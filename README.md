@@ -54,3 +54,4 @@ Every Pacta finding requires two independent, reproducible proofs before it is s
 - **Email**: `pacta@dri.network`
 | **Sprint 4** | `26401312` (`0x192da20`) | Mellow Core / Lido Earn (`MC1`), Convex (`CX1`), Abracadabra (`AB1`–`AB3` Quarantined) | [`audits/sprint-4/block-26401312-summary.md`](audits/sprint-4/block-26401312-summary.md) |
 | **Sprint 5** | `26401405` (`0x192da7d`) | Fluid / Instadapp (`FL1`), MetaMorpho Re7 WETH/USDT (`MM1`), Pendle V2 (`PN1` Quarantined) | [`audits/sprint-5/block-26401405-summary.md`](audits/sprint-5/block-26401405-summary.md) |
+| **Sprint 6** | `26401540` (`0x192db04`) | Maple V2 (`MP1`), Liquity V2 (`LQ1`), Quarantined `MP2` & Silo V2 (`SL1`) | [`audits/sprint-6/block-26401540-summary.md`](audits/sprint-6/block-26401540-summary.md) | `task-00c9e4aae632` (`receipt_seq: 229`) |
