@@ -52,3 +52,4 @@ Every Pacta finding requires two independent, reproducible proofs before it is s
 - **Organization**: [Fractal Neurons](https://fractalneurons.com) · [`@Fractal-Neurons`](https://github.com/Fractal-Neurons)
 - **GitHub Maintainer Account**: [`@pacta-fractal-neurons`](https://github.com/pacta-fractal-neurons)
 - **Email**: `pacta@dri.network`
+| **Sprint 4** | `26401312` (`0x192da20`) | Mellow Core / Lido Earn (`MC1`), Convex (`CX1`), Abracadabra (`AB1`–`AB3` Quarantined) | [`audits/sprint-4/block-26401312-summary.md`](audits/sprint-4/block-26401312-summary.md) |
