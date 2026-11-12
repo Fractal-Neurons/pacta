@@ -3,26 +3,36 @@ pragma solidity ^0.8.24;
 
 /// @title PactaCommitmentRegistry
 /// @author Fractal Neurons — Pacta Protocol Commitments DRI (https://fractal-neurons.github.io/pacta/)
-/// @notice Minimal on-chain commitment verification registry & attestation emitter with strict 2-tier role separation:
+/// @notice Minimal on-chain commitment verification registry with strict 2-tier role separation and quarantine safety:
 ///         - Tier 1 (`treasurySafe`): Owner/admin Safe controlled by human founder (no hot keys on server).
+///           Cannot publish attestations directly (`onlyAttester`), preventing operational/admin role conflation.
 ///         - Tier 2 (`attester`): Dedicated low-balance operational EOA (`0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09`)
-///           authorized only to publish block-pinned commitment audit receipts.
+///           authorized strictly to record block-pinned public sprint audit digests (zero value transfer or admin rights).
+///         - Quarantine-Safe Schema: Emits and stores only numeric `sprintId`, `chainId`, `blockNumber`, `blockHash`,
+///           `verifiedCount`, `driftCount`, `summarySha256`, and `githubPrNumber` (no arbitrary target addresses or
+///           free-form URI strings that could leak `disclosure_only` findings on-chain).
 /// @custom:security-contact pacta@dri.network
 contract PactaCommitmentRegistry {
-    /// @notice Emitted when a block-pinned commitment audit is recorded on-chain.
-    /// @param targetContract Primary protocol contract or governance Safe audited.
-    /// @param blockNumber Pinned mainnet/L2 block number at which proofs were verified.
-    /// @param verifiedCount Number of commitments verified in the bundle.
-    /// @param driftCount Number of non-sensitive commitment drifts recorded in the public summary.
-    /// @param proofSha256 SHA-256 digest of the deterministic replay bundle / audit summary.
-    /// @param reportURI Canonical URI to the public audit summary on https://fractal-neurons.github.io/pacta/ or GitHub.
+    struct SprintVerification {
+        uint64 chainId;
+        uint64 blockNumber;
+        bytes32 blockHash;
+        uint8 verifiedCount;
+        uint8 driftCount;
+        bytes32 summarySha256;
+        uint32 githubPrNumber;
+    }
+
+    /// @notice Emitted when a block-pinned Sprint commitment audit summary is recorded on-chain.
     event CommitmentVerified(
-        address indexed targetContract,
-        uint256 indexed blockNumber,
+        uint16 indexed sprintId,
+        uint64 indexed chainId,
+        uint64 indexed blockNumber,
+        bytes32 blockHash,
         uint8 verifiedCount,
         uint8 driftCount,
-        bytes32 proofSha256,
-        string reportURI
+        bytes32 summarySha256,
+        uint32 githubPrNumber
     );
 
     event TreasurySafeTransferred(address indexed previousSafe, address indexed newSafe);
@@ -31,81 +41,154 @@ contract PactaCommitmentRegistry {
     error UnauthorizedTreasurySafe();
     error UnauthorizedAttester();
     error ZeroAddress();
+    error RoleCollision();
+    error InvalidInitialAttester();
+    error EmptyBatch();
+    error ArrayLengthMismatch();
+    error InvalidVerificationParameters();
 
-    /// @notice Tier 1 Treasury & Admin Safe (human-controlled).
-    address public treasurySafe;
-
-    /// @notice Tier 2 Operational Attester EOA (0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09).
-    address public attester;
+    /// @notice Canonical initial Tier 2 Pacta Attester EOA.
+    address public constant INITIAL_PACTA_ATTESTER = 0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09;
 
     /// @notice Canonical service portal URI for block explorer discovery.
     string public constant SERVICE_PORTAL_URI = "https://fractal-neurons.github.io/pacta/";
 
-    /// @notice Canonical scan request intake URI.
-    string public constant SCAN_INTAKE_URI = "https://github.com/Fractal-Neurons/pacta/issues/new?template=request-scan.yml";
+    /// @notice Canonical public audit repository prefix (append `/pull/<githubPrNumber>`).
+    string public constant GITHUB_PR_PREFIX = "https://github.com/Fractal-Neurons/pacta/pull/";
 
-    modifier onlyTreasurySafe() {
+    /// @notice Tier 1 Treasury & Admin Safe (human-controlled).
+    address public treasurySafe;
+
+    /// @notice Tier 2 Operational Attester EOA (pinned at deployment to INITIAL_PACTA_ATTESTER).
+    address public attester;
+
+    /// @notice Stored public verification records by Sprint ID.
+    mapping(uint16 => SprintVerification) public sprintVerifications;
+
+    modifier onlyTreasury() {
         if (msg.sender != treasurySafe) revert UnauthorizedTreasurySafe();
         _;
     }
 
-    modifier onlyAttesterOrTreasury() {
-        if (msg.sender != attester && msg.sender != treasurySafe) revert UnauthorizedAttester();
+    modifier onlyAttester() {
+        if (msg.sender != attester) revert UnauthorizedAttester();
         _;
     }
 
     constructor(address initialTreasurySafe, address initialAttester) {
         if (initialTreasurySafe == address(0) || initialAttester == address(0)) revert ZeroAddress();
+        if (initialAttester != INITIAL_PACTA_ATTESTER) revert InvalidInitialAttester();
+        if (initialTreasurySafe == initialAttester) revert RoleCollision();
         treasurySafe = initialTreasurySafe;
         attester = initialAttester;
         emit TreasurySafeTransferred(address(0), initialTreasurySafe);
         emit AttesterUpdated(address(0), initialAttester);
     }
 
-    /// @notice Record a single verified commitment audit receipt on-chain.
+    /// @notice Record a single verified Sprint commitment summary receipt on-chain (callable strictly by Tier 2 `attester`).
     function recordVerification(
-        address targetContract,
-        uint256 blockNumber,
+        uint16 sprintId,
+        uint64 chainId,
+        uint64 blockNumber,
+        bytes32 blockHash,
         uint8 verifiedCount,
         uint8 driftCount,
-        bytes32 proofSha256,
-        string calldata reportURI
-    ) external onlyAttesterOrTreasury {
-        emit CommitmentVerified(targetContract, blockNumber, verifiedCount, driftCount, proofSha256, reportURI);
+        bytes32 summarySha256,
+        uint32 githubPrNumber
+    ) external onlyAttester {
+        _record(sprintId, chainId, blockNumber, blockHash, verifiedCount, driftCount, summarySha256, githubPrNumber);
     }
 
-    /// @notice Record a batch of verified commitment audit receipts in a single transaction.
+    /// @notice Record a non-empty batch of verified Sprint commitment summary receipts in a single transaction.
     function recordVerificationBatch(
-        address[] calldata targetContracts,
-        uint256[] calldata blockNumbers,
+        uint16[] calldata sprintIds,
+        uint64[] calldata chainIds,
+        uint64[] calldata blockNumbers,
+        bytes32[] calldata blockHashes,
         uint8[] calldata verifiedCounts,
         uint8[] calldata driftCounts,
-        bytes32[] calldata proofSha256s,
-        string[] calldata reportURIs
-    ) external onlyAttesterOrTreasury {
-        uint256 len = targetContracts.length;
+        bytes32[] calldata summarySha256s,
+        uint32[] calldata githubPrNumbers
+    ) external onlyAttester {
+        uint256 len = sprintIds.length;
+        if (len == 0) revert EmptyBatch();
+        if (
+            chainIds.length != len ||
+            blockNumbers.length != len ||
+            blockHashes.length != len ||
+            verifiedCounts.length != len ||
+            driftCounts.length != len ||
+            summarySha256s.length != len ||
+            githubPrNumbers.length != len
+        ) revert ArrayLengthMismatch();
+
         for (uint256 i = 0; i < len; ++i) {
-            emit CommitmentVerified(
-                targetContracts[i],
+            _record(
+                sprintIds[i],
+                chainIds[i],
                 blockNumbers[i],
+                blockHashes[i],
                 verifiedCounts[i],
                 driftCounts[i],
-                proofSha256s[i],
-                reportURIs[i]
+                summarySha256s[i],
+                githubPrNumbers[i]
             );
         }
     }
 
-    /// @notice Rotate the Tier 2 Attester EOA (callable only by Tier 1 Treasury Safe).
-    function setAttester(address newAttester) external onlyTreasurySafe {
+    function _record(
+        uint16 sprintId,
+        uint64 chainId,
+        uint64 blockNumber,
+        bytes32 blockHash,
+        uint8 verifiedCount,
+        uint8 driftCount,
+        bytes32 summarySha256,
+        uint32 githubPrNumber
+    ) internal {
+        if (
+            sprintId == 0 ||
+            chainId == 0 ||
+            blockNumber == 0 ||
+            blockHash == bytes32(0) ||
+            summarySha256 == bytes32(0) ||
+            githubPrNumber == 0
+        ) revert InvalidVerificationParameters();
+
+        sprintVerifications[sprintId] = SprintVerification({
+            chainId: chainId,
+            blockNumber: blockNumber,
+            blockHash: blockHash,
+            verifiedCount: verifiedCount,
+            driftCount: driftCount,
+            summarySha256: summarySha256,
+            githubPrNumber: githubPrNumber
+        });
+
+        emit CommitmentVerified(
+            sprintId,
+            chainId,
+            blockNumber,
+            blockHash,
+            verifiedCount,
+            driftCount,
+            summarySha256,
+            githubPrNumber
+        );
+    }
+
+    /// @notice Rotate the Tier 2 Attester EOA (callable strictly by Tier 1 `treasurySafe`).
+    function setAttester(address newAttester) external onlyTreasury {
         if (newAttester == address(0)) revert ZeroAddress();
+        if (newAttester == treasurySafe) revert RoleCollision();
         emit AttesterUpdated(attester, newAttester);
         attester = newAttester;
     }
 
-    /// @notice Transfer Tier 1 Treasury Safe ownership (callable only by current Tier 1 Treasury Safe).
-    function setTreasurySafe(address newTreasurySafe) external onlyTreasurySafe {
+    /// @notice Transfer Tier 1 Treasury Safe ownership (callable strictly by current Tier 1 `treasurySafe`).
+    function setTreasurySafe(address newTreasurySafe) external onlyTreasury {
         if (newTreasurySafe == address(0)) revert ZeroAddress();
+        if (newTreasurySafe == attester) revert RoleCollision();
         emit TreasurySafeTransferred(treasurySafe, newTreasurySafe);
         treasurySafe = newTreasurySafe;
     }
