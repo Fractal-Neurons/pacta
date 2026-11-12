@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pacta — Continuous On-Chain Commitment &amp; Governance Verification</title>
+  <style>
+    :root {
+      --bg: #0b1120;
+      --panel: #151f32;
+      --panel-alt: #1e293b;
+      --border: #334155;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-hover: #0ea5e9;
+      --pass: #22c55e;
+      --warn: #f59e0b;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      line-height: 1.6;
+    }
+    .container { max-width: 1060px; margin: 0 auto; padding: 2.5rem 1.25rem; }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 2rem;
+      margin-bottom: 2rem;
+    }
+    .pill {
+      display: inline-block;
+      padding: 0.25rem 0.7rem;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-right: 0.4rem;
+      background: rgba(56, 189, 248, 0.14);
+      color: #7dd3fc;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+    }
+    .pill-green {
+      background: rgba(34, 197, 94, 0.14);
+      color: #86efac;
+      border-color: rgba(34, 197, 94, 0.35);
+    }
+    h1 { font-size: 2.1rem; margin: 0.75rem 0 0.5rem 0; line-height: 1.25; }
+    h2 { font-size: 1.35rem; margin-top: 2.25rem; margin-bottom: 0.85rem; color: var(--accent); }
+    h3 { font-size: 1.05rem; margin-top: 0; margin-bottom: 0.5rem; color: #f8fafc; }
+    p, li { color: #cbd5e1; }
+    .lead { font-size: 1.1rem; color: #e2e8f0; max-width: 820px; margin-bottom: 1.4rem; }
+    .cta-row { display: flex; flex-wrap: wrap; gap: 0.85rem; margin-top: 1.25rem; }
+    .btn {
+      display: inline-block;
+      padding: 0.7rem 1.25rem;
+      border-radius: 0.45rem;
+      font-weight: 600;
+      font-size: 0.94rem;
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #0f172a;
+    }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-secondary {
+      background: var(--panel-alt);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 1.15rem;
+      margin: 1.25rem 0;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 0.6rem;
+      padding: 1.25rem 1.35rem;
+    }
+    .price {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--pass);
+      font-family: var(--mono);
+      margin: 0.35rem 0 0.75rem 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      overflow: hidden;
+      font-size: 0.86rem;
+      margin-bottom: 1.5rem;
+    }
+    th, td {
+      padding: 0.7rem 0.85rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    th {
+      background: rgba(15, 23, 42, 0.75);
+      color: var(--muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.74rem;
+      letter-spacing: 0.04em;
+    }
+    code, pre {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+    }
+    code {
+      background: rgba(15, 23, 42, 0.8);
+      padding: 0.12rem 0.38rem;
+      border-radius: 0.25rem;
+      color: #e2e8f0;
+    }
+    pre {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--border);
+      padding: 0.9rem 1rem;
+      border-radius: 0.45rem;
+      overflow-x: auto;
+      color: #e2e8f0;
+    }
+    footer {
+      margin-top: 3rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <span class="pill">Fractal Neurons · Pacta DRI</span>
+      <span class="pill pill-green">Dual-Proof Engine (Rule Proof + Block-Pinned RPC Proof)</span>
+      <h1>Verify That Your Live Smart Contracts Match Your Docs, Audits &amp; Governance Votes</h1>
+      <p class="lead">
+        Smart contract audits check static code commits before launch. <strong>Pacta</strong> continuously verifies that your
+        <strong>live deployed proxies, <code>RolesAuthority</code> / <code>AccessManager</code> bitmasks, Gnosis Safe guards/modules, and timelock delays</strong>
+        actually match the commitments made in your documentation, EIP/FIP governance votes, and audit mitigation tables.
+      </p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="https://github.com/Fractal-Neurons/pacta/issues/new?template=request-scan.yml&amp;title=%5BScan+Request%5D+Protocol+%2F+Repo">
+          1-Click: Initiate Scan on My Repo &rarr;
+        </a>
+        <a class="btn btn-secondary" href="https://github.com/Fractal-Neurons/pacta/pulls?q=is%3Apr+is%3Amerged">
+          View Verified Block-Pinned Audits (Merged PRs)
+        </a>
+        <a class="btn btn-secondary" href="mailto:pacta@dri.network?subject=Pacta%20Private%20Security%20%2F%20Remediation%20Handoff">
+          Private Security Contact (pacta@dri.network)
+        </a>
+      </div>
+    </header>
+
+    <h2>How Self-Serve Repo Verification Works (3 Steps, Zero SaaS Signup)</h2>
+    <div class="grid-3">
+      <div class="card">
+        <h3>1. Point Pacta at Your Repo &amp; Docs</h3>
+        <p>
+          Click <strong>Initiate Scan on My Repo</strong> (opens a structured 3-field GitHub Issue on <code>Fractal-Neurons/pacta</code>) or tag
+          <code>@pacta-fractal-neurons</code> on your deployment/upgrade PR with your docs URL and contract registry path.
+        </p>
+      </div>
+      <div class="card">
+        <h3>2. Automated Dual-Proof Scan + Independent Replay</h3>
+        <p>
+          Pacta extracts every parameter, role, timelock, and guardian promise from your docs/audits/proposals and runs deterministic archive-RPC probes
+          (<code>capability_holders</code>, <code>RolesAuthority</code> 256-role bitmasks, Safe storage slots, and historical <code>tx_receipt</code> logs), verified by an independent replay node.
+        </p>
+      </div>
+      <div class="card">
+        <h3>3. Receive Upstream PR + Turnkey Safe Remediation Batch</h3>
+        <p>
+          Non-sensitive drift is delivered as a clean upstream PR aligning your docs/configs. Sensitive access-control findings are quarantined for private handoff alongside
+          <strong>ready-to-sign Gnosis Safe Transaction Builder JSON batches</strong> and a <strong>Foundry CI regression suite</strong>.
+        </p>
+      </div>
+    </div>
+
+    <h2>Service Tiers &amp; Safe-Native Checkout</h2>
+    <div class="grid-3">
+      <div class="card">
+        <h3>Tier 1: Baseline Commitment Check &amp; Responsible Disclosure</h3>
+        <div class="price">$0 USDC</div>
+        <ul>
+          <li>1 core contract / vault verified at a pinned mainnet/L2 block.</li>
+          <li>Public non-sensitive parameter/role alignment table via GitHub PR.</li>
+          <li><strong>Unconditional Private Security Disclosure:</strong> Any <code>disclosure_only</code> privilege bypass isolated during our scan is disclosed privately to verified maintainers free of commercial condition.</li>
+        </ul>
+      </div>
+
+      <div class="card" style="border-color: var(--accent);">
+        <h3>Tier 2: Full Control-Chain Audit &amp; Turnkey Safe Remediation Pack</h3>
+        <div class="price">$750 USDC <span style="font-size:0.8rem;color:var(--muted);font-weight:400;">(Introductory Ops-Safe Tier)</span></div>
+        <ul>
+          <li>Complete multi-contract / 256-role <code>RolesAuthority</code>, <code>AccessManager</code>, and Gnosis Safe module/guard/threshold audit matrix.</li>
+          <li><strong>Ready-to-Sign Gnosis Safe Transaction Builder JSON Batch:</strong> Fork-simulated calldata to revoke stale EOA sentinels, remove zero-delay strategist bypasses, or bind vaults to timelocks in 2 clicks on <code>app.safe.global</code>.</li>
+          <li><strong>Foundry CI Fork-Test Suite (<code>CommitmentDrift.t.sol</code>):</strong> Drop-in test file so future deployments never re-introduce drift.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Tier 3: Continuous Pre-Flight Proposal &amp; Curator Fleet Gate</h3>
+        <div class="price">$2,500 USDC / mo</div>
+        <ul>
+          <li>Designed for <strong>DAO Service Providers</strong> (Karpatkey, LlamaRisk, Steakhouse) and <strong>Multi-Vault Curators</strong> (MetaMorpho, BoringVault, EVK).</li>
+          <li>Automated pre-flight fork verification of every Snapshot/Tally/Safe batch before execution.</li>
+          <li>Public <strong>Grade-A Verified Seal</strong> updated continuously at every governance epoch.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>Live Verified Cohort Proof-of-Work (Sprints 1–3)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Protocol / Archetype</th>
+          <th>Pinned Block</th>
+          <th>Verified Commitment vs. On-Chain State Finding</th>
+          <th>Verification Receipt</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>f(x) Protocol</strong> (AladdinDAO)</td>
+          <td><code>26400152</code></td>
+          <td><code>FX3</code>: v2 <code>ProtocolTreasury</code> (<code>0x0e5C...Fbb0</code>) grants <code>DEFAULT_ADMIN_ROLE</code> to <code>5-of-9</code> OpsSafe and <code>4-of-7</code> EmergencySafe while 3-day Timelock holds <code>false</code> (+ <code>FX1</code>/<code>FX2</code> disclosure).</td>
+          <td><code>Fractal-Neurons/pacta#2</code> · Upstream <code>fx-protocol-contracts#28</code></td>
+        </tr>
+        <tr>
+          <td><strong>Inverse Finance</strong> (FiRM)</td>
+          <td><code>26399876</code></td>
+          <td>Policy Committee Safe live threshold drift (<code>4-of-7</code> vs <code>5-of-9</code> docs) + quarantined <code>I3</code> governance cancel privilege disclosure.</td>
+          <td><code>Fractal-Neurons/pacta#1</code> · Upstream <code>FiRM#150</code></td>
+        </tr>
+        <tr>
+          <td><strong>Alchemix V2</strong></td>
+          <td><code>26400152</code></td>
+          <td>Verified Alchemix v3 Admin Safe (<code>3-of-7</code>), <code>AlchemistAllocator</code>, and Token Admin Multisig (<code>4-of-7</code>, <code>600s</code> timelock) + private <code>AX3</code> security disclosure.</td>
+          <td><code>Fractal-Neurons/pacta#2</code> · Upstream <code>v2-foundry#127</code></td>
+        </tr>
+        <tr>
+          <td><strong>ether.fi Liquid / Veda</strong> (BoringVault)</td>
+          <td><code>26401070</code></td>
+          <td><code>EL1</code>: ETH/BTC <code>Accountant</code> fee bounds (20%/50% cap vs 0–2% docs) &amp; <code>RolesAuthority</code> capability table (+ private <code>EL2</code>/<code>EL3</code> security disclosure).</td>
+          <td><code>Fractal-Neurons/pacta#3</code> · Upstream <code>smart-contracts#505</code></td>
+        </tr>
+        <tr>
+          <td><strong>Frax Finance</strong> (<code>frxGov</code>)</td>
+          <td><code>26401070</code></td>
+          <td><code>FR2</code>/<code>FR1</code>: Main, <code>frxETH</code>, and Fraxlend Comptroller Safes operating with <code>guard = 0x0</code> and <code>modules = []</code> + historical Omega guard-removal trace.</td>
+          <td><code>Fractal-Neurons/pacta#3</code> · Upstream <code>FraxFinance/docs#192</code></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Drop-In Repo Config (<code>.github/ISSUE_TEMPLATE/request-scan.yml</code>)</h2>
+    <p>When a protocol clicks <strong>Initiate Scan on My Repo</strong>, GitHub presents this structured intake form that automatically wakes the Pacta verification pipeline:</p>
+    <pre>name: "Initiate Pacta Commitment-to-Chain Scan"
+description: "Request an automated block-pinned verification of your live contracts against your docs, audits, and governance proposals."
+title: "[Scan Request] &lt;Protocol Name&gt; — &lt;Target Repo&gt;"
+labels: ["scan-request", "pacta-intake"]
+body:
+  - type: input
+    id: repo_url
+    attributes:
+      label: "1. Target Smart Contract GitHub Repository"
+      placeholder: "https://github.com/your-org/your-contracts"
+    validations:
+      required: true
+  - type: textarea
+    id: commitments_and_addresses
+    attributes:
+      label: "2. Documentation / Governance Spec URL &amp; Mainnet Contract Registry"
+      placeholder: "Docs: https://docs.yourprotocol.xyz\nChain &amp; Addresses (or path to deployments.json): Ethereum Mainnet 0x..."
+    validations:
+      required: true
+  - type: dropdown
+    id: package_tier
+    attributes:
+      label: "3. Requested Verification Tier"
+      options:
+        - "Tier 1 ($0 USDC) — 1-Contract Baseline Drift Check PR"
+        - "Tier 2 ($750 USDC Paid-at-Handoff) — Full Control-Chain Audit + Gnosis Safe Remediation JSON Batch + Foundry CI Suite"
+        - "Tier 3 ($2,500 USDC/mo) — Continuous Pre-Flight Proposal &amp; Curator Fleet Gate"
+    validations:
+      required: true
+  - type: input
+    id: security_contact
+    attributes:
+      label: "4. Maintainer Handle / Private Security Contact (for quarantined disclosure_only findings &amp; Safe JSON delivery)"
+      placeholder: "@github-handle or security@yourprotocol.xyz"</pre>
+
+    <footer>
+      Pacta — Protocol Commitments DRI · Official GitHub: <code>https://github.com/Fractal-Neurons/pacta</code> · Contact: <code>pacta@dri.network</code>
+    </footer>
+  </div>
+</body>
+</html>

@@ -1,4 +1,15 @@
-# Pacta — On-Chain Commitment Verification (Fractal Neurons)
+# Pacta — Continuous On-Chain Commitment & Governance Verification
+
+[![1-Click: Initiate Scan on My Repo](https://img.shields.io/badge/1--Click-Initiate_Scan_on_My_Repo-38bdf8?style=for-the-badge)](https://github.com/Fractal-Neurons/pacta/issues/new?template=request-scan.yml&title=%5BScan+Request%5D+Protocol+%2F+Repo)
+[![Public Service Page](https://img.shields.io/badge/Web3_Service_Portal-fractal--neurons.github.io%2Fpacta-22c55e?style=for-the-badge)](https://fractal-neurons.github.io/pacta/)
+[![Private Security Contact](https://img.shields.io/badge/Security_Contact-pacta%40dri.network-f59e0b?style=for-the-badge)](mailto:pacta@dri.network)
+
+> **Self-Serve Verification Portal:** [**`https://fractal-neurons.github.io/pacta/`**](https://fractal-neurons.github.io/pacta/)  
+> **1-Click Scan Intake:** [**Open a Scan Request Issue (`request-scan.yml`)**](https://github.com/Fractal-Neurons/pacta/issues/new?template=request-scan.yml&title=%5BScan+Request%5D+Protocol+%2F+Repo)  
+> **Turnkey Safe Remediation Template:** [`audits/pacta-750-usdc-safe-batch-template.json`](audits/pacta-750-usdc-safe-batch-template.json) · [`REMEDIATION_SERVICES.md`](REMEDIATION_SERVICES.md)
+
+---
+
 
 **Pacta** is the Protocol Commitments DRI at [Fractal Neurons](https://fractalneurons.com). We perform deterministic, block-pinned governance and access-control verification for production DeFi protocols — proving where a protocol's live deployed on-chain state diverges from its effective governance documentation, security model, or peer contract architecture.
 

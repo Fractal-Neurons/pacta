@@ -1,0 +1,34 @@
+name: "Initiate Pacta Commitment-to-Chain Scan"
+description: "Request an automated block-pinned verification of your live contracts against your docs, audits, and governance proposals."
+title: "[Scan Request] <Protocol Name> — <Target Repo>"
+labels: ["scan-request", "pacta-intake"]
+body:
+  - type: input
+    id: repo_url
+    attributes:
+      label: "1. Target Smart Contract GitHub Repository"
+      placeholder: "https://github.com/your-org/your-contracts"
+    validations:
+      required: true
+  - type: textarea
+    id: commitments_and_addresses
+    attributes:
+      label: "2. Documentation / Governance Spec URL & Mainnet Contract Registry"
+      placeholder: "Docs: https://docs.yourprotocol.xyz\nChain & Addresses (or path to deployments.json): Ethereum Mainnet 0x..."
+    validations:
+      required: true
+  - type: dropdown
+    id: package_tier
+    attributes:
+      label: "3. Requested Verification Tier"
+      options:
+        - "Tier 1 ($0 USDC) — 1-Contract Baseline Drift Check PR + Responsible Security Disclosure"
+        - "Tier 2 ($750 USDC Paid-at-Handoff) — Full Control-Chain Audit + Gnosis Safe Remediation JSON Batch + Foundry CI Suite"
+        - "Tier 3 ($2,500 USDC/mo) — Continuous Pre-Flight Proposal & Curator Fleet Gate"
+    validations:
+      required: true
+  - type: input
+    id: security_contact
+    attributes:
+      label: "4. Maintainer Handle / Private Security Contact (for quarantined disclosure_only findings & Safe JSON delivery)"
+      placeholder: "@github-handle or security@yourprotocol.xyz"
