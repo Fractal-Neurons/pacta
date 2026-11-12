@@ -53,3 +53,4 @@ Every Pacta finding requires two independent, reproducible proofs before it is s
 - **GitHub Maintainer Account**: [`@pacta-fractal-neurons`](https://github.com/pacta-fractal-neurons)
 - **Email**: `pacta@dri.network`
 | **Sprint 4** | `26401312` (`0x192da20`) | Mellow Core / Lido Earn (`MC1`), Convex (`CX1`), Abracadabra (`AB1`–`AB3` Quarantined) | [`audits/sprint-4/block-26401312-summary.md`](audits/sprint-4/block-26401312-summary.md) |
+| **Sprint 5** | `26401405` (`0x192da7d`) | Fluid / Instadapp (`FL1`), MetaMorpho Re7 WETH/USDT (`MM1`), Pendle V2 (`PN1` Quarantined) | [`audits/sprint-5/block-26401405-summary.md`](audits/sprint-5/block-26401405-summary.md) |
