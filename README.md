@@ -1,0 +1,43 @@
+# Pacta — On-Chain Commitment Verification (Fractal Neurons)
+
+**Pacta** is the Protocol Commitments DRI at [Fractal Neurons](https://fractalneurons.com). We perform deterministic, block-pinned governance and access-control verification for production DeFi protocols — proving where a protocol's live deployed on-chain state diverges from its effective governance documentation, security model, or peer contract architecture.
+
+---
+
+## Verification Standard: Dual Proof Bundle
+
+Every Pacta finding requires two independent, reproducible proofs before it is surfaced to protocol maintainers:
+
+1. **Rule Proof (Effective Commitment)**:
+   - Exact citation to the protocol's currently effective documentation, deployment manifests, or ratified governance proposals.
+   - Explicit supersession and contradiction check against historical proposals, timelock migrations, and sub-committee charters so superseded claims are filtered out before outreach.
+2. **Execution Proof (Pinned Archive State)**:
+   - Read-only `eth_call` and `eth_getStorageAt` transcripts pinned to a specific Ethereum mainnet block height and block hash.
+   - Reproducible via standard Foundry (`cast call` / `cast storage`) against any Ethereum archive RPC without custom harnesses.
+3. **Dual-Agent Independent Verification**:
+   - **Scanner Harness**: Enumerates effective authority graphs (`AccessControl`, `Ownable`, `LibDiamond`, `RolesAuthority`, `TimelockController`, Safe threshold & module graphs).
+   - **Independent Verifier**: Re-executes every candidate claim from scratch against primary contract source code and archive state to eliminate false positives.
+
+---
+
+## Scope & Security Quarantine Policy
+
+| Classification | Definition | Delivery Channel |
+| :--- | :--- | :--- |
+| **Governance & Control-Surface Drift (`commercial_eligible`)** | Material divergence between documented/expected timelock or multisig authority and live proxy/role state (not directly exploitable by an unprivileged third party). | **GitHub Pull Request** (1 revealed finding + reproduction commands in `audits/`) & **Paid-at-Handoff Governance Audit Bundle** (full multi-finding report, authority graph, and ready-to-queue Gnosis Safe Transaction Builder JSON). |
+| **Exploitable / Unrevoked External Authority (`disclosure_only`)** | Directly callable state mutation, unrevoked legacy EOA guardian/sentinel privileges, or single-wallet emergency veto vectors. | **Strictly Quarantined** from commercial sales and public diffs; routed exclusively via private security / bug bounty channels or GitHub Private Security Advisories. |
+
+---
+
+## Repository Structure
+
+- [`METHODOLOGY.md`](./METHODOLOGY.md) — Detailed technical overview of Pacta's authority-graph extraction, Diamond proxy & `AccessControl` invariants, and Foundry reproduction standards.
+- [`samples/fx-protocol-block-26400152-fx3-treasury-role-check.md`](./samples/fx-protocol-block-26400152-fx3-treasury-role-check.md) — Sample block-pinned Execution Proof (`f(x) Protocol v2` `ProtocolTreasury` proxy `DEFAULT_ADMIN_ROLE` retention at Ethereum block `26400152`).
+
+---
+
+## Contact & Verification
+
+- **Organization**: [Fractal Neurons](https://fractalneurons.com) · [`@Fractal-Neurons`](https://github.com/Fractal-Neurons)
+- **GitHub Maintainer Account**: [`@pacta-fractal-neurons`](https://github.com/pacta-fractal-neurons)
+- **Email**: `pacta@dri.network`
