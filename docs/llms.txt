@@ -4,6 +4,11 @@
 
 Pacta checks who can change the rules of DeFi protocols (proxy admins, timelock delays, Safe quorums, roles) and compares that with what the protocols document. Every record is a read-only on-chain observation pinned to an Ethereum Mainnet block number and canonical block hash.
 
+## Agent feeds
+- [https://pacta.wtf/llms-full.txt](https://pacta.wtf/llms-full.txt): complete single-file reference (feeds, MCP tools, x402, anchoring, every record, proposal and queued operation).
+- [https://pacta.wtf/api/v1/proposals.json](https://pacta.wtf/api/v1/proposals.json): schema `pacta.governance_proposals_feed.v1`; live Aave / Euler / Morpho / Sky proposals mapped to block-pinned observations.
+- [https://pacta.wtf/.well-known/agent.json](https://pacta.wtf/.well-known/agent.json) (A2A Agent Card) · [https://pacta.wtf/.well-known/mcp.json](https://pacta.wtf/.well-known/mcp.json) (MCP manifest) · [https://pacta.wtf/SKILL.md](https://pacta.wtf/SKILL.md) (portable agent skill).
+
 ## Data
 - [https://pacta.wtf/api/v1/index.json](https://pacta.wtf/api/v1/index.json): schema `pacta.counterparty_control_index.v1`; `summary_metrics` (sprints_completed=14, records_indexed=37, parameter_deltas=14, protective_deltas=4, aligned_baselines=19); each entry has id, protocol, category, sprint, block_number, block_hash, classification, surface, target_contract, target_label, check_type, selector_or_slot, call_signature, call_args, repro_calldata, onchain_observed, documented_reference, observed/documented delay seconds, summary_doc, summary_sha256, base_eas_uid.
 - [https://pacta.wtf/api/v1/radar.json](https://pacta.wtf/api/v1/radar.json): queued timelock operations, refreshed at finalized block 26406890 (2026-11-13 15:18 UTC).

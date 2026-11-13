@@ -188,6 +188,11 @@ def app_behaviour(appjs, request_html, index_html, row_id):
         return {"harness_error": (out.stderr or out.stdout)[-400:]}
 
 
+def urllib_host(u):
+    import urllib.parse
+    return urllib.parse.urlsplit(u).hostname or ""
+
+
 def llms_txt(read_):
     return read_("docs/llms.txt")
 
@@ -217,7 +222,8 @@ def main():
     check('zero "Security Quarantine" wording', not bad, str(bad))
     # single commercial offer; no private-disclosure charity copy anywhere public
     req_page = read("docs/request/index.html")
-    copy_files = ["docs/index.html", "docs/request/index.html", "docs/llms.txt", "docs/app.js", "docs/api/v1/index.json", "README.md",
+    copy_files = ["docs/index.html", "docs/request/index.html", "docs/llms.txt", "docs/llms-full.txt", "docs/SKILL.md", "docs/.well-known/agent.json",
+                  "docs/.well-known/mcp.json", "docs/api/v1/proposals.json", "docs/app.js", "docs/api/v1/index.json", "README.md",
                   "REMEDIATION_SERVICES.md", "METHODOLOGY.md", ".github/ISSUE_TEMPLATE/request-scan.yml"] + \
                  [os.path.relpath(p, ROOT) for p in glob.glob(os.path.join(DOCS, "briefs", "*", "index.html"))]
     charity = re.compile(r"private disclosure|\$0 private|\$0 gratis|gratis|free of charge|at no cost|at \$0 cost|no cost to the protocol", re.I)
@@ -292,6 +298,10 @@ def main():
     check("every block_hash is a 32-byte hex", not bad_hash, str(bad_hash))
     corpus = {"docs/index.html": re.sub(r'data-search="[^"]*"', "", page), "docs/llms.txt": read("docs/llms.txt"),
               "docs/api/v1/index.json": json.dumps(idx), "README.md": read("README.md")}
+    for f in ("docs/llms-full.txt", "docs/SKILL.md", "docs/.well-known/agent.json", "docs/.well-known/mcp.json", "docs/api/v1/proposals.json",
+              "docs/api/v1/onboarding.json"):
+        if os.path.exists(os.path.join(ROOT, f)):
+            corpus[f] = read(f)
     for p in glob.glob(os.path.join(DOCS, "briefs", "**", "*.html"), recursive=True) + glob.glob(os.path.join(ROOT, "audits", "**", "*.md"), recursive=True):
         corpus[os.path.relpath(p, ROOT)] = open(p).read()
     bad55 = sorted({f"{f}: {a}" for f, t in corpus.items() for a in re.findall(r"0x[0-9a-fA-F]{40}(?![0-9a-fA-F])", t) if not eip55_ok(a)})
@@ -476,6 +486,71 @@ def main():
     linked = all(f'href="briefs/{sl}/"' in page and f"{base}/briefs/{sl}/" in llms_t and f"{base}/briefs/{sl}/" in sm for sl in EXPECT_ONB)
     check("onboarding briefs linked from the homepage (#onboarding), llms.txt and sitemap.xml", linked and 'id="onboarding"' in page
           and "/api/v1/onboarding.json" in llms_t)
+
+    # agent-first (B2A) feeds: proposals.json, llms-full.txt, .well-known/{agent,mcp}.json, SKILL.md
+    import tempfile
+    sys.path.insert(0, os.path.join(ROOT, "tools"))
+    import build_b2a_feeds as B2A
+    b2a_files = ["api/v1/proposals.json", "llms-full.txt", ".well-known/agent.json", ".well-known/mcp.json", "SKILL.md"]
+    scratch = os.path.join(os.path.expanduser("~"), ".cache", "pacta-site-verify")
+    os.makedirs(scratch, exist_ok=True)
+    with tempfile.TemporaryDirectory(dir=scratch) as td:
+        B2A.write_all(td, idx, radar, onb)
+        drift = [f for f in b2a_files if open(os.path.join(td, f), "rb").read() != read("docs/" + f, "rb")]
+    check("B2A feeds are a byte-identical deterministic build of index/radar/onboarding.json (no hand edits, no wall clock)", not drift, str(drift))
+    prop = json.loads(read("docs/api/v1/proposals.json"))
+    PKEYS = {"proposal_id", "forum", "topic_id", "title", "forum_url", "relation", "chain", "chain_id", "pinned_block_number", "pinned_block_hash",
+             "source_feed", "source_record_ids", "brief_url", "control_plane_summary", "recommended_sentinel_predicates", "repro_commands"}
+    idx_ids, onb_slugs = {e["id"] for e in entries}, {b["slug"] for b in onb["briefs"]}
+    pbad = []
+    for pp in prop.get("proposals", []):
+        if not PKEYS <= set(pp) or pp["proposal_id"] != f'{pp["forum"]}-{pp["topic_id"]}':
+            pbad.append(f'{pp.get("proposal_id")}: keys')
+            continue
+        if not re.fullmatch(r"0x[0-9a-f]{64}", pp["pinned_block_hash"]) or (pp["chain"], pp["chain_id"]) not in (("ethereum", 1), ("base", 8453)):
+            pbad.append(f'{pp["proposal_id"]}: pin')
+        if urllib_host(pp["forum_url"]) != B2A.FORUM_HOST[pp["forum"]]:
+            pbad.append(f'{pp["proposal_id"]}: forum host')
+        pool = onb_slugs if pp["source_feed"] == "/api/v1/onboarding.json" else idx_ids
+        if not pp["source_record_ids"] or not set(pp["source_record_ids"]) <= pool:
+            pbad.append(f'{pp["proposal_id"]}: source_record_ids')
+        if pp["brief_url"] and not os.path.exists(os.path.join(DOCS, pp["brief_url"].replace(base + "/", "").rstrip("/"), "index.html")):
+            pbad.append(f'{pp["proposal_id"]}: brief_url')
+        if not pp["repro_commands"] or not any(f'--block {pp["pinned_block_number"]}' in c for c in pp["repro_commands"]) \
+                or not set(pp["recommended_sentinel_predicates"]) <= set(B2A.PREDICATES) or not pp["control_plane_summary"]:
+            pbad.append(f'{pp["proposal_id"]}: repro/predicates/summary')
+    forums = {pp["forum"] for pp in prop.get("proposals", [])}
+    need_ids = {"aave-25128", "aave-25499", "aave-25927", "aave-25721", "aave-26304", "aave-25902", "euler-1862", "euler-1850", "morpho-2301", "sky-28390"}
+    check("proposals.json (pacta.governance_proposals_feed.v1): all 4 forums, the 10 specified proposals, pins, forum hosts, record ids + brief URLs resolve",
+          prop.get("schema") == "pacta.governance_proposals_feed.v1" and forums == {"aave", "euler", "morpho", "sky"}
+          and need_ids <= {pp["proposal_id"] for pp in prop["proposals"]} and prop["counts"]["total"] == len(prop["proposals"]) and not pbad,
+          f'{len(prop.get("proposals", []))} proposals; bad {pbad[:4]}')
+    full = read("docs/llms-full.txt")
+    miss = [i for i in idx_ids | {pp["proposal_id"] for pp in prop["proposals"]} if i not in full]
+    check("llms-full.txt: every indexed record, every proposal and every feed URL; registry, EAS schema, x402 payTo and Pacta Treasury",
+          not miss and all(f"{base}{p_}" in full for p_, _ in B2A.FEEDS) and B2A.REGISTRY in full and B2A.EAS_SCHEMA in full
+          and B2A.PAY_TO in full and f"Pacta Treasury: {B2A.TREASURY}" in full, f"missing {miss[:4]}")
+    card, man = json.loads(read("docs/.well-known/agent.json")), json.loads(read("docs/.well-known/mcp.json"))
+    eps = list(card.get("endpoints", {}).get("feeds", {}).values()) + [card["endpoints"]["mcp_manifest"], card["endpoints"]["skill"]] + list(man["feeds"].values())
+    unresolved = [u for u in eps if not os.path.exists(os.path.join(DOCS, u.replace(base + "/", "")))]
+    check("agent.json (A2A card: name/url/version/provider/capabilities/modes/skills/x402) + mcp.json (name, stdio, tools, status): endpoints resolve",
+          all(k in card for k in ("protocolVersion", "name", "description", "url", "version", "provider", "documentationUrl", "capabilities",
+                                   "defaultInputModes", "defaultOutputModes", "skills")) and len(card["skills"]) >= 3
+          and card["x402"]["payTo"] == B2A.PAY_TO and card["x402"]["asset"] == B2A.USDC_BASE and card["x402"]["chainId"] == 8453
+          and man["name"] == "io.github.fractal-neurons/pacta" and man["transport"]["type"] == "stdio" and "pacta_list_proposals" in {t["name"] for t in man["tools"]}
+          and man["status"].startswith("publication_pending") and not unresolved, f"unresolved {unresolved[:3]}")
+    skill = read("docs/SKILL.md")
+    fm = re.match(r"---\n(.*?)\n---\n", skill, re.S)
+    check("SKILL.md: YAML frontmatter (name pacta-protocol-commitments, one-line description), feed URLs, verification recipe",
+          bool(fm) and "name: pacta-protocol-commitments" in fm.group(1) and re.search(r"^description: .{60,}$", fm.group(1), re.M) is not None
+          and all(f"{base}{p_}" in skill for p_, _ in B2A.FEEDS) and "--block" in skill)
+    near = []
+    for f in ["docs/" + x for x in b2a_files] + ["docs/llms.txt", "docs/index.html", "README.md"]:
+        t = read(f)
+        for mm in re.finditer(B2A.TREASURY, t, re.I):
+            if re.search(r"\bSafe\b|\bmultisig\b|\bGnosis\b", t[max(0, mm.start() - 120): mm.end() + 120], re.I):
+                near.append(f)
+    check("0x4348…Ed14 is never labelled a Safe / multisig anywhere in the agent feeds, llms.txt, homepage or README", not near, str(near))
 
     # private identifiers must never be published: compared by SHA-256 of lowercased tokens, so the
     # repository itself never contains the literal identifiers this check guards against

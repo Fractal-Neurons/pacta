@@ -14,5 +14,10 @@
   <url><loc>https://pacta.wtf/briefs/paxos-paxgy-eth/</loc><lastmod>2026-11-13</lastmod></url>
   <url><loc>https://pacta.wtf/briefs/tether-usat-eth/</loc><lastmod>2026-11-13</lastmod></url>
   <url><loc>https://pacta.wtf/api/v1/onboarding.json</loc><lastmod>2026-11-13</lastmod></url>
+  <url><loc>https://pacta.wtf/api/v1/proposals.json</loc><lastmod>2026-11-13</lastmod></url>
+  <url><loc>https://pacta.wtf/llms-full.txt</loc><lastmod>2026-11-13</lastmod></url>
+  <url><loc>https://pacta.wtf/SKILL.md</loc><lastmod>2026-11-13</lastmod></url>
+  <url><loc>https://pacta.wtf/.well-known/agent.json</loc><lastmod>2026-11-13</lastmod></url>
+  <url><loc>https://pacta.wtf/.well-known/mcp.json</loc><lastmod>2026-11-13</lastmod></url>
   <url><loc>https://pacta.wtf/demos/swapio-x402/</loc><lastmod>2026-11-13</lastmod></url>
 </urlset>

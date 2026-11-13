@@ -26,6 +26,7 @@ import urllib.parse
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import onboarding_render as OR  # noqa: E402
+import build_b2a_feeds as B2A  # noqa: E402
 
 BASE_URL = "https://pacta.wtf"   # cutover: "https://pacta.fractalneurons.com"
 
@@ -493,7 +494,8 @@ def verify_section(idx, c):
 <div><dt>Ethereum Mainnet</dt><dd>All {c["records"]} indexed records are pinned to a block number and its canonical block hash; reads use EIP-1898 <code>requireCanonical</code>.</dd></div>
 <div><dt>Open verifier spec</dt><dd>Each record lists the target contract, the full call signature and arguments (or EIP-1967 slot), the block and the block hash. Replay it with <code>cast</code> or raw <code>eth_call</code> / <code>eth_getStorageAt</code>.</dd></div>
 <div><dt>On-chain anchoring on Base</dt><dd>{anchoring_text(c)} Multi-attest txs {multi_tx_html(c)} · Registry {hexref(reg)} (Sourcify verified) · EAS schema {hexref(schema)}.</dd></div>
-<div><dt>Machine-readable</dt><dd><a href="api/v1/index.json">/api/v1/index.json</a> (schema <code>{E(idx["schema"])}</code>) · <a href="api/v1/radar.json">/api/v1/radar.json</a> · <a href="llms.txt">/llms.txt</a></dd></div>
+<div><dt>Machine-readable</dt><dd><a href="api/v1/index.json">/api/v1/index.json</a> (schema <code>{E(idx["schema"])}</code>) · <a href="api/v1/radar.json">/api/v1/radar.json</a> · <a href="api/v1/onboarding.json">/api/v1/onboarding.json</a> · <a href="api/v1/proposals.json">/api/v1/proposals.json</a> · <a href="llms.txt">/llms.txt</a> · <a href="llms-full.txt">/llms-full.txt</a></dd></div>
+<div><dt>For agents</dt><dd><a href=".well-known/agent.json">A2A Agent Card</a> · <a href=".well-known/mcp.json">MCP manifest</a> · <a href="SKILL.md">SKILL.md</a>. Read-only and free; optional x402 (Base USDC) live scans.</dd></div>
 <div><dt>Reorg handling</dt><dd>Live monitoring uses a 64-block reorg-aware indexer: observations from orphaned blocks are retracted, never silently kept.</dd></div>
 </dl>
 {term(cmd, "Verify from your terminal")}
@@ -634,7 +636,7 @@ def about_section(idx):
 <dl class="deflist">
 <div><dt>Contact</dt><dd><a href="#request">Request builder</a> · <span class="mono">{CONTACT}</span>{copy_btn(CONTACT, "Copy")}</dd></div>
 <div><dt>Code &amp; data</dt><dd><a href="{REPO}" target="_blank" rel="noopener">{REPO.replace("https://", "")} ↗</a></dd></div>
-<div><dt>For agents</dt><dd><a href="llms.txt">/llms.txt</a> · <a href="api/v1/index.json">/api/v1/index.json</a></dd></div>
+<div><dt>For agents</dt><dd><a href="llms.txt">/llms.txt</a> · <a href="llms-full.txt">/llms-full.txt</a> · <a href="api/v1/proposals.json">/api/v1/proposals.json</a> · <a href=".well-known/agent.json">agent.json</a> · <a href="SKILL.md">SKILL.md</a></dd></div>
 <div><dt>Security</dt><dd><a href=".well-known/security.txt">/.well-known/security.txt</a></dd></div>
 </dl>
 </div>
@@ -746,6 +748,10 @@ def llms(idx, radar):
         "# Pacta (by Fractal Neurons)", "",
         f"> Block-pinned control-plane snapshots and pre-execution timelock alerts for DeFi collateral. {c['sprints']} Sprints · {c['records']} Indexed Records.", "",
         "Pacta checks who can change the rules of DeFi protocols (proxy admins, timelock delays, Safe quorums, roles) and compares that with what the protocols document. Every record is a read-only on-chain observation pinned to an Ethereum Mainnet block number and canonical block hash.", "",
+        "## Agent feeds",
+        f"- [{BASE_URL}/llms-full.txt]({BASE_URL}/llms-full.txt): complete single-file reference (feeds, MCP tools, x402, anchoring, every record, proposal and queued operation).",
+        f"- [{BASE_URL}/api/v1/proposals.json]({BASE_URL}/api/v1/proposals.json): schema `pacta.governance_proposals_feed.v1`; live Aave / Euler / Morpho / Sky proposals mapped to block-pinned observations.",
+        f"- [{BASE_URL}/.well-known/agent.json]({BASE_URL}/.well-known/agent.json) (A2A Agent Card) · [{BASE_URL}/.well-known/mcp.json]({BASE_URL}/.well-known/mcp.json) (MCP manifest) · [{BASE_URL}/SKILL.md]({BASE_URL}/SKILL.md) (portable agent skill).", "",
         "## Data",
         f"- [{BASE_URL}/api/v1/index.json]({BASE_URL}/api/v1/index.json): schema `{idx['schema']}`; `summary_metrics` (sprints_completed={c['sprints']}, records_indexed={c['records']}, parameter_deltas={c['delta']}, protective_deltas={c['protect']}, aligned_baselines={c['aligned']}); each entry has id, protocol, category, sprint, block_number, block_hash, classification, surface, target_contract, target_label, check_type, selector_or_slot, call_signature, call_args, repro_calldata, onchain_observed, documented_reference, observed/documented delay seconds, summary_doc, summary_sha256, base_eas_uid.",
         f"- [{BASE_URL}/api/v1/radar.json]({BASE_URL}/api/v1/radar.json): queued timelock operations, refreshed at finalized block {r['block_number']} ({r['block_time_utc']}).", "",
@@ -796,10 +802,12 @@ def main():
     onb = load_onboarding()
     for b in onb["briefs"]:
         w(f"briefs/{b['slug']}/index.html", onboarding_page(b, idx))
+    B2A.write_all(DOCS, idx, radar, onb)          # proposals.json, llms-full.txt, .well-known/{agent,mcp}.json, SKILL.md
     w("llms.txt", llms(idx, radar))
     w("robots.txt", f"User-agent: *\nAllow: /\n\nSitemap: {BASE_URL}/sitemap.xml\n")
     urls = ["/", "/request/", "/llms.txt", "/api/v1/index.json", "/api/v1/radar.json"] + [f"/briefs/{k}/" for k in BRIEFS] + \
-        [f"/briefs/{b['slug']}/" for b in load_onboarding()["briefs"]] + (["/api/v1/onboarding.json"] if load_onboarding()["briefs"] else []) + ["/demos/swapio-x402/"]
+        [f"/briefs/{b['slug']}/" for b in load_onboarding()["briefs"]] + (["/api/v1/onboarding.json"] if load_onboarding()["briefs"] else []) + \
+        ["/api/v1/proposals.json", "/llms-full.txt", "/SKILL.md", "/.well-known/agent.json", "/.well-known/mcp.json", "/demos/swapio-x402/"]
     w("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
       + "".join(f"  <url><loc>{BASE_URL}{u}</loc><lastmod>{today}</lastmod></url>\n" for u in urls) + "</urlset>\n")
     w(".well-known/security.txt", f"Contact: mailto:{CONTACT}\nExpires: 2027-11-13T00:00:00.000Z\nPreferred-Languages: en\n"

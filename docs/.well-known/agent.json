@@ -1,0 +1,177 @@
+{
+ "anchoring": {
+  "attester": "0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09",
+  "chainId": 8453,
+  "easSchema": "0x7ff485bc1159dff3c70eefcb9dff2d65be990301760c2d53799e5a45e3badf83",
+  "registry": "0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872",
+  "treasury": {
+   "address": "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14",
+   "kind": "externally owned account",
+   "label": "Pacta Treasury"
+  }
+ },
+ "authentication": {
+  "notes": "Static feeds need no auth. Paid live scans use x402 (HTTP 402 + X-PAYMENT) instead of accounts or keys.",
+  "schemes": [
+   "none"
+  ]
+ },
+ "capabilities": {
+  "pushNotifications": false,
+  "stateTransitionHistory": false,
+  "streaming": false
+ },
+ "defaultInputModes": [
+  "application/json",
+  "text/plain"
+ ],
+ "defaultOutputModes": [
+  "application/json",
+  "text/markdown"
+ ],
+ "description": "Block-pinned DeFi control-plane intelligence for agents: proxy admins, timelocks, Safe quorums and roles behind collateral, compared with documentation and live governance proposals. Free static JSON feeds; optional x402 pay-per-call live scans on Base.",
+ "documentationUrl": "https://pacta.wtf/llms-full.txt",
+ "endpoints": {
+  "feeds": {
+   "/.well-known/agent.json": "https://pacta.wtf/.well-known/agent.json",
+   "/.well-known/mcp.json": "https://pacta.wtf/.well-known/mcp.json",
+   "/SKILL.md": "https://pacta.wtf/SKILL.md",
+   "/api/v1/index.json": "https://pacta.wtf/api/v1/index.json",
+   "/api/v1/onboarding.json": "https://pacta.wtf/api/v1/onboarding.json",
+   "/api/v1/proposals.json": "https://pacta.wtf/api/v1/proposals.json",
+   "/api/v1/radar.json": "https://pacta.wtf/api/v1/radar.json",
+   "/llms-full.txt": "https://pacta.wtf/llms-full.txt",
+   "/llms.txt": "https://pacta.wtf/llms.txt"
+  },
+  "mcp_manifest": "https://pacta.wtf/.well-known/mcp.json",
+  "skill": "https://pacta.wtf/SKILL.md"
+ },
+ "iconUrl": "https://pacta.wtf/favicon.png",
+ "name": "Pacta",
+ "protocolVersion": "0.3.0",
+ "provider": {
+  "organization": "Fractal Neurons",
+  "url": "https://fractalneurons.com"
+ },
+ "skills": [
+  {
+   "description": "Who can upgrade, pause, mint or change delays for a DeFi protocol, at a canonical block, with a cast reproduction.",
+   "examples": [
+    "Which address can upgrade Ethena's minting contract and with what delay?",
+    "Fetch https://pacta.wtf/api/v1/index.json and list parameter deltas."
+   ],
+   "id": "control-plane-lookup",
+   "inputModes": [
+    "application/json"
+   ],
+   "name": "Control-plane lookup",
+   "outputModes": [
+    "application/json"
+   ],
+   "tags": [
+    "defi",
+    "governance",
+    "timelock",
+    "proxy-admin",
+    "risk"
+   ]
+  },
+  {
+   "description": "For a live Aave / Euler / Morpho / Sky onboarding proposal, return the block-pinned control-plane observations and Sentinel predicates.",
+   "examples": [
+    "Fetch https://pacta.wtf/api/v1/proposals.json and summarise aave-25128.",
+    "Fetch https://pacta.wtf/api/v1/proposals.json and summarise aave-25499."
+   ],
+   "id": "collateral-diligence",
+   "inputModes": [
+    "application/json"
+   ],
+   "name": "Collateral onboarding diligence",
+   "outputModes": [
+    "application/json"
+   ],
+   "tags": [
+    "curator",
+    "collateral",
+    "aave",
+    "euler",
+    "morpho",
+    "sky"
+   ]
+  },
+  {
+   "description": "Pending timelock operations and their on-chain ETAs.",
+   "examples": [
+    "Fetch https://pacta.wtf/api/v1/radar.json."
+   ],
+   "id": "timelock-radar",
+   "inputModes": [
+    "application/json"
+   ],
+   "name": "Queued timelock radar",
+   "outputModes": [
+    "application/json"
+   ],
+   "tags": [
+    "timelock",
+    "monitoring"
+   ]
+  },
+  {
+   "description": "Replay any record with eth_call / cast at its pinned block and compare the canonical block hash.",
+   "examples": [
+    "cast call <target> \"getMinDelay()\" --block <N> --rpc-url $ETH_RPC_URL"
+   ],
+   "id": "verify-onchain",
+   "inputModes": [
+    "text/plain"
+   ],
+   "name": "Reproduce a value",
+   "outputModes": [
+    "text/plain"
+   ],
+   "tags": [
+    "verification",
+    "eip-1898",
+    "coding-agent"
+   ]
+  }
+ ],
+ "url": "https://pacta.wtf/",
+ "version": "2026.11.13",
+ "x402": {
+  "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+  "chainId": 8453,
+  "network": "base",
+  "payTo": "0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09",
+  "routes": [
+   {
+    "maxAmountRequired": "100000",
+    "path": "/v1/scan/control-plane",
+    "priceUsd": "$0.10",
+    "query": "chain=ethereum|base&address=0x…"
+   },
+   {
+    "maxAmountRequired": "250000",
+    "path": "/v1/scan/timelock-op",
+    "priceUsd": "$0.25",
+    "query": "chain=ethereum|base&timelock=0x…&opId=0x…"
+   },
+   {
+    "maxAmountRequired": "150000",
+    "path": "/v1/scan/proposal-diff",
+    "priceUsd": "$0.15",
+    "query": "forum=aave|euler|morpho|sky&topicId=<id>"
+   },
+   {
+    "maxAmountRequired": "100000",
+    "path": "/v1/briefs/live-timelocks",
+    "priceUsd": "$0.10",
+    "query": ""
+   }
+  ],
+  "scheme": "exact",
+  "status": "edge worker deployment pending; free feeds are live",
+  "x402Version": 1
+ }
+}
