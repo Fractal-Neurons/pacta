@@ -15,10 +15,16 @@ the homepage and at /request/, no spec-letter labels such as "(a)" in the UI, ev
 resolves, no duplicate ids, no raw 32-byte hashes in visible text (they are shortened, full value in a tooltip / copy
 button), hairline design radii (<= 4px; dots only), and briefs rendered inside the shared site chrome.
 
+Commercial copy (single offer): zero "private disclosure" / "$0" / gratis charity copy on any public file; the one paid
+offer ($5,000 USDC 24h clearance, optional $1,500/month monitoring) and the free community queue are the only tracks;
+no curator subscription tracks; public data stated as free and real-time; the payment address equals the index's treasury
+address and is EIP-55; the GitHub dropdown options match the issue template exactly; Sprint 15 stays out of audits/.
+
 Behaviour check: docs/app.js is executed under node (tools/app_harness.js; pure node, no network, no listener, no files)
-against a synthetic DOM built from the real /request/ and homepage HTML. Private disclosure must remove the GitHub
-intake href (aria-disabled="true", click prevented, warning shown, scope text never in a GitHub URL) via both the radio
-and ?tier=disclosure; switching back restores the link; malformed #r-... hashes never throw during initialization.
+against a synthetic DOM built from the real /request/ and homepage HTML: the clearance track is the default and shows
+the payment panel; a valid tx hash and forum URL reach the brief and the GitHub prefill, a malformed hash is flagged and
+never forwarded; the community queue hides payment and drops the hash; ?tier= prefill and homepage plan buttons work;
+malformed #r-... hashes never throw during initialization.
 """
 
 import datetime as dt
@@ -182,6 +188,10 @@ def app_behaviour(appjs, request_html, index_html, row_id):
         return {"harness_error": (out.stderr or out.stdout)[-400:]}
 
 
+def llms_txt(read_):
+    return read_("docs/llms.txt")
+
+
 def main():
     base = re.search(r'^BASE_URL = "([^"]+)"', read("tools/build_site.py"), re.M).group(1)
     raw = read("docs/index.html", "rb")
@@ -205,7 +215,39 @@ def main():
     public = ["docs/index.html", "docs/llms.txt", "README.md"] + [os.path.relpath(p, ROOT) for p in glob.glob(os.path.join(DOCS, "briefs", "*", "index.html"))]
     bad = [p for p in public if "Security Quarantine" in read(p)]
     check('zero "Security Quarantine" wording', not bad, str(bad))
-    check('"Free Private Disclosure" present on the homepage', "Free Private Disclosure" in page)
+    # single commercial offer; no private-disclosure charity copy anywhere public
+    req_page = read("docs/request/index.html")
+    copy_files = ["docs/index.html", "docs/request/index.html", "docs/llms.txt", "docs/app.js", "docs/api/v1/index.json", "README.md",
+                  "REMEDIATION_SERVICES.md", "METHODOLOGY.md", ".github/ISSUE_TEMPLATE/request-scan.yml"] + \
+                 [os.path.relpath(p, ROOT) for p in glob.glob(os.path.join(DOCS, "briefs", "*", "index.html"))]
+    charity = re.compile(r"private disclosure|\$0 private|\$0 gratis|gratis|free of charge|at no cost|at \$0 cost|no cost to the protocol", re.I)
+    bad_c = sorted({f"{f}: {m.group(0)}" for f in copy_files for m in charity.finditer(read(f))})
+    check('zero "private disclosure" / "$0" / gratis copy in public files', not bad_c, f"{len(copy_files)} files; {bad_c[:4]}")
+    subs = re.compile(r"Curator Radar|Commitment CI Gate|\$3,000|/ year|USDC/mo\)|USDC/yr", re.I)
+    bad_s = sorted({f"{f}: {m.group(0)}" for f in copy_files for m in subs.finditer(read(f))})
+    check("no curator / SaaS subscription tracks (one paid offer only)", not bad_s, str(bad_s[:4]))
+    offer = ("24h Collateral Onboarding &amp; Delta Clearance Attestation", "$5,000 USDC", "$1,500 / month", "Curator Diligence Dossier")
+    check("homepage + /request/ carry the $5,000 USDC 24h clearance offer and $1,500/month add-on",
+          all(t in page and t in req_page for t in offer) and "$5,000 USDC flat" in llms_txt(read)
+          and "Immunefi" in page and "Cantina" in page and "15% referral" in page)
+    check("public data stated free and real-time (homepage, llms.txt, README)",
+          "free and real-time" in page and "Free and real-time" in llms_txt(read) and "Free and real-time" in read("README.md"))
+    radios = re.findall(r'name="tier" value="(\w+)"', req_page)
+    radios_home = re.findall(r'name="tier" value="(\w+)"', page)
+    check("request builder offers exactly clearance (default) + community, on both pages", radios == radios_home == ["clearance", "community"]
+          and all(len(re.findall(r'name="tier" value="\w+" checked', t)) == 1 and 'value="clearance" checked' in t for t in (page, req_page)),
+          str(radios))
+    treasury = json.loads(read("docs/api/v1/index.json"))["onchain_anchoring"]["treasury_admin"]
+    shown = set(re.findall(r'data-treasury="(0x[0-9a-fA-F]{40})"', page + req_page)) | set(re.findall(r'class="mono full">(0x[0-9a-fA-F]{40})<', page + req_page))
+    check("payment address = index treasury address (EIP-55) everywhere it is shown", shown == {treasury} and eip55_ok(treasury)
+          and treasury in read("REMEDIATION_SERVICES.md") and treasury in llms_txt(read) and treasury in read(".github/ISSUE_TEMPLATE/request-scan.yml"),
+          f"{sorted(shown)}")
+    tmpl = read(".github/ISSUE_TEMPLATE/request-scan.yml")
+    opts = re.findall(r'^\s+- "(.+)"$', tmpl.split("id: package_tier", 1)[1].split("validations", 1)[0], re.M)
+    js_opts = re.findall(r'"([^"]+)",\s*\n\s*"Pacta (?:24h clearance|community queue) request"', read("docs/app.js"))
+    check("GitHub dropdown prefill strings match the issue template exactly", sorted(opts) == sorted(js_opts) and len(opts) == 2
+          and all(f'id: {k}' in tmpl for k in ("forum_proposal_url", "payment_tx_hash")), f"template {opts} app.js {js_opts}")
+    check("Sprint 15 summary stays out of audits/ (embargo)", not os.path.exists(os.path.join(ROOT, "audits", "sprint-15")))
     appjs = read("docs/app.js")
     check('radar says "Execution window opens in" (ETA = eligibility)', "Execution window opens in" in appjs and "Executing in" not in appjs)
     check('finality badge says "Scanner-pinned (L1 finalized)"', "Scanner-pinned (L1 finalized)" in appjs and "Scanner-pinned (L1 finalized)" in page)
@@ -228,9 +270,20 @@ def main():
               f"sprints {sorted(nums_s)} records {sorted(nums_r)}")
     rows = len(re.findall(r'<tr data-class="', page))
     check("homepage matrix renders every record", rows == n, f"{rows} rows")
-    eas = idx["onchain_anchoring"]["sprint_eas_attestations"]
-    check("12 Base EAS sprint attestations for Sprints 1-12; 13-14 pending", len(eas) == 12 and sorted(map(int, eas)) == list(range(1, 13))
-          and all(e["base_eas_uid"] is None for e in entries if e["sprint"] >= 13) and "12 Base EAS sprint attestations" in page)
+    anc = idx["onchain_anchoring"]
+    eas = anc["sprint_eas_attestations"]
+    uid_ok = all(re.fullmatch(r"0x[0-9a-f]{64}", u) for u in eas.values()) and len(set(eas.values())) == len(eas)
+    check("16 Base EAS sprint attestations (Sprints 1-16); every record carries its sprint's UID", len(eas) == 16 and sorted(map(int, eas)) == list(range(1, 17))
+          and uid_ok and all(e["base_eas_uid"] == eas[str(e["sprint"])] for e in entries) and "16 Base EAS sprint attestations" in page
+          and re.search(r"<b>16</b><span>Base EAS attestations</span>", page) is not None)
+    # Sprints 13-16 batch, read back from Base on 2026-11-13 (tx status 1, Attested logs from the attester, schema 0x7ff4..df83,
+    # not revoked; Sprint 13/14 block, block hash, record count and summary SHA-256 match this index)
+    pinned = {"13": "0x6afd266541ea1643b680ce6ec15d218874356598820987c6b3eaf16342cd075c", "14": "0x8965ae6e51a78132a77eb14c0ac1c6cd1be357d6f261253efff28869478ae5b8",
+              "15": "0x967a4935786194575835d5a46e3e39b1d553225deb6a96c7ff4acf52a34dff22", "16": "0x217d213de3cd9ef094670ff69d258af35adf132406caa547f729f487dc9d7e58"}
+    check("Sprint 13-16 UIDs + batch tx equal the values verified on Base", all(eas.get(k) == v for k, v in pinned.items())
+          and anc.get("eas_multi_attest_sprints_13_16_tx") == "0x11546aac53e3fe57fa6ac9f7e4397f06c58b6803252e099eb9349eca00f2edbf")
+    check("multi-attest txs recorded (Sprints 1-12 and 13-16)", re.fullmatch(r"0x[0-9a-f]{64}", anc.get("eas_multi_attest_sprints_13_16_tx", "")) is not None
+          and anc["attestation_coverage"]["eas_multi_attest_txs"] == {"1–12": anc["eas_multi_attest_tx"], "13–16": anc["eas_multi_attest_sprints_13_16_tx"]})
 
     # data integrity
     bad_sha = [e["id"] for e in entries if "0x" + hashlib.sha256(read(e["summary_doc"], "rb")).hexdigest() != e["summary_sha256"]]
@@ -377,13 +430,15 @@ def main():
 
     # behaviour: run app.js against a synthetic DOM of the real /request/ and homepage markup
     res = app_behaviour(appjs, pages.get(os.path.join("request", "index.html"), ""), page, entries[0]["id"])
-    expected = ["radar_initially_has_github_href", "radio_no_href", "radio_aria_disabled_true", "radio_click_prevented", "radio_warn_shown",
-                "radio_scope_not_in_any_github_url", "radio_status_not_opened", "radar_restores_github_href", "radar_removes_aria_disabled",
-                "radar_hides_warn", "radar_click_not_prevented", "prefill_selects_disclosure", "prefill_no_href", "prefill_aria_disabled_true",
-                "prefill_click_prevented", "prefill_warn_shown", "prefill_scope_not_in_any_github_url", "prefill_status_not_opened",
+    expected = ["default_is_clearance", "clearance_pay_panel_shown", "clearance_tx_field_shown", "clearance_github_href",
+                "clearance_github_tier_exact", "clearance_brief_has_price_and_treasury", "tx_valid_in_brief", "tx_valid_in_github",
+                "forum_in_brief_and_github", "tx_valid_not_flagged", "tx_invalid_flagged", "tx_invalid_not_in_github",
+                "community_pay_panel_hidden", "community_tx_field_hidden", "community_github_tier_exact", "community_no_tx_anywhere",
+                "community_click_not_prevented", "clearance_restores_pay_panel", "prefill_selects_community",
+                "prefill_unknown_tier_keeps_clearance", "homepage_plan_button_preselects",
                 "hash_ok #r-[unclosed", "hash_ok #r-x\\", 'hash_ok #r-"]', "hash_ok #r-%E0%A4%A", "valid_hash_opens_drawer"]
     failed_b = [k for k in expected if res.get(k) is not True] + (["harness_error: " + res["harness_error"][:200]] if "harness_error" in res else [])
-    check("app.js behaviour: private disclosure never builds a GitHub URL; malformed #hash never throws", not failed_b,
+    check("app.js behaviour: clearance/community tracks, payment panel, tx-hash + forum prefill; malformed #hash never throws", not failed_b,
           f"{len(expected) - len([k for k in expected if res.get(k) is not True])}/{len(expected)} assertions; failed {failed_b[:4]}")
 
     # private identifiers must never be published: compared by SHA-256 of lowercased tokens, so the

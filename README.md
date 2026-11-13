@@ -4,7 +4,7 @@
 [![JSON API v1](https://img.shields.io/badge/JSON_Feed-%2Fapi%2Fv1%2Findex.json-22c55e?style=for-the-badge&labelColor=000000)](https://pacta.wtf/api/v1/index.json)
 [![Base Registry](https://img.shields.io/badge/Base_Registry-pacta.base.eth-0052ff?style=for-the-badge&labelColor=000000)](https://sourcify.dev/#/lookup/0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872)
 [![Base EAS Schema](https://img.shields.io/badge/Base_EAS-0x7ff4...df83-a855f7?style=for-the-badge&labelColor=000000)](https://base.easscan.org/schema/view/0x7ff485bc1159dff3c70eefcb9dff2d65be990301760c2d53799e5a45e3badf83)
-[![Request Scope](https://img.shields.io/badge/Intake-Request_Institutional_Scope-38bdf8?style=for-the-badge&labelColor=000000)](https://github.com/Fractal-Neurons/pacta/issues/new?template=request-scan.yml&title=%5BPacta+Scope%5D+Organization+%2F+Protocol)
+[![Request Scope](https://img.shields.io/badge/Intake-24h_Clearance_%245k_USDC-38bdf8?style=for-the-badge&labelColor=000000)](https://github.com/Fractal-Neurons/pacta/issues/new?template=request-scan.yml&title=%5BPacta+Scope%5D+Organization+%2F+Protocol)
 
 > **Public Counterparty Snapshot Portal:** [**`https://pacta.wtf/`**](https://pacta.wtf/)  
 > **Machine-Readable Snapshot JSON (`v1`):** [**`https://pacta.wtf/api/v1/index.json`**](https://pacta.wtf/api/v1/index.json)  
@@ -27,8 +27,8 @@ Each public record in the Pacta Index separates scanner archive replay from offl
    - Read-only `eth_call` and `eth_getStorageAt` checks pinned to an Ethereum Mainnet block height and canonical block hash, replayed across `gateway.tenderly.co/public/mainnet` and `rpc.mevblocker.io` for the sampled contracts and getters listed in each summary.
 3. **Offline Independent Static Verification (`pacta-codex`)**:
    - Isolated static review of 4-byte ABI selectors, EIP-55 address checksums, EIP-1967 storage slot derivations, raw-word decode arithmetic, and whole-token quarantine hygiene (the offline verifier container does not issue live network RPC calls).
-4. **Free Private Disclosure**:
-   - Directly callable state mutations, unrevoked legacy EOA authorities, and exploit-sensitive findings (`disclosure_only`) are **excluded** from public commits and feeds, and are routed **privately, free of charge** (paired with target-specific, fork-simulated Safe Transaction Builder remediation engineering) exclusively through official private security channels (`GHSA`, `security@`, Immunefi, Cantina). Do **not** submit security vulnerabilities in public GitHub issues.
+4. **Exploit-Sensitive Findings**:
+   - Directly callable state mutations, unrevoked legacy EOA authorities, and exploit-sensitive findings (`disclosure_only`) are **excluded** from public commits and feeds. Vulnerabilities go through the protocol's **Immunefi** or **Cantina** bounty programme, or to a partner audit firm under a **15% referral partnership**. Do **not** submit security vulnerabilities in public GitHub issues.
 
 ---
 
@@ -36,10 +36,10 @@ Each public record in the Pacta Index separates scanner archive replay from offl
 
 **14 Sprints · 37 Indexed Records** (14 parameter deltas · 4 protective deltas · 19 aligned baselines).
 
-Sprints 1–12 (zero quarantined findings) carry 12 on-chain Base EAS sprint attestations (multi-attest tx `0x8c53e155a4b2f28ffbf069f1b65952fc8f7d81740f362b8aafb39493c6bd001b`); Sprints 13–14 are pinned by canonical block hash and SHA-256 summary digest in `/api/v1/index.json` until batch-attested. Every attested sprint summary is cryptographically anchored on **Base Mainnet (`Chain ID 8453`)** by our dedicated Tier-2 Attester (`pacta.base.eth` / `0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09`, governed by cold Tier-1 owner `0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14`):
+Sprints 1–16 carry **16 on-chain Base EAS sprint attestations**: Sprints 1–12 in multi-attest tx `0x8c53e155a4b2f28ffbf069f1b65952fc8f7d81740f362b8aafb39493c6bd001b` and Sprints 13–16 in multi-attest tx `0x11546aac53e3fe57fa6ac9f7e4397f06c58b6803252e099eb9349eca00f2edbf` (Base block 57,032,413). Each attestation commits to the sprint's Ethereum block number, canonical block hash and summary SHA-256; Sprints 15–16 records join the public index after review. Every attested sprint summary is cryptographically anchored on **Base Mainnet (`Chain ID 8453`)** by our dedicated Tier-2 Attester (`pacta.base.eth` / `0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09`, governed by cold Tier-1 owner `0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14`):
 
 - **`PactaCommitmentRegistry` (Base Mainnet):** [`0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872`](https://basescan.org/address/0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872) · [Sourcify `exact_match`](https://sourcify.dev/#/lookup/0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872)
-- **Canonical Base EAS Schema (`0x4200...0020`):** [`0x7ff485bc1159dff3c70eefcb9dff2d65be990301760c2d53799e5a45e3badf83`](https://base.easscan.org/schema/view/0x7ff485bc1159dff3c70eefcb9dff2d65be990301760c2d53799e5a45e3badf83) (`uint64 sprint,uint64 ethereumBlock,bytes32 ethereumBlockHash,bytes32 summarySha256,uint16 publicRecordCount,string summaryPath`)
+- **Canonical Base EAS Schema (`0x4200...0020`):** [`0x7ff485bc1159dff3c70eefcb9dff2d65be990301760c2d53799e5a45e3badf83`](https://base.easscan.org/schema/view/0x7ff485bc1159dff3c70eefcb9dff2d65be990301760c2d53799e5a45e3badf83) (`uint16 sprintId,uint64 chainId,uint64 blockNumber,bytes32 blockHash,uint8 verifiedCount,uint8 driftCount,bytes32 summarySha256,string prURI`, as registered on Base)
 - **Official Basename:** `pacta.base.eth` (forward + reverse L2 resolver verified on Base Mainnet)
 
 ---
@@ -62,8 +62,10 @@ Sprints 1–12 (zero quarantined findings) carry 12 on-chain Base EAS sprint att
 | **Sprint 10** | `26403121` (`0x192e131`) | `0x71acee2313a2c8eacd7d2c87667dc505310b3e9224d84eaebb71d5a890ef9d1c` | [`0xfdd8...0e6c`](https://base.easscan.org/attestation/view/0xfdd83c8091ef6e8ffe67e8a55a78892fcfbb1092683b21ff2d85f8cc09750e6c) | [`audits/sprint-10/block-26403121-summary.md`](audits/sprint-10/block-26403121-summary.md) — Ondo Finance (`OUSG`/`Flux`), Mantle (`mETH`), Symbiotic Core, Lido (`DualGovernance`) |
 | **Sprint 11** | `26403523` (`0x192e2c3`) | `0xfc7beaa2338e8054577c0b101b641bc42afca2af39cb85d3fc13cbee32d4681a` | [`0x754e...5e42`](https://base.easscan.org/attestation/view/0x754edd7612258b755ff2e56903243d1f8867bad53c29ce3febb5ed9114005e42) | [`audits/sprint-11/block-26403523-summary.md`](audits/sprint-11/block-26403523-summary.md) — Curve (`crvUSD`), Gearbox V3 / V3.1, Lombard (`LBTC`), Resolv (`USR`/`RLP`) |
 | **Sprint 12** | `26403676` (`0x192e35c`) | `0xf4246ca23c4c38d520de16080a11b5186d04c8242b2c85edcb04c455d291c3ae` | [`0x7caa...6de9`](https://base.easscan.org/attestation/view/0x7caae9c22c86ae171392def07dce83fa5da6fbf904b1ba9b5ff66a5021b16de9) | [`audits/sprint-12/block-26403676-summary.md`](audits/sprint-12/block-26403676-summary.md) — Stader (`ETHx`), StakeWise V3 (`osETH`), Swell (`swETH`/`rswETH`), Superstate (`USTB`/`USCC`) |
-| **Sprint 13** | `26405302` (`0x192e9b6`) | `0xe05f4fd5698556131e7514b3a8eb24960962a768f8e0bfe0e99e3f1681127f65` | Pending batch attestation (hash-pinned) | [`audits/sprint-13/block-26405302-summary.md`](audits/sprint-13/block-26405302-summary.md) — ether.fi Core Upgrade Timelock op `0x244e…359f` |
-| **Sprint 14** | `26406106` (`0x192ecda`) | `0xcb24dfb0b8af01dff9550fbbf6eb589b30d29b9625f41af56c188ae10d086ecf` | Pending batch attestation (hash-pinned) | [`audits/sprint-14/block-26406106-summary.md`](audits/sprint-14/block-26406106-summary.md) — Ethena, Treehouse TREE, Inverse FiRM, Kelp rsETH |
+| **Sprint 13** | `26405302` (`0x192e9b6`) | `0xe05f4fd5698556131e7514b3a8eb24960962a768f8e0bfe0e99e3f1681127f65` | [`0x6afd...075c`](https://base.easscan.org/attestation/view/0x6afd266541ea1643b680ce6ec15d218874356598820987c6b3eaf16342cd075c) | [`audits/sprint-13/block-26405302-summary.md`](audits/sprint-13/block-26405302-summary.md) — ether.fi Core Upgrade Timelock op `0x244e…359f` |
+| **Sprint 14** | `26406106` (`0x192ecda`) | `0xcb24dfb0b8af01dff9550fbbf6eb589b30d29b9625f41af56c188ae10d086ecf` | [`0x8965...b5b8`](https://base.easscan.org/attestation/view/0x8965ae6e51a78132a77eb14c0ac1c6cd1be357d6f261253efff28869478ae5b8) | [`audits/sprint-14/block-26406106-summary.md`](audits/sprint-14/block-26406106-summary.md) — Ethena, Treehouse TREE, Inverse FiRM, Kelp rsETH |
+
+Sprints 15 and 16 are attested on Base ([`0x967a...ff22`](https://base.easscan.org/attestation/view/0x967a4935786194575835d5a46e3e39b1d553225deb6a96c7ff4acf52a34dff22), [`0x217d...7e58`](https://base.easscan.org/attestation/view/0x217d213de3cd9ef094670ff69d258af35adf132406caa547f729f487dc9d7e58)); their summaries and records are published after review.
 
 ---
 
@@ -79,8 +81,12 @@ ETH_RPC_URL="https://gateway.tenderly.co/public/mainnet" forge test -vv
 
 ---
 
-## Contact & Institutional Subscriptions
+## Access, Engagements & Contact
 
+- **Free and real-time for everyone:** every indexed record, the timelock radar, pre-execution briefs, `/api/v1/*.json` and `llms.txt` are open to vault curators, allocators and AI risk agents with no key, delay or paywall. Curators never pay.
+- **24h Collateral Onboarding & Delta Clearance Attestation — `$5,000 USDC` flat** (optional continuous *Aligned* badge maintenance: `$1,500 / month`): for collateral issuers onboarding an asset or clearing a `parameter_delta` flag. Canonical block-pinned control-plane audit, GitBook / config reconciliation PR, Base Mainnet EAS *Aligned* attestation in `PactaCommitmentRegistry`, and a paste-ready Curator Diligence Dossier (PDF + JSON) for Morpho, Euler, Aave and Sky forum proposals. Pay in USDC on Base or Ethereum to the Pacta treasury `0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14` (same address on both chains); request at [`pacta.wtf/request/`](https://pacta.wtf/request/). See [`REMEDIATION_SERVICES.md`](REMEDIATION_SERVICES.md).
+- **Community queue:** free, unscheduled (typically 6–8 weeks).
+- **Exploit-sensitive vulnerabilities:** Immunefi / Cantina bounty programmes, or a partner audit firm (15% referral partnership) — never public issues.
 - **Organization**: [Fractal Neurons](https://fractalneurons.com) · [`@Fractal-Neurons`](https://github.com/Fractal-Neurons)
 - **Maintainer Account**: [`@pacta-fractal-neurons`](https://github.com/pacta-fractal-neurons)
-- **Institutional Feeds, CI Guardrails & Private Security Contact**: `pacta@dri.network`
+- **Contact**: `pacta@dri.network`

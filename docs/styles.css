@@ -320,6 +320,8 @@ tr.drawer > td { padding: 4px 0 24px; background: var(--sunken); border-bottom: 
 .plan.feat { background: linear-gradient(var(--accent), var(--accent)) top / 100% 2px no-repeat; }
 .plan .pending { display: inline-block; margin-left: 6px; font: 500 11px/1 var(--sans); color: var(--amber); }
 .note { margin-top: 14px; font-size: 13px; color: var(--muted); }
+.plans.two { grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr); }
+.plan .addon { margin-top: 6px; font-size: 13px; color: var(--ink-2); }
 
 /* ---------- request builder ---------- */
 .req { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); margin-top: 24px; border: 1px solid var(--line-2); border-radius: var(--r); background: var(--surface); }
@@ -352,6 +354,14 @@ legend { padding: 0; margin-bottom: 8px; font: 600 11px/1 var(--sans); letter-sp
 .addrline { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); }
 .addrline b { font-family: var(--mono); font-weight: 500; color: var(--ink); font-size: 13px; }
 .warn-line { margin-top: 10px; font-size: 12.5px; color: var(--amber); }
+.pay { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 13px; color: var(--ink-2); }
+.pay p { margin: 8px 0 0; }
+.pay .kv { margin-top: 10px; grid-template-columns: 116px minmax(0, 1fr); }
+.pay .kv dd { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+.pay .full { color: var(--ink); overflow-wrap: anywhere; }
+.pay .hint { font-size: 12px; color: var(--muted); }
+.req-out > .note { font-size: 12.5px; }
+.field input:invalid, .field input[aria-invalid="true"] { border-color: var(--amber); }
 
 /* ---------- faq ---------- */
 .faq { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 48px; margin-top: 8px; }

@@ -26,7 +26,7 @@ def metrics():
     m = idx["summary_metrics"]
     eas = len(idx["onchain_anchoring"]["sprint_eas_attestations"])
     return [(str(m["sprints_completed"]), "Sprints completed"), (str(m["records_indexed"]), "Verified surfaces"),
-            (str(eas), "Base EAS attestations"), ("$0", "Private disclosure")]
+            (str(eas), "Base EAS attestations"), ("24h", "Issuer clearance SLA")]
 
 
 def og(fonts, path):

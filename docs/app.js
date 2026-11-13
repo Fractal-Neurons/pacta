@@ -272,50 +272,55 @@
   }
 
   // ---- request builder: brief + GitHub intake + Gmail compose + copy ---------------------------------
+  // Two tracks: the 24h clearance attestation (paid, default) and the free community queue. The public data itself is
+  // free for everyone, so nothing here gates access. GitHub dropdown strings must match .github/ISSUE_TEMPLATE/request-scan.yml.
   var REQ_TO = "pacta@dri.network";
   var TRACK = {
-    radar: ["Institutional Curator Radar ($3,000/month)", "Institutional Curator Counterparty & Timelock Alerting Feed ($2,000–$5,000 USDC/mo)"],
-    ci: ["Protocol Commitment CI Gate ($5,000/year)", "Protocol Continuous Commitment CI & Pre-Flight Proposal Gate ($3,000–$10,000 USDC/yr)"],
-    index: ["Public index entry (free)", null],
-    disclosure: ["Private disclosure (free)", null]
+    clearance: ["24h Collateral Onboarding & Delta Clearance Attestation ($5,000 USDC flat; optional $1,500/month Aligned monitoring)",
+                "24h Collateral Onboarding & Delta Clearance Attestation ($5,000 USDC flat; optional $1,500/mo Aligned monitoring)",
+                "Pacta 24h clearance request"],
+    community: ["Community queue (free; unscheduled, typically 6–8 weeks)", "Community queue (free; unscheduled, typically 6–8 weeks)",
+                "Pacta community queue request"]
   };
+  var TX_RE = /^0x[0-9a-fA-F]{64}$/;
   function initRequest() {
     var form = $("#req-form"); if (!form) return;
-    var out = $("#req-brief"), gh = $("#req-gh"), gm = $("#req-gmail"), warn = $("#req-warn"), st = $("#req-status");
+    var out = $("#req-brief"), gh = $("#req-gh"), gm = $("#req-gmail"), st = $("#req-status"), pay = $("#req-pay");
+    var txField = $("#req-tx-field"), txHint = $("#req-tx-hint"), txIn = $("#req-tx");
+    var treasury = form.getAttribute("data-treasury") || "";
     function val(n) { var x = form.elements[n]; return x ? String(x.value || "").trim() : ""; }
-    function tier() { var x = $('input[name="tier"]:checked', form); return x ? x.value : "radar"; }
+    function tier() { var x = $('input[name="tier"]:checked', form); return x && TRACK[x.value] ? x.value : "clearance"; }
     function protocols() { return $$('input[name="protocol"]:checked', form).map(function (x) { return x.value; }); }
     function update() {
-      var t = tier(), ps = protocols(), org = val("org"), scope = val("scope"), contact = val("contact");
-      var lines = ["To: " + REQ_TO, "Subject: Pacta coverage request" + (org ? " — " + org : ""), "",
+      var t = tier(), paid = t === "clearance", ps = protocols(), org = val("org"), scope = val("scope"), contact = val("contact");
+      var forum = val("forum"), tx = paid ? val("tx") : "", txOk = !tx || TX_RE.test(tx);
+      var subj = TRACK[t][2] + (org ? " — " + org : "");
+      var lines = ["To: " + REQ_TO, "Subject: " + subj, "",
         "Track: " + TRACK[t][0],
         "Organization: " + (org || "(not given)"),
         "Protocols in scope: " + (ps.length ? ps.join(", ") : "(none selected)")];
       if (scope) lines.push("Contracts / docs / portfolio:", scope);
-      lines.push("Contact: " + (contact || "(not given)"));
-      if (t === "disclosure") lines.push("", "Private disclosure: please reply with a private channel before any details are shared.");
-      lines.push("", "Sent from " + location.href.split("#")[0]);
-      var text = lines.join("\n");
-      out.textContent = text;
-      var priv = t === "disclosure";
-      if (priv) {
-        // Private disclosure: never build a public GitHub URL (it would carry the scope text); disable the action.
-        gh.removeAttribute("href");
-        gh.setAttribute("aria-disabled", "true");
-        gh.style.pointerEvents = "none"; gh.style.opacity = "0.45"; gh.tabIndex = -1;
-      } else {
-        var title = "[Pacta Scope] " + (org || (ps.length ? ps.slice(0, 3).join(", ") : "coverage request"));
-        var p = new URLSearchParams({ template: "request-scan.yml", title: title });
-        p.set("repo_or_portfolio_url", scope.split(/\s+/).filter(function (w) { return /^https?:\/\//.test(w); })[0] || "");
-        p.set("commitments_and_addresses", ["Protocols: " + (ps.join(", ") || "-"), scope].filter(Boolean).join("\n"));
-        if (TRACK[t][1]) p.set("package_tier", TRACK[t][1]);
-        p.set("contact_channel", contact);
-        gh.removeAttribute("aria-disabled");
-        gh.href = "https://github.com/Fractal-Neurons/pacta/issues/new?" + p.toString();
-        gh.style.pointerEvents = ""; gh.style.opacity = ""; gh.tabIndex = 0;
+      if (forum) lines.push("Forum proposal: " + forum);
+      if (paid) {
+        lines.push("Payment: " + (tx ? tx + (txOk ? "" : "  (check: not a 0x-prefixed 32-byte transaction hash)")
+                                     : "not yet sent; please confirm scope first") + " — $5,000 USDC to " + treasury + " on Base or Ethereum");
       }
-      warn.hidden = !priv;
-      var subj = "Pacta coverage request" + (org ? " — " + org : "");
+      lines.push("Contact: " + (contact || "(not given)"));
+      lines.push("", "Sent from " + location.href.split("#")[0]);
+      out.textContent = lines.join("\n");
+      if (pay) pay.hidden = !paid;
+      if (txField) txField.hidden = !paid;
+      if (txIn) { if (txOk) txIn.removeAttribute("aria-invalid"); else txIn.setAttribute("aria-invalid", "true"); }
+      if (txHint) txHint.textContent = txOk ? "A 66-character hash starting with 0x." : "That does not look like a transaction hash (0x + 64 hex characters).";
+      var title = "[Pacta Scope] " + (org || (ps.length ? ps.slice(0, 3).join(", ") : (paid ? "24h clearance" : "community queue")));
+      var p = new URLSearchParams({ template: "request-scan.yml", title: title });
+      p.set("repo_or_portfolio_url", forum || scope.split(/\s+/).filter(function (w) { return /^https?:\/\//.test(w); })[0] || "");
+      p.set("commitments_and_addresses", ["Protocols: " + (ps.join(", ") || "-"), scope].filter(Boolean).join("\n"));
+      p.set("package_tier", TRACK[t][1]);
+      if (forum) p.set("forum_proposal_url", forum);
+      if (paid && tx && txOk) p.set("payment_tx_hash", tx);
+      p.set("contact_channel", contact);
+      gh.href = "https://github.com/Fractal-Neurons/pacta/issues/new?" + p.toString();
       gm.href = "https://mail.google.com/mail/?view=cm&fs=1&to=" + encodeURIComponent(REQ_TO) + "&su=" + encodeURIComponent(subj) +
         "&body=" + encodeURIComponent(lines.slice(3).join("\n"));
       if (st) st.textContent = "";
@@ -325,10 +330,7 @@
     }
     form.addEventListener("input", update);
     form.addEventListener("change", update);
-    gh.addEventListener("click", function (ev) {
-      if (tier() === "disclosure" || !gh.hasAttribute("href")) { ev.preventDefault(); ev.stopPropagation(); return; }
-      if (st) st.textContent = "Opened in a new tab. If nothing appeared, use Copy brief.";
-    });
+    gh.addEventListener("click", function () { if (st) st.textContent = "Opened in a new tab. If nothing appeared, use Copy brief."; });
     gm.addEventListener("click", function () { if (st) st.textContent = "Opened in a new tab. If nothing appeared, use Copy brief."; });
     document.addEventListener("click", function (ev) {
       var a = ev.target.closest("a[data-tier]"); if (!a) return;

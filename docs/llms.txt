@@ -17,19 +17,26 @@ Pacta checks who can change the rules of DeFi protocols (proxy admins, timelock 
 ## Methodology
 - Scanner seats replay read-only eth_call / eth_getStorageAt at the cited block (two independent archive RPCs); an isolated verifier seat re-checks selectors, EIP-55 checksums, EIP-1967 slots and arithmetic offline.
 - Classifications: parameter_delta (on-chain differs from docs), protective_delta (a change that strengthens controls), aligned_baseline (on-chain matches docs).
-- Exploit-sensitive findings are never published; they are disclosed privately, free of charge, to official protocol security teams.
+- Exploit-sensitive vulnerabilities are never published here. They go through the protocol’s Immunefi or Cantina bounty programme, or to a partner audit firm under a 15% referral partnership.
+
+## Access
+- Free and real-time for everyone, including vault curators, allocators and AI risk agents: every indexed record, the timelock radar, the briefs, /api/v1/*.json and this file. No key, no delay, no paywall; curators never pay.
 
 ## On-chain anchoring (Base, chain id 8453)
 - PactaCommitmentRegistry: `0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872` (Sourcify verified); attester `pacta.base.eth` (`0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09`).
-- EAS schema: `0x7ff485bc1159dff3c70eefcb9dff2d65be990301760c2d53799e5a45e3badf83`; 12 sprint attestations for Sprints 1–12 (multi-attest tx `0x8c53e155a4b2f28ffbf069f1b65952fc8f7d81740f362b8aafb39493c6bd001b`).
-- Sprints 13–14: pinned by canonical block hash + SHA-256 summary digest in /api/v1/index.json until batch-attested.
+- EAS schema: `0x7ff485bc1159dff3c70eefcb9dff2d65be990301760c2d53799e5a45e3badf83`. 16 Base EAS sprint attestations cover Sprints 1–16; Sprints 15–16 records join the public index after review.
+- Multi-attest tx, Sprints 1–12: `0x8c53e155a4b2f28ffbf069f1b65952fc8f7d81740f362b8aafb39493c6bd001b`
+- Multi-attest tx, Sprints 13–16: `0x11546aac53e3fe57fa6ac9f7e4397f06c58b6803252e099eb9349eca00f2edbf`
+- Per-sprint attestation UIDs: `onchain_anchoring.sprint_eas_attestations` in /api/v1/index.json; each record's `base_eas_uid`.
 
-## Engagements
-- Request coverage: https://pacta.wtf/request/ (builds a scope brief; opens a pre-filled GitHub intake issue or Gmail compose, or copies the brief).
-- Tracks: public index (free); private disclosure (free); Institutional Curator Radar ($3,000/month); Protocol Commitment CI Gate ($5,000/year).
+## Engagements (collateral issuers)
+- 24h Collateral Onboarding & Delta Clearance Attestation: $5,000 USDC flat (optional continuous Aligned badge maintenance: $1,500 / month). Canonical block-pinned control-plane audit, GitBook / config reconciliation PR, Base Mainnet EAS Aligned attestation in PactaCommitmentRegistry, and a Curator Diligence Dossier (PDF + JSON) for Morpho, Euler, Aave and Sky forum proposals. Clears open parameter_delta flags or onboards a new asset.
+- Payment: USDC on Base (`0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`) or Ethereum (`0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48`) to the Pacta treasury `0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14` (same address on both chains).
+- Community queue: free, unscheduled (typically 6–8 weeks).
+- Request: https://pacta.wtf/request/ (builds a scope brief; opens a pre-filled GitHub intake issue or Gmail compose, or copies the brief).
 
-## x402 paid API (USDC on Base)
-- Planned endpoint: https://api.pacta.wtf (deployment pending; not yet live). Routes: `GET /v1/scan/control-plane?chain=&address=` ($0.10), `GET /v1/scan/timelock-op?timelock=&opId=` ($0.25), `GET /v1/briefs/live-timelocks` ($0.10); free `/health`, `/.well-known/x402`, `/v1/sample/control-plane`.
+## x402 API (planned, not live)
+- On-demand scans of contracts outside the index; the indexed data above stays free. Planned endpoint: https://api.pacta.wtf (deployment pending; not yet live). Routes: `GET /v1/scan/control-plane?chain=&address=` ($0.10), `GET /v1/scan/timelock-op?timelock=&opId=` ($0.25); free `/health`, `/.well-known/x402`, `/v1/sample/control-plane`.
 
 ## Contact
 - pacta@dri.network · https://github.com/Fractal-Neurons/pacta · https://fractalneurons.com · security: https://pacta.wtf/.well-known/security.txt

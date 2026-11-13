@@ -156,50 +156,75 @@ function run(tree, app, loc) {
 const input = JSON.parse(require("fs").readFileSync(0, "utf8"));
 const res = {};
 const SCOPE = "HARNESS-SCOPE-7c1e https://example.invalid/docs 0x1111111111111111111111111111111111111111";
-function ghUrls(doc) {
-  return doc.querySelectorAll("[href]").map(e => e.getAttribute("href")).filter(h => /github\.com/.test(h));
+const TX = "0x" + "ab".repeat(32);
+const FORUM = "https://forum.example.invalid/t/harness-listing/1";
+const OPT = {
+  clearance: "24h Collateral Onboarding & Delta Clearance Attestation ($5,000 USDC flat; optional $1,500/mo Aligned monitoring)",
+  community: "Community queue (free; unscheduled, typically 6–8 weeks)"
+};
+function ghParams(doc) {
+  const h = doc.getElementById("req-gh").getAttribute("href") || "";
+  if (!/^https:\/\/github\.com\/Fractal-Neurons\/pacta\/issues\/new\?/.test(h)) return null;
+  return new URLSearchParams(h.split("?")[1]);
 }
-function checkDisabled(doc, tag) {
-  const gh = doc.getElementById("req-gh"), warn = doc.getElementById("req-warn");
-  const ev = new Event_("click"); gh.dispatchEvent(ev);
-  res[tag + "_no_href"] = gh.hasAttribute("href") === false;
-  res[tag + "_aria_disabled_true"] = gh.getAttribute("aria-disabled") === "true";
-  res[tag + "_click_prevented"] = ev.defaultPrevented === true;
-  res[tag + "_warn_shown"] = warn.hidden === false;
-  res[tag + "_scope_not_in_any_github_url"] = !ghUrls(doc).some(h => decodeURIComponent(h.replace(/\+/g, " ")).includes("HARNESS-SCOPE"));
-  res[tag + "_status_not_opened"] = !/Opened in a new tab/.test(doc.getElementById("req-status").textContent);
-}
-function setScope(doc) {
-  const ta = doc.getElementById("req-scope"); ta.value = SCOPE;
-  const ev = new Event_("input"); ev.target = ta; ta.dispatchEvent(ev);
+function setField(doc, id, v) {
+  const el = doc.getElementById(id); el.value = v;
+  const ev = new Event_("input"); ev.target = el; el.dispatchEvent(ev);
 }
 function pick(doc, val) {
-  const radios = doc.querySelectorAll('input[name="tier"]');
-  const r = radios.find(x => x.getAttribute("value") === val);
+  const r = doc.querySelectorAll('input[name="tier"]').find(x => x.getAttribute("value") === val);
   r.checked = true;
   const ev = new Event_("change"); ev.target = r; r.dispatchEvent(ev);
 }
+const checked = doc => (doc.querySelector('input[name="tier"]:checked') || { getAttribute: () => null }).getAttribute("value");
+const brief = doc => doc.getElementById("req-brief").textContent;
 try {
-  // (a1) radio change to disclosure on /request/
+  // (a) /request/ defaults to the 24h clearance: payment panel + tx field visible, GitHub intake prefilled with the exact dropdown option
   let p = run(input.request, input.app, { path: "/request/" });
-  setScope(p.document);
-  res.radar_initially_has_github_href = /^https:\/\/github\.com\/Fractal-Neurons\/pacta\/issues\/new\?/.test(p.document.getElementById("req-gh").getAttribute("href") || "");
-  pick(p.document, "disclosure");
-  checkDisabled(p.document, "radio");
-  // (b) back to radar restores the intake link
-  pick(p.document, "radar");
-  const gh = p.document.getElementById("req-gh");
-  res.radar_restores_github_href = /^https:\/\/github\.com\/Fractal-Neurons\/pacta\/issues\/new\?/.test(gh.getAttribute("href") || "");
-  res.radar_removes_aria_disabled = !gh.hasAttribute("aria-disabled");
-  res.radar_hides_warn = p.document.getElementById("req-warn").hidden === true;
-  const ev = new Event_("click"); gh.dispatchEvent(ev);
-  res.radar_click_not_prevented = ev.defaultPrevented === false;
-  // (a2) ?tier=disclosure prefill
+  const d = p.document, treasury = d.getElementById("req-form").getAttribute("data-treasury");
+  res.default_is_clearance = checked(d) === "clearance";
+  res.clearance_pay_panel_shown = d.getElementById("req-pay").hidden === false;
+  res.clearance_tx_field_shown = d.getElementById("req-tx-field").hidden === false;
+  let q = ghParams(d);
+  res.clearance_github_href = q !== null;
+  res.clearance_github_tier_exact = !!q && q.get("package_tier") === OPT.clearance;
+  res.clearance_brief_has_price_and_treasury = /\$5,000 USDC/.test(brief(d)) && /^0x[0-9a-fA-F]{40}$/.test(treasury || "") && brief(d).includes(treasury);
+  // (b) a valid payment tx hash + forum URL flow into the brief and the GitHub prefill
+  setField(d, "req-scope", SCOPE); setField(d, "req-forum", FORUM); setField(d, "req-tx", TX);
+  q = ghParams(d);
+  res.tx_valid_in_brief = brief(d).includes("Payment: " + TX) && !/\(check:/.test(brief(d));
+  res.tx_valid_in_github = !!q && q.get("payment_tx_hash") === TX;
+  res.forum_in_brief_and_github = brief(d).includes("Forum proposal: " + FORUM) && !!q && q.get("forum_proposal_url") === FORUM;
+  res.tx_valid_not_flagged = d.getElementById("req-tx").hasAttribute("aria-invalid") === false;
+  // (c) a malformed tx hash is flagged and never forwarded to GitHub
+  setField(d, "req-tx", "0x1234");
+  q = ghParams(d);
+  res.tx_invalid_flagged = d.getElementById("req-tx").getAttribute("aria-invalid") === "true" && /\(check:/.test(brief(d));
+  res.tx_invalid_not_in_github = !!q && !q.has("payment_tx_hash");
+  setField(d, "req-tx", TX);
+  // (d) switching to the community queue hides payment, drops the tx hash, keeps the intake link working
+  pick(d, "community");
+  q = ghParams(d);
+  res.community_pay_panel_hidden = d.getElementById("req-pay").hidden === true;
+  res.community_tx_field_hidden = d.getElementById("req-tx-field").hidden === true;
+  res.community_github_tier_exact = !!q && q.get("package_tier") === OPT.community;
+  res.community_no_tx_anywhere = !!q && !q.has("payment_tx_hash") && !brief(d).includes(TX) && !/Payment:/.test(brief(d));
+  const ev = new Event_("click"); d.getElementById("req-gh").dispatchEvent(ev);
+  res.community_click_not_prevented = ev.defaultPrevented === false;
+  // (e) back to clearance restores the payment panel
+  pick(d, "clearance");
+  res.clearance_restores_pay_panel = d.getElementById("req-pay").hidden === false && ghParams(d).get("payment_tx_hash") === TX;
+  // (f) ?tier=community prefill; unknown tiers fall back to the default
+  p = run(input.request, input.app, { path: "/request/", search: "?tier=community" });
+  res.prefill_selects_community = checked(p.document) === "community" && p.document.getElementById("req-pay").hidden === true;
   p = run(input.request, input.app, { path: "/request/", search: "?tier=disclosure" });
-  res.prefill_selects_disclosure = (p.document.querySelector('input[name="tier"]:checked') || { getAttribute: () => null }).getAttribute("value") === "disclosure";
-  setScope(p.document);
-  checkDisabled(p.document, "prefill");
-  // (c) malformed hashes never throw during initialization; a real id still opens its drawer
+  res.prefill_unknown_tier_keeps_clearance = checked(p.document) === "clearance";
+  // (g) homepage plan buttons preselect their track in #request
+  p = run(input.index, input.app, { path: "/" });
+  const btn = p.document.querySelectorAll("a[data-tier]").find(a => a.getAttribute("data-tier") === "community");
+  const cev = new Event_("click"); btn.dispatchEvent(cev);
+  res.homepage_plan_button_preselects = checked(p.document) === "community";
+  // (h) malformed hashes never throw during initialization; a real id still opens its drawer
   for (const h of ["#r-[unclosed", "#r-x\\", "#r-\"]", "#r-%E0%A4%A"]) {
     try { run(input.index, input.app, { path: "/", hash: h }); res["hash_ok " + h] = true; }
     catch (e) { res["hash_ok " + h] = false; res["hash_err " + h] = String(e); }

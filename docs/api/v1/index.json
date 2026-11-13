@@ -1,6 +1,6 @@
 {
   "schema": "pacta.counterparty_control_index.v1",
-  "generated_at": "2026-11-13T15:33:34Z",
+  "generated_at": "2026-11-13T19:59:27Z",
   "publisher": {
     "organization": "Fractal Neurons",
     "unit": "Pacta Protocol Commitments DRI",
@@ -29,6 +29,7 @@
     "eas_schema_url": "https://base.easscan.org/schema/view/0x7ff485bc1159dff3c70eefcb9dff2d65be990301760c2d53799e5a45e3badf83",
     "eas_schema_register_tx": "0x3ff42fe681156dff4c0d10779cc637f48dab30eacef9e26c549fe6bd2e0cee80",
     "eas_multi_attest_tx": "0x8c53e155a4b2f28ffbf069f1b65952fc8f7d81740f362b8aafb39493c6bd001b",
+    "eas_multi_attest_sprints_13_16_tx": "0x11546aac53e3fe57fa6ac9f7e4397f06c58b6803252e099eb9349eca00f2edbf",
     "sprint_eas_attestations": {
       "1": "0x34049a2c64fe3355f8e325481234754c8422a48bb4784fed1d028fa40eb93058",
       "2": "0xca4b525bf5142d8e88433cbed2a1aa87bb06a97d1353cb77621ec41a51ce8101",
@@ -41,16 +42,25 @@
       "9": "0x0e017bc4399101f9fef3d98a434dd9f2829b6e386e7733408dfd4b626d186eea",
       "10": "0xfdd83c8091ef6e8ffe67e8a55a78892fcfbb1092683b21ff2d85f8cc09750e6c",
       "11": "0x754edd7612258b755ff2e56903243d1f8867bad53c29ce3febb5ed9114005e42",
-      "12": "0x7caae9c22c86ae171392def07dce83fa5da6fbf904b1ba9b5ff66a5021b16de9"
+      "12": "0x7caae9c22c86ae171392def07dce83fa5da6fbf904b1ba9b5ff66a5021b16de9",
+      "13": "0x6afd266541ea1643b680ce6ec15d218874356598820987c6b3eaf16342cd075c",
+      "14": "0x8965ae6e51a78132a77eb14c0ac1c6cd1be357d6f261253efff28869478ae5b8",
+      "15": "0x967a4935786194575835d5a46e3e39b1d553225deb6a96c7ff4acf52a34dff22",
+      "16": "0x217d213de3cd9ef094670ff69d258af35adf132406caa547f729f487dc9d7e58"
     },
     "attestation_coverage": {
-      "base_eas_attested_sprints": "1-12",
+      "base_eas_attested_sprints": "1-16",
       "eas_multi_attest_tx": "0x8c53e155a4b2f28ffbf069f1b65952fc8f7d81740f362b8aafb39493c6bd001b",
-      "pending_batch_attestation_sprints": [
-        13,
-        14
-      ],
-      "pending_anchor": "canonical Ethereum block hash + SHA-256 summary digest in each entry"
+      "pending_batch_attestation_sprints": [],
+      "pending_anchor": "none: every indexed record carries its sprint's Base EAS UID; each attestation commits to the sprint's Ethereum block hash and summary SHA-256",
+      "eas_multi_attest_txs": {
+        "1–12": "0x8c53e155a4b2f28ffbf069f1b65952fc8f7d81740f362b8aafb39493c6bd001b",
+        "13–16": "0x11546aac53e3fe57fa6ac9f7e4397f06c58b6803252e099eb9349eca00f2edbf"
+      },
+      "attested_not_yet_indexed_sprints": [
+        15,
+        16
+      ]
     }
   },
   "methodology": {
@@ -62,7 +72,7 @@
     ],
     "scanner_replay": "Dual-RPC deterministic archive eth_call / eth_getStorageAt replay performed by scanner/leader seats at the cited block height and canonical block hash.",
     "independent_verifier_scope": "Offline static ABI 4-byte selector derivation, EIP-55 checksum verification, EIP-1967 slot derivation, arithmetic consistency, and whole-token quarantine review performed by isolated verifier seat (offline verifier container does not execute live network RPC calls).",
-    "quarantine_policy": "Directly callable state mutations, unrevoked legacy EOA authorities, and exploit-sensitive findings are excluded from this public feed and routed privately at $0 cost to official protocol security contacts.",
+    "quarantine_policy": "Directly callable state mutations, unrevoked legacy EOA authorities, and exploit-sensitive findings are excluded from this public feed and routed through the protocol's Immunefi or Cantina bounty programme, or to a partner audit firm under a 15% referral partnership.",
     "delay_field_semantics": "When observed_delay_seconds is non-null, observed_delay_source specifies the exact contract, 4-byte selector, and getter signature returning that integer delay at the pinned block height; both fields are null where the record evaluates role membership, proxy slots, fee basis points, or non-timelocked ownership.",
     "scope_limitation": "Entries report sampled historical read-only getter/slot returns alongside cited documentation; they do not certify protocol-wide immutability, exhaustive authority coverage, downstream mutation semantics, or exploitability."
   },
@@ -1020,10 +1030,10 @@
         "selector": "0xf27a0c92"
       },
       "documented_delay_seconds": null,
-      "verification_status": "scanner_dual_rpc_replayed_pending_static_review_and_attestation",
+      "verification_status": "scanner_dual_rpc_replayed_base_eas_attested_pending_static_review",
       "summary_doc": "audits/sprint-13/block-26405302-summary.md",
       "summary_sha256": "0xb145edb20f6ce673732517962b202205d73f8316b29736090f984fabab82b50b",
-      "base_eas_uid": null,
+      "base_eas_uid": "0x6afd266541ea1643b680ce6ec15d218874356598820987c6b3eaf16342cd075c",
       "call_signature": "getMinDelay()",
       "call_args": [],
       "repro_calldata": "0xf27a0c92"
@@ -1049,10 +1059,10 @@
         "selector": "0xf27a0c92"
       },
       "documented_delay_seconds": 604800,
-      "verification_status": "scanner_dual_rpc_replayed_pending_static_review_and_attestation",
+      "verification_status": "scanner_dual_rpc_replayed_base_eas_attested_pending_static_review",
       "summary_doc": "audits/sprint-14/block-26406106-summary.md",
       "summary_sha256": "0x3bdb79ac424d55bd31241a04bcc3740ce57061e47512bcc3ee9cb217d2928b1c",
-      "base_eas_uid": null,
+      "base_eas_uid": "0x8965ae6e51a78132a77eb14c0ac1c6cd1be357d6f261253efff28869478ae5b8",
       "call_signature": "getMinDelay()",
       "call_args": [],
       "repro_calldata": "0xf27a0c92"
@@ -1078,10 +1088,10 @@
         "selector": "0xf27a0c92"
       },
       "documented_delay_seconds": 432000,
-      "verification_status": "scanner_dual_rpc_replayed_pending_static_review_and_attestation",
+      "verification_status": "scanner_dual_rpc_replayed_base_eas_attested_pending_static_review",
       "summary_doc": "audits/sprint-14/block-26406106-summary.md",
       "summary_sha256": "0x3bdb79ac424d55bd31241a04bcc3740ce57061e47512bcc3ee9cb217d2928b1c",
-      "base_eas_uid": null,
+      "base_eas_uid": "0x8965ae6e51a78132a77eb14c0ac1c6cd1be357d6f261253efff28869478ae5b8",
       "call_signature": "getMinDelay()",
       "call_args": [],
       "repro_calldata": "0xf27a0c92"
@@ -1107,10 +1117,10 @@
         "selector": "0x6a42b8f8"
       },
       "documented_delay_seconds": 172800,
-      "verification_status": "scanner_dual_rpc_replayed_pending_static_review_and_attestation",
+      "verification_status": "scanner_dual_rpc_replayed_base_eas_attested_pending_static_review",
       "summary_doc": "audits/sprint-14/block-26406106-summary.md",
       "summary_sha256": "0x3bdb79ac424d55bd31241a04bcc3740ce57061e47512bcc3ee9cb217d2928b1c",
-      "base_eas_uid": null,
+      "base_eas_uid": "0x8965ae6e51a78132a77eb14c0ac1c6cd1be357d6f261253efff28869478ae5b8",
       "call_signature": "stalenessThreshold(address)",
       "call_args": [
         "0xC45E9c231ab5D9Bd3F1131E7901B100D8D236C4d"
@@ -1138,10 +1148,10 @@
         "selector": "0xf27a0c92"
       },
       "documented_delay_seconds": 864000,
-      "verification_status": "scanner_dual_rpc_replayed_pending_static_review_and_attestation",
+      "verification_status": "scanner_dual_rpc_replayed_base_eas_attested_pending_static_review",
       "summary_doc": "audits/sprint-14/block-26406106-summary.md",
       "summary_sha256": "0x3bdb79ac424d55bd31241a04bcc3740ce57061e47512bcc3ee9cb217d2928b1c",
-      "base_eas_uid": null,
+      "base_eas_uid": "0x8965ae6e51a78132a77eb14c0ac1c6cd1be357d6f261253efff28869478ae5b8",
       "call_signature": null,
       "call_args": [],
       "repro_calldata": null

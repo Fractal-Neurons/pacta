@@ -1,19 +1,20 @@
-name: "Request Pacta Counterparty Feed or Commitment CI Scope"
-description: "Submit non-sensitive public scope for institutional counterparty alerting or protocol commitment CI engagements."
+name: "Request a Pacta 24h Clearance or Community Queue Scope"
+description: "Submit non-sensitive public scope for a 24h collateral clearance attestation ($5,000 USDC) or the free community queue."
 title: "[Pacta Scope] <Organization / Protocol Name>"
 labels: ["pacta-intake"]
 body:
   - type: markdown
     attributes:
       value: |
-        > **SECURITY NOTICE — PUBLIC ISSUE TRACKER:**
-        > **Do NOT submit security vulnerabilities, unrevoked-authority findings, private calldata, or keys in this public form.**
-        > For gratis (`$0`) responsible security disclosures and private remediation handoffs, contact **`pacta@dri.network`** directly or use your repository's private GitHub Security Advisory (`GHSA`) channel.
+        > **PUBLIC ISSUE TRACKER.** Do **not** submit security vulnerabilities, private calldata or keys here.
+        > Exploit-sensitive vulnerabilities go through the protocol's Immunefi or Cantina bounty programme.
+        >
+        > All Pacta public data (indexed records, timelock radar, briefs, `/api/v1/*.json`, `llms.txt`) is free and real-time; nothing below is needed to access it.
   - type: input
     id: repo_or_portfolio_url
     attributes:
-      label: "1. Public Smart Contract Repository or Curated Vault Portfolio"
-      placeholder: "https://github.com/your-org/your-contracts (or public Morpho / Euler / Aave collateral list)"
+      label: "1. Public Smart Contract Repository, Forum Proposal or Curated Vault Portfolio"
+      placeholder: "https://github.com/your-org/your-contracts, a Morpho / Euler / Aave / Sky forum proposal, or a public collateral list"
     validations:
       required: true
   - type: textarea
@@ -26,14 +27,29 @@ body:
   - type: dropdown
     id: package_tier
     attributes:
-      label: "3. Requested Institutional Engagement Track"
+      label: "3. Track"
       options:
-        - "Institutional Curator Counterparty & Timelock Alerting Feed ($2,000–$5,000 USDC/mo)"
-        - "Protocol Continuous Commitment CI & Pre-Flight Proposal Gate ($3,000–$10,000 USDC/yr)"
+        - "24h Collateral Onboarding & Delta Clearance Attestation ($5,000 USDC flat; optional $1,500/mo Aligned monitoring)"
+        - "Community queue (free; unscheduled, typically 6–8 weeks)"
     validations:
       required: true
   - type: input
+    id: forum_proposal_url
+    attributes:
+      label: "4. Forum Proposal URL (optional)"
+      placeholder: "https://… listing or collateral-onboarding proposal the Curator Diligence Dossier should support"
+    validations:
+      required: false
+  - type: input
+    id: payment_tx_hash
+    attributes:
+      label: "5. USDC Payment Transaction Hash (optional; 24h clearance only)"
+      description: "$5,000 USDC on Base or Ethereum to the Pacta treasury 0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14. Leave blank to confirm scope first."
+      placeholder: "0x… (66 characters)"
+    validations:
+      required: false
+  - type: input
     id: contact_channel
     attributes:
-      label: "4. Public Organization Contact Handle or Security Email Reference"
+      label: "6. Public Organization Contact Handle or Email Reference"
       placeholder: "risk@yourorg.xyz or @github-org-handle (do not include sensitive details)"

@@ -47,18 +47,26 @@ BRIEFS = {
 NAV = [("inspector", "Inspector"), ("radar", "Radar"), ("findings", "Findings"), ("index", "Index"), ("verify", "Verify"),
        ("pricing", "Pricing"), ("faq", "FAQ")]
 # Engagement tracks shown in #pricing and offered by the request builder. key -> (title, price, unit, summary, GitHub dropdown option)
+# One commercial offer (for collateral issuers) plus the free community queue. The public data itself (every indexed
+# record, the timelock radar, briefs, /api/v1/*.json and llms.txt) is free and real-time for everyone: no paywall, no delay.
+# The GitHub dropdown option strings must match .github/ISSUE_TEMPLATE/request-scan.yml exactly (prefill is by value).
+CLEARANCE_PRICE, MONITORING_PRICE = "$5,000 USDC", "$1,500 / month"
 TRACKS = {
-    "radar": ("Institutional Curator Radar", "$3,000", "/ month",
-              "Continuous monitoring of up to 25 collateral protocols with pre-execution timelock briefs.",
-              "Institutional Curator Counterparty & Timelock Alerting Feed ($2,000–$5,000 USDC/mo)"),
-    "ci": ("Protocol Commitment CI Gate", "$5,000", "/ year",
-           "A CI gate that diffs on-chain roles and delays against your documented commitments on every proposal.",
-           "Protocol Continuous Commitment CI & Pre-Flight Proposal Gate ($3,000–$10,000 USDC/yr)"),
-    "index": ("Public index", "Free", "",
-              "Suggest a protocol or contract for the free, public, block-pinned index.", None),
-    "disclosure": ("Free Private Disclosure", "Free", "",
-                   "Exploit-sensitive finding. Never published; routed privately to the protocol's official security team.", None),
+    "clearance": ("24h Collateral Onboarding & Delta Clearance Attestation", CLEARANCE_PRICE, "flat",
+                  f"Block-pinned control-plane audit, GitBook / config reconciliation PR, Base EAS Aligned attestation and a "
+                  f"Curator Diligence Dossier, delivered in 24 hours. Optional continuous Aligned monitoring: {MONITORING_PRICE}.",
+                  "24h Collateral Onboarding & Delta Clearance Attestation ($5,000 USDC flat; optional $1,500/mo Aligned monitoring)"),
+    "community": ("Community queue", "Free", "",
+                  "Standard public queue, unscheduled (typically 6–8 weeks). Curators and risk stewards always have free, "
+                  "real-time access to pacta.wtf and llms.txt.",
+                  "Community queue (free; unscheduled, typically 6–8 weeks)"),
 }
+DEFAULT_TRACK = "clearance"
+# Payment rail for the clearance offer. The treasury is an externally owned account (no contract code on Base or
+# Ethereum), so the same key controls it on both chains; USDC contracts are Circle's native deployments.
+USDC = {"Base": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", "Ethereum": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"}
+VULN_ROUTE = ("Exploit-sensitive vulnerabilities are never published here. They go through the protocol’s Immunefi or "
+              "Cantina bounty programme, or to a partner audit firm under a 15% referral partnership.")
 FINDINGS = [  # (record id, headline, explanation html, observed, documented, link, link label)
     ("ethena-minting-rlusd-usat-onboarding-ops",
      "New Ethena collateral can be approved on a 1-day timelock; the docs describe 7 days.",
@@ -183,10 +191,30 @@ def load():
 
 def counts(idx):
     m = idx["summary_metrics"]
-    eas = sorted(int(k) for k in idx["onchain_anchoring"]["sprint_eas_attestations"])
-    return {"sprints": m["sprints_completed"], "records": m["records_indexed"], "eas_n": len(eas), "eas_from": eas[0], "eas_to": eas[-1],
-            "pending": f"{eas[-1] + 1}–{m['sprints_completed']}", "multi_tx": idx["onchain_anchoring"]["eas_multi_attest_tx"],
+    a = idx["onchain_anchoring"]
+    eas = sorted(int(k) for k in a["sprint_eas_attestations"])
+    assert eas == list(range(1, len(eas) + 1)), "sprint attestations must be contiguous from Sprint 1"
+    s = m["sprints_completed"]
+    pend = [n for n in range(1, s + 1) if n not in eas]                       # indexed but not yet attested
+    later = [n for n in eas if n > s]                                           # attested, records not yet in the index
+    rng = lambda xs: "" if not xs else (str(xs[0]) if len(xs) == 1 else f"{xs[0]}–{xs[-1]}")
+    return {"sprints": s, "records": m["records_indexed"], "eas_n": len(eas), "eas_from": eas[0], "eas_to": eas[-1],
+            "pending": rng(pend), "later": rng(later), "multi_txs": a["attestation_coverage"]["eas_multi_attest_txs"],
             "delta": m["parameter_deltas"], "protect": m["protective_deltas"], "aligned": m["aligned_baselines"]}
+
+
+def multi_tx_html(c):
+    return " and ".join(f"{hexref(tx)} (Sprints {rng})" for rng, tx in c["multi_txs"].items())
+
+
+def anchoring_text(c):
+    """One sentence on Base anchoring, derived from the data (never hand-edited)."""
+    t = f'{c["eas_n"]} Base EAS sprint attestations cover Sprints {c["eas_from"]}–{c["eas_to"]}'
+    if c["pending"]:
+        t += f'; Sprints {c["pending"]} are pinned by block hash and SHA-256 summary digest until batch-attested'
+    if c["later"]:
+        t += f'; Sprint{"s" if "–" in c["later"] else ""} {c["later"]} records join the public index after review'
+    return t + "."
 
 
 CLASS_LABEL = {"parameter_delta": ("delta", "Parameter delta"), "protective_delta": ("protect", "Protective delta"),
@@ -417,7 +445,7 @@ def verify_section(idx, c):
 <dl class="deflist">
 <div><dt>Ethereum Mainnet</dt><dd>All {c["records"]} indexed records are pinned to a block number and its canonical block hash; reads use EIP-1898 <code>requireCanonical</code>.</dd></div>
 <div><dt>Open verifier spec</dt><dd>Each record lists the target contract, the full call signature and arguments (or EIP-1967 slot), the block and the block hash. Replay it with <code>cast</code> or raw <code>eth_call</code> / <code>eth_getStorageAt</code>.</dd></div>
-<div><dt>On-chain anchoring on Base</dt><dd>{c["eas_n"]} Base EAS sprint attestations cover Sprints {c["eas_from"]}–{c["eas_to"]}; Sprints {c["pending"]} are pinned by block hash and SHA-256 summary digest until batch-attested. Registry {hexref(reg)} (Sourcify verified) · EAS schema {hexref(schema)}.</dd></div>
+<div><dt>On-chain anchoring on Base</dt><dd>{anchoring_text(c)} Multi-attest txs {multi_tx_html(c)} · Registry {hexref(reg)} (Sourcify verified) · EAS schema {hexref(schema)}.</dd></div>
 <div><dt>Machine-readable</dt><dd><a href="api/v1/index.json">/api/v1/index.json</a> (schema <code>{E(idx["schema"])}</code>) · <a href="api/v1/radar.json">/api/v1/radar.json</a> · <a href="llms.txt">/llms.txt</a></dd></div>
 <div><dt>Reorg handling</dt><dd>Live monitoring uses a 64-block reorg-aware indexer: observations from orphaned blocks are retracted, never silently kept.</dd></div>
 </dl>
@@ -429,24 +457,30 @@ def verify_section(idx, c):
 def pricing_section(home=""):
     req = "#request" if home == "" else f"{home}request/"
 
-    def plan(key, tier, bullets, cta, feat=False):
-        title, price, unit, _, _ = TRACKS[key]
+    def plan(key, tier, bullets, cta, feat=False, addon="", title=None, price=None):
+        t_, p_, unit, _, _ = TRACKS[key]
+        title, price = title or t_, price or p_
         lis = "".join(f"<li>{b}</li>" for b in bullets)
         return (f'<div class="plan{" feat" if feat else ""}"><span class="tier">{tier}</span><h3>{E(title)}</h3>'
-                f'<div class="price">{price}{f"<small>{unit}</small>" if unit else ""}</div><ul>{lis}</ul>'
+                f'<div class="price">{price}{f"<small>{unit}</small>" if unit else ""}</div>{addon}<ul>{lis}</ul>'
                 f'<a class="btn{" primary" if feat else ""}" href="{req}{"" if home == "" else "?tier=" + key}" data-tier="{key}">{cta} <span class="arr">→</span></a></div>')
-    plans = (plan("index", "Everyone", ["All indexed records, briefs and the JSON feed", "Inspector and cast reproductions", "Suggest a protocol for coverage"],
-                  "Suggest a protocol")
-             + plan("disclosure", "Security teams", ["Exploit-sensitive findings are never published here",
-                                                             "Routed privately to official security teams", "No cost to the protocol"], "Report privately")
-             + plan("radar", "Curators &amp; allocators", ["Up to 25 collateral protocols, monitored continuously", "Pre-execution briefs for queued timelock operations",
-                                                         "Alerts to Slack, Telegram or webhook", "Block-pinned, reproducible evidence"], "Request the radar", feat=True)
-             + plan("ci", "Protocol teams", ["Role, delay and quorum diff on every governance proposal", "Fork simulation of queued timelock payloads",
-                                            "Base EAS anchoring of each commitment check"], "Request the CI gate"))
+    plans = (plan("community", "Curators, allocators &amp; AI risk agents",
+                  ["Every indexed record, the timelock radar and pre-execution briefs, free and real-time",
+                   "JSON feed and llms.txt with no key, no delay and no paywall", "Inspector and <code>cast</code> reproductions",
+                   "Suggest a protocol: community queue, unscheduled (typically 6–8 weeks)"], "Join the community queue",
+                  title="Open risk feed", price="Free<small>real-time</small>")
+             + plan("clearance", "Collateral issuers",
+                    ["Canonical block-pinned control-plane audit of your proxy admins, Safes, roles and timelocks",
+                     "GitBook / config reconciliation PR wherever docs and on-chain state differ",
+                     "Base Mainnet EAS <i>Aligned</i> attestation in PactaCommitmentRegistry, clearing open <code>parameter_delta</code> flags",
+                     "Paste-ready Curator Diligence Dossier (PDF + JSON) for Morpho, Euler, Aave and Sky forum proposals",
+                     "USDC on Base or Ethereum; payment details are in the request builder"],
+                    "Book a 24h clearance", feat=True,
+                    addon=f'<p class="addon">Optional: continuous <i>Aligned</i> badge maintenance, {E(MONITORING_PRICE)}</p>'))
     return f"""<section class="sec" id="pricing"><div class="wrap">
-<div class="sec-head"><span class="n">06</span><h2>Engagements</h2><span class="aside">Public data is free. Continuous coverage is priced per track.</span></div>
-<div class="plans">{plans}</div>
-<p class="note">x402 pay-per-call API (USDC on Base): control-plane scans from $0.10 per call. <span class="pending">Deployment pending</span> — not yet live.</p>
+<div class="sec-head"><span class="n">06</span><h2>Engagements</h2><span class="aside">All public data is free and real-time. One paid service, for collateral issuers.</span></div>
+<div class="plans two">{plans}</div>
+<p class="note">{E(VULN_ROUTE)}</p>
 </div></section>"""
 
 
@@ -459,32 +493,45 @@ def protocol_options(idx):
     return sorted(names, key=str.lower)
 
 
+def pay_panel(idx):
+    treasury = idx["onchain_anchoring"]["treasury_admin"]
+    rows = "".join(f'<dt>USDC on {k}</dt><dd>{hexref(v)}</dd>' for k, v in USDC.items())
+    return (f'<div class="pay" id="req-pay"><span class="label">Payment · 24h clearance</span>'
+            f'<p>{E(CLEARANCE_PRICE)} flat, sent to the Pacta treasury on Base or Ethereum. USDC only; the same address on both chains.</p>'
+            f'<dl class="kv"><dt>Pacta treasury</dt><dd><span class="mono full">{treasury}</span>{copy_btn(treasury)}</dd>{rows}</dl>'
+            f'<p class="hint">Paid already? Add the transaction hash on the left. Otherwise send the brief first: the 24-hour window '
+            f'starts once scope and payment are both confirmed.</p></div>')
+
+
 def request_builder(idx, home=""):
     tiers = "".join(
-        f'<label><input type="radio" name="tier" value="{k}"{" checked" if k == "radar" else ""}><span><b>{E(t)}</b>'
-        f'{" · " + p + (" " + u if u else "") if p != "Free" else " · Free"}<span class="sub">{E(s)}</span></span></label>'
-        for k, (t, p, u, s, _) in TRACKS.items())
+        f'<label><input type="radio" name="tier" value="{k}"{" checked" if k == DEFAULT_TRACK else ""}><span><b>{E(t)}</b>'
+        f'{" · " + E(p) + (" " + E(u) if u else "")}<span class="sub">{E(sm)}</span></span></label>'
+        for k, (t, p, u, sm, _) in TRACKS.items())
     protos = "".join(f'<label><input type="checkbox" name="protocol" value="{E(n)}"><span>{E(n)}</span></label>'
                      for n in protocol_options(idx))
     gh = f"{REPO}/issues/new?template=request-scan.yml&title=" + urllib.parse.quote("[Pacta Scope] ")
-    gm = "https://mail.google.com/mail/?view=cm&fs=1&to=" + urllib.parse.quote(CONTACT) + "&su=" + urllib.parse.quote("Pacta coverage request")
-    return f"""<form class="req" id="req-form" autocomplete="off" onsubmit="return false">
+    gm = "https://mail.google.com/mail/?view=cm&fs=1&to=" + urllib.parse.quote(CONTACT) + "&su=" + urllib.parse.quote("Pacta 24h clearance request")
+    return f"""<form class="req" id="req-form" autocomplete="off" onsubmit="return false" data-treasury="{idx["onchain_anchoring"]["treasury_admin"]}">
 <div class="req-form">
 <fieldset><legend>Track</legend><div class="opts one">{tiers}</div></fieldset>
 <fieldset><legend>Protocols in scope <span class="legend-note">· {len(protocol_options(idx))} indexed; add others below</span></legend><div class="opts scroll" id="req-protocols">{protos}</div></fieldset>
-<div class="field"><label for="req-org">Organization or protocol</label><input id="req-org" name="org" type="text" placeholder="e.g. Example Capital, or the protocol you run"></div>
+<div class="field"><label for="req-org">Organization or protocol</label><input id="req-org" name="org" type="text" placeholder="e.g. Example Labs, or the asset you issue"></div>
 <div class="field"><label for="req-scope">Contracts, docs or portfolio</label><textarea id="req-scope" name="scope" placeholder="Public docs URL, mainnet addresses, or the collateral list you curate"></textarea><p class="hint">Public information only. Never paste keys or exploit details here.</p></div>
+<div class="field" id="req-forum-field"><label for="req-forum">Forum proposal URL <span class="legend-note">· optional</span></label><input id="req-forum" name="forum" type="url" placeholder="https://… Morpho, Euler, Aave or Sky forum listing proposal"></div>
+<div class="field" id="req-tx-field"><label for="req-tx">Payment transaction hash <span class="legend-note">· optional</span></label><input id="req-tx" name="tx" type="text" spellcheck="false" placeholder="0x… (Base or Ethereum)"><p class="hint" id="req-tx-hint">A 66-character hash starting with 0x.</p></div>
 <div class="field"><label for="req-contact">How should we reach you?</label><input id="req-contact" name="contact" type="text" placeholder="Work email, Telegram or GitHub handle"></div>
 </div>
 <div class="req-out">
 <span class="label">Scope brief</span>
 <div class="term"><div class="term-h"><span>To: {CONTACT}</span><button class="copy" type="button" data-copy-from="req-brief">Copy brief</button></div><pre id="req-brief">Choose a track and protocols; the brief updates as you type.</pre></div>
+{pay_panel(idx)}
 <div class="actions">
 <a class="btn primary" id="req-gh" href="{E(gh)}" target="_blank" rel="noopener">Open a pre-filled GitHub intake issue <span class="arr">↗</span></a>
 <a class="btn" id="req-gmail" href="{E(gm)}" target="_blank" rel="noopener">Compose in Gmail <span class="arr">↗</span></a>
 <button class="btn" type="button" id="req-copy" data-copy-from="req-brief">Copy brief and address <span class="arr">⧉</span></button>
 </div>
-<p class="warn-line" id="req-warn" hidden>Private disclosure: do not use the public GitHub tracker. Copy the brief or use Gmail, and keep exploit details out until a private channel is agreed.</p>
+<p class="note">{E(VULN_ROUTE)}</p>
 <p class="status" id="req-status" role="status" aria-live="polite"></p>
 <div class="addrline">Or write to <b>{CONTACT}</b>{copy_btn(CONTACT, "Copy address")}</div>
 </div>
@@ -501,17 +548,23 @@ def request_section(idx):
 def faq_section(c, r):
     qa = [
         ("What exactly is anchored on-chain?",
-         f'Sprints {c["eas_from"]}–{c["eas_to"]} carry {c["eas_n"]} Base EAS sprint attestations (multi-attest tx {hexref(c["multi_tx"])}), recorded by '
-         f'<code>pacta.base.eth</code> in PactaCommitmentRegistry. Sprints {c["pending"]} are pinned by canonical block hash and SHA-256 summary digest in '
-         f'/api/v1/index.json until they are batch-attested.'),
+         f'{anchoring_text(c)} They are recorded by <code>pacta.base.eth</code> in PactaCommitmentRegistry (multi-attest txs {multi_tx_html(c)}); '
+         f'each attestation commits to the sprint’s Ethereum block hash and summary SHA-256.'),
+        ("Is the data free?",
+         "Yes, and in real time. Every indexed record, the timelock radar, the briefs, /api/v1/index.json and llms.txt are free for vault "
+         "curators, allocators and AI risk agents: no key, no delay and no paywall. Curators never pay."),
+        ("What does the $5,000 clearance include?",
+         "For collateral issuers onboarding an asset or clearing a <code>parameter_delta</code> flag: a canonical block-pinned control-plane audit, "
+         "a GitBook / config reconciliation PR, a Base Mainnet EAS <i>Aligned</i> attestation and a Curator Diligence Dossier (PDF + JSON) "
+         "ready to paste into Morpho, Euler, Aave or Sky forum proposals, in 24 hours, for $5,000 USDC flat. Continuous <i>Aligned</i> "
+         "badge maintenance is optional at $1,500 / month."),
         ("How do I reproduce a record?",
          "Every record gives the contract, the call signature with all arguments (or the storage slot), the block and the canonical block hash. "
          "Copy its <code>cast</code> command from the inspector or the index and run it against any archive node."),
         ("What happens to exploit-sensitive findings?",
-         "Free Private Disclosure: they are never published here and are routed privately, at no cost, to official protocol security teams "
-         "(security contacts, private advisories or bounty platforms)."),
+         E(VULN_ROUTE)),
         ("Do I need a wallet?",
-         "No. The inspector, the radar and the JSON feed are public and read-only. A pay-per-call x402 API (USDC on Base) is planned and optional."),
+         "No. The inspector, the radar, the briefs and the JSON feed are public and read-only. A wallet is only needed to pay for a clearance."),
         ("How fresh is the radar?",
          f'The radar states the exact finalized block it was refreshed at (#{r["block_number"]:,}, {E(r["block_time_utc"])}); countdowns are computed '
          f'from each operation’s on-chain ETA. An ETA is when execution becomes possible, not a guarantee that it happens.'),
@@ -552,7 +605,7 @@ def page(idx, radar):
 {topbar()}
 <main id="main">
 <section class="hero"><div class="wrap">
-<div class="eyebrow">For vault curators, allocators and protocol risk teams</div>
+<div class="eyebrow">For vault curators, allocators, risk teams and collateral issuers</div>
 <h1>{E(H1)}</h1>
 <p class="lede">Pacta pins the proxy admins, Safe quorums, roles and timelock delays behind your collateral to canonical Ethereum blocks, checks them against what each protocol documents, and briefs you before a queued change can execute.</p>
 <div class="ctas"><a class="btn primary" href="#request">Request coverage <span class="arr">→</span></a><a class="btn" href="#inspector">Inspect a protocol</a></div>
@@ -560,8 +613,8 @@ def page(idx, radar):
 <div class="ledger">
 <div><b>{c["sprints"]}</b><span>Sprints completed</span><small>Ethereum Mainnet control-plane reviews</small></div>
 <div><b>{c["records"]}</b><span>Verified surfaces</span><small>Each pinned to a canonical block hash</small></div>
-<div><b>{c["eas_n"]}</b><span>Base EAS attestations</span><small>Sprints {c["eas_from"]}–{c["eas_to"]}; {c["pending"]} hash-pinned</small></div>
-<div><b>$0</b><span>Private disclosure</span><small>Exploit-sensitive findings go privately to security teams</small></div>
+<div><b>{c["eas_n"]}</b><span>Base EAS attestations</span><small>Sprints {c["eas_from"]}–{c["eas_to"]}{"; " + c["pending"] + " hash-pinned" if c["pending"] else ""}{"; " + c["later"] + " records after review" if c["later"] else ""}</small></div>
+<div><b>24h</b><span>Issuer clearance SLA</span><small>{E(CLEARANCE_PRICE)} flat · Base EAS <i>Aligned</i> attestation</small></div>
 </div>
 </div></section>
 {inspector(idx, c)}
@@ -584,14 +637,14 @@ def request_page(idx):
     c = counts(idx)
     count_line = f'{c["sprints"]} Sprints · {c["records"]} Indexed Records'
     reg = idx["onchain_anchoring"]["commitment_registry"]
-    desc = "Request Pacta coverage: build a scope brief and send it through GitHub, Gmail or your own mail client."
+    desc = "Book a 24h collateral clearance attestation ($5,000 USDC) or join the free community queue."
     body = f"""<body>
 {topbar("../")}
 <main id="main">
 <section class="sec" id="request"><div class="wrap">
 <div class="crumbs"><a href="../">Pacta</a> / Request coverage</div>
 <div class="sec-head"><span class="n">→</span><h2>Request coverage</h2><span class="aside">Nothing is sent until you choose a channel</span></div>
-<p class="sec-intro">Pick a track and the protocols you hold or run. The scope brief builds in your browser; open it as a pre-filled GitHub intake issue, compose it in Gmail, or copy it with our address.</p>
+<p class="sec-intro">Pick a track and the protocols you hold, run or issue. The scope brief builds in your browser; open it as a pre-filled GitHub intake issue, compose it in Gmail, or copy it with our address. Public data stays free either way.</p>
 {request_builder(idx, "../")}
 </div></section>
 {pricing_section("../")}
@@ -629,7 +682,7 @@ def brief_page(slug, desc, idx, radar):
 <div class="crumbs"><a href="../../">Pacta</a> / <a href="../../#radar">Timelock radar</a> / Pre-execution brief</div>
 <article class="memo">
 {content}</article>
-<div class="memo-foot"><span>Read-only on-chain analysis. Not investment advice. Exploit-sensitive findings are disclosed privately, never here.</span><a href="../../request/">Get briefs like this for your collateral →</a></div>
+<div class="memo-foot"><span>Read-only on-chain analysis. Not investment advice. Exploit-sensitive vulnerabilities are never published here; they go through Immunefi or Cantina bounty programmes.</span><a href="../../request/">Get briefs like this for your collateral →</a></div>
 </main>
 {footer(count_line, reg, "../../")}
 </body></html>
@@ -654,16 +707,21 @@ def llms(idx, radar):
         "## Methodology",
         "- Scanner seats replay read-only eth_call / eth_getStorageAt at the cited block (two independent archive RPCs); an isolated verifier seat re-checks selectors, EIP-55 checksums, EIP-1967 slots and arithmetic offline.",
         "- Classifications: parameter_delta (on-chain differs from docs), protective_delta (a change that strengthens controls), aligned_baseline (on-chain matches docs).",
-        "- Exploit-sensitive findings are never published; they are disclosed privately, free of charge, to official protocol security teams.", "",
+        f"- {VULN_ROUTE}", "",
+        "## Access",
+        "- Free and real-time for everyone, including vault curators, allocators and AI risk agents: every indexed record, the timelock radar, the briefs, /api/v1/*.json and this file. No key, no delay, no paywall; curators never pay.", "",
         "## On-chain anchoring (Base, chain id 8453)",
         f"- PactaCommitmentRegistry: `{a['commitment_registry']}` (Sourcify verified); attester `pacta.base.eth` (`{a['attester_eoa']}`).",
-        f"- EAS schema: `{a['eas_schema_uid']}`; {c['eas_n']} sprint attestations for Sprints {c['eas_from']}–{c['eas_to']} (multi-attest tx `{c['multi_tx']}`).",
-        f"- Sprints {c['pending']}: pinned by canonical block hash + SHA-256 summary digest in /api/v1/index.json until batch-attested.", "",
-        "## Engagements",
-        f"- Request coverage: {BASE_URL}/request/ (builds a scope brief; opens a pre-filled GitHub intake issue or Gmail compose, or copies the brief).",
-        "- Tracks: public index (free); private disclosure (free); Institutional Curator Radar ($3,000/month); Protocol Commitment CI Gate ($5,000/year).", "",
-        "## x402 paid API (USDC on Base)",
-        "- Planned endpoint: https://api.pacta.wtf (deployment pending; not yet live). Routes: `GET /v1/scan/control-plane?chain=&address=` ($0.10), `GET /v1/scan/timelock-op?timelock=&opId=` ($0.25), `GET /v1/briefs/live-timelocks` ($0.10); free `/health`, `/.well-known/x402`, `/v1/sample/control-plane`.", "",
+        f"- EAS schema: `{a['eas_schema_uid']}`. {anchoring_text(c)}",
+    ] + [f"- Multi-attest tx, Sprints {r_}: `{tx}`" for r_, tx in c["multi_txs"].items()] + [
+        "- Per-sprint attestation UIDs: `onchain_anchoring.sprint_eas_attestations` in /api/v1/index.json; each record's `base_eas_uid`.", "",
+        "## Engagements (collateral issuers)",
+        f"- 24h Collateral Onboarding & Delta Clearance Attestation: {CLEARANCE_PRICE} flat (optional continuous Aligned badge maintenance: {MONITORING_PRICE}). Canonical block-pinned control-plane audit, GitBook / config reconciliation PR, Base Mainnet EAS Aligned attestation in PactaCommitmentRegistry, and a Curator Diligence Dossier (PDF + JSON) for Morpho, Euler, Aave and Sky forum proposals. Clears open parameter_delta flags or onboards a new asset.",
+        f"- Payment: USDC on Base (`{USDC['Base']}`) or Ethereum (`{USDC['Ethereum']}`) to the Pacta treasury `{a['treasury_admin']}` (same address on both chains).",
+        "- Community queue: free, unscheduled (typically 6–8 weeks).",
+        f"- Request: {BASE_URL}/request/ (builds a scope brief; opens a pre-filled GitHub intake issue or Gmail compose, or copies the brief).", "",
+        "## x402 API (planned, not live)",
+        "- On-demand scans of contracts outside the index; the indexed data above stays free. Planned endpoint: https://api.pacta.wtf (deployment pending; not yet live). Routes: `GET /v1/scan/control-plane?chain=&address=` ($0.10), `GET /v1/scan/timelock-op?timelock=&opId=` ($0.25); free `/health`, `/.well-known/x402`, `/v1/sample/control-plane`.", "",
         "## Contact",
         f"- {CONTACT} · {REPO} · {FN} · security: {BASE_URL}/.well-known/security.txt", "",
     ]
