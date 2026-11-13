@@ -1,6 +1,6 @@
 {
   "schema": "pacta.counterparty_control_index.v1",
-  "generated_at": "2026-11-13T01:15:00Z",
+  "generated_at": "2026-11-13T04:22:00Z",
   "publisher": {
     "organization": "Fractal Neurons",
     "unit": "Pacta Protocol Commitments DRI",
@@ -23,13 +23,39 @@
     "scope_limitation": "Entries report sampled historical read-only getter/slot returns alongside cited documentation; they do not certify protocol-wide immutability, exhaustive authority coverage, downstream mutation semantics, or exploitability."
   },
   "summary_metrics": {
-    "sprints_completed": 9,
-    "records_indexed": 20,
-    "parameter_deltas": 9,
-    "protective_deltas": 1,
-    "aligned_baselines": 10
+    "sprints_completed": 10,
+    "records_indexed": 24,
+    "parameter_deltas": 10,
+    "protective_deltas": 2,
+    "aligned_baselines": 12
   },
   "entries": [
+    {
+      "id": "ondo-ousg-rate-limiter-and-flux-timelock",
+      "protocol": "Ondo Finance (OUSG & Flux Finance)",
+      "category": "Institutional RWA / Tokenized Treasuries",
+      "sprint": 10,
+      "block_number": 26403121,
+      "block_hash": "0x71acee2313a2c8eacd7d2c87667dc505310b3e9224d84eaebb71d5a890ef9d1c",
+      "classification": "parameter_delta",
+      "surface": "OUSG RateLimiter Global Subscription Limit & Flux 1d Timelock",
+      "target_contract": "0x98Db502215Da1ad9F626D4a0090A8A2f4971003c",
+      "target_label": "Ondo RateLimiter",
+      "check_type": "eth_call",
+      "selector_or_slot": "0x435e3a08",
+      "onchain_observed": "RateLimiter (0x98Db502215Da1ad9F626D4a0090A8A2f4971003c) globalSubscriptionLimits(0x1B19C19393e2d034D8Ff31ff34c81252FcBbee92) word [2] = 100000000000000000000000000 ($100M per 86400s window), globalRedemptionLimits(OUSG) word [2] = 50000000000000000000000000 ($50M per 86400s); Flux Comptroller (0x95Af143a021DF745bc78e845b54591C53a8B3A51) admin() = FluxTimelock (0x2c5898da4DF1d45EAb2B7B192a361C3b9EB18d9c, delay() = 86400s / 1d, admin() = 0x336505EC1BcC1A020EeDe459f57581725D23465A); OUSG totalSupply = 1,110,569.33 OUSG.",
+      "documented_reference": "docs.ondo.finance/qualified-access-products/ousg/instant-limits.md states 'Instant minting has a $50M Global Limit' and 'Instant redemptions have a $50M Global Limit'; Flux docs specify 1-day Timelock governance.",
+      "observed_delay_seconds": 86400,
+      "observed_delay_source": {
+        "contract": "0x2c5898da4DF1d45EAb2B7B192a361C3b9EB18d9c",
+        "selector": "0x6a42b8f8",
+        "getter": "delay()"
+      },
+      "documented_delay_seconds": 86400,
+      "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
+      "summary_doc": "audits/sprint-10/block-26403121-summary.md",
+      "summary_sha256": "0x64b868f9d22c2994ecac03962ff2606d52fb7a4ad5a77ebb595911001b70db19"
+    },
     {
       "id": "maple-v2-syrup-ppm-admin",
       "protocol": "Maple Finance V2 / Syrup",
@@ -247,6 +273,32 @@
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-1/block-26399876-summary.md",
       "summary_sha256": "0xeb97180d687f9f8fb9a1ae341349bd74d3bc7ff95da0e4eb586e6ba4f540cffe"
+    },
+    {
+      "id": "mantle-lsp-meth-upgrade-timelock",
+      "protocol": "Mantle Liquid Staking (mETH / cmETH)",
+      "category": "Liquid Staking & Restaking",
+      "sprint": 10,
+      "block_number": 26403121,
+      "block_hash": "0x71acee2313a2c8eacd7d2c87667dc505310b3e9224d84eaebb71d5a890ef9d1c",
+      "classification": "protective_delta",
+      "surface": "Core Proxy EIP-1967 Admin Slot & 3-Day UpgradeTimelock",
+      "target_contract": "0xc26016f1166bE7b6c5611AAB104122E0f6c2aCE2",
+      "target_label": "Mantle UpgradeTimelock",
+      "check_type": "eth_call",
+      "selector_or_slot": "0xf27a0c92",
+      "onchain_observed": "mETH (0xd5F7838F5C461fefF7FE49ea5ebaF7728bB0ADfa) & Staking (0xe3cBd06D7dadB3F4e6557bAb7EdD924CD1489E8f) EIP-1967 admin slots point to UpgradeTimelock (0xc26016f1166bE7b6c5611AAB104122E0f6c2aCE2) with getMinDelay() = 259200s (3 days) and PROPOSER_ROLE held by 6-of-14 Security Council Safe (0x4e59e778a0fb77fBb305637435C62FaeD9aED40f); mETH totalSupply = 217,256.94 mETH.",
+      "documented_reference": "docs.mantle.xyz/meth/concepts/risk-management/upgradability-and-timelock.md previously noted 'The timelock is configured with a default delay of 0' (live deployment enforces stricter 3-day UpgradeTimelock).",
+      "observed_delay_seconds": 259200,
+      "observed_delay_source": {
+        "contract": "0xc26016f1166bE7b6c5611AAB104122E0f6c2aCE2",
+        "selector": "0xf27a0c92",
+        "getter": "getMinDelay()"
+      },
+      "documented_delay_seconds": 0,
+      "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
+      "summary_doc": "audits/sprint-10/block-26403121-summary.md",
+      "summary_sha256": "0x64b868f9d22c2994ecac03962ff2606d52fb7a4ad5a77ebb595911001b70db19"
     },
     {
       "id": "yearn-v3-role-manager-timelock",
@@ -517,6 +569,54 @@
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-9/block-26402160-summary.md",
       "summary_sha256": "0x0a4b9cbd0c3f3eb1839a86753857a603237918200e1d9f90e757f70008472ef4"
+    },
+    {
+      "id": "symbiotic-core-immutable-registries-and-safes",
+      "protocol": "Symbiotic Core",
+      "category": "Restaking Infrastructure",
+      "sprint": 10,
+      "block_number": 26403121,
+      "block_hash": "0x71acee2313a2c8eacd7d2c87667dc505310b3e9224d84eaebb71d5a890ef9d1c",
+      "classification": "aligned_baseline",
+      "surface": "Sampled Non-Upgradeable Core Registries & Factory/Adapter Safes",
+      "target_contract": "0xAEb6bdd95c502390db8f52c8909F703E9Af6a346",
+      "target_label": "Symbiotic VaultFactory",
+      "check_type": "eth_getStorageAt",
+      "selector_or_slot": "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+      "onchain_observed": "VaultFactory (0xAEb6bdd95c502390db8f52c8909F703E9Af6a346), OperatorRegistry (0xAd817a6Bc954F678451A71363f04150FDD81Af9F), and NetworkRegistry (0xC773b1011461e7314CF05f97d95aa8e92C1Fd8aA) hold zero EIP-1967 implementation/admin slots (0x00...00); VaultFactory.owner() = 2-of-3 Gnosis Safe (0x5721ce64Ee0D772Ce613b62D411350091C544cD0); AdapterRegistry (0x788823C9579A049D986eB76718bC758C0998594a) owner() = 3-of-5 Gnosis Safe (0xf6BB2e64Bd201A862f2Fe5461fc7Ef01e2040b6A).",
+      "documented_reference": "Symbiotic Core architecture specifies non-upgradeable core registries and multisig-governed implementation/adapter whitelists.",
+      "observed_delay_seconds": null,
+      "observed_delay_source": null,
+      "documented_delay_seconds": null,
+      "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
+      "summary_doc": "audits/sprint-10/block-26403121-summary.md",
+      "summary_sha256": "0x64b868f9d22c2994ecac03962ff2606d52fb7a4ad5a77ebb595911001b70db19"
+    },
+    {
+      "id": "lido-dual-governance-emergency-timelock",
+      "protocol": "Lido (stETH / Dual Governance)",
+      "category": "Blue-Chip Liquid Staking",
+      "sprint": 10,
+      "block_number": 26403121,
+      "block_hash": "0x71acee2313a2c8eacd7d2c87667dc505310b3e9224d84eaebb71d5a890ef9d1c",
+      "classification": "aligned_baseline",
+      "surface": "EmergencyProtectedTimelock Delays, DualGovernance & Committee Safes",
+      "target_contract": "0xCE0425301C85c5Ea2A0873A2dEe44d78E02D2316",
+      "target_label": "EmergencyProtectedTimelock",
+      "check_type": "eth_call",
+      "selector_or_slot": "0x709105d7",
+      "onchain_observed": "EmergencyProtectedTimelock (0xCE0425301C85c5Ea2A0873A2dEe44d78E02D2316) getAfterSubmitDelay() = 259200s (3d), getAfterScheduleDelay() = 86400s (1d), getGovernance() = DualGovernance (0xC1db28B3301331277e307FDCfF8DE28242A4486E), getEmergencyProtectionDetails() = (2592000, 0, 1813449600); Emergency Activation (0x8B7854488Fde088d686Ea672B6ba1A5242515f45, 4-of-7 Safe), Emergency Execution (0xC7792b3F2B399bB0EdF53fECDceCeB97FBEB18AF, 5-of-7 Safe), Reseal (0xFFe21561251c49AdccFad065C94Fb4931dF49081, 5-of-6 Safe), and CircuitBreaker (0x8772E3a2D86B9347A2688f9bc1808A6d8917760C, 3-of-6 Safe); stETH totalSupply = 9,759,371.53 stETH.",
+      "documented_reference": "lidofinance/dual-governance deploy-config-mainnet.toml, lidofinance/docs committee specs, and forum record 10032.",
+      "observed_delay_seconds": 259200,
+      "observed_delay_source": {
+        "contract": "0xCE0425301C85c5Ea2A0873A2dEe44d78E02D2316",
+        "selector": "0x709105d7",
+        "getter": "getAfterSubmitDelay()"
+      },
+      "documented_delay_seconds": 259200,
+      "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
+      "summary_doc": "audits/sprint-10/block-26403121-summary.md",
+      "summary_sha256": "0x64b868f9d22c2994ecac03962ff2606d52fb7a4ad5a77ebb595911001b70db19"
     }
   ]
 }
