@@ -320,18 +320,23 @@ Environment (all optional, none secret):
 """
 
 
-def write_all(docs, idx, radar, onb):
+def render_all(idx, radar, onb):
+    """Pure function: {relative path under docs/: file text}. No filesystem access (used by verify_site_v2.py)."""
     prop = proposals(idx, onb)
-    files = {
+    return {
         "api/v1/proposals.json": json.dumps(prop, indent=1, sort_keys=True, ensure_ascii=False) + "\n",
         "llms-full.txt": llms_full(idx, radar, prop, onb),
         ".well-known/agent.json": json.dumps(agent_card(prop, onb, idx), indent=1, sort_keys=True, ensure_ascii=False) + "\n",
         ".well-known/mcp.json": json.dumps(mcp_manifest(idx, onb), indent=1, sort_keys=True, ensure_ascii=False) + "\n",
         "SKILL.md": skill_md(prop, idx),
     }
+
+
+def write_all(docs, idx, radar, onb):
+    files = render_all(idx, radar, onb)
     for rel, text in files.items():
         p = os.path.join(docs, rel)
         os.makedirs(os.path.dirname(p), exist_ok=True)
         with open(p, "w") as fh:
             fh.write(text)
-    return prop
+    return json.loads(files["api/v1/proposals.json"])

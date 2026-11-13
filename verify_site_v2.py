@@ -488,15 +488,12 @@ def main():
           and "/api/v1/onboarding.json" in llms_t)
 
     # agent-first (B2A) feeds: proposals.json, llms-full.txt, .well-known/{agent,mcp}.json, SKILL.md
-    import tempfile
     sys.path.insert(0, os.path.join(ROOT, "tools"))
+    sys.dont_write_bytecode = True                            # no __pycache__ writes into a possibly read-only checkout
     import build_b2a_feeds as B2A
     b2a_files = ["api/v1/proposals.json", "llms-full.txt", ".well-known/agent.json", ".well-known/mcp.json", "SKILL.md"]
-    scratch = os.path.join(os.path.expanduser("~"), ".cache", "pacta-site-verify")
-    os.makedirs(scratch, exist_ok=True)
-    with tempfile.TemporaryDirectory(dir=scratch) as td:
-        B2A.write_all(td, idx, radar, onb)
-        drift = [f for f in b2a_files if open(os.path.join(td, f), "rb").read() != read("docs/" + f, "rb")]
+    rendered = B2A.render_all(idx, radar, onb)               # in memory: no scratch files, works with a read-only HOME
+    drift = [f for f in b2a_files if rendered.get(f, "").encode() != read("docs/" + f, "rb")] + sorted(set(rendered) - set(b2a_files))
     check("B2A feeds are a byte-identical deterministic build of index/radar/onboarding.json (no hand edits, no wall clock)", not drift, str(drift))
     prop = json.loads(read("docs/api/v1/proposals.json"))
     PKEYS = {"proposal_id", "forum", "topic_id", "title", "forum_url", "relation", "chain", "chain_id", "pinned_block_number", "pinned_block_hash",
