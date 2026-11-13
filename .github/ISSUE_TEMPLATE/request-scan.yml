@@ -1,34 +1,39 @@
-name: "Initiate Pacta Commitment-to-Chain Scan"
-description: "Request an automated block-pinned verification of your live contracts against your docs, audits, and governance proposals."
-title: "[Scan Request] <Protocol Name> — <Target Repo>"
-labels: ["scan-request", "pacta-intake"]
+name: "Request Pacta Counterparty Feed or Commitment CI Scope"
+description: "Submit non-sensitive public scope for institutional counterparty alerting or protocol commitment CI engagements."
+title: "[Pacta Scope] <Organization / Protocol Name>"
+labels: ["pacta-intake"]
 body:
-  - type: input
-    id: repo_url
+  - type: markdown
     attributes:
-      label: "1. Target Smart Contract GitHub Repository"
-      placeholder: "https://github.com/your-org/your-contracts"
+      value: |
+        > **SECURITY NOTICE — PUBLIC ISSUE TRACKER:**
+        > **Do NOT submit security vulnerabilities, unrevoked-authority findings, private calldata, or keys in this public form.**
+        > For gratis (`$0`) responsible security disclosures and private remediation handoffs, contact **`pacta@dri.network`** directly or use your repository's private GitHub Security Advisory (`GHSA`) channel.
+  - type: input
+    id: repo_or_portfolio_url
+    attributes:
+      label: "1. Public Smart Contract Repository or Curated Vault Portfolio"
+      placeholder: "https://github.com/your-org/your-contracts (or public Morpho / Euler / Aave collateral list)"
     validations:
       required: true
   - type: textarea
     id: commitments_and_addresses
     attributes:
-      label: "2. Documentation / Governance Spec URL & Mainnet Contract Registry"
-      placeholder: "Docs: https://docs.yourprotocol.xyz\nChain & Addresses (or path to deployments.json): Ethereum Mainnet 0x..."
+      label: "2. Public Documentation URL & Deployed Mainnet Contract Addresses"
+      placeholder: "Docs: https://docs.yourprotocol.xyz\nPublic Mainnet Addresses (or path to deployments.json): Ethereum Mainnet 0x..."
     validations:
       required: true
   - type: dropdown
     id: package_tier
     attributes:
-      label: "3. Requested Verification Tier"
+      label: "3. Requested Institutional Engagement Track"
       options:
-        - "Tier 1 ($0 USDC) — 1-Contract Baseline Drift Check PR + Responsible Security Disclosure"
-        - "Tier 2 ($750 USDC Paid-at-Handoff) — Full Control-Chain Audit + Gnosis Safe Remediation JSON Batch + Foundry CI Suite"
-        - "Tier 3 ($2,500 USDC/mo) — Continuous Pre-Flight Proposal & Curator Fleet Gate"
+        - "Institutional Curator Counterparty & Timelock Alerting Feed ($2,000–$5,000 USDC/mo)"
+        - "Protocol Continuous Commitment CI & Pre-Flight Proposal Gate ($3,000–$10,000 USDC/yr)"
     validations:
       required: true
   - type: input
-    id: security_contact
+    id: contact_channel
     attributes:
-      label: "4. Maintainer Handle / Private Security Contact (for quarantined disclosure_only findings & Safe JSON delivery)"
-      placeholder: "@github-handle or security@yourprotocol.xyz"
+      label: "4. Public Organization Contact Handle or Security Email Reference"
+      placeholder: "risk@yourorg.xyz or @github-org-handle (do not include sensitive details)"

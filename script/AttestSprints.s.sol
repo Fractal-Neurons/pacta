@@ -26,7 +26,7 @@ interface IEAS {
 }
 
 /// @title AttestSprints
-/// @notice Deterministic Base Mainnet (`chainId == 8453`) direct-EOA calldata builder for Sprints 1–6 public audit summaries.
+/// @notice Deterministic Base Mainnet (`chainId == 8453`) direct-EOA calldata builder for Sprints 1–8 public audit summaries.
 ///         Because EAS records `msg.sender` as the on-chain `attester`, transactions built by this helper are signed and
 ///         broadcast directly by Tier 2 `PACTA_ATTESTER_EOA` (`0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09`) to `BASE_SCHEMA_REGISTRY`
 ///         (`0x4200000000000000000000000000000000000020`) and `BASE_EAS` (`0x4200000000000000000000000000000000000021`), ensuring
@@ -52,33 +52,43 @@ contract AttestSprints {
     // Canonical Ethereum Mainnet Block Numbers, Live-RPC Block Hashes, and Sanitized Summary SHA-256 Digests
     uint64 public constant SPRINT_1_BLOCK = 26399876;
     bytes32 public constant SPRINT_1_BLOCK_HASH = 0x8bf896b892683ff3267b88b367ab015a70cf5caf53542eb405f4f648f6bcde8a;
-    bytes32 public constant SPRINT_1_SUMMARY_SHA256 = 0x4628df8585cf37a84d3a2084f778886e151e200e433c04a2aed47ad6f1f306b6;
+    bytes32 public constant SPRINT_1_SUMMARY_SHA256 = 0xeb97180d687f9f8fb9a1ae341349bd74d3bc7ff95da0e4eb586e6ba4f540cffe;
     string public constant SPRINT_1_PR_URI = "https://github.com/Fractal-Neurons/pacta/pull/1";
 
     uint64 public constant SPRINT_2_BLOCK = 26400152;
     bytes32 public constant SPRINT_2_BLOCK_HASH = 0xa9a61622304ec55c5fec49abbcabec60069f66f28792cf841bdd7aef12ce63aa;
-    bytes32 public constant SPRINT_2_SUMMARY_SHA256 = 0x257f475130f0602d3b0194457cd0ab0715f5dc4a8c76d25554bcb5ced72a211d;
+    bytes32 public constant SPRINT_2_SUMMARY_SHA256 = 0x9c2a186cf21dd97faf2a6afb9f810e1b9f6c8503dc5f7153435c0fa48811c966;
     string public constant SPRINT_2_PR_URI = "https://github.com/Fractal-Neurons/pacta/pull/2";
 
     uint64 public constant SPRINT_3_BLOCK = 26401070;
     bytes32 public constant SPRINT_3_BLOCK_HASH = 0xcf55f6a42ae610c1f8766b5c2fb676d91f178469fa10ef777eccbb76f6506234;
-    bytes32 public constant SPRINT_3_SUMMARY_SHA256 = 0x8ba8b87f8607fd2a890850568c7134db66717ef776165b9435ba4e8c8b2831c9;
+    bytes32 public constant SPRINT_3_SUMMARY_SHA256 = 0x02d6de1d05599e44d0634541a13d05764a90d6f860c8d8bcfde4b0e980d3c122;
     string public constant SPRINT_3_PR_URI = "https://github.com/Fractal-Neurons/pacta/pull/3";
 
     uint64 public constant SPRINT_4_BLOCK = 26401312;
     bytes32 public constant SPRINT_4_BLOCK_HASH = 0x95866ea3ef8f9a0567ce000bc8075f6dc5fb0f1e80cb4e9999ae624a2f0dc109;
-    bytes32 public constant SPRINT_4_SUMMARY_SHA256 = 0xbbe35eeb93f9fe246c632d89c51ddee336daa332a5216535796800a5bae234a1;
+    bytes32 public constant SPRINT_4_SUMMARY_SHA256 = 0x6adc370fdb6acbc14f38ab1b30cb90a0c1e5ce8c2457ad64177c82f548edc2fb;
     string public constant SPRINT_4_PR_URI = "https://github.com/Fractal-Neurons/pacta/pull/5";
 
     uint64 public constant SPRINT_5_BLOCK = 26401405;
     bytes32 public constant SPRINT_5_BLOCK_HASH = 0x26e155e1569d436406a52ecee31c94d8d8ef2ca4c45d82211a84c8c802be1510;
-    bytes32 public constant SPRINT_5_SUMMARY_SHA256 = 0x091f660b0d23cd9275f6c88b564916876b6c6220390eb10a38db410c0c25d891;
+    bytes32 public constant SPRINT_5_SUMMARY_SHA256 = 0xfd13461161313f9bd5ae867e4076d5f07b787e05370bca7516dcbbc8ba8f63a2;
     string public constant SPRINT_5_PR_URI = "https://github.com/Fractal-Neurons/pacta/pull/7";
 
     uint64 public constant SPRINT_6_BLOCK = 26401540;
     bytes32 public constant SPRINT_6_BLOCK_HASH = 0x49324aaf84b0ffd4e21026c5345272788bff377f0f86fcdb74280cdfc32a9641;
-    bytes32 public constant SPRINT_6_SUMMARY_SHA256 = 0x12c1701a44b4d39f6adeb6f28bb5b391d04262a10652c975a912fccf989ac4c8;
+    bytes32 public constant SPRINT_6_SUMMARY_SHA256 = 0xec0e3a3862cd528a35acc2992eccd798f8ce4bc8e7ea8c0311f56fa000df8471;
     string public constant SPRINT_6_PR_URI = "https://github.com/Fractal-Neurons/pacta/pull/10";
+
+    uint64 public constant SPRINT_7_BLOCK = 26401638;
+    bytes32 public constant SPRINT_7_BLOCK_HASH = 0xe62ad2969617ad07c23bec298c3d5e197ea7c3084f7f66c90d2eb51d04c6273e;
+    bytes32 public constant SPRINT_7_SUMMARY_SHA256 = 0x326d36de4579d119b7cccc7ad36786933b50c2a0957082e28a73e6e6e6847f35;
+    string public constant SPRINT_7_PR_URI = "https://github.com/Fractal-Neurons/pacta/pull/13";
+
+    uint64 public constant SPRINT_8_BLOCK = 26401725;
+    bytes32 public constant SPRINT_8_BLOCK_HASH = 0xec3820f0a9db32c01728e66f78dc1958e410269e1077fd1db53df4fbce2ad7a1;
+    bytes32 public constant SPRINT_8_SUMMARY_SHA256 = 0x7f5605538db468ccb2f51a5822ea2dabf29fb36858f7ae301e36b1a57f6dd2d2;
+    string public constant SPRINT_8_PR_URI = "https://github.com/Fractal-Neurons/pacta/pull/14";
 
     /// @notice Compute the canonical Base EAS Schema UID (`keccak256(abi.encodePacked(schema, resolver, revocable))`).
     function canonicalSchemaUID() public pure returns (bytes32) {
@@ -100,7 +110,7 @@ contract AttestSprints {
         calldataBytes = abi.encodeCall(ISchemaRegistry.register, (PACTA_EAS_SCHEMA, address(0), true));
     }
 
-    /// @notice Return the pinned, quarantine-safe public attestation data payload for Sprint `sprintId` (1..6).
+    /// @notice Return the pinned, quarantine-safe public attestation data payload for Sprint `sprintId` (1..8).
     function getPinnedSprintPayload(uint16 sprintId) public pure returns (bytes memory) {
         if (sprintId == 1) {
             return _encodeSprintAttestationData(1, ETH_MAINNET_CHAIN_ID, SPRINT_1_BLOCK, SPRINT_1_BLOCK_HASH, 4, 1, SPRINT_1_SUMMARY_SHA256, SPRINT_1_PR_URI);
@@ -114,6 +124,10 @@ contract AttestSprints {
             return _encodeSprintAttestationData(5, ETH_MAINNET_CHAIN_ID, SPRINT_5_BLOCK, SPRINT_5_BLOCK_HASH, 3, 2, SPRINT_5_SUMMARY_SHA256, SPRINT_5_PR_URI);
         } else if (sprintId == 6) {
             return _encodeSprintAttestationData(6, ETH_MAINNET_CHAIN_ID, SPRINT_6_BLOCK, SPRINT_6_BLOCK_HASH, 4, 1, SPRINT_6_SUMMARY_SHA256, SPRINT_6_PR_URI);
+        } else if (sprintId == 7) {
+            return _encodeSprintAttestationData(7, ETH_MAINNET_CHAIN_ID, SPRINT_7_BLOCK, SPRINT_7_BLOCK_HASH, 3, 1, SPRINT_7_SUMMARY_SHA256, SPRINT_7_PR_URI);
+        } else if (sprintId == 8) {
+            return _encodeSprintAttestationData(8, ETH_MAINNET_CHAIN_ID, SPRINT_8_BLOCK, SPRINT_8_BLOCK_HASH, 3, 2, SPRINT_8_SUMMARY_SHA256, SPRINT_8_PR_URI);
         }
         revert InvalidSprintId();
     }
