@@ -1,6 +1,6 @@
 {
   "schema": "pacta.counterparty_control_index.v1",
-  "generated_at": "2026-11-13T04:50:00Z",
+  "generated_at": "2026-11-13T05:23:00Z",
   "publisher": {
     "organization": "Fractal Neurons",
     "unit": "Pacta Protocol Commitments DRI",
@@ -23,13 +23,39 @@
     "scope_limitation": "Entries report sampled historical read-only getter/slot returns alongside cited documentation; they do not certify protocol-wide immutability, exhaustive authority coverage, downstream mutation semantics, or exploitability."
   },
   "summary_metrics": {
-    "sprints_completed": 11,
-    "records_indexed": 28,
-    "parameter_deltas": 12,
+    "sprints_completed": 12,
+    "records_indexed": 32,
+    "parameter_deltas": 13,
     "protective_deltas": 2,
-    "aligned_baselines": 14
+    "aligned_baselines": 17
   },
   "entries": [
+    {
+      "id": "stader-ethx-manager-safe-and-timelock",
+      "protocol": "Stader Labs (ETHx)",
+      "category": "Liquid Staking",
+      "sprint": 12,
+      "block_number": 26403676,
+      "block_hash": "0xf4246ca23c4c38d520de16080a11b5186d04c8242b2c85edcb04c455d291c3ae",
+      "classification": "parameter_delta",
+      "surface": "Manager Safe Quorum & 7-Day TimelockController Admin Path",
+      "target_contract": "0xAAfb31780e4b9c95Bc920e388f4925A874cd07AF",
+      "target_label": "Stader Manager Safe",
+      "check_type": "eth_call",
+      "selector_or_slot": "0xe75235b8",
+      "onchain_observed": "Manager Safe (0xAAfb31780e4b9c95Bc920e388f4925A874cd07AF) getThreshold() = 3, getOwners().length = 6 (3-of-6 Gnosis Safe); ETHx (0xA35b1B31Ce002FBF2058D22F30f95D405200A15b) EIP-1967 admin slot = ProxyAdmin (0x67B12264Ca3e0037Fc7E22F2457b42643a04C86e), owner() = TimelockController (0x1112D5C55670Cb5144BF36114C20a122908068B9, getMinDelay() = 604800s / 7d, PROPOSER_ROLE held by 6-of-9 Community Safe 0x45B977CeCB9Dfaa17dFcBa88826ef684b8489fF6), which also holds DEFAULT_ADMIN_ROLE on ETHx and StaderConfig (0x4ABEF2263d5A5ED582FC9A9789a41D85b68d69DB); ETHx MINTER_ROLE held by StakePoolsManager (0xcf5EA1b38380f6aF39068375516Daf40Ed70D299), totalSupply = 58,434.16 ETHx (18 dec).",
+      "documented_reference": "staderlabs.gitbook.io/ethereum states 'The Manager multisig is a 3-of-5 and is tasked with maintaining the protocol' and specifies a 7-day minimum delay on contract upgrades.",
+      "observed_delay_seconds": 604800,
+      "observed_delay_source": {
+        "contract": "0x1112D5C55670Cb5144BF36114C20a122908068B9",
+        "selector": "0xf27a0c92",
+        "getter": "getMinDelay()"
+      },
+      "documented_delay_seconds": 604800,
+      "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
+      "summary_doc": "audits/sprint-12/block-26403676-summary.md",
+      "summary_sha256": "0x66205001b915f64cb7154d4f3d8643ea60348e6460bff476ff3f1fc6e7a60b26"
+    },
     {
       "id": "curve-crvusd-factory-lending-owner-proxy",
       "protocol": "Curve Finance (crvUSD)",
@@ -717,6 +743,76 @@
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-11/block-26403523-summary.md",
       "summary_sha256": "0xc4a599ac19a79b5e24627692ccfc0431ba231ab8bea24236b8b876b5605ebaa8"
+    },
+    {
+      "id": "stakewise-v3-oseth-oracle-quorum-and-ltv",
+      "protocol": "StakeWise V3 (osETH)",
+      "category": "Liquid Staking Infrastructure",
+      "sprint": 12,
+      "block_number": 26403676,
+      "block_hash": "0xf4246ca23c4c38d520de16080a11b5186d04c8242b2c85edcb04c455d291c3ae",
+      "classification": "aligned_baseline",
+      "surface": "Sampled Keeper Oracle Quorum, osETH Fee & LTV Configuration",
+      "target_contract": "0x6B5815467da09DaA7DC83Db21c9239d98Bb487b5",
+      "target_label": "StakeWise V3 Keeper",
+      "check_type": "eth_call",
+      "selector_or_slot": "0x7386749e",
+      "onchain_observed": "Sampled Keeper (0x6B5815467da09DaA7DC83Db21c9239d98Bb487b5) totalOracles() = 11, rewardsMinOracles() = 6, validatorsMinOracles() = 6 (6-of-11 oracle signature quorum); osETH (0xf1C9acDc66974dFB6dEcB12aA385b9cD01190E38) owner() = 0x0000000000000000000000000000000000000000, totalSupply = 148,452.02 osETH (18 dec); OsTokenVaultController (0x2A261e60FB14586B474C208b1B7AC6D0f5000306) feePercent() = 500 (5%), totalAssets = 160,753.18 ETH; OsTokenConfig (0x287d1e2A8dE183A8bf8f2b09Fa1340fBd766eb59) getConfig(0x0000000000000000000000000000000000000000) = (1.01e18, 0.92e18, 0.90e18) (90% mint LTV, 92% liquidation threshold).",
+      "documented_reference": "docs.stakewise.io/docs/oracles/intro ('currently 6 of 11 Oracles'), docs/fees/intro ('5% fee on the rewards accumulated by osETH'), and docs/ostoken/how-ostoken-works ('liquidation threshold is set to 92% LTV').",
+      "observed_delay_seconds": null,
+      "observed_delay_source": null,
+      "documented_delay_seconds": null,
+      "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
+      "summary_doc": "audits/sprint-12/block-26403676-summary.md",
+      "summary_sha256": "0x66205001b915f64cb7154d4f3d8643ea60348e6460bff476ff3f1fc6e7a60b26"
+    },
+    {
+      "id": "swell-sweth-rsweth-timelock-and-reprice-bounds",
+      "protocol": "Swell (swETH / rswETH)",
+      "category": "Liquid Staking & Restaking",
+      "sprint": 12,
+      "block_number": 26403676,
+      "block_hash": "0xf4246ca23c4c38d520de16080a11b5186d04c8242b2c85edcb04c455d291c3ae",
+      "classification": "aligned_baseline",
+      "surface": "Sampled 7-Day SwellTimelock, ProxyAdmins & Reprice Bounds",
+      "target_contract": "0xbA829003e6b5dD858fbed3945719939a6DC3073b",
+      "target_label": "SwellTimelock",
+      "check_type": "eth_call",
+      "selector_or_slot": "0x6a42b8f8",
+      "onchain_observed": "swETH (0xf951E335afb289353dc249e82926178EaC7DEd78) EIP-1967 admin ProxyAdmin (0x25EAf579cA2255fAA5463c635eec28697b5b8846) and rswETH (0xFAe103DC9cf190eD75350761e95403b7b8aFa6c0) EIP-1967 admin ProxyAdmin (0xD750B84845f1cAdfEAc63f96Ec74635e949bFd14) both resolve owner() to SwellTimelock (0xbA829003e6b5dD858fbed3945719939a6DC3073b, delay() = 604800s / 7d, admin() = 4-of-7 Safe 0x20fDF47509C5eFC0e1101e3CE443691781C17F90), which is also the sole PLATFORM_ADMIN on both AccessControlManagers (0x625087d72c762254a72CB22cC2ECa40da6b95EAC, 0x796592b2092F7E150C48643dA19Dd2F28be3333F); minimumRepriceTime = 3600s (1h), maximumRepriceDifferencePercentage = 1% (1e16); swETH totalSupply = 9,635.13 swETH, rswETH totalSupply = 10,363.44 rswETH.",
+      "documented_reference": "Swell v3-core-public deployment architecture specifying 7-day Timelock upgrade/platform-admin control, 1h minimum reprice cadence, and 1% maximum reprice bound.",
+      "observed_delay_seconds": 604800,
+      "observed_delay_source": {
+        "contract": "0xbA829003e6b5dD858fbed3945719939a6DC3073b",
+        "selector": "0x6a42b8f8",
+        "getter": "delay()"
+      },
+      "documented_delay_seconds": null,
+      "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
+      "summary_doc": "audits/sprint-12/block-26403676-summary.md",
+      "summary_sha256": "0x66205001b915f64cb7154d4f3d8643ea60348e6460bff476ff3f1fc6e7a60b26"
+    },
+    {
+      "id": "superstate-ustb-uscc-fee-and-usdc-alignment",
+      "protocol": "Superstate (USTB / USCC)",
+      "category": "Institutional RWA / Tokenized Funds",
+      "sprint": 12,
+      "block_number": 26403676,
+      "block_hash": "0xf4246ca23c4c38d520de16080a11b5186d04c8242b2c85edcb04c455d291c3ae",
+      "classification": "aligned_baseline",
+      "surface": "Sampled USDC Subscription Fee & Fund Supply Alignment",
+      "target_contract": "0x43415eB6ff9DB7E26A15b704e7A3eDCe97d31C4e",
+      "target_label": "Superstate USTB",
+      "check_type": "eth_call",
+      "selector_or_slot": "0xbf7d9119",
+      "onchain_observed": "Sampled USTB (0x43415eB6ff9DB7E26A15b704e7A3eDCe97d31C4e) supportedStablecoins(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48) returns sweep destination 0x774AE279c21B6a17a6E2BD5ab5398FF98F398807 and subscription fee = 0 for USDC; USTB totalSupply = 39,459,575.14 USTB (6 dec), USCC (0x14d60E7FDC0D71d8611742720E4C50E7a974020c) totalSupply = 4,066,680.13 USCC (6 dec).",
+      "documented_reference": "docs.superstate.com/investors/smart-contracts.md states 'At time of writing, fees are set to 0 and only USDC is supported.'",
+      "observed_delay_seconds": null,
+      "observed_delay_source": null,
+      "documented_delay_seconds": null,
+      "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
+      "summary_doc": "audits/sprint-12/block-26403676-summary.md",
+      "summary_sha256": "0x66205001b915f64cb7154d4f3d8643ea60348e6460bff476ff3f1fc6e7a60b26"
     }
   ]
 }

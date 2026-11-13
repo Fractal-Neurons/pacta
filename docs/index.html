@@ -446,7 +446,7 @@ details p {
         </div>
         <div class="stats">
           <div class="stat">
-            <div class="stat__num">11 Sprints · 28 Records</div>
+            <div class="stat__num">12 Sprints · 32 Records</div>
             <div class="stat__label">Pinned to canonical Ethereum Mainnet block hashes</div>
           </div>
           <div class="stat">
@@ -463,7 +463,7 @@ details p {
 
     <section class="sec" id="index">
       <div class="wrap">
-        <p class="eyebrow">01 / Public Control-Plane &amp; Timelock Truth Index (Sprints 1–11)</p>
+        <p class="eyebrow">01 / Public Control-Plane &amp; Timelock Truth Index (Sprints 1–12)</p>
         <h2>Verified on-chain parameters across <strong>collateral &amp; lending infrastructure.</strong></h2>
         <p class="lede">
           All entries below reflect public, non-exploitable architectural state replayed at the cited Ethereum Mainnet block height. Security-sensitive findings are strictly excluded from public tables and routed privately at zero cost to official protocol security contacts.
@@ -480,6 +480,13 @@ details p {
               </tr>
             </thead>
             <tbody>
+              <tr>
+                <td><strong>Stader Labs</strong><br><code>ETHx</code></td>
+                <td><code>#26,403,676</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-12/block-26403676-summary.md">Sprint 12</a></td>
+                <td><code>Manager</code> Safe Quorum &amp; <code>7d</code> Timelock</td>
+                <td><span class="pill">Parameter Delta</span></td>
+                <td><code>Manager</code> Safe (<code>0xAAfb...07AF</code>) is live <code>3-of-6</code> vs. <code>3-of-5</code> in <code>staderlabs.gitbook.io</code>; <code>ETHx</code> (<code>0xA35b...A15b</code>) <code>ProxyAdmin</code> (<code>0x67B1...C86e</code>) &amp; <code>DEFAULT_ADMIN_ROLE</code> resolve to <code>7d</code> <code>TimelockController</code> (<code>0x1112...68B9</code>, <code>604,800s</code>, <code>6-of-9</code> proposer) across <code>58,434.16 ETHx</code>.</td>
+              </tr>
               <tr>
                 <td><strong>Curve Finance</strong><br><code>crvUSD</code> / <code>ControllerFactory</code></td>
                 <td><code>#26,403,523</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-11/block-26403523-summary.md">Sprint 11</a></td>
@@ -593,6 +600,13 @@ details p {
                 <td>Sampled <code>BOLD</code> (<code>0x6440...b01D</code>) <code>owner() = 0x0</code>, <code>Governance</code> <code>owner() = 0x0</code>, and <code>CollateralRegistry</code> EIP-1967 implementation slot <code>= 0x00...00</code>.</td>
               </tr>
               <tr>
+                <td><strong>StakeWise V3, Swell &amp; Superstate</strong><br><code>osETH</code>, <code>swETH</code>/<code>rswETH</code> &amp; <code>USTB</code>/<code>USCC</code></td>
+                <td><code>#26,403,676</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-12/block-26403676-summary.md">Sprint 12</a></td>
+                <td>Sampled Oracle Quorum, <code>7d</code> Timelock &amp; <code>0</code>-Fee RWA</td>
+                <td><span class="pill">Aligned Baseline</span></td>
+                <td>StakeWise <code>Keeper</code> (<code>0x6B58...87b5</code>) enforces <code>6-of-11</code> oracles, <code>5%</code> fee &amp; <code>90%/92%</code> LTV; Swell <code>swETH</code>/<code>rswETH</code> <code>ProxyAdmin</code>s &amp; <code>PLATFORM_ADMIN</code> resolve to <code>7d</code> <code>SwellTimelock</code> (<code>0xbA82...073b</code>, <code>604,800s</code>); Superstate <code>USTB</code> (<code>0x4341...1C4e</code>) supports <code>USDC</code> at <code>0</code> fee across <code>39.46M USTB</code>.</td>
+              </tr>
+              <tr>
                 <td><strong>Lombard &amp; Resolv</strong><br><code>LBTC</code> Core &amp; <code>USR</code> Admin Rules</td>
                 <td><code>#26,403,523</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-11/block-26403523-summary.md">Sprint 11</a></td>
                 <td>Sampled 24h Proxy Timelock &amp; Admin Delay</td>
@@ -696,7 +710,7 @@ ETH_RPC_URL="https://gateway.tenderly.co/public/mainnet" forge test -vv</code></
         </details>
         <details>
           <summary>How can risk curators reproduce an index entry independently?</summary>
-          <p>Every entry in <a href="api/v1/index.json"><code>/api/v1/index.json</code></a> and <a href="https://github.com/Fractal-Neurons/pacta/tree/main/audits"><code>audits/sprint-1..11</code></a> includes the exact contract address, function selector or EIP-1967 storage slot, and canonical Ethereum Mainnet block height + block hash, reproducible with a single <code>cast call</code> or <code>cast storage</code> against any archive node.</p>
+          <p>Every entry in <a href="api/v1/index.json"><code>/api/v1/index.json</code></a> and <a href="https://github.com/Fractal-Neurons/pacta/tree/main/audits"><code>audits/sprint-1..12</code></a> includes the exact contract address, function selector or EIP-1967 storage slot, and canonical Ethereum Mainnet block height + block hash, reproducible with a single <code>cast call</code> or <code>cast storage</code> against any archive node.</p>
         </details>
       </div>
     </section>
