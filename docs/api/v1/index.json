@@ -1,13 +1,48 @@
 {
   "schema": "pacta.counterparty_control_index.v1",
-  "generated_at": "2026-11-13T05:23:00Z",
+  "generated_at": "2026-11-13T10:05:00Z",
   "publisher": {
     "organization": "Fractal Neurons",
     "unit": "Pacta Protocol Commitments DRI",
     "portal_url": "https://fractal-neurons.github.io/pacta/",
     "repository_url": "https://github.com/Fractal-Neurons/pacta",
     "security_contact": "pacta@dri.network",
-    "attester_eoa": "0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09"
+    "attester_eoa": "0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09",
+    "attester_basename": "pacta.base.eth",
+    "treasury_admin": "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14"
+  },
+  "onchain_anchoring": {
+    "chain_id": 8453,
+    "network": "base-mainnet",
+    "attester_basename": "pacta.base.eth",
+    "attester_eoa": "0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09",
+    "treasury_admin": "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14",
+    "commitment_registry": "0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872",
+    "basescan_url": "https://basescan.org/address/0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872",
+    "sourcify_url": "https://sourcify.dev/#/lookup/0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872",
+    "registry_deploy_tx": "0xbbd6cbdd6980c8d99e00ede04259df13c839a005eb611678f9d3a3efd892064f",
+    "registry_batch_tx": "0x1be31c238cb0f9a196b1ed1f654e5e8c377442e3181c205a5c33d95c4b9cdf79",
+    "basename_register_tx": "0x89de213d0d220148ed750c89fbcb7a2a2df8a5fd962ee0d7bf5448fee2e205d4",
+    "eas_schema_registry": "0x4200000000000000000000000000000000000020",
+    "eas_contract": "0x4200000000000000000000000000000000000021",
+    "eas_schema_uid": "0x7ff485bc1159dff3c70eefcb9dff2d65be990301760c2d53799e5a45e3badf83",
+    "eas_schema_url": "https://base.easscan.org/schema/view/0x7ff485bc1159dff3c70eefcb9dff2d65be990301760c2d53799e5a45e3badf83",
+    "eas_schema_register_tx": "0x3ff42fe681156dff4c0d10779cc637f48dab30eacef9e26c549fe6bd2e0cee80",
+    "eas_multi_attest_tx": "0x8c53e155a4b2f28ffbf069f1b65952fc8f7d81740f362b8aafb39493c6bd001b",
+    "sprint_eas_attestations": {
+      "1": "0x34049a2c64fe3355f8e325481234754c8422a48bb4784fed1d028fa40eb93058",
+      "2": "0xca4b525bf5142d8e88433cbed2a1aa87bb06a97d1353cb77621ec41a51ce8101",
+      "3": "0x291e513f3d697eea41b20bd57bf53acdb085b5566e499dd655ff46d7cd9d95a8",
+      "4": "0xa26f81b0e68248c7f286527286b3d2e6b299502d53f4dfbc4397df7d22262986",
+      "5": "0x804289d4357b0a8d5a360911ec450c13ca36c4422d1e811c4c7040ef7d2628e5",
+      "6": "0x749d96e1a3d214a4ab66c528ca12c84dce085fa138dc370dd0eb817d890f09fa",
+      "7": "0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779",
+      "8": "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2",
+      "9": "0x0e017bc4399101f9fef3d98a434dd9f2829b6e386e7733408dfd4b626d186eea",
+      "10": "0xfdd83c8091ef6e8ffe67e8a55a78892fcfbb1092683b21ff2d85f8cc09750e6c",
+      "11": "0x754edd7612258b755ff2e56903243d1f8867bad53c29ce3febb5ed9114005e42",
+      "12": "0x7caae9c22c86ae171392def07dce83fa5da6fbf904b1ba9b5ff66a5021b16de9"
+    }
   },
   "methodology": {
     "chain_id": 1,
@@ -54,7 +89,8 @@
       "documented_delay_seconds": 604800,
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-12/block-26403676-summary.md",
-      "summary_sha256": "0x66205001b915f64cb7154d4f3d8643ea60348e6460bff476ff3f1fc6e7a60b26"
+      "summary_sha256": "0x66205001b915f64cb7154d4f3d8643ea60348e6460bff476ff3f1fc6e7a60b26",
+      "base_eas_uid": "0x7caae9c22c86ae171392def07dce83fa5da6fbf904b1ba9b5ff66a5021b16de9"
     },
     {
       "id": "curve-crvusd-factory-lending-owner-proxy",
@@ -76,7 +112,8 @@
       "documented_delay_seconds": null,
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-11/block-26403523-summary.md",
-      "summary_sha256": "0xc4a599ac19a79b5e24627692ccfc0431ba231ab8bea24236b8b876b5605ebaa8"
+      "summary_sha256": "0xc4a599ac19a79b5e24627692ccfc0431ba231ab8bea24236b8b876b5605ebaa8",
+      "base_eas_uid": "0x754edd7612258b755ff2e56903243d1f8867bad53c29ce3febb5ed9114005e42"
     },
     {
       "id": "gearbox-v3-legacy-timelock-and-instance-safe",
@@ -102,7 +139,8 @@
       "documented_delay_seconds": 172800,
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-11/block-26403523-summary.md",
-      "summary_sha256": "0xc4a599ac19a79b5e24627692ccfc0431ba231ab8bea24236b8b876b5605ebaa8"
+      "summary_sha256": "0xc4a599ac19a79b5e24627692ccfc0431ba231ab8bea24236b8b876b5605ebaa8",
+      "base_eas_uid": "0x754edd7612258b755ff2e56903243d1f8867bad53c29ce3febb5ed9114005e42"
     },
     {
       "id": "ondo-ousg-rate-limiter-and-flux-timelock",
@@ -128,7 +166,8 @@
       "documented_delay_seconds": 86400,
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-10/block-26403121-summary.md",
-      "summary_sha256": "0x64b868f9d22c2994ecac03962ff2606d52fb7a4ad5a77ebb595911001b70db19"
+      "summary_sha256": "0x64b868f9d22c2994ecac03962ff2606d52fb7a4ad5a77ebb595911001b70db19",
+      "base_eas_uid": "0xfdd83c8091ef6e8ffe67e8a55a78892fcfbb1092683b21ff2d85f8cc09750e6c"
     },
     {
       "id": "maple-v2-syrup-ppm-admin",
@@ -150,7 +189,8 @@
       "documented_delay_seconds": 259200,
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-6/block-26401540-summary.md",
-      "summary_sha256": "0xec0e3a3862cd528a35acc2992eccd798f8ce4bc8e7ea8c0311f56fa000df8471"
+      "summary_sha256": "0xec0e3a3862cd528a35acc2992eccd798f8ce4bc8e7ea8c0311f56fa000df8471",
+      "base_eas_uid": "0x749d96e1a3d214a4ab66c528ca12c84dce085fa138dc370dd0eb817d890f09fa"
     },
     {
       "id": "ethena-admin-timelock-and-dev-safe",
@@ -176,7 +216,8 @@
       "documented_delay_seconds": 604800,
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-7/block-26401638-summary.md",
-      "summary_sha256": "0x326d36de4579d119b7cccc7ad36786933b50c2a0957082e28a73e6e6e6847f35"
+      "summary_sha256": "0x326d36de4579d119b7cccc7ad36786933b50c2a0957082e28a73e6e6e6847f35",
+      "base_eas_uid": "0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779"
     },
     {
       "id": "usual-money-registry-access-delay",
@@ -202,7 +243,8 @@
       "documented_delay_seconds": 259200,
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-8/block-26401725-summary.md",
-      "summary_sha256": "0x7f5605538db468ccb2f51a5822ea2dabf29fb36858f7ae301e36b1a57f6dd2d2"
+      "summary_sha256": "0x7f5605538db468ccb2f51a5822ea2dabf29fb36858f7ae301e36b1a57f6dd2d2",
+      "base_eas_uid": "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2"
     },
     {
       "id": "fluid-instadapp-vault-factory-auth",
@@ -224,7 +266,8 @@
       "documented_delay_seconds": null,
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-5/block-26401405-summary.md",
-      "summary_sha256": "0xfd13461161313f9bd5ae867e4076d5f07b787e05370bca7516dcbbc8ba8f63a2"
+      "summary_sha256": "0xfd13461161313f9bd5ae867e4076d5f07b787e05370bca7516dcbbc8ba8f63a2",
+      "base_eas_uid": "0x804289d4357b0a8d5a360911ec450c13ca36c4422d1e811c4c7040ef7d2628e5"
     },
     {
       "id": "metamorpho-re7-weth-guardian-parity",
@@ -250,7 +293,8 @@
       "documented_delay_seconds": 259200,
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-5/block-26401405-summary.md",
-      "summary_sha256": "0xfd13461161313f9bd5ae867e4076d5f07b787e05370bca7516dcbbc8ba8f63a2"
+      "summary_sha256": "0xfd13461161313f9bd5ae867e4076d5f07b787e05370bca7516dcbbc8ba8f63a2",
+      "base_eas_uid": "0x804289d4357b0a8d5a360911ec450c13ca36c4422d1e811c4c7040ef7d2628e5"
     },
     {
       "id": "mellow-lido-earn-curator-quorum",
@@ -276,7 +320,8 @@
       "documented_delay_seconds": null,
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-4/block-26401312-summary.md",
-      "summary_sha256": "0x6adc370fdb6acbc14f38ab1b30cb90a0c1e5ce8c2457ad64177c82f548edc2fb"
+      "summary_sha256": "0x6adc370fdb6acbc14f38ab1b30cb90a0c1e5ce8c2457ad64177c82f548edc2fb",
+      "base_eas_uid": "0xa26f81b0e68248c7f286527286b3d2e6b299502d53f4dfbc4397df7d22262986"
     },
     {
       "id": "renzo-ezeth-deposit-queue-fee",
@@ -298,7 +343,8 @@
       "documented_delay_seconds": null,
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-8/block-26401725-summary.md",
-      "summary_sha256": "0x7f5605538db468ccb2f51a5822ea2dabf29fb36858f7ae301e36b1a57f6dd2d2"
+      "summary_sha256": "0x7f5605538db468ccb2f51a5822ea2dabf29fb36858f7ae301e36b1a57f6dd2d2",
+      "base_eas_uid": "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2"
     },
     {
       "id": "fx-protocol-v2-treasury-admin",
@@ -320,7 +366,8 @@
       "documented_delay_seconds": 259200,
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-2/block-26400152-summary.md",
-      "summary_sha256": "0x9c2a186cf21dd97faf2a6afb9f810e1b9f6c8503dc5f7153435c0fa48811c966"
+      "summary_sha256": "0x9c2a186cf21dd97faf2a6afb9f810e1b9f6c8503dc5f7153435c0fa48811c966",
+      "base_eas_uid": "0xca4b525bf5142d8e88433cbed2a1aa87bb06a97d1353cb77621ec41a51ce8101"
     },
     {
       "id": "inverse-finance-firm-policy-safe",
@@ -346,7 +393,8 @@
       "documented_delay_seconds": 172800,
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-1/block-26399876-summary.md",
-      "summary_sha256": "0xeb97180d687f9f8fb9a1ae341349bd74d3bc7ff95da0e4eb586e6ba4f540cffe"
+      "summary_sha256": "0xeb97180d687f9f8fb9a1ae341349bd74d3bc7ff95da0e4eb586e6ba4f540cffe",
+      "base_eas_uid": "0x34049a2c64fe3355f8e325481234754c8422a48bb4784fed1d028fa40eb93058"
     },
     {
       "id": "mantle-lsp-meth-upgrade-timelock",
@@ -372,7 +420,8 @@
       "documented_delay_seconds": 0,
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-10/block-26403121-summary.md",
-      "summary_sha256": "0x64b868f9d22c2994ecac03962ff2606d52fb7a4ad5a77ebb595911001b70db19"
+      "summary_sha256": "0x64b868f9d22c2994ecac03962ff2606d52fb7a4ad5a77ebb595911001b70db19",
+      "base_eas_uid": "0xfdd83c8091ef6e8ffe67e8a55a78892fcfbb1092683b21ff2d85f8cc09750e6c"
     },
     {
       "id": "yearn-v3-role-manager-timelock",
@@ -398,7 +447,8 @@
       "documented_delay_seconds": 0,
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-8/block-26401725-summary.md",
-      "summary_sha256": "0x7f5605538db468ccb2f51a5822ea2dabf29fb36858f7ae301e36b1a57f6dd2d2"
+      "summary_sha256": "0x7f5605538db468ccb2f51a5822ea2dabf29fb36858f7ae301e36b1a57f6dd2d2",
+      "base_eas_uid": "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2"
     },
     {
       "id": "etherfi-core-timelocks",
@@ -424,7 +474,8 @@
       "documented_delay_seconds": 864000,
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-7/block-26401638-summary.md",
-      "summary_sha256": "0x326d36de4579d119b7cccc7ad36786933b50c2a0957082e28a73e6e6e6847f35"
+      "summary_sha256": "0x326d36de4579d119b7cccc7ad36786933b50c2a0957082e28a73e6e6e6847f35",
+      "base_eas_uid": "0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779"
     },
     {
       "id": "etherfi-liquid-veda-roles-authority",
@@ -450,7 +501,8 @@
       "documented_delay_seconds": 86400,
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-3/block-26401070-summary.md",
-      "summary_sha256": "0x02d6de1d05599e44d0634541a13d05764a90d6f860c8d8bcfde4b0e980d3c122"
+      "summary_sha256": "0x02d6de1d05599e44d0634541a13d05764a90d6f860c8d8bcfde4b0e980d3c122",
+      "base_eas_uid": "0x291e513f3d697eea41b20bd57bf53acdb085b5566e499dd655ff46d7cd9d95a8"
     },
     {
       "id": "liquity-v2-bold-immutability",
@@ -472,7 +524,8 @@
       "documented_delay_seconds": null,
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-6/block-26401540-summary.md",
-      "summary_sha256": "0xec0e3a3862cd528a35acc2992eccd798f8ce4bc8e7ea8c0311f56fa000df8471"
+      "summary_sha256": "0xec0e3a3862cd528a35acc2992eccd798f8ce4bc8e7ea8c0311f56fa000df8471",
+      "base_eas_uid": "0x749d96e1a3d214a4ab66c528ca12c84dce085fa138dc370dd0eb817d890f09fa"
     },
     {
       "id": "spark-sky-gsm-pause-delay",
@@ -498,7 +551,8 @@
       "documented_delay_seconds": 172800,
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-7/block-26401638-summary.md",
-      "summary_sha256": "0x326d36de4579d119b7cccc7ad36786933b50c2a0957082e28a73e6e6e6847f35"
+      "summary_sha256": "0x326d36de4579d119b7cccc7ad36786933b50c2a0957082e28a73e6e6e6847f35",
+      "base_eas_uid": "0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779"
     },
     {
       "id": "morpho-blue-singleton-owner",
@@ -520,7 +574,8 @@
       "documented_delay_seconds": null,
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-3/block-26401070-summary.md",
-      "summary_sha256": "0x02d6de1d05599e44d0634541a13d05764a90d6f860c8d8bcfde4b0e980d3c122"
+      "summary_sha256": "0x02d6de1d05599e44d0634541a13d05764a90d6f860c8d8bcfde4b0e980d3c122",
+      "base_eas_uid": "0x291e513f3d697eea41b20bd57bf53acdb085b5566e499dd655ff46d7cd9d95a8"
     },
     {
       "id": "convex-booster-governance-chain",
@@ -542,7 +597,8 @@
       "documented_delay_seconds": null,
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-4/block-26401312-summary.md",
-      "summary_sha256": "0x6adc370fdb6acbc14f38ab1b30cb90a0c1e5ce8c2457ad64177c82f548edc2fb"
+      "summary_sha256": "0x6adc370fdb6acbc14f38ab1b30cb90a0c1e5ce8c2457ad64177c82f548edc2fb",
+      "base_eas_uid": "0xa26f81b0e68248c7f286527286b3d2e6b299502d53f4dfbc4397df7d22262986"
     },
     {
       "id": "compound-v3-comet-timelock-and-pause-safe",
@@ -568,7 +624,8 @@
       "documented_delay_seconds": 172800,
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-9/block-26402160-summary.md",
-      "summary_sha256": "0x0a4b9cbd0c3f3eb1839a86753857a603237918200e1d9f90e757f70008472ef4"
+      "summary_sha256": "0x0a4b9cbd0c3f3eb1839a86753857a603237918200e1d9f90e757f70008472ef4",
+      "base_eas_uid": "0x0e017bc4399101f9fef3d98a434dd9f2829b6e386e7733408dfd4b626d186eea"
     },
     {
       "id": "aave-v3-gho-acl-manager-and-executor-lvl1",
@@ -590,7 +647,8 @@
       "documented_delay_seconds": 86400,
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-9/block-26402160-summary.md",
-      "summary_sha256": "0x0a4b9cbd0c3f3eb1839a86753857a603237918200e1d9f90e757f70008472ef4"
+      "summary_sha256": "0x0a4b9cbd0c3f3eb1839a86753857a603237918200e1d9f90e757f70008472ef4",
+      "base_eas_uid": "0x0e017bc4399101f9fef3d98a434dd9f2829b6e386e7733408dfd4b626d186eea"
     },
     {
       "id": "kelp-dao-rseth-proxy-admin-and-timelock",
@@ -616,7 +674,8 @@
       "documented_delay_seconds": 864000,
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-9/block-26402160-summary.md",
-      "summary_sha256": "0x0a4b9cbd0c3f3eb1839a86753857a603237918200e1d9f90e757f70008472ef4"
+      "summary_sha256": "0x0a4b9cbd0c3f3eb1839a86753857a603237918200e1d9f90e757f70008472ef4",
+      "base_eas_uid": "0x0e017bc4399101f9fef3d98a434dd9f2829b6e386e7733408dfd4b626d186eea"
     },
     {
       "id": "eigenlayer-core-proxy-admin-and-timelock",
@@ -642,7 +701,8 @@
       "documented_delay_seconds": 864000,
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-9/block-26402160-summary.md",
-      "summary_sha256": "0x0a4b9cbd0c3f3eb1839a86753857a603237918200e1d9f90e757f70008472ef4"
+      "summary_sha256": "0x0a4b9cbd0c3f3eb1839a86753857a603237918200e1d9f90e757f70008472ef4",
+      "base_eas_uid": "0x0e017bc4399101f9fef3d98a434dd9f2829b6e386e7733408dfd4b626d186eea"
     },
     {
       "id": "symbiotic-core-immutable-registries-and-safes",
@@ -664,7 +724,8 @@
       "documented_delay_seconds": null,
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-10/block-26403121-summary.md",
-      "summary_sha256": "0x64b868f9d22c2994ecac03962ff2606d52fb7a4ad5a77ebb595911001b70db19"
+      "summary_sha256": "0x64b868f9d22c2994ecac03962ff2606d52fb7a4ad5a77ebb595911001b70db19",
+      "base_eas_uid": "0xfdd83c8091ef6e8ffe67e8a55a78892fcfbb1092683b21ff2d85f8cc09750e6c"
     },
     {
       "id": "lido-dual-governance-emergency-timelock",
@@ -690,7 +751,8 @@
       "documented_delay_seconds": 259200,
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-10/block-26403121-summary.md",
-      "summary_sha256": "0x64b868f9d22c2994ecac03962ff2606d52fb7a4ad5a77ebb595911001b70db19"
+      "summary_sha256": "0x64b868f9d22c2994ecac03962ff2606d52fb7a4ad5a77ebb595911001b70db19",
+      "base_eas_uid": "0xfdd83c8091ef6e8ffe67e8a55a78892fcfbb1092683b21ff2d85f8cc09750e6c"
     },
     {
       "id": "lombard-lbtc-core-proxy-upgrade-timelock",
@@ -705,7 +767,7 @@
       "target_label": "Lombard TimelockController",
       "check_type": "eth_call",
       "selector_or_slot": "0xf27a0c92",
-      "onchain_observed": "LBTC (0x8236a87084f8B84306f72007F36F2618A5634494) EIP-1967 admin slot = ProxyAdmin (0xbae061C73876952aa2C5e483B74DfA785425f879), whose owner() — along with AssetRouter ProxyAdmin (0xBf4202c8a0d852D432266dfE112ED624a1a36754) and Consortium ProxyAdmin (0x1629AE77cC70DaAc95Ec479caAEA23ECE77c67c5) — resolves to TimelockController (0x055E84e7FE8955E2781010B866f10Ef6E1E77e59, getMinDelay() = 86400s / 24h, EXECUTOR_ROLE held by 3-of-5 Safe 0x251a604E8E8f6906d60f8dedC5aAeb8CD38F4892 with Guard 0x87bde523e05Fee2C557d6F592F7EB686C69189Ab); LBTC totalSupply = 6,203.54 LBTC (8 dec).",
+      "onchain_observed": "LBTC (0x8236a87084f8B84306f72007F36F2618A5634494) EIP-1967 admin slot = ProxyAdmin (0xbae061C73876952aa2C5e483B74DfA785425f879), whose owner() \u2014 along with AssetRouter ProxyAdmin (0xBf4202c8a0d852D432266dfE112ED624a1a36754) and Consortium ProxyAdmin (0x1629AE77cC70DaAc95Ec479caAEA23ECE77c67c5) \u2014 resolves to TimelockController (0x055E84e7FE8955E2781010B866f10Ef6E1E77e59, getMinDelay() = 86400s / 24h, EXECUTOR_ROLE held by 3-of-5 Safe 0x251a604E8E8f6906d60f8dedC5aAeb8CD38F4892 with Guard 0x87bde523e05Fee2C557d6F592F7EB686C69189Ab); LBTC totalSupply = 6,203.54 LBTC (8 dec).",
       "documented_reference": "docs.lombard.finance/learn/transparency/smart-contracts states 'Each Proxy Upgrade Timelock enforces a 24-hour minimum delay on contract upgrades.'",
       "observed_delay_seconds": 86400,
       "observed_delay_source": {
@@ -716,7 +778,8 @@
       "documented_delay_seconds": 86400,
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-11/block-26403523-summary.md",
-      "summary_sha256": "0xc4a599ac19a79b5e24627692ccfc0431ba231ab8bea24236b8b876b5605ebaa8"
+      "summary_sha256": "0xc4a599ac19a79b5e24627692ccfc0431ba231ab8bea24236b8b876b5605ebaa8",
+      "base_eas_uid": "0x754edd7612258b755ff2e56903243d1f8867bad53c29ce3febb5ed9114005e42"
     },
     {
       "id": "resolv-usr-default-admin-delay-and-safe",
@@ -742,7 +805,8 @@
       "documented_delay_seconds": null,
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-11/block-26403523-summary.md",
-      "summary_sha256": "0xc4a599ac19a79b5e24627692ccfc0431ba231ab8bea24236b8b876b5605ebaa8"
+      "summary_sha256": "0xc4a599ac19a79b5e24627692ccfc0431ba231ab8bea24236b8b876b5605ebaa8",
+      "base_eas_uid": "0x754edd7612258b755ff2e56903243d1f8867bad53c29ce3febb5ed9114005e42"
     },
     {
       "id": "stakewise-v3-oseth-oracle-quorum-and-ltv",
@@ -764,7 +828,8 @@
       "documented_delay_seconds": null,
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-12/block-26403676-summary.md",
-      "summary_sha256": "0x66205001b915f64cb7154d4f3d8643ea60348e6460bff476ff3f1fc6e7a60b26"
+      "summary_sha256": "0x66205001b915f64cb7154d4f3d8643ea60348e6460bff476ff3f1fc6e7a60b26",
+      "base_eas_uid": "0x7caae9c22c86ae171392def07dce83fa5da6fbf904b1ba9b5ff66a5021b16de9"
     },
     {
       "id": "swell-sweth-rsweth-timelock-and-reprice-bounds",
@@ -790,7 +855,8 @@
       "documented_delay_seconds": null,
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-12/block-26403676-summary.md",
-      "summary_sha256": "0x66205001b915f64cb7154d4f3d8643ea60348e6460bff476ff3f1fc6e7a60b26"
+      "summary_sha256": "0x66205001b915f64cb7154d4f3d8643ea60348e6460bff476ff3f1fc6e7a60b26",
+      "base_eas_uid": "0x7caae9c22c86ae171392def07dce83fa5da6fbf904b1ba9b5ff66a5021b16de9"
     },
     {
       "id": "superstate-ustb-uscc-fee-and-usdc-alignment",
@@ -812,7 +878,8 @@
       "documented_delay_seconds": null,
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-12/block-26403676-summary.md",
-      "summary_sha256": "0x66205001b915f64cb7154d4f3d8643ea60348e6460bff476ff3f1fc6e7a60b26"
+      "summary_sha256": "0x66205001b915f64cb7154d4f3d8643ea60348e6460bff476ff3f1fc6e7a60b26",
+      "base_eas_uid": "0x7caae9c22c86ae171392def07dce83fa5da6fbf904b1ba9b5ff66a5021b16de9"
     }
   ]
 }
