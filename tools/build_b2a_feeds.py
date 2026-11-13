@@ -27,13 +27,15 @@ EAS_SCHEMA = "0x7ff485bc1159dff3c70eefcb9dff2d65be990301760c2d53799e5a45e3badf83
 PAY_TO = "0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09"            # attester EOA pacta.base.eth, owner-approved x402 payTo
 TREASURY = "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14"          # Pacta Treasury (an EOA; never call it a Safe)
 USDC_BASE = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"
+X402_URL = "https://pacta-x402.pacta.workers.dev"              # canonical live x402 edge Worker (Cloudflare; owner-deployed)
+X402_FREE = ["/health", "/.well-known/x402", "/v1/sample/control-plane"]
 MCP_NAME = "io.github.fractal-neurons/pacta"
 MCP_PACKAGE = "@pacta/mcp-server"
 MCP_VERSION = "0.1.0"                                            # @pacta/mcp-server package.json version (SKILL.md is shipped in it)
 MCP_ENV = [("PACTA_INDEX_PATH", "Local snapshot of /api/v1/index.json (offline use)"),
            ("PACTA_PROPOSALS_PATH", "Local snapshot of /api/v1/proposals.json"),
            ("PACTA_SPEC_PATH", "Local spec JSON (anchoring overrides, local index fallback)"),
-           ("PACTA_X402_URL", "Enables paid x402 tools against this gateway URL (unset: free tools only)"),
+           ("PACTA_X402_URL", f"Enables paid x402 tools against this gateway URL; the live gateway is {X402_URL} (unset: free tools only)"),
            ("PACTA_X402_MAX_ATOMIC", "Per-call USDC cap in atomic units (default 1000000 = $1.00; hard ceiling 5000000)"),
            ("PACTA_X402_TIMEOUT_MS", "Timeout per outbound request in ms (default 8000)")]
 FORUM_HOST = {"aave": "governance.aave.com", "euler": "forum.euler.finance", "morpho": "forum.morpho.org", "sky": "forum.skyeco.com"}
@@ -176,13 +178,14 @@ def llms_full(idx, radar, prop, onb):
          "## MCP server", f"- Name: {MCP_NAME} · package {MCP_PACKAGE} · transport stdio.", f"- Status: {MCP_STATUS}",
          f"- Install (after publication): `npx -y {MCP_PACKAGE}`; MCP client config: {{\"mcpServers\": {{\"pacta\": {{\"command\": \"npx\", \"args\": [\"-y\", \"{MCP_PACKAGE}\"]}}}}}}",
          "- Tools:"] + [f"  - {n} ({p}): {d}" for n, p, d in MCP_TOOLS] + [
-         "- Paid tools are disabled unless PACTA_X402_URL is set; the client refuses any 402 challenge whose payTo, asset or network differ "
+         f"- Paid tools are disabled unless PACTA_X402_URL is set (opt-in: PACTA_X402_URL={X402_URL}); the client refuses any 402 challenge whose payTo, asset or network differ "
          "from the values below, or whose amount exceeds $1.00 by default.", "",
          "## x402 micropayments (optional; only for live scans of unindexed contracts)",
          f"- Network: Base (chain id 8453) · scheme exact · asset USDC {USDC_BASE} · payTo {PAY_TO} (attester EOA, pacta.base.eth).",
          f"- Pacta Treasury: {TREASURY} (an externally owned account; the PactaCommitmentRegistry treasury slot).",
-         "- Routes (edge worker; deployment pending):"] + [f"  - GET {r}: {atomic} atomic USDC ({usd})" for r, atomic, usd in X402_ROUTES] + [
-         "- Free: GET /health, GET /.well-known/x402 (Bazaar discovery, discoverable: true), GET /v1/sample/control-plane.", "",
+         f"- Live gateway: {X402_URL} (Cloudflare Worker; x402 v1, PayAI facilitator).",
+         "- Paid routes:"] + [f"  - GET {X402_URL}{r}: {atomic} atomic USDC ({usd})" for r, atomic, usd in X402_ROUTES] + [
+         "- Free: " + ", ".join(f"GET {X402_URL}{p}" for p in X402_FREE) + " (/.well-known/x402 is the Bazaar discovery manifest, discoverable: true).", "",
          "## On-chain anchoring (Base, chain id 8453)",
          f"- PactaCommitmentRegistry {REGISTRY} (Sourcify verified); attester pacta.base.eth {a['attester_eoa']}.",
          f"- EAS schema {EAS_SCHEMA}: uint16 sprintId, uint64 chainId, uint64 blockNumber, bytes32 blockHash, uint8 verifiedCount, uint8 driftCount, bytes32 summarySha256, string prURI.",
@@ -243,9 +246,11 @@ def agent_card(prop, onb, idx):
              "tags": ["verification", "eip-1898", "coding-agent"], "inputModes": ["text/plain"], "outputModes": ["text/plain"],
              "examples": ["cast call <target> \"getMinDelay()\" --block <N> --rpc-url $ETH_RPC_URL"]},
         ],
-        "endpoints": {"feeds": {p: f"{BASE}{p}" for p, _ in FEEDS}, "mcp_manifest": f"{BASE}/.well-known/mcp.json", "skill": f"{BASE}/SKILL.md"},
+        "endpoints": {"feeds": {p: f"{BASE}{p}" for p, _ in FEEDS}, "mcp_manifest": f"{BASE}/.well-known/mcp.json", "skill": f"{BASE}/SKILL.md",
+                      "x402_gateway": X402_URL},
         "x402": {"x402Version": 1, "scheme": "exact", "network": "base", "chainId": 8453, "asset": USDC_BASE, "payTo": PAY_TO,
-                 "status": "edge worker deployment pending; free feeds are live",
+                 "status": "live", "gatewayUrl": X402_URL, "discovery": f"{X402_URL}/.well-known/x402",
+                 "free": [f"{X402_URL}{p}" for p in X402_FREE],
                  "routes": [{"path": r.split("?")[0], "query": (r.split("?")[1] if "?" in r else ""), "maxAmountRequired": atomic, "priceUsd": usd} for r, atomic, usd in X402_ROUTES]},
         "anchoring": {"chainId": 8453, "registry": REGISTRY, "easSchema": EAS_SCHEMA, "attester": idx["onchain_anchoring"]["attester_eoa"],
                       "treasury": {"address": TREASURY, "label": "Pacta Treasury", "kind": "externally owned account"}},
@@ -263,6 +268,8 @@ def mcp_manifest(idx, onb):
         "tools": [{"name": n, "access": "free" if p == "free" else "x402", "price": None if p == "free" else p.split(" ")[1], "description": d} for n, p, d in MCP_TOOLS],
         "feeds": {p: f"{BASE}{p}" for p, _ in FEEDS},
         "verification": {"chainId": 8453, "registry": REGISTRY, "easSchema": EAS_SCHEMA, "method": "eth_call with EIP-1898 {blockHash, requireCanonical: true}"},
+        "x402": {"gatewayUrl": X402_URL, "discovery": f"{X402_URL}/.well-known/x402", "enableWith": f"PACTA_X402_URL={X402_URL}",
+                 "optIn": True, "payTo": PAY_TO, "asset": USDC_BASE, "chainId": 8453},
     }
 
 
@@ -303,6 +310,8 @@ Environment (all optional, none secret):
 """ + "\n".join(f"- `{n}`: {d}" for n, d in MCP_ENV) + f"""
 
 ## x402 (optional, only for live scans of contracts not in the index)
+- Live gateway: `{X402_URL}` (discovery `{X402_URL}/.well-known/x402`; free `/health` and `/v1/sample/control-plane`).
+- The MCP paid tools are opt-in: set `PACTA_X402_URL={X402_URL}` to enable them.
 - Base (8453), scheme `exact`, USDC `{USDC_BASE}`, payTo `{PAY_TO}`. Never sign for any other `payTo`.
 - Prices: control-plane scan $0.10, timelock operation $0.25, proposal diff $0.15, live timelocks $0.10. Default client cap $1.00.
 - Pacta Treasury `{TREASURY}` is an EOA (externally owned account) that receives issuer clearance payments; it is not an x402 payTo.

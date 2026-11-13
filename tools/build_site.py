@@ -778,8 +778,9 @@ def llms(idx, radar):
         f"- Payment: USDC on Base (`{USDC['Base']}`) or Ethereum (`{USDC['Ethereum']}`) to the Pacta treasury `{a['treasury_admin']}` (same address on both chains).",
         "- Community queue: free, unscheduled (typically 6–8 weeks).",
         f"- Request: {BASE_URL}/request/ (builds a scope brief; opens a pre-filled GitHub intake issue or Gmail compose, or copies the brief).", "",
-        "## x402 API (planned, not live)",
-        "- On-demand scans of contracts outside the index; the indexed data above stays free. Planned endpoint: https://api.pacta.wtf (deployment pending; not yet live). Routes: `GET /v1/scan/control-plane?chain=&address=` ($0.10), `GET /v1/scan/timelock-op?timelock=&opId=` ($0.25); free `/health`, `/.well-known/x402`, `/v1/sample/control-plane`.", "",
+        "## x402 API (live)",
+        f"- On-demand scans of contracts outside the index; the indexed data above stays free. Live gateway: {B2A.X402_URL} (Cloudflare Worker, x402 v1, USDC on Base, payTo `{B2A.PAY_TO}`). Routes: `GET /v1/scan/control-plane?chain=&address=` ($0.10), `GET /v1/scan/timelock-op?chain=&timelock=&opId=` ($0.25), `GET /v1/scan/proposal-diff?forum=&topicId=` ($0.15), `GET /v1/briefs/live-timelocks` ($0.10); free `/health`, `/.well-known/x402` (Bazaar discovery), `/v1/sample/control-plane`.",
+        f"- MCP: set `PACTA_X402_URL={B2A.X402_URL}` to enable the paid tools (opt-in).", "",
         "## Contact",
         f"- {CONTACT} · {REPO} · {FN} · security: {BASE_URL}/.well-known/security.txt", "",
     ]

@@ -21,7 +21,7 @@
    "secret": false
   },
   {
-   "description": "Enables paid x402 tools against this gateway URL (unset: free tools only)",
+   "description": "Enables paid x402 tools against this gateway URL; the live gateway is https://pacta-x402.pacta.workers.dev (unset: free tools only)",
    "name": "PACTA_X402_URL",
    "required": false,
    "secret": false
@@ -113,5 +113,14 @@
   "method": "eth_call with EIP-1898 {blockHash, requireCanonical: true}",
   "registry": "0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872"
  },
- "version": "2026.11.13"
+ "version": "2026.11.13",
+ "x402": {
+  "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+  "chainId": 8453,
+  "discovery": "https://pacta-x402.pacta.workers.dev/.well-known/x402",
+  "enableWith": "PACTA_X402_URL=https://pacta-x402.pacta.workers.dev",
+  "gatewayUrl": "https://pacta-x402.pacta.workers.dev",
+  "optIn": true,
+  "payTo": "0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09"
+ }
 }

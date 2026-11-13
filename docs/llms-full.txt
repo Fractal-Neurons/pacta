@@ -32,17 +32,18 @@ Generated deterministically from the feeds below (data as of 2026-11-13T21:40:42
   - pacta_scan_control_plane (x402 $0.10): Live control-plane scan of a contract (chain, address)
   - pacta_scan_timelock_op (x402 $0.25): Live TimelockController operation state (timelock, opId)
   - pacta_live_timelocks (x402 $0.10): Live state of tracked queued timelock operations
-- Paid tools are disabled unless PACTA_X402_URL is set; the client refuses any 402 challenge whose payTo, asset or network differ from the values below, or whose amount exceeds $1.00 by default.
+- Paid tools are disabled unless PACTA_X402_URL is set (opt-in: PACTA_X402_URL=https://pacta-x402.pacta.workers.dev); the client refuses any 402 challenge whose payTo, asset or network differ from the values below, or whose amount exceeds $1.00 by default.
 
 ## x402 micropayments (optional; only for live scans of unindexed contracts)
 - Network: Base (chain id 8453) · scheme exact · asset USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913 · payTo 0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09 (attester EOA, pacta.base.eth).
 - Pacta Treasury: 0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14 (an externally owned account; the PactaCommitmentRegistry treasury slot).
-- Routes (edge worker; deployment pending):
-  - GET /v1/scan/control-plane?chain=ethereum|base&address=0x…: 100000 atomic USDC ($0.10)
-  - GET /v1/scan/timelock-op?chain=ethereum|base&timelock=0x…&opId=0x…: 250000 atomic USDC ($0.25)
-  - GET /v1/scan/proposal-diff?forum=aave|euler|morpho|sky&topicId=<id>: 150000 atomic USDC ($0.15)
-  - GET /v1/briefs/live-timelocks: 100000 atomic USDC ($0.10)
-- Free: GET /health, GET /.well-known/x402 (Bazaar discovery, discoverable: true), GET /v1/sample/control-plane.
+- Live gateway: https://pacta-x402.pacta.workers.dev (Cloudflare Worker; x402 v1, PayAI facilitator).
+- Paid routes:
+  - GET https://pacta-x402.pacta.workers.dev/v1/scan/control-plane?chain=ethereum|base&address=0x…: 100000 atomic USDC ($0.10)
+  - GET https://pacta-x402.pacta.workers.dev/v1/scan/timelock-op?chain=ethereum|base&timelock=0x…&opId=0x…: 250000 atomic USDC ($0.25)
+  - GET https://pacta-x402.pacta.workers.dev/v1/scan/proposal-diff?forum=aave|euler|morpho|sky&topicId=<id>: 150000 atomic USDC ($0.15)
+  - GET https://pacta-x402.pacta.workers.dev/v1/briefs/live-timelocks: 100000 atomic USDC ($0.10)
+- Free: GET https://pacta-x402.pacta.workers.dev/health, GET https://pacta-x402.pacta.workers.dev/.well-known/x402, GET https://pacta-x402.pacta.workers.dev/v1/sample/control-plane (/.well-known/x402 is the Bazaar discovery manifest, discoverable: true).
 
 ## On-chain anchoring (Base, chain id 8453)
 - PactaCommitmentRegistry 0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872 (Sourcify verified); attester pacta.base.eth 0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09.

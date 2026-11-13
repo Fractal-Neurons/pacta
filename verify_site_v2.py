@@ -541,6 +541,19 @@ def main():
     check("SKILL.md: YAML frontmatter (name pacta-protocol-commitments, one-line description), feed URLs, verification recipe",
           bool(fm) and "name: pacta-protocol-commitments" in fm.group(1) and re.search(r"^description: .{60,}$", fm.group(1), re.M) is not None
           and all(f"{base}{p_}" in skill for p_, _ in B2A.FEEDS) and "--block" in skill)
+    X402 = "https://pacta-x402.pacta.workers.dev"   # literal on purpose: the generator constant must match it
+    llms_now = read("docs/llms.txt")
+    surfaces = {"agent.json": card["x402"].get("gatewayUrl") == X402 and card["x402"].get("status") == "live"
+                and card["endpoints"].get("x402_gateway") == X402 and card["x402"].get("discovery") == X402 + "/.well-known/x402",
+                "mcp.json": man.get("x402", {}).get("gatewayUrl") == X402 and man["x402"].get("enableWith") == "PACTA_X402_URL=" + X402
+                and any(e["name"] == "PACTA_X402_URL" and X402 in e["description"] for e in man["environment"]),
+                "llms.txt": X402 in llms_now and "## x402 API (live)" in llms_now, "llms-full.txt": f"Live gateway: {X402}" in full and f"GET {X402}/v1/scan/control-plane" in full,
+                "SKILL.md": f"Live gateway: `{X402}`" in skill and f"PACTA_X402_URL={X402}" in skill}
+    stale = [f for f in ["docs/" + x for x in b2a_files] + ["docs/llms.txt"]
+             if re.search(r"deployment pending|planned, not live|not yet live|api\.pacta\.wtf|<worker-origin>", read(f))]
+    check("canonical live x402 gateway https://pacta-x402.pacta.workers.dev in agent.json, mcp.json, llms.txt, llms-full.txt, SKILL.md; no stale 'pending' wording",
+          B2A.X402_URL == X402 and all(surfaces.values()) and not stale,
+          f"missing {[k for k, v in surfaces.items() if not v]}; stale {stale}")
     near = []
     for f in ["docs/" + x for x in b2a_files] + ["docs/llms.txt", "docs/index.html", "README.md"]:
         t = read(f)

@@ -47,11 +47,13 @@ Environment (all optional, none secret):
 - `PACTA_INDEX_PATH`: Local snapshot of /api/v1/index.json (offline use)
 - `PACTA_PROPOSALS_PATH`: Local snapshot of /api/v1/proposals.json
 - `PACTA_SPEC_PATH`: Local spec JSON (anchoring overrides, local index fallback)
-- `PACTA_X402_URL`: Enables paid x402 tools against this gateway URL (unset: free tools only)
+- `PACTA_X402_URL`: Enables paid x402 tools against this gateway URL; the live gateway is https://pacta-x402.pacta.workers.dev (unset: free tools only)
 - `PACTA_X402_MAX_ATOMIC`: Per-call USDC cap in atomic units (default 1000000 = $1.00; hard ceiling 5000000)
 - `PACTA_X402_TIMEOUT_MS`: Timeout per outbound request in ms (default 8000)
 
 ## x402 (optional, only for live scans of contracts not in the index)
+- Live gateway: `https://pacta-x402.pacta.workers.dev` (discovery `https://pacta-x402.pacta.workers.dev/.well-known/x402`; free `/health` and `/v1/sample/control-plane`).
+- The MCP paid tools are opt-in: set `PACTA_X402_URL=https://pacta-x402.pacta.workers.dev` to enable them.
 - Base (8453), scheme `exact`, USDC `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`, payTo `0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09`. Never sign for any other `payTo`.
 - Prices: control-plane scan $0.10, timelock operation $0.25, proposal diff $0.15, live timelocks $0.10. Default client cap $1.00.
 - Pacta Treasury `0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14` is an EOA (externally owned account) that receives issuer clearance payments; it is not an x402 payTo.

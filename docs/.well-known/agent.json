@@ -44,7 +44,8 @@
    "/llms.txt": "https://pacta.wtf/llms.txt"
   },
   "mcp_manifest": "https://pacta.wtf/.well-known/mcp.json",
-  "skill": "https://pacta.wtf/SKILL.md"
+  "skill": "https://pacta.wtf/SKILL.md",
+  "x402_gateway": "https://pacta-x402.pacta.workers.dev"
  },
  "iconUrl": "https://pacta.wtf/favicon.png",
  "name": "Pacta",
@@ -142,6 +143,13 @@
  "x402": {
   "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
   "chainId": 8453,
+  "discovery": "https://pacta-x402.pacta.workers.dev/.well-known/x402",
+  "free": [
+   "https://pacta-x402.pacta.workers.dev/health",
+   "https://pacta-x402.pacta.workers.dev/.well-known/x402",
+   "https://pacta-x402.pacta.workers.dev/v1/sample/control-plane"
+  ],
+  "gatewayUrl": "https://pacta-x402.pacta.workers.dev",
   "network": "base",
   "payTo": "0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09",
   "routes": [
@@ -171,7 +179,7 @@
    }
   ],
   "scheme": "exact",
-  "status": "edge worker deployment pending; free feeds are live",
+  "status": "live",
   "x402Version": 1
  }
 }

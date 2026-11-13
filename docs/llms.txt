@@ -48,8 +48,9 @@ Pacta checks who can change the rules of DeFi protocols (proxy admins, timelock 
 - Community queue: free, unscheduled (typically 6–8 weeks).
 - Request: https://pacta.wtf/request/ (builds a scope brief; opens a pre-filled GitHub intake issue or Gmail compose, or copies the brief).
 
-## x402 API (planned, not live)
-- On-demand scans of contracts outside the index; the indexed data above stays free. Planned endpoint: https://api.pacta.wtf (deployment pending; not yet live). Routes: `GET /v1/scan/control-plane?chain=&address=` ($0.10), `GET /v1/scan/timelock-op?timelock=&opId=` ($0.25); free `/health`, `/.well-known/x402`, `/v1/sample/control-plane`.
+## x402 API (live)
+- On-demand scans of contracts outside the index; the indexed data above stays free. Live gateway: https://pacta-x402.pacta.workers.dev (Cloudflare Worker, x402 v1, USDC on Base, payTo `0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09`). Routes: `GET /v1/scan/control-plane?chain=&address=` ($0.10), `GET /v1/scan/timelock-op?chain=&timelock=&opId=` ($0.25), `GET /v1/scan/proposal-diff?forum=&topicId=` ($0.15), `GET /v1/briefs/live-timelocks` ($0.10); free `/health`, `/.well-known/x402` (Bazaar discovery), `/v1/sample/control-plane`.
+- MCP: set `PACTA_X402_URL=https://pacta-x402.pacta.workers.dev` to enable the paid tools (opt-in).
 
 ## Contact
 - pacta@dri.network · https://github.com/Fractal-Neurons/pacta · https://fractalneurons.com · security: https://pacta.wtf/.well-known/security.txt
