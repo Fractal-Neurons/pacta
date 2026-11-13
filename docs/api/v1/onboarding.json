@@ -1,0 +1,2006 @@
+{
+ "schema": "pacta.onboarding_briefs.v1",
+ "generated_by": "tools/onboarding_scan.py",
+ "generated_at": "2026-11-13T21:40:42Z",
+ "method": "eth_call / eth_getStorageAt / eth_getCode / eth_getTransactionCount pinned with EIP-1898 {blockHash, requireCanonical:true}, byte-compared across two RPC endpoints per chain; role maps replayed from event logs (deployment block -> pinned block).",
+ "briefs": [
+  {
+   "slug": "kerne-kusd-base",
+   "chain": "base",
+   "asset": "kUSD (Kerne)",
+   "venue": "Euler (Base) \u00b7 isolated kUSD/USDC market",
+   "forum": {
+    "name": "Euler forum",
+    "topic": 1862,
+    "url": "https://forum.euler.finance/t/1862",
+    "title": "kUSD/USDC isolated market on Euler Base: deployed, ungoverned, and an underwriting packet for curators"
+   },
+   "chain_id": 8453,
+   "explorer": "https://basescan.org",
+   "pin": {
+    "number": 57050397,
+    "hash": "0xd6d02efb420f81b3f0e095d78453362c4488afb9adc0f8e1c411bb265beb88a7",
+    "timestamp": 1794600455
+   },
+   "rpcs_cross_checked": [
+    "https://base-rpc.publicnode.com",
+    "https://base.gateway.tenderly.co",
+    "https://mainnet.base.org"
+   ],
+   "checks": [
+    {
+     "id": "k_supply",
+     "kind": "eth_call",
+     "label": "kUSD totalSupply()",
+     "to": "0x5C2EfdF0D8D286959b42308966bc2B97f5680AA3",
+     "sig": "totalSupply()",
+     "args": [],
+     "calldata": "0x18160ddd",
+     "raw": "0x00000000000000000000000000000000000000000000003d8af1452c6c310000",
+     "value": 1135263248000000000000
+    },
+    {
+     "id": "k_dec",
+     "kind": "eth_call",
+     "label": "kUSD decimals()",
+     "to": "0x5C2EfdF0D8D286959b42308966bc2B97f5680AA3",
+     "sig": "decimals()",
+     "args": [],
+     "calldata": "0x313ce567",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000000012",
+     "value": 18
+    },
+    {
+     "id": "k_symbol",
+     "kind": "eth_call",
+     "label": "kUSD symbol()",
+     "to": "0x5C2EfdF0D8D286959b42308966bc2B97f5680AA3",
+     "sig": "symbol()",
+     "args": [],
+     "calldata": "0x95d89b41",
+     "raw": "0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000046b55534400000000000000000000000000000000000000000000000000000000",
+     "value": "kUSD"
+    },
+    {
+     "id": "k_ac",
+     "kind": "eth_call",
+     "label": "kUSD supportsInterface(IAccessControl)",
+     "to": "0x5C2EfdF0D8D286959b42308966bc2B97f5680AA3",
+     "sig": "supportsInterface(bytes4)",
+     "args": [
+      "0x7965db0b00000000000000000000000000000000000000000000000000000000"
+     ],
+     "calldata": "0x01ffc9a77965db0b00000000000000000000000000000000000000000000000000000000",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000000001",
+     "value": true
+    },
+    {
+     "id": "v_gov",
+     "kind": "eth_call",
+     "label": "eUSDC vault governorAdmin()",
+     "to": "0xe87c294E1139C31770727193e3Be0ccEd73d6AA3",
+     "sig": "governorAdmin()",
+     "args": [],
+     "calldata": "0x6ce98c29",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000000000",
+     "value": "0x0000000000000000000000000000000000000000"
+    },
+    {
+     "id": "v_oracle",
+     "kind": "eth_call",
+     "label": "eUSDC vault oracle()",
+     "to": "0xe87c294E1139C31770727193e3Be0ccEd73d6AA3",
+     "sig": "oracle()",
+     "args": [],
+     "calldata": "0x7dc0d1d0",
+     "raw": "0x000000000000000000000000b95407727d33fb2e444966fd0b7d0e7767ce019e",
+     "value": "0xB95407727d33fB2E444966fd0B7D0E7767Ce019E"
+    },
+    {
+     "id": "v_caps",
+     "kind": "eth_call",
+     "label": "eUSDC vault caps() (supplyCap, borrowCap)",
+     "to": "0xe87c294E1139C31770727193e3Be0ccEd73d6AA3",
+     "sig": "caps()",
+     "args": [],
+     "calldata": "0x18e22d98",
+     "raw": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+     "value": [
+      0,
+      0
+     ]
+    },
+    {
+     "id": "v_ltvb",
+     "kind": "eth_call",
+     "label": "eUSDC LTVBorrow(ekUSD)",
+     "to": "0xe87c294E1139C31770727193e3Be0ccEd73d6AA3",
+     "sig": "LTVBorrow(address)",
+     "args": [
+      "0xD3800ceb6bBeB90101ed5d5A46017fE846c9509e"
+     ],
+     "calldata": "0xbf58094d000000000000000000000000d3800ceb6bbeb90101ed5d5a46017fe846c9509e",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000001770",
+     "value": 6000
+    },
+    {
+     "id": "v_ltvl",
+     "kind": "eth_call",
+     "label": "eUSDC LTVLiquidation(ekUSD)",
+     "to": "0xe87c294E1139C31770727193e3Be0ccEd73d6AA3",
+     "sig": "LTVLiquidation(address)",
+     "args": [
+      "0xD3800ceb6bBeB90101ed5d5A46017fE846c9509e"
+     ],
+     "calldata": "0xaf5aaeeb000000000000000000000000d3800ceb6bbeb90101ed5d5a46017fe846c9509e",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000001964",
+     "value": 6500
+    },
+    {
+     "id": "v_assets",
+     "kind": "eth_call",
+     "label": "eUSDC totalAssets()",
+     "to": "0xe87c294E1139C31770727193e3Be0ccEd73d6AA3",
+     "sig": "totalAssets()",
+     "args": [],
+     "calldata": "0x01e1d114",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000002fceabc",
+     "value": 50129596
+    },
+    {
+     "id": "v_borrows",
+     "kind": "eth_call",
+     "label": "eUSDC totalBorrows()",
+     "to": "0xe87c294E1139C31770727193e3Be0ccEd73d6AA3",
+     "sig": "totalBorrows()",
+     "args": [],
+     "calldata": "0x47bd3718",
+     "raw": "0x000000000000000000000000000000000000000000000000000000000133273c",
+     "value": 20129596
+    },
+    {
+     "id": "c_gov",
+     "kind": "eth_call",
+     "label": "ekUSD escrow governorAdmin()",
+     "to": "0xD3800ceb6bBeB90101ed5d5A46017fE846c9509e",
+     "sig": "governorAdmin()",
+     "args": [],
+     "calldata": "0x6ce98c29",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000000000",
+     "value": "0x0000000000000000000000000000000000000000"
+    },
+    {
+     "id": "c_asset",
+     "kind": "eth_call",
+     "label": "ekUSD escrow asset()",
+     "to": "0xD3800ceb6bBeB90101ed5d5A46017fE846c9509e",
+     "sig": "asset()",
+     "args": [],
+     "calldata": "0x38d52e0f",
+     "raw": "0x0000000000000000000000005c2efdf0d8d286959b42308966bc2b97f5680aa3",
+     "value": "0x5C2EfdF0D8D286959b42308966bc2B97f5680AA3"
+    },
+    {
+     "id": "c_assets",
+     "kind": "eth_call",
+     "label": "ekUSD escrow totalAssets()",
+     "to": "0xD3800ceb6bBeB90101ed5d5A46017fE846c9509e",
+     "sig": "totalAssets()",
+     "args": [],
+     "calldata": "0x01e1d114",
+     "raw": "0x000000000000000000000000000000000000000000000004563918244f400000",
+     "value": 80000000000000000000
+    },
+    {
+     "id": "r_gov",
+     "kind": "eth_call",
+     "label": "EulerRouter governor()",
+     "to": "0xB95407727d33fB2E444966fd0B7D0E7767Ce019E",
+     "sig": "governor()",
+     "args": [],
+     "calldata": "0x0c340a24",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000000000",
+     "value": "0x0000000000000000000000000000000000000000"
+    },
+    {
+     "id": "r_oracle",
+     "kind": "eth_call",
+     "label": "EulerRouter getConfiguredOracle(kUSD, USDC)",
+     "to": "0xB95407727d33fB2E444966fd0B7D0E7767Ce019E",
+     "sig": "getConfiguredOracle(address,address)",
+     "args": [
+      "0x5C2EfdF0D8D286959b42308966bc2B97f5680AA3",
+      "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"
+     ],
+     "calldata": "0x8aa776080000000000000000000000005c2efdf0d8d286959b42308966bc2b97f5680aa3000000000000000000000000833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+     "raw": "0x0000000000000000000000008f27228f02e798c17b7d6b270f32f8ec6afdd2d3",
+     "value": "0x8f27228f02E798c17B7d6b270F32F8EC6afDD2D3"
+    },
+    {
+     "id": "o_quote",
+     "kind": "eth_call",
+     "label": "FixedRateOracle getQuote(1e18 kUSD -> USDC)",
+     "to": "0x8f27228f02E798c17B7d6b270F32F8EC6afDD2D3",
+     "sig": "getQuote(uint256,address,address)",
+     "args": [
+      1000000000000000000,
+      "0x5C2EfdF0D8D286959b42308966bc2B97f5680AA3",
+      "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"
+     ],
+     "calldata": "0xae68676c0000000000000000000000000000000000000000000000000de0b6b3a76400000000000000000000000000005c2efdf0d8d286959b42308966bc2b97f5680aa3000000000000000000000000833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+     "raw": "0x00000000000000000000000000000000000000000000000000000000000f4240",
+     "value": 1000000
+    },
+    {
+     "id": "s_threshold",
+     "kind": "eth_call",
+     "label": "Kerne Safe getThreshold()",
+     "to": "0x52d3E450bA6c299B1B07298F1E87DD74732D4877",
+     "sig": "getThreshold()",
+     "args": [],
+     "calldata": "0xe75235b8",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000000002",
+     "value": 2
+    },
+    {
+     "id": "s_owners",
+     "kind": "eth_call",
+     "label": "Kerne Safe getOwners()",
+     "to": "0x52d3E450bA6c299B1B07298F1E87DD74732D4877",
+     "sig": "getOwners()",
+     "args": [],
+     "calldata": "0xa0e67e2b",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000300000000000000000000000014f04ce02f35b29af564a98544dd7e23939939460000000000000000000000000cec7021f4c20f3d5ebb55c1ac591c15efbb7895000000000000000000000000f4a43c88b7370bd6e370c7af5fe663c6d223b3fb",
+     "value": [
+      "0x14f04cE02f35B29Af564A98544dD7e2393993946",
+      "0x0CeC7021f4c20f3D5eBb55c1AC591c15eFBb7895",
+      "0xf4A43C88b7370Bd6e370c7Af5FE663c6D223B3fb"
+     ]
+    },
+    {
+     "id": "s_admin",
+     "kind": "eth_call",
+     "label": "kUSD hasRole(DEFAULT_ADMIN_ROLE, Kerne Safe)",
+     "to": "0x5C2EfdF0D8D286959b42308966bc2B97f5680AA3",
+     "sig": "hasRole(bytes32,address)",
+     "args": [
+      "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "0x52d3E450bA6c299B1B07298F1E87DD74732D4877"
+     ],
+     "calldata": "0x91d14854000000000000000000000000000000000000000000000000000000000000000000000000000000000000000052d3e450ba6c299b1b07298f1e87dd74732d4877",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000000000",
+     "value": false
+    },
+    {
+     "id": "k_admin_tl",
+     "kind": "eth_call",
+     "label": "kUSD hasRole(DEFAULT_ADMIN_ROLE, admin timelock)",
+     "to": "0x5C2EfdF0D8D286959b42308966bc2B97f5680AA3",
+     "sig": "hasRole(bytes32,address)",
+     "args": [
+      "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "0x36A14976980B7Dd33136f6613545EB0A2C0a0D72"
+     ],
+     "calldata": "0x91d14854000000000000000000000000000000000000000000000000000000000000000000000000000000000000000036a14976980b7dd33136f6613545eb0a2c0a0d72",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000000001",
+     "value": true
+    },
+    {
+     "id": "tl_delay",
+     "kind": "eth_call",
+     "label": "kUSD admin timelock getMinDelay()",
+     "to": "0x36A14976980B7Dd33136f6613545EB0A2C0a0D72",
+     "sig": "getMinDelay()",
+     "args": [],
+     "calldata": "0xf27a0c92",
+     "raw": "0x000000000000000000000000000000000000000000000000000000000002a300",
+     "value": 172800
+    },
+    {
+     "id": "tl_prop",
+     "kind": "eth_call",
+     "label": "timelock hasRole(PROPOSER_ROLE, Kerne Safe)",
+     "to": "0x36A14976980B7Dd33136f6613545EB0A2C0a0D72",
+     "sig": "hasRole(bytes32,address)",
+     "args": [
+      "0xb09aa5aeb3702cfd50b6b62bc4532604938f21248a27a1d5ca736082b6819cc1",
+      "0x52d3E450bA6c299B1B07298F1E87DD74732D4877"
+     ],
+     "calldata": "0x91d14854b09aa5aeb3702cfd50b6b62bc4532604938f21248a27a1d5ca736082b6819cc100000000000000000000000052d3e450ba6c299b1b07298f1e87dd74732d4877",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000000001",
+     "value": true
+    },
+    {
+     "id": "tl_exec",
+     "kind": "eth_call",
+     "label": "timelock hasRole(EXECUTOR_ROLE, Kerne Safe)",
+     "to": "0x36A14976980B7Dd33136f6613545EB0A2C0a0D72",
+     "sig": "hasRole(bytes32,address)",
+     "args": [
+      "0xd8aa0f3194971a2a116679f7c2090f6939c8d4e01a2a8d7e41d55e5351469e63",
+      "0x52d3E450bA6c299B1B07298F1E87DD74732D4877"
+     ],
+     "calldata": "0x91d14854d8aa0f3194971a2a116679f7c2090f6939c8d4e01a2a8d7e41d55e5351469e6300000000000000000000000052d3e450ba6c299b1b07298f1e87dd74732d4877",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000000001",
+     "value": true
+    },
+    {
+     "id": "tl_canc",
+     "kind": "eth_call",
+     "label": "timelock hasRole(CANCELLER_ROLE, Kerne Safe)",
+     "to": "0x36A14976980B7Dd33136f6613545EB0A2C0a0D72",
+     "sig": "hasRole(bytes32,address)",
+     "args": [
+      "0xfd643c72710c63c0180259aba6b2d05451e3591a24e58b62239378085726f783",
+      "0x52d3E450bA6c299B1B07298F1E87DD74732D4877"
+     ],
+     "calldata": "0x91d14854fd643c72710c63c0180259aba6b2d05451e3591a24e58b62239378085726f78300000000000000000000000052d3e450ba6c299b1b07298f1e87dd74732d4877",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000000001",
+     "value": true
+    },
+    {
+     "id": "k_minter",
+     "kind": "eth_call",
+     "label": "kUSD hasRole(MINTER_ROLE, minter contract)",
+     "to": "0x5C2EfdF0D8D286959b42308966bc2B97f5680AA3",
+     "sig": "hasRole(bytes32,address)",
+     "args": [
+      "0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6",
+      "0xaBDE1138aa1Ce88d1dF06422C0c3b05D70569803"
+     ],
+     "calldata": "0x91d148549f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6000000000000000000000000abde1138aa1ce88d1df06422c0c3b05d70569803",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000000001",
+     "value": true
+    },
+    {
+     "id": "m_kusd",
+     "kind": "eth_call",
+     "label": "minter contract kUSD()",
+     "to": "0xaBDE1138aa1Ce88d1dF06422C0c3b05D70569803",
+     "sig": "kUSD()",
+     "args": [],
+     "calldata": "0x1210de7d",
+     "raw": "0x0000000000000000000000005c2efdf0d8d286959b42308966bc2b97f5680aa3",
+     "value": "0x5C2EfdF0D8D286959b42308966bc2B97f5680AA3"
+    },
+    {
+     "id": "m_paused",
+     "kind": "eth_call",
+     "label": "minter contract paused()",
+     "to": "0xaBDE1138aa1Ce88d1dF06422C0c3b05D70569803",
+     "sig": "paused()",
+     "args": [],
+     "calldata": "0x5c975abb",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000000000",
+     "value": false
+    },
+    {
+     "id": "m_admin_tl",
+     "kind": "eth_call",
+     "label": "minter hasRole(DEFAULT_ADMIN_ROLE, admin timelock)",
+     "to": "0xaBDE1138aa1Ce88d1dF06422C0c3b05D70569803",
+     "sig": "hasRole(bytes32,address)",
+     "args": [
+      "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "0x36A14976980B7Dd33136f6613545EB0A2C0a0D72"
+     ],
+     "calldata": "0x91d14854000000000000000000000000000000000000000000000000000000000000000000000000000000000000000036a14976980b7dd33136f6613545eb0a2c0a0d72",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000000001",
+     "value": true
+    }
+   ],
+   "accounts": {},
+   "role_maps": [
+    {
+     "id": "kusd_roles",
+     "label": "kUSD AccessControl role history",
+     "address": "0x5C2EfdF0D8D286959b42308966bc2B97f5680AA3",
+     "kind": "access_control",
+     "from_block": 44448090,
+     "to_block": 57050397,
+     "events": 16,
+     "log_rpc": "https://base.blockscout.com (index) + receipt verification on 4-endpoint cross-check",
+     "roles": [
+      {
+       "role": "0x0000000000000000000000000000000000000000000000000000000000000000",
+       "name": "DEFAULT_ADMIN_ROLE",
+       "holders": [
+        "0x36A14976980B7Dd33136f6613545EB0A2C0a0D72"
+       ]
+      },
+      {
+       "role": "0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6",
+       "name": "MINTER_ROLE",
+       "holders": [
+        "0xaBDE1138aa1Ce88d1dF06422C0c3b05D70569803"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "kusd_timelock",
+     "label": "kUSD admin TimelockController role history",
+     "address": "0x36A14976980B7Dd33136f6613545EB0A2C0a0D72",
+     "kind": "access_control",
+     "from_block": 49495127,
+     "to_block": 57050397,
+     "events": 4,
+     "log_rpc": "https://base.blockscout.com (index) + receipt verification on 4-endpoint cross-check",
+     "roles": [
+      {
+       "role": "0x0000000000000000000000000000000000000000000000000000000000000000",
+       "name": "DEFAULT_ADMIN_ROLE",
+       "holders": [
+        "0x36A14976980B7Dd33136f6613545EB0A2C0a0D72"
+       ]
+      },
+      {
+       "role": "0xb09aa5aeb3702cfd50b6b62bc4532604938f21248a27a1d5ca736082b6819cc1",
+       "name": "PROPOSER_ROLE",
+       "holders": [
+        "0x52d3E450bA6c299B1B07298F1E87DD74732D4877"
+       ]
+      },
+      {
+       "role": "0xd8aa0f3194971a2a116679f7c2090f6939c8d4e01a2a8d7e41d55e5351469e63",
+       "name": "EXECUTOR_ROLE",
+       "holders": [
+        "0x52d3E450bA6c299B1B07298F1E87DD74732D4877"
+       ]
+      },
+      {
+       "role": "0xfd643c72710c63c0180259aba6b2d05451e3591a24e58b62239378085726f783",
+       "name": "CANCELLER_ROLE",
+       "holders": [
+        "0x52d3E450bA6c299B1B07298F1E87DD74732D4877"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "kusd_minter",
+     "label": "kUSD minter contract role history",
+     "address": "0xaBDE1138aa1Ce88d1dF06422C0c3b05D70569803",
+     "kind": "access_control",
+     "from_block": 48469020,
+     "to_block": 57050397,
+     "events": 11,
+     "log_rpc": "https://base.blockscout.com (index) + receipt verification on 4-endpoint cross-check",
+     "roles": [
+      {
+       "role": "0x0000000000000000000000000000000000000000000000000000000000000000",
+       "name": "DEFAULT_ADMIN_ROLE",
+       "holders": [
+        "0x36A14976980B7Dd33136f6613545EB0A2C0a0D72"
+       ]
+      },
+      {
+       "role": "0x241ecf16d79d0f8dbfb92cbc07fe17840425976cf0667f022fe9877caa831b08",
+       "name": "MANAGER_ROLE",
+       "holders": [
+        "0x36A14976980B7Dd33136f6613545EB0A2C0a0D72",
+        "0xC47adaf51907bB1871D07E18eA21dc75Ae93Cc8E"
+       ]
+      }
+     ]
+    }
+   ],
+   "holders": {
+    "0x36A14976980B7Dd33136f6613545EB0A2C0a0D72": {
+     "address": "0x36A14976980B7Dd33136f6613545EB0A2C0a0D72",
+     "code_bytes": 6536,
+     "nonce": 1,
+     "kind": "contract",
+     "owner_of_safes": []
+    },
+    "0xaBDE1138aa1Ce88d1dF06422C0c3b05D70569803": {
+     "address": "0xaBDE1138aa1Ce88d1dF06422C0c3b05D70569803",
+     "code_bytes": 11376,
+     "nonce": 1,
+     "kind": "contract",
+     "owner_of_safes": []
+    },
+    "0x52d3E450bA6c299B1B07298F1E87DD74732D4877": {
+     "address": "0x52d3E450bA6c299B1B07298F1E87DD74732D4877",
+     "code_bytes": 171,
+     "nonce": 1,
+     "kind": "safe",
+     "threshold": 2,
+     "owners": [
+      "0x14f04cE02f35B29Af564A98544dD7e2393993946",
+      "0x0CeC7021f4c20f3D5eBb55c1AC591c15eFBb7895",
+      "0xf4A43C88b7370Bd6e370c7Af5FE663c6D223B3fb"
+     ],
+     "owner_of_safes": []
+    },
+    "0xC47adaf51907bB1871D07E18eA21dc75Ae93Cc8E": {
+     "address": "0xC47adaf51907bB1871D07E18eA21dc75Ae93Cc8E",
+     "code_bytes": 1012,
+     "nonce": 1,
+     "kind": "contract",
+     "owner_of_safes": []
+    }
+   }
+  },
+  {
+   "slug": "efix-efixdi-base",
+   "chain": "base",
+   "asset": "efixDI+ (EFIX)",
+   "venue": "Euler (Base) \u00b7 efixDI/USDC market (governedPerspective request)",
+   "forum": {
+    "name": "Euler forum",
+    "topic": 1850,
+    "url": "https://forum.euler.finance/t/1850",
+    "title": "efixDI/USDC on Base \u2014 tokenized Brazilian DI fund, D+0 NAV redemption (governedPerspective whitelist)"
+   },
+   "chain_id": 8453,
+   "explorer": "https://basescan.org",
+   "pin": {
+    "number": 57050397,
+    "hash": "0xd6d02efb420f81b3f0e095d78453362c4488afb9adc0f8e1c411bb265beb88a7",
+    "timestamp": 1794600455
+   },
+   "rpcs_cross_checked": [
+    "https://base-rpc.publicnode.com",
+    "https://base.gateway.tenderly.co",
+    "https://mainnet.base.org"
+   ],
+   "checks": [
+    {
+     "id": "v_gov",
+     "kind": "eth_call",
+     "label": "eUSDC vault governorAdmin()",
+     "to": "0xe276BB91E0C63C0BC6ABdd3Dc37DF324f90e3956",
+     "sig": "governorAdmin()",
+     "args": [],
+     "calldata": "0x6ce98c29",
+     "raw": "0x0000000000000000000000009040b4e9e1f8c96dc6def1a2d6f4105d8535eed4",
+     "value": "0x9040b4E9e1F8C96dC6dEF1a2d6f4105D8535EeD4"
+    },
+    {
+     "id": "v_oracle",
+     "kind": "eth_call",
+     "label": "eUSDC vault oracle()",
+     "to": "0xe276BB91E0C63C0BC6ABdd3Dc37DF324f90e3956",
+     "sig": "oracle()",
+     "args": [],
+     "calldata": "0x7dc0d1d0",
+     "raw": "0x0000000000000000000000005f655525a46b968cf388865cebc0c0b79a8f8a2b",
+     "value": "0x5F655525A46B968CF388865CeBC0c0B79A8F8a2b"
+    },
+    {
+     "id": "v_caps",
+     "kind": "eth_call",
+     "label": "eUSDC vault caps() (supplyCap, borrowCap)",
+     "to": "0xe276BB91E0C63C0BC6ABdd3Dc37DF324f90e3956",
+     "sig": "caps()",
+     "args": [],
+     "calldata": "0x18e22d98",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000005609000000000000000000000000000000000000000000000000000000000000398a",
+     "value": [
+      22025,
+      14730
+     ]
+    },
+    {
+     "id": "v_ltvb",
+     "kind": "eth_call",
+     "label": "eUSDC LTVBorrow(escrow)",
+     "to": "0xe276BB91E0C63C0BC6ABdd3Dc37DF324f90e3956",
+     "sig": "LTVBorrow(address)",
+     "args": [
+      "0x008a506c6b6138F47B82f6a0b8Fc7FE375C102e9"
+     ],
+     "calldata": "0xbf58094d000000000000000000000000008a506c6b6138f47b82f6a0b8fc7fe375c102e9",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000001b58",
+     "value": 7000
+    },
+    {
+     "id": "v_ltvl",
+     "kind": "eth_call",
+     "label": "eUSDC LTVLiquidation(escrow)",
+     "to": "0xe276BB91E0C63C0BC6ABdd3Dc37DF324f90e3956",
+     "sig": "LTVLiquidation(address)",
+     "args": [
+      "0x008a506c6b6138F47B82f6a0b8Fc7FE375C102e9"
+     ],
+     "calldata": "0xaf5aaeeb000000000000000000000000008a506c6b6138f47b82f6a0b8fc7fe375c102e9",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000001e14",
+     "value": 7700
+    },
+    {
+     "id": "v_fee",
+     "kind": "eth_call",
+     "label": "eUSDC interestFee()",
+     "to": "0xe276BB91E0C63C0BC6ABdd3Dc37DF324f90e3956",
+     "sig": "interestFee()",
+     "args": [],
+     "calldata": "0xa75df498",
+     "raw": "0x00000000000000000000000000000000000000000000000000000000000005dc",
+     "value": 1500
+    },
+    {
+     "id": "v_assets",
+     "kind": "eth_call",
+     "label": "eUSDC totalAssets()",
+     "to": "0xe276BB91E0C63C0BC6ABdd3Dc37DF324f90e3956",
+     "sig": "totalAssets()",
+     "args": [],
+     "calldata": "0x01e1d114",
+     "raw": "0x00000000000000000000000000000000000000000000000000000000cf724277",
+     "value": 3480371831
+    },
+    {
+     "id": "v_borrows",
+     "kind": "eth_call",
+     "label": "eUSDC totalBorrows()",
+     "to": "0xe276BB91E0C63C0BC6ABdd3Dc37DF324f90e3956",
+     "sig": "totalBorrows()",
+     "args": [],
+     "calldata": "0x47bd3718",
+     "raw": "0x00000000000000000000000000000000000000000000000000000000bae52127",
+     "value": 3135578407
+    },
+    {
+     "id": "c_gov",
+     "kind": "eth_call",
+     "label": "escrow governorAdmin()",
+     "to": "0x008a506c6b6138F47B82f6a0b8Fc7FE375C102e9",
+     "sig": "governorAdmin()",
+     "args": [],
+     "calldata": "0x6ce98c29",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000000000",
+     "value": "0x0000000000000000000000000000000000000000"
+    },
+    {
+     "id": "c_asset",
+     "kind": "eth_call",
+     "label": "escrow asset()",
+     "to": "0x008a506c6b6138F47B82f6a0b8Fc7FE375C102e9",
+     "sig": "asset()",
+     "args": [],
+     "calldata": "0x38d52e0f",
+     "raw": "0x000000000000000000000000f5ca55f3ea5bcd180aea6df9e05a0e63a66f5608",
+     "value": "0xF5cA55f3ea5Bcd180aEa6dF9E05a0E63A66f5608"
+    },
+    {
+     "id": "r_gov",
+     "kind": "eth_call",
+     "label": "EulerRouter governor()",
+     "to": "0x5F655525A46B968CF388865CeBC0c0B79A8F8a2b",
+     "sig": "governor()",
+     "args": [],
+     "calldata": "0x0c340a24",
+     "raw": "0x0000000000000000000000009040b4e9e1f8c96dc6def1a2d6f4105d8535eed4",
+     "value": "0x9040b4E9e1F8C96dC6dEF1a2d6f4105D8535EeD4"
+    },
+    {
+     "id": "r_oracle",
+     "kind": "eth_call",
+     "label": "EulerRouter getConfiguredOracle(efixDI+, USDC)",
+     "to": "0x5F655525A46B968CF388865CeBC0c0B79A8F8a2b",
+     "sig": "getConfiguredOracle(address,address)",
+     "args": [
+      "0xF5cA55f3ea5Bcd180aEa6dF9E05a0E63A66f5608",
+      "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"
+     ],
+     "calldata": "0x8aa77608000000000000000000000000f5ca55f3ea5bcd180aea6df9e05a0e63a66f5608000000000000000000000000833589fcd6edb6e08f4c7c32d4f71b54bda02913",
+     "raw": "0x0000000000000000000000009cd219a773d94bbecdd1bb0ae413c45f72737788",
+     "value": "0x9CD219A773d94BBECdD1bb0ae413c45f72737788"
+    },
+    {
+     "id": "o_name",
+     "kind": "eth_call",
+     "label": "NAV oracle name()",
+     "to": "0x9CD219A773d94BBECdD1bb0ae413c45f72737788",
+     "sig": "name()",
+     "args": [],
+     "calldata": "0x06fdde03",
+     "raw": "0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000216566697844492f5553444320706172207820436861696e6c696e6b42524c55534400000000000000000000000000000000000000000000000000000000000000",
+     "value": "efixDI/USDC par x ChainlinkBRLUSD"
+    },
+    {
+     "id": "s_threshold",
+     "kind": "eth_call",
+     "label": "Governor Safe getThreshold()",
+     "to": "0x9040b4E9e1F8C96dC6dEF1a2d6f4105D8535EeD4",
+     "sig": "getThreshold()",
+     "args": [],
+     "calldata": "0xe75235b8",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000000002",
+     "value": 2
+    },
+    {
+     "id": "s_owners",
+     "kind": "eth_call",
+     "label": "Governor Safe getOwners()",
+     "to": "0x9040b4E9e1F8C96dC6dEF1a2d6f4105D8535EeD4",
+     "sig": "getOwners()",
+     "args": [],
+     "calldata": "0xa0e67e2b",
+     "raw": "0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000030000000000000000000000008f8cd5cc7131bf24fe9bf674d58de6dc624dccb10000000000000000000000000afe6e08d8e7ebac1e6663174a2f2c663f07f589000000000000000000000000a09d5e0001d1fdd2b59072e96c91aa79ed3e40d6",
+     "value": [
+      "0x8f8CD5cC7131BF24fE9BF674D58de6dC624dCCb1",
+      "0x0AFE6E08d8e7Ebac1e6663174a2F2c663f07f589",
+      "0xa09d5E0001d1FdD2b59072E96c91aa79ed3e40D6"
+     ]
+    },
+    {
+     "id": "t_supply",
+     "kind": "eth_call",
+     "label": "efixDI+ totalSupply()",
+     "to": "0xF5cA55f3ea5Bcd180aEa6dF9E05a0E63A66f5608",
+     "sig": "totalSupply()",
+     "args": [],
+     "calldata": "0x18160ddd",
+     "raw": "0x000000000000000000000000000000000000000000001e7e044199ae3658a8d7",
+     "value": 143995590934599912958167
+    },
+    {
+     "id": "t_paused",
+     "kind": "eth_call",
+     "label": "efixDI+ paused()",
+     "to": "0xF5cA55f3ea5Bcd180aEa6dF9E05a0E63A66f5608",
+     "sig": "paused()",
+     "args": [],
+     "calldata": "0x5c975abb",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000000000",
+     "value": false
+    },
+    {
+     "id": "t_admin",
+     "kind": "eth_call",
+     "label": "efixDI+ hasRole(DEFAULT_ADMIN_ROLE, Governor Safe)",
+     "to": "0xF5cA55f3ea5Bcd180aEa6dF9E05a0E63A66f5608",
+     "sig": "hasRole(bytes32,address)",
+     "args": [
+      "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "0x9040b4E9e1F8C96dC6dEF1a2d6f4105D8535EeD4"
+     ],
+     "calldata": "0x91d1485400000000000000000000000000000000000000000000000000000000000000000000000000000000000000009040b4e9e1f8c96dc6def1a2d6f4105d8535eed4",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000000001",
+     "value": true
+    },
+    {
+     "id": "t_minter",
+     "kind": "eth_call",
+     "label": "efixDI+ hasRole(MINTER_ROLE, Safe signer account)",
+     "to": "0xF5cA55f3ea5Bcd180aEa6dF9E05a0E63A66f5608",
+     "sig": "hasRole(bytes32,address)",
+     "args": [
+      "0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6",
+      "0x8f8CD5cC7131BF24fE9BF674D58de6dC624dCCb1"
+     ],
+     "calldata": "0x91d148549f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a60000000000000000000000008f8cd5cc7131bf24fe9bf674d58de6dc624dccb1",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000000001",
+     "value": true
+    },
+    {
+     "id": "t_minter_nonce",
+     "kind": "eth_getTransactionCount",
+     "label": "Safe signer account transaction count",
+     "to": "0x8f8CD5cC7131BF24fE9BF674D58de6dC624dCCb1",
+     "raw": "0x487",
+     "value": 1159
+    },
+    {
+     "id": "t_minter_code",
+     "kind": "eth_getCode",
+     "label": "Safe signer account eth_getCode",
+     "to": "0x8f8CD5cC7131BF24fE9BF674D58de6dC624dCCb1",
+     "code_bytes": 0,
+     "value": "0x"
+    },
+    {
+     "id": "e_owner",
+     "kind": "eth_call",
+     "label": "EFIX owner()",
+     "to": "0x400a8DE2bF8fc4A63000A7E77103eDAE897CB9a3",
+     "sig": "owner()",
+     "args": [],
+     "calldata": "0x8da5cb5b",
+     "raw": "0x0000000000000000000000007c54dccd6fc5db73b34f32aca4d1631e054c7537",
+     "value": "0x7C54Dccd6fC5DB73b34f32aCA4d1631E054c7537"
+    },
+    {
+     "id": "e_owner_code",
+     "kind": "eth_getCode",
+     "label": "EFIX owner eth_getCode (EIP-7702 designator = 0xef0100 || delegate)",
+     "to": "0x7C54Dccd6fC5DB73b34f32aCA4d1631E054c7537",
+     "code_bytes": 23,
+     "value": "0xef0100df02e0aa8a707f2b190b355f320ce7d3bc698792",
+     "eip7702_delegate": "0xdf02e0aa8a707f2b190b355f320CE7d3Bc698792"
+    },
+    {
+     "id": "e_owner_nonce",
+     "kind": "eth_getTransactionCount",
+     "label": "EFIX owner transaction count",
+     "to": "0x7C54Dccd6fC5DB73b34f32aCA4d1631E054c7537",
+     "raw": "0x9c",
+     "value": 156
+    }
+   ],
+   "accounts": {},
+   "role_maps": [
+    {
+     "id": "efixdi_roles",
+     "label": "efixDI+ AccessControl role history",
+     "address": "0xF5cA55f3ea5Bcd180aEa6dF9E05a0E63A66f5608",
+     "kind": "access_control",
+     "from_block": 41724585,
+     "to_block": 57050397,
+     "events": 19,
+     "log_rpc": "https://base.blockscout.com (index) + receipt verification on 4-endpoint cross-check",
+     "roles": [
+      {
+       "role": "0x0000000000000000000000000000000000000000000000000000000000000000",
+       "name": "DEFAULT_ADMIN_ROLE",
+       "holders": [
+        "0x9040b4E9e1F8C96dC6dEF1a2d6f4105D8535EeD4"
+       ]
+      },
+      {
+       "role": "0x65d7a28e3265b37a6474929f336521b332c1681b933f6cb9f3376673440d862a",
+       "name": "PAUSER_ROLE",
+       "holders": [
+        "0x9040b4E9e1F8C96dC6dEF1a2d6f4105D8535EeD4"
+       ]
+      },
+      {
+       "role": "0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6",
+       "name": "MINTER_ROLE",
+       "holders": [
+        "0x8f8CD5cC7131BF24fE9BF674D58de6dC624dCCb1"
+       ]
+      }
+     ]
+    }
+   ],
+   "holders": {
+    "0x9040b4E9e1F8C96dC6dEF1a2d6f4105D8535EeD4": {
+     "address": "0x9040b4E9e1F8C96dC6dEF1a2d6f4105D8535EeD4",
+     "code_bytes": 171,
+     "nonce": 1,
+     "kind": "safe",
+     "threshold": 2,
+     "owners": [
+      "0x8f8CD5cC7131BF24fE9BF674D58de6dC624dCCb1",
+      "0x0AFE6E08d8e7Ebac1e6663174a2F2c663f07f589",
+      "0xa09d5E0001d1FdD2b59072E96c91aa79ed3e40D6"
+     ],
+     "owner_of_safes": []
+    },
+    "0x8f8CD5cC7131BF24fE9BF674D58de6dC624dCCb1": {
+     "address": "0x8f8CD5cC7131BF24fE9BF674D58de6dC624dCCb1",
+     "code_bytes": 0,
+     "nonce": 1159,
+     "kind": "eoa",
+     "owner_of_safes": [
+      "0x9040b4E9e1F8C96dC6dEF1a2d6f4105D8535EeD4"
+     ]
+    }
+   }
+  },
+  {
+   "slug": "circle-cirbtc-eth",
+   "chain": "eth",
+   "asset": "cirBTC (Circle)",
+   "venue": "Aave V3 Core / V4 Core (Ethereum)",
+   "forum": {
+    "name": "Aave governance",
+    "topic": 25128,
+    "url": "https://governance.aave.com/t/25128",
+    "title": "[ARFC] Onboard cirBTC on Aave v3 Core and Aave V4 Core"
+   },
+   "chain_id": 1,
+   "explorer": "https://etherscan.io",
+   "pin": {
+    "number": 26408330,
+    "hash": "0x8efc8256deb932e65b5117f040db264dc8200850636d90eecd5daccb99979f4d",
+    "timestamp": 1794600443
+   },
+   "rpcs_cross_checked": [
+    "https://gateway.tenderly.co/public/mainnet",
+    "https://rpc.mevblocker.io"
+   ],
+   "checks": [
+    {
+     "id": "t_supply",
+     "kind": "eth_call",
+     "label": "cirBTC totalSupply()",
+     "to": "0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E",
+     "sig": "totalSupply()",
+     "args": [],
+     "calldata": "0x18160ddd",
+     "raw": "0x000000000000000000000000000000000000000000000000000000086aa263f1",
+     "value": 36148765681
+    },
+    {
+     "id": "t_dec",
+     "kind": "eth_call",
+     "label": "cirBTC decimals()",
+     "to": "0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E",
+     "sig": "decimals()",
+     "args": [],
+     "calldata": "0x313ce567",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000000008",
+     "value": 8
+    },
+    {
+     "id": "t_version",
+     "kind": "eth_call",
+     "label": "cirBTC version()",
+     "to": "0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E",
+     "sig": "version()",
+     "args": [],
+     "calldata": "0x54fd4d50",
+     "raw": "0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000013200000000000000000000000000000000000000000000000000000000000000",
+     "value": "2"
+    },
+    {
+     "id": "t_paused",
+     "kind": "eth_call",
+     "label": "cirBTC paused()",
+     "to": "0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E",
+     "sig": "paused()",
+     "args": [],
+     "calldata": "0x5c975abb",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000000000",
+     "value": false
+    },
+    {
+     "id": "p_admin",
+     "kind": "eth_call",
+     "label": "proxy admin()",
+     "to": "0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E",
+     "sig": "admin()",
+     "args": [],
+     "calldata": "0xf851a440",
+     "raw": "0x000000000000000000000000c9cee9efa5180597bb850a642aa75e5ec3b5a9bd",
+     "value": "0xC9cEe9efa5180597BB850A642aA75e5EC3B5a9BD"
+    },
+    {
+     "id": "p_impl",
+     "kind": "eth_call",
+     "label": "proxy implementation()",
+     "to": "0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E",
+     "sig": "implementation()",
+     "args": [],
+     "calldata": "0x5c60da1b",
+     "raw": "0x00000000000000000000000043506849d7c04f9138d1a2050bbf3a0c054402dd",
+     "value": "0x43506849D7C04F9138D1A2050bbF3A0c054402dd"
+    },
+    {
+     "id": "r_owner",
+     "kind": "eth_call",
+     "label": "owner()",
+     "to": "0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E",
+     "sig": "owner()",
+     "args": [],
+     "calldata": "0x8da5cb5b",
+     "raw": "0x000000000000000000000000d50154994eac780c571ff5f7cec0ef2e60085182",
+     "value": "0xd50154994Eac780c571FF5f7ceC0Ef2e60085182"
+    },
+    {
+     "id": "r_mm",
+     "kind": "eth_call",
+     "label": "masterMinter()",
+     "to": "0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E",
+     "sig": "masterMinter()",
+     "args": [],
+     "calldata": "0x35d99f35",
+     "raw": "0x000000000000000000000000c0cc159c07a99eecc35c36f25fe7c1aeeb3587a2",
+     "value": "0xC0Cc159c07a99EeCC35C36f25fE7C1Aeeb3587A2"
+    },
+    {
+     "id": "r_pauser",
+     "kind": "eth_call",
+     "label": "pauser()",
+     "to": "0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E",
+     "sig": "pauser()",
+     "args": [],
+     "calldata": "0x9fd0506d",
+     "raw": "0x000000000000000000000000abde92e0efe04a0c1469cd21bf400cb1969fa222",
+     "value": "0xabde92e0efE04a0c1469cD21Bf400Cb1969fA222"
+    },
+    {
+     "id": "r_bl",
+     "kind": "eth_call",
+     "label": "blacklister()",
+     "to": "0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E",
+     "sig": "blacklister()",
+     "args": [],
+     "calldata": "0xbd102430",
+     "raw": "0x000000000000000000000000b5be9afa2ff55b8f9ae3e223b2f18ab6b84e1d79",
+     "value": "0xb5BE9AfA2ff55B8f9AE3e223b2F18ab6B84e1D79"
+    },
+    {
+     "id": "r_rescuer",
+     "kind": "eth_call",
+     "label": "rescuer()",
+     "to": "0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E",
+     "sig": "rescuer()",
+     "args": [],
+     "calldata": "0x38a63183",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000000000",
+     "value": "0x0000000000000000000000000000000000000000"
+    }
+   ],
+   "accounts": {
+    "admin": {
+     "address": "0xC9cEe9efa5180597BB850A642aA75e5EC3B5a9BD",
+     "code_bytes": 0,
+     "nonce": 0
+    },
+    "owner": {
+     "address": "0xd50154994Eac780c571FF5f7ceC0Ef2e60085182",
+     "code_bytes": 0,
+     "nonce": 0
+    },
+    "pauser": {
+     "address": "0xabde92e0efE04a0c1469cD21Bf400Cb1969fA222",
+     "code_bytes": 0,
+     "nonce": 0
+    },
+    "blacklister": {
+     "address": "0xb5BE9AfA2ff55B8f9AE3e223b2F18ab6B84e1D79",
+     "code_bytes": 0,
+     "nonce": 495
+    },
+    "masterMinter": {
+     "address": "0xC0Cc159c07a99EeCC35C36f25fE7C1Aeeb3587A2",
+     "code_bytes": 5346,
+     "nonce": 1
+    },
+    "r_mm_owner": {
+     "address": "0x51834D9b4B25c470aeA8D54F800a18Db2dA42256",
+     "code_bytes": 0,
+     "nonce": 9,
+     "of": "0xC0Cc159c07a99EeCC35C36f25fE7C1Aeeb3587A2",
+     "call": "owner()"
+    }
+   },
+   "role_maps": [],
+   "holders": {}
+  },
+  {
+   "slug": "paxos-paxgy-eth",
+   "chain": "eth",
+   "asset": "PAXGy (Paxos Labs)",
+   "venue": "Aave V4 Global Dollar Hub (Ethereum)",
+   "forum": {
+    "name": "Aave governance",
+    "topic": 25499,
+    "url": "https://governance.aave.com/t/25499",
+    "title": "[ARFC] Onboard PAXGy to Aave V4 Global Dollar Hub"
+   },
+   "chain_id": 1,
+   "explorer": "https://etherscan.io",
+   "pin": {
+    "number": 26408330,
+    "hash": "0x8efc8256deb932e65b5117f040db264dc8200850636d90eecd5daccb99979f4d",
+    "timestamp": 1794600443
+   },
+   "rpcs_cross_checked": [
+    "https://gateway.tenderly.co/public/mainnet",
+    "https://rpc.mevblocker.io"
+   ],
+   "checks": [
+    {
+     "id": "v_supply",
+     "kind": "eth_call",
+     "label": "PAXGy totalSupply()",
+     "to": "0x6c6494Fd9962eB98B94ffA48F6679058F820700e",
+     "sig": "totalSupply()",
+     "args": [],
+     "calldata": "0x18160ddd",
+     "raw": "0x0000000000000000000000000000000000000000000000472780d310b0dd7e39",
+     "value": 1312565336266516561465
+    },
+    {
+     "id": "v_dec",
+     "kind": "eth_call",
+     "label": "PAXGy decimals()",
+     "to": "0x6c6494Fd9962eB98B94ffA48F6679058F820700e",
+     "sig": "decimals()",
+     "args": [],
+     "calldata": "0x313ce567",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000000012",
+     "value": 18
+    },
+    {
+     "id": "v_owner",
+     "kind": "eth_call",
+     "label": "PAXGy owner()",
+     "to": "0x6c6494Fd9962eB98B94ffA48F6679058F820700e",
+     "sig": "owner()",
+     "args": [],
+     "calldata": "0x8da5cb5b",
+     "raw": "0x0000000000000000000000000dcc87bc40e775a8207eb2e65b68cf51964cdf08",
+     "value": "0x0DcC87BC40E775A8207eB2e65b68CF51964cdf08"
+    },
+    {
+     "id": "v_auth",
+     "kind": "eth_call",
+     "label": "PAXGy authority()",
+     "to": "0x6c6494Fd9962eB98B94ffA48F6679058F820700e",
+     "sig": "authority()",
+     "args": [],
+     "calldata": "0xbf7e214f",
+     "raw": "0x000000000000000000000000c444da4df6af6a9a3891a720c1712a4188d899dd",
+     "value": "0xC444dA4DF6AF6A9A3891a720c1712a4188d899DD"
+    },
+    {
+     "id": "tl_delay",
+     "kind": "eth_call",
+     "label": "Timelock getMinDelay()",
+     "to": "0x0DcC87BC40E775A8207eB2e65b68CF51964cdf08",
+     "sig": "getMinDelay()",
+     "args": [],
+     "calldata": "0xf27a0c92",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000015180",
+     "value": 86400
+    },
+    {
+     "id": "a_owner",
+     "kind": "eth_call",
+     "label": "RolesAuthority owner()",
+     "to": "0xC444dA4DF6AF6A9A3891a720c1712a4188d899DD",
+     "sig": "owner()",
+     "args": [],
+     "calldata": "0x8da5cb5b",
+     "raw": "0x0000000000000000000000000dcc87bc40e775a8207eb2e65b68cf51964cdf08",
+     "value": "0x0DcC87BC40E775A8207eB2e65b68CF51964cdf08"
+    },
+    {
+     "id": "acc_state",
+     "kind": "eth_call",
+     "label": "Accountant accountantState()",
+     "to": "0x397e38359f169748a02bc11f98D4f451FE88C1fd",
+     "sig": "accountantState()",
+     "args": [],
+     "calldata": "0x433255de",
+     "raw": "0x0000000000000000000000000000000000417626ef34d62c4dc189b021603f2f00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000472780d310b0dd7e390000000000000000000000000000000000000000000000000df06f12d71640050000000000000000000000000000000000000000000000000df06f12d716400500000000000000000000000000000000000000000000000000000000000027140000000000000000000000000000000000000000000000000000000000002710000000000000000000000000000000000000000000000000000000006af764b300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000e1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+     "value": [
+      339895704838963128617752882317377327,
+      0,
+      1312565336266516561465,
+      1004424843612274693,
+      1004424843612274693,
+      10004,
+      10000,
+      1794598067,
+      0,
+      3600,
+      0,
+      0
+     ]
+    },
+    {
+     "id": "acc_rate",
+     "kind": "eth_call",
+     "label": "Accountant getRate()",
+     "to": "0x397e38359f169748a02bc11f98D4f451FE88C1fd",
+     "sig": "getRate()",
+     "args": [],
+     "calldata": "0x679aefce",
+     "raw": "0x0000000000000000000000000000000000000000000000000df06f12d7164005",
+     "value": 1004424843612274693
+    },
+    {
+     "id": "acc_owner",
+     "kind": "eth_call",
+     "label": "Accountant owner()",
+     "to": "0x397e38359f169748a02bc11f98D4f451FE88C1fd",
+     "sig": "owner()",
+     "args": [],
+     "calldata": "0x8da5cb5b",
+     "raw": "0x0000000000000000000000000dcc87bc40e775a8207eb2e65b68cf51964cdf08",
+     "value": "0x0DcC87BC40E775A8207eB2e65b68CF51964cdf08"
+    },
+    {
+     "id": "te_paused",
+     "kind": "eth_call",
+     "label": "Teller isPaused()",
+     "to": "0x41AB5d8387e60E30AACCF11357C306f6d875A6f7",
+     "sig": "isPaused()",
+     "args": [],
+     "calldata": "0xb187bd26",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000000000",
+     "value": false
+    },
+    {
+     "id": "te_owner",
+     "kind": "eth_call",
+     "label": "Teller owner()",
+     "to": "0x41AB5d8387e60E30AACCF11357C306f6d875A6f7",
+     "sig": "owner()",
+     "args": [],
+     "calldata": "0x8da5cb5b",
+     "raw": "0x0000000000000000000000000dcc87bc40e775a8207eb2e65b68cf51964cdf08",
+     "value": "0x0DcC87BC40E775A8207eB2e65b68CF51964cdf08"
+    },
+    {
+     "id": "te_lock",
+     "kind": "eth_call",
+     "label": "Teller shareLockPeriod()",
+     "to": "0x41AB5d8387e60E30AACCF11357C306f6d875A6f7",
+     "sig": "shareLockPeriod()",
+     "args": [],
+     "calldata": "0x9fdb11b6",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000000000",
+     "value": 0
+    },
+    {
+     "id": "old_paused",
+     "kind": "eth_call",
+     "label": "Previous teller isPaused()",
+     "to": "0x5C43aD60Beb32F88D14296fEF67ec0F329f3fe72",
+     "sig": "isPaused()",
+     "args": [],
+     "calldata": "0xb187bd26",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000000001",
+     "value": true
+    },
+    {
+     "id": "m_owner",
+     "kind": "eth_call",
+     "label": "Manager owner()",
+     "to": "0x353741aBa79974a90F88594f6CBd1a9c54651015",
+     "sig": "owner()",
+     "args": [],
+     "calldata": "0x8da5cb5b",
+     "raw": "0x0000000000000000000000000dcc87bc40e775a8207eb2e65b68cf51964cdf08",
+     "value": "0x0DcC87BC40E775A8207eB2e65b68CF51964cdf08"
+    },
+    {
+     "id": "safe_threshold",
+     "kind": "eth_call",
+     "label": "Operations Safe getThreshold()",
+     "to": "0x0000000000417626Ef34D62C4DC189b021603f2F",
+     "sig": "getThreshold()",
+     "args": [],
+     "calldata": "0xe75235b8",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000000003",
+     "value": 3
+    },
+    {
+     "id": "safe_owners",
+     "kind": "eth_call",
+     "label": "Operations Safe getOwners()",
+     "to": "0x0000000000417626Ef34D62C4DC189b021603f2F",
+     "sig": "getOwners()",
+     "args": [],
+     "calldata": "0xa0e67e2b",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000500000000000000000000000041431e315a84659012b5622627b8f9e9bf79652c0000000000000000000000006be51156c578414e7893b91fde1627e8741d526e000000000000000000000000fbf73c3622668cfe655faff8fcb9876015001a5e000000000000000000000000317eebf4b4a2cee0e9a73f276628986ab254a0240000000000000000000000001d607e4eb747f1294ae632d3490f121b00db9312",
+     "value": [
+      "0x41431e315A84659012B5622627b8f9e9Bf79652C",
+      "0x6Be51156C578414E7893B91FDE1627E8741D526E",
+      "0xFBf73C3622668cfE655fAFF8fCb9876015001A5e",
+      "0x317eEbf4B4a2ceE0e9a73f276628986Ab254A024",
+      "0x1D607E4eb747f1294AE632D3490f121B00Db9312"
+     ]
+    },
+    {
+     "id": "eoa_code",
+     "kind": "eth_getCode",
+     "label": "Rate-updater account eth_getCode",
+     "to": "0x1755397BEc366a1e1160d8aE0106C60E7e344B56",
+     "code_bytes": 0,
+     "value": "0x",
+     "args": null
+    },
+    {
+     "id": "eoa_nonce",
+     "kind": "eth_getTransactionCount",
+     "label": "Rate-updater account transaction count",
+     "to": "0x1755397BEc366a1e1160d8aE0106C60E7e344B56",
+     "raw": "0x204d",
+     "value": 8269,
+     "args": null
+    }
+   ],
+   "accounts": {},
+   "role_maps": [
+    {
+     "id": "paxgy_authority",
+     "label": "RolesAuthority capability history",
+     "address": "0xC444dA4DF6AF6A9A3891a720c1712a4188d899DD",
+     "kind": "solmate_roles",
+     "from_block": 25740680,
+     "to_block": 26408330,
+     "events": 68,
+     "log_rpc": "https://gateway.tenderly.co/public/mainnet",
+     "owner_from_events": "0x0DcC87BC40E775A8207eB2e65b68CF51964cdf08",
+     "roles": [
+      {
+       "role": 1,
+       "holders": [
+        "0x40617CF21a5d4ecae4f7a6656f85bcCaA760672a",
+        "0x50E87E017C749eBD46C0C5CD3d5A97BB1f46e2bB",
+        "0xf5c62c8E997156466B82Ec3Ee6a63Cc601BBF8FF"
+       ],
+       "capabilities": [
+        {
+         "target": "0x353741aBa79974a90F88594f6CBd1a9c54651015",
+         "selector": "0x244b0f6a",
+         "signature": "manageVaultWithMerkleVerification(bytes32[][],address[],address[],bytes[],uint256[])"
+        }
+       ]
+      },
+      {
+       "role": 2,
+       "holders": [
+        "0x353741aBa79974a90F88594f6CBd1a9c54651015"
+       ],
+       "capabilities": [
+        {
+         "target": "0x6c6494Fd9962eB98B94ffA48F6679058F820700e",
+         "selector": "0x224d8703",
+         "signature": "manage(address[],bytes[],uint256[])"
+        },
+        {
+         "target": "0x6c6494Fd9962eB98B94ffA48F6679058F820700e",
+         "selector": "0xf6e715d0",
+         "signature": "manage(address,bytes,uint256)"
+        }
+       ]
+      },
+      {
+       "role": 3,
+       "holders": [
+        "0x41AB5d8387e60E30AACCF11357C306f6d875A6f7"
+       ],
+       "capabilities": [
+        {
+         "target": "0x6c6494Fd9962eB98B94ffA48F6679058F820700e",
+         "selector": "0x18457e61",
+         "signature": "exit(address,address,uint256,address,uint256)"
+        },
+        {
+         "target": "0x6c6494Fd9962eB98B94ffA48F6679058F820700e",
+         "selector": "0x39d6ba32",
+         "signature": "enter(address,address,uint256,address,uint256)"
+        }
+       ]
+      },
+      {
+       "role": 4,
+       "holders": [
+        "0x0000000000417626Ef34D62C4DC189b021603f2F",
+        "0x1755397BEc366a1e1160d8aE0106C60E7e344B56"
+       ],
+       "capabilities": [
+        {
+         "target": "0x397e38359f169748a02bc11f98D4f451FE88C1fd",
+         "selector": "0x3458113d",
+         "signature": "updateExchangeRate(uint96)"
+        }
+       ]
+      },
+      {
+       "role": 5,
+       "holders": [
+        "0x69e0BF658bE5600864A946b4e5B911736D248FB4"
+       ],
+       "capabilities": [
+        {
+         "target": "0x41AB5d8387e60E30AACCF11357C306f6d875A6f7",
+         "selector": "0x3e64ce99",
+         "signature": "bulkWithdraw(address,uint256,uint256,address)"
+        }
+       ]
+      },
+      {
+       "role": 6,
+       "holders": [
+        "0x0000000000417626Ef34D62C4DC189b021603f2F",
+        "0x07F99eF00C778d5D30e86C2EDB15E69e8763D5f7",
+        "0xe5CcB29Cb9C886da329098A184302E2D5Ff0cD9E"
+       ],
+       "capabilities": [
+        {
+         "target": "0x353741aBa79974a90F88594f6CBd1a9c54651015",
+         "selector": "0x8456cb59",
+         "signature": "pause()"
+        },
+        {
+         "target": "0x397e38359f169748a02bc11f98D4f451FE88C1fd",
+         "selector": "0x8456cb59",
+         "signature": "pause()"
+        },
+        {
+         "target": "0x41AB5d8387e60E30AACCF11357C306f6d875A6f7",
+         "selector": "0x8456cb59",
+         "signature": "pause()"
+        },
+        {
+         "target": "0x5C43aD60Beb32F88D14296fEF67ec0F329f3fe72",
+         "selector": "0x8456cb59",
+         "signature": "pause()"
+        }
+       ]
+      },
+      {
+       "role": 7,
+       "holders": [
+        "0x9c5F19dD50bfC4484bdCbCa2AB9A390cC7e0c160",
+        "0xF6dE922D08cF9Ee4e7cE25ca1f3936EC1AA1f62C"
+       ],
+       "capabilities": [
+        {
+         "target": "0x41AB5d8387e60E30AACCF11357C306f6d875A6f7",
+         "selector": "0x0efe6a8b",
+         "signature": "deposit(address,uint256,uint256)"
+        }
+       ]
+      },
+      {
+       "role": 9,
+       "holders": [
+        "0xaA0e7f8b3bf12e48b0ff4AB7D30B5f8dDf263372"
+       ],
+       "capabilities": [
+        {
+         "target": "0x69e0BF658bE5600864A946b4e5B911736D248FB4",
+         "selector": "0xf1bfdc06",
+         "signature": null
+        }
+       ]
+      },
+      {
+       "role": 10,
+       "holders": [],
+       "capabilities": [
+        {
+         "target": "0x2e30D7903f69063be7B5C5B374648dc9Fc7FB7Ee",
+         "selector": "0x5efbc32a",
+         "signature": null
+        }
+       ]
+      },
+      {
+       "role": 12,
+       "holders": [
+        "0x46e3420D02d628D3781fA16149e741bCB97Da055",
+        "0x4AB88515Fd84289d8aaB1464753775e90695e944",
+        "0x4Fe93ebC4Ce6Ae4f81601cC7Ce7139023919E003",
+        "0x6CeE63865a50cFDb55387396FFe9A45dF3f271C9",
+        "0x8999c5554A983e9b9679cCFAB3709830dCe75a0B",
+        "0xAc978a4187f4233E564a6d698d31AaE33b8f4C6d",
+        "0xC180130b2112E49fCaB64bD36E1F1e8483052cb9",
+        "0xDFAF4495d1C87d629C8a09DD20E80F5222176cBa",
+        "0xDeAd6b0F53b7B529003EDbd612b336561DE56A02",
+        "0xF368d43f148e1803eC793670183b0CA6a07d3898",
+        "0xae54E08B6c3d7c755a168B67F5eDF767D148811B",
+        "0xd28a89ce2EDF3b48956b6B5676964caA867a85eA",
+        "0xd30630b8c8AEB0b0125b10b607C56ee52c44C082"
+       ],
+       "capabilities": [
+        {
+         "target": "0x41AB5d8387e60E30AACCF11357C306f6d875A6f7",
+         "selector": "0xbfe1a0f2",
+         "signature": "depositAndBridge(address,uint256,uint256,(uint32,address,address,uint64,bytes))"
+        },
+        {
+         "target": "0x69e0BF658bE5600864A946b4e5B911736D248FB4",
+         "selector": "0x13bd894c",
+         "signature": null
+        },
+        {
+         "target": "0x9c5F19dD50bfC4484bdCbCa2AB9A390cC7e0c160",
+         "selector": "0x2d7174c8",
+         "signature": null
+        },
+        {
+         "target": "0xF6dE922D08cF9Ee4e7cE25ca1f3936EC1AA1f62C",
+         "selector": "0x2d7174c8",
+         "signature": null
+        },
+        {
+         "target": "0xF6dE922D08cF9Ee4e7cE25ca1f3936EC1AA1f62C",
+         "selector": "0x6dbc73ff",
+         "signature": null
+        }
+       ]
+      }
+     ],
+     "public_capabilities": [
+      {
+       "target": "0x0000000000000000000000000000000000000000",
+       "selector": "0x2d7174c8",
+       "signature": null
+      },
+      {
+       "target": "0x41AB5d8387e60E30AACCF11357C306f6d875A6f7",
+       "selector": "0xa69559d1",
+       "signature": "bridge(uint256,(uint32,address,address,uint64,bytes))"
+      },
+      {
+       "target": "0x5C43aD60Beb32F88D14296fEF67ec0F329f3fe72",
+       "selector": "0xa69559d1",
+       "signature": "bridge(uint256,(uint32,address,address,uint64,bytes))"
+      },
+      {
+       "target": "0x9c5F19dD50bfC4484bdCbCa2AB9A390cC7e0c160",
+       "selector": "0x2d7174c8",
+       "signature": null
+      },
+      {
+       "target": "0x9c5F19dD50bfC4484bdCbCa2AB9A390cC7e0c160",
+       "selector": "0x6dbc73ff",
+       "signature": null
+      }
+     ]
+    },
+    {
+     "id": "paxgy_timelock",
+     "label": "TimelockController role history",
+     "address": "0x0DcC87BC40E775A8207eB2e65b68CF51964cdf08",
+     "kind": "access_control",
+     "from_block": 25984137,
+     "to_block": 26408330,
+     "events": 9,
+     "log_rpc": "https://gateway.tenderly.co/public/mainnet",
+     "roles": [
+      {
+       "role": "0x0000000000000000000000000000000000000000000000000000000000000000",
+       "name": "DEFAULT_ADMIN_ROLE",
+       "holders": [
+        "0x0DcC87BC40E775A8207eB2e65b68CF51964cdf08"
+       ]
+      },
+      {
+       "role": "0xb09aa5aeb3702cfd50b6b62bc4532604938f21248a27a1d5ca736082b6819cc1",
+       "name": "PROPOSER_ROLE",
+       "holders": [
+        "0x0000000000417626Ef34D62C4DC189b021603f2F"
+       ]
+      },
+      {
+       "role": "0xd8aa0f3194971a2a116679f7c2090f6939c8d4e01a2a8d7e41d55e5351469e63",
+       "name": "EXECUTOR_ROLE",
+       "holders": [
+        "0x0000000000417626Ef34D62C4DC189b021603f2F",
+        "0x1D607E4eb747f1294AE632D3490f121B00Db9312",
+        "0x317eEbf4B4a2ceE0e9a73f276628986Ab254A024",
+        "0x41431e315A84659012B5622627b8f9e9Bf79652C",
+        "0x6Be51156C578414E7893B91FDE1627E8741D526E",
+        "0xFBf73C3622668cfE655fAFF8fCb9876015001A5e"
+       ]
+      },
+      {
+       "role": "0xfd643c72710c63c0180259aba6b2d05451e3591a24e58b62239378085726f783",
+       "name": "CANCELLER_ROLE",
+       "holders": [
+        "0x0000000000417626Ef34D62C4DC189b021603f2F"
+       ]
+      }
+     ]
+    }
+   ],
+   "holders": {
+    "0x40617CF21a5d4ecae4f7a6656f85bcCaA760672a": {
+     "address": "0x40617CF21a5d4ecae4f7a6656f85bcCaA760672a",
+     "code_bytes": 0,
+     "nonce": 2,
+     "kind": "eoa",
+     "owner_of_safes": []
+    },
+    "0x50E87E017C749eBD46C0C5CD3d5A97BB1f46e2bB": {
+     "address": "0x50E87E017C749eBD46C0C5CD3d5A97BB1f46e2bB",
+     "code_bytes": 0,
+     "nonce": 11,
+     "kind": "eoa",
+     "owner_of_safes": []
+    },
+    "0xf5c62c8E997156466B82Ec3Ee6a63Cc601BBF8FF": {
+     "address": "0xf5c62c8E997156466B82Ec3Ee6a63Cc601BBF8FF",
+     "code_bytes": 0,
+     "nonce": 2,
+     "kind": "eoa",
+     "owner_of_safes": []
+    },
+    "0x353741aBa79974a90F88594f6CBd1a9c54651015": {
+     "address": "0x353741aBa79974a90F88594f6CBd1a9c54651015",
+     "code_bytes": 7920,
+     "nonce": 1,
+     "kind": "contract",
+     "owner_of_safes": []
+    },
+    "0x41AB5d8387e60E30AACCF11357C306f6d875A6f7": {
+     "address": "0x41AB5d8387e60E30AACCF11357C306f6d875A6f7",
+     "code_bytes": 19569,
+     "nonce": 1,
+     "kind": "contract",
+     "owner_of_safes": []
+    },
+    "0x0000000000417626Ef34D62C4DC189b021603f2F": {
+     "address": "0x0000000000417626Ef34D62C4DC189b021603f2F",
+     "code_bytes": 171,
+     "nonce": 1,
+     "kind": "safe",
+     "threshold": 3,
+     "owners": [
+      "0x41431e315A84659012B5622627b8f9e9Bf79652C",
+      "0x6Be51156C578414E7893B91FDE1627E8741D526E",
+      "0xFBf73C3622668cfE655fAFF8fCb9876015001A5e",
+      "0x317eEbf4B4a2ceE0e9a73f276628986Ab254A024",
+      "0x1D607E4eb747f1294AE632D3490f121B00Db9312"
+     ],
+     "owner_of_safes": []
+    },
+    "0x1755397BEc366a1e1160d8aE0106C60E7e344B56": {
+     "address": "0x1755397BEc366a1e1160d8aE0106C60E7e344B56",
+     "code_bytes": 0,
+     "nonce": 8269,
+     "kind": "eoa",
+     "owner_of_safes": []
+    },
+    "0x69e0BF658bE5600864A946b4e5B911736D248FB4": {
+     "address": "0x69e0BF658bE5600864A946b4e5B911736D248FB4",
+     "code_bytes": 17313,
+     "nonce": 1,
+     "kind": "contract",
+     "owner_of_safes": []
+    },
+    "0x07F99eF00C778d5D30e86C2EDB15E69e8763D5f7": {
+     "address": "0x07F99eF00C778d5D30e86C2EDB15E69e8763D5f7",
+     "code_bytes": 4758,
+     "nonce": 1,
+     "kind": "contract",
+     "owner_of_safes": []
+    },
+    "0xe5CcB29Cb9C886da329098A184302E2D5Ff0cD9E": {
+     "address": "0xe5CcB29Cb9C886da329098A184302E2D5Ff0cD9E",
+     "code_bytes": 0,
+     "nonce": 66,
+     "kind": "eoa",
+     "owner_of_safes": []
+    },
+    "0x9c5F19dD50bfC4484bdCbCa2AB9A390cC7e0c160": {
+     "address": "0x9c5F19dD50bfC4484bdCbCa2AB9A390cC7e0c160",
+     "code_bytes": 9340,
+     "nonce": 1,
+     "kind": "contract",
+     "owner_of_safes": []
+    },
+    "0xF6dE922D08cF9Ee4e7cE25ca1f3936EC1AA1f62C": {
+     "address": "0xF6dE922D08cF9Ee4e7cE25ca1f3936EC1AA1f62C",
+     "code_bytes": 9340,
+     "nonce": 1,
+     "kind": "contract",
+     "owner_of_safes": []
+    },
+    "0xaA0e7f8b3bf12e48b0ff4AB7D30B5f8dDf263372": {
+     "address": "0xaA0e7f8b3bf12e48b0ff4AB7D30B5f8dDf263372",
+     "code_bytes": 0,
+     "nonce": 21,
+     "kind": "eoa",
+     "owner_of_safes": []
+    },
+    "0x46e3420D02d628D3781fA16149e741bCB97Da055": {
+     "address": "0x46e3420D02d628D3781fA16149e741bCB97Da055",
+     "code_bytes": 23,
+     "nonce": 510,
+     "eip7702_delegate": "0x80296FF8D1ED46f8e3C7992664D13B833504c2Bb",
+     "kind": "eoa",
+     "owner_of_safes": []
+    },
+    "0x4AB88515Fd84289d8aaB1464753775e90695e944": {
+     "address": "0x4AB88515Fd84289d8aaB1464753775e90695e944",
+     "code_bytes": 23,
+     "nonce": 787,
+     "eip7702_delegate": "0x079596b325D8D3B776ab304eb4b3FFE993a3abe9",
+     "kind": "eoa",
+     "owner_of_safes": []
+    },
+    "0x4Fe93ebC4Ce6Ae4f81601cC7Ce7139023919E003": {
+     "address": "0x4Fe93ebC4Ce6Ae4f81601cC7Ce7139023919E003",
+     "code_bytes": 5314,
+     "nonce": 1,
+     "kind": "contract",
+     "owner_of_safes": []
+    },
+    "0x6CeE63865a50cFDb55387396FFe9A45dF3f271C9": {
+     "address": "0x6CeE63865a50cFDb55387396FFe9A45dF3f271C9",
+     "code_bytes": 0,
+     "nonce": 1,
+     "kind": "eoa",
+     "owner_of_safes": []
+    },
+    "0x8999c5554A983e9b9679cCFAB3709830dCe75a0B": {
+     "address": "0x8999c5554A983e9b9679cCFAB3709830dCe75a0B",
+     "code_bytes": 0,
+     "nonce": 556,
+     "kind": "eoa",
+     "owner_of_safes": []
+    },
+    "0xAc978a4187f4233E564a6d698d31AaE33b8f4C6d": {
+     "address": "0xAc978a4187f4233E564a6d698d31AaE33b8f4C6d",
+     "code_bytes": 0,
+     "nonce": 26,
+     "kind": "eoa",
+     "owner_of_safes": []
+    },
+    "0xC180130b2112E49fCaB64bD36E1F1e8483052cb9": {
+     "address": "0xC180130b2112E49fCaB64bD36E1F1e8483052cb9",
+     "code_bytes": 0,
+     "nonce": 90,
+     "kind": "eoa",
+     "owner_of_safes": []
+    },
+    "0xDFAF4495d1C87d629C8a09DD20E80F5222176cBa": {
+     "address": "0xDFAF4495d1C87d629C8a09DD20E80F5222176cBa",
+     "code_bytes": 23,
+     "nonce": 73,
+     "eip7702_delegate": "0x69e6bd1C4082403Fc7917a61F6216552fC1a541D",
+     "kind": "eoa",
+     "owner_of_safes": []
+    },
+    "0xDeAd6b0F53b7B529003EDbd612b336561DE56A02": {
+     "address": "0xDeAd6b0F53b7B529003EDbd612b336561DE56A02",
+     "code_bytes": 0,
+     "nonce": 429,
+     "kind": "eoa",
+     "owner_of_safes": []
+    },
+    "0xF368d43f148e1803eC793670183b0CA6a07d3898": {
+     "address": "0xF368d43f148e1803eC793670183b0CA6a07d3898",
+     "code_bytes": 0,
+     "nonce": 7600,
+     "kind": "eoa",
+     "owner_of_safes": []
+    },
+    "0xae54E08B6c3d7c755a168B67F5eDF767D148811B": {
+     "address": "0xae54E08B6c3d7c755a168B67F5eDF767D148811B",
+     "code_bytes": 0,
+     "nonce": 272,
+     "kind": "eoa",
+     "owner_of_safes": []
+    },
+    "0xd28a89ce2EDF3b48956b6B5676964caA867a85eA": {
+     "address": "0xd28a89ce2EDF3b48956b6B5676964caA867a85eA",
+     "code_bytes": 0,
+     "nonce": 44,
+     "kind": "eoa",
+     "owner_of_safes": []
+    },
+    "0xd30630b8c8AEB0b0125b10b607C56ee52c44C082": {
+     "address": "0xd30630b8c8AEB0b0125b10b607C56ee52c44C082",
+     "code_bytes": 0,
+     "nonce": 9,
+     "kind": "eoa",
+     "owner_of_safes": []
+    },
+    "0x0DcC87BC40E775A8207eB2e65b68CF51964cdf08": {
+     "address": "0x0DcC87BC40E775A8207eB2e65b68CF51964cdf08",
+     "code_bytes": 6577,
+     "nonce": 1,
+     "kind": "contract",
+     "owner_of_safes": []
+    },
+    "0x1D607E4eb747f1294AE632D3490f121B00Db9312": {
+     "address": "0x1D607E4eb747f1294AE632D3490f121B00Db9312",
+     "code_bytes": 0,
+     "nonce": 362,
+     "kind": "eoa",
+     "owner_of_safes": [
+      "0x0000000000417626Ef34D62C4DC189b021603f2F"
+     ]
+    },
+    "0x317eEbf4B4a2ceE0e9a73f276628986Ab254A024": {
+     "address": "0x317eEbf4B4a2ceE0e9a73f276628986Ab254A024",
+     "code_bytes": 0,
+     "nonce": 103,
+     "kind": "eoa",
+     "owner_of_safes": [
+      "0x0000000000417626Ef34D62C4DC189b021603f2F"
+     ]
+    },
+    "0x41431e315A84659012B5622627b8f9e9Bf79652C": {
+     "address": "0x41431e315A84659012B5622627b8f9e9Bf79652C",
+     "code_bytes": 0,
+     "nonce": 187,
+     "kind": "eoa",
+     "owner_of_safes": [
+      "0x0000000000417626Ef34D62C4DC189b021603f2F"
+     ]
+    },
+    "0x6Be51156C578414E7893B91FDE1627E8741D526E": {
+     "address": "0x6Be51156C578414E7893B91FDE1627E8741D526E",
+     "code_bytes": 0,
+     "nonce": 1,
+     "kind": "eoa",
+     "owner_of_safes": [
+      "0x0000000000417626Ef34D62C4DC189b021603f2F"
+     ]
+    },
+    "0xFBf73C3622668cfE655fAFF8fCb9876015001A5e": {
+     "address": "0xFBf73C3622668cfE655fAFF8fCb9876015001A5e",
+     "code_bytes": 0,
+     "nonce": 267,
+     "kind": "eoa",
+     "owner_of_safes": [
+      "0x0000000000417626Ef34D62C4DC189b021603f2F"
+     ]
+    }
+   }
+  },
+  {
+   "slug": "tether-usat-eth",
+   "chain": "eth",
+   "asset": "USAT (Tether America / Anchorage)",
+   "venue": "Aave (USAT assessments) \u00b7 Ethereum canonical token",
+   "forum": {
+    "name": "Aave governance",
+    "topic": 25927,
+    "url": "https://governance.aave.com/t/25927",
+    "title": "Tether America USD (USAT) on Aave Avalanche Assessments"
+   },
+   "chain_id": 1,
+   "explorer": "https://etherscan.io",
+   "pin": {
+    "number": 26408330,
+    "hash": "0x8efc8256deb932e65b5117f040db264dc8200850636d90eecd5daccb99979f4d",
+    "timestamp": 1794600443
+   },
+   "rpcs_cross_checked": [
+    "https://gateway.tenderly.co/public/mainnet",
+    "https://rpc.mevblocker.io"
+   ],
+   "checks": [
+    {
+     "id": "t_supply",
+     "kind": "eth_call",
+     "label": "USAT totalSupply()",
+     "to": "0x07041776f5007ACa2A54844F50503a18A72A8b68",
+     "sig": "totalSupply()",
+     "args": [],
+     "calldata": "0x18160ddd",
+     "raw": "0x0000000000000000000000000000000000000000000000000000a316a0547ea0",
+     "value": 179317574500000
+    },
+    {
+     "id": "t_dec",
+     "kind": "eth_call",
+     "label": "USAT decimals()",
+     "to": "0x07041776f5007ACa2A54844F50503a18A72A8b68",
+     "sig": "decimals()",
+     "args": [],
+     "calldata": "0x313ce567",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000000006",
+     "value": 6
+    },
+    {
+     "id": "p_impl",
+     "kind": "eth_getStorageAt",
+     "label": "EIP-1967 implementation slot",
+     "to": "0x07041776f5007ACa2A54844F50503a18A72A8b68",
+     "slot": "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+     "raw": "0x0000000000000000000000008b98bcd9b1f8ae112fb2b58b45c3bc9a75cc4d0e",
+     "value": "0x8B98Bcd9b1F8ae112FB2b58b45c3Bc9a75CC4d0e",
+     "args": null
+    },
+    {
+     "id": "p_admin",
+     "kind": "eth_getStorageAt",
+     "label": "EIP-1967 admin slot (ProxyAdmin)",
+     "to": "0x07041776f5007ACa2A54844F50503a18A72A8b68",
+     "slot": "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103",
+     "raw": "0x0000000000000000000000003e4c6460aa00c11c81e3c5b95b15d612f5f2d9c7",
+     "value": "0x3e4C6460aa00c11C81e3C5b95b15d612F5F2d9C7",
+     "args": null
+    },
+    {
+     "id": "t_owner",
+     "kind": "eth_call",
+     "label": "USAT owner()",
+     "to": "0x07041776f5007ACa2A54844F50503a18A72A8b68",
+     "sig": "owner()",
+     "args": [],
+     "calldata": "0x8da5cb5b",
+     "raw": "0x00000000000000000000000062b3a0f6ffc5efd7692053a9040fe44f9ac8c5cb",
+     "value": "0x62b3a0f6ffc5efd7692053A9040fE44F9AC8c5Cb"
+    },
+    {
+     "id": "m_required",
+     "kind": "eth_call",
+     "label": "Controller multisig required()",
+     "to": "0x62b3a0f6ffc5efd7692053A9040fE44F9AC8c5Cb",
+     "sig": "required()",
+     "args": [],
+     "calldata": "0xdc8452cd",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000000003",
+     "value": 3
+    },
+    {
+     "id": "m_owners",
+     "kind": "eth_call",
+     "label": "Controller multisig getOwners()",
+     "to": "0x62b3a0f6ffc5efd7692053A9040fE44F9AC8c5Cb",
+     "sig": "getOwners()",
+     "args": [],
+     "calldata": "0xa0e67e2b",
+     "raw": "0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000050000000000000000000000006744a526c21015f46559083cbc1984cc23138af2000000000000000000000000106743fde530388d0e4963d28189e8868f151511000000000000000000000000d3fc71bde8a7e6c6f8b5665c2398e5dca025c680000000000000000000000000682986313e971e197d1afe75f07c54c0e0f8dbc90000000000000000000000001e1ed3720091fbe7f3ee178fe63e9633641fd58d",
+     "value": [
+      "0x6744A526C21015f46559083CBc1984CC23138aF2",
+      "0x106743fDe530388d0e4963d28189e8868F151511",
+      "0xD3Fc71bDE8a7E6c6F8b5665C2398e5DCA025c680",
+      "0x682986313e971e197d1aFe75F07c54C0e0f8dbc9",
+      "0x1e1Ed3720091Fbe7F3Ee178fe63E9633641fD58D"
+     ]
+    },
+    {
+     "id": "m_code",
+     "kind": "eth_getCode",
+     "label": "Controller multisig eth_getCode",
+     "to": "0x62b3a0f6ffc5efd7692053A9040fE44F9AC8c5Cb",
+     "code_bytes": 5705,
+     "value": "0x6060604052361561011a5763ffffffff7c010000000000000000000000000000\u2026",
+     "args": null
+    },
+    {
+     "id": "e_delay",
+     "kind": "eth_call",
+     "label": "Ethena timelock getMinDelay()",
+     "to": "0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94",
+     "sig": "getMinDelay()",
+     "args": [],
+     "calldata": "0xf27a0c92",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000015180",
+     "value": 86400
+    },
+    {
+     "id": "e_op1",
+     "kind": "eth_call",
+     "label": "Ethena op 0x1fe5 isOperationPending()",
+     "to": "0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94",
+     "sig": "isOperationPending(bytes32)",
+     "args": [
+      "0x1fe5e3e892708310bbfcf50efc03a1b8e21e0d0042035d7e8315e0cd5f26d85b"
+     ],
+     "calldata": "0x584b153e1fe5e3e892708310bbfcf50efc03a1b8e21e0d0042035d7e8315e0cd5f26d85b",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000000001",
+     "value": true
+    },
+    {
+     "id": "e_op2",
+     "kind": "eth_call",
+     "label": "Ethena op 0x0ca0 isOperationPending()",
+     "to": "0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94",
+     "sig": "isOperationPending(bytes32)",
+     "args": [
+      "0x0ca0fcc4856b87f3df9a74532bd60db58d1310c27c17e7d9bfa8a56846f57a90"
+     ],
+     "calldata": "0x584b153e0ca0fcc4856b87f3df9a74532bd60db58d1310c27c17e7d9bfa8a56846f57a90",
+     "raw": "0x0000000000000000000000000000000000000000000000000000000000000001",
+     "value": true
+    },
+    {
+     "id": "e_op2_eta",
+     "kind": "eth_call",
+     "label": "Ethena op 0x0ca0 getTimestamp()",
+     "to": "0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94",
+     "sig": "getTimestamp(bytes32)",
+     "args": [
+      "0x0ca0fcc4856b87f3df9a74532bd60db58d1310c27c17e7d9bfa8a56846f57a90"
+     ],
+     "calldata": "0xd45c44350ca0fcc4856b87f3df9a74532bd60db58d1310c27c17e7d9bfa8a56846f57a90",
+     "raw": "0x000000000000000000000000000000000000000000000000000000006af8365f",
+     "value": 1794651743
+    }
+   ],
+   "accounts": {
+    "proxy_admin": {
+     "address": "0x3e4C6460aa00c11C81e3C5b95b15d612F5F2d9C7",
+     "code_bytes": 2187,
+     "nonce": 1,
+     "owner": "0x62b3a0f6ffc5efd7692053A9040fE44F9AC8c5Cb"
+    }
+   },
+   "role_maps": [],
+   "holders": {}
+  }
+ ]
+}

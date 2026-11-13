@@ -46,7 +46,7 @@ Sprints 1–16 carry **16 on-chain Base EAS sprint attestations**: Sprints 1–1
 
 ## Block-Pinned Public Sprint Summaries (Ethereum Mainnet)
 
-**14 Sprints · 37 Indexed Records.** Site build: `python3 tools/refresh_radar.py && python3 tools/build_site.py && python3 verify_site_v2.py` (the canonical base URL is a single `BASE_URL` constant in `tools/build_site.py`; brief pages are rendered from `tools/briefs_src/` inside the shared site chrome, and every call to action goes through the in-browser request builder at `/request/`).
+**14 Sprints · 37 Indexed Records.** Site build: `python3 tools/refresh_radar.py && python3 tools/onboarding_scan.py && python3 tools/build_site.py && python3 verify_site_v2.py` (`onboarding_scan.py` writes `docs/api/v1/onboarding.json`, the single source of the live onboarding verification briefs at `/briefs/<slug>/`: every check is a block-pinned, two-endpoint cross-checked read, and role maps are replayed from event logs with each log verified against its receipt) (the canonical base URL is a single `BASE_URL` constant in `tools/build_site.py`; brief pages are rendered from `tools/briefs_src/` inside the shared site chrome, and every call to action goes through the in-browser request builder at `/request/`).
 
 | Sprint | Pinned Block | Canonical Block Hash | Base EAS Attestation | Public Summary & Sampled Protocols |
 | :--- | :--- | :--- | :--- | :--- |

@@ -21,7 +21,11 @@ import html
 import json
 import os
 import re
+import sys
 import urllib.parse
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import onboarding_render as OR  # noqa: E402
 
 BASE_URL = "https://pacta.wtf"   # cutover: "https://pacta.fractalneurons.com"
 
@@ -342,6 +346,49 @@ def inspector(idx, c):
 </div></section>"""
 
 
+def load_onboarding():
+    p = os.path.join(DOCS, "api", "v1", "onboarding.json")
+    return json.load(open(p)) if os.path.exists(p) else {"briefs": []}
+
+
+def onboarding_section(onb):
+    if not onb["briefs"]:
+        return ""
+    return f"""<section class="sec" id="onboarding"><div class="wrap">
+<div class="sec-head"><span class="n">03</span><h2>Live onboarding verification briefs</h2><span class="aside">{len(onb["briefs"])} assets currently proposed as collateral · block-pinned</span></div>
+<p class="sec-intro">Who can change each asset now in front of Aave and Euler governance, read at a canonical block on two RPC endpoints, with every call reproducible. Machine-readable: <a href="api/v1/onboarding.json">/api/v1/onboarding.json</a>.</p>
+<div class="tbl-wrap"><table class="tbl radar"><thead><tr><th>Asset</th><th>Forum thread</th><th class="hide-m">Pinned block</th><th class="r">Brief</th></tr></thead>
+<tbody>{OR.homepage_rows(onb)}</tbody></table></div>
+</div></section>"""
+
+
+def onboarding_page(b, idx):
+    pin = b["pin"]
+    cmd = OR.terms(b)
+    content = OR.content(b, term(cmd, "Reproduce every value on any archive node"), CLEARANCE_PRICE)
+    meta = (f'<dl class="memo-meta"><dt>Asset</dt><dd>{E(b["asset"])}</dd><dt>Venue</dt><dd>{E(b["venue"])}</dd>'
+            f'<dt>Pinned block</dt><dd>{E(OR.CHAIN_NAME[b["chain"]])} <span class="num">#{pin["number"]:,}</span> · {E(utc(pin["timestamp"], True))} '
+            f'<span class="badge final">Canonical (EIP-1898)</span></dd><dt>Block hash</dt><dd>{hexref(pin["hash"], 10, 6)}</dd>'
+            f'<dt>Data</dt><dd><a href="../../api/v1/onboarding.json">/api/v1/onboarding.json</a> · slug <code>{E(b["slug"])}</code></dd></dl>')
+    content = content.replace("</header>", "</header>\n" + meta, 1)
+    c = counts(idx)
+    count_line = f'{c["sprints"]} Sprints · {c["records"]} Indexed Records'
+    reg = idx["onchain_anchoring"]["commitment_registry"]
+    title = f'{b["asset"]}: onboarding verification brief'
+    body = f"""<body>
+{topbar("../../")}
+<main id="main" class="memo-wrap">
+<div class="crumbs"><a href="../../">Pacta</a> / <a href="../../#onboarding">Onboarding briefs</a> / {E(b["slug"])}</div>
+<article class="memo">
+{content}</article>
+<div class="memo-foot"><span>Read-only on-chain analysis. Not investment advice. Exploit-sensitive vulnerabilities are never published here; they go through Immunefi or Cantina bounty programmes.</span><a href="../../request/?tier=clearance">Clear these findings in 24h · {E(CLEARANCE_PRICE)} →</a></div>
+</main>
+{footer(count_line, reg, "../../")}
+</body></html>
+"""
+    return head(title, OR.summary(b), f"{BASE_URL}/briefs/{b['slug']}/", prefix="../../", og_title=title, og_type="article") + "\n" + body
+
+
 def radar_section(radar):
     r = radar["refreshed_at"]
     rows = []
@@ -376,7 +423,7 @@ def findings_section(idx):
             f'<div class="cmpcol"><span class="chip obs{" warn" if e["classification"] == "parameter_delta" else ""}"><i>{obs[0]}</i><b>{E(obs[1])}</b></span>'
             f'<span class="chip"><i>{doc[0]}</i><b>{E(doc[1])}</b></span><a href="{E(href)}"{" data-open=" + chr(34) + E(rid) + chr(34) if not link else ""}>{label} →</a></div></div>')
     return f"""<section class="sec" id="findings"><div class="wrap">
-<div class="sec-head"><span class="n">03</span><h2>Selected governance deltas</h2><span class="aside">What is on-chain versus what the docs say</span></div>
+<div class="sec-head"><span class="n">04</span><h2>Selected governance deltas</h2><span class="aside">What is on-chain versus what the docs say</span></div>
 <div class="frows">{"".join(rows)}</div>
 </div></section>"""
 
@@ -413,7 +460,7 @@ def index_rows(idx):
 
 def index_section(idx, c, count_line):
     return f"""<section class="sec" id="index"><div class="wrap">
-<div class="sec-head"><span class="n">04</span><h2>Public control-plane index</h2><span class="aside">{E(count_line)}</span></div>
+<div class="sec-head"><span class="n">05</span><h2>Public control-plane index</h2><span class="aside">{E(count_line)}</span></div>
 <div class="ix-tools">
 <input id="matrix-q" type="search" placeholder="Filter by protocol, contract, address or text" aria-label="Filter records" autocomplete="off">
 <div class="seg" role="group" aria-label="Filter by classification">
@@ -440,7 +487,7 @@ def verify_section(idx, c):
            f"# 3) Reference Foundry suite (offline; fork tests need ETH_RPC_URL)\n"
            f'forge test --no-match-test "testFork" -vv')
     return f"""<section class="sec" id="verify"><div class="wrap">
-<div class="sec-head"><span class="n">05</span><h2>Don’t trust, verify</h2><span class="aside">Everything here replays against any archive node</span></div>
+<div class="sec-head"><span class="n">06</span><h2>Don’t trust, verify</h2><span class="aside">Everything here replays against any archive node</span></div>
 <div class="split">
 <dl class="deflist">
 <div><dt>Ethereum Mainnet</dt><dd>All {c["records"]} indexed records are pinned to a block number and its canonical block hash; reads use EIP-1898 <code>requireCanonical</code>.</dd></div>
@@ -478,7 +525,7 @@ def pricing_section(home=""):
                     "Book a 24h clearance", feat=True,
                     addon=f'<p class="addon">Optional: continuous <i>Aligned</i> badge maintenance, {E(MONITORING_PRICE)}</p>'))
     return f"""<section class="sec" id="pricing"><div class="wrap">
-<div class="sec-head"><span class="n">06</span><h2>Engagements</h2><span class="aside">All public data is free and real-time. One paid service, for collateral issuers.</span></div>
+<div class="sec-head"><span class="n">07</span><h2>Engagements</h2><span class="aside">All public data is free and real-time. One paid service, for collateral issuers.</span></div>
 <div class="plans two">{plans}</div>
 <p class="note">{E(VULN_ROUTE)}</p>
 </div></section>"""
@@ -540,7 +587,7 @@ def request_builder(idx, home=""):
 
 def request_section(idx):
     return f"""<section class="sec" id="request"><div class="wrap">
-<div class="sec-head"><span class="n">07</span><h2>Request coverage</h2><span class="aside">Builds a scope brief in your browser; nothing is sent until you choose a channel</span></div>
+<div class="sec-head"><span class="n">08</span><h2>Request coverage</h2><span class="aside">Builds a scope brief in your browser; nothing is sent until you choose a channel</span></div>
 {request_builder(idx)}
 </div></section>"""
 
@@ -574,14 +621,14 @@ def faq_section(c, r):
     ]
     items = "".join(f"<div><dt>{q}</dt><dd>{a}</dd></div>" for q, a in qa)
     return f"""<section class="sec" id="faq"><div class="wrap">
-<div class="sec-head"><span class="n">08</span><h2>Questions &amp; methodology</h2></div>
+<div class="sec-head"><span class="n">09</span><h2>Questions &amp; methodology</h2></div>
 <dl class="faq">{items}</dl>
 </div></section>"""
 
 
 def about_section(idx):
     return f"""<section class="sec" id="about"><div class="wrap">
-<div class="sec-head"><span class="n">09</span><h2>About</h2></div>
+<div class="sec-head"><span class="n">10</span><h2>About</h2></div>
 <div class="about">
 <p>Pacta is built by <a href="{FN}" target="_blank" rel="noopener">Fractal Neurons</a>, a research engineering firm. <i>Pacta sunt servanda</i>: agreements must be kept. We check that the people who control DeFi collateral keep the commitments their documentation makes, and we tell you before that changes.</p>
 <dl class="deflist">
@@ -619,6 +666,7 @@ def page(idx, radar):
 </div></section>
 {inspector(idx, c)}
 {radar_section(radar)}
+{onboarding_section(load_onboarding())}
 {findings_section(idx)}
 {index_section(idx, c, count_line)}
 {verify_section(idx, c)}
@@ -703,6 +751,10 @@ def llms(idx, radar):
         f"- [{BASE_URL}/api/v1/radar.json]({BASE_URL}/api/v1/radar.json): queued timelock operations, refreshed at finalized block {r['block_number']} ({r['block_time_utc']}).", "",
         "## Live pre-execution briefs",
     ] + [f"- [{BASE_URL}/briefs/{k}/]({BASE_URL}/briefs/{k}/): {v}" for k, v in BRIEFS.items()] + [
+        "", "## Live onboarding verification briefs (assets proposed as collateral; block-pinned)",
+        f"- [{BASE_URL}/api/v1/onboarding.json]({BASE_URL}/api/v1/onboarding.json): schema `pacta.onboarding_briefs.v1`; every check with call, calldata, raw result and decoded value; role maps replayed from events.",
+    ] + [f"- [{BASE_URL}/briefs/{b['slug']}/]({BASE_URL}/briefs/{b['slug']}/): {OR.summary(b)} ({b['forum']['name']} #{b['forum']['topic']}; {OR.CHAIN_NAME[b['chain']]} block {b['pin']['number']})"
+         for b in load_onboarding()["briefs"]] + [
         f"- [{BASE_URL}/demos/swapio-x402/]({BASE_URL}/demos/swapio-x402/): 90-second x402 storyboard (TreasuryGuard) with a live, on-chain-verified Base USDC settlement receipt.", "",
         "## Methodology",
         "- Scanner seats replay read-only eth_call / eth_getStorageAt at the cited block (two independent archive RPCs); an isolated verifier seat re-checks selectors, EIP-55 checksums, EIP-1967 slots and arithmetic offline.",
@@ -741,9 +793,13 @@ def main():
     w("request/index.html", request_page(idx))
     for slug, desc in BRIEFS.items():
         w(f"briefs/{slug}/index.html", brief_page(slug, desc, idx, radar))
+    onb = load_onboarding()
+    for b in onb["briefs"]:
+        w(f"briefs/{b['slug']}/index.html", onboarding_page(b, idx))
     w("llms.txt", llms(idx, radar))
     w("robots.txt", f"User-agent: *\nAllow: /\n\nSitemap: {BASE_URL}/sitemap.xml\n")
-    urls = ["/", "/request/", "/llms.txt", "/api/v1/index.json", "/api/v1/radar.json"] + [f"/briefs/{k}/" for k in BRIEFS] + ["/demos/swapio-x402/"]
+    urls = ["/", "/request/", "/llms.txt", "/api/v1/index.json", "/api/v1/radar.json"] + [f"/briefs/{k}/" for k in BRIEFS] + \
+        [f"/briefs/{b['slug']}/" for b in load_onboarding()["briefs"]] + (["/api/v1/onboarding.json"] if load_onboarding()["briefs"] else []) + ["/demos/swapio-x402/"]
     w("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
       + "".join(f"  <url><loc>{BASE_URL}{u}</loc><lastmod>{today}</lastmod></url>\n" for u in urls) + "</urlset>\n")
     w(".well-known/security.txt", f"Contact: mailto:{CONTACT}\nExpires: 2027-11-13T00:00:00.000Z\nPreferred-Languages: en\n"

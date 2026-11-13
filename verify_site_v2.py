@@ -441,6 +441,42 @@ def main():
     check("app.js behaviour: clearance/community tracks, payment panel, tx-hash + forum prefill; malformed #hash never throws", not failed_b,
           f"{len(expected) - len([k for k in expected if res.get(k) is not True])}/{len(expected)} assertions; failed {failed_b[:4]}")
 
+    # live onboarding verification briefs (rendered from docs/api/v1/onboarding.json by tools/onboarding_scan.py + build_site.py)
+    onb_path = os.path.join(DOCS, "api", "v1", "onboarding.json")
+    EXPECT_ONB = {"kerne-kusd-base": ("base", 57050397, "0xd6d02efb420f81b3f0e095d78453362c4488afb9adc0f8e1c411bb265beb88a7"),
+                  "efix-efixdi-base": ("base", 57050397, "0xd6d02efb420f81b3f0e095d78453362c4488afb9adc0f8e1c411bb265beb88a7"),
+                  "circle-cirbtc-eth": ("eth", 26408330, "0x8efc8256deb932e65b5117f040db264dc8200850636d90eecd5daccb99979f4d"),
+                  "paxos-paxgy-eth": ("eth", 26408330, "0x8efc8256deb932e65b5117f040db264dc8200850636d90eecd5daccb99979f4d"),
+                  "tether-usat-eth": ("eth", 26408330, "0x8efc8256deb932e65b5117f040db264dc8200850636d90eecd5daccb99979f4d")}
+    onb = json.loads(read("docs/api/v1/onboarding.json")) if os.path.exists(onb_path) else {"briefs": []}
+    got = {b["slug"]: (b["chain"], b["pin"]["number"], b["pin"]["hash"]) for b in onb["briefs"]}
+    check("onboarding.json: 5 briefs at the specified pinned blocks (schema pacta.onboarding_briefs.v1)",
+          onb.get("schema") == "pacta.onboarding_briefs.v1" and got == EXPECT_ONB, f"{sorted(got)}")
+    bad_cd, bad_page, n_checks = [], [], 0
+    for b in onb["briefs"]:
+        pg = pages.get(os.path.join("briefs", b["slug"], "index.html"), "")
+        casts = len(re.findall(r"^cast (?:call|storage|code|nonce) ", html.unescape(pg), re.M))
+        if casts != len(b["checks"]) or f'--block {b["pin"]["number"]}' not in pg or b["pin"]["hash"] not in pg \
+                or 'href="../../request/?tier=clearance"' not in pg or "$5,000 USDC" not in pg or len(b["checks"]) < 8:
+            bad_page.append(f'{b["slug"]}: casts {casts}/{len(b["checks"])}')
+        for c in b["checks"]:
+            n_checks += 1
+            if c["kind"] == "eth_call":
+                want = "0x" + keccak(c["sig"].encode()).hex()[:8] + "".join(
+                    (hex(a)[2:] if isinstance(a, int) else a[2:].lower()).rjust(64, "0") for a in c["args"])
+                if c["calldata"] != want:
+                    bad_cd.append(f'{b["slug"]}:{c["id"]}')
+            val = c["value"]
+            if isinstance(val, (int, str)) and not isinstance(val, bool) and c["kind"] != "eth_getCode" and str(val) not in html.unescape(pg):
+                bad_page.append(f'{b["slug"]}:{c["id"]} value not shown')
+    check("onboarding briefs: every eth_call calldata re-derives from signature + args", not bad_cd and n_checks > 0, f"{n_checks} checks; bad {bad_cd[:3]}")
+    check("onboarding briefs: one cast line per check, pin block + hash, every value shown, $5,000 clearance CTA", not bad_page and onb["briefs"],
+          str(bad_page[:4]))
+    llms_t, sm = read("docs/llms.txt"), read("docs/sitemap.xml")
+    linked = all(f'href="briefs/{sl}/"' in page and f"{base}/briefs/{sl}/" in llms_t and f"{base}/briefs/{sl}/" in sm for sl in EXPECT_ONB)
+    check("onboarding briefs linked from the homepage (#onboarding), llms.txt and sitemap.xml", linked and 'id="onboarding"' in page
+          and "/api/v1/onboarding.json" in llms_t)
+
     # private identifiers must never be published: compared by SHA-256 of lowercased tokens, so the
     # repository itself never contains the literal identifiers this check guards against
     scope = [p for p in glob.glob(os.path.join(ROOT, "docs", "**", "*"), recursive=True) + glob.glob(os.path.join(ROOT, "audits", "**", "*"), recursive=True)

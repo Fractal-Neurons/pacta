@@ -1,0 +1,86 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>USAT (Tether America / Anchorage): onboarding verification brief</title>
+<meta name="description" content="USAT (Ethereum): EIP-1967 proxy controlled by a 3-of-5 legacy MultiSigWallet with no timelock; linked pending Ethena ops.">
+<link rel="canonical" href="https://pacta.wtf/briefs/tether-usat-eth/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Pacta by Fractal Neurons">
+<meta property="og:title" content="USAT (Tether America / Anchorage): onboarding verification brief">
+<meta property="og:description" content="USAT (Ethereum): EIP-1967 proxy controlled by a 3-of-5 legacy MultiSigWallet with no timelock; linked pending Ethena ops.">
+<meta property="og:url" content="https://pacta.wtf/briefs/tether-usat-eth/">
+<meta property="og:image" content="https://pacta.wtf/og-preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="USAT (Tether America / Anchorage): onboarding verification brief">
+<meta name="twitter:description" content="USAT (Ethereum): EIP-1967 proxy controlled by a 3-of-5 legacy MultiSigWallet with no timelock; linked pending Ethena ops.">
+<meta name="twitter:image" content="https://pacta.wtf/og-preview.png">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../../favicon.png" type="image/png" sizes="32x32">
+<link rel="stylesheet" href="../../styles.css">
+<link rel="alternate" type="text/markdown" href="../../llms.txt" title="llms.txt">
+<script>document.documentElement.className="js";try{if(localStorage.getItem("pacta-theme")==="slate")document.documentElement.dataset.theme="slate"}catch(e){}</script>
+<script src="../../app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar"><div class="wrap"><a class="brand" href="../../"><img src="../../favicon.svg" alt="" width="22" height="22">PACTA<small>by Fractal Neurons</small></a><nav class="nav" aria-label="Sections"><a href="../../#inspector">Inspector</a><a href="../../#radar">Radar</a><a href="../../#findings">Findings</a><a href="../../#index">Index</a><a href="../../#verify">Verify</a><a href="../../#pricing">Pricing</a><a href="../../#faq">FAQ</a></nav><div class="tools"><button class="tt" type="button" aria-label="Theme: Paper (switch to Slate)"><span data-t="paper" class="on">Paper</span><span data-t="slate">Slate</span></button><a class="btn sm primary" href="../../request/">Request coverage</a></div></div></header>
+<main id="main" class="memo-wrap">
+<div class="crumbs"><a href="../../">Pacta</a> / <a href="../../#onboarding">Onboarding briefs</a> / tether-usat-eth</div>
+<article class="memo">
+<header>
+  <div><span class="badge badge-cyan">Onboarding verification brief</span><span class="badge badge-amber">Aave governance #25927</span></div>
+  <h1>USAT (Tether America / Anchorage): control-plane state at Ethereum Mainnet block 26,408,330</h1>
+  <p>Read-only verification of who can change USAT (Tether America / Anchorage) and the Aave (USAT assessments) · Ethereum canonical token it is proposed for, pinned to a canonical block and reproducible on any archive node. Forum thread: <a href="https://governance.aave.com/t/25927" target="_blank" rel="noopener">Tether America USD (USAT) on Aave Avalanche Assessments ↗</a>.</p>
+</header>
+<dl class="memo-meta"><dt>Asset</dt><dd>USAT (Tether America / Anchorage)</dd><dt>Venue</dt><dd>Aave (USAT assessments) · Ethereum canonical token</dd><dt>Pinned block</dt><dd>Ethereum Mainnet <span class="num">#26,408,330</span> · 2026-11-13 20:07:23 UTC <span class="badge final">Canonical (EIP-1898)</span></dd><dt>Block hash</dt><dd><span class="addr" title="0x8efc8256deb932e65b5117f040db264dc8200850636d90eecd5daccb99979f4d">0x8efc8256…979f4d</span><button class="copy" type="button" data-copy="0x8efc8256deb932e65b5117f040db264dc8200850636d90eecd5daccb99979f4d">Copy</button></dd><dt>Data</dt><dd><a href="../../api/v1/onboarding.json">/api/v1/onboarding.json</a> · slug <code>tether-usat-eth</code></dd></dl>
+
+<div class="meta-grid"><div class="kpi"><div class="k">Upgrade path</div><div class="v">ProxyAdmin</div><div class="s">EIP-1967</div></div><div class="kpi"><div class="k">Controller</div><div class="v">3-of-5 MultiSig</div><div class="s">Legacy MultiSigWallet</div></div><div class="kpi"><div class="k">Timelock</div><div class="v">none</div><div class="s">Executes on 3rd confirmation</div></div><div class="kpi"><div class="k">Supply</div><div class="v">179,317,574.50 USAT</div><div class="s">6 decimals</div></div></div>
+
+<h2>1. Findings</h2>
+<div class="card"><ul><li>USAT <span class="addr" title="0x07041776f5007ACa2A54844F50503a18A72A8b68">0x0704…8b68</span><button class="copy" type="button" data-copy="0x07041776f5007ACa2A54844F50503a18A72A8b68">Copy</button> is an EIP-1967 proxy: implementation <span class="addr" title="0x8B98Bcd9b1F8ae112FB2b58b45c3Bc9a75CC4d0e">0x8B98…4d0e</span><button class="copy" type="button" data-copy="0x8B98Bcd9b1F8ae112FB2b58b45c3Bc9a75CC4d0e">Copy</button>, ProxyAdmin <span class="addr" title="0x3e4C6460aa00c11C81e3C5b95b15d612F5F2d9C7">0x3e4C…d9C7</span><button class="copy" type="button" data-copy="0x3e4C6460aa00c11C81e3C5b95b15d612F5F2d9C7">Copy</button> whose <code>owner()</code> is <span class="addr" title="0x62b3a0f6ffc5efd7692053A9040fE44F9AC8c5Cb">0x62b3…c5Cb</span><button class="copy" type="button" data-copy="0x62b3a0f6ffc5efd7692053A9040fE44F9AC8c5Cb">Copy</button>. <code>USAT.owner()</code> is the same address.</li><li>That controller is a legacy MultiSigWallet (submit / confirm / execute; 5,705 bytes), <code>required()</code> = 3 of 5 owners. It is not a TimelockController: an upgrade or owner action executes as soon as the third confirmation lands.</li><li>Linked queue: Ethena timelock <span class="addr" title="0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94">0xE8Dc…7c94</span><button class="copy" type="button" data-copy="0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94">Copy</button> (86,400s delay) holds two pending operations (<code>isOperationPending</code> = true / true) that add RLUSD and USAT to EthenaMinting; the USAT operation becomes executable at 2026-11-14 10:22:23 UTC. See the <a href="../ethena-ops-0x0ca0-0x1fe5/">Ethena pre-execution brief</a>.</li><li>The forum thread assesses the bridged USAT on Avalanche; this brief covers the canonical Ethereum token whose redemption and credit exposure that bridged asset inherits.</li></ul></div>
+
+<h2>2. Observed state at block 26,408,330</h2>
+<div class="card"><p>Block hash <span class="addr" title="0x8efc8256deb932e65b5117f040db264dc8200850636d90eecd5daccb99979f4d">0x8efc8256…979f4d</span><button class="copy" type="button" data-copy="0x8efc8256deb932e65b5117f040db264dc8200850636d90eecd5daccb99979f4d">Copy</button>; every read below used EIP-1898 <code>{blockHash, requireCanonical: true}</code> and returned byte-identical results on 2 independent RPC endpoints.</p>
+<div class="tbl-wrap"><table><thead><tr><th>Check</th><th>Contract</th><th>Value</th></tr></thead><tbody><tr><td>USAT totalSupply()</td><td><span class="addr" title="0x07041776f5007ACa2A54844F50503a18A72A8b68">0x0704…8b68</span><button class="copy" type="button" data-copy="0x07041776f5007ACa2A54844F50503a18A72A8b68">Copy</button></td><td><code>179317574500000</code></td></tr><tr><td>USAT decimals()</td><td><span class="addr" title="0x07041776f5007ACa2A54844F50503a18A72A8b68">0x0704…8b68</span><button class="copy" type="button" data-copy="0x07041776f5007ACa2A54844F50503a18A72A8b68">Copy</button></td><td><code>6</code></td></tr><tr><td>EIP-1967 implementation slot</td><td><span class="addr" title="0x07041776f5007ACa2A54844F50503a18A72A8b68">0x0704…8b68</span><button class="copy" type="button" data-copy="0x07041776f5007ACa2A54844F50503a18A72A8b68">Copy</button></td><td><code>0x8B98Bcd9b1F8ae112FB2b58b45c3Bc9a75CC4d0e</code></td></tr><tr><td>EIP-1967 admin slot (ProxyAdmin)</td><td><span class="addr" title="0x07041776f5007ACa2A54844F50503a18A72A8b68">0x0704…8b68</span><button class="copy" type="button" data-copy="0x07041776f5007ACa2A54844F50503a18A72A8b68">Copy</button></td><td><code>0x3e4C6460aa00c11C81e3C5b95b15d612F5F2d9C7</code></td></tr><tr><td>USAT owner()</td><td><span class="addr" title="0x07041776f5007ACa2A54844F50503a18A72A8b68">0x0704…8b68</span><button class="copy" type="button" data-copy="0x07041776f5007ACa2A54844F50503a18A72A8b68">Copy</button></td><td><code>0x62b3a0f6ffc5efd7692053A9040fE44F9AC8c5Cb</code></td></tr><tr><td>Controller multisig required()</td><td><span class="addr" title="0x62b3a0f6ffc5efd7692053A9040fE44F9AC8c5Cb">0x62b3…c5Cb</span><button class="copy" type="button" data-copy="0x62b3a0f6ffc5efd7692053A9040fE44F9AC8c5Cb">Copy</button></td><td><code>3</code></td></tr><tr><td>Controller multisig getOwners()</td><td><span class="addr" title="0x62b3a0f6ffc5efd7692053A9040fE44F9AC8c5Cb">0x62b3…c5Cb</span><button class="copy" type="button" data-copy="0x62b3a0f6ffc5efd7692053A9040fE44F9AC8c5Cb">Copy</button></td><td><code>[5] 0x6744A526C21015f46559083CBc1984CC23138aF2, 0x106743fDe530388d0e4963d28189e8868F151511, 0xD3Fc71bDE8a7E6c6F8b5665C2398e5DCA025c680, 0x682986313e971e197d1aFe75F07c54C0e0f8dbc9, 0x1e1Ed3720091Fbe7F3Ee178fe63E9633641fD58D</code></td></tr><tr><td>Controller multisig eth_getCode</td><td><span class="addr" title="0x62b3a0f6ffc5efd7692053A9040fE44F9AC8c5Cb">0x62b3…c5Cb</span><button class="copy" type="button" data-copy="0x62b3a0f6ffc5efd7692053A9040fE44F9AC8c5Cb">Copy</button></td><td><code>5,705 bytes</code></td></tr><tr><td>Ethena timelock getMinDelay()</td><td><span class="addr" title="0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94">0xE8Dc…7c94</span><button class="copy" type="button" data-copy="0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94">Copy</button></td><td><code>86400</code></td></tr><tr><td>Ethena op 0x1fe5 isOperationPending()</td><td><span class="addr" title="0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94">0xE8Dc…7c94</span><button class="copy" type="button" data-copy="0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94">Copy</button></td><td><code>true</code></td></tr><tr><td>Ethena op 0x0ca0 isOperationPending()</td><td><span class="addr" title="0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94">0xE8Dc…7c94</span><button class="copy" type="button" data-copy="0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94">Copy</button></td><td><code>true</code></td></tr><tr><td>Ethena op 0x0ca0 getTimestamp()</td><td><span class="addr" title="0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94">0xE8Dc…7c94</span><button class="copy" type="button" data-copy="0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94">Copy</button></td><td><code>1794651743</code></td></tr></tbody></table></div></div>
+
+
+<h2>3. Reproduce</h2>
+<div class="term"><div class="term-h"><span>Reproduce every value on any archive node</span><button class="copy" type="button" data-copy-term>Copy command</button></div><pre># Ethereum Mainnet block 26408330
+cast block 26408330 --field hash --rpc-url &quot;$ETH_RPC_URL&quot;
+# expect 0x8efc8256deb932e65b5117f040db264dc8200850636d90eecd5daccb99979f4d
+
+# USAT totalSupply()
+cast call 0x07041776f5007ACa2A54844F50503a18A72A8b68 &quot;totalSupply()&quot; --block 26408330 --rpc-url &quot;$ETH_RPC_URL&quot;
+# USAT decimals()
+cast call 0x07041776f5007ACa2A54844F50503a18A72A8b68 &quot;decimals()&quot; --block 26408330 --rpc-url &quot;$ETH_RPC_URL&quot;
+# EIP-1967 implementation slot
+cast storage 0x07041776f5007ACa2A54844F50503a18A72A8b68 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc --block 26408330 --rpc-url &quot;$ETH_RPC_URL&quot;
+# EIP-1967 admin slot (ProxyAdmin)
+cast storage 0x07041776f5007ACa2A54844F50503a18A72A8b68 0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103 --block 26408330 --rpc-url &quot;$ETH_RPC_URL&quot;
+# USAT owner()
+cast call 0x07041776f5007ACa2A54844F50503a18A72A8b68 &quot;owner()&quot; --block 26408330 --rpc-url &quot;$ETH_RPC_URL&quot;
+# Controller multisig required()
+cast call 0x62b3a0f6ffc5efd7692053A9040fE44F9AC8c5Cb &quot;required()&quot; --block 26408330 --rpc-url &quot;$ETH_RPC_URL&quot;
+# Controller multisig getOwners()
+cast call 0x62b3a0f6ffc5efd7692053A9040fE44F9AC8c5Cb &quot;getOwners()&quot; --block 26408330 --rpc-url &quot;$ETH_RPC_URL&quot;
+# Controller multisig eth_getCode
+cast code 0x62b3a0f6ffc5efd7692053A9040fE44F9AC8c5Cb --block 26408330 --rpc-url &quot;$ETH_RPC_URL&quot;
+# Ethena timelock getMinDelay()
+cast call 0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94 &quot;getMinDelay()&quot; --block 26408330 --rpc-url &quot;$ETH_RPC_URL&quot;
+# Ethena op 0x1fe5 isOperationPending()
+cast call 0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94 &quot;isOperationPending(bytes32)&quot; 0x1fe5e3e892708310bbfcf50efc03a1b8e21e0d0042035d7e8315e0cd5f26d85b --block 26408330 --rpc-url &quot;$ETH_RPC_URL&quot;
+# Ethena op 0x0ca0 isOperationPending()
+cast call 0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94 &quot;isOperationPending(bytes32)&quot; 0x0ca0fcc4856b87f3df9a74532bd60db58d1310c27c17e7d9bfa8a56846f57a90 --block 26408330 --rpc-url &quot;$ETH_RPC_URL&quot;
+# Ethena op 0x0ca0 getTimestamp()
+cast call 0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94 &quot;getTimestamp(bytes32)&quot; 0x0ca0fcc4856b87f3df9a74532bd60db58d1310c27c17e7d9bfa8a56846f57a90 --block 26408330 --rpc-url &quot;$ETH_RPC_URL&quot;</pre></div>
+
+<h2>4. Scope</h2>
+<div class="card"><ul><li>Observations of on-chain state only. They do not assess code correctness, reserves, legal structure or off-chain key custody, and they are not investment advice.</li>
+<li>Issuers can clear or document these findings with a <a href="../../request/?tier=clearance">24h Collateral Onboarding &amp; Delta Clearance Attestation</a> ($5,000 USDC flat): block-pinned audit, docs / config reconciliation PR, Base EAS <i>Aligned</i> attestation and a Curator Diligence Dossier for the forum thread.</li></ul></div>
+</article>
+<div class="memo-foot"><span>Read-only on-chain analysis. Not investment advice. Exploit-sensitive vulnerabilities are never published here; they go through Immunefi or Cantina bounty programmes.</span><a href="../../request/?tier=clearance">Clear these findings in 24h · $5,000 USDC →</a></div>
+</main>
+<footer class="ftr"><div class="wrap"><span>Pacta · Fractal Neurons · pacta.base.eth · 14 Sprints · 37 Indexed Records</span><nav aria-label="Footer"><a href="https://github.com/Fractal-Neurons/pacta" target="_blank" rel="noopener">GitHub</a><a href="../../api/v1/index.json">JSON feed</a><a href="../../llms.txt">llms.txt</a><a href="https://basescan.org/address/0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872" target="_blank" rel="noopener">Base registry</a><a href="../../.well-known/security.txt">security.txt</a><a href="../../request/">Contact</a></nav></div></footer>
+</body></html>

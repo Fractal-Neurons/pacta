@@ -1,0 +1,84 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>cirBTC (Circle): onboarding verification brief</title>
+<meta name="description" content="cirBTC (Circle FiatToken): upgrade admin, owner, pauser and blacklister are EOAs; no on-chain timelock or multisig.">
+<link rel="canonical" href="https://pacta.wtf/briefs/circle-cirbtc-eth/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Pacta by Fractal Neurons">
+<meta property="og:title" content="cirBTC (Circle): onboarding verification brief">
+<meta property="og:description" content="cirBTC (Circle FiatToken): upgrade admin, owner, pauser and blacklister are EOAs; no on-chain timelock or multisig.">
+<meta property="og:url" content="https://pacta.wtf/briefs/circle-cirbtc-eth/">
+<meta property="og:image" content="https://pacta.wtf/og-preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="cirBTC (Circle): onboarding verification brief">
+<meta name="twitter:description" content="cirBTC (Circle FiatToken): upgrade admin, owner, pauser and blacklister are EOAs; no on-chain timelock or multisig.">
+<meta name="twitter:image" content="https://pacta.wtf/og-preview.png">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../../favicon.png" type="image/png" sizes="32x32">
+<link rel="stylesheet" href="../../styles.css">
+<link rel="alternate" type="text/markdown" href="../../llms.txt" title="llms.txt">
+<script>document.documentElement.className="js";try{if(localStorage.getItem("pacta-theme")==="slate")document.documentElement.dataset.theme="slate"}catch(e){}</script>
+<script src="../../app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar"><div class="wrap"><a class="brand" href="../../"><img src="../../favicon.svg" alt="" width="22" height="22">PACTA<small>by Fractal Neurons</small></a><nav class="nav" aria-label="Sections"><a href="../../#inspector">Inspector</a><a href="../../#radar">Radar</a><a href="../../#findings">Findings</a><a href="../../#index">Index</a><a href="../../#verify">Verify</a><a href="../../#pricing">Pricing</a><a href="../../#faq">FAQ</a></nav><div class="tools"><button class="tt" type="button" aria-label="Theme: Paper (switch to Slate)"><span data-t="paper" class="on">Paper</span><span data-t="slate">Slate</span></button><a class="btn sm primary" href="../../request/">Request coverage</a></div></div></header>
+<main id="main" class="memo-wrap">
+<div class="crumbs"><a href="../../">Pacta</a> / <a href="../../#onboarding">Onboarding briefs</a> / circle-cirbtc-eth</div>
+<article class="memo">
+<header>
+  <div><span class="badge badge-cyan">Onboarding verification brief</span><span class="badge badge-amber">Aave governance #25128</span></div>
+  <h1>cirBTC (Circle): control-plane state at Ethereum Mainnet block 26,408,330</h1>
+  <p>Read-only verification of who can change cirBTC (Circle) and the Aave V3 Core / V4 Core (Ethereum) it is proposed for, pinned to a canonical block and reproducible on any archive node. Forum thread: <a href="https://governance.aave.com/t/25128" target="_blank" rel="noopener">[ARFC] Onboard cirBTC on Aave v3 Core and Aave V4 Core ↗</a>.</p>
+</header>
+<dl class="memo-meta"><dt>Asset</dt><dd>cirBTC (Circle)</dd><dt>Venue</dt><dd>Aave V3 Core / V4 Core (Ethereum)</dd><dt>Pinned block</dt><dd>Ethereum Mainnet <span class="num">#26,408,330</span> · 2026-11-13 20:07:23 UTC <span class="badge final">Canonical (EIP-1898)</span></dd><dt>Block hash</dt><dd><span class="addr" title="0x8efc8256deb932e65b5117f040db264dc8200850636d90eecd5daccb99979f4d">0x8efc8256…979f4d</span><button class="copy" type="button" data-copy="0x8efc8256deb932e65b5117f040db264dc8200850636d90eecd5daccb99979f4d">Copy</button></dd><dt>Data</dt><dd><a href="../../api/v1/onboarding.json">/api/v1/onboarding.json</a> · slug <code>circle-cirbtc-eth</code></dd></dl>
+
+<div class="meta-grid"><div class="kpi"><div class="k">Upgrade authority</div><div class="v">EOA</div><div class="s">0 txs sent</div></div><div class="kpi"><div class="k">Owner</div><div class="v">EOA</div><div class="s">No timelock</div></div><div class="kpi"><div class="k">Supply</div><div class="v">361.49 cirBTC</div><div class="s">8 decimals</div></div><div class="kpi"><div class="k">Paused</div><div class="v">false</div><div class="s">FiatToken v2</div></div></div>
+
+<h2>1. Findings</h2>
+<div class="card"><ul><li>Upgrade authority: proxy <code>admin()</code> = <span class="addr" title="0xC9cEe9efa5180597BB850A642aA75e5EC3B5a9BD">0xC9cE…a9BD</span><button class="copy" type="button" data-copy="0xC9cEe9efa5180597BB850A642aA75e5EC3B5a9BD">Copy</button>, EOA (no contract code); 0 transactions sent. Implementation <span class="addr" title="0x43506849D7C04F9138D1A2050bbF3A0c054402dd">0x4350…02dd</span><button class="copy" type="button" data-copy="0x43506849D7C04F9138D1A2050bbF3A0c054402dd">Copy</button>; <code>version()</code> = “2”.</li><li>Operational roles: <code>owner()</code> <span class="addr" title="0xd50154994Eac780c571FF5f7ceC0Ef2e60085182">0xd501…5182</span><button class="copy" type="button" data-copy="0xd50154994Eac780c571FF5f7ceC0Ef2e60085182">Copy</button> (EOA (no contract code); 0 transactions sent); <code>pauser()</code> <span class="addr" title="0xabde92e0efE04a0c1469cD21Bf400Cb1969fA222">0xabde…A222</span><button class="copy" type="button" data-copy="0xabde92e0efE04a0c1469cD21Bf400Cb1969fA222">Copy</button> (EOA (no contract code); 0 transactions sent); <code>blacklister()</code> <span class="addr" title="0xb5BE9AfA2ff55B8f9AE3e223b2F18ab6B84e1D79">0xb5BE…1D79</span><button class="copy" type="button" data-copy="0xb5BE9AfA2ff55B8f9AE3e223b2F18ab6B84e1D79">Copy</button> (EOA (no contract code); 495 transactions sent); <code>masterMinter()</code> <span class="addr" title="0xC0Cc159c07a99EeCC35C36f25fE7C1Aeeb3587A2">0xC0Cc…87A2</span><button class="copy" type="button" data-copy="0xC0Cc159c07a99EeCC35C36f25fE7C1Aeeb3587A2">Copy</button> (contract (5,346 bytes of code), <code>owner()</code> <span class="addr" title="0x51834D9b4B25c470aeA8D54F800a18Db2dA42256">0x5183…2256</span><button class="copy" type="button" data-copy="0x51834D9b4B25c470aeA8D54F800a18Db2dA42256">Copy</button>: EOA (no contract code); 9 transactions sent).</li><li>None of these roles sits behind an on-chain TimelockController or multisig contract at the pinned block: upgrade, pause, blacklist and minter configuration take effect in the transaction that calls them. Key custody (HSM / MPC) is off-chain and not observable here.</li></ul></div>
+
+<h2>2. Observed state at block 26,408,330</h2>
+<div class="card"><p>Block hash <span class="addr" title="0x8efc8256deb932e65b5117f040db264dc8200850636d90eecd5daccb99979f4d">0x8efc8256…979f4d</span><button class="copy" type="button" data-copy="0x8efc8256deb932e65b5117f040db264dc8200850636d90eecd5daccb99979f4d">Copy</button>; every read below used EIP-1898 <code>{blockHash, requireCanonical: true}</code> and returned byte-identical results on 2 independent RPC endpoints.</p>
+<div class="tbl-wrap"><table><thead><tr><th>Check</th><th>Contract</th><th>Value</th></tr></thead><tbody><tr><td>cirBTC totalSupply()</td><td><span class="addr" title="0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E">0x72DF…075E</span><button class="copy" type="button" data-copy="0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E">Copy</button></td><td><code>36148765681</code></td></tr><tr><td>cirBTC decimals()</td><td><span class="addr" title="0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E">0x72DF…075E</span><button class="copy" type="button" data-copy="0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E">Copy</button></td><td><code>8</code></td></tr><tr><td>cirBTC version()</td><td><span class="addr" title="0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E">0x72DF…075E</span><button class="copy" type="button" data-copy="0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E">Copy</button></td><td><code>2</code></td></tr><tr><td>cirBTC paused()</td><td><span class="addr" title="0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E">0x72DF…075E</span><button class="copy" type="button" data-copy="0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E">Copy</button></td><td><code>false</code></td></tr><tr><td>proxy admin()</td><td><span class="addr" title="0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E">0x72DF…075E</span><button class="copy" type="button" data-copy="0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E">Copy</button></td><td><code>0xC9cEe9efa5180597BB850A642aA75e5EC3B5a9BD</code></td></tr><tr><td>proxy implementation()</td><td><span class="addr" title="0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E">0x72DF…075E</span><button class="copy" type="button" data-copy="0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E">Copy</button></td><td><code>0x43506849D7C04F9138D1A2050bbF3A0c054402dd</code></td></tr><tr><td>owner()</td><td><span class="addr" title="0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E">0x72DF…075E</span><button class="copy" type="button" data-copy="0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E">Copy</button></td><td><code>0xd50154994Eac780c571FF5f7ceC0Ef2e60085182</code></td></tr><tr><td>masterMinter()</td><td><span class="addr" title="0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E">0x72DF…075E</span><button class="copy" type="button" data-copy="0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E">Copy</button></td><td><code>0xC0Cc159c07a99EeCC35C36f25fE7C1Aeeb3587A2</code></td></tr><tr><td>pauser()</td><td><span class="addr" title="0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E">0x72DF…075E</span><button class="copy" type="button" data-copy="0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E">Copy</button></td><td><code>0xabde92e0efE04a0c1469cD21Bf400Cb1969fA222</code></td></tr><tr><td>blacklister()</td><td><span class="addr" title="0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E">0x72DF…075E</span><button class="copy" type="button" data-copy="0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E">Copy</button></td><td><code>0xb5BE9AfA2ff55B8f9AE3e223b2F18ab6B84e1D79</code></td></tr><tr><td>rescuer()</td><td><span class="addr" title="0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E">0x72DF…075E</span><button class="copy" type="button" data-copy="0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E">Copy</button></td><td><code>0x0000000000000000000000000000000000000000</code></td></tr></tbody></table></div></div>
+
+
+<h2>3. Reproduce</h2>
+<div class="term"><div class="term-h"><span>Reproduce every value on any archive node</span><button class="copy" type="button" data-copy-term>Copy command</button></div><pre># Ethereum Mainnet block 26408330
+cast block 26408330 --field hash --rpc-url &quot;$ETH_RPC_URL&quot;
+# expect 0x8efc8256deb932e65b5117f040db264dc8200850636d90eecd5daccb99979f4d
+
+# cirBTC totalSupply()
+cast call 0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E &quot;totalSupply()&quot; --block 26408330 --rpc-url &quot;$ETH_RPC_URL&quot;
+# cirBTC decimals()
+cast call 0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E &quot;decimals()&quot; --block 26408330 --rpc-url &quot;$ETH_RPC_URL&quot;
+# cirBTC version()
+cast call 0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E &quot;version()&quot; --block 26408330 --rpc-url &quot;$ETH_RPC_URL&quot;
+# cirBTC paused()
+cast call 0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E &quot;paused()&quot; --block 26408330 --rpc-url &quot;$ETH_RPC_URL&quot;
+# proxy admin()
+cast call 0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E &quot;admin()&quot; --block 26408330 --rpc-url &quot;$ETH_RPC_URL&quot;
+# proxy implementation()
+cast call 0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E &quot;implementation()&quot; --block 26408330 --rpc-url &quot;$ETH_RPC_URL&quot;
+# owner()
+cast call 0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E &quot;owner()&quot; --block 26408330 --rpc-url &quot;$ETH_RPC_URL&quot;
+# masterMinter()
+cast call 0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E &quot;masterMinter()&quot; --block 26408330 --rpc-url &quot;$ETH_RPC_URL&quot;
+# pauser()
+cast call 0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E &quot;pauser()&quot; --block 26408330 --rpc-url &quot;$ETH_RPC_URL&quot;
+# blacklister()
+cast call 0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E &quot;blacklister()&quot; --block 26408330 --rpc-url &quot;$ETH_RPC_URL&quot;
+# rescuer()
+cast call 0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E &quot;rescuer()&quot; --block 26408330 --rpc-url &quot;$ETH_RPC_URL&quot;</pre></div>
+
+<h2>4. Scope</h2>
+<div class="card"><ul><li>Observations of on-chain state only. They do not assess code correctness, reserves, legal structure or off-chain key custody, and they are not investment advice.</li>
+<li>Issuers can clear or document these findings with a <a href="../../request/?tier=clearance">24h Collateral Onboarding &amp; Delta Clearance Attestation</a> ($5,000 USDC flat): block-pinned audit, docs / config reconciliation PR, Base EAS <i>Aligned</i> attestation and a Curator Diligence Dossier for the forum thread.</li></ul></div>
+</article>
+<div class="memo-foot"><span>Read-only on-chain analysis. Not investment advice. Exploit-sensitive vulnerabilities are never published here; they go through Immunefi or Cantina bounty programmes.</span><a href="../../request/?tier=clearance">Clear these findings in 24h · $5,000 USDC →</a></div>
+</main>
+<footer class="ftr"><div class="wrap"><span>Pacta · Fractal Neurons · pacta.base.eth · 14 Sprints · 37 Indexed Records</span><nav aria-label="Footer"><a href="https://github.com/Fractal-Neurons/pacta" target="_blank" rel="noopener">GitHub</a><a href="../../api/v1/index.json">JSON feed</a><a href="../../llms.txt">llms.txt</a><a href="https://basescan.org/address/0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872" target="_blank" rel="noopener">Base registry</a><a href="../../.well-known/security.txt">security.txt</a><a href="../../request/">Contact</a></nav></div></footer>
+</body></html>
