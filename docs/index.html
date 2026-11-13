@@ -3,13 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Pacta Verifier & Bounty Blueprint — Fractal Neurons</title>
-  <meta name="description" content="Verify protocol commitments in docs against deployed on-chain contracts.">
+  <title>Pacta — Institutional DeFi Counterparty &amp; Timelock Index | Fractal Neurons</title>
+  <meta name="description" content="Block-pinned counterparty control-plane, timelock, and Gnosis Safe verification index for institutional DeFi risk curators, allocators, and security teams.">
   <meta name="theme-color" content="#000000">
   <link rel="icon" type="image/png" href="data:image/png;base64,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">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Outfit:wght@400;500;600&display=swap">
   <style>
 :root {
   --bg: #000000;
@@ -21,8 +18,8 @@
   --cyan-dim: rgba(116, 244, 246, 0.12);
   --cyan-border: rgba(116, 244, 246, 0.32);
   --border: rgba(244, 246, 248, 0.12);
-  --font-sans: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
 }
 
 *, *::before, *::after {
@@ -52,7 +49,7 @@ a:hover {
 
 .wrap {
   width: 100%;
-  max-width: 1080px;
+  max-width: 1120px;
   margin: 0 auto;
   padding: 0 16px;
 }
@@ -61,7 +58,6 @@ a:hover {
   .wrap { padding: 0 24px; }
 }
 
-/* Header — simple flex-wrap, works on 320px+ mobile with zero JS */
 .hdr {
   border-bottom: 1px solid var(--border);
   background: #000000;
@@ -149,7 +145,6 @@ a:hover {
   font-size: 0.75rem;
 }
 
-/* Hero — clean, static, mobile-first */
 .hero {
   padding: 36px 0 28px;
   border-bottom: 1px solid var(--border);
@@ -199,7 +194,7 @@ h3 {
 .lede {
   color: var(--muted);
   font-size: 1rem;
-  max-width: 68ch;
+  max-width: 72ch;
   margin: 0 0 20px;
 }
 
@@ -218,7 +213,6 @@ h3 {
   .actions .btn { width: auto; }
 }
 
-/* Sections & Grids */
 .sec {
   padding: 32px 0;
   border-bottom: 1px solid var(--border);
@@ -232,7 +226,7 @@ h3 {
   display: grid;
   grid-template-columns: 1fr;
   gap: 12px;
-  margin-top: 16px;
+  margin-top: 20px;
 }
 
 @media (min-width: 640px) {
@@ -248,7 +242,7 @@ h3 {
 
 .stat__num {
   font-family: var(--font-mono);
-  font-size: 1.65rem;
+  font-size: 1.55rem;
   font-weight: 600;
   color: var(--cyan);
   line-height: 1.2;
@@ -269,21 +263,6 @@ h3 {
 
 @media (min-width: 768px) {
   .grid-3 { grid-template-columns: repeat(3, 1fr); }
-}
-
-.grid-4 {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 14px;
-  margin-top: 20px;
-}
-
-@media (min-width: 640px) {
-  .grid-4 { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media (min-width: 960px) {
-  .grid-4 { grid-template-columns: repeat(4, 1fr); }
 }
 
 .card {
@@ -322,9 +301,9 @@ h3 {
   color: var(--cyan);
   background: var(--cyan-dim);
   border: 1px solid var(--cyan-border);
+  white-space: nowrap;
 }
 
-/* Tables & Code — mobile horizontal scroll without breaking page width */
 .table-wrap {
   width: 100%;
   overflow-x: auto;
@@ -338,8 +317,8 @@ h3 {
 table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.88rem;
-  min-width: 540px;
+  font-size: 0.86rem;
+  min-width: 680px;
 }
 
 th {
@@ -433,21 +412,21 @@ details p {
   justify-content: space-between;
   gap: 12px;
 }
-</style>
+  </style>
 </head>
 <body>
   <header class="hdr">
     <div class="wrap hdr__in">
-      <a class="brand" href="https://pacta.dri.network/public/strategy/">
+      <a class="brand" href="https://fractal-neurons.github.io/pacta/">
         <img src="data:image/png;base64,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" alt="Fractal Neurons" width="32" height="32">
         <span>Fractal Neurons // Pacta</span>
       </a>
       <nav class="nav" aria-label="Primary">
-        <a href="https://pacta.dri.network/public/strategy/" >Overview</a>
-        <a href="https://pacta.dri.network/public/strategy/service-page-and-bounty-blueprint/" aria-current='page'>Verifier &amp; Bounties</a>
-        <a href="https://pacta.dri.network/public/strategy/sprint4-packaging-and-sprints5-8-queue/" >Sprints 4–8</a>
-        <a href="https://pacta.dri.network/public/strategy/income-strategies-2week-window/" >Revenue Playbook</a>
-        <a class="btn btn--sm" href="https://github.com/Fractal-Neurons/pacta/issues/new?template=request-scan.yml&amp;title=%5BScan+Request%5D+Protocol+%2F+Repo">Request Scan</a>
+        <a href="#index" aria-current="page">Counterparty Index</a>
+        <a href="api/v1/index.json">JSON Feed v1</a>
+        <a href="#ci-gate">Foundry CI Gate</a>
+        <a href="#subscriptions">Institutional Feeds</a>
+        <a class="btn btn--sm" href="https://github.com/Fractal-Neurons/pacta/issues/new?template=request-scan.yml&amp;title=%5BPacta+Request%5D+Organization+%2F+Protocol">Request Coverage</a>
       </nav>
     </div>
   </header>
@@ -455,253 +434,220 @@ details p {
 
     <section class="hero">
       <div class="wrap">
-        <p class="eyebrow">Fractal Neurons · Pacta Protocol Commitments Verifier</p>
-        <h1>Verify what your protocol <strong>promises in docs</strong> against what lives <strong>on-chain.</strong></h1>
+        <p class="eyebrow">Fractal Neurons · Pacta Institutional Control-Plane Index</p>
+        <h1>Block-pinned <strong>counterparty &amp; timelock snapshots</strong> across production DeFi.</h1>
         <p class="lede">
-          Pacta extracts machine-checkable commitments from documentation, NatSpec, and governance specs—and proves where deployed contracts or live Safe/Timelock configurations diverge using deterministic Foundry mainnet forks.
+          Pacta publishes block-pinned archive observations of sampled EIP-1967 proxy admins, <code>TimelockController</code> delays, <code>RolesAuthority</code> bitmasks, and Gnosis Safe quorums compared against cited protocol documentation—separating reproducible read-only state checks from policy interpretation.
         </p>
         <div class="actions">
-          <a class="btn" href="https://github.com/Fractal-Neurons/pacta/issues/new?template=request-scan.yml&amp;title=%5BScan+Request%5D+Protocol+%2F+Repo">Request a Repo Scan</a>
-          <a class="btn btn--ghost" href="#tiers">View Pricing ($0 / $750 / $2,500)</a>
+          <a class="btn" href="#index">Explore Live Index</a>
+          <a class="btn btn--ghost" href="api/v1/index.json">Machine-Readable JSON API</a>
+          <a class="btn btn--ghost" href="https://github.com/Fractal-Neurons/pacta/blob/main/contracts/test/PactaGovernanceInvariants.t.sol">Foundry CI Reference</a>
         </div>
         <div class="stats">
           <div class="stat">
-            <div class="stat__num">15 Protocols</div>
-            <div class="stat__label">Verified across Sprints 1–4 on Mainnet &amp; Base</div>
+            <div class="stat__num">8 Sprints · 16 Records</div>
+            <div class="stat__label">Pinned to canonical Ethereum Mainnet block hashes</div>
           </div>
           <div class="stat">
-            <div class="stat__num">5 Merged PRs</div>
-            <div class="stat__label">Published in <a href="https://github.com/Fractal-Neurons/pacta/pulls?q=is%3Apr+is%3Amerged">Fractal-Neurons/pacta</a></div>
+            <div class="stat__num">Dual-RPC + Static Review</div>
+            <div class="stat__label">Scanner archive replay (<code>tenderly</code> &amp; <code>mevblocker</code>) + offline static ABI/slot audit</div>
           </div>
           <div class="stat">
-            <div class="stat__num">24–48h</div>
-            <div class="stat__label">Turnaround for Foundry proofs &amp; Safe JSON batches</div>
+            <div class="stat__num">$0 Security Quarantine</div>
+            <div class="stat__label">Sensitive findings &amp; Safe batches delivered gratis via private advisories</div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="sec" id="tiers">
+    <section class="sec" id="index">
       <div class="wrap">
-        <p class="eyebrow">01 / Service Tiers</p>
-        <h2>From free baseline scan to <strong>ready-to-sign Safe remediation.</strong></h2>
+        <p class="eyebrow">01 / Public Control-Plane &amp; Timelock Truth Index (Sprints 1–8)</p>
+        <h2>Verified on-chain parameters across <strong>collateral &amp; lending infrastructure.</strong></h2>
+        <p class="lede">
+          All entries below reflect public, non-exploitable architectural state replayed at the cited Ethereum Mainnet block height. Security-sensitive findings are strictly excluded from public tables and routed privately at zero cost to official protocol security contacts.
+        </p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Protocol / Collateral</th>
+                <th>Pinned Block</th>
+                <th>Surface Checked</th>
+                <th>Classification</th>
+                <th>Observed On-Chain State vs. Documentation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Maple Finance V2 / Syrup</strong><br><code>syrupUSDC</code></td>
+                <td><code>#26,401,540</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-6/block-26401540-summary.md">Sprint 6</a></td>
+                <td>EIP-1967 Proxy Admin vs. Timelock</td>
+                <td><span class="pill">Parameter Delta</span></td>
+                <td><code>PoolPermissionManager</code> (<code>0xBe10...D8b3</code>) EIP-1967 admin slot holds <code>4-of-7</code> DAO Safe (<code>0xd6d4...a196</code>), while <code>Globals.governor()</code> points to 3-day <code>GovernorTimelock</code> (<code>259,200s</code>) across <code>898.55M</code> <code>syrupUSDC</code> units.</td>
+              </tr>
+              <tr>
+                <td><strong>Ethena</strong><br><code>USDe</code> / <code>sUSDe</code></td>
+                <td><code>#26,401,638</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-7/block-26401638-summary.md">Sprint 7</a></td>
+                <td>Timelock Delay &amp; Dev Safe Quorum</td>
+                <td><span class="pill">Parameter Delta</span></td>
+                <td><code>EthenaTimelockController</code> (<code>0xE8Dc...7c94</code>) <code>getMinDelay() = 86,400s</code> (1d, forum topic 810) vs. <code>7d</code> in <code>key-trust-assumptions.md</code>; Dev Safe (<code>0x3B0A...1862</code>) is live <code>5-of-10</code> vs. <code>5/11</code> / <code>7</code> sigs in docs.</td>
+              </tr>
+              <tr>
+                <td><strong>Usual Money</strong><br><code>USD0</code> / <code>USD0++</code></td>
+                <td><code>#26,401,725</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-8/block-26401725-summary.md">Sprint 8</a></td>
+                <td><code>RegistryAccess</code> Admin Delay</td>
+                <td><span class="pill">Parameter Delta</span></td>
+                <td><code>RegistryAccess</code> (<code>0x0D37...bb56</code>) <code>defaultAdminDelay() = 1s</code> (<code>8-of-15</code> Safe <code>0x6e9d...7FB7</code>, <code>pendingDefaultAdminDelay = (0,0)</code>) vs. 3-day (<code>259,200s</code>) role-grant delay in docs.</td>
+              </tr>
+              <tr>
+                <td><strong>Fluid / Instadapp</strong><br>Vaults 76, 110, 111, 144</td>
+                <td><code>#26,401,405</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-5/block-26401405-summary.md">Sprint 5</a></td>
+                <td><code>VaultFactory.isVaultAuth</code> Scope</td>
+                <td><span class="pill">Parameter Delta</span></td>
+                <td><code>isVaultAuth(vault, 0x4F6F...D49e)</code> returns <code>true</code> on Vaults 76, 110, 111, and 144 per <code>IGP-98</code>/<code>IGP-126</code> migration configuration vs. narrow fee/reward scope in permissions doc.</td>
+              </tr>
+              <tr>
+                <td><strong>MetaMorpho Curated</strong><br><code>Re7 WETH</code> vs. <code>Re7 USDT</code></td>
+                <td><code>#26,401,405</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-5/block-26401405-summary.md">Sprint 5</a></td>
+                <td>Guardian Parity &amp; 3d Timelock</td>
+                <td><span class="pill">Parameter Delta</span></td>
+                <td><code>Re7 WETH</code> (<code>0x78Fc...94d0</code>) enforces <code>timelock() = 259,200s</code> (3d) and <code>2-of-4</code> Safe owner, with <code>guardian() = 0x0</code> vs. Aragon Guardian (<code>0x2F80...BDd4</code>) on peer <code>Re7 USDT</code>.</td>
+              </tr>
+              <tr>
+                <td><strong>Mellow / Lido Earn</strong><br><code>earnETH</code> / <code>earnUSD</code></td>
+                <td><code>#26,401,312</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-4/block-26401312-summary.md">Sprint 4</a></td>
+                <td>Curator Quorum &amp; Admin Overlap</td>
+                <td><span class="pill">Parameter Delta</span></td>
+                <td>Curator Safe (<code>0xe5ab...769d</code>) is live <code>3-of-5</code> vs. <code>3/6</code> in Lido docs; all 5 Curator signers are also owners on the <code>5-of-8</code> Lazy Vault Admin Safe (<code>0x0Dd7...076E</code>, <code>0s</code> Timelock).</td>
+              </tr>
+              <tr>
+                <td><strong>Renzo Protocol</strong><br><code>ezETH</code></td>
+                <td><code>#26,401,725</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-8/block-26401725-summary.md">Sprint 8</a></td>
+                <td><code>DepositQueue</code> Fee Basis Points</td>
+                <td><span class="pill">Parameter Delta</span></td>
+                <td><code>DepositQueue</code> (<code>0xf2F3...0d60</code>) <code>feeBasisPoints() = 1500</code> (<code>15%</code>) vs. <code>10%</code> in <code>ezeth</code> staking documentation; <code>3-of-5</code> Admin Safe across <code>39,495.32 ezETH</code>.</td>
+              </tr>
+              <tr>
+                <td><strong>f(x) Protocol v2</strong><br><code>ProtocolTreasury</code> (4 Pools)</td>
+                <td><code>#26,400,152</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-2/block-26400152-summary.md">Sprint 2</a></td>
+                <td><code>DEFAULT_ADMIN_ROLE</code> Holders</td>
+                <td><span class="pill">Parameter Delta</span></td>
+                <td>All 4 sampled v2 <code>ProtocolTreasury</code> proxies (<code>0x3235...CdA6</code>, etc.) return <code>hasRole = true</code> for <code>6-of-9</code> OpsSafe (<code>0x26B2...7BbF</code>) and <code>3-of-4</code> EmergencySafe (<code>0x28c9...eF62</code>), whereas sampled <code>Timelock</code> (<code>0x6886...E61a</code>) returns <code>false</code> at block <code>26400152</code>.</td>
+              </tr>
+              <tr>
+                <td><strong>Inverse Finance</strong><br><code>FiRM</code> / <code>GovernorMills</code></td>
+                <td><code>#26,399,876</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-1/block-26399876-summary.md">Sprint 1</a></td>
+                <td>Policy Committee Safe Quorum</td>
+                <td><span class="pill">Parameter Delta</span></td>
+                <td><code>GovernorMills</code> guardian wrapper (<code>0x941c...259D</code>) references Policy Committee Safe (<code>0x4b6c...F1B7</code>), live <code>4-of-7</code> on-chain vs. <code>5-of-9</code> in working-groups docs; Timelock delay is <code>48h</code>.</td>
+              </tr>
+              <tr>
+                <td><strong>Yearn V3</strong><br><code>RoleManager</code></td>
+                <td><code>#26,401,725</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-8/block-26401725-summary.md">Sprint 8</a></td>
+                <td>7-Day Governance Timelock</td>
+                <td><span class="pill">Protective Delta</span></td>
+                <td><code>RoleManager</code> (<code>0xb3bd...9a41</code>) <code>governance()</code> is wired to 7-day <code>TimelockController</code> (<code>0x88Ba...BF73</code>, <code>604,800s</code>), stricter than legacy devdocs note; <code>Daddy</code> Safe is <code>6-of-9</code>.</td>
+              </tr>
+              <tr>
+                <td><strong>ether.fi Core &amp; Liquid</strong><br><code>eETH</code> / <code>BoringVault</code></td>
+                <td><code>#26,401,638</code> (<a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-7/block-26401638-summary.md">S7</a>)<br><code>#26,401,070</code> (<a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-3/block-26401070-summary.md">S3</a>)</td>
+                <td>Sampled 10d / 2d / 1d Timelocks</td>
+                <td><span class="pill">Aligned Baseline</span></td>
+                <td>Core Upgrade Timelock (<code>0x9f26...0761</code>) <code>864,000s</code> (10d) &amp; Operating Timelock (<code>0xcD42...5d7a</code>) <code>172,800s</code> (2d) at S7; Liquid <code>RolesAuthority</code> (<code>0x485B...8122</code>) owned by 1d Timelock (<code>0xD829...2C89</code>) at S3.</td>
+              </tr>
+              <tr>
+                <td><strong>Liquity V2</strong><br><code>BOLD</code></td>
+                <td><code>#26,401,540</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-6/block-26401540-summary.md">Sprint 6</a></td>
+                <td>Sampled Owner &amp; EIP-1967 Slot</td>
+                <td><span class="pill">Aligned Baseline</span></td>
+                <td>Sampled <code>BOLD</code> (<code>0x6440...b01D</code>) <code>owner() = 0x0</code>, <code>Governance</code> <code>owner() = 0x0</code>, and <code>CollateralRegistry</code> EIP-1967 implementation slot <code>= 0x00...00</code>.</td>
+              </tr>
+              <tr>
+                <td><strong>Spark / Sky, Morpho &amp; Convex</strong><br>Sampled Core Contracts</td>
+                <td><code>#26,401,638</code> (<a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-7/block-26401638-summary.md">S7</a>)<br><code>#26,401,070</code> (<a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-3/block-26401070-summary.md">S3</a>) · <code>#26,401,312</code> (<a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-4/block-26401312-summary.md">S4</a>)</td>
+                <td>Sampled GSM Delay &amp; Owners</td>
+                <td><span class="pill">Aligned Baseline</span></td>
+                <td>Sky <code>GSM_PAUSE_PROXY</code> (<code>0xbE28...38f3</code>) <code>delay() = 172,800s</code> (48h) &amp; Spark <code>owner() = SPARK_PROXY</code> (S7); Morpho Blue <code>owner()</code> (S3) &amp; Convex <code>Booster</code> chain (S4) aligned.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" id="ci-gate">
+      <div class="wrap">
+        <p class="eyebrow">02 / Machine-Readable Snapshot JSON &amp; Reference Foundry Suite</p>
+        <h2>Ingest static snapshot records or run <strong>offline unit &amp; archive-fork checks.</strong></h2>
+        <p class="lede">
+          Risk curators can query our block-pinned JSON snapshot directly, while protocol engineering teams can adapt our open-source <code>PactaGovernanceInvariants.t.sol</code> reference suite (deterministic offline unit tests in GitHub Actions plus optional archive-fork smoke tests when <code>ETH_RPC_URL</code> is configured).
+        </p>
+        <pre><code># 1. Query the block-pinned Counterparty Control-Plane Snapshot JSON
+curl -s https://fractal-neurons.github.io/pacta/api/v1/index.json | jq '.entries[] | {protocol, block_number, classification, observed_delay_seconds}'
+
+# 2. Run deterministic unit tests + Mainnet archive smoke tests in Foundry
+forge test --no-match-test "testFork" -vv
+ETH_RPC_URL="https://gateway.tenderly.co/public/mainnet" forge test -vv</code></pre>
+      </div>
+    </section>
+
+    <section class="sec" id="subscriptions">
+      <div class="wrap">
+        <p class="eyebrow">03 / Institutional Feeds &amp; Gratis Security Policy</p>
+        <h2>Aligned incentives for <strong>curators, allocators, and CISOs.</strong></h2>
         <div class="grid-3">
           <div class="card">
             <div>
               <div class="card__top">
-                <span class="eyebrow" style="margin:0">Tier 01 · Public Wedge</span>
-                <span class="pill">$0 Free</span>
+                <span class="eyebrow" style="margin:0">Security Quarantine</span>
+                <span class="pill">$0 Gratis</span>
               </div>
-              <h3>Baseline Commitment Scan</h3>
-              <p>6-commitment doc-vs-code &amp; on-chain role snapshot for 1 public repo, delivered as a clean GitHub issue or PR within 24 hours.</p>
+              <h3>Private Advisory + Remediation</h3>
+              <p>All <code>disclosure_only</code> findings (unrevoked legacy EOA roles, unguarded mutation paths, module hygiene) are excluded from public feeds and delivered <strong>free of charge</strong> with fork-simulated Safe Transaction Builder remediation engineering to official security contacts.</p>
             </div>
-            <a class="btn btn--ghost" href="https://github.com/Fractal-Neurons/pacta/issues/new?template=request-scan.yml&amp;title=%5BFree+Baseline+Scan%5D+Protocol+%2F+Repo">Request Free Scan</a>
+            <a class="btn btn--ghost" href="mailto:pacta@dri.network?subject=Private%20Security%20Disclosure%20Verification">Security Contact</a>
           </div>
 
           <div class="card">
             <div>
               <div class="card__top">
-                <span class="eyebrow" style="margin:0">Tier 02 · Remediation</span>
-                <span class="pill">$750 USDC</span>
+                <span class="eyebrow" style="margin:0">Curators &amp; Underwriters</span>
+                <span class="pill">$2k–$5k / mo</span>
               </div>
-              <h3>Full Matrix + Safe Batch JSON</h3>
-              <p>15–25 commitment audit across docs, NatSpec, and proxy state, plus a ready-to-sign <strong>Safe Transaction Builder JSON</strong> batch and Foundry simulation within 48 hours.</p>
+              <h3>Counterparty Event Alerting</h3>
+              <p>Scoped subscription monitoring of emitted <code>CallScheduled</code>, <code>Upgraded</code>, <code>RoleGranted</code>, <code>MinDelayChange</code>, and Safe <code>ChangedThreshold</code> / <code>EnabledModule</code> events across your vault collateral stack (<code>USDe</code>, <code>syrupUSDC</code>, <code>weETH</code>, <code>ezETH</code>, <code>USD0</code>).</p>
             </div>
-            <a class="btn" href="https://github.com/Fractal-Neurons/pacta/issues/new?template=request-scan.yml&amp;title=%5B%24750+Full+Matrix+%2B+Safe+Batch%5D+Protocol+%2F+Repo">Order $750 Pack</a>
+            <a class="btn" href="https://github.com/Fractal-Neurons/pacta/issues/new?template=request-scan.yml&amp;title=%5BCurator+Feed%5D+Portfolio+Coverage">Request Curator Feed</a>
           </div>
 
           <div class="card">
             <div>
               <div class="card__top">
-                <span class="eyebrow" style="margin:0">Tier 03 · Release Gate</span>
-                <span class="pill">$2,500 USDC</span>
+                <span class="eyebrow" style="margin:0">Protocol Engineering</span>
+                <span class="pill">$3k–$10k / yr</span>
               </div>
-              <h3>Pre-Audit &amp; CI Retainer</h3>
-              <p>Pre-audit commitment matrix, custom Foundry invariant suite wired into every PR, and 30-day continuous on-chain governance drift monitoring.</p>
+              <h3>Commitment CI &amp; Proposal Gate</h3>
+              <p>Tailored <code>PactaGovernanceInvariants.t.sol</code> suite integrated into GitHub Actions CI plus pre-execution fork simulation of queued Timelock / Governor payloads against your documented security model.</p>
             </div>
-            <a class="btn btn--ghost" href="https://github.com/Fractal-Neurons/pacta/issues/new?template=request-scan.yml&amp;title=%5B%242500+Release+Gate%5D+Protocol+%2F+Repo">Request Release Gate</a>
+            <a class="btn btn--ghost" href="https://github.com/Fractal-Neurons/pacta/issues/new?template=request-scan.yml&amp;title=%5BProtocol+CI+Gate%5D+Repository">Request CI Guardrail</a>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="sec" id="intake">
-      <div class="wrap">
-        <p class="eyebrow">02 / 4-Step Self-Serve Flow</p>
-        <h2>How it works from <strong>repo URL to verified proof.</strong></h2>
-        <div class="grid-4">
-          <div class="card">
-            <div>
-              <span class="pill">Step 01</span>
-              <h3 style="margin-top:10px">Submit Scope</h3>
-              <p>Open <code>request-scan.yml</code> on GitHub with your repo URL, commit SHA, and deployed chain addresses.</p>
-            </div>
-          </div>
-          <div class="card">
-            <div>
-              <span class="pill">Step 02</span>
-              <h3 style="margin-top:10px">Extract Claims</h3>
-              <p>Pacta maps docs and NatSpec into testable invariants (roles, timelocks, caps, fee bounds).</p>
-            </div>
-          </div>
-          <div class="card">
-            <div>
-              <span class="pill">Step 03</span>
-              <h3 style="margin-top:10px">Fork-Verify</h3>
-              <p>Claude &amp; Codex run deterministic Foundry harnesses at a pinned mainnet/L2 block height.</p>
-            </div>
-          </div>
-          <div class="card">
-            <div>
-              <span class="pill">Step 04</span>
-              <h3 style="margin-top:10px">Remediate</h3>
-              <p>Receive your verification report, Foundry CI test suite, and ready-to-sign Safe Batch JSON.</p>
-            </div>
-          </div>
-        </div>
-
-        <pre><code>{
-  "version": "1.0",
-  "chainId": "1",
-  "meta": { "name": "Pacta Safe Remediation Batch — Stale Role Revocation" },
-  "transactions": [
-    {
-      "to": "0xProtocolAccessManagerAddress",
-      "value": "0",
-      "contractMethod": { "name": "revokeRole", "inputs": [
-        { "name": "role", "type": "bytes32" },
-        { "name": "account", "type": "address" }
-      ]},
-      "contractInputsValues": {
-        "role": "0x...QUARANTINED_ROLE_ID",
-        "account": "0xStaleFormerTeamEOA"
-      }
-    }
-  ]
-}</code></pre>
-      </div>
-    </section>
-
-    <section class="sec" id="scorecard">
-      <div class="wrap">
-        <p class="eyebrow">03 / Verified Track Record (Sprints 1–4)</p>
-        <h2>Audited commitments across <strong>production DeFi protocols.</strong></h2>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Protocol</th>
-                <th>Sprint</th>
-                <th>Pinned Env / Block</th>
-                <th>Status</th>
-                <th>Key Public Verification Takeaway</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Aerodrome Finance</strong></td>
-                <td>Sprint 1</td>
-                <td><code>Solidity 0.8.19</code></td>
-                <td><span class="pill">Doc Drift</span></td>
-                <td><code>Pool.sol</code> stable fee denominator is <code>10000</code> (0.04% max) vs NatSpec <code>2000</code> (0.05%) (<a href="https://github.com/Fractal-Neurons/pacta/pull/1">PR #1</a>).</td>
-              </tr>
-              <tr>
-                <td><strong>Frax Staked ETH (sfrxETH)</strong></td>
-                <td>Sprint 2</td>
-                <td><code>Solidity 0.8.19</code></td>
-                <td><span class="pill">Spec Drift</span></td>
-                <td>ERC-4626 reward cycle sync window allows bounded timestamp lag between <code>syncRewards()</code> calls (<a href="https://github.com/Fractal-Neurons/pacta/pull/2">PR #2</a>).</td>
-              </tr>
-              <tr>
-                <td><strong>Gearbox V3 Core</strong></td>
-                <td>Sprint 3</td>
-                <td><code>Mainnet #24,865,672</code></td>
-                <td><span class="pill">On-Chain Drift</span></td>
-                <td><code>ACL.sol</code> configurator role assignment verified against live mainnet state (<a href="https://github.com/Fractal-Neurons/pacta/pull/3">PR #3</a>).</td>
-              </tr>
-              <tr>
-                <td><strong>Moonwell Flagship</strong></td>
-                <td>Sprint 3</td>
-                <td><code>Base #44,619,580</code></td>
-                <td><span class="pill">On-Chain Drift</span></td>
-                <td>Base Morpho Flagship Vault timelock &amp; allocator hierarchy verified at block <code>44,619,580</code>.</td>
-              </tr>
-              <tr>
-                <td><strong>Lido Earn / Mellow (MC1)</strong></td>
-                <td>Sprint 4</td>
-                <td><code>Mainnet #26,401,312</code></td>
-                <td><span class="pill">Quorum Drift</span></td>
-                <td>Curator Safe (<code>0xe5ab...769d</code>) is live <code>3/5</code> on-chain vs <code>3/6</code> in Lido docs, with 5/5 signer overlap on <code>5/8</code> Admin Safe (<a href="https://github.com/Fractal-Neurons/pacta/pull/5">PR #5</a>).</td>
-              </tr>
-              <tr>
-                <td><strong>Convex Finance (CX1)</strong></td>
-                <td>Sprint 4</td>
-                <td><code>Mainnet #26,401,312</code></td>
-                <td><span class="pill">Verified</span></td>
-                <td><code>CrvDepositor.feeManager()</code> deployer EOA verified with <code>lockIncentive = 0</code> (<a href="https://github.com/Fractal-Neurons/pacta/pull/5">PR #5</a>).</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <section class="sec" id="bounty-blueprint">
-      <div class="wrap">
-        <p class="eyebrow">04 / Dual-Lane Bounty &amp; Commercial Routing</p>
-        <h2>Pre-funded bug bounty escrow <strong>plus direct Safe JSON upsell.</strong></h2>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Protocol / Scope</th>
-                <th>Channel</th>
-                <th>Assigned Monetization Lane</th>
-                <th>Target Payout / Ticket</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Euler V2 (EU1)</strong></td>
-                <td>Cantina Bug Bounty</td>
-                <td><strong>Lane A (Bounty Escrow):</strong> Submit quarantined finding via Cantina encrypted report; fallback to Lane B if classified as informational.</td>
-                <td><strong>$1,500 – $10,000 USDC</strong></td>
-              </tr>
-              <tr>
-                <td><strong>Abracadabra (AB1/AB3)</strong></td>
-                <td><code>security@abracadabra.money</code></td>
-                <td><strong>Lane B (Private Security Thread + Safe Batch):</strong> Deliver quarantined disclosure free of charge paired with $750 Safe role-revocation JSON batch.</td>
-                <td><strong>$750 – $2,500 USDC</strong></td>
-              </tr>
-              <tr>
-                <td><strong>Reserve Protocol (RS1)</strong></td>
-                <td>Immunefi / Maintainer</td>
-                <td><strong>Lane B (Safe Remediation Pack):</strong> Convert governance/role hygiene finding into ready-to-sign Safe Transaction Builder JSON.</td>
-                <td><strong>$750 – $2,500 USDC</strong></td>
-              </tr>
-              <tr>
-                <td><strong>Sprints 5–8 Queue</strong></td>
-                <td>Immunefi &amp; Cantina</td>
-                <td><strong>Dual-Lane Pre-Tagging:</strong> Code-level auth/freeze bugs route to Immunefi/Cantina (Lane A); curator/doc drift routes to $750 Safe JSON (Lane B).</td>
-                <td><strong>$2,000 – $15,000 USDC</strong></td>
-              </tr>
-            </tbody>
-          </table>
         </div>
       </div>
     </section>
 
     <section class="sec" id="faq">
       <div class="wrap">
-        <p class="eyebrow">05 / FAQ &amp; Guardrails</p>
-        <h2>Zero-noise engineering &amp; <strong>strict disclosure ethics.</strong></h2>
+        <p class="eyebrow">04 / Verification &amp; Quarantine Standards</p>
+        <h2>Deterministic archive proofs &amp; <strong>zero-leakage ethics.</strong></h2>
         <details open>
-          <summary>How do you protect sensitive security findings?</summary>
-          <p>Any finding involving fund risk, privilege escalation, or freeze/DoS is strictly quarantined as <code>disclosure_only</code>. Zero exploit details appear in public PRs or web pages; they are routed exclusively via Immunefi/Cantina or official security emails.</p>
+          <summary>How does Pacta separate public counterparty metrics from private security disclosures?</summary>
+          <p>Any finding involving callable privilege escalation, unrevoked legacy EOA authority, or freeze/liveness exposure is quarantined under <code>0600</code> local storage as <code>disclosure_only</code>. Zero exploit paths, private EOA labels, or sensitive selectors appear in this index; they are transmitted strictly via GitHub Private Security Advisories, Immunefi/Cantina, or official <code>security@</code> channels at <code>$0</code> cost.</p>
         </details>
         <details>
-          <summary>What are your GitHub PR anti-spam guardrails?</summary>
-          <p>Maximum 2–3 external PRs per day, minimum 2–4 hours spacing, maximum 1 open unmerged PR per target organization, zero cold @mentions, and zero commercial invoice pitches inside PR bodies.</p>
+          <summary>How can risk curators reproduce an index entry independently?</summary>
+          <p>Every entry in <a href="api/v1/index.json"><code>/api/v1/index.json</code></a> and <a href="https://github.com/Fractal-Neurons/pacta/tree/main/audits"><code>audits/sprint-1..8</code></a> includes the exact contract address, function selector or EIP-1967 storage slot, and canonical Ethereum Mainnet block height + block hash, reproducible with a single <code>cast call</code> or <code>cast storage</code> against any archive node.</p>
         </details>
       </div>
     </section>
@@ -710,12 +656,12 @@ details p {
   <footer class="ftr">
     <div class="wrap ftr__in">
       <div class="brand">
-        <img src="data:image/png;base64,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" alt="Fractal Neurons" width="24" height="24">
-        <span>Fractal Neurons · Pacta DRI</span>
+        <img src="data:image/png;base64,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" alt="Fractal Neurons" width="28" height="28">
+        <span>Fractal Neurons // Pacta</span>
       </div>
       <div>
-        <a href="https://fractal-neurons.github.io/pacta/">GitHub Pages Portal</a> ·
-        <a href="https://github.com/Fractal-Neurons/pacta">GitHub Repo</a> ·
+        <a href="https://github.com/Fractal-Neurons/pacta">GitHub</a> ·
+        <a href="api/v1/index.json">JSON API</a> ·
         <a href="mailto:pacta@dri.network">pacta@dri.network</a>
       </div>
     </div>

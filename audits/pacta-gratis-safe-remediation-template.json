@@ -1,0 +1,13 @@
+{
+  "version": "1.0",
+  "chainId": "1",
+  "createdAt": 1794517200000,
+  "meta": {
+    "name": "NON-EXECUTABLE Safe Transaction Builder Schema Envelope (Illustrative Only)",
+    "description": "Structural JSON envelope example only (transactions array intentionally empty). Do NOT import as an executable batch; private remediation handoffs require target-specific ABI verification (e.g., AccessControl vs. OwnableRoles vs. TimelockController.scheduleBatch) and fork simulation against live target code prior to maintainer signing.",
+    "txBuilderVersion": "1.16.5",
+    "createdFromSafeAddress": "0x0000000000000000000000000000000000000000",
+    "createdFromOwnerAddress": ""
+  },
+  "transactions": []
+}

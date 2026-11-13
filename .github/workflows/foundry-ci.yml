@@ -1,0 +1,40 @@
+name: Pacta Foundry Offline Unit Gate
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+jobs:
+  foundry-offline-unit-gate:
+    name: Compile & Run Offline Deterministic Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.9.0
+
+      - name: Build contracts, scripts, and test suite
+        run: forge build --sizes
+
+      - name: Verify full 7-test discovery list
+        run: |
+          LIST_OUT="$(forge test --list)"
+          echo "$LIST_OUT"
+          for fn in \
+            testAttestSprintsDeterministicPayloads \
+            testCandidateProposalDelayFloorGate \
+            testForkLiquityV2SampledAlignmentAt26401540 \
+            testForkYearnV3SnapshotAt26401725 \
+            testRegistryBatchRecordingAndBounds \
+            testRegistryConstructorGuards \
+            testRegistryRoleSeparationAndAdminDenials; do
+            echo "$LIST_OUT" | grep -q "$fn"
+          done
+
+      - name: Execute offline deterministic unit tests (archive fork tests require ETH_RPC_URL)
+        run: forge test --no-match-test "testFork" -vv

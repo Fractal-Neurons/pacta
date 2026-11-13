@@ -2,8 +2,8 @@
 
 - **Ethereum Mainnet Block**: `26401725` (`0x192dbbd`)
 - **Canonical Block Hash**: `0xec3820f0a9db32c01728e66f78dc1958e410269e1077fd1db53df4fbce2ad7a1`
-- **Scanner Seat**: `pacta-claude@dri.network` (`task-fe16019fcbd3`, `receipt_seq: 287`, dual-RPC replay across `gateway.tenderly.co` and `rpc.mevblocker.io`, `exit 0`)
-- **Independent Verifier Review**: `pacta-codex@dri.network` (`task-a56208db3da5`, `receipt_seq: 296`, static proof-bundle decode: `14/14` `eth_call`s, `6/6` Gnosis Safe arrays, `15/15` harness unit tests passed)
+- **Scanner Seat**: `pacta-claude@dri.network` (`task-fe16019fcbd3`, `receipt_seq: 287`, dual-RPC replay across `gateway.tenderly.co` and `rpc.mevblocker.io`, `exit 0`, `15/15` scanner harness unit tests passed)
+- **Independent Verifier Review**: `pacta-codex@dri.network` (`task-a56208db3da5`, `receipt_seq: 296`, static proof-bundle decode of `14/14` `eth_call`s & `6/6` Gnosis Safe arrays, EIP-55, selector & quarantine review; offline verifier does not execute live RPC calls or test suites)
 
 ## 1. Usual Money (`UL1`) — `RegistryAccess` Admin Delay Parameter Record
 
@@ -31,3 +31,5 @@
 | **`RoleManager.getDaddy()` (`YV2`)** | `0xb3bd6B2E61753C311EFbCF0111f75D29706D9a41` | `0xe33c71d0` | `0xFEB4acf3df3cDEA7399794D0869ef76A6EfAff52` (`6-of-9` `ychad.eth` Safe) |
 | **`RoleManager.getBrain()` (`YV2`)** | `0xb3bd6B2E61753C311EFbCF0111f75D29706D9a41` | `0xd811ae21` | `0x16388463d60FFE0661Cf7F1f31a7D658aC790ff7` (`3-of-6` Safe) |
 | **`Accountant.defaultConfig()` (word 2)** | `0x5A74Cb32D36f2f517DB6f7b0A0591e09b22cDE69` | `0x9e09ed5f` | `[0, 1000, 0, 10000, 20000, 1, 0]` (word 2 `= 1000`) |
+
+> **Scope & Evidence Limit**: Sampled read-only getter/slot observations at the pinned block compared against cited documentation; does not certify protocol-wide authority completeness, downstream mutation semantics, or exploitability.
