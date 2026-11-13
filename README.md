@@ -46,7 +46,7 @@ Sprints 1–12 (zero quarantined findings) carry 12 on-chain Base EAS sprint att
 
 ## Block-Pinned Public Sprint Summaries (Ethereum Mainnet)
 
-**14 Sprints · 37 Indexed Records.** Site build: `python3 tools/refresh_radar.py && python3 tools/build_site.py && python3 verify_site_v2.py` (the canonical base URL is a single `BASE_URL` constant in `tools/build_site.py`).
+**14 Sprints · 37 Indexed Records.** Site build: `python3 tools/refresh_radar.py && python3 tools/build_site.py && python3 verify_site_v2.py` (the canonical base URL is a single `BASE_URL` constant in `tools/build_site.py`; brief pages are rendered from `tools/briefs_src/` inside the shared site chrome, and every call to action goes through the in-browser request builder at `/request/`).
 
 | Sprint | Pinned Block | Canonical Block Hash | Base EAS Attestation | Public Summary & Sampled Protocols |
 | :--- | :--- | :--- | :--- | :--- |

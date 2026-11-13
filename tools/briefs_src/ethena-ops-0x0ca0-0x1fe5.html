@@ -1,0 +1,86 @@
+<!-- title: Pacta Governance Radar · Pre-Execution Brief — Ethena Timelock Ops 0x0ca0...7a90 & 0x1fe5...d85b -->
+<header>
+  <div>
+    <span class="badge badge-cyan">Pre-execution brief</span>
+    <span class="badge badge-amber">Collateral onboarding · bounded caps</span>
+  </div>
+  <h1>Ethena <code>EthenaMinting</code> — Pending Collateral Onboarding Ops <code>0x1fe5...d85b</code> &amp; <code>0x0ca0...7a90</code></h1>
+  <p>Pre-execution calldata, per-block mint/redeem cap parity, and directional <code>stablesDeltaLimit</code> audit for institutional <code>USDe</code> / <code>sUSDe</code> risk curators.</p>
+</header>
+
+<div class="meta-grid">
+  <div class="kpi">
+    <div class="k">Assets Onboarded</div>
+    <div class="v">RLUSD &amp; USAT</div>
+    <div class="s">$1.918B (18d) + $179.32M (6d)</div>
+  </div>
+  <div class="kpi">
+    <div class="k">Timelock Window</div>
+    <div class="v">1.00 Day (86,400s)</div>
+    <div class="s">ETAs: 2026-11-14 10:20–10:22 UTC</div>
+  </div>
+  <div class="kpi">
+    <div class="k">Per-Block Mint / Redeem</div>
+    <div class="v">200M / 20M USDe</div>
+    <div class="s">Matches USDC, USDT &amp; globalConfig</div>
+  </div>
+  <div class="kpi">
+    <div class="k">Adverse Delta Limit</div>
+    <div class="v">0 bps Ceiling</div>
+    <div class="s">stablesDeltaLimit == 0 enforced</div>
+  </div>
+</div>
+
+<h2>1. What Is Queued &amp; Why It Matters for USDe / sUSDe Allocators</h2>
+<div class="card">
+  <p>In Ethereum Mainnet transactions <code>0x75e4afa406b66ac39b2d4a9faaec04577df7e83cac0b4ff1bf02f7bf56d17005</code> (block <code>26405406</code>) and <code>0x0c6daf9d6977fbe221c4535b7febf38a46c46a58f59ce277bbb512b0996ff015</code> (block <code>26405415</code>), Ethena's <code>5-of-10</code> Proposer Safe (<code>0x3B0AAf6e6fCd4a7cEEf8c92C32DFeA9E64dC1862</code>) scheduled two 24-hour operations on <strong>EthenaTimelockController</strong> (<code>0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94</code>) targeting <strong>EthenaMinting</strong> (<code>0xe3490297a08d6fC8Da46Edb7B6142E4F461b62D3</code>):</p>
+  <ul>
+    <li><strong>Op <code>0x1fe5e3e892708310bbfcf50efc03a1b8e21e0d0042035d7e8315e0cd5f26d85b</code> (ETA <code>2026-11-14 10:20:35 UTC</code>):</strong> Calls <code>addSupportedAsset(0x8292Bb45bf1Ee4d140127049757C2E0fF06317eD, (0, true, 200000000e18, 20000000e18))</code>, onboarding <strong>Ripple USD (<code>RLUSD</code>)</strong> (scanner dual-RPC <code>symbol()</code> / <code>decimals()</code> / <code>totalSupply()</code> at block <code>26406429</code>, hash <code>0xb65c04eeddc59de1affade1a5e76250fed78467ad3a69f5d292c5e5f089dab84</code>: <code>18</code> decimals, observed L1 supply <code>1,917,942,633.70 RLUSD</code>) as active <code>TokenType.STABLE</code> (<code>0</code>) mint/redeem backing.</li>
+    <li><strong>Op <code>0x0ca0fcc4856b87f3df9a74532bd60db58d1310c27c17e7d9bfa8a56846f57a90</code> (ETA <code>2026-11-14 10:22:23 UTC</code>):</strong> Calls <code>addSupportedAsset(0x07041776f5007ACa2A54844F50503a18A72A8b68, (0, true, 200000000e18, 20000000e18))</code>, onboarding <strong>Tether America USD (<code>USAT</code>)</strong> (scanner dual-RPC check at block <code>26406429</code>, hash <code>0xb65c04ee...9dab84</code>: <code>6</code> decimals, observed L1 supply <code>179,317,574.50 USAT</code>) under identical <code>TokenType.STABLE</code> parameters.</li>
+    <li><strong>Directional <code>stablesDeltaLimit == 0</code> Semantics:</strong> Classifying an asset as <code>TokenType.STABLE</code> (<code>0</code>) subjects RFQ orders to <code>verifyStablesLimit</code>. With <code>stablesDeltaLimit() == 0</code> on-chain, adverse pricing deviation is capped at <code>0 bps</code> (mints reject <code>usdeAmount &gt; normalizedCollateral</code> beyond sub-bps integer truncation; redemptions reject <code>normalizedCollateral &gt; usdeAmount</code> beyond sub-bps truncation).</li>
+    <li><strong>Issuer Counterparty Expansion:</strong> While per-block circuit breakers match existing <code>USDC</code> (<code>0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48</code>) and <code>USDT</code> (<code>0xdAC17F958D2ee523a2206206994597C13D831ec7</code>) caps (<code>200M USDe</code> mint / <code>20M USDe</code> redeem) and remain bounded by aggregate <code>globalConfig()</code> (<code>200M / 20M USDe/block</code>), execution expands <code>USDe</code> reserve eligibility to two regulated USD stablecoin issuers (Ripple and Tether America).</li>
+  </ul>
+</div>
+
+<h2>2. Deterministic Verification &amp; Simulation Audit</h2>
+<div class="card">
+  <table>
+    <thead>
+      <tr>
+        <th>Verification Check</th>
+        <th>Attributed On-Chain / Cryptographic Evidence</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>OZ <code>hashOperation</code> Preimages</strong></td>
+        <td>Independent verifier (block <code>26406275</code>): zero-predecessor, zero-salt hashes reproduce <code>0x1fe5e3e8...d85b</code> (<code>RLUSD</code>) and <code>0x0ca0fcc4...7a90</code> (<code>USAT</code>) on <code>0xE8Dc...7c94</code></td>
+        <td><span class="badge badge-green">Pass</span></td>
+      </tr>
+      <tr>
+        <td><strong>Pre-Execution Support State</strong></td>
+        <td>Independent verifier (block <code>26406275</code>): queued schedule state &amp; verified source confirmed; scanner archive read (block <code>26406106</code> / <code>26406207</code>): <code>isSupportedAsset == false</code> for both, <code>hasRole(DEFAULT_ADMIN_ROLE, 0xE8Dc...7c94) == true</code></td>
+        <td><span class="badge badge-green">Pass</span></td>
+      </tr>
+      <tr>
+        <td><strong>Archive Simulation &amp; Access Guard</strong></td>
+        <td>Scanner archive simulation (block <code>26406106</code> / <code>26406207</code>): <code>eth_call</code> of selector <code>0x7cfbc42f</code> from <code>0xE8Dc...7c94</code> returns <code>0x</code>; unprivileged caller reverts <code>AccessControl</code></td>
+        <td><span class="badge badge-green">Pass</span></td>
+      </tr>
+      <tr>
+        <td><strong>Cap &amp; Decimal Normalization</strong></td>
+        <td>Independent verifier (block <code>26406275</code>) &amp; scanner token metadata (block <code>26406429</code>, <code>0xb65c04ee...9dab84</code>): <code>USAT</code> (<code>6</code> dec) &amp; <code>RLUSD</code> (<code>18</code> dec) normalize to 18-decimal <code>USDe</code> units inside <code>verifyStablesLimit</code>; per-block caps match <code>globalConfig</code></td>
+        <td><span class="badge badge-green">Aligned</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<h2>3. Curator Monitoring Summary</h2>
+<div class="card">
+  <ul>
+    <li><strong>Issuer Concentration &amp; Liquidity Review (Before <code>2026-11-14 10:20 UTC</code>):</strong> Vault curators underwriting <code>USDe</code> / <code>sUSDe</code> markets on Morpho, Aave, Euler, and Pendle should update backing-composition models to reflect <code>RLUSD</code> and <code>USAT</code> reserve eligibility alongside <code>USDC</code> and <code>USDT</code>. At block <code>26406429</code>, observed L1 <code>USAT</code> supply was <code>179.32M</code> while its configured per-block mint cap is <code>200M USDe</code> (distinct measurements; gross single-block mint volume depends on token transfers, reuse, redemptions, and issuance).</li>
+    <li><strong>Post-Execution Checks (After <code>2026-11-14 10:22 UTC</code>):</strong> Confirm <code>CallExecuted</code> for <code>0x1fe5...d85b</code> and <code>0x0ca0...7a90</code>, verify <code>stablesDeltaLimit()</code> remains <code>0</code>, and monitor <code>Mint</code> / <code>Redeem</code> event mix on <code>0xe3490297a08d6fC8Da46Edb7B6142E4F461b62D3</code>.</li>
+  </ul>
+</div>

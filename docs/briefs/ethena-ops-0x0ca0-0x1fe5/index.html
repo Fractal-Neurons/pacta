@@ -1,10 +1,7 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Pacta Governance Radar · Pre-Execution Brief — Ethena Timelock Ops 0x0ca0...7a90 &amp; 0x1fe5...d85b</title>
-<!-- pacta-meta v2 -->
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pacta Governance Radar · Pre-Execution Brief — Ethena Timelock Ops 0x0ca0...7a90 &amp; 0x1fe5...d85b</title>
 <meta name="description" content="Pre-execution brief: two queued Ethena timelock operations onboard RLUSD and USAT to EthenaMinting at 200M / 20M USDe-per-block caps (1-day delay; ETAs 2026-11-14 10:20–10:22 UTC).">
 <link rel="canonical" href="https://pacta.wtf/briefs/ethena-ops-0x0ca0-0x1fe5/">
 <meta property="og:type" content="article">
@@ -19,138 +16,107 @@
 <meta name="twitter:title" content="Pacta Governance Radar · Pre-Execution Brief — Ethena Timelock Ops 0x0ca0...7a90 &amp; 0x1fe5...d85b">
 <meta name="twitter:description" content="Pre-execution brief: two queued Ethena timelock operations onboard RLUSD and USAT to EthenaMinting at 200M / 20M USDe-per-block caps (1-day delay; ETAs 2026-11-14 10:20–10:22 UTC).">
 <meta name="twitter:image" content="https://pacta.wtf/og-preview.png">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">
-<!-- /pacta-meta -->
-  <style>
-    :root {
-      --bg: #070d12;
-      --card: #0d1720;
-      --border: #1e3346;
-      --green: #10b981;
-      --cyan: #38bdf8;
-      --amber: #f59e0b;
-      --text: #e2e8f0;
-      --muted: #94a3b8;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
-    * { box-sizing: border-box; }
-    body { margin: 0; padding: 2rem 1.25rem 4rem; background: var(--bg); color: var(--text); font-family: var(--sans); line-height: 1.55; }
-    .wrap { max-width: 960px; margin: 0 auto; }
-    .badge { display: inline-block; font-family: var(--mono); font-size: 0.74rem; padding: 0.2rem 0.55rem; border-radius: 999px; font-weight: 700; }
-    .badge-green { background: rgba(16, 185, 129, 0.15); color: var(--green); border: 1px solid rgba(16, 185, 129, 0.45); }
-    .badge-cyan { background: rgba(56, 189, 248, 0.14); color: var(--cyan); border: 1px solid rgba(56, 189, 248, 0.45); }
-    .badge-amber { background: rgba(245, 158, 11, 0.14); color: var(--amber); border: 1px solid rgba(245, 158, 11, 0.45); }
-    header { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1.4rem 1.6rem; margin-bottom: 1.25rem; }
-    h1 { margin: 0.5rem 0 0.35rem; font-size: 1.4rem; color: #fff; }
-    h2 { font-size: 1.05rem; color: var(--cyan); border-left: 3px solid var(--cyan); padding-left: 0.65rem; margin: 1.6rem 0 0.75rem; font-family: var(--mono); text-transform: uppercase; }
-    .meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; margin-bottom: 1.25rem; }
-    .kpi { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 0.85rem 1rem; font-family: var(--mono); }
-    .kpi .k { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; }
-    .kpi .v { font-size: 1.08rem; font-weight: 700; color: #fff; margin-top: 0.2rem; }
-    .kpi .s { font-size: 0.73rem; color: var(--green); margin-top: 0.12rem; }
-    .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.1rem 1.3rem; margin-bottom: 1rem; }
-    code { font-family: var(--mono); font-size: 0.83em; background: rgba(56, 189, 248, 0.1); color: #bae6fd; padding: 0.1rem 0.32rem; border-radius: 3px; word-break: break-all; }
-    table { width: 100%; border-collapse: collapse; font-size: 0.86rem; margin-top: 0.5rem; }
-    th, td { text-align: left; padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border); vertical-align: top; }
-    th { font-family: var(--mono); font-size: 0.74rem; color: var(--cyan); text-transform: uppercase; background: rgba(56, 189, 248, 0.06); }
-    a { color: var(--cyan); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    footer { margin-top: 2rem; font-size: 0.8rem; color: var(--muted); font-family: var(--mono); text-align: center; }
-  </style>
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../../favicon.png" type="image/png" sizes="32x32">
+<link rel="stylesheet" href="../../styles.css">
+<link rel="alternate" type="text/markdown" href="../../llms.txt" title="llms.txt">
+<script>document.documentElement.className="js";try{if(localStorage.getItem("pacta-theme")==="slate")document.documentElement.dataset.theme="slate"}catch(e){}</script>
+<script src="../../app.js" defer></script>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;align-items:center;">
-      <span class="badge badge-cyan">PACTA GOVERNANCE RADAR · PRE-EXECUTION BRIEF</span>
-      <span class="badge badge-amber">COLLATERAL ONBOARDING · BOUNDED CAPS</span>
-    </div>
-    <h1>Ethena <code>EthenaMinting</code> — Pending Collateral Onboarding Ops <code>0x1fe5...d85b</code> &amp; <code>0x0ca0...7a90</code></h1>
-    <p style="margin:0.25rem 0 0;color:var(--muted);font-size:0.93rem;">Pre-execution calldata, per-block mint/redeem cap parity, and directional <code>stablesDeltaLimit</code> audit for institutional <code>USDe</code> / <code>sUSDe</code> risk curators.</p>
-  </header>
-
-  <div class="meta-grid">
-    <div class="kpi">
-      <div class="k">Assets Onboarded</div>
-      <div class="v">RLUSD &amp; USAT</div>
-      <div class="s">$1.918B (18d) + $179.32M (6d)</div>
-    </div>
-    <div class="kpi">
-      <div class="k">Timelock Window</div>
-      <div class="v">1.00 Day (86,400s)</div>
-      <div class="s">ETAs: 2026-11-14 10:20–10:22 UTC</div>
-    </div>
-    <div class="kpi">
-      <div class="k">Per-Block Mint / Redeem</div>
-      <div class="v">200M / 20M USDe</div>
-      <div class="s">Matches USDC, USDT &amp; globalConfig</div>
-    </div>
-    <div class="kpi">
-      <div class="k">Adverse Delta Limit</div>
-      <div class="v">0 bps Ceiling</div>
-      <div class="s">stablesDeltaLimit == 0 enforced</div>
-    </div>
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar"><div class="wrap"><a class="brand" href="../../"><img src="../../favicon.svg" alt="" width="22" height="22">PACTA<small>by Fractal Neurons</small></a><nav class="nav" aria-label="Sections"><a href="../../#inspector">Inspector</a><a href="../../#radar">Radar</a><a href="../../#findings">Findings</a><a href="../../#index">Index</a><a href="../../#verify">Verify</a><a href="../../#pricing">Pricing</a><a href="../../#faq">FAQ</a></nav><div class="tools"><button class="tt" type="button" aria-label="Theme: Paper (switch to Slate)"><span data-t="paper" class="on">Paper</span><span data-t="slate">Slate</span></button><a class="btn sm primary" href="../../request/">Request coverage</a></div></div></header>
+<main id="main" class="memo-wrap">
+<div class="crumbs"><a href="../../">Pacta</a> / <a href="../../#radar">Timelock radar</a> / Pre-execution brief</div>
+<article class="memo">
+<header>
+  <div>
+    <span class="badge badge-cyan">Pre-execution brief</span>
+    <span class="badge badge-amber">Collateral onboarding · bounded caps</span>
   </div>
+  <h1>Ethena <code>EthenaMinting</code> — Pending Collateral Onboarding Ops <code>0x1fe5...d85b</code> &amp; <code>0x0ca0...7a90</code></h1>
+  <p>Pre-execution calldata, per-block mint/redeem cap parity, and directional <code>stablesDeltaLimit</code> audit for institutional <code>USDe</code> / <code>sUSDe</code> risk curators.</p>
+</header>
+<dl class="memo-meta"><dt>Protocol</dt><dd>Ethena</dd><dt>Timelock</dt><dd><span class="addr" title="0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94">0xE8Dc…7c94</span><button class="copy" type="button" data-copy="0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94">Copy</button> · 1d minimum delay</dd><dt>Operations</dt><dd><span class="addr" title="0x1fe5e3e892708310bbfcf50efc03a1b8e21e0d0042035d7e8315e0cd5f26d85b">0x1fe5e3…d85b</span><button class="copy" type="button" data-copy="0x1fe5e3e892708310bbfcf50efc03a1b8e21e0d0042035d7e8315e0cd5f26d85b">Copy</button> <span class="addr" title="0x0ca0fcc4856b87f3df9a74532bd60db58d1310c27c17e7d9bfa8a56846f57a90">0x0ca0fc…7a90</span><button class="copy" type="button" data-copy="0x0ca0fcc4856b87f3df9a74532bd60db58d1310c27c17e7d9bfa8a56846f57a90">Copy</button></dd><dt>Execution window</dt><dd><span class="countdown" data-eta="1794651635">ETA 2026-11-14 10:20 UTC</span> · 2026-11-14 10:20:35 UTC</dd><dt>State</dt><dd>Pending at finalized block <span class="num">#26,406,890</span> (2026-11-13 15:18 UTC) <span class="badge final">Scanner-pinned (L1 finalized)</span></dd></dl>
 
-  <h2>1. What Is Queued &amp; Why It Matters for USDe / sUSDe Allocators</h2>
-  <div class="card">
-    <p style="margin-top:0;">In Ethereum Mainnet transactions <code>0x75e4afa406b66ac39b2d4a9faaec04577df7e83cac0b4ff1bf02f7bf56d17005</code> (block <code>26405406</code>) and <code>0x0c6daf9d6977fbe221c4535b7febf38a46c46a58f59ce277bbb512b0996ff015</code> (block <code>26405415</code>), Ethena's <code>5-of-10</code> Proposer Safe (<code>0x3B0AAf6e6fCd4a7cEEf8c92C32DFeA9E64dC1862</code>) scheduled two 24-hour operations on <strong>EthenaTimelockController</strong> (<code>0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94</code>) targeting <strong>EthenaMinting</strong> (<code>0xe3490297a08d6fC8Da46Edb7B6142E4F461b62D3</code>):</p>
-    <ul>
-      <li><strong>Op <code>0x1fe5e3e892708310bbfcf50efc03a1b8e21e0d0042035d7e8315e0cd5f26d85b</code> (ETA <code>2026-11-14 10:20:35 UTC</code>):</strong> Calls <code>addSupportedAsset(0x8292Bb45bf1Ee4d140127049757C2E0fF06317eD, (0, true, 200000000e18, 20000000e18))</code>, onboarding <strong>Ripple USD (<code>RLUSD</code>)</strong> (scanner dual-RPC <code>symbol()</code> / <code>decimals()</code> / <code>totalSupply()</code> at block <code>26406429</code>, hash <code>0xb65c04eeddc59de1affade1a5e76250fed78467ad3a69f5d292c5e5f089dab84</code>: <code>18</code> decimals, observed L1 supply <code>1,917,942,633.70 RLUSD</code>) as active <code>TokenType.STABLE</code> (<code>0</code>) mint/redeem backing.</li>
-      <li><strong>Op <code>0x0ca0fcc4856b87f3df9a74532bd60db58d1310c27c17e7d9bfa8a56846f57a90</code> (ETA <code>2026-11-14 10:22:23 UTC</code>):</strong> Calls <code>addSupportedAsset(0x07041776f5007ACa2A54844F50503a18A72A8b68, (0, true, 200000000e18, 20000000e18))</code>, onboarding <strong>Tether America USD (<code>USAT</code>)</strong> (scanner dual-RPC check at block <code>26406429</code>, hash <code>0xb65c04ee...9dab84</code>: <code>6</code> decimals, observed L1 supply <code>179,317,574.50 USAT</code>) under identical <code>TokenType.STABLE</code> parameters.</li>
-      <li><strong>Directional <code>stablesDeltaLimit == 0</code> Semantics:</strong> Classifying an asset as <code>TokenType.STABLE</code> (<code>0</code>) subjects RFQ orders to <code>verifyStablesLimit</code>. With <code>stablesDeltaLimit() == 0</code> on-chain, adverse pricing deviation is capped at <code>0 bps</code> (mints reject <code>usdeAmount &gt; normalizedCollateral</code> beyond sub-bps integer truncation; redemptions reject <code>normalizedCollateral &gt; usdeAmount</code> beyond sub-bps truncation).</li>
-      <li><strong>Issuer Counterparty Expansion:</strong> While per-block circuit breakers match existing <code>USDC</code> (<code>0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48</code>) and <code>USDT</code> (<code>0xdAC17F958D2ee523a2206206994597C13D831ec7</code>) caps (<code>200M USDe</code> mint / <code>20M USDe</code> redeem) and remain bounded by aggregate <code>globalConfig()</code> (<code>200M / 20M USDe/block</code>), execution expands <code>USDe</code> reserve eligibility to two regulated USD stablecoin issuers (Ripple and Tether America).</li>
-    </ul>
+<div class="meta-grid">
+  <div class="kpi">
+    <div class="k">Assets Onboarded</div>
+    <div class="v">RLUSD &amp; USAT</div>
+    <div class="s">$1.918B (18d) + $179.32M (6d)</div>
   </div>
-
-  <h2>2. Deterministic Verification &amp; Simulation Audit</h2>
-  <div class="card">
-    <table>
-      <thead>
-        <tr>
-          <th>Verification Check</th>
-          <th>Attributed On-Chain / Cryptographic Evidence</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>OZ <code>hashOperation</code> Preimages</strong></td>
-          <td>Independent verifier (block <code>26406275</code>): zero-predecessor, zero-salt hashes reproduce <code>0x1fe5e3e8...d85b</code> (<code>RLUSD</code>) and <code>0x0ca0fcc4...7a90</code> (<code>USAT</code>) on <code>0xE8Dc...7c94</code></td>
-          <td><span class="badge badge-green">PASS</span></td>
-        </tr>
-        <tr>
-          <td><strong>Pre-Execution Support State</strong></td>
-          <td>Independent verifier (block <code>26406275</code>): queued schedule state &amp; verified source confirmed; scanner archive read (block <code>26406106</code> / <code>26406207</code>): <code>isSupportedAsset == false</code> for both, <code>hasRole(DEFAULT_ADMIN_ROLE, 0xE8Dc...7c94) == true</code></td>
-          <td><span class="badge badge-green">PASS</span></td>
-        </tr>
-        <tr>
-          <td><strong>Archive Simulation &amp; Access Guard</strong></td>
-          <td>Scanner archive simulation (block <code>26406106</code> / <code>26406207</code>): <code>eth_call</code> of selector <code>0x7cfbc42f</code> from <code>0xE8Dc...7c94</code> returns <code>0x</code>; unprivileged caller reverts <code>AccessControl</code></td>
-          <td><span class="badge badge-green">PASS</span></td>
-        </tr>
-        <tr>
-          <td><strong>Cap &amp; Decimal Normalization</strong></td>
-          <td>Independent verifier (block <code>26406275</code>) &amp; scanner token metadata (block <code>26406429</code>, <code>0xb65c04ee...9dab84</code>): <code>USAT</code> (<code>6</code> dec) &amp; <code>RLUSD</code> (<code>18</code> dec) normalize to 18-decimal <code>USDe</code> units inside <code>verifyStablesLimit</code>; per-block caps match <code>globalConfig</code></td>
-          <td><span class="badge badge-green">ALIGNED</span></td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="kpi">
+    <div class="k">Timelock Window</div>
+    <div class="v">1.00 Day (86,400s)</div>
+    <div class="s">ETAs: 2026-11-14 10:20–10:22 UTC</div>
   </div>
-
-  <h2>3. Curator Monitoring Summary</h2>
-  <div class="card">
-    <ul style="margin:0;">
-      <li><strong>Issuer Concentration &amp; Liquidity Review (Before <code>2026-11-14 10:20 UTC</code>):</strong> Vault curators underwriting <code>USDe</code> / <code>sUSDe</code> markets on Morpho, Aave, Euler, and Pendle should update backing-composition models to reflect <code>RLUSD</code> and <code>USAT</code> reserve eligibility alongside <code>USDC</code> and <code>USDT</code>. At block <code>26406429</code>, observed L1 <code>USAT</code> supply was <code>179.32M</code> while its configured per-block mint cap is <code>200M USDe</code> (distinct measurements; gross single-block mint volume depends on token transfers, reuse, redemptions, and issuance).</li>
-      <li><strong>Post-Execution Checks (After <code>2026-11-14 10:22 UTC</code>):</strong> Confirm <code>CallExecuted</code> for <code>0x1fe5...d85b</code> and <code>0x0ca0...7a90</code>, verify <code>stablesDeltaLimit()</code> remains <code>0</code>, and monitor <code>Mint</code> / <code>Redeem</code> event mix on <code>0xe3490297a08d6fC8Da46Edb7B6142E4F461b62D3</code>.</li>
-    </ul>
+  <div class="kpi">
+    <div class="k">Per-Block Mint / Redeem</div>
+    <div class="v">200M / 20M USDe</div>
+    <div class="s">Matches USDC, USDT &amp; globalConfig</div>
   </div>
-
-  <footer>
-    <a href="https://pacta.wtf/">Pacta Protocol Commitments</a> · Fractal Neurons · <code>pacta.base.eth</code> · Base Registry <code>0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872</code>
-  </footer>
+  <div class="kpi">
+    <div class="k">Adverse Delta Limit</div>
+    <div class="v">0 bps Ceiling</div>
+    <div class="s">stablesDeltaLimit == 0 enforced</div>
+  </div>
 </div>
-</body>
-</html>
+
+<h2>1. What Is Queued &amp; Why It Matters for USDe / sUSDe Allocators</h2>
+<div class="card">
+  <p>In Ethereum Mainnet transactions <code>0x75e4afa406b66ac39b2d4a9faaec04577df7e83cac0b4ff1bf02f7bf56d17005</code> (block <code>26405406</code>) and <code>0x0c6daf9d6977fbe221c4535b7febf38a46c46a58f59ce277bbb512b0996ff015</code> (block <code>26405415</code>), Ethena's <code>5-of-10</code> Proposer Safe (<code>0x3B0AAf6e6fCd4a7cEEf8c92C32DFeA9E64dC1862</code>) scheduled two 24-hour operations on <strong>EthenaTimelockController</strong> (<code>0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94</code>) targeting <strong>EthenaMinting</strong> (<code>0xe3490297a08d6fC8Da46Edb7B6142E4F461b62D3</code>):</p>
+  <ul>
+    <li><strong>Op <code>0x1fe5e3e892708310bbfcf50efc03a1b8e21e0d0042035d7e8315e0cd5f26d85b</code> (ETA <code>2026-11-14 10:20:35 UTC</code>):</strong> Calls <code>addSupportedAsset(0x8292Bb45bf1Ee4d140127049757C2E0fF06317eD, (0, true, 200000000e18, 20000000e18))</code>, onboarding <strong>Ripple USD (<code>RLUSD</code>)</strong> (scanner dual-RPC <code>symbol()</code> / <code>decimals()</code> / <code>totalSupply()</code> at block <code>26406429</code>, hash <code>0xb65c04eeddc59de1affade1a5e76250fed78467ad3a69f5d292c5e5f089dab84</code>: <code>18</code> decimals, observed L1 supply <code>1,917,942,633.70 RLUSD</code>) as active <code>TokenType.STABLE</code> (<code>0</code>) mint/redeem backing.</li>
+    <li><strong>Op <code>0x0ca0fcc4856b87f3df9a74532bd60db58d1310c27c17e7d9bfa8a56846f57a90</code> (ETA <code>2026-11-14 10:22:23 UTC</code>):</strong> Calls <code>addSupportedAsset(0x07041776f5007ACa2A54844F50503a18A72A8b68, (0, true, 200000000e18, 20000000e18))</code>, onboarding <strong>Tether America USD (<code>USAT</code>)</strong> (scanner dual-RPC check at block <code>26406429</code>, hash <code>0xb65c04ee...9dab84</code>: <code>6</code> decimals, observed L1 supply <code>179,317,574.50 USAT</code>) under identical <code>TokenType.STABLE</code> parameters.</li>
+    <li><strong>Directional <code>stablesDeltaLimit == 0</code> Semantics:</strong> Classifying an asset as <code>TokenType.STABLE</code> (<code>0</code>) subjects RFQ orders to <code>verifyStablesLimit</code>. With <code>stablesDeltaLimit() == 0</code> on-chain, adverse pricing deviation is capped at <code>0 bps</code> (mints reject <code>usdeAmount &gt; normalizedCollateral</code> beyond sub-bps integer truncation; redemptions reject <code>normalizedCollateral &gt; usdeAmount</code> beyond sub-bps truncation).</li>
+    <li><strong>Issuer Counterparty Expansion:</strong> While per-block circuit breakers match existing <code>USDC</code> (<code>0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48</code>) and <code>USDT</code> (<code>0xdAC17F958D2ee523a2206206994597C13D831ec7</code>) caps (<code>200M USDe</code> mint / <code>20M USDe</code> redeem) and remain bounded by aggregate <code>globalConfig()</code> (<code>200M / 20M USDe/block</code>), execution expands <code>USDe</code> reserve eligibility to two regulated USD stablecoin issuers (Ripple and Tether America).</li>
+  </ul>
+</div>
+
+<h2>2. Deterministic Verification &amp; Simulation Audit</h2>
+<div class="card">
+  <table>
+    <thead>
+      <tr>
+        <th>Verification Check</th>
+        <th>Attributed On-Chain / Cryptographic Evidence</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>OZ <code>hashOperation</code> Preimages</strong></td>
+        <td>Independent verifier (block <code>26406275</code>): zero-predecessor, zero-salt hashes reproduce <code>0x1fe5e3e8...d85b</code> (<code>RLUSD</code>) and <code>0x0ca0fcc4...7a90</code> (<code>USAT</code>) on <code>0xE8Dc...7c94</code></td>
+        <td><span class="badge badge-green">Pass</span></td>
+      </tr>
+      <tr>
+        <td><strong>Pre-Execution Support State</strong></td>
+        <td>Independent verifier (block <code>26406275</code>): queued schedule state &amp; verified source confirmed; scanner archive read (block <code>26406106</code> / <code>26406207</code>): <code>isSupportedAsset == false</code> for both, <code>hasRole(DEFAULT_ADMIN_ROLE, 0xE8Dc...7c94) == true</code></td>
+        <td><span class="badge badge-green">Pass</span></td>
+      </tr>
+      <tr>
+        <td><strong>Archive Simulation &amp; Access Guard</strong></td>
+        <td>Scanner archive simulation (block <code>26406106</code> / <code>26406207</code>): <code>eth_call</code> of selector <code>0x7cfbc42f</code> from <code>0xE8Dc...7c94</code> returns <code>0x</code>; unprivileged caller reverts <code>AccessControl</code></td>
+        <td><span class="badge badge-green">Pass</span></td>
+      </tr>
+      <tr>
+        <td><strong>Cap &amp; Decimal Normalization</strong></td>
+        <td>Independent verifier (block <code>26406275</code>) &amp; scanner token metadata (block <code>26406429</code>, <code>0xb65c04ee...9dab84</code>): <code>USAT</code> (<code>6</code> dec) &amp; <code>RLUSD</code> (<code>18</code> dec) normalize to 18-decimal <code>USDe</code> units inside <code>verifyStablesLimit</code>; per-block caps match <code>globalConfig</code></td>
+        <td><span class="badge badge-green">Aligned</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<h2>3. Curator Monitoring Summary</h2>
+<div class="card">
+  <ul>
+    <li><strong>Issuer Concentration &amp; Liquidity Review (Before <code>2026-11-14 10:20 UTC</code>):</strong> Vault curators underwriting <code>USDe</code> / <code>sUSDe</code> markets on Morpho, Aave, Euler, and Pendle should update backing-composition models to reflect <code>RLUSD</code> and <code>USAT</code> reserve eligibility alongside <code>USDC</code> and <code>USDT</code>. At block <code>26406429</code>, observed L1 <code>USAT</code> supply was <code>179.32M</code> while its configured per-block mint cap is <code>200M USDe</code> (distinct measurements; gross single-block mint volume depends on token transfers, reuse, redemptions, and issuance).</li>
+    <li><strong>Post-Execution Checks (After <code>2026-11-14 10:22 UTC</code>):</strong> Confirm <code>CallExecuted</code> for <code>0x1fe5...d85b</code> and <code>0x0ca0...7a90</code>, verify <code>stablesDeltaLimit()</code> remains <code>0</code>, and monitor <code>Mint</code> / <code>Redeem</code> event mix on <code>0xe3490297a08d6fC8Da46Edb7B6142E4F461b62D3</code>.</li>
+  </ul>
+</div>
+</article>
+<div class="memo-foot"><span>Read-only on-chain analysis. Not investment advice. Exploit-sensitive findings are disclosed privately, never here.</span><a href="../../request/">Get briefs like this for your collateral →</a></div>
+</main>
+<footer class="ftr"><div class="wrap"><span>Pacta · Fractal Neurons · pacta.base.eth · 14 Sprints · 37 Indexed Records</span><nav aria-label="Footer"><a href="https://github.com/Fractal-Neurons/pacta" target="_blank" rel="noopener">GitHub</a><a href="../../api/v1/index.json">JSON feed</a><a href="../../llms.txt">llms.txt</a><a href="https://basescan.org/address/0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872" target="_blank" rel="noopener">Base registry</a><a href="../../.well-known/security.txt">security.txt</a><a href="../../request/">Contact</a></nav></div></footer>
+</body></html>

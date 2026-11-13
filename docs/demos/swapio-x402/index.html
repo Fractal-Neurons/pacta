@@ -6,10 +6,10 @@
 <title>TreasuryGuard - an x402 rebalancer on Swap.io (90s storyboard)</title>
 <meta name="description" content="A 90-second storyboard: an autonomous treasury rebalancer that pays per call with x402 - no API keys, no subscription.">
 <style>
-  :root { --bg:#0b1020; --panel:#121a33; --ink:#e8ecf8; --mute:#93a0c4; --acc:#5eead4; --warn:#fbbf24; --pay:#a78bfa; --ok:#4ade80; --bad:#f87171; }
+  :root { --bg:#0b0c0e; --panel:#121418; --line:#262a31; --ink:#e8eaed; --mute:#9aa1ac; --acc:#a3b8ec; --warn:#e3a540; --pay:#b7a6e8; --ok:#5cc394; --bad:#e5726b; }
   * { box-sizing:border-box; }
-  html,body { margin:0; height:100%; background:#05070f; color:var(--ink); font:16px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif; }
-  #stage { position:absolute; inset:0; margin:auto; width:min(100vw,177.78vh); height:min(56.25vw,100vh); background:radial-gradient(1200px 600px at 20% 0%,#16224a 0%,var(--bg) 60%); overflow:hidden; }
+  html,body { margin:0; height:100%; background:#060708; color:var(--ink); font:16px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif; }
+  #stage { position:absolute; inset:0; margin:auto; width:min(100vw,177.78vh); height:min(56.25vw,100vh); background:var(--bg); border-top:2px solid var(--acc); overflow:hidden; }
   .scene { position:absolute; inset:0; padding:5.5% 7%; opacity:0; transform:translateY(12px); transition:opacity .6s, transform .6s; pointer-events:none; }
   .scene.on { opacity:1; transform:none; pointer-events:auto; }
   .kicker { color:var(--acc); letter-spacing:.14em; text-transform:uppercase; font-size:clamp(10px,1.4vw,18px); font-weight:700; }
@@ -18,29 +18,31 @@
   p, li { font-size:clamp(12px,1.9vw,26px); color:var(--mute); }
   b, .ink { color:var(--ink); }
   .row { display:flex; gap:3%; align-items:stretch; }
-  .card { background:var(--panel); border:1px solid #23305c; border-radius:14px; padding:2.2% 2.6%; flex:1; }
-  .term { font:clamp(10px,1.55vw,21px)/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; background:#070b17; border:1px solid #1f2a52; border-radius:12px; padding:2% 2.4%; white-space:pre-wrap; min-height:56%; }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:4px; padding:2.2% 2.6%; flex:1; }
+  .term { font:clamp(10px,1.55vw,21px)/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; background:#08090b; border:1px solid var(--line); border-radius:4px; padding:2% 2.4%; white-space:pre-wrap; min-height:56%; }
   .term .l { opacity:0; transition:opacity .35s; } .term .l.on { opacity:1; }
-  .c-req { color:#7dd3fc; } .c-402 { color:var(--warn); } .c-pay { color:var(--pay); } .c-200 { color:var(--ok); } .c-dim { color:#5b688f; }
+  .c-req { color:var(--acc); } .c-402 { color:var(--warn); } .c-pay { color:var(--pay); } .c-200 { color:var(--ok); } .c-dim { color:#6c727c; }
   .flow { display:flex; align-items:center; justify-content:space-between; margin-top:3%; }
-  .node { background:var(--panel); border:2px solid #2b3a6e; border-radius:14px; padding:1.6% 1.8%; text-align:center; width:22%; font-size:clamp(11px,1.7vw,22px); }
-  .node.hot { border-color:var(--acc); box-shadow:0 0 0 4px #5eead422; }
-  .arrow { flex:1; height:4px; margin:0 1%; background:linear-gradient(90deg,#2b3a6e,#5eead4); border-radius:2px; position:relative; }
-  .pill { display:inline-block; padding:.15em .6em; border-radius:999px; font-weight:700; font-size:.85em; }
-  .p402 { background:#fbbf2422; color:var(--warn); } .p200 { background:#4ade8022; color:var(--ok); } .ppay { background:#a78bfa22; color:var(--pay); }
+  .node { background:var(--panel); border:1px solid var(--line); border-radius:4px; padding:1.6% 1.8%; text-align:center; width:22%; font-size:clamp(11px,1.7vw,22px); }
+  .node.hot { border-color:var(--acc); }
+  .arrow { flex:1; height:4px; margin:0 1%; background:var(--line); border-radius:0; position:relative; }
+  .pill { display:inline-block; padding:.15em .6em; border-radius:3px; font-weight:700; font-size:.85em; }
+  .p402 { background:#e3a5401f; color:var(--warn); } .p200 { background:#5cc3941f; color:var(--ok); } .ppay { background:#b7a6e81f; color:var(--pay); }
   .big { font-size:clamp(28px,6vw,88px); font-weight:800; color:var(--ink); }
   table { width:100%; border-collapse:collapse; font-size:clamp(11px,1.8vw,24px); }
-  td, th { padding:.45em .5em; border-bottom:1px solid #23305c; text-align:left; } th { color:var(--acc); font-weight:600; }
+  td, th { padding:.45em .5em; border-bottom:1px solid var(--line); text-align:left; } th { color:var(--acc); font-weight:600; }
   .num { text-align:right; font-variant-numeric:tabular-nums; }
   #hud { position:absolute; left:0; right:0; bottom:0; height:6px; background:#ffffff14; }
-  #bar { height:100%; width:0; background:linear-gradient(90deg,var(--acc),var(--pay)); }
+  #bar { height:100%; width:0; background:var(--acc); }
   #ctl { position:absolute; right:1.4%; bottom:2.2%; display:flex; gap:.5em; font:12px ui-monospace,monospace; color:var(--mute); }
-  #ctl button { background:#ffffff12; color:var(--ink); border:1px solid #ffffff22; border-radius:8px; padding:.35em .7em; cursor:pointer; font:inherit; }
+  #ctl button { background:#ffffff12; color:var(--ink); border:1px solid #ffffff22; border-radius:3px; padding:.35em .7em; cursor:pointer; font:inherit; }
   #clock { position:absolute; left:1.6%; bottom:2.4%; font:12px ui-monospace,monospace; color:var(--mute); }
+  #ctl a { color:var(--mute); text-decoration:none; padding:.35em .5em; border:1px solid #ffffff22; border-radius:3px; }
+  #ctl a:hover { color:var(--ink); }
   .rec #ctl, .rec #clock { display:none; }
-  .foot { position:absolute; left:7%; bottom:7%; font-size:clamp(9px,1.2vw,15px); color:#5b688f; }
+  .foot { position:absolute; left:7%; bottom:7%; font-size:clamp(9px,1.2vw,15px); color:#6c727c; }
   .live-receipt { display:none; margin-top:1.2%; font:clamp(10px,1.3vw,17px)/1.4 ui-monospace,SFMono-Regular,Menlo,monospace; color:var(--ok); }
-  .live-receipt.on { display:inline-flex; gap:.6em; align-items:center; background:#4ade8014; border:1px solid #4ade8044; border-radius:999px; padding:.3em .9em; }
+  .live-receipt.on { display:inline-flex; gap:.6em; align-items:center; background:#5cc39414; border:1px solid #5cc39444; border-radius:3px; padding:.3em .9em; }
   .live-receipt a { color:var(--ok); text-decoration:underline dotted; }
 </style>
 </head>
@@ -143,7 +145,7 @@
   </section>
   <div id="hud"><div id="bar"></div></div>
   <div id="clock">0:00 / 1:30</div>
-  <div id="ctl"><button id="prev" title="Previous (Left)">◀</button><button id="play" title="Play/Pause (Space)">❚❚</button><button id="next" title="Next (Right)">▶</button><button id="rst" title="Restart (R)">↺</button></div>
+  <div id="ctl"><a id="home" href="../../" title="Back to Pacta">Pacta ↗</a><button id="prev" title="Previous (Left)">◀</button><button id="play" title="Play/Pause (Space)">❚❚</button><button id="next" title="Next (Right)">▶</button><button id="rst" title="Restart (R)">↺</button></div>
 </div>
 <script>
 (() => {

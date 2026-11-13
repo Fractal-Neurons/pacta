@@ -9,6 +9,16 @@ across index.html, llms.txt, README.md and /api/v1/index.json, summary SHA-256 d
 count, og-preview.png = 1200x630 PNG, favicon sizes, discovery files (llms.txt, robots.txt, sitemap.xml,
 .well-known/security.txt, .nojekyll), brief metadata, radar freshness, HTML tag balance, and a deny-list of private
 identifiers that must never appear on the public site.
+
+v3 design checks: no mailto: links (dead clicks without a desktop mail client), a working coverage-request builder on
+the homepage and at /request/, no spec-letter labels such as "(a)" in the UI, every internal link and #anchor
+resolves, no duplicate ids, no raw 32-byte hashes in visible text (they are shortened, full value in a tooltip / copy
+button), hairline design radii (<= 4px; dots only), and briefs rendered inside the shared site chrome.
+
+Behaviour check: docs/app.js is executed under node (tools/app_harness.js; pure node, no network, no listener, no files)
+against a synthetic DOM built from the real /request/ and homepage HTML. Private disclosure must remove the GitHub
+intake href (aria-disabled="true", click prevented, warning shown, scope text never in a GitHub URL) via both the radio
+and ?tier=disclosure; switching back restores the link; malformed #r-... hashes never throw during initialization.
 """
 
 import datetime as dt
@@ -18,7 +28,9 @@ import html.parser
 import json
 import os
 import re
+import shutil
 import struct
+import subprocess
 import sys
 import xml.etree.ElementTree as ET
 
@@ -123,6 +135,53 @@ class Balance(html.parser.HTMLParser):
             self.errors.append(f"unexpected </{tag}> (open: {self.stack[-3:]})")
 
 
+class Tree(html.parser.HTMLParser):
+    """HTML -> ["tag", {attrs}, [children]] tree for tools/app_harness.js (the synthetic DOM)."""
+    VOID = Balance.VOID
+
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.root = ["#root", {}, []]
+        self.stack = [self.root]
+
+    def handle_starttag(self, tag, attrs):
+        node = [tag, {k: ("" if v is None else v) for k, v in attrs}, []]
+        self.stack[-1][2].append(node)
+        if tag not in self.VOID:
+            self.stack.append(node)
+
+    def handle_startendtag(self, tag, attrs):
+        self.stack[-1][2].append([tag, {k: ("" if v is None else v) for k, v in attrs}, []])
+
+    def handle_endtag(self, tag):
+        for i in range(len(self.stack) - 1, 0, -1):
+            if self.stack[i][0] == tag:
+                del self.stack[i:]
+                break
+
+    def handle_data(self, data):
+        self.stack[-1][2].append(data)
+
+
+def dom_tree(text):
+    t = Tree()
+    t.feed(text)
+    return next(n for n in t.root[2] if isinstance(n, list) and n[0] == "html")
+
+
+def app_behaviour(appjs, request_html, index_html, row_id):
+    """Run docs/app.js under node against a synthetic DOM of the real pages. No network, no listener, no files."""
+    node = shutil.which("node")
+    if not node:
+        return {"harness_error": "node not found"}
+    payload = json.dumps({"app": appjs, "request": dom_tree(request_html), "index": dom_tree(index_html), "rowId": row_id})
+    out = subprocess.run([node, os.path.join(ROOT, "tools", "app_harness.js")], input=payload, capture_output=True, text=True, timeout=120)
+    try:
+        return json.loads(out.stdout)
+    except ValueError:
+        return {"harness_error": (out.stderr or out.stdout)[-400:]}
+
+
 def main():
     base = re.search(r'^BASE_URL = "([^"]+)"', read("tools/build_site.py"), re.M).group(1)
     raw = read("docs/index.html", "rb")
@@ -223,9 +282,9 @@ def main():
     try:
         sm = ET.fromstring(read("docs/sitemap.xml", "rb"))
         locs = {e.text for e in sm.iter("{http://www.sitemaps.org/schemas/sitemap/0.9}loc")}
-        need = {f"{base}/", f"{base}/llms.txt", f"{base}/api/v1/index.json", f"{base}/demos/swapio-x402/"} | \
+        need = {f"{base}/", f"{base}/request/", f"{base}/llms.txt", f"{base}/api/v1/index.json", f"{base}/demos/swapio-x402/"} | \
                {f"{base}/briefs/{os.path.basename(os.path.dirname(p))}/" for p in glob.glob(os.path.join(DOCS, "briefs", "*", "index.html"))}
-        check("sitemap.xml lists home, llms.txt, API, every brief and the demo", need <= locs, f"missing {sorted(need - locs)}")
+        check("sitemap.xml lists home, request, llms.txt, API, every brief and the demo", need <= locs, f"missing {sorted(need - locs)}")
     except ET.ParseError as e:
         check("sitemap.xml parses", False, str(e))
     sec = read("docs/.well-known/security.txt")
@@ -255,6 +314,77 @@ def main():
         b = Balance()
         b.feed(read(f))
         check(f"HTML tag balance: {f}", not b.errors and not [t for t in b.stack if t not in ("html", "body")], "; ".join(b.errors[:3]))
+
+    # v3 design / UX invariants
+    pages = {os.path.relpath(p, DOCS): open(p).read() for p in glob.glob(os.path.join(DOCS, "**", "*.html"), recursive=True)}
+    mail = sorted(k for k, v in pages.items() if "mailto:" in v) + (["app.js"] if "mailto:" in appjs else [])
+    check("no mailto: links on any page (every CTA works in the browser)", not mail, f"{len(pages)} pages; with mailto: {mail}")
+    req_ok = all(t in page for t in ('id="request"', 'id="req-form"', 'id="req-gh"', 'id="req-gmail"', 'id="req-copy"', "issues/new?template=request-scan.yml",
+                                     "https://mail.google.com/mail/?view=cm")) and 'id="req-form"' in pages.get(os.path.join("request", "index.html"), "")
+    check("coverage-request builder on the homepage (#request) and at /request/", req_ok)
+    spec = sorted(k for k, v in pages.items() if re.search(r">\s*\([a-d]\)\s", v))
+    check('no spec-letter labels such as "(a)" in the UI', not spec, str(spec))
+    fmt_bad = sorted({f"{k}: {m}" for k, v in pages.items() for m in re.findall(r"&amp;(?:amp|lt|gt|quot|#x?[0-9a-f]+);|\b\d+\.\d{3,}h\b|\b0\.0\d*h\b", v)})
+    check("no double-escaped entities or long float durations in any page", not fmt_bad, str(fmt_bad[:4]))
+
+    class Links(html.parser.HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.ids, self.hrefs, self.dups = set(), [], []
+
+        def handle_starttag(self, tag, attrs):
+            a = dict(attrs)
+            if a.get("id"):
+                if a["id"] in self.ids:
+                    self.dups.append(a["id"])
+                self.ids.add(a["id"])
+            for k in ("href", "src"):
+                if a.get(k) and tag not in ("link",) or (tag == "link" and a.get("rel") in ("stylesheet", "icon")):
+                    if a.get(k):
+                        self.hrefs.append(a[k])
+    parsed = {}
+    for rel, text in pages.items():
+        lp = Links()
+        lp.feed(text)
+        parsed[rel] = lp
+    broken, dups = [], []
+    for rel, lp in parsed.items():
+        dups += [f"{rel}#{d}" for d in lp.dups]
+        for h in lp.hrefs:
+            if re.match(r"^(https?:|mailto:|data:|javascript:)", h) or h.startswith("//"):
+                continue
+            path, _, frag = h.partition("#")
+            path = path.split("?")[0]
+            target = os.path.normpath(os.path.join(os.path.dirname(rel), path)) if path else rel
+            if path.endswith("/") or (path and os.path.isdir(os.path.join(DOCS, target))):
+                target = os.path.join(target, "index.html")
+            if not os.path.exists(os.path.join(DOCS, target)):
+                broken.append(f"{rel}: {h}")
+            elif frag and target in parsed and frag not in parsed[target].ids:
+                broken.append(f"{rel}: {h} (no id)")
+    check("every internal link and #anchor resolves; no duplicate ids", not broken and not dups, f"broken {broken[:4]} dup ids {dups[:4]}")
+    visible = re.sub(r"<pre\b.*?</pre>", " ", page, flags=re.S)
+    visible = re.sub(r"<[^>]+>", " ", visible)
+    raw64 = re.findall(r"0x[0-9a-fA-F]{64}", visible)
+    check("no raw 32-byte hashes in visible homepage text (shortened, full value in tooltip/copy)", not raw64, f"{len(raw64)} found {raw64[:2]}")
+    css = read("docs/styles.css")
+    radii = re.findall(r"border-radius:\s*([^;}]+)", css)
+    bad_r = [r for r in radii if not all(v in ("0", "50%", "var(--r)") or (v.endswith("px") and float(v[:-2]) <= 4) for v in r.strip().split())]
+    check("hairline design: every border-radius <= 4px (dots 50%)", not bad_r, f"{len(radii)} radii; bad {bad_r}")
+    chrome = [rel for rel in pages if rel.startswith("briefs" + os.sep) and not ('class="topbar"' in pages[rel] and 'href="../../styles.css"' in pages[rel]
+                                                                           and "<style" not in pages[rel])]
+    check("briefs share the site chrome and stylesheet (no inline styles)", not chrome, str(chrome))
+
+    # behaviour: run app.js against a synthetic DOM of the real /request/ and homepage markup
+    res = app_behaviour(appjs, pages.get(os.path.join("request", "index.html"), ""), page, entries[0]["id"])
+    expected = ["radar_initially_has_github_href", "radio_no_href", "radio_aria_disabled_true", "radio_click_prevented", "radio_warn_shown",
+                "radio_scope_not_in_any_github_url", "radio_status_not_opened", "radar_restores_github_href", "radar_removes_aria_disabled",
+                "radar_hides_warn", "radar_click_not_prevented", "prefill_selects_disclosure", "prefill_no_href", "prefill_aria_disabled_true",
+                "prefill_click_prevented", "prefill_warn_shown", "prefill_scope_not_in_any_github_url", "prefill_status_not_opened",
+                "hash_ok #r-[unclosed", "hash_ok #r-x\\", 'hash_ok #r-"]', "hash_ok #r-%E0%A4%A", "valid_hash_opens_drawer"]
+    failed_b = [k for k in expected if res.get(k) is not True] + (["harness_error: " + res["harness_error"][:200]] if "harness_error" in res else [])
+    check("app.js behaviour: private disclosure never builds a GitHub URL; malformed #hash never throws", not failed_b,
+          f"{len(expected) - len([k for k in expected if res.get(k) is not True])}/{len(expected)} assertions; failed {failed_b[:4]}")
 
     # private identifiers must never be published: compared by SHA-256 of lowercased tokens, so the
     # repository itself never contains the literal identifiers this check guards against

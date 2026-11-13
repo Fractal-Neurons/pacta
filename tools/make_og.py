@@ -13,60 +13,65 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from pacta_raster import TTF, Canvas, measure, wrap, write_png  # noqa: E402
 
-BG, SURFACE, SURFACE2, BORDER = "#0b1017", "#111927", "#172234", "#23324a"
-TEXT, MUTED, ACCENT = "#e6edf3", "#94a3b8", "#38bdf8"
+import json  # noqa: E402
+
+# v3 Paper palette (matches docs/styles.css)
+BG, INK, INK2, MUTED, LINE, LINE2, ACCENT = "#f7f7f5", "#14161a", "#353a42", "#5f6570", "#e1e1dc", "#cdcdc6", "#1d4ed8"
 HEADLINE = "Know when the people who control your DeFi collateral can change the rules — before they do."
+DOCS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "docs")
+
+
+def metrics():
+    idx = json.load(open(os.path.join(DOCS, "api", "v1", "index.json")))
+    m = idx["summary_metrics"]
+    eas = len(idx["onchain_anchoring"]["sprint_eas_attestations"])
+    return [(str(m["sprints_completed"]), "Sprints completed"), (str(m["records_indexed"]), "Verified surfaces"),
+            (str(eas), "Base EAS attestations"), ("$0", "Private disclosure")]
 
 
 def og(fonts, path):
     sans_sb, sans, mono_md, mono = fonts
-    W, H = 1200, 630
+    W, H, X = 1200, 630, 72
     cv = Canvas(W, H, BG)
-    for x in range(0, W, 40):                                   # faint grid
-        cv.rect(x, 0, x + 1, H, MUTED, 0.035)
-    for y in range(0, H, 40):
-        cv.rect(0, y, W, y + 1, MUTED, 0.035)
-    for r in range(440, 40, -8):                                # soft accent glow, top right (fine steps, no banding)
-        cv.circle(1080, 40, r, ACCENT, 0.0045)
-    cv.rect(0, 0, W, 6, ACCENT, 0.9)                            # top rule
-    # brand row: mark + wordmark
-    cv.rounded(64, 52, 104, 92, 9, SURFACE2, border=ACCENT, bw=2.5)
-    cv.text(sans_sb, "P", 74, 84, 30, ACCENT)
-    cv.circle(96, 84, 3.2, TEXT)
-    cv.text(mono_md, "PACTA · FRACTAL NEURONS", 122, 81, 22, ACCENT, tracking=2.4)
-    cv.text(mono, "PACTA SUNT SERVANDA", W - 64 - measure(mono, "PACTA SUNT SERVANDA", 16, 2.0), 80, 16, MUTED, tracking=2.0)
+    cv.rect(0, 0, W, 5, ACCENT)                                 # restrained cobalt top rule
+    # brand row: mark + wordmark, domain on the right
+    cv.rounded(X, 54, X + 34, 88, 3, INK)
+    cv.text(sans_sb, "P", X + 9, 80, 24, BG)
+    cv.circle(X + 26, 80, 2.4, "#a3b8ec")
+    cv.text(sans_sb, "PACTA", X + 48, 79, 21, INK, tracking=2.2)
+    bx = X + 48 + measure(sans_sb, "PACTA", 21, 2.2) + 16
+    cv.rect(bx, 60, bx + 1, 84, LINE2)
+    cv.text(sans, "by Fractal Neurons", bx + 16, 79, 19, MUTED)
+    dom = "pacta.wtf"
+    cv.text(mono_md, dom, W - X - measure(mono_md, dom, 19), 79, 19, INK2)
+    cv.rect(X, 116, W - X, 117, LINE2)
     # headline
-    y = 178
-    for ln in wrap(sans_sb, HEADLINE, 54, W - 128):
-        cv.text(sans_sb, ln, 64, y, 54, TEXT)
-        y += 66
-    # control-plane diagram: Safe 4-of-7 -> 48h Timelock -> Proxy
-    boxes = [("Safe", "4-of-7 multisig"), ("Timelock", "48h minDelay"), ("Proxy", "EIP-1967 admin")]
-    bw_, bh_, gap, top = 300, 104, 86, 418
-    x = 64
-    for i, (title, sub) in enumerate(boxes):
-        hot = i == 1
-        cv.rounded(x, top, x + bw_, top + bh_, 14, SURFACE, border=ACCENT if hot else BORDER, bw=2.0 if hot else 1.5)
-        cv.text(sans_sb, title, x + 24, top + 46, 30, TEXT)
-        cv.text(mono, sub, x + 24, top + 80, 19, ACCENT if hot else MUTED)
-        if i < 2:
-            cv.arrow(x + bw_ + 14, top + bh_ / 2, x + bw_ + gap - 14, ACCENT, w=3.0, head=13)
-        x += bw_ + gap
-    # footer
-    cv.rect(64, 560, W - 64, 561, BORDER)
-    cv.text(mono, "Block-pinned control-plane snapshots · reproducible on any archive node", 64, 598, 17, MUTED)
-    url = "pacta.wtf"
-    cv.text(mono_md, url, W - 64 - measure(mono_md, url, 20), 599, 20, ACCENT)
+    y = 196
+    for ln in wrap(sans_sb, HEADLINE, 52, W - 2 * X - 40):
+        cv.text(sans_sb, ln, X, y, 52, INK)
+        y += 64
+    # metrics ledger: hairline-separated columns
+    top = 444
+    cv.rect(X, top, W - X, top + 1, LINE2)
+    cols = metrics()
+    cw = (W - 2 * X) / len(cols)
+    for i, (num, label) in enumerate(cols):
+        cx = X + i * cw + (0 if i == 0 else 26)
+        if i:
+            cv.rect(X + i * cw, top + 1, X + i * cw + 1, top + 104, LINE)
+        cv.text(sans_sb, num, cx, top + 58, 40, INK)
+        cv.text(sans, label, cx, top + 88, 18, MUTED)
+    cv.rect(X, top + 104, W - X, top + 105, LINE)
+    cv.text(mono, "Block-pinned control-plane snapshots · reproducible on any archive node", X, 596, 16, MUTED)
     return write_png(path, cv)
 
 
 def favicon(fonts, path):
     sans_sb = fonts[0]
     cv = Canvas(32, 32, BG, alpha=True)
-    cv.rounded(0, 0, 32, 32, 7, BG)
-    cv.rounded(0.5, 0.5, 31.5, 31.5, 7, BG, border=ACCENT, bw=1.6)
-    cv.text(sans_sb, "P", 8.2, 24.5, 22, ACCENT)
-    cv.circle(24, 24, 2.2, TEXT)
+    cv.rounded(0, 0, 32, 32, 3, INK)
+    cv.text(sans_sb, "P", 8.4, 24.5, 22, BG)
+    cv.circle(24.2, 24.2, 2.2, "#a3b8ec")
     return write_png(path, cv)
 
 

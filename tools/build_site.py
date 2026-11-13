@@ -2,12 +2,18 @@
 
   python3 tools/refresh_radar.py            # (live, read-only) refresh docs/api/v1/radar.json
   python3 tools/make_og.py --font-dir DIR   # (optional) re-render og-preview.png / favicon.png
-  python3 tools/build_site.py               # writes docs/index.html, llms.txt, robots.txt, sitemap.xml,
-                                            # .well-known/security.txt, .nojekyll and brief <head> metadata
+  python3 tools/build_site.py               # writes docs/index.html, request/, briefs/*/ (from tools/briefs_src/),
+                                            # llms.txt, robots.txt, sitemap.xml, .well-known/security.txt, .nojekyll
   python3 verify_site_v2.py                 # checks the result
 
 Domain cutover: change BASE_URL below (one line) and rebuild; every absolute URL (canonical, Open Graph, X card,
 sitemap, robots, security.txt, llms.txt, brief metadata) is derived from it.
+
+Design (v3): institutional editorial + data terminal. Hairline structure, 2-4px radii, Paper (light) default with a
+Slate (dark) theme, tabular numerals, no web fonts and no third-party requests. Every call to action stays in the
+browser: there are no mailto: links (they are dead clicks without a desktop mail client); requests go through the
+coverage-request builder (#request and /request/), which opens a pre-filled GitHub intake issue, a Gmail web compose
+window, or copies the scope brief.
 """
 
 import datetime as dt
@@ -15,11 +21,13 @@ import html
 import json
 import os
 import re
+import urllib.parse
 
 BASE_URL = "https://pacta.wtf"   # cutover: "https://pacta.fractalneurons.com"
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 DOCS = os.path.join(ROOT, "docs")
+BRIEF_SRC = os.path.join(os.path.dirname(os.path.abspath(__file__)), "briefs_src")
 E = html.escape
 CONTACT = "pacta@dri.network"
 REPO = "https://github.com/Fractal-Neurons/pacta"
@@ -36,25 +44,75 @@ BRIEFS = {
     "treehouse-op-0x2f11": "Pre-execution brief: a queued 5-day timelock operation upgrades the Treehouse TREE token (not tETH) "
                            "and installs a 5-of-7 Safe blacklister (ETA 2026-11-17 04:51 UTC).",
 }
-PILLS = [("Ethena", "Ethena"), ("Lido", "Lido"), ("Curve crvUSD", "Curve Finance (crvUSD)"), ("Stader ETHx", "Stader"), ("Kelp rsETH", "Kelp")]
+NAV = [("inspector", "Inspector"), ("radar", "Radar"), ("findings", "Findings"), ("index", "Index"), ("verify", "Verify"),
+       ("pricing", "Pricing"), ("faq", "FAQ")]
+# Engagement tracks shown in #pricing and offered by the request builder. key -> (title, price, unit, summary, GitHub dropdown option)
+TRACKS = {
+    "radar": ("Institutional Curator Radar", "$3,000", "/ month",
+              "Continuous monitoring of up to 25 collateral protocols with pre-execution timelock briefs.",
+              "Institutional Curator Counterparty & Timelock Alerting Feed ($2,000–$5,000 USDC/mo)"),
+    "ci": ("Protocol Commitment CI Gate", "$5,000", "/ year",
+           "A CI gate that diffs on-chain roles and delays against your documented commitments on every proposal.",
+           "Protocol Continuous Commitment CI & Pre-Flight Proposal Gate ($3,000–$10,000 USDC/yr)"),
+    "index": ("Public index", "Free", "",
+              "Suggest a protocol or contract for the free, public, block-pinned index.", None),
+    "disclosure": ("Free Private Disclosure", "Free", "",
+                   "Exploit-sensitive finding. Never published; routed privately to the protocol's official security team.", None),
+}
+FINDINGS = [  # (record id, headline, explanation html, observed, documented, link, link label)
+    ("ethena-minting-rlusd-usat-onboarding-ops",
+     "New Ethena collateral can be approved on a 1-day timelock; the docs describe 7 days.",
+     'Two queued operations onboard RLUSD and USAT at 200M / 20M USDe-per-block caps, the same as USDC / USDT, with '
+     '<code>stablesDeltaLimit = 0</code>. <code>getMinDelay()</code> returns 86,400s.',
+     ("Observed", "1d"), ("Docs", "7d"), "briefs/ethena-ops-0x0ca0-0x1fe5/", "Read the brief"),
+    ("stader-ethx-manager-safe-and-timelock",
+     "Stader’s Manager Safe is 3-of-6 on-chain; the docs say 3-of-5.",
+     "The ETHx upgrade path itself sits behind a 7-day TimelockController, as documented. The difference is the Manager "
+     "multisig’s signer set.",
+     ("Observed", "3-of-6"), ("Docs", "3-of-5"), None, "View record"),
+    ("curve-crvusd-factory-lending-owner-proxy",
+     "crvUSD market creation now passes through a LendingOwnerProxy wrapper.",
+     "ControllerFactory <code>admin()</code> is a LendingOwnerProxy whose <code>dao()</code> is the CurveOwnershipAgent "
+     "(7-day Aragon vote), with a 5-of-9 EmergencyDAO. The docs still name the agent as the admin.",
+     ("Observed", "LendingOwnerProxy"), ("Docs", "OwnershipAgent"), None, "View record"),
+    ("inverse-firm-borrowcontroller-staleness-sentinel",
+     "A zero staleness threshold switches FiRM’s oracle staleness check off for sDOLA; a queued 48h fix turns it on.",
+     "<code>stalenessThreshold = 0</code> makes <code>isPriceStale</code> return false. A queued Timelock transaction sets "
+     "86,500s.",
+     ("Observed", "0 (off)"), ("Queued", "86,500s"), None, "View record"),
+]
 
 
 def short(h, a=6, b=4):
     return h[:a] + "…" + h[-b:]
 
 
-def utc(t):
-    return dt.datetime.fromtimestamp(t, dt.UTC).strftime("%Y-%m-%d %H:%M UTC")
+def utc(t, secs_=False):
+    return dt.datetime.fromtimestamp(t, dt.UTC).strftime("%Y-%m-%d %H:%M:%S UTC" if secs_ else "%Y-%m-%d %H:%M UTC")
 
 
 def secs(s):
+    """Exact compact duration: 0 -> 0s, 1 -> 1s, 86400 -> 1d, 129600 -> 1d 12h. Mirrors secs() in docs/app.js."""
     if s is None:
         return "—"
-    d = s / 86400
-    return (f"{int(d)}d" if d >= 1 and d == int(d) else f"{s / 3600:g}h")
+    s, parts = int(s), []
+    for unit, n in (("d", 86400), ("h", 3600), ("m", 60), ("s", 1)):
+        if s >= n:
+            q, s = divmod(s, n)
+            parts.append(f"{q}{unit}")
+    return " ".join(parts) or "0s"
 
 
-def head(title, desc, url, image=f"{BASE_URL}/og-preview.png", css="styles.css", js=True, icon_prefix=""):
+def copy_btn(value, label="Copy"):
+    return f'<button class="copy" type="button" data-copy="{E(value)}">{label}</button>'
+
+
+def hexref(value, a=6, b=4):
+    """Truncated hex for display, full value in title + copy button. Never lets a 42/66-char string break a layout."""
+    return f'<span class="addr" title="{E(value)}">{E(short(value, a, b))}</span>{copy_btn(value)}'
+
+
+def head(title, desc, url, prefix="", og_title=OG_TITLE, og_type="website", image=f"{BASE_URL}/og-preview.png"):
     """Order matters: everything social/agent-relevant comes first and stays inside the first 1.2 KB."""
     t, d = E(title), E(desc)
     parts = [
@@ -64,28 +122,53 @@ def head(title, desc, url, image=f"{BASE_URL}/og-preview.png", css="styles.css",
         f"<title>{t}</title>",
         f'<meta name="description" content="{d}">',
         f'<link rel="canonical" href="{url}">',
-        '<meta property="og:type" content="website">',
+        f'<meta property="og:type" content="{og_type}">',
         '<meta property="og:site_name" content="Pacta by Fractal Neurons">',
-        f'<meta property="og:title" content="{E(OG_TITLE)}">',
+        f'<meta property="og:title" content="{E(og_title)}">',
         f'<meta property="og:description" content="{d}">',
         f'<meta property="og:url" content="{url}">',
         f'<meta property="og:image" content="{image}">',
         '<meta property="og:image:width" content="1200">',
         '<meta property="og:image:height" content="630">',
         '<meta name="twitter:card" content="summary_large_image">',
-        f'<meta name="twitter:title" content="{E(OG_TITLE)}">',
+        f'<meta name="twitter:title" content="{E(og_title)}">',
         f'<meta name="twitter:description" content="{d}">',
         f'<meta name="twitter:image" content="{image}">',
-        f'<link rel="icon" href="{icon_prefix}favicon.svg" type="image/svg+xml">',
-        f'<link rel="icon" href="{icon_prefix}favicon.png" type="image/png" sizes="32x32">',
-        f'<link rel="stylesheet" href="{css}">',
-        f'<link rel="alternate" type="text/markdown" href="{icon_prefix}llms.txt" title="llms.txt">',
+        f'<link rel="icon" href="{prefix}favicon.svg" type="image/svg+xml">',
+        f'<link rel="icon" href="{prefix}favicon.png" type="image/png" sizes="32x32">',
+        f'<link rel="stylesheet" href="{prefix}styles.css">',
+        f'<link rel="alternate" type="text/markdown" href="{prefix}llms.txt" title="llms.txt">',
+        '<script>document.documentElement.className="js";try{if(localStorage.getItem("pacta-theme")==="slate")'
+        'document.documentElement.dataset.theme="slate"}catch(e){}</script>',
+        f'<script src="{prefix}app.js" defer></script>',
+        "</head>",
     ]
-    if js:
-        parts.append('<script>try{if(localStorage.getItem("pacta-theme")==="paper")document.documentElement.dataset.theme="paper"}catch(e){}</script>')
-        parts.append('<script src="app.js" defer></script>')
-    parts.append("</head>")
     return "\n".join(parts)
+
+
+def topbar(home=""):
+    """home = "" on the homepage, "../" or "../../" on sub-pages."""
+    links = "".join(f'<a href="{home}#{k}">{lbl}</a>' for k, lbl in NAV)
+    req = "#request" if home == "" else f"{home}request/"
+    return (f'<a class="skip" href="#main">Skip to content</a>\n'
+            f'<header class="topbar"><div class="wrap">'
+            f'<a class="brand" href="{home or "./"}"><img src="{home}favicon.svg" alt="" width="22" height="22">PACTA<small>by Fractal Neurons</small></a>'
+            f'<nav class="nav" aria-label="Sections">{links}</nav>'
+            f'<div class="tools"><button class="tt" type="button" aria-label="Theme: Paper (switch to Slate)">'
+            f'<span data-t="paper" class="on">Paper</span><span data-t="slate">Slate</span></button>'
+            f'<a class="btn sm primary" href="{req}">Request coverage</a></div>'
+            f'</div></header>')
+
+
+def footer(count_line, reg, home=""):
+    return (f'<footer class="ftr"><div class="wrap">'
+            f'<span>Pacta · Fractal Neurons · pacta.base.eth · {E(count_line)}</span>'
+            f'<nav aria-label="Footer"><a href="{REPO}" target="_blank" rel="noopener">GitHub</a>'
+            f'<a href="{home}api/v1/index.json">JSON feed</a><a href="{home}llms.txt">llms.txt</a>'
+            f'<a href="https://basescan.org/address/{E(reg)}" target="_blank" rel="noopener">Base registry</a>'
+            f'<a href="{home}.well-known/security.txt">security.txt</a>'
+            f'<a href="{home}{"#request" if home == "" else "request/"}">Contact</a></nav>'
+            f'</div></footer>')
 
 
 def load():
@@ -106,197 +189,452 @@ def counts(idx):
             "delta": m["parameter_deltas"], "protect": m["protective_deltas"], "aligned": m["aligned_baselines"]}
 
 
+CLASS_LABEL = {"parameter_delta": ("delta", "Parameter delta"), "protective_delta": ("protect", "Protective delta"),
+               "aligned_baseline": ("", "Aligned baseline")}
+
+
 def badge(c):
-    return {"parameter_delta": '<span class="badge delta">parameter delta</span>',
-            "protective_delta": '<span class="badge protect">protective delta</span>'}.get(c, '<span class="badge ok">aligned baseline</span>')
+    cls, lbl = CLASS_LABEL.get(c, ("", "Aligned baseline"))
+    return f'<span class="{("badge " + cls).strip()}">{lbl}</span>'
 
 
-def matrix_rows(idx):
-    rows = []
-    for e in sorted(idx["entries"], key=lambda e: (-e["sprint"], e["protocol"])):
-        proof = (f'<a href="https://base.easscan.org/attestation/view/{E(e["base_eas_uid"])}" target="_blank" rel="noopener">EAS {E(short(e["base_eas_uid"]))}</a>'
-                 if e["base_eas_uid"] else '<span class="count">EAS pending (hash-pinned)</span>')
-        search = " ".join(str(e.get(k, "")) for k in ("protocol", "category", "surface", "target_contract", "target_label", "onchain_observed", "classification", "sprint")).lower()
-        rows.append(
-            f'<tr data-class="{E(e["classification"])}" data-search="{E(search)}">'
-            f'<td><b>{E(e["protocol"])}</b><div class="count">{E(e["category"])}</div></td>'
-            f'<td>S{e["sprint"]}<div class="count">#{e["block_number"]:,}</div><div class="addr" title="{E(e["block_hash"])}">{E(short(e["block_hash"], 10, 6))}</div></td>'
-            f'<td><b>{E(e["target_label"])}</b> <span class="addr">{E(e["target_contract"])}</span><div>{E(e["surface"])}</div><div class="obs">{E(e["onchain_observed"])}</div></td>'
-            f'<td>{badge(e["classification"])}</td>'
-            f'<td class="mono">{secs(e["observed_delay_seconds"])} / {secs(e["documented_delay_seconds"])}</td>'
-            f'<td><a href="{REPO}/blob/main/{E(e["summary_doc"])}" target="_blank" rel="noopener">Summary</a><div>{proof}</div>'
-            f'<div class="addr" title="SHA-256 of the summary">{E(short(e["summary_sha256"], 10, 4))}</div></td></tr>')
-    return "\n".join(rows)
+def dot(c):
+    return f'<span class="dot {CLASS_LABEL.get(c, ("", ""))[0]}"></span>'
 
 
 def cast_line(e):
-    """Runnable cast command for a record (full signature + all arguments); mirrors castCmd() in docs/app.js."""
+    """Runnable cast commands for a record (full signature + all arguments). Mirrors castCmd() in docs/app.js."""
     rpc = '--rpc-url "$ETH_RPC_URL"'
     if e["check_type"] == "eth_getStorageAt":
-        return f'cast storage {e["target_contract"]} {e["selector_or_slot"]} --block {e["block_number"]} {rpc}'
-    args = (" " + " ".join(e["call_args"])) if e.get("call_args") else ""
-    return f'cast call {e["target_contract"]} "{e["call_signature"]}"{args} --block {e["block_number"]} {rpc}'
+        first = f'cast storage {e["target_contract"]} \\\n  {e["selector_or_slot"]} \\\n  --block {e["block_number"]} {rpc}'
+    else:
+        args = (" " + " ".join(e["call_args"])) if e.get("call_args") else ""
+        first = f'cast call {e["target_contract"]} \\\n  "{e["call_signature"]}"{args} \\\n  --block {e["block_number"]} {rpc}'
+    return f'{first}\ncast block {e["block_number"]} --field hash {rpc}\n# expect {e["block_hash"]}'
 
 
-def static_inspector(idx):
-    """Server-rendered default (Ethena, most recent record) so crawlers and no-JS readers see a real record."""
-    e = sorted([x for x in idx["entries"] if "Ethena" in x["protocol"]], key=lambda x: -x["sprint"])[0]
-    return (f'<div><b>{E(e["protocol"])}</b> {badge(e["classification"])} <span class="count">Sprint {e["sprint"]} · {E(e["surface"])}</span></div>'
-            f'<div class="cell"><h3>(a) Pinned block &amp; canonical hash</h3><p>#{e["block_number"]:,} <span class="badge ok">Scanner-pinned (L1 finalized)</span></p><p class="addr">{E(e["block_hash"])}</p></div>'
-            f'<div class="cell"><h3>(c) Timelock &amp; proxy control plane</h3><p>minDelay observed {secs(e["observed_delay_seconds"])} vs docs {secs(e["documented_delay_seconds"])}</p></div>'
-            f'<div class="cell"><h3>(d) Reproduce it yourself</h3><div class="cmd"><pre>{E(cast_line(e))}\n'
-            f'cast block {e["block_number"]} --field hash --rpc-url "$ETH_RPC_URL"   # expect {E(e["block_hash"])}</pre></div></div>'
-            f'<p class="count">{E(e["onchain_observed"])}</p>')
+def term(cmd, title="Reproduce on any archive node"):
+    return (f'<div class="term"><div class="term-h"><span>{E(title)}</span>'
+            f'<button class="copy" type="button" data-copy-term>Copy command</button></div>'
+            f'<pre>{E(cmd)}</pre></div>')
 
 
-def radar_cards(radar):
-    out = []
+def proof_html(e):
+    if e["base_eas_uid"]:
+        return (f'<a href="https://base.easscan.org/attestation/view/{E(e["base_eas_uid"])}" target="_blank" rel="noopener">'
+                f'Base EAS attestation {E(short(e["base_eas_uid"]))} ↗</a>')
+    return 'Pending Base EAS batch attestation · pinned by block hash and summary SHA-256'
+
+
+def multisig(text):
+    seen = []
+    for x in re.findall(r"\b\d+-of-\d+\b", text):
+        if x not in seen:
+            seen.append(x)
+    return " · ".join(seen) if seen else None
+
+
+def proxy_admin(text):
+    m = re.search(r"ProxyAdmin \((0x[0-9a-fA-F]{40})\)", text) or re.search(r"admin\(\) = [A-Za-z ]*\((0x[0-9a-fA-F]{40})\)", text)
+    return m.group(1) if m else None
+
+
+def delay_cmp(e):
+    o, d = e["observed_delay_seconds"], e["documented_delay_seconds"]
+    if o is None and d is None:
+        return '<span class="muted">No timelock delay in this record</span>'
+    warn = o is not None and d is not None and o != d
+    return (f'<span class="cmp"><span class="chip obs{" warn" if warn else ""}"><i>Observed</i><b>{secs(o)}</b></span>'
+            f'<span class="vs">vs</span><span class="chip"><i>Docs</i><b>{secs(d)}</b></span></span>')
+
+
+def sheet(e):
+    """Specification sheet for one record (server-rendered default; docs/app.js renders the same structure)."""
+    ms, pa = multisig(e["onchain_observed"]), proxy_admin(e["onchain_observed"])
+    rows = [("Category", E(e["category"])),
+            ("Target contract", f'{E(e["target_label"])} · {hexref(e["target_contract"])}'),
+            ("Timelock delay", delay_cmp(e))]
+    if ms:
+        rows.append(("Safe quorum", f'<span class="mono">{E(ms)}</span>'))
+    if pa:
+        rows.append(("EIP-1967 ProxyAdmin", hexref(pa)))
+    rows += [("Pinned block", f'<span class="num">#{e["block_number"]:,}</span> · Sprint {e["sprint"]} '
+                              f'<span class="badge final">Scanner-pinned (L1 finalized)</span>'),
+             ("Canonical block hash", hexref(e["block_hash"], 8, 6)),
+             ("Proof", proof_html(e)),
+             ("Summary", f'<a href="{REPO}/blob/main/{E(e["summary_doc"])}" target="_blank" rel="noopener">{E(os.path.basename(e["summary_doc"]))} ↗</a>'
+                         f' · SHA-256 {hexref(e["summary_sha256"], 8, 4)}')]
+    kv = "".join(f"<dt>{k}</dt><dd>{v}</dd>" for k, v in rows)
+    return (f'<div class="sheet-h"><h3>{E(e["protocol"])}</h3>{badge(e["classification"])}</div>'
+            f'<p class="sheet-sub">{E(e["surface"])}</p>'
+            f'<dl class="kv">{kv}</dl>'
+            f'<p class="obs-text">{prose(e["onchain_observed"])}</p>'
+            + term(cast_line(e)))
+
+
+HEX64 = re.compile(r"0x[0-9a-fA-F]{64}(?![0-9a-fA-F])")
+
+
+def prose(text):
+    """Escape record prose for display; 32-byte hashes (tx / op / block ids) are shortened with the full value in a
+    tooltip, so a 66-character token can never force a mid-hash wrap. The JSON feed keeps the full text."""
+    out, last = [], 0
+    for m in HEX64.finditer(text):
+        out.append(E(text[last:m.start()]))
+        out.append(f'<span class="hx" title="{m.group(0)}">{E(short(m.group(0), 8, 6))}</span>')
+        last = m.end()
+    out.append(E(text[last:]))
+    return "".join(out)
+
+
+def sorted_entries(idx):
+    return sorted(idx["entries"], key=lambda e: (-e["sprint"], e["protocol"].lower()))
+
+
+def inspector(idx, c):
+    ents = sorted_entries(idx)
+    default = next(e for e in ents if e["protocol"].startswith("Ethena"))
+    items = "".join(
+        f'<li><a href="#r-{E(e["id"])}" data-id="{E(e["id"])}" data-class="{E(e["classification"])}"'
+        f'{" aria-current=" + chr(34) + "true" + chr(34) if e is default else ""}>'
+        f'{dot(e["classification"])}<span class="p">{E(e["protocol"])}</span><span class="sp">S{e["sprint"]}</span>'
+        f'<span class="s">{E(e["surface"])}</span></a></li>'
+        for e in ents)
+    return f"""<section class="sec" id="inspector"><div class="wrap">
+<div class="sec-head"><span class="n">01</span><h2>Control-plane inspector</h2><span class="aside">No wallet. Every value pinned to a block and reproducible.</span></div>
+<div class="bench">
+<div class="bench-side">
+<div class="bench-search"><input id="insp-q" type="search" placeholder="Search protocol, contract or 0x address" aria-label="Search {c["records"]} indexed records" autocomplete="off">
+<div class="bench-filter" role="group" aria-label="Filter by classification"><button type="button" data-f="all" aria-pressed="true">All</button><button type="button" data-f="parameter_delta" aria-pressed="false">Deltas</button><button type="button" data-f="protective_delta" aria-pressed="false">Protective</button><button type="button" data-f="aligned_baseline" aria-pressed="false">Aligned</button></div></div>
+<ul class="bench-list" id="insp-list">{items}</ul>
+<div class="bench-count" id="insp-count">{c["records"]} of {c["records"]} records</div>
+</div>
+<div class="sheet" id="insp-panel" aria-live="polite">{sheet(default)}</div>
+</div>
+</div></section>"""
+
+
+def radar_section(radar):
+    r = radar["refreshed_at"]
+    rows = []
     for it in radar["items"]:
-        ops = " &amp; ".join(f'<span class="addr">{E(short(o["op_id"], 6, 4))}</span>' for o in it["operations"])
-        state = "pending" if all(o["pending"] for o in it["operations"]) else ("executed" if all(o["done"] for o in it["operations"]) else "mixed")
-        out.append(
-            f'<article class="card"><div class="meta">{E(it["protocol"])} · ETA {E(utc(it["eta"]))} · {secs(it["min_delay_seconds"])} timelock · {state} at refresh</div>'
-            f'<h3>{E(it["title"])}</h3><p>{E(it["summary"])}</p><p class="meta">Op {ops}</p>'
-            f'<div class="countdown" data-eta="{it["eta"]}">ETA {E(utc(it["eta"]))}</div>'
-            f'<a class="more" href="{E(it["brief"])}">Read the pre-execution brief →</a></article>')
-    return "\n".join(out)
+        ops = ", ".join(f'<span class="hx" title="{o["op_id"]}">{short(o["op_id"], 6, 4)}</span>' for o in it["operations"])
+        state = "Pending" if all(o["pending"] for o in it["operations"]) else ("Executed" if all(o["done"] for o in it["operations"]) else "Mixed")
+        rows.append(
+            f'<tr><td><b>{E(it["protocol"])}</b><span class="sub">{state} at refresh</span></td>'
+            f'<td><span class="op">{E(it["title"])}</span><span class="sub">{E(it["summary"])}</span>'
+            f'<span class="meta">Timelock {hexref(it["timelock"])} · Operation{"s" if len(it["operations"]) > 1 else ""} {ops}</span></td>'
+            f'<td class="nowrap num hide-m">{secs(it["min_delay_seconds"])}</td>'
+            f'<td class="nowrap"><span class="countdown" data-eta="{it["eta"]}">ETA {E(utc(it["eta"]))}</span><span class="sub">{E(utc(it["eta"]))}</span></td>'
+            f'<td class="r nowrap"><a href="{E(it["brief"])}">Read brief →</a></td></tr>')
+    fresh = f'Last refreshed: {r["block_time_utc"]} (Mainnet finalized block #{r["block_number"]:,})'
+    return f"""<section class="sec" id="radar"><div class="wrap">
+<div class="sec-head"><span class="n">02</span><h2>Queued timelock radar</h2><span class="aside">{sum(len(it["operations"]) for it in radar["items"])} operations · {len(radar["items"])} protocols</span></div>
+<div class="tbl-wrap"><table class="tbl radar"><thead><tr><th>Protocol</th><th>Queued operation</th><th class="hide-m">Delay</th><th>Execution window</th><th class="r">Brief</th></tr></thead>
+<tbody>{"".join(rows)}</tbody></table></div>
+<div class="prov"><span class="badge final">Scanner-pinned (L1 finalized)</span><span>{E(fresh)}</span><span>State and ETAs read at that block on {r.get("rpcs_cross_checked", 2)} independent RPCs; countdowns run in your browser from each on-chain ETA.</span></div>
+</div></section>"""
+
+
+def findings_section(idx):
+    by_id = {e["id"]: e for e in idx["entries"]}
+    rows = []
+    for rid, h, expl, obs, doc, link, label in FINDINGS:
+        e = by_id[rid]
+        href = link or f"#r-{rid}"
+        rows.append(
+            f'<div class="frow"><div class="who">{E(e["protocol"])}<span class="sub">Sprint {e["sprint"]} · {E(e["category"])}</span>{badge(e["classification"])}</div>'
+            f'<div><h3>{E(h)}</h3><p>{expl}</p></div>'
+            f'<div class="cmpcol"><span class="chip obs{" warn" if e["classification"] == "parameter_delta" else ""}"><i>{obs[0]}</i><b>{E(obs[1])}</b></span>'
+            f'<span class="chip"><i>{doc[0]}</i><b>{E(doc[1])}</b></span><a href="{E(href)}"{" data-open=" + chr(34) + E(rid) + chr(34) if not link else ""}>{label} →</a></div></div>')
+    return f"""<section class="sec" id="findings"><div class="wrap">
+<div class="sec-head"><span class="n">03</span><h2>Selected governance deltas</h2><span class="aside">What is on-chain versus what the docs say</span></div>
+<div class="frows">{"".join(rows)}</div>
+</div></section>"""
+
+
+def index_rows(idx):
+    rows = []
+    for e in sorted_entries(idx):
+        search = " ".join(str(e.get(k, "")) for k in ("protocol", "category", "surface", "target_contract", "target_label", "onchain_observed", "classification", "sprint")).lower()
+        rid = E(e["id"])
+        proof = (f'<a href="https://base.easscan.org/attestation/view/{E(e["base_eas_uid"])}" target="_blank" rel="noopener">EAS ↗</a>'
+                 if e["base_eas_uid"] else '<span class="muted">Hash-pinned</span>')
+        rows.append(
+            f'<tr data-class="{E(e["classification"])}" class="rec" data-id="{rid}" data-search="{E(search)}">'
+            f'<td><b class="ell">{E(e["protocol"])}</b><span class="sub ell">{E(e["category"])}</span></td>'
+            f'<td class="hide-s"><span class="ell">{E(e["target_label"])}</span><span class="sub">{hexref(e["target_contract"])}</span></td>'
+            f'<td>{badge(e["classification"])}</td>'
+            f'<td class="hide-m num nowrap">{secs(e["observed_delay_seconds"])} <span class="muted">/ {secs(e["documented_delay_seconds"])}</span></td>'
+            f'<td class="hide-m nowrap"><span class="num">S{e["sprint"]} · #{e["block_number"]:,}</span><span class="sub">{proof}</span></td>'
+            f'<td class="x"><a class="inspect-btn" href="#r-{rid}" aria-expanded="false" aria-controls="r-{rid}">Details</a></td></tr>')
+        kv = (f'<dt>Pinned block</dt><dd><span class="num">#{e["block_number"]:,}</span> · {hexref(e["block_hash"], 8, 6)}</dd>'
+              f'<dt>Delay</dt><dd>{delay_cmp(e)}</dd>'
+              f'<dt>Summary</dt><dd><a href="{REPO}/blob/main/{E(e["summary_doc"])}" target="_blank" rel="noopener">Sprint {e["sprint"]} summary ↗</a></dd>'
+              f'<dt>SHA-256</dt><dd>{hexref(e["summary_sha256"], 10, 6)}</dd>'
+              f'<dt>Proof</dt><dd>{proof_html(e)}</dd>')
+        rows.append(
+            f'<tr class="drawer" id="r-{rid}"><td colspan="6"><div class="drawer-in">'
+            f'<div><p class="drawer-title">{E(e["surface"])}</p><span class="label">On-chain observation</span><p class="obs-text">{prose(e["onchain_observed"])}</p>'
+            f'<p class="obs-text"><span class="label">Documented</span><br>{prose(e["documented_reference"])}</p>'
+            f'<p class="obs-text"><button class="linkish" type="button" data-inspect="{rid}">Open in inspector ↑</button></p></div>'
+            f'<div><dl class="kv">{kv}</dl>{term(cast_line(e))}</div>'
+            f'</div></td></tr>')
+    return "\n".join(rows)
+
+
+def index_section(idx, c, count_line):
+    return f"""<section class="sec" id="index"><div class="wrap">
+<div class="sec-head"><span class="n">04</span><h2>Public control-plane index</h2><span class="aside">{E(count_line)}</span></div>
+<div class="ix-tools">
+<input id="matrix-q" type="search" placeholder="Filter by protocol, contract, address or text" aria-label="Filter records" autocomplete="off">
+<div class="seg" role="group" aria-label="Filter by classification">
+<button type="button" data-class="all" aria-pressed="true">All<span class="num">{c["records"]}</span></button><button type="button" data-class="parameter_delta" aria-pressed="false">Parameter deltas<span class="num">{c["delta"]}</span></button><button type="button" data-class="protective_delta" aria-pressed="false">Protective<span class="num">{c["protect"]}</span></button><button type="button" data-class="aligned_baseline" aria-pressed="false">Aligned<span class="num">{c["aligned"]}</span></button>
+</div>
+<span class="ix-count" id="matrix-count">{c["records"]} of {c["records"]} records shown</span>
+</div>
+<div class="tbl-wrap"><table class="tbl" id="matrix">
+<colgroup><col class="c-p"><col class="c-s"><col class="c-c"><col class="c-d"><col class="c-b"><col class="c-x"></colgroup>
+<thead><tr><th>Protocol</th><th class="hide-s">Surface</th><th>Status</th><th class="hide-m">Delay obs / docs</th><th class="hide-m">Block / proof</th><th class="x"><span class="skip">Details</span></th></tr></thead>
+<tbody>
+{index_rows(idx)}
+</tbody></table></div>
+</div></section>"""
+
+
+def verify_section(idx, c):
+    reg, schema = idx["onchain_anchoring"]["commitment_registry"], idx["onchain_anchoring"]["eas_schema_uid"]
+    cmd = (f"# 1) Pull the block-pinned index\n"
+           f"curl -s {BASE_URL}/api/v1/index.json \\\n  | jq '.entries[] | {{protocol, sprint, block_number, classification}}'\n\n"
+           f"# 2) Replay one record: Stader Manager Safe threshold\n"
+           f'cast call 0xAAfb31780e4b9c95Bc920e388f4925A874cd07AF \\\n  "getThreshold()" \\\n  --block 26403676 --rpc-url "$ETH_RPC_URL"\n'
+           f'cast block 26403676 --field hash --rpc-url "$ETH_RPC_URL"\n\n'
+           f"# 3) Reference Foundry suite (offline; fork tests need ETH_RPC_URL)\n"
+           f'forge test --no-match-test "testFork" -vv')
+    return f"""<section class="sec" id="verify"><div class="wrap">
+<div class="sec-head"><span class="n">05</span><h2>Don’t trust, verify</h2><span class="aside">Everything here replays against any archive node</span></div>
+<div class="split">
+<dl class="deflist">
+<div><dt>Ethereum Mainnet</dt><dd>All {c["records"]} indexed records are pinned to a block number and its canonical block hash; reads use EIP-1898 <code>requireCanonical</code>.</dd></div>
+<div><dt>Open verifier spec</dt><dd>Each record lists the target contract, the full call signature and arguments (or EIP-1967 slot), the block and the block hash. Replay it with <code>cast</code> or raw <code>eth_call</code> / <code>eth_getStorageAt</code>.</dd></div>
+<div><dt>On-chain anchoring on Base</dt><dd>{c["eas_n"]} Base EAS sprint attestations cover Sprints {c["eas_from"]}–{c["eas_to"]}; Sprints {c["pending"]} are pinned by block hash and SHA-256 summary digest until batch-attested. Registry {hexref(reg)} (Sourcify verified) · EAS schema {hexref(schema)}.</dd></div>
+<div><dt>Machine-readable</dt><dd><a href="api/v1/index.json">/api/v1/index.json</a> (schema <code>{E(idx["schema"])}</code>) · <a href="api/v1/radar.json">/api/v1/radar.json</a> · <a href="llms.txt">/llms.txt</a></dd></div>
+<div><dt>Reorg handling</dt><dd>Live monitoring uses a 64-block reorg-aware indexer: observations from orphaned blocks are retracted, never silently kept.</dd></div>
+</dl>
+{term(cmd, "Verify from your terminal")}
+</div>
+</div></section>"""
+
+
+def pricing_section(home=""):
+    req = "#request" if home == "" else f"{home}request/"
+
+    def plan(key, tier, bullets, cta, feat=False):
+        title, price, unit, _, _ = TRACKS[key]
+        lis = "".join(f"<li>{b}</li>" for b in bullets)
+        return (f'<div class="plan{" feat" if feat else ""}"><span class="tier">{tier}</span><h3>{E(title)}</h3>'
+                f'<div class="price">{price}{f"<small>{unit}</small>" if unit else ""}</div><ul>{lis}</ul>'
+                f'<a class="btn{" primary" if feat else ""}" href="{req}{"" if home == "" else "?tier=" + key}" data-tier="{key}">{cta} <span class="arr">→</span></a></div>')
+    plans = (plan("index", "Everyone", ["All indexed records, briefs and the JSON feed", "Inspector and cast reproductions", "Suggest a protocol for coverage"],
+                  "Suggest a protocol")
+             + plan("disclosure", "Security teams", ["Exploit-sensitive findings are never published here",
+                                                             "Routed privately to official security teams", "No cost to the protocol"], "Report privately")
+             + plan("radar", "Curators &amp; allocators", ["Up to 25 collateral protocols, monitored continuously", "Pre-execution briefs for queued timelock operations",
+                                                         "Alerts to Slack, Telegram or webhook", "Block-pinned, reproducible evidence"], "Request the radar", feat=True)
+             + plan("ci", "Protocol teams", ["Role, delay and quorum diff on every governance proposal", "Fork simulation of queued timelock payloads",
+                                            "Base EAS anchoring of each commitment check"], "Request the CI gate"))
+    return f"""<section class="sec" id="pricing"><div class="wrap">
+<div class="sec-head"><span class="n">06</span><h2>Engagements</h2><span class="aside">Public data is free. Continuous coverage is priced per track.</span></div>
+<div class="plans">{plans}</div>
+<p class="note">x402 pay-per-call API (USDC on Base): control-plane scans from $0.10 per call. <span class="pending">Deployment pending</span> — not yet live.</p>
+</div></section>"""
+
+
+def protocol_options(idx):
+    names = []
+    for e in sorted_entries(idx):
+        n = e["protocol"]
+        if n not in names:
+            names.append(n)
+    return sorted(names, key=str.lower)
+
+
+def request_builder(idx, home=""):
+    tiers = "".join(
+        f'<label><input type="radio" name="tier" value="{k}"{" checked" if k == "radar" else ""}><span><b>{E(t)}</b>'
+        f'{" · " + p + (" " + u if u else "") if p != "Free" else " · Free"}<span class="sub">{E(s)}</span></span></label>'
+        for k, (t, p, u, s, _) in TRACKS.items())
+    protos = "".join(f'<label><input type="checkbox" name="protocol" value="{E(n)}"><span>{E(n)}</span></label>'
+                     for n in protocol_options(idx))
+    gh = f"{REPO}/issues/new?template=request-scan.yml&title=" + urllib.parse.quote("[Pacta Scope] ")
+    gm = "https://mail.google.com/mail/?view=cm&fs=1&to=" + urllib.parse.quote(CONTACT) + "&su=" + urllib.parse.quote("Pacta coverage request")
+    return f"""<form class="req" id="req-form" autocomplete="off" onsubmit="return false">
+<div class="req-form">
+<fieldset><legend>Track</legend><div class="opts one">{tiers}</div></fieldset>
+<fieldset><legend>Protocols in scope <span class="legend-note">· {len(protocol_options(idx))} indexed; add others below</span></legend><div class="opts scroll" id="req-protocols">{protos}</div></fieldset>
+<div class="field"><label for="req-org">Organization or protocol</label><input id="req-org" name="org" type="text" placeholder="e.g. Example Capital, or the protocol you run"></div>
+<div class="field"><label for="req-scope">Contracts, docs or portfolio</label><textarea id="req-scope" name="scope" placeholder="Public docs URL, mainnet addresses, or the collateral list you curate"></textarea><p class="hint">Public information only. Never paste keys or exploit details here.</p></div>
+<div class="field"><label for="req-contact">How should we reach you?</label><input id="req-contact" name="contact" type="text" placeholder="Work email, Telegram or GitHub handle"></div>
+</div>
+<div class="req-out">
+<span class="label">Scope brief</span>
+<div class="term"><div class="term-h"><span>To: {CONTACT}</span><button class="copy" type="button" data-copy-from="req-brief">Copy brief</button></div><pre id="req-brief">Choose a track and protocols; the brief updates as you type.</pre></div>
+<div class="actions">
+<a class="btn primary" id="req-gh" href="{E(gh)}" target="_blank" rel="noopener">Open a pre-filled GitHub intake issue <span class="arr">↗</span></a>
+<a class="btn" id="req-gmail" href="{E(gm)}" target="_blank" rel="noopener">Compose in Gmail <span class="arr">↗</span></a>
+<button class="btn" type="button" id="req-copy" data-copy-from="req-brief">Copy brief and address <span class="arr">⧉</span></button>
+</div>
+<p class="warn-line" id="req-warn" hidden>Private disclosure: do not use the public GitHub tracker. Copy the brief or use Gmail, and keep exploit details out until a private channel is agreed.</p>
+<p class="status" id="req-status" role="status" aria-live="polite"></p>
+<div class="addrline">Or write to <b>{CONTACT}</b>{copy_btn(CONTACT, "Copy address")}</div>
+</div>
+</form>"""
+
+
+def request_section(idx):
+    return f"""<section class="sec" id="request"><div class="wrap">
+<div class="sec-head"><span class="n">07</span><h2>Request coverage</h2><span class="aside">Builds a scope brief in your browser; nothing is sent until you choose a channel</span></div>
+{request_builder(idx)}
+</div></section>"""
+
+
+def faq_section(c, r):
+    qa = [
+        ("What exactly is anchored on-chain?",
+         f'Sprints {c["eas_from"]}–{c["eas_to"]} carry {c["eas_n"]} Base EAS sprint attestations (multi-attest tx {hexref(c["multi_tx"])}), recorded by '
+         f'<code>pacta.base.eth</code> in PactaCommitmentRegistry. Sprints {c["pending"]} are pinned by canonical block hash and SHA-256 summary digest in '
+         f'/api/v1/index.json until they are batch-attested.'),
+        ("How do I reproduce a record?",
+         "Every record gives the contract, the call signature with all arguments (or the storage slot), the block and the canonical block hash. "
+         "Copy its <code>cast</code> command from the inspector or the index and run it against any archive node."),
+        ("What happens to exploit-sensitive findings?",
+         "Free Private Disclosure: they are never published here and are routed privately, at no cost, to official protocol security teams "
+         "(security contacts, private advisories or bounty platforms)."),
+        ("Do I need a wallet?",
+         "No. The inspector, the radar and the JSON feed are public and read-only. A pay-per-call x402 API (USDC on Base) is planned and optional."),
+        ("How fresh is the radar?",
+         f'The radar states the exact finalized block it was refreshed at (#{r["block_number"]:,}, {E(r["block_time_utc"])}); countdowns are computed '
+         f'from each operation’s on-chain ETA. An ETA is when execution becomes possible, not a guarantee that it happens.'),
+        ("What do the classifications mean?",
+         "Parameter delta: on-chain state differs from the documentation. Protective delta: a change that strengthens controls. "
+         "Aligned baseline: on-chain state matches the documentation at the pinned block."),
+    ]
+    items = "".join(f"<div><dt>{q}</dt><dd>{a}</dd></div>" for q, a in qa)
+    return f"""<section class="sec" id="faq"><div class="wrap">
+<div class="sec-head"><span class="n">08</span><h2>Questions &amp; methodology</h2></div>
+<dl class="faq">{items}</dl>
+</div></section>"""
+
+
+def about_section(idx):
+    return f"""<section class="sec" id="about"><div class="wrap">
+<div class="sec-head"><span class="n">09</span><h2>About</h2></div>
+<div class="about">
+<p>Pacta is built by <a href="{FN}" target="_blank" rel="noopener">Fractal Neurons</a>, a research engineering firm. <i>Pacta sunt servanda</i>: agreements must be kept. We check that the people who control DeFi collateral keep the commitments their documentation makes, and we tell you before that changes.</p>
+<dl class="deflist">
+<div><dt>Contact</dt><dd><a href="#request">Request builder</a> · <span class="mono">{CONTACT}</span>{copy_btn(CONTACT, "Copy")}</dd></div>
+<div><dt>Code &amp; data</dt><dd><a href="{REPO}" target="_blank" rel="noopener">{REPO.replace("https://", "")} ↗</a></dd></div>
+<div><dt>For agents</dt><dd><a href="llms.txt">/llms.txt</a> · <a href="api/v1/index.json">/api/v1/index.json</a></dd></div>
+<div><dt>Security</dt><dd><a href=".well-known/security.txt">/.well-known/security.txt</a></dd></div>
+</dl>
+</div>
+</div></section>"""
 
 
 def page(idx, radar):
     c = counts(idx)
     r = radar["refreshed_at"]
     count_line = f'{c["sprints"]} Sprints · {c["records"]} Indexed Records'
-    fresh = f'Last refreshed: {r["block_time_utc"]} (Mainnet finalized block #{r["block_number"]:,})'
-    pills = "".join(f'<button class="pill" type="button" data-key="{E(k)}" aria-pressed="false">{E(lbl)}</button>' for lbl, k in PILLS)
     reg = idx["onchain_anchoring"]["commitment_registry"]
-    schema = idx["onchain_anchoring"]["eas_schema_uid"]
+    nxt = min(radar["items"], key=lambda it: it["eta"])
+    n_ops = sum(len(it["operations"]) for it in radar["items"])
     body = f"""<body>
-<a class="skip" href="#main">Skip to content</a>
-<header class="hdr"><div class="wrap">
-<a class="brand" href="./"><img src="favicon.svg" alt="" width="26" height="26">PACTA <small>by Fractal Neurons</small></a>
-<nav class="nav" aria-label="Sections"><a href="#inspector">Inspector</a><a href="#radar">Radar</a><a href="#findings">Findings</a><a href="#index">Index</a><a href="#pricing">Pricing</a><a href="#verify">Verify</a><a href="#about">About</a></nav>
-<button class="theme-toggle" type="button" aria-label="Switch theme"><span data-t="slate" class="on">Slate</span>/<span data-t="paper">Paper</span></button>
-</div></header>
+{topbar()}
 <main id="main">
-<section class="hero"><div class="wrap hero-grid">
-<div>
-<div class="eyebrow">PACTA SUNT SERVANDA · BY FRACTAL NEURONS</div>
+<section class="hero"><div class="wrap">
+<div class="eyebrow">For vault curators, allocators and protocol risk teams</div>
 <h1>{E(H1)}</h1>
-<p class="sub"><strong>Built for DeFi vault curators, institutional allocators, and protocol risk teams.</strong> Point-in-time smart contract audit PDFs go stale the moment a multisig rotates signers, attaches a Safe module, or lowers a timelock delay. Pacta delivers deterministic, block-pinned control-plane snapshots and pre-execution timelock alerts reproducible against any archive node.</p>
-<div class="ctas">
-<a class="btn primary" href="mailto:{CONTACT}?subject=Pacta%20Collateral%20Control-Plane%20Alerts">Get Alerts on Your Collateral</a>
-<a class="btn" href="mailto:{CONTACT}?subject=Pacta%20Curator%20Walkthrough">Book a Risk Walkthrough</a>
-<a class="btn" href="#radar">Explore Live Radar ↓</a>
-</div>
-<div class="stats">
-<div class="stat"><b>{E(count_line)}</b><span>Ethereum Mainnet, each pinned to a canonical block hash</span></div>
-<div class="stat"><b>{c["eas_n"]} Base EAS sprint attestations</b><span>Sprints {c["eas_from"]}–{c["eas_to"]} · multi-attest tx <span class="mono">{E(short(c["multi_tx"]))}</span></span></div>
-<div class="stat"><b>Sprints {c["pending"]} hash-pinned</b><span>block hash + SHA-256 summary digest in <a href="api/v1/index.json">/api/v1/index.json</a> until batch-attested</span></div>
-<div class="stat"><b>Free Private Disclosure</b><span>Exploit-sensitive findings are never published here; they go privately to official security teams at no cost</span></div>
-</div>
-</div>
-<aside class="inspector" id="inspector" aria-label="Control-plane inspector">
-<h2>Control-Plane Inspector · no wallet required</h2>
-<p class="hint">Pick a protocol or search the {c["records"]} indexed records. Every value is pinned to a block and reproducible.</p>
-<div class="pills">{pills}</div>
-<input class="search" id="insp-q" type="search" placeholder="Paste 0x address or filter {c["records"]} indexed records…" aria-label="Search indexed records">
-<div class="results" id="insp-results"></div>
-<div class="panel" id="insp-panel">{static_inspector(idx)}</div>
-</aside>
-</div></section>
-
-<section class="sec" id="radar"><div class="wrap">
-<div class="sec-h"><span class="kicker">01</span><h2>Queued Timelock Radar</h2><span class="fresh">{E(fresh)}</span></div>
-<p class="count">State and ETAs are read at the finalized block above on two independent RPCs; countdowns run in your browser from each operation's on-chain ETA.</p>
-<div class="grid3">{radar_cards(radar)}</div>
-</div></section>
-
-<section class="sec" id="findings"><div class="wrap">
-<div class="sec-h"><span class="kicker">02</span><h2>Headline findings, in plain English</h2><p>Each card links to a block-pinned record below.</p></div>
-<div class="grid4">
-<article class="card"><div class="meta">Ethena · Sprint 7 &amp; 14 · parameter delta</div><h3>New Ethena collateral can be approved on a 1-day timelock, while the docs describe 7 days.</h3><p>Two queued operations onboard RLUSD and USAT at 200M / 20M USDe-per-block caps (the same as USDC / USDT), with <span class="mono">stablesDeltaLimit = 0</span> (0 bps). Observed <span class="mono">getMinDelay() = 86,400s</span>; key-trust-assumptions.md lists 7-day time-locks, and a July 2026 Risk Committee post mentions the 1-day delay.</p><a class="more" href="briefs/ethena-ops-0x0ca0-0x1fe5/">Brief →</a></article>
-<article class="card"><div class="meta">Stader ETHx · Sprint 12 · parameter delta</div><h3>Stader's Manager Safe is 3-of-6 on-chain; the docs say 3-of-5.</h3><p>The ETHx upgrade path itself sits behind a 7-day TimelockController, as documented. The difference is the Manager multisig's signer set.</p><a class="more" href="#index">Record →</a></article>
-<article class="card"><div class="meta">Curve crvUSD · Sprint 11 · parameter delta</div><h3>crvUSD market creation now passes through a LendingOwnerProxy wrapper.</h3><p>ControllerFactory <span class="mono">admin()</span> is a LendingOwnerProxy whose <span class="mono">dao()</span> is the CurveOwnershipAgent (7-day Aragon vote), with a 5-of-9 EmergencyDAO. The docs still name the agent as the admin.</p><a class="more" href="#index">Record →</a></article>
-<article class="card"><div class="meta">Inverse FiRM · Sprint 14 · protective delta</div><h3>A zero staleness threshold switches FiRM's oracle staleness check off for sDOLA; a queued 48h fix turns it on.</h3><p><span class="mono">stalenessThreshold = 0</span> makes <span class="mono">isPriceStale</span> return false; a queued Timelock transaction sets 86,500s.</p><a class="more" href="#index">Record →</a></article>
+<p class="lede">Pacta pins the proxy admins, Safe quorums, roles and timelock delays behind your collateral to canonical Ethereum blocks, checks them against what each protocol documents, and briefs you before a queued change can execute.</p>
+<div class="ctas"><a class="btn primary" href="#request">Request coverage <span class="arr">→</span></a><a class="btn" href="#inspector">Inspect a protocol</a></div>
+<div class="livebar"><span class="dot live"></span><b>{n_ops} timelock operations queued across {len(radar["items"])} protocols.</b> Next: {E(nxt["protocol"])}, <span class="countdown" data-eta="{nxt["eta"]}">ETA {E(utc(nxt["eta"]))}</span> · <a href="#radar">Radar →</a></div>
+<div class="ledger">
+<div><b>{c["sprints"]}</b><span>Sprints completed</span><small>Ethereum Mainnet control-plane reviews</small></div>
+<div><b>{c["records"]}</b><span>Verified surfaces</span><small>Each pinned to a canonical block hash</small></div>
+<div><b>{c["eas_n"]}</b><span>Base EAS attestations</span><small>Sprints {c["eas_from"]}–{c["eas_to"]}; {c["pending"]} hash-pinned</small></div>
+<div><b>$0</b><span>Private disclosure</span><small>Exploit-sensitive findings go privately to security teams</small></div>
 </div>
 </div></section>
-
-<section class="sec" id="index"><div class="wrap">
-<div class="sec-h"><span class="kicker">03</span><h2>Public Control-Plane Index</h2><p>{E(count_line)} · {c["delta"]} parameter deltas · {c["protect"]} protective deltas · {c["aligned"]} aligned baselines</p></div>
-<details class="matrix" open><summary>Full {c["records"]}-record address matrix (filterable)</summary>
-<div class="matrix-tools">
-<input class="search" id="matrix-q" type="search" placeholder="Filter by protocol, address or text…" aria-label="Filter records">
-<button class="chip" type="button" data-class="all" aria-pressed="true">All</button>
-<button class="chip" type="button" data-class="parameter_delta" aria-pressed="false">Parameter deltas</button>
-<button class="chip" type="button" data-class="protective_delta" aria-pressed="false">Protective deltas</button>
-<button class="chip" type="button" data-class="aligned_baseline" aria-pressed="false">Aligned baselines</button>
-<span class="count" id="matrix-count">{c["records"]} of {c["records"]} records shown</span>
-</div>
-<div class="tbl-wrap"><table id="matrix"><thead><tr><th>Protocol</th><th>Sprint / block</th><th>Contract &amp; observation</th><th>Class</th><th>Delay obs / docs</th><th>Proof</th></tr></thead>
-<tbody>
-{matrix_rows(idx)}
-</tbody></table></div>
-</details>
-</div></section>
-
-<section class="sec" id="verify"><div class="wrap">
-<div class="sec-h"><span class="kicker">04</span><h2>Don't trust, verify</h2><p>Everything here can be replayed against any archive node.</p></div>
-<div class="grid2">
-<div class="card"><h3>Chain &amp; finality coverage</h3><ul class="clean">
-<li><b>Ethereum Mainnet</b>: all {c["records"]} indexed records, each pinned to a block number and its canonical block hash (reads use EIP-1898 <span class="mono">requireCanonical</span>).</li>
-<li><b>Base</b>: on-chain anchoring (PactaCommitmentRegistry + EAS) and the x402 paid API.</li>
-<li><b>Arbitrum</b>: available for engagements on request.</li>
-<li>Live monitoring uses a 64-block reorg-aware indexer: observations from orphaned blocks are retracted, never silently kept.</li></ul></div>
-<div class="card"><h3>Open verifier spec</h3><ul class="clean">
-<li>Each record lists the target contract, the 4-byte selector or EIP-1967 slot, the block number and the canonical block hash: replay it with <span class="mono">cast call</span> / <span class="mono">cast storage</span> or raw <span class="mono">eth_call</span> / <span class="mono">eth_getStorageAt</span>.</li>
-<li>Machine-readable feed: <a href="api/v1/index.json">/api/v1/index.json</a> (schema <span class="mono">{E(idx["schema"])}</span>) and <a href="api/v1/radar.json">/api/v1/radar.json</a>.</li>
-<li>Sourcify-verified PactaCommitmentRegistry <a href="https://sourcify.dev/#/lookup/{E(reg)}" target="_blank" rel="noopener" class="mono">{E(short(reg))}</a> on Base; EAS schema <a href="https://base.easscan.org/schema/view/{E(schema)}" target="_blank" rel="noopener" class="mono">{E(short(schema))}</a>.</li></ul></div>
-</div>
-<pre class="block"># 1) Pull the block-pinned index
-curl -s {BASE_URL}/api/v1/index.json | jq '.entries[] | {{protocol, sprint, block_number, classification, observed_delay_seconds}}'
-# 2) Replay one record (Stader Manager Safe threshold at block 26403676)
-cast call 0xAAfb31780e4b9c95Bc920e388f4925A874cd07AF "getThreshold()" --block 26403676 --rpc-url "$ETH_RPC_URL"
-cast block 26403676 --field hash --rpc-url "$ETH_RPC_URL"   # expect 0xf4246ca2…c3ae
-# 3) Run the reference Foundry suite (offline unit tests; fork tests when ETH_RPC_URL is set)
-forge test --no-match-test "testFork" -vv</pre>
-</div></section>
-
-<section class="sec" id="pricing"><div class="wrap">
-<div class="sec-h"><span class="kicker">05</span><h2>Engagements</h2><p>One-time checks priced per engagement; continuous coverage priced per month.</p></div>
-<div class="grid4">
-<article class="card"><h3>Express Single-Contract Check</h3><div class="price">$250 <small>one-time</small></div><p>4h turnaround. Block-pinned control-plane snapshot of one contract: proxy admin, owner, Safe quorum, timelock delay, versus its docs.</p><a class="more" href="mailto:{CONTACT}?subject=Pacta%20Express%20Single-Contract%20Check">Request →</a></article>
-<article class="card"><h3>Protocol Control-Plane Audit</h3><div class="price">$1,500 <small>one-time</small></div><p>24h turnaround. Full control-plane map of a protocol with reproducible records and a written brief.</p><a class="more" href="mailto:{CONTACT}?subject=Pacta%20Protocol%20Control-Plane%20Audit">Request →</a></article>
-<article class="card"><h3>Protocol CI &amp; Pre-Execution Guard</h3><div class="price">$1,500 <small>/ mo</small></div><p>Continuous GitHub CI role-diff gate, fork simulation of queued timelock payloads, and Base EAS anchoring.</p><a class="more" href="mailto:{CONTACT}?subject=Pacta%20Protocol%20CI%20%26%20Pre-Execution%20Guard">Request →</a></article>
-<article class="card featured"><h3>Institutional Curator &amp; Allocator Radar</h3><div class="price">$3,000 <small>/ mo</small></div><p>24/7 monitoring across up to 25 collateral protocols, queued-timelock impact briefs, Slack / Telegram / webhook alerts, and x402 API access.</p><a class="more" href="mailto:{CONTACT}?subject=Pacta%20Curator%20%26%20Allocator%20Radar">Request →</a></article>
-</div>
-<article class="card disclosure" style="margin-top:16px"><h3>Free Private Disclosure</h3><p>Exploit-sensitive findings are never published here — they are routed privately at no cost to official protocol security teams.</p><a class="more" href="mailto:{CONTACT}?subject=Private%20Security%20Disclosure%20Verification">Verify a disclosure →</a></article>
-</div></section>
-
-<section class="sec faq" id="faq"><div class="wrap">
-<div class="sec-h"><span class="kicker">06</span><h2>Questions</h2></div>
-<details><summary>What exactly is anchored on-chain?</summary><p>Sprints {c["eas_from"]}–{c["eas_to"]} carry {c["eas_n"]} on-chain Base EAS sprint attestations (multi-attest tx <span class="mono">{E(short(c["multi_tx"]))}</span>), recorded by <span class="mono">pacta.base.eth</span> in PactaCommitmentRegistry. Sprints {c["pending"]} are pinned by canonical block hash and SHA-256 summary digest in /api/v1/index.json until they are batch-attested.</p></details>
-<details><summary>How do I reproduce a record?</summary><p>Every record gives the contract, selector or storage slot, block number and canonical block hash. Run the listed <span class="mono">cast</span> command against any archive node and compare the block hash.</p></details>
-<details><summary>What happens to exploit-sensitive findings?</summary><p>Free Private Disclosure: they are never published here and are routed privately, at no cost, to official protocol security teams (security contacts, private advisories or bounty platforms).</p></details>
-<details><summary>Do I need a wallet?</summary><p>No. The inspector, the radar and the JSON feed are public and read-only. Paid API access uses x402 (USDC on Base) and is optional.</p></details>
-<details><summary>How fresh is the radar?</summary><p>The radar states the exact finalized block it was refreshed at ({r["block_number"]:,}, {E(r["block_time_utc"])}); countdowns are computed from each operation's on-chain ETA.</p></details>
-</div></section>
-
-<section class="sec" id="about"><div class="wrap">
-<div class="sec-h"><span class="kicker">07</span><h2>About Fractal Neurons</h2></div>
-<div class="grid2">
-<div class="card"><p>Pacta is built by <a href="{FN}" target="_blank" rel="noopener">Fractal Neurons</a>, a research engineering firm. <i>Pacta sunt servanda</i>: agreements must be kept. We check that the people who control DeFi collateral keep the commitments their documentation makes, and we tell you before that changes.</p></div>
-<div class="card"><ul class="clean">
-<li>Contact: <a href="mailto:{CONTACT}">{CONTACT}</a></li>
-<li>Code &amp; data: <a href="{REPO}" target="_blank" rel="noopener">{REPO.replace("https://", "")}</a></li>
-<li>For agents: <a href="llms.txt">/llms.txt</a> · <a href="api/v1/index.json">/api/v1/index.json</a></li>
-<li>Security: <a href=".well-known/security.txt">/.well-known/security.txt</a></li></ul></div>
-</div>
-</div></section>
+{inspector(idx, c)}
+{radar_section(radar)}
+{findings_section(idx)}
+{index_section(idx, c, count_line)}
+{verify_section(idx, c)}
+{pricing_section()}
+{request_section(idx)}
+{faq_section(c, r)}
+{about_section(idx)}
 </main>
-<footer class="ftr"><div class="wrap"><span>Pacta · Fractal Neurons · pacta.base.eth · {E(count_line)}</span><span><a href="{REPO}">GitHub</a> · <a href="api/v1/index.json">JSON</a> · <a href="llms.txt">llms.txt</a> · <a href="https://basescan.org/address/{E(reg)}">Base registry</a> · <a href="mailto:{CONTACT}">{CONTACT}</a></span></div></footer>
+{footer(count_line, reg)}
 </body></html>
 """
     return head(TITLE, DESC, BASE_URL + "/") + "\n" + body
+
+
+def request_page(idx):
+    c = counts(idx)
+    count_line = f'{c["sprints"]} Sprints · {c["records"]} Indexed Records'
+    reg = idx["onchain_anchoring"]["commitment_registry"]
+    desc = "Request Pacta coverage: build a scope brief and send it through GitHub, Gmail or your own mail client."
+    body = f"""<body>
+{topbar("../")}
+<main id="main">
+<section class="sec" id="request"><div class="wrap">
+<div class="crumbs"><a href="../">Pacta</a> / Request coverage</div>
+<div class="sec-head"><span class="n">→</span><h2>Request coverage</h2><span class="aside">Nothing is sent until you choose a channel</span></div>
+<p class="sec-intro">Pick a track and the protocols you hold or run. The scope brief builds in your browser; open it as a pre-filled GitHub intake issue, compose it in Gmail, or copy it with our address.</p>
+{request_builder(idx, "../")}
+</div></section>
+{pricing_section("../")}
+</main>
+{footer(count_line, reg, "../")}
+</body></html>
+"""
+    return head("Request coverage · Pacta", desc, f"{BASE_URL}/request/", prefix="../", og_title="Request Pacta coverage") + "\n" + body
+
+
+def brief_page(slug, desc, idx, radar):
+    src = open(os.path.join(BRIEF_SRC, f"{slug}.html")).read()
+    title = html.unescape(re.match(r"<!-- title: (.*?) -->\n", src).group(1))   # plain text; head() escapes once
+    content = src.split("\n", 1)[1]
+    item = next((it for it in radar["items"] if it["brief"].rstrip("/").endswith(slug)), None)
+    r = radar["refreshed_at"]
+    meta = ""
+    if item:
+        ops = " ".join(hexref(o["op_id"], 8, 4) for o in item["operations"])
+        state = "Pending" if all(o["pending"] for o in item["operations"]) else ("Executed" if all(o["done"] for o in item["operations"]) else "Mixed")
+        meta = (f'<dl class="memo-meta">'
+                f'<dt>Protocol</dt><dd>{E(item["protocol"])}</dd>'
+                f'<dt>Timelock</dt><dd>{hexref(item["timelock"])} · {secs(item["min_delay_seconds"])} minimum delay</dd>'
+                f'<dt>Operation{"s" if len(item["operations"]) > 1 else ""}</dt><dd>{ops}</dd>'
+                f'<dt>Execution window</dt><dd><span class="countdown" data-eta="{item["eta"]}">ETA {E(utc(item["eta"]))}</span> · {E(utc(item["eta"], True))}</dd>'
+                f'<dt>State</dt><dd>{state} at finalized block <span class="num">#{r["block_number"]:,}</span> ({E(r["block_time_utc"])}) '
+                f'<span class="badge final">Scanner-pinned (L1 finalized)</span></dd></dl>')
+    content = content.replace("</header>", "</header>\n" + meta, 1)
+    c = counts(idx)
+    count_line = f'{c["sprints"]} Sprints · {c["records"]} Indexed Records'
+    reg = idx["onchain_anchoring"]["commitment_registry"]
+    body = f"""<body>
+{topbar("../../")}
+<main id="main" class="memo-wrap">
+<div class="crumbs"><a href="../../">Pacta</a> / <a href="../../#radar">Timelock radar</a> / Pre-execution brief</div>
+<article class="memo">
+{content}</article>
+<div class="memo-foot"><span>Read-only on-chain analysis. Not investment advice. Exploit-sensitive findings are disclosed privately, never here.</span><a href="../../request/">Get briefs like this for your collateral →</a></div>
+</main>
+{footer(count_line, reg, "../../")}
+</body></html>
+"""
+    return head(title, desc, f"{BASE_URL}/briefs/{slug}/", prefix="../../", og_title=title, og_type="article") + "\n" + body
 
 
 def llms(idx, radar):
@@ -308,11 +646,11 @@ def llms(idx, radar):
         f"> Block-pinned control-plane snapshots and pre-execution timelock alerts for DeFi collateral. {c['sprints']} Sprints · {c['records']} Indexed Records.", "",
         "Pacta checks who can change the rules of DeFi protocols (proxy admins, timelock delays, Safe quorums, roles) and compares that with what the protocols document. Every record is a read-only on-chain observation pinned to an Ethereum Mainnet block number and canonical block hash.", "",
         "## Data",
-        f"- [{BASE_URL}/api/v1/index.json]({BASE_URL}/api/v1/index.json): schema `{idx['schema']}`; `summary_metrics` (sprints_completed={c['sprints']}, records_indexed={c['records']}, parameter_deltas={c['delta']}, protective_deltas={c['protect']}, aligned_baselines={c['aligned']}); each entry has id, protocol, category, sprint, block_number, block_hash, classification, surface, target_contract, target_label, check_type, selector_or_slot, onchain_observed, documented_reference, observed/documented delay seconds, summary_doc, summary_sha256, base_eas_uid.",
+        f"- [{BASE_URL}/api/v1/index.json]({BASE_URL}/api/v1/index.json): schema `{idx['schema']}`; `summary_metrics` (sprints_completed={c['sprints']}, records_indexed={c['records']}, parameter_deltas={c['delta']}, protective_deltas={c['protect']}, aligned_baselines={c['aligned']}); each entry has id, protocol, category, sprint, block_number, block_hash, classification, surface, target_contract, target_label, check_type, selector_or_slot, call_signature, call_args, repro_calldata, onchain_observed, documented_reference, observed/documented delay seconds, summary_doc, summary_sha256, base_eas_uid.",
         f"- [{BASE_URL}/api/v1/radar.json]({BASE_URL}/api/v1/radar.json): queued timelock operations, refreshed at finalized block {r['block_number']} ({r['block_time_utc']}).", "",
         "## Live pre-execution briefs",
     ] + [f"- [{BASE_URL}/briefs/{k}/]({BASE_URL}/briefs/{k}/): {v}" for k, v in BRIEFS.items()] + [
-        f"- [{BASE_URL}/demos/swapio-x402/]({BASE_URL}/demos/swapio-x402/): 90-second x402 storyboard (TreasuryGuard).", "",
+        f"- [{BASE_URL}/demos/swapio-x402/]({BASE_URL}/demos/swapio-x402/): 90-second x402 storyboard (TreasuryGuard) with a live, on-chain-verified Base USDC settlement receipt.", "",
         "## Methodology",
         "- Scanner seats replay read-only eth_call / eth_getStorageAt at the cited block (two independent archive RPCs); an isolated verifier seat re-checks selectors, EIP-55 checksums, EIP-1967 slots and arithmetic offline.",
         "- Classifications: parameter_delta (on-chain differs from docs), protective_delta (a change that strengthens controls), aligned_baseline (on-chain matches docs).",
@@ -321,6 +659,9 @@ def llms(idx, radar):
         f"- PactaCommitmentRegistry: `{a['commitment_registry']}` (Sourcify verified); attester `pacta.base.eth` (`{a['attester_eoa']}`).",
         f"- EAS schema: `{a['eas_schema_uid']}`; {c['eas_n']} sprint attestations for Sprints {c['eas_from']}–{c['eas_to']} (multi-attest tx `{c['multi_tx']}`).",
         f"- Sprints {c['pending']}: pinned by canonical block hash + SHA-256 summary digest in /api/v1/index.json until batch-attested.", "",
+        "## Engagements",
+        f"- Request coverage: {BASE_URL}/request/ (builds a scope brief; opens a pre-filled GitHub intake issue or Gmail compose, or copies the brief).",
+        "- Tracks: public index (free); private disclosure (free); Institutional Curator Radar ($3,000/month); Protocol Commitment CI Gate ($5,000/year).", "",
         "## x402 paid API (USDC on Base)",
         "- Planned endpoint: https://api.pacta.wtf (deployment pending; not yet live). Routes: `GET /v1/scan/control-plane?chain=&address=` ($0.10), `GET /v1/scan/timelock-op?timelock=&opId=` ($0.25), `GET /v1/briefs/live-timelocks` ($0.10); free `/health`, `/.well-known/x402`, `/v1/sample/control-plane`.", "",
         "## Contact",
@@ -329,51 +670,27 @@ def llms(idx, radar):
     return "\n".join(lines)
 
 
-def inject_brief_meta(slug, desc):
-    p = os.path.join(DOCS, "briefs", slug, "index.html")
-    s = open(p).read()
-    s = re.sub(r"\n?<!-- pacta-meta v2 -->.*?<!-- /pacta-meta -->", "", s, flags=re.S)
-    t = re.search(r"<title>(.*?)</title>", s, re.S)
-    url = f"{BASE_URL}/briefs/{slug}/"
-    meta = "\n".join([
-        "<!-- pacta-meta v2 -->",
-        f'<meta name="description" content="{E(desc)}">',
-        f'<link rel="canonical" href="{url}">',
-        '<meta property="og:type" content="article">',
-        '<meta property="og:site_name" content="Pacta by Fractal Neurons">',
-        f'<meta property="og:title" content="{t.group(1).strip()}">',
-        f'<meta property="og:description" content="{E(desc)}">',
-        f'<meta property="og:url" content="{url}">',
-        f'<meta property="og:image" content="{BASE_URL}/og-preview.png">',
-        '<meta property="og:image:width" content="1200">',
-        '<meta property="og:image:height" content="630">',
-        '<meta name="twitter:card" content="summary_large_image">',
-        f'<meta name="twitter:title" content="{t.group(1).strip()}">',
-        f'<meta name="twitter:description" content="{E(desc)}">',
-        f'<meta name="twitter:image" content="{BASE_URL}/og-preview.png">',
-        '<link rel="icon" href="/favicon.svg" type="image/svg+xml">',
-        '<link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">',
-        "<!-- /pacta-meta -->"])
-    s = s.replace(t.group(0), t.group(0) + "\n" + meta, 1)
-    open(p, "w").write(s)
-
-
 def main():
     idx, radar = load()
     today = dt.date.today().isoformat()
-    w = lambda rel, text: open(os.path.join(DOCS, rel), "w").write(text)
+
+    def w(rel, text):
+        p = os.path.join(DOCS, rel)
+        os.makedirs(os.path.dirname(p), exist_ok=True)
+        with open(p, "w") as fh:
+            fh.write(text)
     w("index.html", page(idx, radar))
+    w("request/index.html", request_page(idx))
+    for slug, desc in BRIEFS.items():
+        w(f"briefs/{slug}/index.html", brief_page(slug, desc, idx, radar))
     w("llms.txt", llms(idx, radar))
     w("robots.txt", f"User-agent: *\nAllow: /\n\nSitemap: {BASE_URL}/sitemap.xml\n")
-    urls = ["/", "/llms.txt", "/api/v1/index.json", "/api/v1/radar.json"] + [f"/briefs/{k}/" for k in BRIEFS] + ["/demos/swapio-x402/"]
+    urls = ["/", "/request/", "/llms.txt", "/api/v1/index.json", "/api/v1/radar.json"] + [f"/briefs/{k}/" for k in BRIEFS] + ["/demos/swapio-x402/"]
     w("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
       + "".join(f"  <url><loc>{BASE_URL}{u}</loc><lastmod>{today}</lastmod></url>\n" for u in urls) + "</urlset>\n")
-    os.makedirs(os.path.join(DOCS, ".well-known"), exist_ok=True)
     w(".well-known/security.txt", f"Contact: mailto:{CONTACT}\nExpires: 2027-11-13T00:00:00.000Z\nPreferred-Languages: en\n"
       f"Canonical: {BASE_URL}/.well-known/security.txt\nPolicy: {BASE_URL}/#faq\n")
     w(".nojekyll", "")    # GitHub Pages: serve dot-directories such as /.well-known/
-    for slug, desc in BRIEFS.items():
-        inject_brief_meta(slug, desc)
     c = counts(idx)
     print(f"built: {c['sprints']} sprints, {c['records']} records; radar block {radar['refreshed_at']['block_number']}; base {BASE_URL}")
 

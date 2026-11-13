@@ -5,14 +5,14 @@
 Pacta checks who can change the rules of DeFi protocols (proxy admins, timelock delays, Safe quorums, roles) and compares that with what the protocols document. Every record is a read-only on-chain observation pinned to an Ethereum Mainnet block number and canonical block hash.
 
 ## Data
-- [https://pacta.wtf/api/v1/index.json](https://pacta.wtf/api/v1/index.json): schema `pacta.counterparty_control_index.v1`; `summary_metrics` (sprints_completed=14, records_indexed=37, parameter_deltas=14, protective_deltas=4, aligned_baselines=19); each entry has id, protocol, category, sprint, block_number, block_hash, classification, surface, target_contract, target_label, check_type, selector_or_slot, onchain_observed, documented_reference, observed/documented delay seconds, summary_doc, summary_sha256, base_eas_uid.
+- [https://pacta.wtf/api/v1/index.json](https://pacta.wtf/api/v1/index.json): schema `pacta.counterparty_control_index.v1`; `summary_metrics` (sprints_completed=14, records_indexed=37, parameter_deltas=14, protective_deltas=4, aligned_baselines=19); each entry has id, protocol, category, sprint, block_number, block_hash, classification, surface, target_contract, target_label, check_type, selector_or_slot, call_signature, call_args, repro_calldata, onchain_observed, documented_reference, observed/documented delay seconds, summary_doc, summary_sha256, base_eas_uid.
 - [https://pacta.wtf/api/v1/radar.json](https://pacta.wtf/api/v1/radar.json): queued timelock operations, refreshed at finalized block 26406890 (2026-11-13 15:18 UTC).
 
 ## Live pre-execution briefs
 - [https://pacta.wtf/briefs/ethena-ops-0x0ca0-0x1fe5/](https://pacta.wtf/briefs/ethena-ops-0x0ca0-0x1fe5/): Pre-execution brief: two queued Ethena timelock operations onboard RLUSD and USAT to EthenaMinting at 200M / 20M USDe-per-block caps (1-day delay; ETAs 2026-11-14 10:20–10:22 UTC).
 - [https://pacta.wtf/briefs/etherfi-op-0x244e/](https://pacta.wtf/briefs/etherfi-op-0x244e/): Pre-execution brief: ether.fi operation 0x244e…359f moves the EtherfiL1SyncPoolETH LayerZero V2 delegate behind the 10-day EtherFiTimelock (ETA 2026-11-20 16:54 UTC).
 - [https://pacta.wtf/briefs/treehouse-op-0x2f11/](https://pacta.wtf/briefs/treehouse-op-0x2f11/): Pre-execution brief: a queued 5-day timelock operation upgrades the Treehouse TREE token (not tETH) and installs a 5-of-7 Safe blacklister (ETA 2026-11-17 04:51 UTC).
-- [https://pacta.wtf/demos/swapio-x402/](https://pacta.wtf/demos/swapio-x402/): 90-second x402 storyboard (TreasuryGuard).
+- [https://pacta.wtf/demos/swapio-x402/](https://pacta.wtf/demos/swapio-x402/): 90-second x402 storyboard (TreasuryGuard) with a live, on-chain-verified Base USDC settlement receipt.
 
 ## Methodology
 - Scanner seats replay read-only eth_call / eth_getStorageAt at the cited block (two independent archive RPCs); an isolated verifier seat re-checks selectors, EIP-55 checksums, EIP-1967 slots and arithmetic offline.
@@ -23,6 +23,10 @@ Pacta checks who can change the rules of DeFi protocols (proxy admins, timelock 
 - PactaCommitmentRegistry: `0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872` (Sourcify verified); attester `pacta.base.eth` (`0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09`).
 - EAS schema: `0x7ff485bc1159dff3c70eefcb9dff2d65be990301760c2d53799e5a45e3badf83`; 12 sprint attestations for Sprints 1–12 (multi-attest tx `0x8c53e155a4b2f28ffbf069f1b65952fc8f7d81740f362b8aafb39493c6bd001b`).
 - Sprints 13–14: pinned by canonical block hash + SHA-256 summary digest in /api/v1/index.json until batch-attested.
+
+## Engagements
+- Request coverage: https://pacta.wtf/request/ (builds a scope brief; opens a pre-filled GitHub intake issue or Gmail compose, or copies the brief).
+- Tracks: public index (free); private disclosure (free); Institutional Curator Radar ($3,000/month); Protocol Commitment CI Gate ($5,000/year).
 
 ## x402 paid API (USDC on Base)
 - Planned endpoint: https://api.pacta.wtf (deployment pending; not yet live). Routes: `GET /v1/scan/control-plane?chain=&address=` ($0.10), `GET /v1/scan/timelock-op?timelock=&opId=` ($0.25), `GET /v1/briefs/live-timelocks` ($0.10); free `/health`, `/.well-known/x402`, `/v1/sample/control-plane`.

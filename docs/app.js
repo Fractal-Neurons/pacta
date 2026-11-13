@@ -1,6 +1,6 @@
-// Pacta site v2: theme toggle, zero-wallet control-plane inspector, radar countdowns, matrix filter.
+// Pacta site v3: theme, live countdowns, copy buttons, control-plane inspector, index filter + drawers, request builder.
 // No wallet, no trackers, no third-party requests: data comes from this site's own /api/v1/*.json files.
-// All record text is inserted with textContent (never innerHTML).
+// Record text is inserted with textContent (never innerHTML). Every control works without a mail client.
 (function () {
   "use strict";
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -8,29 +8,31 @@
   function el(tag, attrs, kids) {
     var n = document.createElement(tag);
     Object.keys(attrs || {}).forEach(function (k) { if (k === "text") n.textContent = attrs[k]; else n.setAttribute(k, attrs[k]); });
-    (kids || []).forEach(function (c) { if (c) n.appendChild(typeof c === "string" ? document.createTextNode(c) : c); });
+    (kids || []).forEach(function (c) { if (c !== null && c !== undefined) n.appendChild(typeof c === "string" ? document.createTextNode(c) : c); });
     return n;
   }
+  function short(h, a, b) { return h.slice(0, a) + "…" + h.slice(-b); }
+  function num(n) { return Number(n).toLocaleString("en-US"); }
 
-  // ---- theme ----------------------------------------------------------------------------------------
+  // ---- theme: Paper (default) / Slate ---------------------------------------------------------------
   function applyTheme(t) {
-    if (t === "paper") document.documentElement.setAttribute("data-theme", "paper");
+    if (t === "slate") document.documentElement.setAttribute("data-theme", "slate");
     else document.documentElement.removeAttribute("data-theme");
-    $$(".theme-toggle span").forEach(function (s) { s.classList.toggle("on", s.getAttribute("data-t") === (t === "paper" ? "paper" : "slate")); });
-    var b = $(".theme-toggle"); if (b) b.setAttribute("aria-label", "Theme: " + (t === "paper" ? "Paper" : "Slate") + " (switch)");
+    $$(".tt span").forEach(function (s) { s.classList.toggle("on", s.getAttribute("data-t") === (t === "slate" ? "slate" : "paper")); });
+    var b = $(".tt"); if (b) b.setAttribute("aria-label", "Theme: " + (t === "slate" ? "Slate (switch to Paper)" : "Paper (switch to Slate)"));
   }
   function initTheme() {
     var t = null; try { t = localStorage.getItem("pacta-theme"); } catch (e) {}
     applyTheme(t);
-    var b = $(".theme-toggle");
+    var b = $(".tt");
     if (b) b.addEventListener("click", function () {
-      var next = document.documentElement.getAttribute("data-theme") === "paper" ? "slate" : "paper";
+      var next = document.documentElement.getAttribute("data-theme") === "slate" ? "paper" : "slate";
       try { localStorage.setItem("pacta-theme", next); } catch (e) {}
       applyTheme(next);
     });
   }
 
-  // ---- countdowns -------------------------------------------------------------------------------------
+  // ---- countdowns (an ETA is when execution becomes possible, not a guarantee) -----------------------
   function fmt(sec) {
     var d = Math.floor(sec / 86400), h = Math.floor(sec % 86400 / 3600), m = Math.floor(sec % 3600 / 60);
     return (d ? d + "d " : "") + h + "h " + m + "m";
@@ -44,119 +46,301 @@
     });
   }
 
-  // ---- matrix filter ----------------------------------------------------------------------------------
-  function initMatrix() {
-    var q = $("#matrix-q"), rows = $$("#matrix tbody tr"), count = $("#matrix-count"), cls = "all";
-    if (!rows.length) return;
-    function apply() {
-      var t = (q && q.value || "").trim().toLowerCase(), shown = 0;
-      rows.forEach(function (r) {
-        var ok = (cls === "all" || r.getAttribute("data-class") === cls) && (!t || r.getAttribute("data-search").indexOf(t) >= 0);
-        r.hidden = !ok; if (ok) shown++;
-      });
-      if (count) count.textContent = shown + " of " + rows.length + " records shown";
-    }
-    if (q) q.addEventListener("input", apply);
-    $$(".chip[data-class]").forEach(function (c) {
-      c.addEventListener("click", function () {
-        cls = c.getAttribute("data-class");
-        $$(".chip[data-class]").forEach(function (o) { o.setAttribute("aria-pressed", String(o === c)); });
-        apply();
-      });
+  // ---- copy to clipboard (works on http(s) and file://) ---------------------------------------------
+  function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text);
+    return new Promise(function (resolve, reject) {
+      var ta = el("textarea", { readonly: "", style: "position:fixed;top:-1000px;opacity:0" });
+      ta.value = text; document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy") ? resolve() : reject(); } catch (e) { reject(e); } finally { ta.remove(); }
     });
-    apply();
+  }
+  function flash(btn, ok) {
+    if (!btn.hasAttribute("data-label")) btn.setAttribute("data-label", btn.innerHTML);   // our own static markup
+    clearTimeout(btn._t);
+    btn.classList.toggle("done", ok);
+    btn.textContent = ok ? "Copied!" : "Select and press Ctrl+C";
+    btn._t = setTimeout(function () { btn.innerHTML = btn.getAttribute("data-label"); btn.classList.remove("done"); }, 1600);
+  }
+  function initCopy() {
+    document.addEventListener("click", function (ev) {
+      var b = ev.target.closest("[data-copy],[data-copy-from],[data-copy-term]");
+      if (!b) return;
+      ev.preventDefault(); ev.stopPropagation();
+      var src = b.hasAttribute("data-copy-term") ? $("pre", b.closest(".term")) : $("#" + b.getAttribute("data-copy-from"));
+      var text = b.hasAttribute("data-copy") ? b.getAttribute("data-copy") : (src ? src.textContent : "");
+      copyText(text).then(function () {
+        flash(b, true);
+        var st = $("#req-status"); if (st && b.closest("#req-form")) st.textContent = "Copied! Paste it into an email to " + REQ_TO + " from any mail app.";
+      }, function () { flash(b, false); });
+    });
   }
 
-  // ---- inspector --------------------------------------------------------------------------------------
-  var DATA = null, FINAL = 0;
+  // ---- data -------------------------------------------------------------------------------------------
+  var DATA = null, BYID = {};
+  function loadData() {
+    return fetch(document.documentElement.getAttribute("data-api") || "api/v1/index.json")
+      .then(function (r) { return r.json(); })
+      .then(function (d) { DATA = d; d.entries.forEach(function (e) { BYID[e.id] = e; }); return d; });
+  }
+
+  // ---- record rendering (mirrors sheet() in tools/build_site.py) -------------------------------------
+  var CLS = { parameter_delta: ["delta", "Parameter delta"], protective_delta: ["protect", "Protective delta"], aligned_baseline: ["", "Aligned baseline"] };
+  function badge(c, text, extra) { var k = CLS[c] || CLS.aligned_baseline; return el("span", { "class": ("badge " + (extra || k[0])).trim(), text: text || k[1] }); }
+  // Exact compact duration: 0 -> 0s, 1 -> 1s, 86400 -> 1d, 129600 -> 1d 12h (mirrors secs() in tools/build_site.py)
   function secs(s) {
-    if (s === null || s === undefined) return "not documented";
-    var d = s / 86400; return (d >= 1 && Number.isInteger(d) ? d + "d" : (s / 3600) + "h") + " (" + Number(s).toLocaleString("en-US") + "s)";
+    if (s === null || s === undefined) return "—";
+    var parts = []; s = Math.floor(s);
+    [["d", 86400], ["h", 3600], ["m", 60], ["s", 1]].forEach(function (u) {
+      if (s >= u[1]) { parts.push(Math.floor(s / u[1]) + u[0]); s = s % u[1]; }
+    });
+    return parts.join(" ") || "0s";
+  }
+  function copyBtn(v, label) { return el("button", { "class": "copy", type: "button", "data-copy": v, text: label || "Copy" }); }
+  function hexref(v, a, b) { return [el("span", { "class": "addr", title: v, text: short(v, a || 6, b || 4) }), copyBtn(v)]; }
+  function delayCmp(e) {
+    var o = e.observed_delay_seconds, d = e.documented_delay_seconds;
+    if ((o === null || o === undefined) && (d === null || d === undefined)) return el("span", { "class": "muted", text: "No timelock delay in this record" });
+    var warn = o !== null && o !== undefined && d !== null && d !== undefined && o !== d;
+    return el("span", { "class": "cmp" }, [
+      el("span", { "class": "chip obs" + (warn ? " warn" : "") }, [el("i", { text: "Observed" }), el("b", { text: secs(o) })]),
+      el("span", { "class": "vs", text: "vs" }),
+      el("span", { "class": "chip" }, [el("i", { text: "Docs" }), el("b", { text: secs(d) })])]);
   }
   function multisig(text) {
-    var m = text.match(/\b\d+-of-\d+\b/g) || [];
-    var seen = []; m.forEach(function (x) { if (seen.indexOf(x) < 0) seen.push(x); });
-    var guard = /\bguard\b/i.test(text) ? "Safe guard referenced in record" : (/\bmodule\b/i.test(text) ? "Safe module referenced in record" : "Safe modules / guard: not probed in this record");
-    return { quorum: seen.length ? seen.join(" · ") : "no Safe quorum in this record", guard: guard };
+    var seen = []; (text.match(/\b\d+-of-\d+\b/g) || []).forEach(function (x) { if (seen.indexOf(x) < 0) seen.push(x); });
+    return seen.length ? seen.join(" · ") : null;
   }
   function proxyAdmin(text) {
     var m = text.match(/ProxyAdmin \((0x[0-9a-fA-F]{40})\)/) || text.match(/admin\(\) = [A-Za-z ]*\((0x[0-9a-fA-F]{40})\)/);
     return m ? m[1] : null;
   }
-  function roles(text) {
-    var m = text.match(/(PROPOSER_ROLE[^;.)]*|EXECUTOR_ROLE[^;.)]*|DEFAULT_ADMIN_ROLE[^;.)]*)/g);
-    return m ? m.slice(0, 2).join("; ") : "roles not enumerated in this record";
-  }
-  // Runnable as-is: full signature + every argument (call_signature / call_args in /api/v1/index.json);
-  // repro_calldata is the exact ABI-encoded calldata for raw eth_call users.
+  // Runnable as-is: full signature + every argument (call_signature / call_args in /api/v1/index.json).
   function castCmd(e) {
     var rpc = '--rpc-url "$ETH_RPC_URL"';
     var first = e.check_type === "eth_getStorageAt"
-      ? "cast storage " + e.target_contract + " " + e.selector_or_slot + " --block " + e.block_number + " " + rpc
-      : "cast call " + e.target_contract + ' "' + (e.call_signature || e.selector_or_slot) + '"' +
-        (e.call_args && e.call_args.length ? " " + e.call_args.join(" ") : "") + " --block " + e.block_number + " " + rpc;
-    return first + "\ncast block " + e.block_number + " --field hash " + rpc + "   # expect " + e.block_hash;
+      ? "cast storage " + e.target_contract + " \\\n  " + e.selector_or_slot + " \\\n  --block " + e.block_number + " " + rpc
+      : "cast call " + e.target_contract + ' \\\n  "' + (e.call_signature || e.selector_or_slot) + '"' +
+        (e.call_args && e.call_args.length ? " " + e.call_args.join(" ") : "") + " \\\n  --block " + e.block_number + " " + rpc;
+    return first + "\ncast block " + e.block_number + " --field hash " + rpc + "\n# expect " + e.block_hash;
   }
-  function cell(title, kids) { return el("div", { "class": "cell" }, [el("h3", { text: title })].concat(kids)); }
-  function render(e) {
+  function term(cmd, title) {
+    return el("div", { "class": "term" }, [
+      el("div", { "class": "term-h" }, [el("span", { text: title || "Reproduce on any archive node" }),
+        el("button", { "class": "copy", type: "button", "data-copy-term": "", text: "Copy command" })]),
+      el("pre", { text: cmd })]);
+  }
+  function proof(e) {
+    if (e.base_eas_uid) return el("a", { href: "https://base.easscan.org/attestation/view/" + e.base_eas_uid, target: "_blank", rel: "noopener", text: "Base EAS attestation " + short(e.base_eas_uid, 6, 4) + " ↗" });
+    return el("span", { text: "Pending Base EAS batch attestation · pinned by block hash and summary SHA-256" });
+  }
+  // 32-byte hashes in prose are shortened with the full value in a tooltip (mirrors prose() in build_site.py)
+  function prose(text) {
+    var out = [], last = 0, re = /0x[0-9a-fA-F]{64}(?![0-9a-fA-F])/g, m;
+    while ((m = re.exec(text))) {
+      out.push(text.slice(last, m.index));
+      out.push(el("span", { "class": "hx", title: m[0], text: short(m[0], 8, 6) }));
+      last = m.index + m[0].length;
+    }
+    out.push(text.slice(last));
+    return out;
+  }
+  function renderSheet(e) {
     var panel = $("#insp-panel"); if (!panel || !e) return;
+    var obs = e.onchain_observed || "", ms = multisig(obs), pa = proxyAdmin(obs);
+    var repo = "https://github.com/Fractal-Neurons/pacta/blob/main/";
+    var rows = [
+      ["Category", [e.category]],
+      ["Target contract", [e.target_label + " · "].concat(hexref(e.target_contract))],
+      ["Timelock delay", [delayCmp(e)]]];
+    if (ms) rows.push(["Safe quorum", [el("span", { "class": "mono", text: ms })]]);
+    if (pa) rows.push(["EIP-1967 ProxyAdmin", hexref(pa)]);
+    rows.push(["Pinned block", [el("span", { "class": "num", text: "#" + num(e.block_number) }), " · Sprint " + e.sprint + " ",
+      badge(null, "Scanner-pinned (L1 finalized)", "final")]]);
+    rows.push(["Canonical block hash", hexref(e.block_hash, 8, 6)]);
+    rows.push(["Proof", [proof(e)]]);
+    rows.push(["Summary", [el("a", { href: repo + e.summary_doc, target: "_blank", rel: "noopener", text: e.summary_doc.split("/").pop() + " ↗" }), " · SHA-256 "].concat(hexref(e.summary_sha256, 8, 4))]);
+    var dl = el("dl", { "class": "kv" });
+    rows.forEach(function (r) { dl.appendChild(el("dt", { text: r[0] })); dl.appendChild(el("dd", {}, r[1])); });
     panel.textContent = "";
-    var fin = FINAL && e.block_number <= FINAL;
-    var ms = multisig(e.onchain_observed || ""), pa = proxyAdmin(e.onchain_observed || "");
-    var differs = e.documented_delay_seconds !== null && e.observed_delay_seconds !== null && e.documented_delay_seconds !== e.observed_delay_seconds;
-    var cls = e.classification === "parameter_delta" ? "delta" : (e.classification === "protective_delta" ? "protect" : "ok");
-    panel.appendChild(el("div", {}, [el("b", { text: e.protocol + " " }), el("span", { "class": "badge " + cls, text: e.classification.replace("_", " ") }),
-      el("span", { "class": "count", text: "  Sprint " + e.sprint + " · " + e.surface })]));
-    panel.appendChild(cell("(a) Pinned block & canonical hash", [el("p", {}, ["#" + Number(e.block_number).toLocaleString("en-US") + " ",
-      el("span", { "class": "badge" + (fin ? " ok" : ""), text: fin ? "Scanner-pinned (L1 finalized)" : "Scanner-pinned (finality: check head)" })]), el("p", { "class": "addr", text: e.block_hash })]));
-    panel.appendChild(cell("(b) Multisig / Safe posture", [el("p", { text: ms.quorum }), el("p", { "class": "count", text: ms.guard })]));
-    panel.appendChild(cell("(c) Timelock & proxy control plane", [
-      el("p", {}, ["minDelay observed " + secs(e.observed_delay_seconds) + " vs docs " + secs(e.documented_delay_seconds) + " ",
-        differs ? el("span", { "class": "badge delta", text: "differs from docs" }) : null]),
-      el("p", { "class": "count", text: "Roles: " + roles(e.onchain_observed || "") }),
-      el("p", { "class": "count", text: "EIP-1967 ProxyAdmin: " + (pa || "not applicable / not in this record") })]));
-    var cmd = castCmd(e);
-    var copy = el("button", { "class": "copy", type: "button", text: "Copy" });
-    copy.addEventListener("click", function () { if (navigator.clipboard) navigator.clipboard.writeText(cmd).then(function () { copy.textContent = "Copied"; setTimeout(function () { copy.textContent = "Copy"; }, 1500); }); });
-    var eas = e.base_eas_uid
-      ? el("a", { href: "https://base.easscan.org/attestation/view/" + e.base_eas_uid, target: "_blank", rel: "noopener", text: "Base EAS attestation ↗" })
-      : el("span", { "class": "count", text: "Base EAS: pending batch attestation — pinned by block hash + SHA-256 " + String(e.summary_sha256).slice(0, 18) + "…" });
-    panel.appendChild(cell("(d) Reproduce it yourself", [el("div", { "class": "cmd" }, [el("pre", { text: cmd }), copy]), el("p", {}, [eas])]));
-    panel.appendChild(el("p", { "class": "count", text: e.onchain_observed }));
+    panel.appendChild(el("div", { "class": "sheet-h" }, [el("h3", { text: e.protocol }), badge(e.classification)]));
+    panel.appendChild(el("p", { "class": "sheet-sub", text: e.surface }));
+    panel.appendChild(dl);
+    panel.appendChild(el("p", { "class": "obs-text" }, prose(obs)));
+    panel.appendChild(term(castCmd(e)));
   }
-  function pick(key) {
-    if (!DATA) return;
-    var list = DATA.entries.filter(function (e) { return e.protocol.toLowerCase().indexOf(key.toLowerCase()) >= 0; })
-      .sort(function (a, b) { return b.sprint - a.sprint; });
-    $$(".pill").forEach(function (p) { p.setAttribute("aria-pressed", String(p.getAttribute("data-key") === key)); });
-    showResults(list); render(list[0]);
-  }
-  function showResults(list) {
-    var box = $("#insp-results"); if (!box) return;
-    box.textContent = "";
-    list.slice(0, 12).forEach(function (e) {
-      var b = el("button", { type: "button", text: e.protocol + " · S" + e.sprint + " · " + e.target_label });
-      b.addEventListener("click", function () { render(e); });
-      box.appendChild(b);
+
+  // ---- inspector workbench ---------------------------------------------------------------------------
+  function initInspector() {
+    var list = $("#insp-list"); if (!list) return;
+    var q = $("#insp-q"), count = $("#insp-count"), filt = "all";
+    var links = $$("a[data-id]", list);
+    function select(id, scroll) {
+      var e = BYID[id]; if (!e) return false;
+      links.forEach(function (a) { a.setAttribute("aria-current", String(a.getAttribute("data-id") === id)); });
+      renderSheet(e);
+      if (scroll) $("#inspector").scrollIntoView({ behavior: "smooth", block: "start" });
+      return true;
+    }
+    function apply() {
+      var t = (q && q.value || "").trim().toLowerCase(), shown = 0;
+      links.forEach(function (a) {
+        var e = BYID[a.getAttribute("data-id")];
+        var hay = e ? JSON.stringify(e).toLowerCase() : a.textContent.toLowerCase();
+        var ok = (filt === "all" || a.getAttribute("data-class") === filt) && (!t || hay.indexOf(t) >= 0);
+        a.parentNode.hidden = !ok; if (ok) shown++;
+      });
+      if (count) count.textContent = shown + " of " + links.length + " records";
+    }
+    list.addEventListener("click", function (ev) {
+      var a = ev.target.closest("a[data-id]"); if (!a || !DATA) return;   // without data, the link opens the index drawer
+      ev.preventDefault(); select(a.getAttribute("data-id"), false);
+    });
+    list.addEventListener("keydown", function (ev) {
+      if (ev.key !== "ArrowDown" && ev.key !== "ArrowUp") return;
+      var vis = links.filter(function (a) { return !a.parentNode.hidden; }), i = vis.indexOf(document.activeElement);
+      if (i < 0) return; ev.preventDefault();
+      var n = vis[Math.max(0, Math.min(vis.length - 1, i + (ev.key === "ArrowDown" ? 1 : -1)))]; n.focus(); select(n.getAttribute("data-id"), false);
+    });
+    if (q) q.addEventListener("input", function () {
+      apply();
+      var first = links.filter(function (a) { return !a.parentNode.hidden; })[0];
+      if (first && q.value.trim()) select(first.getAttribute("data-id"), false);
+    });
+    $$(".bench-filter button").forEach(function (b) {
+      b.addEventListener("click", function () {
+        filt = b.getAttribute("data-f");
+        $$(".bench-filter button").forEach(function (o) { o.setAttribute("aria-pressed", String(o === b)); });
+        apply();
+      });
+    });
+    document.addEventListener("click", function (ev) {
+      var b = ev.target.closest("[data-inspect]"); if (!b || !DATA) return;
+      ev.preventDefault(); select(b.getAttribute("data-inspect"), true);
     });
   }
-  function initInspector() {
-    var search = $("#insp-q");
-    Promise.all([fetch("api/v1/index.json").then(function (r) { return r.json(); }),
-                 fetch("api/v1/radar.json").then(function (r) { return r.json(); }).catch(function () { return null; })])
-      .then(function (res) {
-        DATA = res[0]; FINAL = res[1] && res[1].refreshed_at ? res[1].refreshed_at.block_number : 0;
-        $$(".pill").forEach(function (p) { p.addEventListener("click", function () { pick(p.getAttribute("data-key")); }); });
-        if (search) search.addEventListener("input", function () {
-          var t = search.value.trim().toLowerCase(); if (!t) return;
-          var list = DATA.entries.filter(function (e) { return JSON.stringify(e).toLowerCase().indexOf(t) >= 0; });
-          showResults(list); if (list.length) render(list[0]);
-        });
-        pick("Ethena");
-      }).catch(function () { /* static fallback stays visible */ });
+
+  // ---- public index: filter + inline drawers ---------------------------------------------------------
+  function initIndex() {
+    var rows = $$("#matrix tbody tr.rec"); if (!rows.length) return;
+    var q = $("#matrix-q"), count = $("#matrix-count"), cls = "all";
+    function drawer(r) { return document.getElementById("r-" + r.getAttribute("data-id")); }
+    function toggle(r, open) {
+      var d = drawer(r); if (!d) return;
+      open = open === undefined ? !d.classList.contains("open") : open;
+      d.classList.toggle("open", open); r.classList.toggle("open", open);
+      var b = $(".inspect-btn", r); if (b) { b.setAttribute("aria-expanded", String(open)); b.textContent = open ? "Close" : "Details"; }
+    }
+    function apply() {
+      var t = (q && q.value || "").trim().toLowerCase(), shown = 0;
+      rows.forEach(function (r) {
+        var ok = (cls === "all" || r.getAttribute("data-class") === cls) && (!t || r.getAttribute("data-search").indexOf(t) >= 0);
+        r.hidden = !ok; if (!ok) toggle(r, false); else shown++;
+      });
+      if (count) count.textContent = shown + " of " + rows.length + " records shown";
+    }
+    rows.forEach(function (r) {
+      r.addEventListener("click", function (ev) {
+        if (ev.target.closest("a:not(.inspect-btn),button")) return;
+        ev.preventDefault(); toggle(r);
+      });
+    });
+    if (q) q.addEventListener("input", apply);
+    $$("#index .seg button").forEach(function (b) {
+      b.addEventListener("click", function () {
+        cls = b.getAttribute("data-class");
+        $$("#index .seg button").forEach(function (o) { o.setAttribute("aria-pressed", String(o === b)); });
+        apply();
+      });
+    });
+    function openFromHash() {
+      var m = location.hash.match(/^#r-(.+)$/); if (!m) return;
+      var id = m[1];
+      try { id = decodeURIComponent(id); } catch (e) { /* keep the raw fragment */ }
+      var r = rows.filter(function (x) { return x.getAttribute("data-id") === id; })[0]; if (!r) return;   // no selector parsing
+      r.hidden = false; toggle(r, true); r.scrollIntoView({ block: "center" });
+    }
+    document.addEventListener("click", function (ev) {
+      var a = ev.target.closest("a[data-open]"); if (!a) return;
+      ev.preventDefault();
+      var oid = a.getAttribute("data-open"), r = rows.filter(function (x) { return x.getAttribute("data-id") === oid; })[0]; if (!r) return;
+      r.hidden = false; toggle(r, true); r.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+    window.addEventListener("hashchange", openFromHash);
+    openFromHash();
+    apply();
+  }
+
+  // ---- request builder: brief + GitHub intake + Gmail compose + copy ---------------------------------
+  var REQ_TO = "pacta@dri.network";
+  var TRACK = {
+    radar: ["Institutional Curator Radar ($3,000/month)", "Institutional Curator Counterparty & Timelock Alerting Feed ($2,000–$5,000 USDC/mo)"],
+    ci: ["Protocol Commitment CI Gate ($5,000/year)", "Protocol Continuous Commitment CI & Pre-Flight Proposal Gate ($3,000–$10,000 USDC/yr)"],
+    index: ["Public index entry (free)", null],
+    disclosure: ["Private disclosure (free)", null]
+  };
+  function initRequest() {
+    var form = $("#req-form"); if (!form) return;
+    var out = $("#req-brief"), gh = $("#req-gh"), gm = $("#req-gmail"), warn = $("#req-warn"), st = $("#req-status");
+    function val(n) { var x = form.elements[n]; return x ? String(x.value || "").trim() : ""; }
+    function tier() { var x = $('input[name="tier"]:checked', form); return x ? x.value : "radar"; }
+    function protocols() { return $$('input[name="protocol"]:checked', form).map(function (x) { return x.value; }); }
+    function update() {
+      var t = tier(), ps = protocols(), org = val("org"), scope = val("scope"), contact = val("contact");
+      var lines = ["To: " + REQ_TO, "Subject: Pacta coverage request" + (org ? " — " + org : ""), "",
+        "Track: " + TRACK[t][0],
+        "Organization: " + (org || "(not given)"),
+        "Protocols in scope: " + (ps.length ? ps.join(", ") : "(none selected)")];
+      if (scope) lines.push("Contracts / docs / portfolio:", scope);
+      lines.push("Contact: " + (contact || "(not given)"));
+      if (t === "disclosure") lines.push("", "Private disclosure: please reply with a private channel before any details are shared.");
+      lines.push("", "Sent from " + location.href.split("#")[0]);
+      var text = lines.join("\n");
+      out.textContent = text;
+      var priv = t === "disclosure";
+      if (priv) {
+        // Private disclosure: never build a public GitHub URL (it would carry the scope text); disable the action.
+        gh.removeAttribute("href");
+        gh.setAttribute("aria-disabled", "true");
+        gh.style.pointerEvents = "none"; gh.style.opacity = "0.45"; gh.tabIndex = -1;
+      } else {
+        var title = "[Pacta Scope] " + (org || (ps.length ? ps.slice(0, 3).join(", ") : "coverage request"));
+        var p = new URLSearchParams({ template: "request-scan.yml", title: title });
+        p.set("repo_or_portfolio_url", scope.split(/\s+/).filter(function (w) { return /^https?:\/\//.test(w); })[0] || "");
+        p.set("commitments_and_addresses", ["Protocols: " + (ps.join(", ") || "-"), scope].filter(Boolean).join("\n"));
+        if (TRACK[t][1]) p.set("package_tier", TRACK[t][1]);
+        p.set("contact_channel", contact);
+        gh.removeAttribute("aria-disabled");
+        gh.href = "https://github.com/Fractal-Neurons/pacta/issues/new?" + p.toString();
+        gh.style.pointerEvents = ""; gh.style.opacity = ""; gh.tabIndex = 0;
+      }
+      warn.hidden = !priv;
+      var subj = "Pacta coverage request" + (org ? " — " + org : "");
+      gm.href = "https://mail.google.com/mail/?view=cm&fs=1&to=" + encodeURIComponent(REQ_TO) + "&su=" + encodeURIComponent(subj) +
+        "&body=" + encodeURIComponent(lines.slice(3).join("\n"));
+      if (st) st.textContent = "";
+    }
+    function preselect(t) {
+      var r = $$('input[name="tier"]', form).filter(function (x) { return x.value === t; })[0]; if (r) { r.checked = true; update(); }
+    }
+    form.addEventListener("input", update);
+    form.addEventListener("change", update);
+    gh.addEventListener("click", function (ev) {
+      if (tier() === "disclosure" || !gh.hasAttribute("href")) { ev.preventDefault(); ev.stopPropagation(); return; }
+      if (st) st.textContent = "Opened in a new tab. If nothing appeared, use Copy brief.";
+    });
+    gm.addEventListener("click", function () { if (st) st.textContent = "Opened in a new tab. If nothing appeared, use Copy brief."; });
+    document.addEventListener("click", function (ev) {
+      var a = ev.target.closest("a[data-tier]"); if (!a) return;
+      if ((a.getAttribute("href") || "").charAt(0) === "#") { preselect(a.getAttribute("data-tier")); }
+    });
+    var m = location.search.match(/[?&]tier=(\w+)/); if (m && TRACK[m[1]]) preselect(m[1]);
+    update();
   }
 
   document.addEventListener("DOMContentLoaded", function () {
-    initTheme(); initMatrix(); initInspector(); tick(); setInterval(tick, 30000);
+    initTheme(); initCopy(); tick(); setInterval(tick, 30000);
+    initIndex(); initRequest(); initInspector();
+    if ($("#insp-list")) loadData().catch(function () { /* static sheet and drawer links keep working */ });
   });
 })();
