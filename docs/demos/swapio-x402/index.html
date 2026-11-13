@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TreasuryGuard - an x402 rebalancer on Swap.io (90s storyboard)</title>
+<meta name="description" content="A 90-second storyboard: an autonomous treasury rebalancer that pays per call with x402 - no API keys, no subscription.">
+<style>
+  :root { --bg:#0b1020; --panel:#121a33; --ink:#e8ecf8; --mute:#93a0c4; --acc:#5eead4; --warn:#fbbf24; --pay:#a78bfa; --ok:#4ade80; --bad:#f87171; }
+  * { box-sizing:border-box; }
+  html,body { margin:0; height:100%; background:#05070f; color:var(--ink); font:16px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif; }
+  #stage { position:absolute; inset:0; margin:auto; width:min(100vw,177.78vh); height:min(56.25vw,100vh); background:radial-gradient(1200px 600px at 20% 0%,#16224a 0%,var(--bg) 60%); overflow:hidden; }
+  .scene { position:absolute; inset:0; padding:5.5% 7%; opacity:0; transform:translateY(12px); transition:opacity .6s, transform .6s; pointer-events:none; }
+  .scene.on { opacity:1; transform:none; pointer-events:auto; }
+  .kicker { color:var(--acc); letter-spacing:.14em; text-transform:uppercase; font-size:clamp(10px,1.4vw,18px); font-weight:700; }
+  h1 { font-size:clamp(22px,4.6vw,64px); line-height:1.05; margin:.25em 0 .2em; }
+  h2 { font-size:clamp(18px,3.2vw,44px); margin:.2em 0 .5em; }
+  p, li { font-size:clamp(12px,1.9vw,26px); color:var(--mute); }
+  b, .ink { color:var(--ink); }
+  .row { display:flex; gap:3%; align-items:stretch; }
+  .card { background:var(--panel); border:1px solid #23305c; border-radius:14px; padding:2.2% 2.6%; flex:1; }
+  .term { font:clamp(10px,1.55vw,21px)/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; background:#070b17; border:1px solid #1f2a52; border-radius:12px; padding:2% 2.4%; white-space:pre-wrap; min-height:56%; }
+  .term .l { opacity:0; transition:opacity .35s; } .term .l.on { opacity:1; }
+  .c-req { color:#7dd3fc; } .c-402 { color:var(--warn); } .c-pay { color:var(--pay); } .c-200 { color:var(--ok); } .c-dim { color:#5b688f; }
+  .flow { display:flex; align-items:center; justify-content:space-between; margin-top:3%; }
+  .node { background:var(--panel); border:2px solid #2b3a6e; border-radius:14px; padding:1.6% 1.8%; text-align:center; width:22%; font-size:clamp(11px,1.7vw,22px); }
+  .node.hot { border-color:var(--acc); box-shadow:0 0 0 4px #5eead422; }
+  .arrow { flex:1; height:4px; margin:0 1%; background:linear-gradient(90deg,#2b3a6e,#5eead4); border-radius:2px; position:relative; }
+  .pill { display:inline-block; padding:.15em .6em; border-radius:999px; font-weight:700; font-size:.85em; }
+  .p402 { background:#fbbf2422; color:var(--warn); } .p200 { background:#4ade8022; color:var(--ok); } .ppay { background:#a78bfa22; color:var(--pay); }
+  .big { font-size:clamp(28px,6vw,88px); font-weight:800; color:var(--ink); }
+  table { width:100%; border-collapse:collapse; font-size:clamp(11px,1.8vw,24px); }
+  td, th { padding:.45em .5em; border-bottom:1px solid #23305c; text-align:left; } th { color:var(--acc); font-weight:600; }
+  .num { text-align:right; font-variant-numeric:tabular-nums; }
+  #hud { position:absolute; left:0; right:0; bottom:0; height:6px; background:#ffffff14; }
+  #bar { height:100%; width:0; background:linear-gradient(90deg,var(--acc),var(--pay)); }
+  #ctl { position:absolute; right:1.4%; bottom:2.2%; display:flex; gap:.5em; font:12px ui-monospace,monospace; color:var(--mute); }
+  #ctl button { background:#ffffff12; color:var(--ink); border:1px solid #ffffff22; border-radius:8px; padding:.35em .7em; cursor:pointer; font:inherit; }
+  #clock { position:absolute; left:1.6%; bottom:2.4%; font:12px ui-monospace,monospace; color:var(--mute); }
+  .rec #ctl, .rec #clock { display:none; }
+  .foot { position:absolute; left:7%; bottom:7%; font-size:clamp(9px,1.2vw,15px); color:#5b688f; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <!-- 1 -->
+  <section class="scene" data-dur="8">
+    <div class="kicker">Swap.io Agent API · x402</div>
+    <h1>TreasuryGuard</h1>
+    <p style="font-size:clamp(14px,2.6vw,36px)" class="ink">An autonomous rebalancer that pays <b>per call</b> in USDC.<br>No API key. No subscription. It only pays when it actually trades.</p>
+    <div class="foot">Storyboard / mockup. Prices are as listed at hermes.swap.io/v1/info on 2026-11-13; the safety-check price is illustrative.</div>
+  </section>
+  <!-- 2 -->
+  <section class="scene" data-dur="10">
+    <div class="kicker">The situation</div>
+    <h2>A small DAO treasury: 60% SOL / 40% USDC</h2>
+    <div class="row">
+      <div class="card"><p><b>Rule:</b> if the mix drifts more than 5 points from target, rebalance with one swap.</p><p><b>Reality:</b> that happens a few times a month. Most hours, nothing happens.</p></div>
+      <div class="card"><p><b>The usual way:</b> sign up, store an API key on a server, pay a monthly plan even in the idle weeks.</p><p><b>For an agent that is spun up only when needed, that is a key to leak and a bill for doing nothing.</b></p></div>
+    </div>
+  </section>
+  <!-- 3 -->
+  <section class="scene" data-dur="9">
+    <div class="kicker">Trigger</div>
+    <h2>Drift detected: SOL is now <span style="color:var(--warn)">67.2%</span> of the treasury</h2>
+    <div class="flow">
+      <div class="node hot">TreasuryGuard<br><span class="pill ppay">USDC wallet only</span></div><div class="arrow"></div>
+      <div class="node">Pre-trade<br>safety check</div><div class="arrow"></div>
+      <div class="node">Swap.io<br>quote</div><div class="arrow"></div>
+      <div class="node">Swap.io<br>build-tx</div>
+    </div>
+    <p style="margin-top:4%">Plan: sell ~7.2 points of SOL into USDC. Three paid calls, each one settled on the spot.</p>
+  </section>
+  <!-- 4 -->
+  <section class="scene" data-dur="11" data-term>
+    <div class="kicker">Step 1 · pay for a safety check before trading</div>
+    <div class="term">
+<span class="l c-req">GET /v1/token-safety?mint=EPjF…Dt1v            (example provider)</span>
+<span class="l c-402">← HTTP 402 Payment Required   price: $0.01 USDC   payTo: provider wallet</span>
+<span class="l c-pay">→ agent signs a USDC payment and retries with the X-PAYMENT header</span>
+<span class="l c-200">← HTTP 200  { "mintAuthority": "checked", "freezeAuthority": "checked", "verdict": "ok" }</span>
+<span class="l c-dim">  X-PAYMENT-RESPONSE: settlement tx hash  ·  no account, no key</span>
+    </div>
+    <p>Before moving treasury funds, the bot buys one answer from a verification API, for this trade only.</p>
+  </section>
+  <!-- 5 -->
+  <section class="scene" data-dur="12" data-term>
+    <div class="kicker">Step 2 · ask Swap.io for a quote</div>
+    <div class="term">
+<span class="l c-req">POST https://hermes.swap.io/v1/swap/quote
+  { input: SOL 3.1, output: USDC, slippageBps: 50, userAddress: treasury }</span>
+<span class="l c-402">← HTTP 402 Payment Required
+  { scheme: "exact", network: "solana", asset: USDC, maxAmountRequired: "3000" }   = $0.003</span>
+<span class="l c-pay">→ x402 client pays 0.003 USDC and retries automatically</span>
+<span class="l c-200">← HTTP 200  { quotes: [ … ranked … ], bestQuote }   + X-PAYMENT-RESPONSE (tx hash)</span>
+    </div>
+    <p>The <b>402</b> tells the agent the exact price, token and network. The agent pays and gets the answer in the same loop.</p>
+  </section>
+  <!-- 6 -->
+  <section class="scene" data-dur="11" data-term>
+    <div class="kicker">Step 3 · build the swap transaction</div>
+    <div class="term">
+<span class="l c-req">POST https://hermes.swap.io/v1/swap/build-tx   { providerQuote: bestQuote.providerQuote }</span>
+<span class="l c-402">← HTTP 402   maxAmountRequired: "3000"   = $0.003</span>
+<span class="l c-pay">→ pay 0.003 USDC · retry</span>
+<span class="l c-200">← HTTP 200  { unsigned transaction }</span>
+<span class="l c-dim">  agent signs with the treasury key, broadcasts via any Solana RPC, logs the Solscan link</span>
+    </div>
+    <p>Quotes are short-lived, so the bot builds and sends right away. The rebalance is done.</p>
+  </section>
+  <!-- 7 -->
+  <section class="scene" data-dur="10">
+    <div class="kicker">What it cost in x402 API fees</div>
+    <table>
+      <tr><th>Call</th><th class="num">Paid via x402</th></tr>
+      <tr><td>Safety check (illustrative)</td><td class="num">$0.010</td></tr>
+      <tr><td>Swap.io quote (hermes.swap.io/v1/info, 2026-11-13)</td><td class="num">$0.003</td></tr>
+      <tr><td>Swap.io build-tx (hermes.swap.io/v1/info, 2026-11-13)</td><td class="num">$0.003</td></tr>
+      <tr><td><b>Per rebalance</b></td><td class="num"><b>~$0.016 in x402 API fees</b></td></tr>
+      <tr><td><b>An idle month</b></td><td class="num"><b class="ink">$0/mo in idle API subscription fees</b></td></tr>
+    </table>
+    <p style="font-size:clamp(10px,1.3vw,17px)">API fees only: excludes swap LP fees and slippage, Solana network fees, and bot hosting.</p>
+  </section>
+  <!-- 8 -->
+  <section class="scene" data-dur="11">
+    <div class="kicker">Why x402 beats API keys and subscriptions here</div>
+    <div class="row">
+      <div class="card"><p><b>No long-lived API credential to leak</b> (agent wallet signing keys still require scoped custody).</p><p><b>Pay only when trading.</b> Idle weeks cost nothing.</p></div>
+      <div class="card"><p><b>Budgets in code.</b> Cap spend per call and per day in the agent, before it signs.</p><p><b>Disposable agents.</b> Spin one up for one rebalance and throw it away, with no signup flow.</p></div>
+    </div>
+  </section>
+  <!-- 9 -->
+  <section class="scene" data-dur="8">
+    <div class="kicker">The x402 loop, once more</div>
+    <p class="big">request → <span style="color:var(--warn)">402</span> → <span style="color:var(--pay)">pay USDC</span> → <span style="color:var(--ok)">200</span></p>
+    <p class="ink" style="font-size:clamp(14px,2.4vw,32px)">TreasuryGuard: a treasury that rebalances itself and pays cents only when it trades.</p>
+    <div class="foot">Swap.io Agent API: hermes.swap.io · docs.swap.io/developer-tools/agent-api-x402 · x402.org · @swapdotio @Superteam</div>
+  </section>
+  <div id="hud"><div id="bar"></div></div>
+  <div id="clock">0:00 / 1:30</div>
+  <div id="ctl"><button id="prev" title="Previous (Left)">◀</button><button id="play" title="Play/Pause (Space)">❚❚</button><button id="next" title="Next (Right)">▶</button><button id="rst" title="Restart (R)">↺</button></div>
+</div>
+<script>
+(() => {
+  const scenes = [...document.querySelectorAll(".scene")];
+  const durs = scenes.map(s => Number(s.dataset.dur) * 1000);
+  const total = durs.reduce((a, b) => a + b, 0);            // 90 s
+  const qs = new URLSearchParams(location.search);
+  if (qs.get("record") === "1") document.body.classList.add("rec");
+  let idx = 0, t0 = performance.now(), offset = 0, playing = qs.get("paused") !== "1", timers = [];
+  const startOf = i => durs.slice(0, i).reduce((a, b) => a + b, 0);
+  function show(i) {
+    idx = Math.max(0, Math.min(scenes.length - 1, i));
+    scenes.forEach((s, k) => s.classList.toggle("on", k === idx));
+    timers.forEach(clearTimeout); timers = [];
+    const lines = [...scenes[idx].querySelectorAll(".term .l")];
+    lines.forEach(l => l.classList.remove("on"));
+    const step = (durs[idx] * 0.7) / Math.max(1, lines.length);
+    lines.forEach((l, k) => timers.push(setTimeout(() => l.classList.add("on"), 400 + k * step)));
+  }
+  function seek(i) { offset = startOf(Math.max(0, Math.min(scenes.length - 1, i))); t0 = performance.now(); show(i); }
+  function tick(now) {
+    const el = playing ? offset + (now - t0) : offset;
+    if (el >= total) { offset = total; playing = qs.get("loop") === "1"; if (playing) seek(0); }
+    let i = 0, acc = 0; while (i < durs.length - 1 && el >= acc + durs[i]) { acc += durs[i]; i++; }
+    if (i !== idx) show(i);
+    document.getElementById("bar").style.width = (100 * Math.min(el, total) / total) + "%";
+    const s = Math.floor(Math.min(el, total) / 1000);
+    document.getElementById("clock").textContent = `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")} / 1:30`;
+    requestAnimationFrame(tick);
+  }
+  function toggle() {
+    if (playing) { offset += performance.now() - t0; playing = false; } else { t0 = performance.now(); playing = true; }
+    document.getElementById("play").textContent = playing ? "❚❚" : "▶︎";
+  }
+  document.getElementById("play").onclick = toggle;
+  document.getElementById("prev").onclick = () => seek(idx - 1);
+  document.getElementById("next").onclick = () => seek(idx + 1);
+  document.getElementById("rst").onclick = () => { seek(0); playing = true; };
+  addEventListener("keydown", e => {
+    if (e.key === " ") { e.preventDefault(); toggle(); }
+    else if (e.key === "ArrowRight") seek(idx + 1);
+    else if (e.key === "ArrowLeft") seek(idx - 1);
+    else if (e.key === "r" || e.key === "R") { seek(0); playing = true; }
+    else if (e.key === "f" || e.key === "F") document.documentElement.requestFullscreen && document.documentElement.requestFullscreen();
+  });
+  const start = Number(qs.get("scene"));            // ?scene=N (1-based) for frame export
+  if (start >= 1) { seek(start - 1); if (qs.get("still") === "1") { playing = false; scenes[idx].querySelectorAll(".term .l").forEach(l => l.classList.add("on")); } }
+  else show(0);
+  requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>
