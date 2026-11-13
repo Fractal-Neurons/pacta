@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pacta Governance Radar · Pre-Execution Brief — Treehouse TREE Op 0x2f11...451f</title>
+  <style>
+    :root {
+      --bg: #070d12;
+      --card: #0d1720;
+      --border: #1e3346;
+      --green: #10b981;
+      --cyan: #38bdf8;
+      --amber: #f59e0b;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 2rem 1.25rem 4rem; background: var(--bg); color: var(--text); font-family: var(--sans); line-height: 1.55; }
+    .wrap { max-width: 960px; margin: 0 auto; }
+    .badge { display: inline-block; font-family: var(--mono); font-size: 0.74rem; padding: 0.2rem 0.55rem; border-radius: 999px; font-weight: 700; }
+    .badge-green { background: rgba(16, 185, 129, 0.15); color: var(--green); border: 1px solid rgba(16, 185, 129, 0.45); }
+    .badge-cyan { background: rgba(56, 189, 248, 0.14); color: var(--cyan); border: 1px solid rgba(56, 189, 248, 0.45); }
+    .badge-amber { background: rgba(245, 158, 11, 0.14); color: var(--amber); border: 1px solid rgba(245, 158, 11, 0.45); }
+    header { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1.4rem 1.6rem; margin-bottom: 1.25rem; }
+    h1 { margin: 0.5rem 0 0.35rem; font-size: 1.4rem; color: #fff; }
+    h2 { font-size: 1.05rem; color: var(--cyan); border-left: 3px solid var(--cyan); padding-left: 0.65rem; margin: 1.6rem 0 0.75rem; font-family: var(--mono); text-transform: uppercase; }
+    .meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; margin-bottom: 1.25rem; }
+    .kpi { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 0.85rem 1rem; font-family: var(--mono); }
+    .kpi .k { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; }
+    .kpi .v { font-size: 1.08rem; font-weight: 700; color: #fff; margin-top: 0.2rem; }
+    .kpi .s { font-size: 0.73rem; color: var(--amber); margin-top: 0.12rem; }
+    .kpi .s-ok { font-size: 0.73rem; color: var(--green); margin-top: 0.12rem; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.1rem 1.3rem; margin-bottom: 1rem; }
+    code { font-family: var(--mono); font-size: 0.83em; background: rgba(56, 189, 248, 0.1); color: #bae6fd; padding: 0.1rem 0.32rem; border-radius: 3px; word-break: break-all; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.86rem; margin-top: 0.5rem; }
+    th, td { text-align: left; padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+    th { font-family: var(--mono); font-size: 0.74rem; color: var(--cyan); text-transform: uppercase; background: rgba(56, 189, 248, 0.06); }
+    a { color: var(--cyan); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    footer { margin-top: 2rem; font-size: 0.8rem; color: var(--muted); font-family: var(--mono); text-align: center; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;align-items:center;">
+      <span class="badge badge-cyan">PACTA GOVERNANCE RADAR · PRE-EXECUTION BRIEF</span>
+      <span class="badge badge-amber">CONTROL-PLANE SHIFT: NEW 0S FREEZE ROLE</span>
+    </div>
+    <h1>Treehouse <code>TREE</code> Token — Pending UUPS Upgrade Op <code>0x2f11...451f</code></h1>
+    <p style="margin:0.25rem 0 0;color:var(--muted);font-size:0.93rem;">Pre-execution calldata, ERC-7201 storage-namespace verification, and post-upgrade transfer-freeze authority analysis for <code>TREE</code> token holders and lenders (note: targets <code>TREE</code> governance token, not <code>tETH</code>).</p>
+  </header>
+
+  <div class="meta-grid">
+    <div class="kpi">
+      <div class="k">Target Asset</div>
+      <div class="v">TREE (1.00B Supply)</div>
+      <div class="s-ok">Governance Token (Not tETH)</div>
+    </div>
+    <div class="kpi">
+      <div class="k">Timelock Window</div>
+      <div class="v">5.00 Days (432,000s)</div>
+      <div class="s-ok">ETA: 2026-11-17 04:51:47 UTC</div>
+    </div>
+    <div class="kpi">
+      <div class="k">ERC-7201 Namespace</div>
+      <div class="v">0xdf681306...6b00</div>
+      <div class="s-ok">Source Layout Preserved</div>
+    </div>
+    <div class="kpi">
+      <div class="k">New Operational Role</div>
+      <div class="v">0s Blacklister</div>
+      <div class="s">5-of-7 Safe Freeze Power</div>
+    </div>
+  </div>
+
+  <h2>1. What Is Queued &amp; Why It Matters for TREE Holders &amp; Venues</h2>
+  <div class="card">
+    <p style="margin-top:0;">In Ethereum Mainnet transaction <code>0x36f7071cb0cae1f60d9b9be05fa381993e04550ee807621134dd08f74fe9dee5</code> (block <code>26396588</code>), Treehouse's <code>5-of-7</code> Governance Safe (<code>0x22261B4D6F629D8cF946C3524df86bF7222901F6</code>) scheduled operation <code>0x2f11dcc36860f09b9ef94585589ced1798cef603d133efecd017ce7e544c451f</code> on <strong>TimelockController</strong> (<code>0x2225DAbFfC7F862c99477381E971E8B1FDaB467e</code>, <code>432,000s</code> / <code>5d</code> delay) targeting the UUPS proxy <strong>TreehouseToken (<code>TREE</code>)</strong> (<code>0x77146784315Ba81904d654466968e3a7c196d1f3</code>):</p>
+    <ul>
+      <li><strong>Decoded UUPS Upgrade &amp; Nested Init Call:</strong> Calls <code>upgradeToAndCall(0x0fedcbfEBc293Ad8048726B0F887e6C1126EffA6, 0xad38bf2200000000000000000000000022261b4d6f629d8cf946c3524df86bf7222901f6)</code>, upgrading <code>TREE</code> from implementation <code>0xFC0732c97f3dF6284A7a9De2a8363CE39b497423</code> to <code>0x0fedcbfEBc293Ad8048726B0F887e6C1126EffA6</code> and atomically invoking <code>updateBlacklister(0x22261B4D6F629D8cF946C3524df86bF7222901F6)</code>.</li>
+      <li><strong>New Post-Upgrade 0-Second Freeze Authority:</strong> The new implementation inherits <code>Blacklistable</code> and overrides <code>_update(from, to, value)</code> with <code>notBlacklisted(from) notBlacklisted(to) notBlacklisted(msg.sender)</code>. While rotating <code>blacklister</code> or upgrading <code>TREE</code> remains gated by <code>onlyOwner</code> (the 5-day <code>TimelockController</code>), the designated <code>5-of-7</code> Safe (<code>0x22261B4D6F629D8cF946C3524df86bF7222901F6</code>, threshold/owner state read by scanner at block <code>26406429</code>, hash <code>0xb65c04eeddc59de1affade1a5e76250fed78467ad3a69f5d292c5e5f089dab84</code>) gains direct, 0-second <code>blacklist(address)</code> / <code>unBlacklist(address)</code> authority over <code>TREE</code> senders, recipients, and <code>msg.sender</code> callers (including <code>transferFrom</code> spenders).</li>
+      <li><strong>Asset Scope Distinction:</strong> This operation modifies only the <code>TREE</code> governance token (<code>0x77146784315Ba81904d654466968e3a7c196d1f3</code>); it does not alter the <code>tETH</code> LST contract (<code>0xD11c452fc99cF405034ee446803b6F6c1F6d5ED8</code>).</li>
+    </ul>
+  </div>
+
+  <h2>2. Deterministic Verification &amp; ERC-7201 Storage Audit</h2>
+  <div class="card">
+    <table>
+      <thead>
+        <tr>
+          <th>Verification Check</th>
+          <th>Attributed On-Chain / Cryptographic Evidence</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>OZ <code>hashOperation</code> Preimage</strong></td>
+          <td>Independent verifier (block <code>26406275</code>): <code>keccak256(abi.encode(0x7714..d1f3, 0, 0x4f1ef286.., 0x00..00, 0x00..00))</code> == <code>0x2f11dcc3...c451f</code></td>
+          <td><span class="badge badge-green">PASS</span></td>
+        </tr>
+        <tr>
+          <td><strong>ERC-7201 Namespace Derivation</strong></td>
+          <td>Independent verifier (block <code>26406275</code>): <code>keccak256(abi.encode(uint256(keccak256("treehouse.storage.Blacklistable")) - 1)) &amp; ~bytes32(uint256(0xff))</code> == <code>0xdf68130666baa706ccbe7ae2392f8ae200401e1ace517b31c8be7bd447dd6b00</code></td>
+          <td><span class="badge badge-green">PASS</span></td>
+        </tr>
+        <tr>
+          <td><strong>Source-Level Linear Layout Diff</strong></td>
+          <td>Independent verifier (block <code>26406275</code>): shared OZ base contracts in verified source are byte-identical; <code>Blacklistable</code> uses only ERC-7201 namespaced storage with zero new linear state variables (<code>ccipAdmin</code> linear declaration unchanged); constructors call <code>_disableInitializers()</code></td>
+          <td><span class="badge badge-green">PRESERVED</span></td>
+        </tr>
+        <tr>
+          <td><strong>Archive Simulation &amp; Access Guard</strong></td>
+          <td>Scanner archive simulation (block <code>26406106</code> / <code>26406207</code>): <code>upgradeToAndCall</code> simulated from <code>0x2225...467e</code> returns <code>0x</code>; unprivileged caller reverts <code>OwnableUnauthorizedAccount</code> (<code>0x118cdaa7</code>)</td>
+          <td><span class="badge badge-green">PASS</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>3. Curator &amp; Venue Monitoring Summary</h2>
+  <div class="card">
+    <ul style="margin:0;">
+      <li><strong>Lending &amp; DEX Pool Risk (Before <code>2026-11-17 04:51 UTC</code>):</strong> Any venue accepting <code>TREE</code> as collateral or LP inventory should treat <code>TREE</code> post-execution as an issuer-freezable token (comparable to <code>USDC</code> / <code>USDT</code> blacklist semantics): blacklisting a vault, pool, or borrower address blocks liquidations and <code>transferFrom</code> settlements involving that address.</li>
+      <li><strong>Scope Note:</strong> Storage verification above covers verified Solidity source-level linear declarations and ERC-7201 formula derivation at the pinned block, without certifying compiler artifact equivalence or off-chain signer policy.</li>
+    </ul>
+  </div>
+
+  <footer>
+    <a href="https://pacta.wtf/">Pacta Protocol Commitments</a> · Fractal Neurons · <code>pacta.base.eth</code> · Base Registry <code>0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872</code>
+  </footer>
+</div>
+</body>
+</html>

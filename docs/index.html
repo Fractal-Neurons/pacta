@@ -447,7 +447,7 @@ details p {
         </div>
         <div class="stats">
           <div class="stat">
-            <div class="stat__num">12 Sprints · 32 Records</div>
+            <div class="stat__num">14 Sprints · 36 Records</div>
             <div class="stat__label">Pinned to Ethereum Mainnet hashes &amp; attested on Base (<code>pacta.base.eth</code>)</div>
           </div>
           <div class="stat">
@@ -462,9 +462,32 @@ details p {
       </div>
     </section>
 
+    <section class="sec" id="live-briefs" style="padding: 28px 0; border-bottom: 1px solid var(--border); background: var(--surface);">
+      <div class="wrap">
+        <p class="eyebrow">Live Pre-Execution Governance Radar · Queued Mainnet Timelock Briefs</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; margin-top: 12px;">
+          <div style="border: 1px solid var(--cyan-border); border-radius: 8px; padding: 14px 16px; background: var(--surface-2);">
+            <div class="card__top"><span class="pill">ETA 2026-11-14 10:20 UTC</span><code>Ethena USDe</code></div>
+            <p style="margin: 6px 0 10px; font-size: 0.9rem; color: var(--text);"><strong>Ops <code>0x1fe5...d85b</code> &amp; <code>0x0ca0...7a90</code>:</strong> <code>RLUSD</code> &amp; <code>USAT</code> collateral onboarding at <code>200M/20M USDe/block</code> (<code>0 bps</code> adverse delta).</p>
+            <a href="briefs/ethena-ops-0x0ca0-0x1fe5/">Read Pre-Execution Brief &rarr;</a>
+          </div>
+          <div style="border: 1px solid var(--cyan-border); border-radius: 8px; padding: 14px 16px; background: var(--surface-2);">
+            <div class="card__top"><span class="pill">ETA 2026-11-17 04:51 UTC</span><code>Treehouse TREE</code></div>
+            <p style="margin: 6px 0 10px; font-size: 0.9rem; color: var(--text);"><strong>Op <code>0x2f11...451f</code>:</strong> UUPS upgrade of <code>TREE</code> token (not <code>tETH</code>) adding <code>Blacklistable</code> 0s <code>5-of-7</code> Safe freeze role.</p>
+            <a href="briefs/treehouse-op-0x2f11/">Read Pre-Execution Brief &rarr;</a>
+          </div>
+          <div style="border: 1px solid var(--cyan-border); border-radius: 8px; padding: 14px 16px; background: var(--surface-2);">
+            <div class="card__top"><span class="pill">ETA 2026-11-16 01:41 UTC</span><code>ether.fi weETH</code></div>
+            <p style="margin: 6px 0 10px; font-size: 0.9rem; color: var(--text);"><strong>Op <code>0x244e...57c9</code>:</strong> 3-day timelock upgrade of <code>EtherFiNodesManager</code> &amp; <code>StakingManager</code> (EIP-1967 storage verified).</p>
+            <a href="briefs/etherfi-op-0x244e/">Read Pre-Execution Brief &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="sec" id="index">
       <div class="wrap">
-        <p class="eyebrow">01 / Public Control-Plane &amp; Timelock Truth Index (Sprints 1–12)</p>
+        <p class="eyebrow">01 / Public Control-Plane &amp; Timelock Truth Index (Sprints 1–14)</p>
         <h2>Verified on-chain parameters across <strong>collateral &amp; lending infrastructure.</strong></h2>
         <p class="lede">
           All entries below reflect public, non-exploitable architectural state replayed at the cited Ethereum Mainnet block height. Security-sensitive findings are strictly excluded from public tables and routed privately at zero cost to official protocol security contacts.
@@ -481,6 +504,20 @@ details p {
               </tr>
             </thead>
             <tbody>
+              <tr>
+                <td><strong>Ethena</strong><br><code>EthenaMinting</code> (<code>RLUSD</code> / <code>USAT</code>)</td>
+                <td><code>#26,406,275</code><br><a href="briefs/ethena-ops-0x0ca0-0x1fe5/">Sprint 14 Brief</a></td>
+                <td>Queued <code>1d</code> Timelock Ops &amp; <code>stablesDeltaLimit</code></td>
+                <td><span class="pill">Queued Onboarding</span></td>
+                <td>Ops <code>0x1fe5...d85b</code> &amp; <code>0x0ca0...7a90</code> (ETAs <code>2026-11-14 10:20–10:22 UTC</code>) onboard <code>RLUSD</code> &amp; <code>USAT</code> at <code>200M / 20M USDe/block</code> matching <code>globalConfig</code>; directional <code>stablesDeltaLimit == 0</code> enforces <code>0 bps</code> adverse ceiling.</td>
+              </tr>
+              <tr>
+                <td><strong>Treehouse</strong><br><code>TREE</code> Governance Token</td>
+                <td><code>#26,406,275</code><br><a href="briefs/treehouse-op-0x2f11/">Sprint 14 Brief</a></td>
+                <td>Queued <code>5d</code> UUPS Upgrade &amp; ERC-7201 Layout</td>
+                <td><span class="pill">Queued Control Shift</span></td>
+                <td>Op <code>0x2f11...451f</code> (ETA <code>2026-11-17 04:51 UTC</code>) upgrades <code>TREE</code> (<code>0x7714...d1f3</code>, not <code>tETH</code>) to add ERC-7201 <code>Blacklistable</code>, granting <code>5-of-7</code> Safe (<code>0x2226...01F6</code>) <code>0s</code> freeze authority while preserving source-level linear declarations.</td>
+              </tr>
               <tr>
                 <td><strong>Stader Labs</strong><br><code>ETHx</code></td>
                 <td><code>#26,403,676</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-12/block-26403676-summary.md">Sprint 12</a></td>
