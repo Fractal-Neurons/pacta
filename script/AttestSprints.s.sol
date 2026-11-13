@@ -26,7 +26,7 @@ interface IEAS {
 }
 
 /// @title AttestSprints
-/// @notice Deterministic Base Mainnet (`chainId == 8453`) direct-EOA calldata builder for Sprints 1–11 public audit summaries.
+/// @notice Deterministic Base Mainnet (`chainId == 8453`) direct-EOA calldata builder for Sprints 1–12 public audit summaries.
 ///         Because EAS records `msg.sender` as the on-chain `attester`, transactions built by this helper are signed and
 ///         broadcast directly by Tier 2 `PACTA_ATTESTER_EOA` (`0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09`) to `BASE_SCHEMA_REGISTRY`
 ///         (`0x4200000000000000000000000000000000000020`) and `BASE_EAS` (`0x4200000000000000000000000000000000000021`), ensuring
@@ -105,6 +105,11 @@ contract AttestSprints {
     bytes32 public constant SPRINT_11_SUMMARY_SHA256 = 0xc4a599ac19a79b5e24627692ccfc0431ba231ab8bea24236b8b876b5605ebaa8;
     string public constant SPRINT_11_PR_URI = "https://github.com/Fractal-Neurons/pacta/pull/18";
 
+    uint64 public constant SPRINT_12_BLOCK = 26403676;
+    bytes32 public constant SPRINT_12_BLOCK_HASH = 0xf4246ca23c4c38d520de16080a11b5186d04c8242b2c85edcb04c455d291c3ae;
+    bytes32 public constant SPRINT_12_SUMMARY_SHA256 = 0x66205001b915f64cb7154d4f3d8643ea60348e6460bff476ff3f1fc6e7a60b26;
+    string public constant SPRINT_12_PR_URI = "https://github.com/Fractal-Neurons/pacta/pull/19";
+
     /// @notice Compute the canonical Base EAS Schema UID (`keccak256(abi.encodePacked(schema, resolver, revocable))`).
     function canonicalSchemaUID() public pure returns (bytes32) {
         return keccak256(abi.encodePacked(PACTA_EAS_SCHEMA, address(0), true));
@@ -125,7 +130,7 @@ contract AttestSprints {
         calldataBytes = abi.encodeCall(ISchemaRegistry.register, (PACTA_EAS_SCHEMA, address(0), true));
     }
 
-    /// @notice Return the pinned, quarantine-safe public attestation data payload for Sprint `sprintId` (1..11).
+    /// @notice Return the pinned, quarantine-safe public attestation data payload for Sprint `sprintId` (1..12).
     function getPinnedSprintPayload(uint16 sprintId) public pure returns (bytes memory) {
         if (sprintId == 1) {
             return _encodeSprintAttestationData(1, ETH_MAINNET_CHAIN_ID, SPRINT_1_BLOCK, SPRINT_1_BLOCK_HASH, 4, 1, SPRINT_1_SUMMARY_SHA256, SPRINT_1_PR_URI);
@@ -149,6 +154,8 @@ contract AttestSprints {
             return _encodeSprintAttestationData(10, ETH_MAINNET_CHAIN_ID, SPRINT_10_BLOCK, SPRINT_10_BLOCK_HASH, 4, 1, SPRINT_10_SUMMARY_SHA256, SPRINT_10_PR_URI);
         } else if (sprintId == 11) {
             return _encodeSprintAttestationData(11, ETH_MAINNET_CHAIN_ID, SPRINT_11_BLOCK, SPRINT_11_BLOCK_HASH, 4, 2, SPRINT_11_SUMMARY_SHA256, SPRINT_11_PR_URI);
+        } else if (sprintId == 12) {
+            return _encodeSprintAttestationData(12, ETH_MAINNET_CHAIN_ID, SPRINT_12_BLOCK, SPRINT_12_BLOCK_HASH, 4, 1, SPRINT_12_SUMMARY_SHA256, SPRINT_12_PR_URI);
         }
         revert InvalidSprintId();
     }
