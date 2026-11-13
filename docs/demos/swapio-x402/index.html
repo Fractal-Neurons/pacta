@@ -39,6 +39,9 @@
   #clock { position:absolute; left:1.6%; bottom:2.4%; font:12px ui-monospace,monospace; color:var(--mute); }
   .rec #ctl, .rec #clock { display:none; }
   .foot { position:absolute; left:7%; bottom:7%; font-size:clamp(9px,1.2vw,15px); color:#5b688f; }
+  .live-receipt { display:none; margin-top:1.2%; font:clamp(10px,1.3vw,17px)/1.4 ui-monospace,SFMono-Regular,Menlo,monospace; color:var(--ok); }
+  .live-receipt.on { display:inline-flex; gap:.6em; align-items:center; background:#4ade8014; border:1px solid #4ade8044; border-radius:999px; padding:.3em .9em; }
+  .live-receipt a { color:var(--ok); text-decoration:underline dotted; }
 </style>
 </head>
 <body>
@@ -95,6 +98,7 @@
 <span class="l c-200">← HTTP 200  { quotes: [ … ranked … ], bestQuote }   + X-PAYMENT-RESPONSE (tx hash)</span>
     </div>
     <p>The <b>402</b> tells the agent the exact price, token and network. The agent pays and gets the answer in the same loop.</p>
+    <div class="live-receipt" data-receipt></div>
   </section>
   <!-- 6 -->
   <section class="scene" data-dur="11" data-term>
@@ -134,6 +138,7 @@
     <div class="kicker">The x402 loop, once more</div>
     <p class="big">request → <span style="color:var(--warn)">402</span> → <span style="color:var(--pay)">pay USDC</span> → <span style="color:var(--ok)">200</span></p>
     <p class="ink" style="font-size:clamp(14px,2.4vw,32px)">TreasuryGuard: a treasury that rebalances itself and pays cents only when it trades.</p>
+    <div class="live-receipt" data-receipt></div>
     <div class="foot">Swap.io Agent API: hermes.swap.io · docs.swap.io/developer-tools/agent-api-x402 · x402.org · @swapdotio @Superteam</div>
   </section>
   <div id="hud"><div id="bar"></div></div>
@@ -188,6 +193,34 @@
   if (start >= 1) { seek(start - 1); if (qs.get("still") === "1") { playing = false; scenes[idx].querySelectorAll(".term .l").forEach(l => l.classList.add("on")); } }
   else show(0);
   requestAnimationFrame(tick);
+  // Optional live receipt: ./live-receipt.json written by swapio_x402_client.py run-paid-demo. Silent no-op if absent.
+  // The badge renders ONLY for a live (non-dry-run) Base receipt whose every paid call was verified on-chain and bound
+  // to its own EIP-3009 authorization (AuthorizationUsed(payer, nonce) in the same canonical receipt).
+  function validReceipt(rc) {
+    if (!rc || rc.kind !== "pacta.swapio.x402.live-receipt.v1" || rc.dry_run !== false || rc.network !== "base") return false;
+    const calls = Array.isArray(rc.calls) ? rc.calls.filter(c => c && !c.skipped) : [];
+    if (!calls.length || !(Number(rc.total_paid_atomic_usdc) > 0)) return false;
+    const h32 = h => typeof h === "string" && /^0x[0-9a-fA-F]{64}$/.test(h) && !/^0x0{64}$/.test(h);
+    return calls.every(c => c.verified_onchain === true && c.authorization_bound === true &&
+      Number.isInteger(c.paid_atomic_usdc) && c.paid_atomic_usdc > 0 &&
+      Number.isInteger(c.block_number) && c.block_number > 0 && h32(c.settlement_tx) && h32(c.block_hash));
+  }
+  fetch("./live-receipt.json", { cache: "no-store" }).then(r => (r.ok ? r.json() : null)).then(rc => {
+    if (!validReceipt(rc)) return;
+    const call = rc.calls[0];
+    const usd = Number(rc.total_paid_atomic_usdc) / 1e6;
+    document.querySelectorAll("[data-receipt]").forEach(el => {
+      el.textContent = "";
+      const label = document.createElement("span");
+      label.textContent = `\u2713 live x402 call \u00b7 hermes.swap.io${call.endpoint || ""} \u00b7 paid $${usd.toFixed(6)} USDC on Base \u00b7`;
+      const a = document.createElement("a");
+      a.href = "https://basescan.org/tx/" + call.settlement_tx;
+      a.target = "_blank"; a.rel = "noopener noreferrer";
+      a.textContent = call.settlement_tx.slice(0, 10) + "\u2026" + call.settlement_tx.slice(-6);
+      el.append(label, a);
+      el.classList.add("on");
+    });
+  }).catch(() => {});
 })();
 </script>
 </body>

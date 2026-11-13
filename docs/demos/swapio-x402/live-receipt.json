@@ -1,0 +1,69 @@
+{
+ "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+ "calls": [
+  {
+   "authorization_bound": true,
+   "basescan": "https://basescan.org/tx/0xebcda30c45f95feb283a6e2cce6084f493afe63b447960b64e75de633ccb8b78",
+   "block_hash": "0x1dda67b7252a5fdaee0c6ef05462818c80d6e9e07a6697476d23efa3488fe270",
+   "block_number": 56980269,
+   "endpoint": "/v1/swap/quote",
+   "network": "base",
+   "paid_atomic_usdc": 3007,
+   "payer": "0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09",
+   "settlement_tx": "0xebcda30c45f95feb283a6e2cce6084f493afe63b447960b64e75de633ccb8b78",
+   "status": 200,
+   "verified_onchain": true
+  },
+  {
+   "authorization_bound": true,
+   "basescan": "https://basescan.org/tx/0x6829a3d4e2ad75931f8fff1a706abe7088b1c306ed08236f1fd0182eb4587b2e",
+   "block_hash": "0xcc11eb0dbc0c2c4015cc1aa614e53f25c6bb6ae39ae8769dc7089a52b988aff5",
+   "block_number": 56980282,
+   "endpoint": "/v1/swap/build-tx",
+   "network": "base",
+   "paid_atomic_usdc": 3000,
+   "payer": "0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09",
+   "settlement_tx": "0x6829a3d4e2ad75931f8fff1a706abe7088b1c306ed08236f1fd0182eb4587b2e",
+   "status": 200,
+   "unsigned_tx_summary": {
+    "keys": [
+     "chainKey",
+     "computeUnitLimit",
+     "lastValidBlockHeight",
+     "prioritizationFeeLamports",
+     "provider",
+     "success",
+     "swapTransaction",
+     "warnings"
+    ],
+    "note": "unsigned Solana transaction; never signed or broadcast"
+   },
+   "verified_onchain": true
+  }
+ ],
+ "caps": {
+  "per_call": 5000,
+  "session": 10000
+ },
+ "dry_run": false,
+ "finished_at": "2026-11-13T16:13:53Z",
+ "kind": "pacta.swapio.x402.live-receipt.v1",
+ "ledger_total_reserved_atomic_usdc": 6007,
+ "network": "base",
+ "pay_to": "0xC22f661733B85C1349F7C83EE0B2BCF3234603dE",
+ "payer": "0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09",
+ "quote_request": {
+  "input": "SOL",
+  "lamports": "100000000",
+  "output": "USDC",
+  "slippageBps": 50
+ },
+ "quote_summary": {
+  "best_out_amount": "7973058",
+  "best_provider": "dflow",
+  "quotes": 6
+ },
+ "service": "https://hermes.swap.io",
+ "started_at": "2026-11-13T16:13:47Z",
+ "total_paid_atomic_usdc": 6007
+}
