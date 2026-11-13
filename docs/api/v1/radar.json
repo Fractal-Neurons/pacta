@@ -1,0 +1,71 @@
+{
+  "schema": "pacta.radar.v1",
+  "chain_id": 1,
+  "refreshed_at": {
+    "block_number": 26406890,
+    "block_hash": "0x6320a9134c07cf01b9a2338d8deb52e5b5c785226eacca5ba886f50818160c5d",
+    "block_timestamp": 1794583127,
+    "block_time_utc": "2026-11-13 15:18 UTC",
+    "tag": "finalized",
+    "rpcs_cross_checked": 2
+  },
+  "items": [
+    {
+      "protocol": "Ethena",
+      "title": "Ethena USDe \u2014 RLUSD & USAT collateral onboarding",
+      "summary": "Two queued EthenaMinting.addSupportedAsset calls onboard RLUSD and USAT at 200M / 20M USDe-per-block caps (stablesDeltaLimit = 0 bps).",
+      "timelock": "0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94",
+      "brief": "briefs/ethena-ops-0x0ca0-0x1fe5/",
+      "min_delay_seconds": 86400,
+      "operations": [
+        {
+          "op_id": "0x1fe5e3e892708310bbfcf50efc03a1b8e21e0d0042035d7e8315e0cd5f26d85b",
+          "eta": 1794651635,
+          "pending": true,
+          "done": false
+        },
+        {
+          "op_id": "0x0ca0fcc4856b87f3df9a74532bd60db58d1310c27c17e7d9bfa8a56846f57a90",
+          "eta": 1794651743,
+          "pending": true,
+          "done": false
+        }
+      ],
+      "eta": 1794651635
+    },
+    {
+      "protocol": "Treehouse",
+      "title": "Treehouse TREE \u2014 UUPS upgrade adding Blacklistable",
+      "summary": "Upgrades the TREE governance token (not tETH) and installs a 5-of-7 Safe as blacklister: a zero-delay transfer-freeze role after execution.",
+      "timelock": "0x2225DAbFfC7F862c99477381E971E8B1FDaB467e",
+      "brief": "briefs/treehouse-op-0x2f11/",
+      "min_delay_seconds": 432000,
+      "operations": [
+        {
+          "op_id": "0x2f11dcc36860f09b9ef94585589ced1798cef603d133efecd017ce7e544c451f",
+          "eta": 1794891107,
+          "pending": true,
+          "done": false
+        }
+      ],
+      "eta": 1794891107
+    },
+    {
+      "protocol": "ether.fi",
+      "title": "ether.fi \u2014 LayerZero V2 delegate moved behind the 10-day timelock",
+      "summary": "EtherfiL1SyncPoolETH.setDelegate(EtherFiTimelock): protective hardening of the OApp's messaging configuration.",
+      "timelock": "0x9f26d4C958fD811A1F59B01B86Be7dFFc9d20761",
+      "brief": "briefs/etherfi-op-0x244e/",
+      "min_delay_seconds": 864000,
+      "operations": [
+        {
+          "op_id": "0x244e3f6c3df722246c471cee58804dd34c7703fce9cee1eadc1c5a85f171359f",
+          "eta": 1795193651,
+          "pending": true,
+          "done": false
+        }
+      ],
+      "eta": 1795193651
+    }
+  ]
+}

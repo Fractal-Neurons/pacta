@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://pacta.wtf/</loc><lastmod>2026-11-13</lastmod></url>
+  <url><loc>https://pacta.wtf/llms.txt</loc><lastmod>2026-11-13</lastmod></url>
+  <url><loc>https://pacta.wtf/api/v1/index.json</loc><lastmod>2026-11-13</lastmod></url>
+  <url><loc>https://pacta.wtf/api/v1/radar.json</loc><lastmod>2026-11-13</lastmod></url>
+  <url><loc>https://pacta.wtf/briefs/ethena-ops-0x0ca0-0x1fe5/</loc><lastmod>2026-11-13</lastmod></url>
+  <url><loc>https://pacta.wtf/briefs/etherfi-op-0x244e/</loc><lastmod>2026-11-13</lastmod></url>
+  <url><loc>https://pacta.wtf/briefs/treehouse-op-0x2f11/</loc><lastmod>2026-11-13</lastmod></url>
+  <url><loc>https://pacta.wtf/demos/swapio-x402/</loc><lastmod>2026-11-13</lastmod></url>
+</urlset>

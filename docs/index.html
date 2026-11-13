@@ -1,777 +1,189 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Pacta — Institutional DeFi Counterparty &amp; Timelock Index | Fractal Neurons</title>
-  <meta name="description" content="Block-pinned counterparty control-plane, timelock, and Gnosis Safe verification index for institutional DeFi risk curators, allocators, and security teams.">
-  <meta name="theme-color" content="#000000">
-  <link rel="icon" type="image/png" href="data:image/png;base64,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">
-  <style>
-:root {
-  --bg: #000000;
-  --surface: #070b10;
-  --surface-2: #0c121a;
-  --text: #f4f6f8;
-  --muted: #9aa4b0;
-  --cyan: #74f4f6;
-  --cyan-dim: rgba(116, 244, 246, 0.12);
-  --cyan-border: rgba(116, 244, 246, 0.32);
-  --border: rgba(244, 246, 248, 0.12);
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
-}
-
-*, *::before, *::after {
-  box-sizing: border-box;
-}
-
-html, body {
-  margin: 0;
-  padding: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font-sans);
-  font-size: 16px;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
-}
-
-a {
-  color: var(--cyan);
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-.wrap {
-  width: 100%;
-  max-width: 1120px;
-  margin: 0 auto;
-  padding: 0 16px;
-}
-
-@media (min-width: 640px) {
-  .wrap { padding: 0 24px; }
-}
-
-.hdr {
-  border-bottom: 1px solid var(--border);
-  background: #000000;
-  padding: 14px 0;
-}
-
-.hdr__in {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--text);
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  text-decoration: none !important;
-}
-
-.brand img {
-  width: 32px;
-  height: 32px;
-  display: block;
-  flex-shrink: 0;
-}
-
-.nav {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px 14px;
-  width: 100%;
-}
-
-@media (min-width: 768px) {
-  .nav { width: auto; }
-}
-
-.nav a {
-  color: var(--muted);
-  font-size: 0.9rem;
-  white-space: nowrap;
-}
-
-.nav a[aria-current="page"],
-.nav a:hover {
-  color: var(--cyan);
-  text-decoration: none;
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 10px 18px;
-  border-radius: 6px;
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  font-weight: 500;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  text-decoration: none !important;
-  border: 1px solid var(--cyan);
-  background: var(--cyan);
-  color: #000000;
-}
-
-.btn--ghost {
-  background: transparent;
-  color: var(--cyan);
-  border-color: var(--cyan-border);
-}
-
-.btn--sm {
-  padding: 6px 12px;
-  font-size: 0.75rem;
-}
-
-.hero {
-  padding: 36px 0 28px;
-  border-bottom: 1px solid var(--border);
-}
-
-@media (min-width: 640px) {
-  .hero { padding: 56px 0 44px; }
-}
-
-.eyebrow {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  color: var(--cyan);
-  margin: 0 0 10px;
-}
-
-h1 {
-  font-size: clamp(1.65rem, 5vw, 2.6rem);
-  font-weight: 600;
-  line-height: 1.2;
-  margin: 0 0 14px;
-  color: var(--text);
-}
-
-h1 strong, h2 strong {
-  color: var(--cyan);
-  font-weight: 600;
-}
-
-h2 {
-  font-size: clamp(1.3rem, 3.5vw, 1.85rem);
-  font-weight: 600;
-  line-height: 1.25;
-  margin: 0 0 10px;
-  color: var(--text);
-}
-
-h3 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin: 0 0 8px;
-  color: var(--text);
-}
-
-.lede {
-  color: var(--muted);
-  font-size: 1rem;
-  max-width: 72ch;
-  margin: 0 0 20px;
-}
-
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 18px;
-}
-
-.actions .btn {
-  width: 100%;
-}
-
-@media (min-width: 480px) {
-  .actions .btn { width: auto; }
-}
-
-.sec {
-  padding: 32px 0;
-  border-bottom: 1px solid var(--border);
-}
-
-@media (min-width: 640px) {
-  .sec { padding: 48px 0; }
-}
-
-.stats {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
-  margin-top: 20px;
-}
-
-@media (min-width: 640px) {
-  .stats { grid-template-columns: repeat(3, 1fr); }
-}
-
-.stat {
-  background: var(--surface);
-  border: 1px solid var(--cyan-border);
-  border-radius: 8px;
-  padding: 16px;
-}
-
-.stat__num {
-  font-family: var(--font-mono);
-  font-size: 1.55rem;
-  font-weight: 600;
-  color: var(--cyan);
-  line-height: 1.2;
-}
-
-.stat__label {
-  font-size: 0.85rem;
-  color: var(--muted);
-  margin-top: 4px;
-}
-
-.grid-3 {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
-  margin-top: 20px;
-}
-
-@media (min-width: 768px) {
-  .grid-3 { grid-template-columns: repeat(3, 1fr); }
-}
-
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-top: 2px solid var(--cyan);
-  border-radius: 8px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.card p {
-  color: var(--muted);
-  font-size: 0.92rem;
-  margin: 0 0 14px;
-}
-
-.card__top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 10px;
-}
-
-.pill {
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: 99px;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--cyan);
-  background: var(--cyan-dim);
-  border: 1px solid var(--cyan-border);
-  white-space: nowrap;
-}
-
-.table-wrap {
-  width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--surface);
-  margin-top: 18px;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.86rem;
-  min-width: 680px;
-}
-
-th {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--cyan);
-  background: var(--surface-2);
-  text-align: left;
-  padding: 12px 14px;
-  border-bottom: 1px solid var(--cyan-border);
-}
-
-td {
-  padding: 12px 14px;
-  border-bottom: 1px solid var(--border);
-  color: var(--muted);
-  vertical-align: top;
-}
-
-td strong {
-  color: var(--text);
-}
-
-tr:last-child td {
-  border-bottom: 0;
-}
-
-pre {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--cyan);
-  border-radius: 6px;
-  padding: 14px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  line-height: 1.55;
-  color: var(--cyan);
-  margin: 14px 0 0;
-}
-
-code {
-  font-family: var(--font-mono);
-  font-size: 0.84em;
-  color: var(--cyan);
-  background: var(--surface-2);
-  padding: 2px 5px;
-  border-radius: 4px;
-  word-break: break-word;
-}
-
-pre code {
-  background: none;
-  padding: 0;
-  word-break: normal;
-}
-
-details {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 14px 16px;
-  margin-top: 10px;
-}
-
-summary {
-  font-weight: 600;
-  cursor: pointer;
-  color: var(--text);
-}
-
-details p {
-  color: var(--muted);
-  font-size: 0.92rem;
-  margin: 10px 0 0;
-}
-
-.ftr {
-  padding: 28px 0 40px;
-  color: var(--muted);
-  font-size: 0.85rem;
-}
-
-.ftr__in {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-  </style>
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pacta · DeFi control-plane monitoring</title>
+<meta name="description" content="Block-pinned DeFi control-plane snapshots and timelock alerts.">
+<link rel="canonical" href="https://pacta.wtf/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Pacta by Fractal Neurons">
+<meta property="og:title" content="Know when your DeFi collateral’s rules change — before they do">
+<meta property="og:description" content="Block-pinned DeFi control-plane snapshots and timelock alerts.">
+<meta property="og:url" content="https://pacta.wtf/">
+<meta property="og:image" content="https://pacta.wtf/og-preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Know when your DeFi collateral’s rules change — before they do">
+<meta name="twitter:description" content="Block-pinned DeFi control-plane snapshots and timelock alerts.">
+<meta name="twitter:image" content="https://pacta.wtf/og-preview.png">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.png" type="image/png" sizes="32x32">
+<link rel="stylesheet" href="styles.css">
+<link rel="alternate" type="text/markdown" href="llms.txt" title="llms.txt">
+<script>try{if(localStorage.getItem("pacta-theme")==="paper")document.documentElement.dataset.theme="paper"}catch(e){}</script>
+<script src="app.js" defer></script>
 </head>
 <body>
-  <header class="hdr">
-    <div class="wrap hdr__in">
-      <a class="brand" href="https://pacta.wtf/">
-        <img src="data:image/png;base64,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" alt="Fractal Neurons" width="32" height="32">
-        <span>Fractal Neurons // Pacta</span>
-      </a>
-      <nav class="nav" aria-label="Primary">
-        <a href="#index" aria-current="page">Counterparty Index</a>
-        <a href="api/v1/index.json">JSON Feed v1</a>
-        <a href="#ci-gate">Foundry CI Gate</a>
-        <a href="#subscriptions">Institutional Feeds</a>
-        <a class="btn btn--sm" href="https://github.com/Fractal-Neurons/pacta/issues/new?template=request-scan.yml&amp;title=%5BPacta+Request%5D+Organization+%2F+Protocol">Request Coverage</a>
-      </nav>
-    </div>
-  </header>
-  <main>
+<a class="skip" href="#main">Skip to content</a>
+<header class="hdr"><div class="wrap">
+<a class="brand" href="./"><img src="favicon.svg" alt="" width="26" height="26">PACTA <small>by Fractal Neurons</small></a>
+<nav class="nav" aria-label="Sections"><a href="#inspector">Inspector</a><a href="#radar">Radar</a><a href="#findings">Findings</a><a href="#index">Index</a><a href="#pricing">Pricing</a><a href="#verify">Verify</a><a href="#about">About</a></nav>
+<button class="theme-toggle" type="button" aria-label="Switch theme"><span data-t="slate" class="on">Slate</span>/<span data-t="paper">Paper</span></button>
+</div></header>
+<main id="main">
+<section class="hero"><div class="wrap hero-grid">
+<div>
+<div class="eyebrow">PACTA SUNT SERVANDA · BY FRACTAL NEURONS</div>
+<h1>Know when the people who control your DeFi collateral can change the rules — before they do.</h1>
+<p class="sub"><strong>Built for DeFi vault curators, institutional allocators, and protocol risk teams.</strong> Point-in-time smart contract audit PDFs go stale the moment a multisig rotates signers, attaches a Safe module, or lowers a timelock delay. Pacta delivers deterministic, block-pinned control-plane snapshots and pre-execution timelock alerts reproducible against any archive node.</p>
+<div class="ctas">
+<a class="btn primary" href="mailto:pacta@dri.network?subject=Pacta%20Collateral%20Control-Plane%20Alerts">Get Alerts on Your Collateral</a>
+<a class="btn" href="mailto:pacta@dri.network?subject=Pacta%20Curator%20Walkthrough">Book a Risk Walkthrough</a>
+<a class="btn" href="#radar">Explore Live Radar ↓</a>
+</div>
+<div class="stats">
+<div class="stat"><b>14 Sprints · 37 Indexed Records</b><span>Ethereum Mainnet, each pinned to a canonical block hash</span></div>
+<div class="stat"><b>12 Base EAS sprint attestations</b><span>Sprints 1–12 · multi-attest tx <span class="mono">0x8c53…001b</span></span></div>
+<div class="stat"><b>Sprints 13–14 hash-pinned</b><span>block hash + SHA-256 summary digest in <a href="api/v1/index.json">/api/v1/index.json</a> until batch-attested</span></div>
+<div class="stat"><b>Free Private Disclosure</b><span>Exploit-sensitive findings are never published here; they go privately to official security teams at no cost</span></div>
+</div>
+</div>
+<aside class="inspector" id="inspector" aria-label="Control-plane inspector">
+<h2>Control-Plane Inspector · no wallet required</h2>
+<p class="hint">Pick a protocol or search the 37 indexed records. Every value is pinned to a block and reproducible.</p>
+<div class="pills"><button class="pill" type="button" data-key="Ethena" aria-pressed="false">Ethena</button><button class="pill" type="button" data-key="Lido" aria-pressed="false">Lido</button><button class="pill" type="button" data-key="Curve Finance (crvUSD)" aria-pressed="false">Curve crvUSD</button><button class="pill" type="button" data-key="Stader" aria-pressed="false">Stader ETHx</button><button class="pill" type="button" data-key="Kelp" aria-pressed="false">Kelp rsETH</button></div>
+<input class="search" id="insp-q" type="search" placeholder="Paste 0x address or filter 37 indexed records…" aria-label="Search indexed records">
+<div class="results" id="insp-results"></div>
+<div class="panel" id="insp-panel"><div><b>Ethena (USDe / sUSDe)</b> <span class="badge delta">parameter delta</span> <span class="count">Sprint 14 · EthenaTimelockController 1d delay — queued RLUSD &amp; USAT collateral onboarding</span></div><div class="cell"><h3>(a) Pinned block &amp; canonical hash</h3><p>#26,406,106 <span class="badge ok">Scanner-pinned (L1 finalized)</span></p><p class="addr">0xcb24dfb0b8af01dff9550fbbf6eb589b30d29b9625f41af56c188ae10d086ecf</p></div><div class="cell"><h3>(c) Timelock &amp; proxy control plane</h3><p>minDelay observed 1d vs docs 7d</p></div><div class="cell"><h3>(d) Reproduce it yourself</h3><div class="cmd"><pre>cast call 0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94 &quot;getMinDelay()&quot; --block 26406106 --rpc-url &quot;$ETH_RPC_URL&quot;
+cast block 26406106 --field hash --rpc-url "$ETH_RPC_URL"   # expect 0xcb24dfb0b8af01dff9550fbbf6eb589b30d29b9625f41af56c188ae10d086ecf</pre></div></div><p class="count">getMinDelay() = 86400s (1d). Operations 0x1fe5e3e892708310bbfcf50efc03a1b8e21e0d0042035d7e8315e0cd5f26d85b (ETA 1794651635, 2026-11-14 10:20:35 UTC) and 0x0ca0fcc4856b87f3df9a74532bd60db58d1310c27c17e7d9bfa8a56846f57a90 (ETA 1794651743, 2026-11-14 10:22:23 UTC) are pending. Both call EthenaMinting (0xe3490297a08d6fC8Da46Edb7B6142E4F461b62D3).addSupportedAsset (0x7cfbc42f) for RLUSD and USAT as STABLE with 200M / 20M USDe-per-block mint / redeem caps, the same as the USDC / USDT configuration. EthenaMinting.stablesDeltaLimit() = 0.</p></div>
+</aside>
+</div></section>
 
-    <section class="hero">
-      <div class="wrap">
-        <p class="eyebrow">Fractal Neurons · Pacta Institutional Control-Plane Index</p>
-        <h1>Block-pinned <strong>counterparty &amp; timelock snapshots</strong> across production DeFi.</h1>
-        <p class="lede">
-          Pacta publishes block-pinned archive observations of sampled EIP-1967 proxy admins, <code>TimelockController</code> delays, <code>RolesAuthority</code> bitmasks, and Gnosis Safe quorums compared against cited protocol documentation—separating reproducible read-only state checks from policy interpretation.
-        </p>
-        <div class="actions">
-          <a class="btn" href="#index">Explore Live Index</a>
-          <a class="btn btn--ghost" href="api/v1/index.json">Machine-Readable JSON API</a>
-          <a class="btn btn--ghost" href="https://sourcify.dev/#/lookup/0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872">Base Registry (pacta.base.eth)</a>
-          <a class="btn btn--ghost" href="https://base.easscan.org/schema/view/0x7ff485bc1159dff3c70eefcb9dff2d65be990301760c2d53799e5a45e3badf83">Base EAS Attestations</a>
-        </div>
-        <div class="stats">
-          <div class="stat">
-            <div class="stat__num">14 Sprints · 36 Records</div>
-            <div class="stat__label">Pinned to Ethereum Mainnet hashes &amp; attested on Base (<code>pacta.base.eth</code>)</div>
-          </div>
-          <div class="stat">
-            <div class="stat__num">Dual-RPC + Static Review</div>
-            <div class="stat__label">Scanner archive replay (<code>tenderly</code> &amp; <code>mevblocker</code>) + offline static ABI/slot audit</div>
-          </div>
-          <div class="stat">
-            <div class="stat__num">$0 Security Quarantine</div>
-            <div class="stat__label">Sensitive findings &amp; Safe batches delivered gratis via private advisories</div>
-          </div>
-        </div>
-      </div>
-    </section>
+<section class="sec" id="radar"><div class="wrap">
+<div class="sec-h"><span class="kicker">01</span><h2>Queued Timelock Radar</h2><span class="fresh">Last refreshed: 2026-11-13 15:18 UTC (Mainnet finalized block #26,406,890)</span></div>
+<p class="count">State and ETAs are read at the finalized block above on two independent RPCs; countdowns run in your browser from each operation's on-chain ETA.</p>
+<div class="grid3"><article class="card"><div class="meta">Ethena · ETA 2026-11-14 10:20 UTC · 1d timelock · pending at refresh</div><h3>Ethena USDe — RLUSD &amp; USAT collateral onboarding</h3><p>Two queued EthenaMinting.addSupportedAsset calls onboard RLUSD and USAT at 200M / 20M USDe-per-block caps (stablesDeltaLimit = 0 bps).</p><p class="meta">Op <span class="addr">0x1fe5…d85b</span> &amp; <span class="addr">0x0ca0…7a90</span></p><div class="countdown" data-eta="1794651635">ETA 2026-11-14 10:20 UTC</div><a class="more" href="briefs/ethena-ops-0x0ca0-0x1fe5/">Read the pre-execution brief →</a></article>
+<article class="card"><div class="meta">Treehouse · ETA 2026-11-17 04:51 UTC · 5d timelock · pending at refresh</div><h3>Treehouse TREE — UUPS upgrade adding Blacklistable</h3><p>Upgrades the TREE governance token (not tETH) and installs a 5-of-7 Safe as blacklister: a zero-delay transfer-freeze role after execution.</p><p class="meta">Op <span class="addr">0x2f11…451f</span></p><div class="countdown" data-eta="1794891107">ETA 2026-11-17 04:51 UTC</div><a class="more" href="briefs/treehouse-op-0x2f11/">Read the pre-execution brief →</a></article>
+<article class="card"><div class="meta">ether.fi · ETA 2026-11-20 16:54 UTC · 10d timelock · pending at refresh</div><h3>ether.fi — LayerZero V2 delegate moved behind the 10-day timelock</h3><p>EtherfiL1SyncPoolETH.setDelegate(EtherFiTimelock): protective hardening of the OApp&#x27;s messaging configuration.</p><p class="meta">Op <span class="addr">0x244e…359f</span></p><div class="countdown" data-eta="1795193651">ETA 2026-11-20 16:54 UTC</div><a class="more" href="briefs/etherfi-op-0x244e/">Read the pre-execution brief →</a></article></div>
+</div></section>
 
-    <section class="sec" id="live-briefs" style="padding: 28px 0; border-bottom: 1px solid var(--border); background: var(--surface);">
-      <div class="wrap">
-        <p class="eyebrow">Live Pre-Execution Governance Radar · Queued Mainnet Timelock Briefs</p>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; margin-top: 12px;">
-          <div style="border: 1px solid var(--cyan-border); border-radius: 8px; padding: 14px 16px; background: var(--surface-2);">
-            <div class="card__top"><span class="pill">ETA 2026-11-14 10:20 UTC</span><code>Ethena USDe</code></div>
-            <p style="margin: 6px 0 10px; font-size: 0.9rem; color: var(--text);"><strong>Ops <code>0x1fe5...d85b</code> &amp; <code>0x0ca0...7a90</code>:</strong> <code>RLUSD</code> &amp; <code>USAT</code> collateral onboarding at <code>200M/20M USDe/block</code> (<code>0 bps</code> adverse delta).</p>
-            <a href="briefs/ethena-ops-0x0ca0-0x1fe5/">Read Pre-Execution Brief &rarr;</a>
-          </div>
-          <div style="border: 1px solid var(--cyan-border); border-radius: 8px; padding: 14px 16px; background: var(--surface-2);">
-            <div class="card__top"><span class="pill">ETA 2026-11-17 04:51 UTC</span><code>Treehouse TREE</code></div>
-            <p style="margin: 6px 0 10px; font-size: 0.9rem; color: var(--text);"><strong>Op <code>0x2f11...451f</code>:</strong> UUPS upgrade of <code>TREE</code> token (not <code>tETH</code>) adding <code>Blacklistable</code> 0s <code>5-of-7</code> Safe freeze role.</p>
-            <a href="briefs/treehouse-op-0x2f11/">Read Pre-Execution Brief &rarr;</a>
-          </div>
-          <div style="border: 1px solid var(--cyan-border); border-radius: 8px; padding: 14px 16px; background: var(--surface-2);">
-            <div class="card__top"><span class="pill">ETA 2026-11-16 01:41 UTC</span><code>ether.fi weETH</code></div>
-            <p style="margin: 6px 0 10px; font-size: 0.9rem; color: var(--text);"><strong>Op <code>0x244e...57c9</code>:</strong> 3-day timelock upgrade of <code>EtherFiNodesManager</code> &amp; <code>StakingManager</code> (EIP-1967 storage verified).</p>
-            <a href="briefs/etherfi-op-0x244e/">Read Pre-Execution Brief &rarr;</a>
-          </div>
-        </div>
-      </div>
-    </section>
+<section class="sec" id="findings"><div class="wrap">
+<div class="sec-h"><span class="kicker">02</span><h2>Headline findings, in plain English</h2><p>Each card links to a block-pinned record below.</p></div>
+<div class="grid4">
+<article class="card"><div class="meta">Ethena · Sprint 7 &amp; 14 · parameter delta</div><h3>New Ethena collateral can be approved on a 1-day timelock, while the docs describe 7 days.</h3><p>Two queued operations onboard RLUSD and USAT at 200M / 20M USDe-per-block caps (the same as USDC / USDT), with <span class="mono">stablesDeltaLimit = 0</span> (0 bps). Observed <span class="mono">getMinDelay() = 86,400s</span>; key-trust-assumptions.md lists 7-day time-locks, and a July 2026 Risk Committee post mentions the 1-day delay.</p><a class="more" href="briefs/ethena-ops-0x0ca0-0x1fe5/">Brief →</a></article>
+<article class="card"><div class="meta">Stader ETHx · Sprint 12 · parameter delta</div><h3>Stader's Manager Safe is 3-of-6 on-chain; the docs say 3-of-5.</h3><p>The ETHx upgrade path itself sits behind a 7-day TimelockController, as documented. The difference is the Manager multisig's signer set.</p><a class="more" href="#index">Record →</a></article>
+<article class="card"><div class="meta">Curve crvUSD · Sprint 11 · parameter delta</div><h3>crvUSD market creation now passes through a LendingOwnerProxy wrapper.</h3><p>ControllerFactory <span class="mono">admin()</span> is a LendingOwnerProxy whose <span class="mono">dao()</span> is the CurveOwnershipAgent (7-day Aragon vote), with a 5-of-9 EmergencyDAO. The docs still name the agent as the admin.</p><a class="more" href="#index">Record →</a></article>
+<article class="card"><div class="meta">Inverse FiRM · Sprint 14 · protective delta</div><h3>A zero staleness threshold switches FiRM's oracle staleness check off for sDOLA; a queued 48h fix turns it on.</h3><p><span class="mono">stalenessThreshold = 0</span> makes <span class="mono">isPriceStale</span> return false; a queued Timelock transaction sets 86,500s.</p><a class="more" href="#index">Record →</a></article>
+</div>
+</div></section>
 
-    <section class="sec" id="index">
-      <div class="wrap">
-        <p class="eyebrow">01 / Public Control-Plane &amp; Timelock Truth Index (Sprints 1–14)</p>
-        <h2>Verified on-chain parameters across <strong>collateral &amp; lending infrastructure.</strong></h2>
-        <p class="lede">
-          All entries below reflect public, non-exploitable architectural state replayed at the cited Ethereum Mainnet block height. Security-sensitive findings are strictly excluded from public tables and routed privately at zero cost to official protocol security contacts.
-        </p>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Protocol / Collateral</th>
-                <th>Pinned Block</th>
-                <th>Surface Checked</th>
-                <th>Classification</th>
-                <th>Observed On-Chain State vs. Documentation</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Ethena</strong><br><code>EthenaMinting</code> (<code>RLUSD</code> / <code>USAT</code>)</td>
-                <td><code>#26,406,275</code><br><a href="briefs/ethena-ops-0x0ca0-0x1fe5/">Sprint 14 Brief</a></td>
-                <td>Queued <code>1d</code> Timelock Ops &amp; <code>stablesDeltaLimit</code></td>
-                <td><span class="pill">Queued Onboarding</span></td>
-                <td>Ops <code>0x1fe5...d85b</code> &amp; <code>0x0ca0...7a90</code> (ETAs <code>2026-11-14 10:20–10:22 UTC</code>) onboard <code>RLUSD</code> &amp; <code>USAT</code> at <code>200M / 20M USDe/block</code> matching <code>globalConfig</code>; directional <code>stablesDeltaLimit == 0</code> enforces <code>0 bps</code> adverse ceiling.</td>
-              </tr>
-              <tr>
-                <td><strong>Treehouse</strong><br><code>TREE</code> Governance Token</td>
-                <td><code>#26,406,275</code><br><a href="briefs/treehouse-op-0x2f11/">Sprint 14 Brief</a></td>
-                <td>Queued <code>5d</code> UUPS Upgrade &amp; ERC-7201 Layout</td>
-                <td><span class="pill">Queued Control Shift</span></td>
-                <td>Op <code>0x2f11...451f</code> (ETA <code>2026-11-17 04:51 UTC</code>) upgrades <code>TREE</code> (<code>0x7714...d1f3</code>, not <code>tETH</code>) to add ERC-7201 <code>Blacklistable</code>, granting <code>5-of-7</code> Safe (<code>0x2226...01F6</code>) <code>0s</code> freeze authority while preserving source-level linear declarations.</td>
-              </tr>
-              <tr>
-                <td><strong>Stader Labs</strong><br><code>ETHx</code></td>
-                <td><code>#26,403,676</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-12/block-26403676-summary.md">Sprint 12</a></td>
-                <td><code>Manager</code> Safe Quorum &amp; <code>7d</code> Timelock</td>
-                <td><span class="pill">Parameter Delta</span></td>
-                <td><code>Manager</code> Safe (<code>0xAAfb...07AF</code>) is live <code>3-of-6</code> vs. <code>3-of-5</code> in <code>staderlabs.gitbook.io</code>; <code>ETHx</code> (<code>0xA35b...A15b</code>) <code>ProxyAdmin</code> (<code>0x67B1...C86e</code>) &amp; <code>DEFAULT_ADMIN_ROLE</code> resolve to <code>7d</code> <code>TimelockController</code> (<code>0x1112...68B9</code>, <code>604,800s</code>, <code>6-of-9</code> proposer) across <code>58,434.16 ETHx</code>.</td>
-              </tr>
-              <tr>
-                <td><strong>Curve Finance</strong><br><code>crvUSD</code> / <code>ControllerFactory</code></td>
-                <td><code>#26,403,523</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-11/block-26403523-summary.md">Sprint 11</a></td>
-                <td><code>ControllerFactory.admin()</code> &amp; <code>EmergencyDAO</code></td>
-                <td><span class="pill">Parameter Delta</span></td>
-                <td><code>ControllerFactory</code> (<code>0xC933...38BC</code>) <code>admin()</code> is <code>LendingOwnerProxy</code> (<code>0xeDA0...80d1</code>, routing <code>dao()</code> to <code>CurveOwnershipAgent</code> &amp; ceiling reductions to <code>5-of-9</code> <code>EmergencyDAO</code>) vs. direct <code>CurveOwnershipAgent</code> in <code>factory.md</code>; <code>2.135B crvUSD</code> supply.</td>
-              </tr>
-              <tr>
-                <td><strong>Gearbox V3 / V3.1</strong><br><code>LegacyTimelock</code> &amp; <code>InstanceManager</code></td>
-                <td><code>#26,403,523</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-11/block-26403523-summary.md">Sprint 11</a></td>
-                <td>Timelock Delay &amp; Safe Quorum</td>
-                <td><span class="pill">Parameter Delta</span></td>
-                <td><code>LegacyTimelock</code> (<code>0xa133...f23b</code>) <code>delay() = 129,600s</code> (<code>36h</code>, GIP-104) vs. <code>2d</code> in docs, and <code>InstanceManager</code> (<code>0x7777...CB2e</code>) <code>owner()</code> is live <code>4-of-21</code> Safe (<code>0x1E9e...53D3</code>) vs. <code>4-of-12</code> in docs; Guard Safes aligned.</td>
-              </tr>
-              <tr>
-                <td><strong>Ondo Finance</strong><br><code>OUSG</code> / <code>Flux Finance</code></td>
-                <td><code>#26,403,121</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-10/block-26403121-summary.md">Sprint 10</a></td>
-                <td><code>RateLimiter</code> &amp; <code>FluxTimelock</code></td>
-                <td><span class="pill">Parameter Delta</span></td>
-                <td><code>RateLimiter</code> (<code>0x98Db...003c</code>) <code>globalSubscriptionLimits(OUSG)</code> word <code>[2] = $100M / 24h</code> vs. <code>$50M</code> in <code>instant-limits.md</code>; <code>Flux</code> <code>Comptroller.admin()</code> is <code>1d</code> <code>FluxTimelock</code> (<code>0x2c58...8d9c</code>, <code>86,400s</code>).</td>
-              </tr>
-              <tr>
-                <td><strong>Maple Finance V2 / Syrup</strong><br><code>syrupUSDC</code></td>
-                <td><code>#26,401,540</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-6/block-26401540-summary.md">Sprint 6</a></td>
-                <td>EIP-1967 Proxy Admin vs. Timelock</td>
-                <td><span class="pill">Parameter Delta</span></td>
-                <td><code>PoolPermissionManager</code> (<code>0xBe10...D8b3</code>) EIP-1967 admin slot holds <code>4-of-7</code> DAO Safe (<code>0xd6d4...a196</code>), while <code>Globals.governor()</code> points to 3-day <code>GovernorTimelock</code> (<code>259,200s</code>) across <code>898.55M</code> <code>syrupUSDC</code> units.</td>
-              </tr>
-              <tr>
-                <td><strong>Ethena</strong><br><code>USDe</code> / <code>sUSDe</code></td>
-                <td><code>#26,401,638</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-7/block-26401638-summary.md">Sprint 7</a></td>
-                <td>Timelock Delay &amp; Dev Safe Quorum</td>
-                <td><span class="pill">Parameter Delta</span></td>
-                <td><code>EthenaTimelockController</code> (<code>0xE8Dc...7c94</code>) <code>getMinDelay() = 86,400s</code> (1d, forum topic 810) vs. <code>7d</code> in <code>key-trust-assumptions.md</code>; Dev Safe (<code>0x3B0A...1862</code>) is live <code>5-of-10</code> vs. <code>5/11</code> / <code>7</code> sigs in docs.</td>
-              </tr>
-              <tr>
-                <td><strong>Usual Money</strong><br><code>USD0</code> / <code>USD0++</code></td>
-                <td><code>#26,401,725</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-8/block-26401725-summary.md">Sprint 8</a></td>
-                <td><code>RegistryAccess</code> Admin Delay</td>
-                <td><span class="pill">Parameter Delta</span></td>
-                <td><code>RegistryAccess</code> (<code>0x0D37...bb56</code>) <code>defaultAdminDelay() = 1s</code> (<code>8-of-15</code> Safe <code>0x6e9d...7FB7</code>, <code>pendingDefaultAdminDelay = (0,0)</code>) vs. 3-day (<code>259,200s</code>) role-grant delay in docs.</td>
-              </tr>
-              <tr>
-                <td><strong>Fluid / Instadapp</strong><br>Vaults 76, 110, 111, 144</td>
-                <td><code>#26,401,405</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-5/block-26401405-summary.md">Sprint 5</a></td>
-                <td><code>VaultFactory.isVaultAuth</code> Scope</td>
-                <td><span class="pill">Parameter Delta</span></td>
-                <td><code>isVaultAuth(vault, 0x4F6F...D49e)</code> returns <code>true</code> on Vaults 76, 110, 111, and 144 per <code>IGP-98</code>/<code>IGP-126</code> migration configuration vs. narrow fee/reward scope in permissions doc.</td>
-              </tr>
-              <tr>
-                <td><strong>MetaMorpho Curated</strong><br><code>Re7 WETH</code> vs. <code>Re7 USDT</code></td>
-                <td><code>#26,401,405</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-5/block-26401405-summary.md">Sprint 5</a></td>
-                <td>Guardian Parity &amp; 3d Timelock</td>
-                <td><span class="pill">Parameter Delta</span></td>
-                <td><code>Re7 WETH</code> (<code>0x78Fc...94d0</code>) enforces <code>timelock() = 259,200s</code> (3d) and <code>2-of-4</code> Safe owner, with <code>guardian() = 0x0</code> vs. Aragon Guardian (<code>0x2F80...BDd4</code>) on peer <code>Re7 USDT</code>.</td>
-              </tr>
-              <tr>
-                <td><strong>Mellow / Lido Earn</strong><br><code>earnETH</code> / <code>earnUSD</code></td>
-                <td><code>#26,401,312</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-4/block-26401312-summary.md">Sprint 4</a></td>
-                <td>Curator Quorum &amp; Admin Overlap</td>
-                <td><span class="pill">Parameter Delta</span></td>
-                <td>Curator Safe (<code>0xe5ab...769d</code>) is live <code>3-of-5</code> vs. <code>3/6</code> in Lido docs; all 5 Curator signers are also owners on the <code>5-of-8</code> Lazy Vault Admin Safe (<code>0x0Dd7...076E</code>, <code>0s</code> Timelock).</td>
-              </tr>
-              <tr>
-                <td><strong>Renzo Protocol</strong><br><code>ezETH</code></td>
-                <td><code>#26,401,725</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-8/block-26401725-summary.md">Sprint 8</a></td>
-                <td><code>DepositQueue</code> Fee Basis Points</td>
-                <td><span class="pill">Parameter Delta</span></td>
-                <td><code>DepositQueue</code> (<code>0xf2F3...0d60</code>) <code>feeBasisPoints() = 1500</code> (<code>15%</code>) vs. <code>10%</code> in <code>ezeth</code> staking documentation; <code>3-of-5</code> Admin Safe across <code>39,495.32 ezETH</code>.</td>
-              </tr>
-              <tr>
-                <td><strong>f(x) Protocol v2</strong><br><code>ProtocolTreasury</code> (4 Pools)</td>
-                <td><code>#26,400,152</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-2/block-26400152-summary.md">Sprint 2</a></td>
-                <td><code>DEFAULT_ADMIN_ROLE</code> Holders</td>
-                <td><span class="pill">Parameter Delta</span></td>
-                <td>All 4 sampled v2 <code>ProtocolTreasury</code> proxies (<code>0x3235...CdA6</code>, etc.) return <code>hasRole = true</code> for <code>6-of-9</code> OpsSafe (<code>0x26B2...7BbF</code>) and <code>3-of-4</code> EmergencySafe (<code>0x28c9...eF62</code>), whereas sampled <code>Timelock</code> (<code>0x6886...E61a</code>) returns <code>false</code> at block <code>26400152</code>.</td>
-              </tr>
-              <tr>
-                <td><strong>Inverse Finance</strong><br><code>FiRM</code> / <code>GovernorMills</code></td>
-                <td><code>#26,399,876</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-1/block-26399876-summary.md">Sprint 1</a></td>
-                <td>Policy Committee Safe Quorum</td>
-                <td><span class="pill">Parameter Delta</span></td>
-                <td><code>GovernorMills</code> guardian wrapper (<code>0x941c...259D</code>) references Policy Committee Safe (<code>0x4b6c...F1B7</code>), live <code>4-of-7</code> on-chain vs. <code>5-of-9</code> in working-groups docs; Timelock delay is <code>48h</code>.</td>
-              </tr>
-              <tr>
-                <td><strong>Mantle Liquid Staking</strong><br><code>mETH</code> / <code>cmETH</code></td>
-                <td><code>#26,403,121</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-10/block-26403121-summary.md">Sprint 10</a></td>
-                <td>3-Day <code>UpgradeTimelock</code></td>
-                <td><span class="pill">Protective Delta</span></td>
-                <td><code>mETH</code> (<code>0xd5F7...ADfa</code>) &amp; <code>Staking</code> EIP-1967 admin slots point to 3-day <code>UpgradeTimelock</code> (<code>0xc260...aCE2</code>, <code>259,200s</code>, <code>6-of-14</code> Security Council proposer), stricter than legacy <code>0</code>-delay doc note.</td>
-              </tr>
-              <tr>
-                <td><strong>Yearn V3</strong><br><code>RoleManager</code></td>
-                <td><code>#26,401,725</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-8/block-26401725-summary.md">Sprint 8</a></td>
-                <td>7-Day Governance Timelock</td>
-                <td><span class="pill">Protective Delta</span></td>
-                <td><code>RoleManager</code> (<code>0xb3bd...9a41</code>) <code>governance()</code> is wired to 7-day <code>TimelockController</code> (<code>0x88Ba...BF73</code>, <code>604,800s</code>), stricter than legacy devdocs note; <code>Daddy</code> Safe is <code>6-of-9</code>.</td>
-              </tr>
-              <tr>
-                <td><strong>ether.fi Core &amp; Liquid</strong><br><code>eETH</code> / <code>BoringVault</code></td>
-                <td><code>#26,401,638</code> (<a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-7/block-26401638-summary.md">S7</a>)<br><code>#26,401,070</code> (<a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-3/block-26401070-summary.md">S3</a>)</td>
-                <td>Sampled 10d / 2d / 1d Timelocks</td>
-                <td><span class="pill">Aligned Baseline</span></td>
-                <td>Core Upgrade Timelock (<code>0x9f26...0761</code>) <code>864,000s</code> (10d) &amp; Operating Timelock (<code>0xcD42...5d7a</code>) <code>172,800s</code> (2d) at S7; Liquid <code>RolesAuthority</code> (<code>0x485B...8122</code>) owned by 1d Timelock (<code>0xD829...2C89</code>) at S3.</td>
-              </tr>
-              <tr>
-                <td><strong>Liquity V2</strong><br><code>BOLD</code></td>
-                <td><code>#26,401,540</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-6/block-26401540-summary.md">Sprint 6</a></td>
-                <td>Sampled Owner &amp; EIP-1967 Slot</td>
-                <td><span class="pill">Aligned Baseline</span></td>
-                <td>Sampled <code>BOLD</code> (<code>0x6440...b01D</code>) <code>owner() = 0x0</code>, <code>Governance</code> <code>owner() = 0x0</code>, and <code>CollateralRegistry</code> EIP-1967 implementation slot <code>= 0x00...00</code>.</td>
-              </tr>
-              <tr>
-                <td><strong>StakeWise V3, Swell &amp; Superstate</strong><br><code>osETH</code>, <code>swETH</code>/<code>rswETH</code> &amp; <code>USTB</code>/<code>USCC</code></td>
-                <td><code>#26,403,676</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-12/block-26403676-summary.md">Sprint 12</a></td>
-                <td>Sampled Oracle Quorum, <code>7d</code> Timelock &amp; <code>0</code>-Fee RWA</td>
-                <td><span class="pill">Aligned Baseline</span></td>
-                <td>StakeWise <code>Keeper</code> (<code>0x6B58...87b5</code>) enforces <code>6-of-11</code> oracles, <code>5%</code> fee &amp; <code>90%/92%</code> LTV; Swell <code>swETH</code>/<code>rswETH</code> <code>ProxyAdmin</code>s &amp; <code>PLATFORM_ADMIN</code> resolve to <code>7d</code> <code>SwellTimelock</code> (<code>0xbA82...073b</code>, <code>604,800s</code>); Superstate <code>USTB</code> (<code>0x4341...1C4e</code>) supports <code>USDC</code> at <code>0</code> fee across <code>39.46M USTB</code>.</td>
-              </tr>
-              <tr>
-                <td><strong>Lombard &amp; Resolv</strong><br><code>LBTC</code> Core &amp; <code>USR</code> Admin Rules</td>
-                <td><code>#26,403,523</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-11/block-26403523-summary.md">Sprint 11</a></td>
-                <td>Sampled 24h Proxy Timelock &amp; Admin Delay</td>
-                <td><span class="pill">Aligned Baseline</span></td>
-                <td>Lombard core <code>LBTC</code> (<code>0x8236...4494</code>) <code>ProxyAdmin</code>s resolve to <code>24h</code> <code>TimelockController</code> (<code>0x055E...7e59</code>, <code>86,400s</code>, <code>3-of-5</code> Safe executor); Resolv sampled <code>USR</code> (<code>0x66a1...e110</code>) <code>defaultAdminDelay() = 86,400s</code> under <code>4-of-6</code> Safe (<code>0xD688...f547</code>).</td>
-              </tr>
-              <tr>
-                <td><strong>Lido &amp; Symbiotic Core</strong><br><code>DualGovernance</code> &amp; Core Registries</td>
-                <td><code>#26,403,121</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-10/block-26403121-summary.md">Sprint 10</a></td>
-                <td>Sampled 3d+1d Timelock &amp; Zero Slots</td>
-                <td><span class="pill">Aligned Baseline</span></td>
-                <td>Lido <code>EmergencyProtectedTimelock</code> (<code>0xCE04...2316</code>) enforces <code>259,200s + 86,400s</code> delays &amp; <code>4/7</code>–<code>5/7</code> emergency Safes; Symbiotic core registries hold zero EIP-1967 slots &amp; <code>2-of-3</code> / <code>3-of-5</code> Safe owners.</td>
-              </tr>
-              <tr>
-                <td><strong>Aave V3 / GHO, Compound V3, EigenLayer &amp; Kelp</strong><br>Sampled Blue-Chip Core</td>
-                <td><code>#26,402,160</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-9/block-26402160-summary.md">Sprint 9</a></td>
-                <td>Sampled Timelocks, ACL &amp; ProxyAdmins</td>
-                <td><span class="pill">Aligned Baseline</span></td>
-                <td>Compound V3 Comets -&gt; <code>48h</code> Timelock (<code>0x6d90...3925</code>); Aave V3 <code>ACLManager</code> -&gt; Level 1 Executor (<code>86,400s</code>) &amp; <code>4-of-7</code> Guardian; Kelp <code>rsETH</code> &amp; EigenLayer Core <code>ProxyAdmin</code>s -&gt; <code>10d</code> (<code>864,000s</code>) Timelock paths.</td>
-              </tr>
-              <tr>
-                <td><strong>Spark / Sky, Morpho &amp; Convex</strong><br>Sampled Core Contracts</td>
-                <td><code>#26,401,638</code> (<a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-7/block-26401638-summary.md">S7</a>)<br><code>#26,401,070</code> (<a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-3/block-26401070-summary.md">S3</a>) · <code>#26,401,312</code> (<a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-4/block-26401312-summary.md">S4</a>)</td>
-                <td>Sampled GSM Delay &amp; Owners</td>
-                <td><span class="pill">Aligned Baseline</span></td>
-                <td>Sky <code>GSM_PAUSE_PROXY</code> (<code>0xbE28...38f3</code>) <code>delay() = 172,800s</code> (48h) &amp; Spark <code>owner() = SPARK_PROXY</code> (S7); Morpho Blue <code>owner()</code> (S3) &amp; Convex <code>Booster</code> chain (S4) aligned.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
+<section class="sec" id="index"><div class="wrap">
+<div class="sec-h"><span class="kicker">03</span><h2>Public Control-Plane Index</h2><p>14 Sprints · 37 Indexed Records · 14 parameter deltas · 4 protective deltas · 19 aligned baselines</p></div>
+<details class="matrix" open><summary>Full 37-record address matrix (filterable)</summary>
+<div class="matrix-tools">
+<input class="search" id="matrix-q" type="search" placeholder="Filter by protocol, address or text…" aria-label="Filter records">
+<button class="chip" type="button" data-class="all" aria-pressed="true">All</button>
+<button class="chip" type="button" data-class="parameter_delta" aria-pressed="false">Parameter deltas</button>
+<button class="chip" type="button" data-class="protective_delta" aria-pressed="false">Protective deltas</button>
+<button class="chip" type="button" data-class="aligned_baseline" aria-pressed="false">Aligned baselines</button>
+<span class="count" id="matrix-count">37 of 37 records shown</span>
+</div>
+<div class="tbl-wrap"><table id="matrix"><thead><tr><th>Protocol</th><th>Sprint / block</th><th>Contract &amp; observation</th><th>Class</th><th>Delay obs / docs</th><th>Proof</th></tr></thead>
+<tbody>
+<tr data-class="parameter_delta" data-search="ethena (usde / susde) synthetic dollar ethenatimelockcontroller 1d delay — queued rlusd &amp; usat collateral onboarding 0xe8dc0fab349ea169283c48ccfd09d797e6db7c94 ethenatimelockcontroller getmindelay() = 86400s (1d). operations 0x1fe5e3e892708310bbfcf50efc03a1b8e21e0d0042035d7e8315e0cd5f26d85b (eta 1794651635, 2026-11-14 10:20:35 utc) and 0x0ca0fcc4856b87f3df9a74532bd60db58d1310c27c17e7d9bfa8a56846f57a90 (eta 1794651743, 2026-11-14 10:22:23 utc) are pending. both call ethenaminting (0xe3490297a08d6fc8da46edb7b6142e4f461b62d3).addsupportedasset (0x7cfbc42f) for rlusd and usat as stable with 200m / 20m usde-per-block mint / redeem caps, the same as the usdc / usdt configuration. ethenaminting.stablesdeltalimit() = 0. parameter_delta 14"><td><b>Ethena (USDe / sUSDe)</b><div class="count">Synthetic Dollar</div></td><td>S14<div class="count">#26,406,106</div><div class="addr" title="0xcb24dfb0b8af01dff9550fbbf6eb589b30d29b9625f41af56c188ae10d086ecf">0xcb24dfb0…086ecf</div></td><td><b>EthenaTimelockController</b> <span class="addr">0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94</span><div>EthenaTimelockController 1d delay — queued RLUSD &amp; USAT collateral onboarding</div><div class="obs">getMinDelay() = 86400s (1d). Operations 0x1fe5e3e892708310bbfcf50efc03a1b8e21e0d0042035d7e8315e0cd5f26d85b (ETA 1794651635, 2026-11-14 10:20:35 UTC) and 0x0ca0fcc4856b87f3df9a74532bd60db58d1310c27c17e7d9bfa8a56846f57a90 (ETA 1794651743, 2026-11-14 10:22:23 UTC) are pending. Both call EthenaMinting (0xe3490297a08d6fC8Da46Edb7B6142E4F461b62D3).addSupportedAsset (0x7cfbc42f) for RLUSD and USAT as STABLE with 200M / 20M USDe-per-block mint / redeem caps, the same as the USDC / USDT configuration. EthenaMinting.stablesDeltaLimit() = 0.</div></td><td><span class="badge delta">parameter delta</span></td><td class="mono">1d / 7d</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-14/block-26406106-summary.md" target="_blank" rel="noopener">Summary</a><div><span class="count">EAS pending (hash-pinned)</span></div><div class="addr" title="SHA-256 of the summary">0x3bdb79ac…8b1c</div></td></tr>
+<tr data-class="protective_delta" data-search="inverse finance (firm) cdp / lending borrowcontroller stalenessthreshold 0-sentinel — queued 48h fix for sdola market 0x01eca33e20a4c379bd8a5361f896a7dd2bae4ce8 firm borrowcontroller timelock (0x926df14a23be491164dcf93f4c468a50ef659d5b) delay() = 172800s (48h), and the timelock is borrowcontroller.operator(). stalenessthreshold(sdola market 0xc45e9c231ab5d9bd3f1131e7901b100d8d236c4d) = 0, which disables the oracle staleness check (ispricestale returns false when the threshold is 0). a queued timelock transaction (queuedtransactions = true) sets it to 86500s at eta 1794633827 (2026-11-14 05:23:47 utc), which enables the check (protective). protective_delta 14"><td><b>Inverse Finance (FiRM)</b><div class="count">CDP / Lending</div></td><td>S14<div class="count">#26,406,106</div><div class="addr" title="0xcb24dfb0b8af01dff9550fbbf6eb589b30d29b9625f41af56c188ae10d086ecf">0xcb24dfb0…086ecf</div></td><td><b>FiRM BorrowController</b> <span class="addr">0x01ECA33e20a4c379Bd8A5361f896A7dd2bAE4ce8</span><div>BorrowController stalenessThreshold 0-sentinel — queued 48h fix for sDOLA market</div><div class="obs">Timelock (0x926dF14a23BE491164dCF93f4c468A50ef659D5B) delay() = 172800s (48h), and the Timelock is BorrowController.operator(). stalenessThreshold(sDOLA market 0xC45E9c231ab5D9Bd3F1131E7901B100D8D236C4d) = 0, which disables the oracle staleness check (isPriceStale returns false when the threshold is 0). A queued Timelock transaction (queuedTransactions = true) sets it to 86500s at eta 1794633827 (2026-11-14 05:23:47 UTC), which enables the check (protective).</div></td><td><span class="badge protect">protective delta</span></td><td class="mono">2d / 2d</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-14/block-26406106-summary.md" target="_blank" rel="noopener">Summary</a><div><span class="count">EAS pending (hash-pinned)</span></div><div class="addr" title="SHA-256 of the summary">0x3bdb79ac…8b1c</div></td></tr>
+<tr data-class="aligned_baseline" data-search="kelp dao (rseth) liquid restaking rseth &amp; lrtdepositpool proxyadmin owned by 10d timelockcontroller 0xa1290d69c65a6fe4df752f95823fae25cb99e5a7 rseth proxy (eip-1967 admin slot) rseth (0xa1290d69c65a6fe4df752f95823fae25cb99e5a7) and lrtdepositpool (0x036676389e48133b63a802f8635ad39e752d375d) eip-1967 admin = proxyadmin (0xb61e0e39b6d4030c36a176f576aabe44bf59dc78); owner() = timelockcontroller (0x49bd9989e31ad35b0a62c20be86335196a3135b1) with getmindelay() = 864000s (10d). aligned_baseline 14"><td><b>Kelp DAO (rsETH)</b><div class="count">Liquid Restaking</div></td><td>S14<div class="count">#26,406,106</div><div class="addr" title="0xcb24dfb0b8af01dff9550fbbf6eb589b30d29b9625f41af56c188ae10d086ecf">0xcb24dfb0…086ecf</div></td><td><b>rsETH proxy (EIP-1967 admin slot)</b> <span class="addr">0xA1290d69c65A6Fe4DF752f95823fae25cB99e5A7</span><div>rsETH &amp; LRTDepositPool ProxyAdmin owned by 10d TimelockController</div><div class="obs">rsETH (0xA1290d69c65A6Fe4DF752f95823fae25cB99e5A7) and LRTDepositPool (0x036676389e48133B63a802f8635AD39E752D375D) EIP-1967 admin = ProxyAdmin (0xb61e0E39b6d4030C36A176f576aaBE44BF59Dc78); owner() = TimelockController (0x49bD9989E31aD35B0A62c20BE86335196A3135B1) with getMinDelay() = 864000s (10d).</div></td><td><span class="badge ok">aligned baseline</span></td><td class="mono">10d / 10d</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-14/block-26406106-summary.md" target="_blank" rel="noopener">Summary</a><div><span class="count">EAS pending (hash-pinned)</span></div><div class="addr" title="SHA-256 of the summary">0x3bdb79ac…8b1c</div></td></tr>
+<tr data-class="aligned_baseline" data-search="treehouse (tree / teth) fixed income / lst tree uups owner = 5d timelockcontroller — queued blacklistable upgrade 0x2225dabffc7f862c99477381e971e8b1fdab467e treehouse timelockcontroller getmindelay() = 432000s (5d); tree (0x77146784315ba81904d654466968e3a7c196d1f3).owner() = timelockcontroller. operation 0x2f11dcc36860f09b9ef94585589ced1798cef603d133efecd017ce7e544c451f is pending (eta 1794891107, 2026-11-17 04:51:47 utc). it upgrades tree to implementation 0x0fedcbfebc293ad8048726b0f887e6c1126effa6, which adds a blacklistable module whose blacklister is a 5-of-7 safe; after execution that safe can freeze transfers with no delay. aligned_baseline 14"><td><b>Treehouse (TREE / tETH)</b><div class="count">Fixed Income / LST</div></td><td>S14<div class="count">#26,406,106</div><div class="addr" title="0xcb24dfb0b8af01dff9550fbbf6eb589b30d29b9625f41af56c188ae10d086ecf">0xcb24dfb0…086ecf</div></td><td><b>Treehouse TimelockController</b> <span class="addr">0x2225DAbFfC7F862c99477381E971E8B1FDaB467e</span><div>TREE UUPS owner = 5d TimelockController — queued Blacklistable upgrade</div><div class="obs">getMinDelay() = 432000s (5d); TREE (0x77146784315Ba81904d654466968e3a7c196d1f3).owner() = TimelockController. Operation 0x2f11dcc36860f09b9ef94585589ced1798cef603d133efecd017ce7e544c451f is pending (ETA 1794891107, 2026-11-17 04:51:47 UTC). It upgrades TREE to implementation 0x0fedcbfEBc293Ad8048726B0F887e6C1126EffA6, which adds a Blacklistable module whose blacklister is a 5-of-7 Safe; after execution that Safe can freeze transfers with no delay.</div></td><td><span class="badge ok">aligned baseline</span></td><td class="mono">5d / 5d</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-14/block-26406106-summary.md" target="_blank" rel="noopener">Summary</a><div><span class="count">EAS pending (hash-pinned)</span></div><div class="addr" title="SHA-256 of the summary">0x3bdb79ac…8b1c</div></td></tr>
+<tr data-class="protective_delta" data-search="ether.fi core (eeth / weeth) liquid restaking core upgrade timelock (10d) — queued layerzero v2 setdelegate to timelock 0x9f26d4c958fd811a1f59b01b86be7dffc9d20761 etherfitimelock getmindelay() = 864000s (10d); operation 0x244e3f6c3df722246c471cee58804dd34c7703fce9cee1eadc1c5a85f171359f: isoperationpending() = true, gettimestamp() = 1795193651 (2026-11-20 16:54:11 utc). the scheduled call etherfil1syncpooleth (0xd789870bea40d056a4d26055d0befcc8755da146).setdelegate(etherfitimelock) puts the layerzero v2 endpoint delegate behind the 10-day timelock. protective_delta 13"><td><b>ether.fi Core (eETH / weETH)</b><div class="count">Liquid Restaking</div></td><td>S13<div class="count">#26,405,302</div><div class="addr" title="0xe05f4fd5698556131e7514b3a8eb24960962a768f8e0bfe0e99e3f1681127f65">0xe05f4fd5…127f65</div></td><td><b>EtherFiTimelock</b> <span class="addr">0x9f26d4C958fD811A1F59B01B86Be7dFFc9d20761</span><div>Core Upgrade Timelock (10d) — queued LayerZero V2 setDelegate to Timelock</div><div class="obs">getMinDelay() = 864000s (10d); operation 0x244e3f6c3df722246c471cee58804dd34c7703fce9cee1eadc1c5a85f171359f: isOperationPending() = true, getTimestamp() = 1795193651 (2026-11-20 16:54:11 UTC). The scheduled call EtherfiL1SyncPoolETH (0xD789870beA40D056A4d26055d0bEFcC8755DA146).setDelegate(EtherFiTimelock) puts the LayerZero V2 endpoint delegate behind the 10-day timelock.</div></td><td><span class="badge protect">protective delta</span></td><td class="mono">10d / —</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-13/block-26405302-summary.md" target="_blank" rel="noopener">Summary</a><div><span class="count">EAS pending (hash-pinned)</span></div><div class="addr" title="SHA-256 of the summary">0xb145edb2…b50b</div></td></tr>
+<tr data-class="parameter_delta" data-search="stader labs (ethx) liquid staking manager safe quorum &amp; 7-day timelockcontroller admin path 0xaafb31780e4b9c95bc920e388f4925a874cd07af stader manager safe manager safe (0xaafb31780e4b9c95bc920e388f4925a874cd07af) getthreshold() = 3, getowners().length = 6 (3-of-6 gnosis safe); ethx (0xa35b1b31ce002fbf2058d22f30f95d405200a15b) eip-1967 admin slot = proxyadmin (0x67b12264ca3e0037fc7e22f2457b42643a04c86e), owner() = timelockcontroller (0x1112d5c55670cb5144bf36114c20a122908068b9, getmindelay() = 604800s / 7d, proposer_role held by 6-of-9 community safe 0x45b977cecb9dfaa17dfcba88826ef684b8489ff6), which also holds default_admin_role on ethx and staderconfig (0x4abef2263d5a5ed582fc9a9789a41d85b68d69db); ethx minter_role held by stakepoolsmanager (0xcf5ea1b38380f6af39068375516daf40ed70d299), totalsupply = 58,434.16 ethx (18 dec). parameter_delta 12"><td><b>Stader Labs (ETHx)</b><div class="count">Liquid Staking</div></td><td>S12<div class="count">#26,403,676</div><div class="addr" title="0xf4246ca23c4c38d520de16080a11b5186d04c8242b2c85edcb04c455d291c3ae">0xf4246ca2…91c3ae</div></td><td><b>Stader Manager Safe</b> <span class="addr">0xAAfb31780e4b9c95Bc920e388f4925A874cd07AF</span><div>Manager Safe Quorum &amp; 7-Day TimelockController Admin Path</div><div class="obs">Manager Safe (0xAAfb31780e4b9c95Bc920e388f4925A874cd07AF) getThreshold() = 3, getOwners().length = 6 (3-of-6 Gnosis Safe); ETHx (0xA35b1B31Ce002FBF2058D22F30f95D405200A15b) EIP-1967 admin slot = ProxyAdmin (0x67B12264Ca3e0037Fc7E22F2457b42643a04C86e), owner() = TimelockController (0x1112D5C55670Cb5144BF36114C20a122908068B9, getMinDelay() = 604800s / 7d, PROPOSER_ROLE held by 6-of-9 Community Safe 0x45B977CeCB9Dfaa17dFcBa88826ef684b8489fF6), which also holds DEFAULT_ADMIN_ROLE on ETHx and StaderConfig (0x4ABEF2263d5A5ED582FC9A9789a41D85b68d69DB); ETHx MINTER_ROLE held by StakePoolsManager (0xcf5EA1b38380f6aF39068375516Daf40Ed70D299), totalSupply = 58,434.16 ETHx (18 dec).</div></td><td><span class="badge delta">parameter delta</span></td><td class="mono">7d / 7d</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-12/block-26403676-summary.md" target="_blank" rel="noopener">Summary</a><div><a href="https://base.easscan.org/attestation/view/0x7caae9c22c86ae171392def07dce83fa5da6fbf904b1ba9b5ff66a5021b16de9" target="_blank" rel="noopener">EAS 0x7caa…6de9</a></div><div class="addr" title="SHA-256 of the summary">0x66205001…0b26</div></td></tr>
+<tr data-class="aligned_baseline" data-search="stakewise v3 (oseth) liquid staking infrastructure sampled keeper oracle quorum, oseth fee &amp; ltv configuration 0x6b5815467da09daa7dc83db21c9239d98bb487b5 stakewise v3 keeper sampled keeper (0x6b5815467da09daa7dc83db21c9239d98bb487b5) totaloracles() = 11, rewardsminoracles() = 6, validatorsminoracles() = 6 (6-of-11 oracle signature quorum); oseth (0xf1c9acdc66974dfb6decb12aa385b9cd01190e38) owner() = 0x0000000000000000000000000000000000000000, totalsupply = 148,452.02 oseth (18 dec); ostokenvaultcontroller (0x2a261e60fb14586b474c208b1b7ac6d0f5000306) feepercent() = 500 (5%), totalassets = 160,753.18 eth; ostokenconfig (0x287d1e2a8de183a8bf8f2b09fa1340fbd766eb59) getconfig(0x0000000000000000000000000000000000000000) = (1.01e18, 0.92e18, 0.90e18) (90% mint ltv, 92% liquidation threshold). aligned_baseline 12"><td><b>StakeWise V3 (osETH)</b><div class="count">Liquid Staking Infrastructure</div></td><td>S12<div class="count">#26,403,676</div><div class="addr" title="0xf4246ca23c4c38d520de16080a11b5186d04c8242b2c85edcb04c455d291c3ae">0xf4246ca2…91c3ae</div></td><td><b>StakeWise V3 Keeper</b> <span class="addr">0x6B5815467da09DaA7DC83Db21c9239d98Bb487b5</span><div>Sampled Keeper Oracle Quorum, osETH Fee &amp; LTV Configuration</div><div class="obs">Sampled Keeper (0x6B5815467da09DaA7DC83Db21c9239d98Bb487b5) totalOracles() = 11, rewardsMinOracles() = 6, validatorsMinOracles() = 6 (6-of-11 oracle signature quorum); osETH (0xf1C9acDc66974dFB6dEcB12aA385b9cD01190E38) owner() = 0x0000000000000000000000000000000000000000, totalSupply = 148,452.02 osETH (18 dec); OsTokenVaultController (0x2A261e60FB14586B474C208b1B7AC6D0f5000306) feePercent() = 500 (5%), totalAssets = 160,753.18 ETH; OsTokenConfig (0x287d1e2A8dE183A8bf8f2b09Fa1340fBd766eb59) getConfig(0x0000000000000000000000000000000000000000) = (1.01e18, 0.92e18, 0.90e18) (90% mint LTV, 92% liquidation threshold).</div></td><td><span class="badge ok">aligned baseline</span></td><td class="mono">— / —</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-12/block-26403676-summary.md" target="_blank" rel="noopener">Summary</a><div><a href="https://base.easscan.org/attestation/view/0x7caae9c22c86ae171392def07dce83fa5da6fbf904b1ba9b5ff66a5021b16de9" target="_blank" rel="noopener">EAS 0x7caa…6de9</a></div><div class="addr" title="SHA-256 of the summary">0x66205001…0b26</div></td></tr>
+<tr data-class="aligned_baseline" data-search="superstate (ustb / uscc) institutional rwa / tokenized funds sampled usdc subscription fee &amp; fund supply alignment 0x43415eb6ff9db7e26a15b704e7a3edce97d31c4e superstate ustb sampled ustb (0x43415eb6ff9db7e26a15b704e7a3edce97d31c4e) supportedstablecoins(0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48) returns sweep destination 0x774ae279c21b6a17a6e2bd5ab5398ff98f398807 and subscription fee = 0 for usdc; ustb totalsupply = 39,459,575.14 ustb (6 dec), uscc (0x14d60e7fdc0d71d8611742720e4c50e7a974020c) totalsupply = 4,066,680.13 uscc (6 dec). aligned_baseline 12"><td><b>Superstate (USTB / USCC)</b><div class="count">Institutional RWA / Tokenized Funds</div></td><td>S12<div class="count">#26,403,676</div><div class="addr" title="0xf4246ca23c4c38d520de16080a11b5186d04c8242b2c85edcb04c455d291c3ae">0xf4246ca2…91c3ae</div></td><td><b>Superstate USTB</b> <span class="addr">0x43415eB6ff9DB7E26A15b704e7A3eDCe97d31C4e</span><div>Sampled USDC Subscription Fee &amp; Fund Supply Alignment</div><div class="obs">Sampled USTB (0x43415eB6ff9DB7E26A15b704e7A3eDCe97d31C4e) supportedStablecoins(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48) returns sweep destination 0x774AE279c21B6a17a6E2BD5ab5398FF98F398807 and subscription fee = 0 for USDC; USTB totalSupply = 39,459,575.14 USTB (6 dec), USCC (0x14d60E7FDC0D71d8611742720E4C50E7a974020c) totalSupply = 4,066,680.13 USCC (6 dec).</div></td><td><span class="badge ok">aligned baseline</span></td><td class="mono">— / —</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-12/block-26403676-summary.md" target="_blank" rel="noopener">Summary</a><div><a href="https://base.easscan.org/attestation/view/0x7caae9c22c86ae171392def07dce83fa5da6fbf904b1ba9b5ff66a5021b16de9" target="_blank" rel="noopener">EAS 0x7caa…6de9</a></div><div class="addr" title="SHA-256 of the summary">0x66205001…0b26</div></td></tr>
+<tr data-class="aligned_baseline" data-search="swell (sweth / rsweth) liquid staking &amp; restaking sampled 7-day swelltimelock, proxyadmins &amp; reprice bounds 0xba829003e6b5dd858fbed3945719939a6dc3073b swelltimelock sweth (0xf951e335afb289353dc249e82926178eac7ded78) eip-1967 admin proxyadmin (0x25eaf579ca2255faa5463c635eec28697b5b8846) and rsweth (0xfae103dc9cf190ed75350761e95403b7b8afa6c0) eip-1967 admin proxyadmin (0xd750b84845f1cadfeac63f96ec74635e949bfd14) both resolve owner() to swelltimelock (0xba829003e6b5dd858fbed3945719939a6dc3073b, delay() = 604800s / 7d, admin() = 4-of-7 safe 0x20fdf47509c5efc0e1101e3ce443691781c17f90), which is also the sole platform_admin on both accesscontrolmanagers (0x625087d72c762254a72cb22cc2eca40da6b95eac, 0x796592b2092f7e150c48643da19dd2f28be3333f); minimumrepricetime = 3600s (1h), maximumrepricedifferencepercentage = 1% (1e16); sweth totalsupply = 9,635.13 sweth, rsweth totalsupply = 10,363.44 rsweth. aligned_baseline 12"><td><b>Swell (swETH / rswETH)</b><div class="count">Liquid Staking &amp; Restaking</div></td><td>S12<div class="count">#26,403,676</div><div class="addr" title="0xf4246ca23c4c38d520de16080a11b5186d04c8242b2c85edcb04c455d291c3ae">0xf4246ca2…91c3ae</div></td><td><b>SwellTimelock</b> <span class="addr">0xbA829003e6b5dD858fbed3945719939a6DC3073b</span><div>Sampled 7-Day SwellTimelock, ProxyAdmins &amp; Reprice Bounds</div><div class="obs">swETH (0xf951E335afb289353dc249e82926178EaC7DEd78) EIP-1967 admin ProxyAdmin (0x25EAf579cA2255fAA5463c635eec28697b5b8846) and rswETH (0xFAe103DC9cf190eD75350761e95403b7b8aFa6c0) EIP-1967 admin ProxyAdmin (0xD750B84845f1cAdfEAc63f96Ec74635e949bFd14) both resolve owner() to SwellTimelock (0xbA829003e6b5dD858fbed3945719939a6DC3073b, delay() = 604800s / 7d, admin() = 4-of-7 Safe 0x20fDF47509C5eFC0e1101e3CE443691781C17F90), which is also the sole PLATFORM_ADMIN on both AccessControlManagers (0x625087d72c762254a72CB22cC2ECa40da6b95EAC, 0x796592b2092F7E150C48643dA19Dd2F28be3333F); minimumRepriceTime = 3600s (1h), maximumRepriceDifferencePercentage = 1% (1e16); swETH totalSupply = 9,635.13 swETH, rswETH totalSupply = 10,363.44 rswETH.</div></td><td><span class="badge ok">aligned baseline</span></td><td class="mono">7d / —</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-12/block-26403676-summary.md" target="_blank" rel="noopener">Summary</a><div><a href="https://base.easscan.org/attestation/view/0x7caae9c22c86ae171392def07dce83fa5da6fbf904b1ba9b5ff66a5021b16de9" target="_blank" rel="noopener">EAS 0x7caa…6de9</a></div><div class="addr" title="SHA-256 of the summary">0x66205001…0b26</div></td></tr>
+<tr data-class="parameter_delta" data-search="curve finance (crvusd) decentralized stablecoin &amp; lending controllerfactory admin proxy &amp; emergencydao debt-ceiling guard 0xc9332fdcb1c491dcc683bae86fe3cb70360738bc crvusd controllerfactory controllerfactory (0xc9332fdcb1c491dcc683bae86fe3cb70360738bc) admin() = lendingownerproxy (0xeda020b067872717901916a3b8c724c21f6080d1), where dao() = curveownershipagent (0x40907540d8a6c65c637785e8f8b742ae6b0b9968, aragon votetime = 604800s / 7d on 0xe478de485ad2fe566d49342cbd03e49ed7db3356) and emergency_dao() = 5-of-9 emergencydao safe (0x467947ee34af926cf1dcac093870f613c96b1e0c); crvusd (0xf939e0a03fb07f59a73314e73794be0e57ac1b4e) minter() = controllerfactory, totalsupply = 2,134,809,204.98 crvusd; debt_ceiling(0x370a449febb9411c95bf897021377fe0b7d100c0) = 1,000,000,000 crvusd. parameter_delta 11"><td><b>Curve Finance (crvUSD)</b><div class="count">Decentralized Stablecoin &amp; Lending</div></td><td>S11<div class="count">#26,403,523</div><div class="addr" title="0xfc7beaa2338e8054577c0b101b641bc42afca2af39cb85d3fc13cbee32d4681a">0xfc7beaa2…d4681a</div></td><td><b>crvUSD ControllerFactory</b> <span class="addr">0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC</span><div>ControllerFactory Admin Proxy &amp; EmergencyDAO Debt-Ceiling Guard</div><div class="obs">ControllerFactory (0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC) admin() = LendingOwnerProxy (0xeDA020b067872717901916a3B8C724C21f6080d1), where dao() = CurveOwnershipAgent (0x40907540d8a6C65c637785e8f8B742ae6b0b9968, Aragon voteTime = 604800s / 7d on 0xE478de485ad2fe566d49342Cbd03E49ed7DB3356) and emergency_dao() = 5-of-9 EmergencyDAO Safe (0x467947EE34aF926cF1DCac093870f613C96B1E0c); crvUSD (0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E) minter() = ControllerFactory, totalSupply = 2,134,809,204.98 crvUSD; debt_ceiling(0x370a449FeBb9411c95bf897021377fe0B7D100c0) = 1,000,000,000 crvUSD.</div></td><td><span class="badge delta">parameter delta</span></td><td class="mono">— / —</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-11/block-26403523-summary.md" target="_blank" rel="noopener">Summary</a><div><a href="https://base.easscan.org/attestation/view/0x754edd7612258b755ff2e56903243d1f8867bad53c29ce3febb5ed9114005e42" target="_blank" rel="noopener">EAS 0x754e…5e42</a></div><div class="addr" title="SHA-256 of the summary">0xc4a599ac…baa8</div></td></tr>
+<tr data-class="parameter_delta" data-search="gearbox v3 / v3.1 leveraged credit &amp; curated lending legacytimelock delay &amp; instancemanager safe quorum 0xa133c9a92fb8ddb962af1cbae58b2723a0bdf23b gearbox legacytimelock legacytimelock (0xa133c9a92fb8ddb962af1cbae58b2723a0bdf23b) delay() = 129600s (36 hours, gip-104), admin() = legacygovernor (0x29b97f37b3e0c704bcfd785f5b7bba2a0b7df2c7); instancemanager (0x77777777144339bdc3accee992d8d4d31734cb2e) owner() = 4-of-21 gnosis safe (0x1e9ec044853611f4bcd4bbcfe7657508bd1c53d3); tech (0xa7d5ddc1b8557914f158076b228aa91ef613f1d5, 6-of-12), veto (0xbb803559b4d58b75e12dd74641ab955e8b0df40e, 4-of-12), treasury (0x7b065fcb0760df0cea8cfd144e08554f3cea73d1, 5-of-10), and fee (0x3e965117a51186e41c2bb58b729a1e518a715e5f, 5-of-10) guard safes match documented thresholds. parameter_delta 11"><td><b>Gearbox V3 / V3.1</b><div class="count">Leveraged Credit &amp; Curated Lending</div></td><td>S11<div class="count">#26,403,523</div><div class="addr" title="0xfc7beaa2338e8054577c0b101b641bc42afca2af39cb85d3fc13cbee32d4681a">0xfc7beaa2…d4681a</div></td><td><b>Gearbox LegacyTimelock</b> <span class="addr">0xa133C9A92Fb8dDB962Af1cbae58b2723A0bdf23b</span><div>LegacyTimelock Delay &amp; InstanceManager Safe Quorum</div><div class="obs">LegacyTimelock (0xa133C9A92Fb8dDB962Af1cbae58b2723A0bdf23b) delay() = 129600s (36 hours, GIP-104), admin() = LegacyGovernor (0x29B97F37B3E0C704bCFD785F5b7bBa2A0B7df2c7); InstanceManager (0x77777777144339Bdc3aCceE992D8d4D31734CB2e) owner() = 4-of-21 Gnosis Safe (0x1E9ec044853611F4bCD4BBcFE7657508BD1c53D3); Tech (0xA7D5DDc1b8557914F158076b228AA91eF613f1D5, 6-of-12), Veto (0xbb803559B4D58b75E12dd74641AB955e8B0Df40E, 4-of-12), Treasury (0x7b065Fcb0760dF0CEA8CFd144e08554F3CeA73D1, 5-of-10), and Fee (0x3E965117A51186e41c2BB58b729A1e518A715e5F, 5-of-10) Guard Safes match documented thresholds.</div></td><td><span class="badge delta">parameter delta</span></td><td class="mono">36h / 2d</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-11/block-26403523-summary.md" target="_blank" rel="noopener">Summary</a><div><a href="https://base.easscan.org/attestation/view/0x754edd7612258b755ff2e56903243d1f8867bad53c29ce3febb5ed9114005e42" target="_blank" rel="noopener">EAS 0x754e…5e42</a></div><div class="addr" title="SHA-256 of the summary">0xc4a599ac…baa8</div></td></tr>
+<tr data-class="aligned_baseline" data-search="lombard (lbtc) institutional btcfi / liquid staked bitcoin sampled core proxyadmin wiring &amp; 24h timelockcontroller 0x055e84e7fe8955e2781010b866f10ef6e1e77e59 lombard timelockcontroller lbtc (0x8236a87084f8b84306f72007f36f2618a5634494) eip-1967 admin slot = proxyadmin (0xbae061c73876952aa2c5e483b74dfa785425f879), whose owner() — along with assetrouter proxyadmin (0xbf4202c8a0d852d432266dfe112ed624a1a36754) and consortium proxyadmin (0x1629ae77cc70daac95ec479caaea23ece77c67c5) — resolves to timelockcontroller (0x055e84e7fe8955e2781010b866f10ef6e1e77e59, getmindelay() = 86400s / 24h, executor_role held by 3-of-5 safe 0x251a604e8e8f6906d60f8dedc5aaeb8cd38f4892 with guard 0x87bde523e05fee2c557d6f592f7eb686c69189ab); lbtc totalsupply = 6,203.54 lbtc (8 dec). aligned_baseline 11"><td><b>Lombard (LBTC)</b><div class="count">Institutional BTCfi / Liquid Staked Bitcoin</div></td><td>S11<div class="count">#26,403,523</div><div class="addr" title="0xfc7beaa2338e8054577c0b101b641bc42afca2af39cb85d3fc13cbee32d4681a">0xfc7beaa2…d4681a</div></td><td><b>Lombard TimelockController</b> <span class="addr">0x055E84e7FE8955E2781010B866f10Ef6E1E77e59</span><div>Sampled Core ProxyAdmin Wiring &amp; 24h TimelockController</div><div class="obs">LBTC (0x8236a87084f8B84306f72007F36F2618A5634494) EIP-1967 admin slot = ProxyAdmin (0xbae061C73876952aa2C5e483B74DfA785425f879), whose owner() — along with AssetRouter ProxyAdmin (0xBf4202c8a0d852D432266dfE112ED624a1a36754) and Consortium ProxyAdmin (0x1629AE77cC70DaAc95Ec479caAEA23ECE77c67c5) — resolves to TimelockController (0x055E84e7FE8955E2781010B866f10Ef6E1E77e59, getMinDelay() = 86400s / 24h, EXECUTOR_ROLE held by 3-of-5 Safe 0x251a604E8E8f6906d60f8dedC5aAeb8CD38F4892 with Guard 0x87bde523e05Fee2C557d6F592F7EB686C69189Ab); LBTC totalSupply = 6,203.54 LBTC (8 dec).</div></td><td><span class="badge ok">aligned baseline</span></td><td class="mono">1d / 1d</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-11/block-26403523-summary.md" target="_blank" rel="noopener">Summary</a><div><a href="https://base.easscan.org/attestation/view/0x754edd7612258b755ff2e56903243d1f8867bad53c29ce3febb5ed9114005e42" target="_blank" rel="noopener">EAS 0x754e…5e42</a></div><div class="addr" title="SHA-256 of the summary">0xc4a599ac…baa8</div></td></tr>
+<tr data-class="aligned_baseline" data-search="resolv (usr / rlp) delta-neutral synthetic dollar sampled usr accesscontroldefaultadminrules delay &amp; request counters 0x66a1e37c9b0eaddca17d3662d6c05f4decf3e110 resolv usr token sampled usr (0x66a1e37c9b0eaddca17d3662d6c05f4decf3e110) defaultadmin() = 4-of-6 core safe (0xd6889f307be1b83bb355d5da7d4478fb0d2af547) with defaultadmindelay() = 86400s (1 day); sampled usrexternalrequestsmanager (0xa27a69ae180e202fde5d38189a3f24fe24e55861) and rlpexternalrequestsmanager (0xc7ab90c2ea9271efb31f5fa2843eeb4b331eafa0) return paused() = true; usr totalsupply = 6,085,929.53 usr, rlp (0x4956b52ae2ff65d74ca2d61207523288e4528f96) totalsupply = 1,592,731.62 rlp. aligned_baseline 11"><td><b>Resolv (USR / RLP)</b><div class="count">Delta-Neutral Synthetic Dollar</div></td><td>S11<div class="count">#26,403,523</div><div class="addr" title="0xfc7beaa2338e8054577c0b101b641bc42afca2af39cb85d3fc13cbee32d4681a">0xfc7beaa2…d4681a</div></td><td><b>Resolv USR Token</b> <span class="addr">0x66a1E37c9b0eAddca17d3662D6c05F4DECf3e110</span><div>Sampled USR AccessControlDefaultAdminRules Delay &amp; Request Counters</div><div class="obs">Sampled USR (0x66a1E37c9b0eAddca17d3662D6c05F4DECf3e110) defaultAdmin() = 4-of-6 Core Safe (0xD6889F307BE1b83Bb355d5DA7d4478FB0d2Af547) with defaultAdminDelay() = 86400s (1 day); sampled UsrExternalRequestsManager (0xa27a69Ae180e202fDe5D38189a3F24Fe24E55861) and RlpExternalRequestsManager (0xc7AB90c2Ea9271EFB31f5fA2843Eeb4B331eaFA0) return paused() = true; USR totalSupply = 6,085,929.53 USR, RLP (0x4956b52aE2fF65D74CA2d61207523288e4528f96) totalSupply = 1,592,731.62 RLP.</div></td><td><span class="badge ok">aligned baseline</span></td><td class="mono">1d / —</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-11/block-26403523-summary.md" target="_blank" rel="noopener">Summary</a><div><a href="https://base.easscan.org/attestation/view/0x754edd7612258b755ff2e56903243d1f8867bad53c29ce3febb5ed9114005e42" target="_blank" rel="noopener">EAS 0x754e…5e42</a></div><div class="addr" title="SHA-256 of the summary">0xc4a599ac…baa8</div></td></tr>
+<tr data-class="aligned_baseline" data-search="lido (steth / dual governance) blue-chip liquid staking emergencyprotectedtimelock delays, dualgovernance &amp; committee safes 0xce0425301c85c5ea2a0873a2dee44d78e02d2316 emergencyprotectedtimelock emergencyprotectedtimelock (0xce0425301c85c5ea2a0873a2dee44d78e02d2316) getaftersubmitdelay() = 259200s (3d), getafterscheduledelay() = 86400s (1d), getgovernance() = dualgovernance (0xc1db28b3301331277e307fdcff8de28242a4486e), getemergencyprotectiondetails() = (2592000, 0, 1813449600); emergency activation (0x8b7854488fde088d686ea672b6ba1a5242515f45, 4-of-7 safe), emergency execution (0xc7792b3f2b399bb0edf53fecdceceb97fbeb18af, 5-of-7 safe), reseal (0xffe21561251c49adccfad065c94fb4931df49081, 5-of-6 safe), and circuitbreaker (0x8772e3a2d86b9347a2688f9bc1808a6d8917760c, 3-of-6 safe); steth totalsupply = 9,759,371.53 steth. aligned_baseline 10"><td><b>Lido (stETH / Dual Governance)</b><div class="count">Blue-Chip Liquid Staking</div></td><td>S10<div class="count">#26,403,121</div><div class="addr" title="0x71acee2313a2c8eacd7d2c87667dc505310b3e9224d84eaebb71d5a890ef9d1c">0x71acee23…ef9d1c</div></td><td><b>EmergencyProtectedTimelock</b> <span class="addr">0xCE0425301C85c5Ea2A0873A2dEe44d78E02D2316</span><div>EmergencyProtectedTimelock Delays, DualGovernance &amp; Committee Safes</div><div class="obs">EmergencyProtectedTimelock (0xCE0425301C85c5Ea2A0873A2dEe44d78E02D2316) getAfterSubmitDelay() = 259200s (3d), getAfterScheduleDelay() = 86400s (1d), getGovernance() = DualGovernance (0xC1db28B3301331277e307FDCfF8DE28242A4486E), getEmergencyProtectionDetails() = (2592000, 0, 1813449600); Emergency Activation (0x8B7854488Fde088d686Ea672B6ba1A5242515f45, 4-of-7 Safe), Emergency Execution (0xC7792b3F2B399bB0EdF53fECDceCeB97FBEB18AF, 5-of-7 Safe), Reseal (0xFFe21561251c49AdccFad065C94Fb4931dF49081, 5-of-6 Safe), and CircuitBreaker (0x8772E3a2D86B9347A2688f9bc1808A6d8917760C, 3-of-6 Safe); stETH totalSupply = 9,759,371.53 stETH.</div></td><td><span class="badge ok">aligned baseline</span></td><td class="mono">3d / 3d</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-10/block-26403121-summary.md" target="_blank" rel="noopener">Summary</a><div><a href="https://base.easscan.org/attestation/view/0xfdd83c8091ef6e8ffe67e8a55a78892fcfbb1092683b21ff2d85f8cc09750e6c" target="_blank" rel="noopener">EAS 0xfdd8…0e6c</a></div><div class="addr" title="SHA-256 of the summary">0x64b868f9…db19</div></td></tr>
+<tr data-class="protective_delta" data-search="mantle liquid staking (meth / cmeth) liquid staking &amp; restaking core proxy eip-1967 admin slot &amp; 3-day upgradetimelock 0xc26016f1166be7b6c5611aab104122e0f6c2ace2 mantle upgradetimelock meth (0xd5f7838f5c461feff7fe49ea5ebaf7728bb0adfa) &amp; staking (0xe3cbd06d7dadb3f4e6557bab7edd924cd1489e8f) eip-1967 admin slots point to upgradetimelock (0xc26016f1166be7b6c5611aab104122e0f6c2ace2) with getmindelay() = 259200s (3 days) and proposer_role held by 6-of-14 security council safe (0x4e59e778a0fb77fbb305637435c62faed9aed40f); meth totalsupply = 217,256.94 meth. protective_delta 10"><td><b>Mantle Liquid Staking (mETH / cmETH)</b><div class="count">Liquid Staking &amp; Restaking</div></td><td>S10<div class="count">#26,403,121</div><div class="addr" title="0x71acee2313a2c8eacd7d2c87667dc505310b3e9224d84eaebb71d5a890ef9d1c">0x71acee23…ef9d1c</div></td><td><b>Mantle UpgradeTimelock</b> <span class="addr">0xc26016f1166bE7b6c5611AAB104122E0f6c2aCE2</span><div>Core Proxy EIP-1967 Admin Slot &amp; 3-Day UpgradeTimelock</div><div class="obs">mETH (0xd5F7838F5C461fefF7FE49ea5ebaF7728bB0ADfa) &amp; Staking (0xe3cBd06D7dadB3F4e6557bAb7EdD924CD1489E8f) EIP-1967 admin slots point to UpgradeTimelock (0xc26016f1166bE7b6c5611AAB104122E0f6c2aCE2) with getMinDelay() = 259200s (3 days) and PROPOSER_ROLE held by 6-of-14 Security Council Safe (0x4e59e778a0fb77fBb305637435C62FaeD9aED40f); mETH totalSupply = 217,256.94 mETH.</div></td><td><span class="badge protect">protective delta</span></td><td class="mono">3d / 0h</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-10/block-26403121-summary.md" target="_blank" rel="noopener">Summary</a><div><a href="https://base.easscan.org/attestation/view/0xfdd83c8091ef6e8ffe67e8a55a78892fcfbb1092683b21ff2d85f8cc09750e6c" target="_blank" rel="noopener">EAS 0xfdd8…0e6c</a></div><div class="addr" title="SHA-256 of the summary">0x64b868f9…db19</div></td></tr>
+<tr data-class="parameter_delta" data-search="ondo finance (ousg &amp; flux finance) institutional rwa / tokenized treasuries ousg ratelimiter global subscription limit &amp; flux 1d timelock 0x98db502215da1ad9f626d4a0090a8a2f4971003c ondo ratelimiter ratelimiter (0x98db502215da1ad9f626d4a0090a8a2f4971003c) globalsubscriptionlimits(0x1b19c19393e2d034d8ff31ff34c81252fcbbee92) word [2] = 100000000000000000000000000 ($100m per 86400s window), globalredemptionlimits(ousg) word [2] = 50000000000000000000000000 ($50m per 86400s); flux comptroller (0x95af143a021df745bc78e845b54591c53a8b3a51) admin() = fluxtimelock (0x2c5898da4df1d45eab2b7b192a361c3b9eb18d9c, delay() = 86400s / 1d, admin() = 0x336505ec1bcc1a020eede459f57581725d23465a); ousg totalsupply = 1,110,569.33 ousg. parameter_delta 10"><td><b>Ondo Finance (OUSG &amp; Flux Finance)</b><div class="count">Institutional RWA / Tokenized Treasuries</div></td><td>S10<div class="count">#26,403,121</div><div class="addr" title="0x71acee2313a2c8eacd7d2c87667dc505310b3e9224d84eaebb71d5a890ef9d1c">0x71acee23…ef9d1c</div></td><td><b>Ondo RateLimiter</b> <span class="addr">0x98Db502215Da1ad9F626D4a0090A8A2f4971003c</span><div>OUSG RateLimiter Global Subscription Limit &amp; Flux 1d Timelock</div><div class="obs">RateLimiter (0x98Db502215Da1ad9F626D4a0090A8A2f4971003c) globalSubscriptionLimits(0x1B19C19393e2d034D8Ff31ff34c81252FcBbee92) word [2] = 100000000000000000000000000 ($100M per 86400s window), globalRedemptionLimits(OUSG) word [2] = 50000000000000000000000000 ($50M per 86400s); Flux Comptroller (0x95Af143a021DF745bc78e845b54591C53a8B3A51) admin() = FluxTimelock (0x2c5898da4DF1d45EAb2B7B192a361C3b9EB18d9c, delay() = 86400s / 1d, admin() = 0x336505EC1BcC1A020EeDe459f57581725D23465A); OUSG totalSupply = 1,110,569.33 OUSG.</div></td><td><span class="badge delta">parameter delta</span></td><td class="mono">1d / 1d</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-10/block-26403121-summary.md" target="_blank" rel="noopener">Summary</a><div><a href="https://base.easscan.org/attestation/view/0xfdd83c8091ef6e8ffe67e8a55a78892fcfbb1092683b21ff2d85f8cc09750e6c" target="_blank" rel="noopener">EAS 0xfdd8…0e6c</a></div><div class="addr" title="SHA-256 of the summary">0x64b868f9…db19</div></td></tr>
+<tr data-class="aligned_baseline" data-search="symbiotic core restaking infrastructure sampled non-upgradeable core registries &amp; factory/adapter safes 0xaeb6bdd95c502390db8f52c8909f703e9af6a346 symbiotic vaultfactory vaultfactory (0xaeb6bdd95c502390db8f52c8909f703e9af6a346), operatorregistry (0xad817a6bc954f678451a71363f04150fdd81af9f), and networkregistry (0xc773b1011461e7314cf05f97d95aa8e92c1fd8aa) hold zero eip-1967 implementation/admin slots (0x00...00); vaultfactory.owner() = 2-of-3 gnosis safe (0x5721ce64ee0d772ce613b62d411350091c544cd0); adapterregistry (0x788823c9579a049d986eb76718bc758c0998594a) owner() = 3-of-5 gnosis safe (0xf6bb2e64bd201a862f2fe5461fc7ef01e2040b6a). aligned_baseline 10"><td><b>Symbiotic Core</b><div class="count">Restaking Infrastructure</div></td><td>S10<div class="count">#26,403,121</div><div class="addr" title="0x71acee2313a2c8eacd7d2c87667dc505310b3e9224d84eaebb71d5a890ef9d1c">0x71acee23…ef9d1c</div></td><td><b>Symbiotic VaultFactory</b> <span class="addr">0xAEb6bdd95c502390db8f52c8909F703E9Af6a346</span><div>Sampled Non-Upgradeable Core Registries &amp; Factory/Adapter Safes</div><div class="obs">VaultFactory (0xAEb6bdd95c502390db8f52c8909F703E9Af6a346), OperatorRegistry (0xAd817a6Bc954F678451A71363f04150FDD81Af9F), and NetworkRegistry (0xC773b1011461e7314CF05f97d95aa8e92C1Fd8aA) hold zero EIP-1967 implementation/admin slots (0x00...00); VaultFactory.owner() = 2-of-3 Gnosis Safe (0x5721ce64Ee0D772Ce613b62D411350091C544cD0); AdapterRegistry (0x788823C9579A049D986eB76718bC758C0998594a) owner() = 3-of-5 Gnosis Safe (0xf6BB2e64Bd201A862f2Fe5461fc7Ef01e2040b6A).</div></td><td><span class="badge ok">aligned baseline</span></td><td class="mono">— / —</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-10/block-26403121-summary.md" target="_blank" rel="noopener">Summary</a><div><a href="https://base.easscan.org/attestation/view/0xfdd83c8091ef6e8ffe67e8a55a78892fcfbb1092683b21ff2d85f8cc09750e6c" target="_blank" rel="noopener">EAS 0xfdd8…0e6c</a></div><div class="addr" title="SHA-256 of the summary">0x64b868f9…db19</div></td></tr>
+<tr data-class="aligned_baseline" data-search="aave v3 / gho blue-chip lending &amp; decentralized stablecoin aclmanager admin role, executor lvl1 delay &amp; guardian safe 0xc2aacf6553d20d1e9d78e365aaba8032af9c85b0 aclmanager aclmanager hasrole(default_admin_role, 0x5300a1a15135ea4dc7ad5a167152c01efc9b192a) = true; payloadscontroller (0xdabad81af85554e9ae636395611c58f7ec1aaec5) getexecutorsettingsbyaccesscontrol(1) = (0x5300a1a15135ea4dc7ad5a167152c01efc9b192a, 86400s / 1d); emergency_admin held by 4-of-7 protocol guardian safe (0x2cfe3ec4d5a6811f4b8067f0de7e47dfa938aa30); gho (0x40d16fc0246ad3160ccc09b8d0d3a2cd28ae6c2f) totalsupply = 699,000,000 gho. aligned_baseline 9"><td><b>Aave V3 / GHO</b><div class="count">Blue-Chip Lending &amp; Decentralized Stablecoin</div></td><td>S9<div class="count">#26,402,160</div><div class="addr" title="0xd04a5e8aa3500c5b60d90c25a810ef28eb9d1bfffadf28f1da58a31ed90582dc">0xd04a5e8a…0582dc</div></td><td><b>ACLManager</b> <span class="addr">0xc2aaCf6553D20d1e9d78E365AAba8032af9c85b0</span><div>ACLManager Admin Role, Executor Lvl1 Delay &amp; Guardian Safe</div><div class="obs">ACLManager hasRole(DEFAULT_ADMIN_ROLE, 0x5300A1a15135EA4dc7aD5a167152C01EFc9b192A) = true; PayloadsController (0xdAbad81aF85554E9ae636395611C58F7eC1aAEc5) getExecutorSettingsByAccessControl(1) = (0x5300A1a15135EA4dc7aD5a167152C01EFc9b192A, 86400s / 1d); EMERGENCY_ADMIN held by 4-of-7 Protocol Guardian Safe (0x2CFe3ec4d5a6811f4B8067F0DE7e47DfA938Aa30); GHO (0x40D16FC0246aD3160Ccc09B8D0D3A2cD28aE6C2f) totalSupply = 699,000,000 GHO.</div></td><td><span class="badge ok">aligned baseline</span></td><td class="mono">— / 1d</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-9/block-26402160-summary.md" target="_blank" rel="noopener">Summary</a><div><a href="https://base.easscan.org/attestation/view/0x0e017bc4399101f9fef3d98a434dd9f2829b6e386e7733408dfd4b626d186eea" target="_blank" rel="noopener">EAS 0x0e01…6eea</a></div><div class="addr" title="SHA-256 of the summary">0x0a4b9cbd…2ef4</div></td></tr>
+<tr data-class="aligned_baseline" data-search="compound v3 (comet) blue-chip lending comet governor, 48h timelock &amp; pause-guardian safe 0xc3d688b66703497daa19211eedff47f25384cdc3 cusdcv3 sampled cusdcv3 (0xc3d688b66703497daa19211eedff47f25384cdc3) &amp; cwethv3 (0xa17581a9e3356d9a858b789d68b4d866e593ae94) governor() = compoundtimelock (0x6d903f6003cca6255d85cca4d3b5e5146dc33925, delay() = 172800s / 48h, admin() = compoundgovernor 0x309a862bbc1a00e45506cb8a802d1ff10004c8c0); pauseguardian() = 5-of-9 community pause safe (0xbbf3f1421d886e9b2c5d716b5192ac998af2012c). aligned_baseline 9"><td><b>Compound V3 (Comet)</b><div class="count">Blue-Chip Lending</div></td><td>S9<div class="count">#26,402,160</div><div class="addr" title="0xd04a5e8aa3500c5b60d90c25a810ef28eb9d1bfffadf28f1da58a31ed90582dc">0xd04a5e8a…0582dc</div></td><td><b>cUSDCv3</b> <span class="addr">0xc3d688B66703497DAA19211EEdff47f25384cdc3</span><div>Comet Governor, 48h Timelock &amp; Pause-Guardian Safe</div><div class="obs">Sampled cUSDCv3 (0xc3d688B66703497DAA19211EEdff47f25384cdc3) &amp; cWETHv3 (0xA17581A9E3356d9A858b789D68B4d866e593aE94) governor() = CompoundTimelock (0x6d903f6003cca6255D85CcA4D3B5E5146dC33925, delay() = 172800s / 48h, admin() = CompoundGovernor 0x309a862bbC1A00e45506cB8A802D1ff10004c8C0); pauseGuardian() = 5-of-9 Community Pause Safe (0xbbf3f1421D886E9b2c5D716B5192aC998af2012c).</div></td><td><span class="badge ok">aligned baseline</span></td><td class="mono">2d / 2d</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-9/block-26402160-summary.md" target="_blank" rel="noopener">Summary</a><div><a href="https://base.easscan.org/attestation/view/0x0e017bc4399101f9fef3d98a434dd9f2829b6e386e7733408dfd4b626d186eea" target="_blank" rel="noopener">EAS 0x0e01…6eea</a></div><div class="addr" title="SHA-256 of the summary">0x0a4b9cbd…2ef4</div></td></tr>
+<tr data-class="aligned_baseline" data-search="eigenlayer core restaking infrastructure core proxyadmin, dual-owner executor safe &amp; 10d timelock 0xc06fd4f821eac1ff1ae8067b36342899b57baa2d eigenlayertimelockcontroller delegationmanager (0x39053d51b77dc0d36036fc1fcc8cb819df8ef37a) eip-1967 admin slot = core proxyadmin (0x8b9566ada63b64d1e1dcf1418b43fd1433b72444), owner() = 1-of-2 executormultisig (0x369e6f597e22eab55ffb173c6d9cd234bd699111) shared between 10d timelockcontroller (0xc06fd4f821eac1ff1ae8067b36342899b57baa2d, getmindelay() = 864000s) and 9-of-13 communitymultisig (0xfea47018d632a77ba579846c840d5706705dc598); pauserregistry() = 0xb8765ed72235d279c3fb53936e4606db0ef12806. aligned_baseline 9"><td><b>EigenLayer Core</b><div class="count">Restaking Infrastructure</div></td><td>S9<div class="count">#26,402,160</div><div class="addr" title="0xd04a5e8aa3500c5b60d90c25a810ef28eb9d1bfffadf28f1da58a31ed90582dc">0xd04a5e8a…0582dc</div></td><td><b>EigenLayerTimelockController</b> <span class="addr">0xC06Fd4F821eaC1fF1ae8067b36342899b57BAa2d</span><div>Core ProxyAdmin, Dual-Owner Executor Safe &amp; 10d Timelock</div><div class="obs">DelegationManager (0x39053D51B77DC0d36036Fc1fCc8Cb819df8Ef37A) EIP-1967 admin slot = Core ProxyAdmin (0x8b9566AdA63B64d1E1dcF1418b43fd1433b72444), owner() = 1-of-2 ExecutorMultisig (0x369e6F597e22EaB55fFb173C6d9cD234BD699111) shared between 10d TimelockController (0xC06Fd4F821eaC1fF1ae8067b36342899b57BAa2d, getMinDelay() = 864000s) and 9-of-13 CommunityMultisig (0xFEA47018D632A77bA579846c840d5706705Dc598); pauserRegistry() = 0xB8765ed72235d279c3Fb53936E4606db0Ef12806.</div></td><td><span class="badge ok">aligned baseline</span></td><td class="mono">10d / 10d</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-9/block-26402160-summary.md" target="_blank" rel="noopener">Summary</a><div><a href="https://base.easscan.org/attestation/view/0x0e017bc4399101f9fef3d98a434dd9f2829b6e386e7733408dfd4b626d186eea" target="_blank" rel="noopener">EAS 0x0e01…6eea</a></div><div class="addr" title="SHA-256 of the summary">0x0a4b9cbd…2ef4</div></td></tr>
+<tr data-class="aligned_baseline" data-search="kelp dao (rseth) liquid restaking proxyadmin 10d timelock &amp; lrtconfig admin safe 0x49bd9989e31ad35b0a62c20be86335196a3135b1 kelptimelockcontroller rseth (0xa1290d69c65a6fe4df752f95823fae25cb99e5a7) eip-1967 admin slot = proxyadmin (0xb61e0e39b6d4030c36a176f576aabe44bf59dc78), owner() = timelockcontroller (0x49bd9989e31ad35b0a62c20be86335196a3135b1, getmindelay() = 864000s / 10d); lrtconfig (0x947cb49334e6571ccbfef1f1f1178d8469d65ec7) default_admin_role held by 6-of-11 safe (0xb3696a817d01c8623e66d156b6798291fa10a46d); rseth totalsupply = 338,071.33 rseth. aligned_baseline 9"><td><b>Kelp DAO (rsETH)</b><div class="count">Liquid Restaking</div></td><td>S9<div class="count">#26,402,160</div><div class="addr" title="0xd04a5e8aa3500c5b60d90c25a810ef28eb9d1bfffadf28f1da58a31ed90582dc">0xd04a5e8a…0582dc</div></td><td><b>KelpTimelockController</b> <span class="addr">0x49bD9989E31aD35B0A62c20BE86335196A3135B1</span><div>ProxyAdmin 10d Timelock &amp; LRTConfig Admin Safe</div><div class="obs">rsETH (0xA1290d69c65A6Fe4DF752f95823fae25cB99e5A7) EIP-1967 admin slot = ProxyAdmin (0xb61e0E39b6d4030C36A176f576aaBE44BF59Dc78), owner() = TimelockController (0x49bD9989E31aD35B0A62c20BE86335196A3135B1, getMinDelay() = 864000s / 10d); LRTConfig (0x947Cb49334e6571ccBFEF1f1f1178d8469D65ec7) DEFAULT_ADMIN_ROLE held by 6-of-11 Safe (0xb3696a817D01C8623E66D156B6798291fa10a46d); rsETH totalSupply = 338,071.33 rsETH.</div></td><td><span class="badge ok">aligned baseline</span></td><td class="mono">10d / 10d</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-9/block-26402160-summary.md" target="_blank" rel="noopener">Summary</a><div><a href="https://base.easscan.org/attestation/view/0x0e017bc4399101f9fef3d98a434dd9f2829b6e386e7733408dfd4b626d186eea" target="_blank" rel="noopener">EAS 0x0e01…6eea</a></div><div class="addr" title="SHA-256 of the summary">0x0a4b9cbd…2ef4</div></td></tr>
+<tr data-class="parameter_delta" data-search="renzo protocol (ezeth) liquid restaking depositqueue.feebasispoints parameter vs. staking docs 0xf2f305d14dcd8aaef887e0428b3c9534795d0d60 depositqueue feebasispoints() = 1500 (15%); admin multisig (0xd1e6626310fd54eceb5b9a51da2ec329d6d4b68a) is 3-of-5 gnosis safe; ezeth (0xbf5495efe5db9ce00f80364c8b423567e58d2110) totalsupply = 39,495.32 ezeth. parameter_delta 8"><td><b>Renzo Protocol (ezETH)</b><div class="count">Liquid Restaking</div></td><td>S8<div class="count">#26,401,725</div><div class="addr" title="0xec3820f0a9db32c01728e66f78dc1958e410269e1077fd1db53df4fbce2ad7a1">0xec3820f0…2ad7a1</div></td><td><b>DepositQueue</b> <span class="addr">0xf2F305D14DCD8aaef887E0428B3c9534795D0d60</span><div>DepositQueue.feeBasisPoints Parameter vs. Staking Docs</div><div class="obs">feeBasisPoints() = 1500 (15%); Admin Multisig (0xD1e6626310fD54Eceb5b9a51dA2eC329D6D4B68A) is 3-of-5 Gnosis Safe; ezETH (0xbf5495Efe5DB9ce00f80364C8B423567e58d2110) totalSupply = 39,495.32 ezETH.</div></td><td><span class="badge delta">parameter delta</span></td><td class="mono">— / —</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-8/block-26401725-summary.md" target="_blank" rel="noopener">Summary</a><div><a href="https://base.easscan.org/attestation/view/0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2" target="_blank" rel="noopener">EAS 0xfd7c…a6c2</a></div><div class="addr" title="SHA-256 of the summary">0x7f560553…d2d2</div></td></tr>
+<tr data-class="parameter_delta" data-search="usual money (usd0 / usd0++) rwa stablecoin openzeppelin accesscontroldefaultadminrules delay 0x0d374775e962c3608b8f0a4b8b10567df739bb56 registryaccess defaultadmindelay() = 1s (0x01); pendingdefaultadmindelay() = (0, 0); defaultadmin() = 0x6e9d65ec80d69b1f508560bc7aea5003db1f7fb7 (8-of-15 gnosis safe). parameter_delta 8"><td><b>Usual Money (USD0 / USD0++)</b><div class="count">RWA Stablecoin</div></td><td>S8<div class="count">#26,401,725</div><div class="addr" title="0xec3820f0a9db32c01728e66f78dc1958e410269e1077fd1db53df4fbce2ad7a1">0xec3820f0…2ad7a1</div></td><td><b>RegistryAccess</b> <span class="addr">0x0D374775E962c3608B8F0A4b8B10567DF739bb56</span><div>OpenZeppelin AccessControlDefaultAdminRules Delay</div><div class="obs">defaultAdminDelay() = 1s (0x01); pendingDefaultAdminDelay() = (0, 0); defaultAdmin() = 0x6e9d65eC80D69b1f508560Bc7aeA5003db1f7FB7 (8-of-15 Gnosis Safe).</div></td><td><span class="badge delta">parameter delta</span></td><td class="mono">0.000277778h / 3d</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-8/block-26401725-summary.md" target="_blank" rel="noopener">Summary</a><div><a href="https://base.easscan.org/attestation/view/0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2" target="_blank" rel="noopener">EAS 0xfd7c…a6c2</a></div><div class="addr" title="SHA-256 of the summary">0x7f560553…d2d2</div></td></tr>
+<tr data-class="protective_delta" data-search="yearn v3 yield aggregation vaults sampled rolemanager.governance() timelock wiring 0xb3bd6b2e61753c311efbcf0111f75d29706d9a41 rolemanager governance() = 0x88ba032be87d5ef1fbe87336b7090767f367bf73 (timelockcontroller, getmindelay() = 604800s / 7 days); getdaddy() = 0xfeb4acf3df3cdea7399794d0869ef76a6efaff52 (6-of-9 ychad.eth safe); getbrain() = 0x16388463d60ffe0661cf7f1f31a7d658ac790ff7 (3-of-6 safe). protective_delta 8"><td><b>Yearn V3</b><div class="count">Yield Aggregation Vaults</div></td><td>S8<div class="count">#26,401,725</div><div class="addr" title="0xec3820f0a9db32c01728e66f78dc1958e410269e1077fd1db53df4fbce2ad7a1">0xec3820f0…2ad7a1</div></td><td><b>RoleManager</b> <span class="addr">0xb3bd6B2E61753C311EFbCF0111f75D29706D9a41</span><div>Sampled RoleManager.governance() Timelock Wiring</div><div class="obs">governance() = 0x88Ba032be87d5EF1fbE87336B7090767F367BF73 (TimelockController, getMinDelay() = 604800s / 7 days); getDaddy() = 0xFEB4acf3df3cDEA7399794D0869ef76A6EfAff52 (6-of-9 ychad.eth Safe); getBrain() = 0x16388463d60FFE0661Cf7F1f31a7D658aC790ff7 (3-of-6 Safe).</div></td><td><span class="badge protect">protective delta</span></td><td class="mono">7d / 0h</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-8/block-26401725-summary.md" target="_blank" rel="noopener">Summary</a><div><a href="https://base.easscan.org/attestation/view/0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2" target="_blank" rel="noopener">EAS 0xfd7c…a6c2</a></div><div class="addr" title="SHA-256 of the summary">0x7f560553…d2d2</div></td></tr>
+<tr data-class="parameter_delta" data-search="ethena (usde / susde) synthetic dollar / basis collateral timelockcontroller mindelay &amp; dev multisig quorum 0xe8dc0fab349ea169283c48ccfd09d797e6db7c94 ethenatimelockcontroller getmindelay() = 86400s (1 day); dev multisig (0x3b0aaf6e6fcd4a7ceef8c92c32dfea9e64dc1862) getthreshold() = 5, getowners().length = 10 (5-of-10 gnosis safe). parameter_delta 7"><td><b>Ethena (USDe / sUSDe)</b><div class="count">Synthetic Dollar / Basis Collateral</div></td><td>S7<div class="count">#26,401,638</div><div class="addr" title="0xe62ad2969617ad07c23bec298c3d5e197ea7c3084f7f66c90d2eb51d04c6273e">0xe62ad296…c6273e</div></td><td><b>EthenaTimelockController</b> <span class="addr">0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94</span><div>TimelockController MinDelay &amp; Dev Multisig Quorum</div><div class="obs">getMinDelay() = 86400s (1 day); Dev Multisig (0x3B0AAf6e6fCd4a7cEEf8c92C32DFeA9E64dC1862) getThreshold() = 5, getOwners().length = 10 (5-of-10 Gnosis Safe).</div></td><td><span class="badge delta">parameter delta</span></td><td class="mono">1d / 7d</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-7/block-26401638-summary.md" target="_blank" rel="noopener">Summary</a><div><a href="https://base.easscan.org/attestation/view/0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779" target="_blank" rel="noopener">EAS 0x3e0e…8779</a></div><div class="addr" title="SHA-256 of the summary">0x326d36de…7f35</div></td></tr>
+<tr data-class="aligned_baseline" data-search="spark / sky decentralized credit &amp; liquidity sampled pooladdressesprovider owner &amp; gsm delay 0xbe286431454714f511008713973d3b053a2d38f3 gsm_pause_proxy gsm_pause_proxy.delay() = 172800s (48 hours); spark pooladdressesprovider (0x02c3ea4e34c0cbd694d2adfa2c690eecbc1793ee) owner() = 0x3300f198988e4c9c63f75df86de36421f06af8c4 (spark_proxy). aligned_baseline 7"><td><b>Spark / Sky</b><div class="count">Decentralized Credit &amp; Liquidity</div></td><td>S7<div class="count">#26,401,638</div><div class="addr" title="0xe62ad2969617ad07c23bec298c3d5e197ea7c3084f7f66c90d2eb51d04c6273e">0xe62ad296…c6273e</div></td><td><b>GSM_PAUSE_PROXY</b> <span class="addr">0xbE286431454714F511008713973d3B053A2d38f3</span><div>Sampled PoolAddressesProvider Owner &amp; GSM Delay</div><div class="obs">GSM_PAUSE_PROXY.delay() = 172800s (48 hours); Spark PoolAddressesProvider (0x02C3eA4e34C0cBd694D2adFa2c690EECbC1793eE) owner() = 0x3300f198988e4C9C63F75dF86De36421f06af8c4 (SPARK_PROXY).</div></td><td><span class="badge ok">aligned baseline</span></td><td class="mono">2d / 2d</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-7/block-26401638-summary.md" target="_blank" rel="noopener">Summary</a><div><a href="https://base.easscan.org/attestation/view/0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779" target="_blank" rel="noopener">EAS 0x3e0e…8779</a></div><div class="addr" title="SHA-256 of the summary">0x326d36de…7f35</div></td></tr>
+<tr data-class="aligned_baseline" data-search="ether.fi core (eeth / weeth) liquid staking &amp; restaking sampled upgrade &amp; operating timelock delays 0x9f26d4c958fd811a1f59b01b86be7dffc9d20761 ether.fi upgrade timelock upgrade timelock getmindelay() = 864000s (10 days); operating timelock (0xcd425f44758a08baab3c4908f3e3de5776e45d7a) getmindelay() = 172800s (2 days); liquiditypool (0x308861a430be4cce5502d0a12724771fc6daf216) gettotalpooledether = 2,276,605.53 eth. aligned_baseline 7"><td><b>ether.fi Core (eETH / weETH)</b><div class="count">Liquid Staking &amp; Restaking</div></td><td>S7<div class="count">#26,401,638</div><div class="addr" title="0xe62ad2969617ad07c23bec298c3d5e197ea7c3084f7f66c90d2eb51d04c6273e">0xe62ad296…c6273e</div></td><td><b>ether.fi Upgrade Timelock</b> <span class="addr">0x9f26d4C958fD811A1F59B01B86Be7dFFc9d20761</span><div>Sampled Upgrade &amp; Operating Timelock Delays</div><div class="obs">Upgrade Timelock getMinDelay() = 864000s (10 days); Operating Timelock (0xcD425f44758a08BaAB3C4908f3e3dE5776e45d7a) getMinDelay() = 172800s (2 days); LiquidityPool (0x308861A430be4cce5502d0A12724771Fc6DaF216) getTotalPooledEther = 2,276,605.53 ETH.</div></td><td><span class="badge ok">aligned baseline</span></td><td class="mono">10d / 10d</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-7/block-26401638-summary.md" target="_blank" rel="noopener">Summary</a><div><a href="https://base.easscan.org/attestation/view/0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779" target="_blank" rel="noopener">EAS 0x3e0e…8779</a></div><div class="addr" title="SHA-256 of the summary">0x326d36de…7f35</div></td></tr>
+<tr data-class="aligned_baseline" data-search="liquity v2 (bold) immutable cdp stablecoin sampled owner &amp; eip-1967 slot alignment 0x6440f144b7e50d6a8439336510312d2f54beb01d bold token bold.owner() = 0x0; governance (0x807def5e7d057df05c796f4bc75c3fe82bd6eee1) owner() = 0x0; collateralregistry (0xf949982b91c8c61e952b3ba942cbbfaef5386684) eip-1967 implementation slot = 0x00...00. aligned_baseline 6"><td><b>Liquity V2 (BOLD)</b><div class="count">Immutable CDP Stablecoin</div></td><td>S6<div class="count">#26,401,540</div><div class="addr" title="0x49324aaf84b0ffd4e21026c5345272788bff377f0f86fcdb74280cdfc32a9641">0x49324aaf…2a9641</div></td><td><b>BOLD Token</b> <span class="addr">0x6440f144b7e50D6a8439336510312d2F54beB01D</span><div>Sampled Owner &amp; EIP-1967 Slot Alignment</div><div class="obs">BOLD.owner() = 0x0; Governance (0x807DEf5E7d057DF05C796F4bc75C3Fe82Bd6EeE1) owner() = 0x0; CollateralRegistry (0xf949982B91C8c61e952B3bA942cbbfaef5386684) EIP-1967 implementation slot = 0x00...00.</div></td><td><span class="badge ok">aligned baseline</span></td><td class="mono">— / —</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-6/block-26401540-summary.md" target="_blank" rel="noopener">Summary</a><div><a href="https://base.easscan.org/attestation/view/0x749d96e1a3d214a4ab66c528ca12c84dce085fa138dc370dd0eb817d890f09fa" target="_blank" rel="noopener">EAS 0x749d…09fa</a></div><div class="addr" title="SHA-256 of the summary">0xec0e3a38…8471</div></td></tr>
+<tr data-class="parameter_delta" data-search="maple finance v2 / syrup institutional credit / rwa eip-1967 proxy admin slot vs. governortimelock 0xbe10adce8b6e3e02db384e7fada5395dd113d8b3 poolpermissionmanager eip-1967 admin slot holds 4-of-7 maple dao safe (0xd6d4bcde6c816f17889f1dd3000af0261b03a196); globals.governor() (0x804a6f5f667170f545bf14e5ddb48c70b788390c) points to governortimelock (0x2efff88747eb5a3ff00d4d8d0f0800e306c0426b, getmindelay = 259200s / 3d); syrupusdc (0x80ac24aa929eaf5013f6436cda2a7ba190f5cc0b) totalassets = 898,551,580.57 units (6 dec). parameter_delta 6"><td><b>Maple Finance V2 / Syrup</b><div class="count">Institutional Credit / RWA</div></td><td>S6<div class="count">#26,401,540</div><div class="addr" title="0x49324aaf84b0ffd4e21026c5345272788bff377f0f86fcdb74280cdfc32a9641">0x49324aaf…2a9641</div></td><td><b>PoolPermissionManager</b> <span class="addr">0xBe10aDcE8B6E3E02Db384E7FaDA5395DD113D8b3</span><div>EIP-1967 Proxy Admin Slot vs. GovernorTimelock</div><div class="obs">EIP-1967 admin slot holds 4-of-7 Maple DAO Safe (0xd6d4Bcde6c816F17889f1Dd3000aF0261B03a196); Globals.governor() (0x804a6F5F667170F545Bf14e5DDB48C70B788390C) points to GovernorTimelock (0x2eFFf88747EB5a3FF00d4d8d0f0800E306C0426b, getMinDelay = 259200s / 3d); syrupUSDC (0x80ac24aA929eaF5013f6436cdA2a7ba190f5Cc0b) totalAssets = 898,551,580.57 units (6 dec).</div></td><td><span class="badge delta">parameter delta</span></td><td class="mono">— / 3d</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-6/block-26401540-summary.md" target="_blank" rel="noopener">Summary</a><div><a href="https://base.easscan.org/attestation/view/0x749d96e1a3d214a4ab66c528ca12c84dce085fa138dc370dd0eb817d890f09fa" target="_blank" rel="noopener">EAS 0x749d…09fa</a></div><div class="addr" title="SHA-256 of the summary">0xec0e3a38…8471</div></td></tr>
+<tr data-class="parameter_delta" data-search="fluid / instadapp modular lending &amp; dex vaults vaultfactory.isvaultauth migration scope 0x324c5dc1fc42c7a4d43d92df1eba58a54d13bf2d vaultfactory isvaultauth(vault, 0x4f6f977acdd1177dcd81ab83074855ecb9c2d49e) returns true on vault 76 (0x7fe0b032cb5982af72498f96be3dd6566f7b7de8), vault 110 (0xee327311d8640156e87ec33ea55fcbf2309e0ce6), vault 111 (0x984636a30ed2b4a61fb7150ced644096349275d3), and vault 144 (0x0e19b64f3a79feee12df1b6f239929c6ab6c7ed0) per igp-98 / igp-126 migration configuration. parameter_delta 5"><td><b>Fluid / Instadapp</b><div class="count">Modular Lending &amp; DEX Vaults</div></td><td>S5<div class="count">#26,401,405</div><div class="addr" title="0x26e155e1569d436406a52ecee31c94d8d8ef2ca4c45d82211a84c8c802be1510">0x26e155e1…be1510</div></td><td><b>VaultFactory</b> <span class="addr">0x324c5Dc1fC42c7a4D43d92df1eBA58a54d13Bf2d</span><div>VaultFactory.isVaultAuth Migration Scope</div><div class="obs">isVaultAuth(vault, 0x4F6F977aCDD1177DCD81aB83074855EcB9C2D49e) returns true on Vault 76 (0x7FE0B032cB5982Af72498F96be3DD6566F7B7de8), Vault 110 (0xee327311D8640156E87eC33ea55FcbF2309e0ce6), Vault 111 (0x984636a30ed2B4A61FB7150CED644096349275d3), and Vault 144 (0x0e19B64F3A79FeeE12Df1b6f239929c6ab6C7ED0) per IGP-98 / IGP-126 migration configuration.</div></td><td><span class="badge delta">parameter delta</span></td><td class="mono">— / —</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-5/block-26401405-summary.md" target="_blank" rel="noopener">Summary</a><div><a href="https://base.easscan.org/attestation/view/0x804289d4357b0a8d5a360911ec450c13ca36c4422d1e811c4c7040ef7d2628e5" target="_blank" rel="noopener">EAS 0x8042…28e5</a></div><div class="addr" title="SHA-256 of the summary">0xfd134611…63a2</div></td></tr>
+<tr data-class="parameter_delta" data-search="metamorpho (re7 weth vs. re7 usdt) curated lending vaults sampled metamorpho vault guardian configuration 0x78fc2c2ed1a4cdb5402365934ae5648adad094d0 metamorpho re7 weth re7 weth owner() = 0xe86399fe6d7007fdecb08a2ee1434ee677a04433 (2-of-4 safe), timelock() = 259200s (3d), guardian() = 0x0000000000000000000000000000000000000000, pendingguardian() = (0x0, 0); peer re7 usdt (0x95eef579155cd2c5510f312c8fa39208c3be01a8) sets guardian() = 0x2f80ba89362f86a9acc71bffe5ecf4997f52bdd4 (aragon guardian). parameter_delta 5"><td><b>MetaMorpho (Re7 WETH vs. Re7 USDT)</b><div class="count">Curated Lending Vaults</div></td><td>S5<div class="count">#26,401,405</div><div class="addr" title="0x26e155e1569d436406a52ecee31c94d8d8ef2ca4c45d82211a84c8c802be1510">0x26e155e1…be1510</div></td><td><b>MetaMorpho Re7 WETH</b> <span class="addr">0x78Fc2c2eD1A4cDb5402365934aE5648aDAd094d0</span><div>Sampled MetaMorpho Vault Guardian Configuration</div><div class="obs">Re7 WETH owner() = 0xE86399fE6d7007FdEcb08A2ee1434Ee677a04433 (2-of-4 Safe), timelock() = 259200s (3d), guardian() = 0x0000000000000000000000000000000000000000, pendingGuardian() = (0x0, 0); peer Re7 USDT (0x95EeF579155cd2C5510F312c8fA39208c3Be01a8) sets guardian() = 0x2F80ba89362f86a9acC71BFfE5EcF4997F52BDd4 (Aragon Guardian).</div></td><td><span class="badge delta">parameter delta</span></td><td class="mono">3d / 3d</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-5/block-26401405-summary.md" target="_blank" rel="noopener">Summary</a><div><a href="https://base.easscan.org/attestation/view/0x804289d4357b0a8d5a360911ec450c13ca36c4422d1e811c4c7040ef7d2628e5" target="_blank" rel="noopener">EAS 0x8042…28e5</a></div><div class="addr" title="SHA-256 of the summary">0xfd134611…63a2</div></td></tr>
+<tr data-class="aligned_baseline" data-search="convex finance curve governance aggregation sampled booster governance ownership chain 0xf403c135812408bfbe8713b5a23a04b3d48aae31 convex booster convex booster (0xf403c135812408bfbe8713b5a23a04b3d48aae31) owner() resolves via 0x3ce6408f923326f81a7d7929952947748180f1e6 -&gt; 0x256e1bba846611c37cf89844a02435e6c098b86d -&gt; 3-of-5 dao multisig (0xa3c5a1e09150b75ff251c1a7815a07182c3de2fb) at block 26401312. aligned_baseline 4"><td><b>Convex Finance</b><div class="count">Curve Governance Aggregation</div></td><td>S4<div class="count">#26,401,312</div><div class="addr" title="0x95866ea3ef8f9a0567ce000bc8075f6dc5fb0f1e80cb4e9999ae624a2f0dc109">0x95866ea3…0dc109</div></td><td><b>Convex Booster</b> <span class="addr">0xF403C135812408BFbE8713b5A23a04b3D48AAE31</span><div>Sampled Booster Governance Ownership Chain</div><div class="obs">Convex Booster (0xF403C135812408BFbE8713b5A23a04b3D48AAE31) owner() resolves via 0x3cE6408F923326f81A7D7929952947748180f1E6 -&gt; 0x256e1bbA846611C37CF89844a02435E6C098b86D -&gt; 3-of-5 DAO Multisig (0xa3C5A1e09150B75ff251c1a7815A07182c3de2FB) at block 26401312.</div></td><td><span class="badge ok">aligned baseline</span></td><td class="mono">— / —</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-4/block-26401312-summary.md" target="_blank" rel="noopener">Summary</a><div><a href="https://base.easscan.org/attestation/view/0xa26f81b0e68248c7f286527286b3d2e6b299502d53f4dfbc4397df7d22262986" target="_blank" rel="noopener">EAS 0xa26f…2986</a></div><div class="addr" title="SHA-256 of the summary">0x6adc370f…c2fb</div></td></tr>
+<tr data-class="parameter_delta" data-search="mellow protocol / lido earn liquid restaking / curated vaults curator safe quorum &amp; lazy admin signer overlap 0xe5abcc40196174ae0d12153de286f0d8e401769d mellow curator safe getthreshold() = 3, getowners().length = 5 (3-of-5 gnosis safe); default_admin_role (0x00) on earneth (0x6a37725ca7f4ce81c004c955f7280d5c704a249e) and earnusd (0x014e6da8f283c4af65b2aa0f201438680a004452) held by 5-of-8 lazy vault admin safe (0x0dd73341d6158a72b4d224541f1094188f57076e, timelock 0x363ba8843d06ba5968f55c26ab055162edd62189 getmindelay = 0s), where all 5 curator signers are lazy vault admin owners. parameter_delta 4"><td><b>Mellow Protocol / Lido Earn</b><div class="count">Liquid Restaking / Curated Vaults</div></td><td>S4<div class="count">#26,401,312</div><div class="addr" title="0x95866ea3ef8f9a0567ce000bc8075f6dc5fb0f1e80cb4e9999ae624a2f0dc109">0x95866ea3…0dc109</div></td><td><b>Mellow Curator Safe</b> <span class="addr">0xe5abcc40196174Ae0d12153dE286F0D8E401769d</span><div>Curator Safe Quorum &amp; Lazy Admin Signer Overlap</div><div class="obs">getThreshold() = 3, getOwners().length = 5 (3-of-5 Gnosis Safe); DEFAULT_ADMIN_ROLE (0x00) on earnETH (0x6a37725ca7f4CE81c004c955f7280d5C704a249e) and earnUSD (0x014e6DA8F283C4aF65B2AA0f201438680A004452) held by 5-of-8 Lazy Vault Admin Safe (0x0Dd73341d6158a72b4D224541f1094188f57076E, Timelock 0x363Ba8843d06BA5968f55C26aB055162eDd62189 getMinDelay = 0s), where all 5 Curator signers are Lazy Vault Admin owners.</div></td><td><span class="badge delta">parameter delta</span></td><td class="mono">0h / —</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-4/block-26401312-summary.md" target="_blank" rel="noopener">Summary</a><div><a href="https://base.easscan.org/attestation/view/0xa26f81b0e68248c7f286527286b3d2e6b299502d53f4dfbc4397df7d22262986" target="_blank" rel="noopener">EAS 0xa26f…2986</a></div><div class="addr" title="SHA-256 of the summary">0x6adc370f…c2fb</div></td></tr>
+<tr data-class="aligned_baseline" data-search="morpho blue core base lending infrastructure sampled singleton owner &amp; fee/lltv bounds 0xbbbbbbbbbb9cc5e90e3b3af64bdaf62c37eeffcb morpho blue singleton morpho blue owner() = 0xcba28b38103307ec8da98377fff9816c164f9afa and sampled fee/lltv bounds match documentation at block 26401070. aligned_baseline 3"><td><b>Morpho Blue Core</b><div class="count">Base Lending Infrastructure</div></td><td>S3<div class="count">#26,401,070</div><div class="addr" title="0xcf55f6a42ae610c1f8766b5c2fb676d91f178469fa10ef777eccbb76f6506234">0xcf55f6a4…506234</div></td><td><b>Morpho Blue Singleton</b> <span class="addr">0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb</span><div>Sampled Singleton Owner &amp; Fee/LLTV Bounds</div><div class="obs">Morpho Blue owner() = 0xcBa28b38103307Ec8dA98377ffF9816C164f9AFa and sampled fee/LLTV bounds match documentation at block 26401070.</div></td><td><span class="badge ok">aligned baseline</span></td><td class="mono">— / —</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-3/block-26401070-summary.md" target="_blank" rel="noopener">Summary</a><div><a href="https://base.easscan.org/attestation/view/0x291e513f3d697eea41b20bd57bf53acdb085b5566e499dd655ff46d7cd9d95a8" target="_blank" rel="noopener">EAS 0x291e…95a8</a></div><div class="addr" title="SHA-256 of the summary">0x02d6de1d…c122</div></td></tr>
+<tr data-class="aligned_baseline" data-search="ether.fi liquid / veda boringvault curated restaking vaults sampled rolesauthority owner &amp; timelock wiring 0x485bde66bb668a51f2372e34e45b1c6226798122 liquid rolesauthority accountantwithrateproviders (0x0d05d94a5f1e76c18fbeb7a13d17c8a314088198) authority() = 0x485bde66bb668a51f2372e34e45b1c6226798122; rolesauthority.owner() = 0xd829f278016b90fec735f9a12bf8b75e06102c89 (timelockcontroller, getmindelay = 86400s / 1d at block 26401070). aligned_baseline 3"><td><b>ether.fi Liquid / Veda BoringVault</b><div class="count">Curated Restaking Vaults</div></td><td>S3<div class="count">#26,401,070</div><div class="addr" title="0xcf55f6a42ae610c1f8766b5c2fb676d91f178469fa10ef777eccbb76f6506234">0xcf55f6a4…506234</div></td><td><b>Liquid RolesAuthority</b> <span class="addr">0x485Bde66Bb668a51f2372E34e45B1c6226798122</span><div>Sampled RolesAuthority Owner &amp; Timelock Wiring</div><div class="obs">AccountantWithRateProviders (0x0d05D94a5F1E76C18fbeB7A13d17C8a314088198) authority() = 0x485Bde66Bb668a51f2372E34e45B1c6226798122; RolesAuthority.owner() = 0xD829F278016b90FEc735F9A12Bf8b75E06102C89 (TimelockController, getMinDelay = 86400s / 1d at block 26401070).</div></td><td><span class="badge ok">aligned baseline</span></td><td class="mono">1d / 1d</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-3/block-26401070-summary.md" target="_blank" rel="noopener">Summary</a><div><a href="https://base.easscan.org/attestation/view/0x291e513f3d697eea41b20bd57bf53acdb085b5566e499dd655ff46d7cd9d95a8" target="_blank" rel="noopener">EAS 0x291e…95a8</a></div><div class="addr" title="SHA-256 of the summary">0x02d6de1d…c122</div></td></tr>
+<tr data-class="parameter_delta" data-search="f(x) protocol v2 leveraged eth / stablecoin protocoltreasury default_admin_role holders 0x32356fe312eba9b7d6a157ad28d1ca91b571cda6 protocoltreasury (wsteth) default_admin_role (0x00) on all 4 v2 protocoltreasury proxies (0x32356fe312eba9b7d6a157ad28d1ca91b571cda6, 0xb178197e88d58da21be22a408e850d1e6dc09a38, 0x6d9e81c5b7c4b37d0fe9e8cda776e057f4040868, 0x87d5e4caaf4358a4337c10859c7107c7aef4f8ce) held directly by opssafe (0x26b2ec4e02ebe2f54583af25b647b1d619e67bbf, 6-of-9 safe) and emergencysafe (0x28c921adac4c1072658eb01a28da06b5f651ef62, 3-of-4 safe), while timelock (0x68863fb8855b04509a835082478d6e3d0be4e61a, getmindelay = 259200s) holds false. parameter_delta 2"><td><b>f(x) Protocol v2</b><div class="count">Leveraged ETH / Stablecoin</div></td><td>S2<div class="count">#26,400,152</div><div class="addr" title="0xa9a61622304ec55c5fec49abbcabec60069f66f28792cf841bdd7aef12ce63aa">0xa9a61622…ce63aa</div></td><td><b>ProtocolTreasury (wstETH)</b> <span class="addr">0x32356FE312Eba9B7D6A157ad28D1ca91b571CdA6</span><div>ProtocolTreasury DEFAULT_ADMIN_ROLE Holders</div><div class="obs">DEFAULT_ADMIN_ROLE (0x00) on all 4 v2 ProtocolTreasury proxies (0x32356FE312Eba9B7D6A157ad28D1ca91b571CdA6, 0xb178197E88D58Da21bE22A408E850d1e6Dc09A38, 0x6D9e81c5b7C4b37d0Fe9E8CDA776e057f4040868, 0x87d5e4cAaF4358A4337C10859c7107c7AEF4f8Ce) held directly by OpsSafe (0x26B2ec4E02ebe2F54583af25b647b1D619e67BbF, 6-of-9 Safe) and EmergencySafe (0x28c921adAC4c1072658eB01a28DA06b5F651eF62, 3-of-4 Safe), while Timelock (0x68863fb8855b04509a835082478D6E3D0bE4E61a, getMinDelay = 259200s) holds false.</div></td><td><span class="badge delta">parameter delta</span></td><td class="mono">— / 3d</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-2/block-26400152-summary.md" target="_blank" rel="noopener">Summary</a><div><a href="https://base.easscan.org/attestation/view/0xca4b525bf5142d8e88433cbed2a1aa87bb06a97d1353cb77621ec41a51ce8101" target="_blank" rel="noopener">EAS 0xca4b…8101</a></div><div class="addr" title="SHA-256 of the summary">0x9c2a186c…c966</div></td></tr>
+<tr data-class="parameter_delta" data-search="inverse finance (firm) fixed-rate lending policy committee safe quorum &amp; governormills timelock 0x4b6c63e6a94ef26e2df60b89372db2d8e211f1b7 policy committee safe governormills (0xbeccb6bb0aa4ab551966a7e4b97cec74bb359bf6) guardian() wrapper (0x941c2699ec7e55a50bde030d8e1e70649839259d) references policy committee safe (0x4b6c63e6a94ef26e2df60b89372db2d8e211f1b7) with getthreshold() = 4, getowners().length = 7 (4-of-7 gnosis safe); governormills.timelock() (0x926df14a23be491164dcf93f4c468a50ef659d5b) delay() = 172800s (48h). parameter_delta 1"><td><b>Inverse Finance (FiRM)</b><div class="count">Fixed-Rate Lending</div></td><td>S1<div class="count">#26,399,876</div><div class="addr" title="0x8bf896b892683ff3267b88b367ab015a70cf5caf53542eb405f4f648f6bcde8a">0x8bf896b8…bcde8a</div></td><td><b>Policy Committee Safe</b> <span class="addr">0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7</span><div>Policy Committee Safe Quorum &amp; GovernorMills Timelock</div><div class="obs">GovernorMills (0xBeCCB6bb0aa4ab551966A7E4B97cec74bb359Bf6) guardian() wrapper (0x941c2699eC7E55a50Bde030d8E1e70649839259D) references Policy Committee Safe (0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7) with getThreshold() = 4, getOwners().length = 7 (4-of-7 Gnosis Safe); GovernorMills.timelock() (0x926dF14a23BE491164dCF93f4c468A50ef659D5B) delay() = 172800s (48h).</div></td><td><span class="badge delta">parameter delta</span></td><td class="mono">2d / 2d</td><td><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-1/block-26399876-summary.md" target="_blank" rel="noopener">Summary</a><div><a href="https://base.easscan.org/attestation/view/0x34049a2c64fe3355f8e325481234754c8422a48bb4784fed1d028fa40eb93058" target="_blank" rel="noopener">EAS 0x3404…3058</a></div><div class="addr" title="SHA-256 of the summary">0xeb97180d…cffe</div></td></tr>
+</tbody></table></div>
+</details>
+</div></section>
 
-    <section class="sec" id="ci-gate">
-      <div class="wrap">
-        <p class="eyebrow">02 / Machine-Readable Snapshot JSON &amp; Reference Foundry Suite</p>
-        <h2>Ingest static snapshot records or run <strong>offline unit &amp; archive-fork checks.</strong></h2>
-        <p class="lede">
-          Risk curators can query our block-pinned JSON snapshot directly, while protocol engineering teams can adapt our open-source <code>PactaGovernanceInvariants.t.sol</code> reference suite (deterministic offline unit tests in GitHub Actions plus optional archive-fork smoke tests when <code>ETH_RPC_URL</code> is configured).
-        </p>
-        <pre><code># 1. Query the block-pinned Counterparty Control-Plane Snapshot JSON
-curl -s https://pacta.wtf/api/v1/index.json | jq '.entries[] | {protocol, block_number, classification, observed_delay_seconds}'
+<section class="sec" id="verify"><div class="wrap">
+<div class="sec-h"><span class="kicker">04</span><h2>Don't trust, verify</h2><p>Everything here can be replayed against any archive node.</p></div>
+<div class="grid2">
+<div class="card"><h3>Chain &amp; finality coverage</h3><ul class="clean">
+<li><b>Ethereum Mainnet</b>: all 37 indexed records, each pinned to a block number and its canonical block hash (reads use EIP-1898 <span class="mono">requireCanonical</span>).</li>
+<li><b>Base</b>: on-chain anchoring (PactaCommitmentRegistry + EAS) and the x402 paid API.</li>
+<li><b>Arbitrum</b>: available for engagements on request.</li>
+<li>Live monitoring uses a 64-block reorg-aware indexer: observations from orphaned blocks are retracted, never silently kept.</li></ul></div>
+<div class="card"><h3>Open verifier spec</h3><ul class="clean">
+<li>Each record lists the target contract, the 4-byte selector or EIP-1967 slot, the block number and the canonical block hash: replay it with <span class="mono">cast call</span> / <span class="mono">cast storage</span> or raw <span class="mono">eth_call</span> / <span class="mono">eth_getStorageAt</span>.</li>
+<li>Machine-readable feed: <a href="api/v1/index.json">/api/v1/index.json</a> (schema <span class="mono">pacta.counterparty_control_index.v1</span>) and <a href="api/v1/radar.json">/api/v1/radar.json</a>.</li>
+<li>Sourcify-verified PactaCommitmentRegistry <a href="https://sourcify.dev/#/lookup/0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872" target="_blank" rel="noopener" class="mono">0x35D2…d872</a> on Base; EAS schema <a href="https://base.easscan.org/schema/view/0x7ff485bc1159dff3c70eefcb9dff2d65be990301760c2d53799e5a45e3badf83" target="_blank" rel="noopener" class="mono">0x7ff4…df83</a>.</li></ul></div>
+</div>
+<pre class="block"># 1) Pull the block-pinned index
+curl -s https://pacta.wtf/api/v1/index.json | jq '.entries[] | {protocol, sprint, block_number, classification, observed_delay_seconds}'
+# 2) Replay one record (Stader Manager Safe threshold at block 26403676)
+cast call 0xAAfb31780e4b9c95Bc920e388f4925A874cd07AF "getThreshold()" --block 26403676 --rpc-url "$ETH_RPC_URL"
+cast block 26403676 --field hash --rpc-url "$ETH_RPC_URL"   # expect 0xf4246ca2…c3ae
+# 3) Run the reference Foundry suite (offline unit tests; fork tests when ETH_RPC_URL is set)
+forge test --no-match-test "testFork" -vv</pre>
+</div></section>
 
-# 2. Run deterministic unit tests + Mainnet archive smoke tests in Foundry
-forge test --no-match-test "testFork" -vv
-ETH_RPC_URL="https://gateway.tenderly.co/public/mainnet" forge test -vv</code></pre>
-      </div>
-    </section>
+<section class="sec" id="pricing"><div class="wrap">
+<div class="sec-h"><span class="kicker">05</span><h2>Engagements</h2><p>One-time checks priced per engagement; continuous coverage priced per month.</p></div>
+<div class="grid4">
+<article class="card"><h3>Express Single-Contract Check</h3><div class="price">$250 <small>one-time</small></div><p>4h turnaround. Block-pinned control-plane snapshot of one contract: proxy admin, owner, Safe quorum, timelock delay, versus its docs.</p><a class="more" href="mailto:pacta@dri.network?subject=Pacta%20Express%20Single-Contract%20Check">Request →</a></article>
+<article class="card"><h3>Protocol Control-Plane Audit</h3><div class="price">$1,500 <small>one-time</small></div><p>24h turnaround. Full control-plane map of a protocol with reproducible records and a written brief.</p><a class="more" href="mailto:pacta@dri.network?subject=Pacta%20Protocol%20Control-Plane%20Audit">Request →</a></article>
+<article class="card"><h3>Protocol CI &amp; Pre-Execution Guard</h3><div class="price">$1,500 <small>/ mo</small></div><p>Continuous GitHub CI role-diff gate, fork simulation of queued timelock payloads, and Base EAS anchoring.</p><a class="more" href="mailto:pacta@dri.network?subject=Pacta%20Protocol%20CI%20%26%20Pre-Execution%20Guard">Request →</a></article>
+<article class="card featured"><h3>Institutional Curator &amp; Allocator Radar</h3><div class="price">$3,000 <small>/ mo</small></div><p>24/7 monitoring across up to 25 collateral protocols, queued-timelock impact briefs, Slack / Telegram / webhook alerts, and x402 API access.</p><a class="more" href="mailto:pacta@dri.network?subject=Pacta%20Curator%20%26%20Allocator%20Radar">Request →</a></article>
+</div>
+<article class="card disclosure" style="margin-top:16px"><h3>Free Private Disclosure</h3><p>Exploit-sensitive findings are never published here — they are routed privately at no cost to official protocol security teams.</p><a class="more" href="mailto:pacta@dri.network?subject=Private%20Security%20Disclosure%20Verification">Verify a disclosure →</a></article>
+</div></section>
 
-    <section class="sec" id="subscriptions">
-      <div class="wrap">
-        <p class="eyebrow">03 / Institutional Feeds &amp; Gratis Security Policy</p>
-        <h2>Aligned incentives for <strong>curators, allocators, and CISOs.</strong></h2>
-        <div class="grid-3">
-          <div class="card">
-            <div>
-              <div class="card__top">
-                <span class="eyebrow" style="margin:0">Security Quarantine</span>
-                <span class="pill">$0 Gratis</span>
-              </div>
-              <h3>Private Advisory + Remediation</h3>
-              <p>All <code>disclosure_only</code> findings (unrevoked legacy EOA roles, unguarded mutation paths, module hygiene) are excluded from public feeds and delivered <strong>free of charge</strong> with fork-simulated Safe Transaction Builder remediation engineering to official security contacts.</p>
-            </div>
-            <a class="btn btn--ghost" href="mailto:pacta@dri.network?subject=Private%20Security%20Disclosure%20Verification">Security Contact</a>
-          </div>
+<section class="sec faq" id="faq"><div class="wrap">
+<div class="sec-h"><span class="kicker">06</span><h2>Questions</h2></div>
+<details><summary>What exactly is anchored on-chain?</summary><p>Sprints 1–12 carry 12 on-chain Base EAS sprint attestations (multi-attest tx <span class="mono">0x8c53…001b</span>), recorded by <span class="mono">pacta.base.eth</span> in PactaCommitmentRegistry. Sprints 13–14 are pinned by canonical block hash and SHA-256 summary digest in /api/v1/index.json until they are batch-attested.</p></details>
+<details><summary>How do I reproduce a record?</summary><p>Every record gives the contract, selector or storage slot, block number and canonical block hash. Run the listed <span class="mono">cast</span> command against any archive node and compare the block hash.</p></details>
+<details><summary>What happens to exploit-sensitive findings?</summary><p>Free Private Disclosure: they are never published here and are routed privately, at no cost, to official protocol security teams (security contacts, private advisories or bounty platforms).</p></details>
+<details><summary>Do I need a wallet?</summary><p>No. The inspector, the radar and the JSON feed are public and read-only. Paid API access uses x402 (USDC on Base) and is optional.</p></details>
+<details><summary>How fresh is the radar?</summary><p>The radar states the exact finalized block it was refreshed at (26,406,890, 2026-11-13 15:18 UTC); countdowns are computed from each operation's on-chain ETA.</p></details>
+</div></section>
 
-          <div class="card">
-            <div>
-              <div class="card__top">
-                <span class="eyebrow" style="margin:0">Curators &amp; Underwriters</span>
-                <span class="pill">$2k–$5k / mo</span>
-              </div>
-              <h3>Counterparty Event Alerting</h3>
-              <p>Scoped subscription monitoring of emitted <code>CallScheduled</code>, <code>Upgraded</code>, <code>RoleGranted</code>, <code>MinDelayChange</code>, and Safe <code>ChangedThreshold</code> / <code>EnabledModule</code> events across your vault collateral stack (<code>USDe</code>, <code>syrupUSDC</code>, <code>weETH</code>, <code>ezETH</code>, <code>USD0</code>).</p>
-            </div>
-            <a class="btn" href="https://github.com/Fractal-Neurons/pacta/issues/new?template=request-scan.yml&amp;title=%5BCurator+Feed%5D+Portfolio+Coverage">Request Curator Feed</a>
-          </div>
-
-          <div class="card">
-            <div>
-              <div class="card__top">
-                <span class="eyebrow" style="margin:0">Protocol Engineering</span>
-                <span class="pill">$3k–$10k / yr</span>
-              </div>
-              <h3>Commitment CI &amp; Proposal Gate</h3>
-              <p>Tailored <code>PactaGovernanceInvariants.t.sol</code> suite integrated into GitHub Actions CI plus pre-execution fork simulation of queued Timelock / Governor payloads against your documented security model.</p>
-            </div>
-            <a class="btn btn--ghost" href="https://github.com/Fractal-Neurons/pacta/issues/new?template=request-scan.yml&amp;title=%5BProtocol+CI+Gate%5D+Repository">Request CI Guardrail</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="sec" id="faq">
-      <div class="wrap">
-        <p class="eyebrow">04 / Verification &amp; Quarantine Standards</p>
-        <h2>Deterministic archive proofs &amp; <strong>zero-leakage ethics.</strong></h2>
-        <details open>
-          <summary>How does Pacta separate public counterparty metrics from private security disclosures?</summary>
-          <p>Any finding involving callable privilege escalation, unrevoked legacy EOA authority, or freeze/liveness exposure is quarantined under <code>0600</code> local storage as <code>disclosure_only</code>. Zero exploit paths, private EOA labels, or sensitive selectors appear in this index; they are transmitted strictly via GitHub Private Security Advisories, Immunefi/Cantina, or official <code>security@</code> channels at <code>$0</code> cost.</p>
-        </details>
-        <details>
-          <summary>How can risk curators reproduce an index entry independently?</summary>
-          <p>Every entry in <a href="api/v1/index.json"><code>/api/v1/index.json</code></a> and <a href="https://github.com/Fractal-Neurons/pacta/tree/main/audits"><code>audits/sprint-1..12</code></a> includes the exact contract address, function selector or EIP-1967 storage slot, and canonical Ethereum Mainnet block height + block hash, reproducible with a single <code>cast call</code> or <code>cast storage</code> against any archive node.</p>
-        </details>
-        <details>
-          <summary>How are Sprints 1–12 anchored on-chain on Base Mainnet?</summary>
-          <p>Each public sprint summary SHA-256 digest and canonical Ethereum Mainnet block hash is recorded on Base Mainnet (<code>Chain ID 8453</code>) by our dedicated attester <code>pacta.base.eth</code> (<code>0xcA4E...da09</code>) in <a href="https://sourcify.dev/#/lookup/0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872"><code>PactaCommitmentRegistry</code> (<code>0x35D2...d872</code>)</a> and attested under Base EAS Schema <a href="https://base.easscan.org/schema/view/0x7ff485bc1159dff3c70eefcb9dff2d65be990301760c2d53799e5a45e3badf83"><code>0x7ff4...df83</code></a>. All 12 Base EAS attestation UIDs are included in <a href="api/v1/index.json"><code>/api/v1/index.json</code></a>.</p>
-        </details>
-      </div>
-    </section>
-
-  </main>
-  <footer class="ftr">
-    <div class="wrap ftr__in">
-      <div class="brand">
-        <img src="data:image/png;base64,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" alt="Fractal Neurons" width="28" height="28">
-        <span>Fractal Neurons // Pacta // pacta.base.eth</span>
-      </div>
-      <div>
-        <a href="https://github.com/Fractal-Neurons/pacta">GitHub</a> ·
-        <a href="api/v1/index.json">JSON API</a> ·
-        <a href="https://sourcify.dev/#/lookup/0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872">Base Registry</a> ·
-        <a href="https://base.easscan.org/schema/view/0x7ff485bc1159dff3c70eefcb9dff2d65be990301760c2d53799e5a45e3badf83">Base EAS</a> ·
-        <a href="mailto:pacta@dri.network">pacta@dri.network</a>
-      </div>
-    </div>
-  </footer>
-</body>
-</html>
+<section class="sec" id="about"><div class="wrap">
+<div class="sec-h"><span class="kicker">07</span><h2>About Fractal Neurons</h2></div>
+<div class="grid2">
+<div class="card"><p>Pacta is built by <a href="https://fractalneurons.com" target="_blank" rel="noopener">Fractal Neurons</a>, a research engineering firm. <i>Pacta sunt servanda</i>: agreements must be kept. We check that the people who control DeFi collateral keep the commitments their documentation makes, and we tell you before that changes.</p></div>
+<div class="card"><ul class="clean">
+<li>Contact: <a href="mailto:pacta@dri.network">pacta@dri.network</a></li>
+<li>Code &amp; data: <a href="https://github.com/Fractal-Neurons/pacta" target="_blank" rel="noopener">github.com/Fractal-Neurons/pacta</a></li>
+<li>For agents: <a href="llms.txt">/llms.txt</a> · <a href="api/v1/index.json">/api/v1/index.json</a></li>
+<li>Security: <a href=".well-known/security.txt">/.well-known/security.txt</a></li></ul></div>
+</div>
+</div></section>
+</main>
+<footer class="ftr"><div class="wrap"><span>Pacta · Fractal Neurons · pacta.base.eth · 14 Sprints · 37 Indexed Records</span><span><a href="https://github.com/Fractal-Neurons/pacta">GitHub</a> · <a href="api/v1/index.json">JSON</a> · <a href="llms.txt">llms.txt</a> · <a href="https://basescan.org/address/0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872">Base registry</a> · <a href="mailto:pacta@dri.network">pacta@dri.network</a></span></div></footer>
+</body></html>

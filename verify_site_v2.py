@@ -1,0 +1,276 @@
+#!/usr/bin/env python3
+"""verify_site_v2.py - offline checks for the Pacta static site (docs/). Pure stdlib; no network.
+
+  python3 verify_site_v2.py        # exit 0 = all checks passed
+
+Checks: <head> budget (<body> before byte 2500; OG + X tags inside the first 1.2 KB of <head>), zero data:image blobs,
+required Open Graph / X card / canonical tags, zero "Security Quarantine" wording, count parity (sprints / records)
+across index.html, llms.txt, README.md and /api/v1/index.json, summary SHA-256 digests, EIP-55 checksums, matrix row
+count, og-preview.png = 1200x630 PNG, favicon sizes, discovery files (llms.txt, robots.txt, sitemap.xml,
+.well-known/security.txt, .nojekyll), brief metadata, radar freshness, HTML tag balance, and a deny-list of private
+identifiers that must never appear on the public site.
+"""
+
+import datetime as dt
+import glob
+import hashlib
+import html.parser
+import json
+import os
+import re
+import struct
+import sys
+import xml.etree.ElementTree as ET
+
+ROOT = os.path.dirname(os.path.abspath(__file__))
+DOCS = os.path.join(ROOT, "docs")
+RESULTS = []
+
+
+def check(name, ok, detail=""):
+    RESULTS.append((name, bool(ok), detail))
+
+
+def read(rel, mode="r"):
+    with open(os.path.join(ROOT, rel), mode) as fh:
+        return fh.read()
+
+
+# keccak-256 for EIP-55 (stdlib only)
+_RC = [0x0000000000000001, 0x0000000000008082, 0x800000000000808A, 0x8000000080008000, 0x000000000000808B, 0x0000000080000001,
+       0x8000000080008081, 0x8000000000008009, 0x000000000000008A, 0x0000000000000088, 0x0000000080008009, 0x000000008000000A,
+       0x000000008000808B, 0x800000000000008B, 0x8000000000008089, 0x8000000000008003, 0x8000000000008002, 0x8000000000000080,
+       0x000000000000800A, 0x800000008000000A, 0x8000000080008081, 0x8000000000008080, 0x0000000080000001, 0x8000000080008008]
+_R = [[0, 36, 3, 41, 18], [1, 44, 10, 45, 2], [62, 6, 43, 15, 61], [28, 55, 25, 21, 56], [27, 20, 39, 8, 14]]
+_M = (1 << 64) - 1
+
+
+def keccak(data):
+    msg = bytearray(data) + b"\x01"
+    while len(msg) % 136:
+        msg.append(0)
+    msg[-1] |= 0x80
+    a = [[0] * 5 for _ in range(5)]
+    for off in range(0, len(msg), 136):
+        for i in range(17):
+            a[i % 5][i // 5] ^= int.from_bytes(msg[off + 8 * i:off + 8 * i + 8], "little")
+        for rc in _RC:
+            c = [a[x][0] ^ a[x][1] ^ a[x][2] ^ a[x][3] ^ a[x][4] for x in range(5)]
+            d = [c[(x - 1) % 5] ^ (((c[(x + 1) % 5] << 1) | (c[(x + 1) % 5] >> 63)) & _M) for x in range(5)]
+            a = [[a[x][y] ^ d[x] for y in range(5)] for x in range(5)]
+            b = [[0] * 5 for _ in range(5)]
+            for x in range(5):
+                for y in range(5):
+                    r = _R[x][y]
+                    b[y][(2 * x + 3 * y) % 5] = ((a[x][y] << r) | (a[x][y] >> (64 - r))) & _M if r else a[x][y]
+            a = [[b[x][y] ^ ((~b[(x + 1) % 5][y]) & b[(x + 2) % 5][y]) for y in range(5)] for x in range(5)]
+            a[0][0] ^= rc
+    return b"".join(a[i % 5][i // 5].to_bytes(8, "little") for i in range(4))
+
+
+def eip55_ok(addr):
+    body = addr[2:]
+    if body in (body.lower(), body.upper()):
+        return True
+    h = keccak(body.lower().encode()).hex()
+    return addr == "0x" + "".join(ch.upper() if ch.isalpha() and int(h[i], 16) >= 8 else ch.lower() for i, ch in enumerate(body.lower()))
+
+
+DENY_SHA256 = {
+    "f55b134784e0408e7fbb9a364e013a187abb61892ea83954861e6e470ca402a1",
+    "26dcfbfa28f206ba2e67081ecd67fa16331088cf386b934ae5121ca28c79d26c",
+    "ec3a34ebe07e5a8760c88cc8c4e03add1763276b0c95c163315ddfb11fb772af",
+    "b75e8778d665f8a51e220eb42aee997a4b5e48c9db2ccee7bb6adede42ead7cb",
+    "1d7e457b5fce8750db412fc55deed23e9d7c26e284e2c69f9423edadf2d54d1c",
+    "a0e9089ab4b858049538fa2530221a1afdb7e16398ac259a87ae0ca1a69283db",
+    "898a774ab7bfbf9b4224a7cb5f6a5786d7b2b59117f8a8cce103ad115d84bc1c",
+    "46920406b7b239f06f469b02f97a960d542633a98cda0155b1f52fc1effa41f5",
+    "1b115d312ebaa63cacc24bdc63a2a21b4b1c678a209b99b285fdbd8e0c9b0def",
+    "5804b00ea2b294160e7cb6ab7e121d2eba3c9fc11002811461d90475c6b65793",
+    "2c34c6bb2c5960486f7d2015b7994b28cf9a874828e30fb590ce09793d06b057",
+    "29ff56a35bc5fb00e4d761eea222a75774a3b5a574aa63aa044cc7d58a6f2203",
+    "b3b4916f8b7424956ae178f84959899c8ae2424c8fbc0a5cd9cfeba2959385d5",
+    "4fef04a481f14b8a454d887bd0a9f788ab769440a3c9d5755c7fa8a0fbdd48fd",
+    "8b57e629f3becdad3b267292c773469eab75034edbea0677588a25892e6789d9",
+}
+
+
+def tokens(text):
+    """SHA-256 digests of lowercased tokens: words, hyphenated words, and 0x-hex bodies without the prefix."""
+    t = text.lower()
+    words = set(re.findall(r"[a-z0-9]+", t)) | set(re.findall(r"[a-z0-9]+(?:-[a-z0-9]+)+", t))
+    words |= {w[2:] for w in words if w.startswith("0x")}
+    return {hashlib.sha256(w.encode()).hexdigest() for w in words}
+
+
+class Balance(html.parser.HTMLParser):
+    VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "source", "track", "wbr"}
+
+    def __init__(self):
+        super().__init__()
+        self.stack, self.errors = [], []
+
+    def handle_starttag(self, tag, attrs):
+        if tag not in self.VOID:
+            self.stack.append(tag)
+
+    def handle_endtag(self, tag):
+        if tag in self.VOID:
+            return
+        if self.stack and self.stack[-1] == tag:
+            self.stack.pop()
+        else:
+            self.errors.append(f"unexpected </{tag}> (open: {self.stack[-3:]})")
+
+
+def main():
+    base = re.search(r'^BASE_URL = "([^"]+)"', read("tools/build_site.py"), re.M).group(1)
+    raw = read("docs/index.html", "rb")
+    page = raw.decode()
+    hpos, bpos = raw.find(b"<head>"), raw.find(b"<body")
+    check("<body> starts before byte 2500", 0 <= bpos < 2500, f"<body> at byte {bpos}")
+    tw_end = raw.find(b">", raw.find(b'name="twitter:image"')) + 1
+    check("OG + X card tags inside the first 1.2 KB of <head>", 0 < tw_end - hpos <= 1200, f"twitter:image ends {tw_end - hpos} bytes into <head>")
+    check("zero data:image/ blobs in index.html", b"data:image/" not in raw)
+    req = ['<meta charset="utf-8">', 'name="viewport"', "<title>", 'name="description"', f'<link rel="canonical" href="{base}/">',
+           'property="og:type"', 'property="og:site_name"', 'property="og:title"', 'property="og:description"', f'property="og:url" content="{base}/"',
+           f'property="og:image" content="{base}/og-preview.png"', 'property="og:image:width" content="1200"', 'property="og:image:height" content="630"',
+           'name="twitter:card" content="summary_large_image"', 'name="twitter:title"', 'name="twitter:description"',
+           f'name="twitter:image" content="{base}/og-preview.png"', 'href="styles.css"', 'href="favicon.svg"', 'href="favicon.png"']
+    head = page[:bpos]
+    missing = [r for r in req if r not in head]
+    check("required head tags present", not missing, f"missing: {missing}" if missing else f"{len(req)} tags")
+    check("no inline <style> in index.html head", "<style" not in head)
+
+    # wording
+    public = ["docs/index.html", "docs/llms.txt", "README.md"] + [os.path.relpath(p, ROOT) for p in glob.glob(os.path.join(DOCS, "briefs", "*", "index.html"))]
+    bad = [p for p in public if "Security Quarantine" in read(p)]
+    check('zero "Security Quarantine" wording', not bad, str(bad))
+    check('"Free Private Disclosure" present on the homepage', "Free Private Disclosure" in page)
+    appjs = read("docs/app.js")
+    check('radar says "Execution window opens in" (ETA = eligibility)', "Execution window opens in" in appjs and "Executing in" not in appjs)
+    check('finality badge says "Scanner-pinned (L1 finalized)"', "Scanner-pinned (L1 finalized)" in appjs and "Scanner-pinned (L1 finalized)" in page)
+
+    # counts
+    idx = json.loads(read("docs/api/v1/index.json"))
+    m, entries = idx["summary_metrics"], idx["entries"]
+    n, sprints = len(entries), max(e["sprint"] for e in entries)
+    check("index.json records_indexed == len(entries) == 37", m["records_indexed"] == n == 37, f"{m['records_indexed']} / {n}")
+    check("index.json sprints_completed == max(sprint) == 14", m["sprints_completed"] == sprints == 14, f"{m['sprints_completed']} / {sprints}")
+    check("classification counts sum to records", m["parameter_deltas"] + m["protective_deltas"] + m["aligned_baselines"] == n
+          and all(sum(1 for e in entries if e["classification"] == k) == m[v] for k, v in
+                  (("parameter_delta", "parameter_deltas"), ("protective_delta", "protective_deltas"), ("aligned_baseline", "aligned_baselines"))))
+    line = f"{sprints} Sprints · {n} Indexed Records"
+    for f in ("docs/index.html", "docs/llms.txt", "README.md"):
+        t = read(f)
+        nums_s = set(re.findall(r"\b(\d+) Sprints\b", t))
+        nums_r = set(re.findall(r"\b(\d+) (?:Indexed )?Records\b", t))
+        check(f"count parity in {f}", line in t and nums_s <= {str(sprints)} and nums_r <= {str(n)},
+              f"sprints {sorted(nums_s)} records {sorted(nums_r)}")
+    rows = len(re.findall(r'<tr data-class="', page))
+    check("homepage matrix renders every record", rows == n, f"{rows} rows")
+    eas = idx["onchain_anchoring"]["sprint_eas_attestations"]
+    check("12 Base EAS sprint attestations for Sprints 1-12; 13-14 pending", len(eas) == 12 and sorted(map(int, eas)) == list(range(1, 13))
+          and all(e["base_eas_uid"] is None for e in entries if e["sprint"] >= 13) and "12 Base EAS sprint attestations" in page)
+
+    # data integrity
+    bad_sha = [e["id"] for e in entries if "0x" + hashlib.sha256(read(e["summary_doc"], "rb")).hexdigest() != e["summary_sha256"]]
+    check("every summary_sha256 matches its summary file", not bad_sha, str(bad_sha))
+    bad_hash = [e["id"] for e in entries if not re.fullmatch(r"0x[0-9a-f]{64}", e["block_hash"])]
+    check("every block_hash is a 32-byte hex", not bad_hash, str(bad_hash))
+    corpus = {"docs/index.html": re.sub(r'data-search="[^"]*"', "", page), "docs/llms.txt": read("docs/llms.txt"),
+              "docs/api/v1/index.json": json.dumps(idx), "README.md": read("README.md")}
+    for p in glob.glob(os.path.join(DOCS, "briefs", "**", "*.html"), recursive=True) + glob.glob(os.path.join(ROOT, "audits", "**", "*.md"), recursive=True):
+        corpus[os.path.relpath(p, ROOT)] = open(p).read()
+    bad55 = sorted({f"{f}: {a}" for f, t in corpus.items() for a in re.findall(r"0x[0-9a-fA-F]{40}(?![0-9a-fA-F])", t) if not eip55_ok(a)})
+    n55 = len({a for t in corpus.values() for a in re.findall(r"0x[0-9a-fA-F]{40}(?![0-9a-fA-F])", t)})
+    check("EIP-55 on every address: site, index, README, briefs, audits", not bad55, f"{n55} addresses in {len(corpus)} files; bad: {bad55[:5]}")
+
+    # reproducibility: every record carries a complete, self-consistent cast/eth_call reproduction
+    bad_repro = []
+    for e in entries:
+        if e["check_type"] == "eth_call":
+            sig, args, cd = e.get("call_signature"), e.get("call_args"), e.get("repro_calldata")
+            arity = 0 if not sig or sig.endswith("()") else sig.count(",") + 1
+            ok = bool(sig) and "0x" + keccak(sig.encode()).hex()[:8] == e["selector_or_slot"] and isinstance(args, list) and len(args) == arity \
+                and cd == e["selector_or_slot"] + "".join(a[2:].lower().rjust(64, "0") for a in args)
+        else:
+            ok = e.get("call_signature") is None and re.fullmatch(r"0x[0-9a-f]{64}", e["selector_or_slot"]) is not None
+        if not ok:
+            bad_repro.append(e["id"])
+    check("every record has a complete cast reproduction (signature, all args, calldata)", not bad_repro, f"bad: {bad_repro}")
+
+    # assets
+    og = read("docs/og-preview.png", "rb")
+    check("og-preview.png is a 1200x630 PNG", og[:8] == b"\x89PNG\r\n\x1a\n" and og[12:16] == b"IHDR" and struct.unpack(">II", og[16:24]) == (1200, 630),
+          f"{len(og)} bytes")
+    fav = read("docs/favicon.png", "rb")
+    check("favicon.png is a PNG < 2 KB", fav[:8] == b"\x89PNG\r\n\x1a\n" and len(fav) < 2048, f"{len(fav)} bytes {struct.unpack('>II', fav[16:24])}")
+    svg = read("docs/favicon.svg", "rb")
+    try:
+        ET.fromstring(svg)
+        svg_ok = len(svg) < 1024
+    except ET.ParseError:
+        svg_ok = False
+    check("favicon.svg is valid XML < 1 KB", svg_ok, f"{len(svg)} bytes")
+
+    # discovery files
+    llms = read("docs/llms.txt")
+    check("llms.txt: H1, index.json, EAS schema, registry, x402 section", llms.startswith("# ") and "/api/v1/index.json" in llms
+          and idx["onchain_anchoring"]["eas_schema_uid"] in llms and idx["onchain_anchoring"]["commitment_registry"] in llms and "x402" in llms)
+    robots = read("docs/robots.txt")
+    check("robots.txt allows / and lists the sitemap", "Allow: /" in robots and f"Sitemap: {base}/sitemap.xml" in robots)
+    try:
+        sm = ET.fromstring(read("docs/sitemap.xml", "rb"))
+        locs = {e.text for e in sm.iter("{http://www.sitemaps.org/schemas/sitemap/0.9}loc")}
+        need = {f"{base}/", f"{base}/llms.txt", f"{base}/api/v1/index.json", f"{base}/demos/swapio-x402/"} | \
+               {f"{base}/briefs/{os.path.basename(os.path.dirname(p))}/" for p in glob.glob(os.path.join(DOCS, "briefs", "*", "index.html"))}
+        check("sitemap.xml lists home, llms.txt, API, every brief and the demo", need <= locs, f"missing {sorted(need - locs)}")
+    except ET.ParseError as e:
+        check("sitemap.xml parses", False, str(e))
+    sec = read("docs/.well-known/security.txt")
+    exp = re.search(r"^Expires: (\S+)$", sec, re.M)
+    exp_ok = bool(exp) and dt.datetime.fromisoformat(exp.group(1).replace("Z", "+00:00")) > dt.datetime.now(dt.UTC)
+    check("security.txt (RFC 9116): Contact, future Expires, Canonical", "Contact: mailto:pacta@dri.network" in sec and exp_ok
+          and f"Canonical: {base}/.well-known/security.txt" in sec)
+    check(".nojekyll present (so /.well-known/ is served by GitHub Pages)", os.path.exists(os.path.join(DOCS, ".nojekyll")))
+
+    # briefs
+    for p in glob.glob(os.path.join(DOCS, "briefs", "*", "index.html")):
+        s = open(p).read()
+        slug = os.path.basename(os.path.dirname(p))
+        ok = all(t in s for t in ('property="og:title"', 'property="og:image"', 'name="twitter:card"', f'href="{base}/briefs/{slug}/"')) and "data:image/" not in s
+        check(f"brief {slug}: OG/X/canonical tags, no data:image", ok)
+
+    # radar
+    radar = json.loads(read("docs/api/v1/radar.json"))
+    etas = {str(i["eta"]) for i in radar["items"]}
+    shown = set(re.findall(r'data-eta="(\d+)"', page))
+    r = radar["refreshed_at"]
+    check("radar ETAs on the page match radar.json", etas == shown, f"{sorted(etas)} vs {sorted(shown)}")
+    check("radar freshness badge states block and time", f"#{r['block_number']:,}" in page and r["block_time_utc"] in page and "Last refreshed" in page)
+
+    # html structure
+    for f in ["docs/index.html"] + [os.path.relpath(p, ROOT) for p in glob.glob(os.path.join(DOCS, "briefs", "*", "index.html"))]:
+        b = Balance()
+        b.feed(read(f))
+        check(f"HTML tag balance: {f}", not b.errors and not [t for t in b.stack if t not in ("html", "body")], "; ".join(b.errors[:3]))
+
+    # private identifiers must never be published: compared by SHA-256 of lowercased tokens, so the
+    # repository itself never contains the literal identifiers this check guards against
+    scope = [p for p in glob.glob(os.path.join(ROOT, "docs", "**", "*"), recursive=True) + glob.glob(os.path.join(ROOT, "audits", "**", "*"), recursive=True)
+             + glob.glob(os.path.join(ROOT, "tools", "**", "*"), recursive=True) + [os.path.join(ROOT, "README.md"), os.path.abspath(__file__)]
+             if os.path.isfile(p) and p.endswith((".html", ".txt", ".json", ".xml", ".js", ".css", ".md", ".py"))]
+    leaks = sorted({os.path.relpath(p, ROOT) for p in scope if tokens(open(p, errors="replace").read()) & DENY_SHA256})
+    check("no private / quarantined identifiers (SHA-256 token deny-list)", not leaks, f"{len(scope)} files scanned; leaks in: {leaks}")
+
+    width = max(len(n) for n, _, _ in RESULTS)
+    for name, ok, detail in RESULTS:
+        print(f"{'PASS' if ok else 'FAIL'}  {name.ljust(width)}  {detail}")
+    failed = [r for r in RESULTS if not r[1]]
+    print(f"\n{len(RESULTS) - len(failed)}/{len(RESULTS)} checks passed")
+    return 1 if failed else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
