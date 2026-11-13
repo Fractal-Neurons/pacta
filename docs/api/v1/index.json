@@ -1,6 +1,6 @@
 {
   "schema": "pacta.counterparty_control_index.v1",
-  "generated_at": "2026-11-12T23:45:00Z",
+  "generated_at": "2026-11-13T01:15:00Z",
   "publisher": {
     "organization": "Fractal Neurons",
     "unit": "Pacta Protocol Commitments DRI",
@@ -23,11 +23,11 @@
     "scope_limitation": "Entries report sampled historical read-only getter/slot returns alongside cited documentation; they do not certify protocol-wide immutability, exhaustive authority coverage, downstream mutation semantics, or exploitability."
   },
   "summary_metrics": {
-    "sprints_completed": 8,
-    "records_indexed": 16,
+    "sprints_completed": 9,
+    "records_indexed": 20,
     "parameter_deltas": 9,
     "protective_deltas": 1,
-    "aligned_baselines": 6
+    "aligned_baselines": 10
   },
   "entries": [
     {
@@ -417,6 +417,106 @@
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-4/block-26401312-summary.md",
       "summary_sha256": "0x6adc370fdb6acbc14f38ab1b30cb90a0c1e5ce8c2457ad64177c82f548edc2fb"
+    },
+    {
+      "id": "compound-v3-comet-timelock-and-pause-safe",
+      "protocol": "Compound V3 (Comet)",
+      "category": "Blue-Chip Lending",
+      "sprint": 9,
+      "block_number": 26402160,
+      "block_hash": "0xd04a5e8aa3500c5b60d90c25a810ef28eb9d1bfffadf28f1da58a31ed90582dc",
+      "classification": "aligned_baseline",
+      "surface": "Comet Governor, 48h Timelock & Pause-Guardian Safe",
+      "target_contract": "0xc3d688B66703497DAA19211EEdff47f25384cdc3",
+      "target_label": "cUSDCv3",
+      "check_type": "eth_call",
+      "selector_or_slot": "0x0c340a24",
+      "onchain_observed": "Sampled cUSDCv3 (0xc3d688B66703497DAA19211EEdff47f25384cdc3) & cWETHv3 (0xA17581A9E3356d9A858b789D68B4d866e593aE94) governor() = CompoundTimelock (0x6d903f6003cca6255D85CcA4D3B5E5146dC33925, delay() = 172800s / 48h, admin() = CompoundGovernor 0x309a862bbC1A00e45506cB8A802D1ff10004c8C0); pauseGuardian() = 5-of-9 Community Pause Safe (0xbbf3f1421D886E9b2c5D716B5192aC998af2012c).",
+      "documented_reference": "Compound V3 governance documentation specifies 48-hour Timelock ownership and Community Multi-Sig pause guardian.",
+      "observed_delay_seconds": 172800,
+      "observed_delay_source": {
+        "contract": "0x6d903f6003cca6255D85CcA4D3B5E5146dC33925",
+        "selector": "0x6a42b8f8",
+        "getter": "delay()"
+      },
+      "documented_delay_seconds": 172800,
+      "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
+      "summary_doc": "audits/sprint-9/block-26402160-summary.md",
+      "summary_sha256": "0x0a4b9cbd0c3f3eb1839a86753857a603237918200e1d9f90e757f70008472ef4"
+    },
+    {
+      "id": "aave-v3-gho-acl-manager-and-executor-lvl1",
+      "protocol": "Aave V3 / GHO",
+      "category": "Blue-Chip Lending & Decentralized Stablecoin",
+      "sprint": 9,
+      "block_number": 26402160,
+      "block_hash": "0xd04a5e8aa3500c5b60d90c25a810ef28eb9d1bfffadf28f1da58a31ed90582dc",
+      "classification": "aligned_baseline",
+      "surface": "ACLManager Admin Role, Executor Lvl1 Delay & Guardian Safe",
+      "target_contract": "0xc2aaCf6553D20d1e9d78E365AAba8032af9c85b0",
+      "target_label": "ACLManager",
+      "check_type": "eth_call",
+      "selector_or_slot": "0x91d14854",
+      "onchain_observed": "ACLManager hasRole(DEFAULT_ADMIN_ROLE, 0x5300A1a15135EA4dc7aD5a167152C01EFc9b192A) = true; PayloadsController (0xdAbad81aF85554E9ae636395611C58F7eC1aAEc5) getExecutorSettingsByAccessControl(1) = (0x5300A1a15135EA4dc7aD5a167152C01EFc9b192A, 86400s / 1d); EMERGENCY_ADMIN held by 4-of-7 Protocol Guardian Safe (0x2CFe3ec4d5a6811f4B8067F0DE7e47DfA938Aa30); GHO (0x40D16FC0246aD3160Ccc09B8D0D3A2cD28aE6C2f) totalSupply = 699,000,000 GHO.",
+      "documented_reference": "Aave V3 & Governance v3 address book specifies Level 1 Short Executor (1-day execution delay) and 4-of-7 Protocol Guardian Safe.",
+      "observed_delay_seconds": null,
+      "observed_delay_source": null,
+      "documented_delay_seconds": 86400,
+      "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
+      "summary_doc": "audits/sprint-9/block-26402160-summary.md",
+      "summary_sha256": "0x0a4b9cbd0c3f3eb1839a86753857a603237918200e1d9f90e757f70008472ef4"
+    },
+    {
+      "id": "kelp-dao-rseth-proxy-admin-and-timelock",
+      "protocol": "Kelp DAO (rsETH)",
+      "category": "Liquid Restaking",
+      "sprint": 9,
+      "block_number": 26402160,
+      "block_hash": "0xd04a5e8aa3500c5b60d90c25a810ef28eb9d1bfffadf28f1da58a31ed90582dc",
+      "classification": "aligned_baseline",
+      "surface": "ProxyAdmin 10d Timelock & LRTConfig Admin Safe",
+      "target_contract": "0x49bD9989E31aD35B0A62c20BE86335196A3135B1",
+      "target_label": "KelpTimelockController",
+      "check_type": "eth_call",
+      "selector_or_slot": "0xf27a0c92",
+      "onchain_observed": "rsETH (0xA1290d69c65A6Fe4DF752f95823fae25cB99e5A7) EIP-1967 admin slot = ProxyAdmin (0xb61e0E39b6d4030C36A176f576aaBE44BF59Dc78), owner() = TimelockController (0x49bD9989E31aD35B0A62c20BE86335196A3135B1, getMinDelay() = 864000s / 10d); LRTConfig (0x947Cb49334e6571ccBFEF1f1f1178d8469D65ec7) DEFAULT_ADMIN_ROLE held by 6-of-11 Safe (0xb3696a817D01C8623E66D156B6798291fa10a46d); rsETH totalSupply = 338,071.33 rsETH.",
+      "documented_reference": "Kelp DAO security & contract documentation specifies 10-day TimelockController upgrade governance and multisig admin.",
+      "observed_delay_seconds": 864000,
+      "observed_delay_source": {
+        "contract": "0x49bD9989E31aD35B0A62c20BE86335196A3135B1",
+        "selector": "0xf27a0c92",
+        "getter": "getMinDelay()"
+      },
+      "documented_delay_seconds": 864000,
+      "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
+      "summary_doc": "audits/sprint-9/block-26402160-summary.md",
+      "summary_sha256": "0x0a4b9cbd0c3f3eb1839a86753857a603237918200e1d9f90e757f70008472ef4"
+    },
+    {
+      "id": "eigenlayer-core-proxy-admin-and-timelock",
+      "protocol": "EigenLayer Core",
+      "category": "Restaking Infrastructure",
+      "sprint": 9,
+      "block_number": 26402160,
+      "block_hash": "0xd04a5e8aa3500c5b60d90c25a810ef28eb9d1bfffadf28f1da58a31ed90582dc",
+      "classification": "aligned_baseline",
+      "surface": "Core ProxyAdmin, Dual-Owner Executor Safe & 10d Timelock",
+      "target_contract": "0xC06Fd4F821eaC1fF1ae8067b36342899b57BAa2d",
+      "target_label": "EigenLayerTimelockController",
+      "check_type": "eth_call",
+      "selector_or_slot": "0xf27a0c92",
+      "onchain_observed": "DelegationManager (0x39053D51B77DC0d36036Fc1fCc8Cb819df8Ef37A) EIP-1967 admin slot = Core ProxyAdmin (0x8b9566AdA63B64d1E1dcF1418b43fd1433b72444), owner() = 1-of-2 ExecutorMultisig (0x369e6F597e22EaB55fFb173C6d9cD234BD699111) shared between 10d TimelockController (0xC06Fd4F821eaC1fF1ae8067b36342899b57BAa2d, getMinDelay() = 864000s) and 9-of-13 CommunityMultisig (0xFEA47018D632A77bA579846c840d5706705Dc598); pauserRegistry() = 0xB8765ed72235d279c3Fb53936E4606db0Ef12806.",
+      "documented_reference": "Layr-Labs/eigenlayer-contracts main README documents Core ProxyAdmin, 10-day TimelockController + CommunityMultisig Executor wrapper, and PauserRegistry 0xB8765ed72235d279c3Fb53936E4606db0Ef12806.",
+      "observed_delay_seconds": 864000,
+      "observed_delay_source": {
+        "contract": "0xC06Fd4F821eaC1fF1ae8067b36342899b57BAa2d",
+        "selector": "0xf27a0c92",
+        "getter": "getMinDelay()"
+      },
+      "documented_delay_seconds": 864000,
+      "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
+      "summary_doc": "audits/sprint-9/block-26402160-summary.md",
+      "summary_sha256": "0x0a4b9cbd0c3f3eb1839a86753857a603237918200e1d9f90e757f70008472ef4"
     }
   ]
 }

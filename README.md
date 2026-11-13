@@ -41,6 +41,7 @@ Each public record in the Pacta Index separates scanner archive replay from offl
 | **Sprint 6** | `26401540` (`0x192db04`) | `0x49324aaf84b0ffd4e21026c5345272788bff377f0f86fcdb74280cdfc32a9641` | [`audits/sprint-6/block-26401540-summary.md`](audits/sprint-6/block-26401540-summary.md) — Maple Finance V2 / Syrup, Liquity V2 (`BOLD`) |
 | **Sprint 7** | `26401638` (`0x192db66`) | `0xe62ad2969617ad07c23bec298c3d5e197ea7c3084f7f66c90d2eb51d04c6273e` | [`audits/sprint-7/block-26401638-summary.md`](audits/sprint-7/block-26401638-summary.md) — Ethena (`USDe`/`sUSDe`), ether.fi Core, Spark / Sky |
 | **Sprint 8** | `26401725` (`0x192dbbd`) | `0xec3820f0a9db32c01728e66f78dc1958e410269e1077fd1db53df4fbce2ad7a1` | [`audits/sprint-8/block-26401725-summary.md`](audits/sprint-8/block-26401725-summary.md) — Usual Money (`USD0`), Renzo (`ezETH`), Yearn V3 |
+| **Sprint 9** | `26402160` (`0x192dd70`) | `0xd04a5e8aa3500c5b60d90c25a810ef28eb9d1bfffadf28f1da58a31ed90582dc` | [`audits/sprint-9/block-26402160-summary.md`](audits/sprint-9/block-26402160-summary.md) — Compound V3 (`Comet`), Aave V3 / GHO, Kelp DAO (`rsETH`), EigenLayer Core |
 
 ---
 
