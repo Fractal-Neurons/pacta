@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pacta Governance Radar · Pre-Execution Brief — ether.fi Timelock Op 0x244e...359f</title>
+  <style>
+    :root {
+      --bg: #070d12;
+      --card: #0d1720;
+      --border: #1e3346;
+      --green: #10b981;
+      --cyan: #38bdf8;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 2rem 1.25rem 4rem; background: var(--bg); color: var(--text); font-family: var(--sans); line-height: 1.55; }
+    .wrap { max-width: 960px; margin: 0 auto; }
+    .badge { display: inline-block; font-family: var(--mono); font-size: 0.74rem; padding: 0.2rem 0.55rem; border-radius: 999px; font-weight: 700; }
+    .badge-green { background: rgba(16, 185, 129, 0.15); color: var(--green); border: 1px solid rgba(16, 185, 129, 0.45); }
+    .badge-cyan { background: rgba(56, 189, 248, 0.14); color: var(--cyan); border: 1px solid rgba(56, 189, 248, 0.45); }
+    header { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1.4rem 1.6rem; margin-bottom: 1.25rem; }
+    h1 { margin: 0.5rem 0 0.35rem; font-size: 1.4rem; color: #fff; }
+    h2 { font-size: 1.05rem; color: var(--cyan); border-left: 3px solid var(--cyan); padding-left: 0.65rem; margin: 1.6rem 0 0.75rem; font-family: var(--mono); text-transform: uppercase; }
+    .meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; margin-bottom: 1.25rem; }
+    .kpi { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 0.85rem 1rem; font-family: var(--mono); }
+    .kpi .k { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; }
+    .kpi .v { font-size: 1.08rem; font-weight: 700; color: #fff; margin-top: 0.2rem; }
+    .kpi .s { font-size: 0.73rem; color: var(--green); margin-top: 0.12rem; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.1rem 1.3rem; margin-bottom: 1rem; }
+    code { font-family: var(--mono); font-size: 0.83em; background: rgba(56, 189, 248, 0.1); color: #bae6fd; padding: 0.1rem 0.32rem; border-radius: 3px; word-break: break-all; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.86rem; margin-top: 0.5rem; }
+    th, td { text-align: left; padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+    th { font-family: var(--mono); font-size: 0.74rem; color: var(--cyan); text-transform: uppercase; background: rgba(56, 189, 248, 0.06); }
+    a { color: var(--cyan); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    footer { margin-top: 2rem; font-size: 0.8rem; color: var(--muted); font-family: var(--mono); text-align: center; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;align-items:center;">
+      <span class="badge badge-cyan">PACTA GOVERNANCE RADAR · PRE-EXECUTION BRIEF</span>
+      <span class="badge badge-green">VERDICT: PROTECTIVE GOVERNANCE HARDENING</span>
+    </div>
+    <h1>ether.fi Core Upgrade Timelock — Pending Operation <code>0x244e...359f</code></h1>
+    <p style="margin:0.25rem 0 0;color:var(--muted);font-size:0.93rem;">Pre-execution calldata, LayerZero V2 EndpointV2 delegate trace, and EIP-1967 storage-layout audit for institutional <code>weETH</code> / <code>eETH</code> vault risk curators.</p>
+  </header>
+
+  <div class="meta-grid">
+    <div class="kpi">
+      <div class="k">OApp &amp; Adjacent Backing</div>
+      <div class="v">46.92 ETH Float</div>
+      <div class="s">Adjacent to 121,009.28 weETH LockBox</div>
+    </div>
+    <div class="kpi">
+      <div class="k">Timelock Window</div>
+      <div class="v">10.00 Days (864,000s)</div>
+      <div class="s">ETA: 2026-11-20 16:54:11 UTC</div>
+    </div>
+    <div class="kpi">
+      <div class="k">Decoded Call</div>
+      <div class="v">setDelegate(address)</div>
+      <div class="s">Selector 0xca5eb5e1 -&gt; 10d Timelock</div>
+    </div>
+    <div class="kpi">
+      <div class="k">Storage Collision</div>
+      <div class="v">0 Slots Shifted</div>
+      <div class="s">debug_traceCall 0x00 (38,771 gas)</div>
+    </div>
+  </div>
+
+  <h2>1. What Is Queued &amp; Why It Matters for weETH Allocators</h2>
+  <div class="card">
+    <p style="margin-top:0;">In Ethereum Mainnet transaction <code>0x2c052a89c3f8d2782b7cb40ecfa7db5f72bab73d625aa1ad485fea6da24586a4</code> (block <code>26385837</code>), ether.fi's <code>6-of-10</code> Proposer Safe (<code>0xcdd57D11476c22d265722F68390b036f3DA48c21</code>) scheduled operation <code>0x244e3f6c3df722246c471cee58804dd34c7703fce9cee1eadc1c5a85f171359f</code> on <strong>EtherFiTimelock</strong> (<code>0x9f26d4C958fD811A1F59B01B86Be7dFFc9d20761</code>) targeting <strong>EtherfiL1SyncPoolETH</strong> (<code>0xD789870beA40D056A4d26055d0bEFcC8755DA146</code>) — the LayerZero V2 inbound native-ETH minting SyncPool OApp wired into <code>Liquifier</code> (<code>0x9FFDF407cDe9a93c47611799DA23924Af3EF764F</code>), carrying <code>46.92 ETH</code> in-flight unbacked sync float and operating alongside the separate L1 <code>LockBox</code> (<code>0xcd2eb13D6831d4602D80E5db9230A57596CDCA63</code>, holding <code>121,009.28 weETH</code>).</p>
+    <ul>
+      <li><strong>Pre-Execution Delegate Split-Brain:</strong> While <code>EtherfiL1SyncPoolETH.owner()</code> and <code>ProxyAdmin.owner()</code> (<code>0xDBf6bE120D4dc72f01534673a1223182D9F6261D</code>) already enforce the <code>10-day</code> timelock, OpenZeppelin <code>transferOwnership</code> does not update LayerZero V2 <code>EndpointV2.delegates(oapp)</code> (<code>0x1a44076050125825900e736c501f859c50fE728c</code>, selector <code>0x587cde1e</code>), which remained on a <strong>0-second 4-of-7 Safe</strong> (<code>0x2aCA71020De61bb532008049e1Bd41E451aE8AdC</code>) as the verification root for inbound cross-chain sync messages. (By contrast, the separate <code>121,009.28 weETH</code> L1 <code>LockBox</code> OApp already has matching <code>owner() == EndpointV2.delegates() == 0xcd425F44758a08BaAB3C4908f3e3dE5776e45d7a</code>.)</li>
+      <li><strong>Post-Execution Hardening (Nov 20, 16:54 UTC):</strong> Executing <code>setDelegate(0x9f26d4C958fD811A1F59B01B86Be7dFFc9d20761)</code> aligns <code>EtherfiL1SyncPoolETH</code> LayerZero DVN verifier &amp; receive-library configuration 1:1 with the <code>10-day</code> <code>EtherFiTimelock</code>.</li>
+      <li><strong>Peer Collateral Contrast:</strong> Brings <code>weETH</code> / <code>eETH</code> inbound SyncPool LayerZero governance behind a full <code>10-day</code> exit window, contrasting favorably against peer cross-chain collateral architectures where <code>TimelockController</code> selector whitelists retain <code>0-second</code> multisig paths on cross-chain adapter configuration.</li>
+    </ul>
+  </div>
+
+  <h2>2. Deterministic Verification &amp; Implementation Storage Audit</h2>
+  <div class="card">
+    <table>
+      <thead>
+        <tr>
+          <th>Verification Check</th>
+          <th>On-Chain / Cryptographic Evidence (Pinned Ethereum Block <code>26405767</code> / <code>26405868</code>)</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>OZ <code>hashOperation</code> Preimage</strong></td>
+          <td><code>keccak256(abi.encode(0xD789..DA146, 0, 0xca5eb5e1..0761, 0x00..00, 0x8d5b64ec..4cab))</code> == <code>0x244e3f6c...1359f</code></td>
+          <td><span class="badge badge-green">PASS</span></td>
+        </tr>
+        <tr>
+          <td><strong>Archive <code>debug_traceCall</code></strong></td>
+          <td><code>Timelock -&gt; Proxy -&gt; DELEGATECALL Impl (0x5d31..3aBD) -&gt; CALL EndpointV2.setDelegate</code> returns <code>0x</code> (38,771 gas)</td>
+          <td><span class="badge badge-green">PASS</span></td>
+        </tr>
+        <tr>
+          <td><strong>Impl Storage Diff (<code>0x2c28..0155</code> -&gt; <code>0x5d31..3aBD</code>)</strong></td>
+          <td>Added <code>PausableUntil</code> uses custom slot <code>0x2c7e4bc0...f1e1fea2</code> (0 sequential slots); <code>_liquifier</code>, <code>_eEth</code>, <code>_dummyTokens</code> preserved; <code>_paused</code> tail-appended; <code>_roleRegistry</code> (<code>0x6224..7cE9</code>) is bytecode <code>immutable</code></td>
+          <td><span class="badge badge-green">SAFE</span></td>
+        </tr>
+        <tr>
+          <td><strong>Adjacent L1 LockBox OApp Check</strong></td>
+          <td><code>LockBox</code> (<code>0xcd2e..CA63</code>, <code>121,009.28 weETH</code>): <code>owner() == EndpointV2.delegates() == 0xcd42..5d7a</code> (zero split-brain)</td>
+          <td><span class="badge badge-green">ALIGNED</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>3. Curator Monitoring Summary</h2>
+  <div class="card">
+    <ul style="margin:0;">
+      <li><strong>Pre-Nov 20 (<code>16:54 UTC</code>):</strong> No defensive supply/collateral cap reduction indicated for <code>weETH</code> markets on Morpho, Aave, or Euler; watch <code>EndpointV2</code> (<code>0x1a44076050125825900e736c501f859c50fE728c</code>) for any unexpected <code>0s</code> <code>SetConfig</code> or library events from <code>0x2aCA...8AdC</code> prior to execution.</li>
+      <li><strong>Post-Nov 20 (<code>16:54 UTC</code>):</strong> Verify <code>CallExecuted(0x244e...359f)</code> on <code>EtherFiTimelock</code> and confirm <code>EndpointV2.delegates(0xD789...DA146) == 0x9f26d4C958fD811A1F59B01B86Be7dFFc9d20761</code>.</li>
+    </ul>
+  </div>
+
+  <footer>
+    <a href="https://fractal-neurons.github.io/pacta/">Pacta Protocol Commitments</a> · Fractal Neurons · <code>pacta.base.eth</code> · Base Registry <code>0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872</code>
+  </footer>
+</div>
+</body>
+</html>
