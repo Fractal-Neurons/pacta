@@ -446,7 +446,7 @@ details p {
         </div>
         <div class="stats">
           <div class="stat">
-            <div class="stat__num">8 Sprints · 16 Records</div>
+            <div class="stat__num">9 Sprints · 20 Records</div>
             <div class="stat__label">Pinned to canonical Ethereum Mainnet block hashes</div>
           </div>
           <div class="stat">
@@ -463,7 +463,7 @@ details p {
 
     <section class="sec" id="index">
       <div class="wrap">
-        <p class="eyebrow">01 / Public Control-Plane &amp; Timelock Truth Index (Sprints 1–8)</p>
+        <p class="eyebrow">01 / Public Control-Plane &amp; Timelock Truth Index (Sprints 1–9)</p>
         <h2>Verified on-chain parameters across <strong>collateral &amp; lending infrastructure.</strong></h2>
         <p class="lede">
           All entries below reflect public, non-exploitable architectural state replayed at the cited Ethereum Mainnet block height. Security-sensitive findings are strictly excluded from public tables and routed privately at zero cost to official protocol security contacts.
@@ -565,6 +565,13 @@ details p {
                 <td>Sampled <code>BOLD</code> (<code>0x6440...b01D</code>) <code>owner() = 0x0</code>, <code>Governance</code> <code>owner() = 0x0</code>, and <code>CollateralRegistry</code> EIP-1967 implementation slot <code>= 0x00...00</code>.</td>
               </tr>
               <tr>
+                <td><strong>Aave V3 / GHO, Compound V3, EigenLayer &amp; Kelp</strong><br>Sampled Blue-Chip Core</td>
+                <td><code>#26,402,160</code><br><a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-9/block-26402160-summary.md">Sprint 9</a></td>
+                <td>Sampled Timelocks, ACL &amp; ProxyAdmins</td>
+                <td><span class="pill">Aligned Baseline</span></td>
+                <td>Compound V3 Comets -&gt; <code>48h</code> Timelock (<code>0x6d90...3925</code>); Aave V3 <code>ACLManager</code> -&gt; Level 1 Executor (<code>86,400s</code>) &amp; <code>4-of-7</code> Guardian; Kelp <code>rsETH</code> &amp; EigenLayer Core <code>ProxyAdmin</code>s -&gt; <code>10d</code> (<code>864,000s</code>) Timelock paths.</td>
+              </tr>
+              <tr>
                 <td><strong>Spark / Sky, Morpho &amp; Convex</strong><br>Sampled Core Contracts</td>
                 <td><code>#26,401,638</code> (<a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-7/block-26401638-summary.md">S7</a>)<br><code>#26,401,070</code> (<a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-3/block-26401070-summary.md">S3</a>) · <code>#26,401,312</code> (<a href="https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-4/block-26401312-summary.md">S4</a>)</td>
                 <td>Sampled GSM Delay &amp; Owners</td>
@@ -647,7 +654,7 @@ ETH_RPC_URL="https://gateway.tenderly.co/public/mainnet" forge test -vv</code></
         </details>
         <details>
           <summary>How can risk curators reproduce an index entry independently?</summary>
-          <p>Every entry in <a href="api/v1/index.json"><code>/api/v1/index.json</code></a> and <a href="https://github.com/Fractal-Neurons/pacta/tree/main/audits"><code>audits/sprint-1..8</code></a> includes the exact contract address, function selector or EIP-1967 storage slot, and canonical Ethereum Mainnet block height + block hash, reproducible with a single <code>cast call</code> or <code>cast storage</code> against any archive node.</p>
+          <p>Every entry in <a href="api/v1/index.json"><code>/api/v1/index.json</code></a> and <a href="https://github.com/Fractal-Neurons/pacta/tree/main/audits"><code>audits/sprint-1..9</code></a> includes the exact contract address, function selector or EIP-1967 storage slot, and canonical Ethereum Mainnet block height + block hash, reproducible with a single <code>cast call</code> or <code>cast storage</code> against any archive node.</p>
         </details>
       </div>
     </section>
