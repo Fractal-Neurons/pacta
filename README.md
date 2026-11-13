@@ -43,6 +43,7 @@ Each public record in the Pacta Index separates scanner archive replay from offl
 | **Sprint 8** | `26401725` (`0x192dbbd`) | `0xec3820f0a9db32c01728e66f78dc1958e410269e1077fd1db53df4fbce2ad7a1` | [`audits/sprint-8/block-26401725-summary.md`](audits/sprint-8/block-26401725-summary.md) — Usual Money (`USD0`), Renzo (`ezETH`), Yearn V3 |
 | **Sprint 9** | `26402160` (`0x192dd70`) | `0xd04a5e8aa3500c5b60d90c25a810ef28eb9d1bfffadf28f1da58a31ed90582dc` | [`audits/sprint-9/block-26402160-summary.md`](audits/sprint-9/block-26402160-summary.md) — Compound V3 (`Comet`), Aave V3 / GHO, Kelp DAO (`rsETH`), EigenLayer Core |
 | **Sprint 10** | `26403121` (`0x192e131`) | `0x71acee2313a2c8eacd7d2c87667dc505310b3e9224d84eaebb71d5a890ef9d1c` | [`audits/sprint-10/block-26403121-summary.md`](audits/sprint-10/block-26403121-summary.md) — Ondo Finance (`OUSG`/`Flux`), Mantle (`mETH`), Symbiotic Core, Lido (`DualGovernance`) |
+| **Sprint 11** | `26403523` (`0x192e2c3`) | `0xfc7beaa2338e8054577c0b101b641bc42afca2af39cb85d3fc13cbee32d4681a` | [`audits/sprint-11/block-26403523-summary.md`](audits/sprint-11/block-26403523-summary.md) — Curve (`crvUSD`), Gearbox V3 / V3.1, Lombard (`LBTC`), Resolv (`USR`/`RLP`) |
 
 ---
 

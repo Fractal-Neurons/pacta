@@ -1,6 +1,6 @@
 {
   "schema": "pacta.counterparty_control_index.v1",
-  "generated_at": "2026-11-13T04:22:00Z",
+  "generated_at": "2026-11-13T04:50:00Z",
   "publisher": {
     "organization": "Fractal Neurons",
     "unit": "Pacta Protocol Commitments DRI",
@@ -23,13 +23,61 @@
     "scope_limitation": "Entries report sampled historical read-only getter/slot returns alongside cited documentation; they do not certify protocol-wide immutability, exhaustive authority coverage, downstream mutation semantics, or exploitability."
   },
   "summary_metrics": {
-    "sprints_completed": 10,
-    "records_indexed": 24,
-    "parameter_deltas": 10,
+    "sprints_completed": 11,
+    "records_indexed": 28,
+    "parameter_deltas": 12,
     "protective_deltas": 2,
-    "aligned_baselines": 12
+    "aligned_baselines": 14
   },
   "entries": [
+    {
+      "id": "curve-crvusd-factory-lending-owner-proxy",
+      "protocol": "Curve Finance (crvUSD)",
+      "category": "Decentralized Stablecoin & Lending",
+      "sprint": 11,
+      "block_number": 26403523,
+      "block_hash": "0xfc7beaa2338e8054577c0b101b641bc42afca2af39cb85d3fc13cbee32d4681a",
+      "classification": "parameter_delta",
+      "surface": "ControllerFactory Admin Proxy & EmergencyDAO Debt-Ceiling Guard",
+      "target_contract": "0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC",
+      "target_label": "crvUSD ControllerFactory",
+      "check_type": "eth_call",
+      "selector_or_slot": "0xf851a440",
+      "onchain_observed": "ControllerFactory (0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC) admin() = LendingOwnerProxy (0xeDA020b067872717901916a3B8C724C21f6080d1), where dao() = CurveOwnershipAgent (0x40907540d8a6C65c637785e8f8B742ae6b0b9968, Aragon voteTime = 604800s / 7d on 0xE478de485ad2fe566d49342Cbd03E49ed7DB3356) and emergency_dao() = 5-of-9 EmergencyDAO Safe (0x467947EE34aF926cF1DCac093870f613C96B1E0c); crvUSD (0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E) minter() = ControllerFactory, totalSupply = 2,134,809,204.98 crvUSD; debt_ceiling(0x370a449FeBb9411c95bf897021377fe0B7D100c0) = 1,000,000,000 crvUSD.",
+      "documented_reference": "curvefi/docs docs/developer/crvusd/factory.md states 'Only its admin, the CurveOwnershipAgent, can call to add a market'; LendingOwnerProxy intermediate wrapper added at block 26300155.",
+      "observed_delay_seconds": null,
+      "observed_delay_source": null,
+      "documented_delay_seconds": null,
+      "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
+      "summary_doc": "audits/sprint-11/block-26403523-summary.md",
+      "summary_sha256": "0xc4a599ac19a79b5e24627692ccfc0431ba231ab8bea24236b8b876b5605ebaa8"
+    },
+    {
+      "id": "gearbox-v3-legacy-timelock-and-instance-safe",
+      "protocol": "Gearbox V3 / V3.1",
+      "category": "Leveraged Credit & Curated Lending",
+      "sprint": 11,
+      "block_number": 26403523,
+      "block_hash": "0xfc7beaa2338e8054577c0b101b641bc42afca2af39cb85d3fc13cbee32d4681a",
+      "classification": "parameter_delta",
+      "surface": "LegacyTimelock Delay & InstanceManager Safe Quorum",
+      "target_contract": "0xa133C9A92Fb8dDB962Af1cbae58b2723A0bdf23b",
+      "target_label": "Gearbox LegacyTimelock",
+      "check_type": "eth_call",
+      "selector_or_slot": "0x6a42b8f8",
+      "onchain_observed": "LegacyTimelock (0xa133C9A92Fb8dDB962Af1cbae58b2723A0bdf23b) delay() = 129600s (36 hours, GIP-104), admin() = LegacyGovernor (0x29B97F37B3E0C704bCFD785F5b7bBa2A0B7df2c7); InstanceManager (0x77777777144339Bdc3aCceE992D8d4D31734CB2e) owner() = 4-of-21 Gnosis Safe (0x1E9ec044853611F4bCD4BBcFE7657508BD1c53D3); Tech (0xA7D5DDc1b8557914F158076b228AA91eF613f1D5, 6-of-12), Veto (0xbb803559B4D58b75E12dd74641AB955e8B0Df40E, 4-of-12), Treasury (0x7b065Fcb0760dF0CEA8CFd144e08554F3CeA73D1, 5-of-10), and Fee (0x3E965117A51186e41c2BB58b729A1e518A715e5F, 5-of-10) Guard Safes match documented thresholds.",
+      "documented_reference": "docs.gearbox.finance states technical changes are 'behind a 2-day timelock' (172800s) and lists InstanceManager multisig as '4-of-12 (Subject to chain-specific configuration)'.",
+      "observed_delay_seconds": 129600,
+      "observed_delay_source": {
+        "contract": "0xa133C9A92Fb8dDB962Af1cbae58b2723A0bdf23b",
+        "selector": "0x6a42b8f8",
+        "getter": "delay()"
+      },
+      "documented_delay_seconds": 172800,
+      "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
+      "summary_doc": "audits/sprint-11/block-26403523-summary.md",
+      "summary_sha256": "0xc4a599ac19a79b5e24627692ccfc0431ba231ab8bea24236b8b876b5605ebaa8"
+    },
     {
       "id": "ondo-ousg-rate-limiter-and-flux-timelock",
       "protocol": "Ondo Finance (OUSG & Flux Finance)",
@@ -617,6 +665,58 @@
       "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
       "summary_doc": "audits/sprint-10/block-26403121-summary.md",
       "summary_sha256": "0x64b868f9d22c2994ecac03962ff2606d52fb7a4ad5a77ebb595911001b70db19"
+    },
+    {
+      "id": "lombard-lbtc-core-proxy-upgrade-timelock",
+      "protocol": "Lombard (LBTC)",
+      "category": "Institutional BTCfi / Liquid Staked Bitcoin",
+      "sprint": 11,
+      "block_number": 26403523,
+      "block_hash": "0xfc7beaa2338e8054577c0b101b641bc42afca2af39cb85d3fc13cbee32d4681a",
+      "classification": "aligned_baseline",
+      "surface": "Sampled Core ProxyAdmin Wiring & 24h TimelockController",
+      "target_contract": "0x055E84e7FE8955E2781010B866f10Ef6E1E77e59",
+      "target_label": "Lombard TimelockController",
+      "check_type": "eth_call",
+      "selector_or_slot": "0xf27a0c92",
+      "onchain_observed": "LBTC (0x8236a87084f8B84306f72007F36F2618A5634494) EIP-1967 admin slot = ProxyAdmin (0xbae061C73876952aa2C5e483B74DfA785425f879), whose owner() — along with AssetRouter ProxyAdmin (0xBf4202c8a0d852D432266dfE112ED624a1a36754) and Consortium ProxyAdmin (0x1629AE77cC70DaAc95Ec479caAEA23ECE77c67c5) — resolves to TimelockController (0x055E84e7FE8955E2781010B866f10Ef6E1E77e59, getMinDelay() = 86400s / 24h, EXECUTOR_ROLE held by 3-of-5 Safe 0x251a604E8E8f6906d60f8dedC5aAeb8CD38F4892 with Guard 0x87bde523e05Fee2C557d6F592F7EB686C69189Ab); LBTC totalSupply = 6,203.54 LBTC (8 dec).",
+      "documented_reference": "docs.lombard.finance/learn/transparency/smart-contracts states 'Each Proxy Upgrade Timelock enforces a 24-hour minimum delay on contract upgrades.'",
+      "observed_delay_seconds": 86400,
+      "observed_delay_source": {
+        "contract": "0x055E84e7FE8955E2781010B866f10Ef6E1E77e59",
+        "selector": "0xf27a0c92",
+        "getter": "getMinDelay()"
+      },
+      "documented_delay_seconds": 86400,
+      "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
+      "summary_doc": "audits/sprint-11/block-26403523-summary.md",
+      "summary_sha256": "0xc4a599ac19a79b5e24627692ccfc0431ba231ab8bea24236b8b876b5605ebaa8"
+    },
+    {
+      "id": "resolv-usr-default-admin-delay-and-safe",
+      "protocol": "Resolv (USR / RLP)",
+      "category": "Delta-Neutral Synthetic Dollar",
+      "sprint": 11,
+      "block_number": 26403523,
+      "block_hash": "0xfc7beaa2338e8054577c0b101b641bc42afca2af39cb85d3fc13cbee32d4681a",
+      "classification": "aligned_baseline",
+      "surface": "Sampled USR AccessControlDefaultAdminRules Delay & Request Counters",
+      "target_contract": "0x66a1E37c9b0eAddca17d3662D6c05F4DECf3e110",
+      "target_label": "Resolv USR Token",
+      "check_type": "eth_call",
+      "selector_or_slot": "0xcc8463c8",
+      "onchain_observed": "Sampled USR (0x66a1E37c9b0eAddca17d3662D6c05F4DECf3e110) defaultAdmin() = 4-of-6 Core Safe (0xD6889F307BE1b83Bb355d5DA7d4478FB0d2Af547) with defaultAdminDelay() = 86400s (1 day); sampled UsrExternalRequestsManager (0xa27a69Ae180e202fDe5D38189a3F24Fe24E55861) and RlpExternalRequestsManager (0xc7AB90c2Ea9271EFB31f5fA2843Eeb4B331eaFA0) return paused() = true; USR totalSupply = 6,085,929.53 USR, RLP (0x4956b52aE2fF65D74CA2d61207523288e4528f96) totalSupply = 1,592,731.62 RLP.",
+      "documented_reference": "docs.resolv.xyz/litepaper/for-developers/smart-contracts.md core token and external request manager deployment registry.",
+      "observed_delay_seconds": 86400,
+      "observed_delay_source": {
+        "contract": "0x66a1E37c9b0eAddca17d3662D6c05F4DECf3e110",
+        "selector": "0xcc8463c8",
+        "getter": "defaultAdminDelay()"
+      },
+      "documented_delay_seconds": null,
+      "verification_status": "scanner_dual_rpc_replayed_and_static_schema_checked",
+      "summary_doc": "audits/sprint-11/block-26403523-summary.md",
+      "summary_sha256": "0xc4a599ac19a79b5e24627692ccfc0431ba231ab8bea24236b8b876b5605ebaa8"
     }
   ]
 }
