@@ -271,7 +271,7 @@ contract PactaGovernanceInvariantsTest {
         require(s8Hash == blockHashes[1] && s8Sha256 == SPRINT_8_SHA256, "Sprint 8 digest mismatch");
     }
 
-    /// @notice Decodes all 10 `AttestSprints` payloads field-by-field and tests Base chain-ID enforcement.
+    /// @notice Decodes all 11 `AttestSprints` payloads field-by-field and tests Base chain-ID enforcement.
     function testAttestSprintsDeterministicPayloads() public {
         AttestSprints builder = new AttestSprints();
 
@@ -288,7 +288,7 @@ contract PactaGovernanceInvariantsTest {
         require(regTo == builder.BASE_SCHEMA_REGISTRY() && regChain == 8453, "Register target mismatch");
         require(bytes4(regData) == builder.SELECTOR_REGISTER_SCHEMA(), "Register selector mismatch");
 
-        uint64[10] memory expBlocks = [
+        uint64[11] memory expBlocks = [
             builder.SPRINT_1_BLOCK(),
             builder.SPRINT_2_BLOCK(),
             builder.SPRINT_3_BLOCK(),
@@ -298,9 +298,10 @@ contract PactaGovernanceInvariantsTest {
             builder.SPRINT_7_BLOCK(),
             builder.SPRINT_8_BLOCK(),
             builder.SPRINT_9_BLOCK(),
-            builder.SPRINT_10_BLOCK()
+            builder.SPRINT_10_BLOCK(),
+            builder.SPRINT_11_BLOCK()
         ];
-        bytes32[10] memory expHashes = [
+        bytes32[11] memory expHashes = [
             builder.SPRINT_1_BLOCK_HASH(),
             builder.SPRINT_2_BLOCK_HASH(),
             builder.SPRINT_3_BLOCK_HASH(),
@@ -310,9 +311,10 @@ contract PactaGovernanceInvariantsTest {
             builder.SPRINT_7_BLOCK_HASH(),
             builder.SPRINT_8_BLOCK_HASH(),
             builder.SPRINT_9_BLOCK_HASH(),
-            builder.SPRINT_10_BLOCK_HASH()
+            builder.SPRINT_10_BLOCK_HASH(),
+            builder.SPRINT_11_BLOCK_HASH()
         ];
-        bytes32[10] memory expDigests = [
+        bytes32[11] memory expDigests = [
             builder.SPRINT_1_SUMMARY_SHA256(),
             builder.SPRINT_2_SUMMARY_SHA256(),
             builder.SPRINT_3_SUMMARY_SHA256(),
@@ -322,11 +324,12 @@ contract PactaGovernanceInvariantsTest {
             builder.SPRINT_7_SUMMARY_SHA256(),
             builder.SPRINT_8_SUMMARY_SHA256(),
             builder.SPRINT_9_SUMMARY_SHA256(),
-            builder.SPRINT_10_SUMMARY_SHA256()
+            builder.SPRINT_10_SUMMARY_SHA256(),
+            builder.SPRINT_11_SUMMARY_SHA256()
         ];
-        uint8[10] memory expVerified = [uint8(4), 4, 3, 4, 3, 4, 3, 3, 4, 4];
-        uint8[10] memory expDrifts = [uint8(1), 1, 0, 1, 2, 1, 1, 2, 0, 1];
-        string[10] memory expUris = [
+        uint8[11] memory expVerified = [uint8(4), 4, 3, 4, 3, 4, 3, 3, 4, 4, 4];
+        uint8[11] memory expDrifts = [uint8(1), 1, 0, 1, 2, 1, 1, 2, 0, 1, 2];
+        string[11] memory expUris = [
             builder.SPRINT_1_PR_URI(),
             builder.SPRINT_2_PR_URI(),
             builder.SPRINT_3_PR_URI(),
@@ -336,10 +339,11 @@ contract PactaGovernanceInvariantsTest {
             builder.SPRINT_7_PR_URI(),
             builder.SPRINT_8_PR_URI(),
             builder.SPRINT_9_PR_URI(),
-            builder.SPRINT_10_PR_URI()
+            builder.SPRINT_10_PR_URI(),
+            builder.SPRINT_11_PR_URI()
         ];
 
-        for (uint16 id = 1; id <= 10; ++id) {
+        for (uint16 id = 1; id <= 11; ++id) {
             (address attTo, uint256 attChain, bytes32 uid, bytes memory attCall) = builder.buildAttestSprintTx(id);
             require(attTo == builder.BASE_EAS() && attChain == 8453 && uid == builder.canonicalSchemaUID(), "EAS tx mismatch");
             require(bytes4(attCall) == builder.SELECTOR_ATTEST(), "EAS selector mismatch");
@@ -367,7 +371,7 @@ contract PactaGovernanceInvariantsTest {
         }
 
         vm.expectRevert(AttestSprints.InvalidSprintId.selector);
-        builder.getPinnedSprintPayload(11);
+        builder.getPinnedSprintPayload(12);
     }
 
     /// @notice Illustrative mock pattern testing both accepted (`>= 7d`) and rejected (`< 7d`) candidate delay updates.
