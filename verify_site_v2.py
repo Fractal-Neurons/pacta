@@ -182,7 +182,10 @@ def app_behaviour(appjs, request_html, index_html, row_id, beacon="", protocol_h
         return {"harness_error": "node not found"}
     payload = json.dumps({"app": appjs, "request": dom_tree(request_html), "index": dom_tree(index_html), "rowId": row_id, "beacon": beacon,
                           "protocol": dom_tree(protocol_html) if protocol_html else None, "protocolSlug": protocol_slug,
-                          "notfound": dom_tree(notfound_html) if notfound_html else None})
+                          "notfound": dom_tree(notfound_html) if notfound_html else None,
+                          # every published protocol slug (+ wave-2 shapes) must survive the beacon's client-side path redaction
+                          "protocolSlugs": sorted(d for d in os.listdir(os.path.join(DOCS, "protocols")) if os.path.isdir(os.path.join(DOCS, "protocols", d)))
+                          + ["pendle-finance-v2", "uniswap-governance-timelock", "hyperliquid"]})
     out = subprocess.run([node, os.path.join(ROOT, "tools", "app_harness.js")], input=payload, capture_output=True, text=True, timeout=120)
     try:
         return json.loads(out.stdout)
@@ -716,7 +719,9 @@ def main():
         "sendBeacon(url, string) + keepalive no-cors fallback": "sendBeacon(U,b)" in bjs.replace(" ", "") and "JSON.stringify" in bjs
                                                                and re.search(r'keepalive:\s*(!0|true)', bjs) is not None and '"no-cors"' in bjs,
         "Do Not Track gate": re.search(r'\.doNotTrack\s*!=\s*"1"', bjs) is not None,
-        "every contract event": all(f'"{e}"' in bjs for e in b_events) and "live_checker_submit" in appjs,
+        "every contract event (b.js page / scroll / 404 events; app.js copy / CTA / checker hooks via pactaBeacon)":
+            all(f'"{e}"' in bjs for e in ("page_load", "scroll_50", "scroll_90", "protocol_view", "not_found_404"))
+            and all(f'"{e}"' in appjs for e in ("copy_mcp_url", "copy_curl", "copy_skill_md", "cta_click", "live_checker_submit")),
         "no cookie / storage / fingerprint APIs": not re.search(r"cookie|localStorage|sessionStorage|indexedDB|userAgent|canvas|crypto|Math\.random|Date\.now",
                                                                 re.sub(r"/\*.*?\*/", "", bjs, flags=re.S)),
     }
@@ -757,7 +762,8 @@ def main():
           f"bad {js_bad}; localStorage keys {sorted(ls_keys)}; data-api {sorted(data_api)}; fetch {app_fetch}")
     b_keys = ["b_page_load_payload", "b_hook_exposed", "b_copy_and_cta_events", "b_scroll_once_each", "b_live_checker_submit", "b_invalid_submit_not_reported",
               "b_protocol_view", "b_protocol_copy_curl_and_cta", "b_not_found_404", "b_not_found_path_sanitised", "b_not_found_copy_mcp",
-              "b_dnt_sends_nothing", "b_non_https_sends_nothing", "b_fetch_fallback", "b_no_cookie_access"]
+              "b_dnt_sends_nothing", "b_non_https_sends_nothing", "b_fetch_fallback", "b_no_cookie_access",
+              "b_c1_spec_payloads", "b_c1_referrers_redacted", "b_c1_utm_redacted", "b_c1_all_protocol_slugs_kept", "b_c1_page_paths"]
     failed_bk = [k for k in b_keys if res.get(k) is not True] + (["harness_error: " + res["harness_error"][:200]] if "harness_error" in res else [])
     check("beacon behaviour (node harness, mocked navigator.sendBeacon): page_load {r, u}, same-site r=self, protocol_view t=slug, copy_mcp_url / copy_curl / copy_skill_md / cta_click hooks, scroll_50/90 once, live_checker_submit t=chain:address, 404 path sanitised, DNT and http send nothing, fetch keepalive fallback",
           not failed_bk, f"{len(b_keys) - len([k for k in b_keys if res.get(k) is not True])}/{len(b_keys)}; failed {failed_bk[:4]}")

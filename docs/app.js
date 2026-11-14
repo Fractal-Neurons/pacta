@@ -59,6 +59,23 @@
     });
   }
 
+  // ---- first-party beacon hooks: b.js defines window.pactaBeacon (and applies DNT / https / redaction); without it
+  //      nothing is sent. copy_mcp_url / copy_curl by what a copy button copies, copy_skill_md, primary CTAs. --------
+  function initBeaconHooks() {
+    document.addEventListener("click", function (ev) {
+      var B = window.pactaBeacon, x = ev.target, c, a, q, t;
+      if (typeof B !== "function" || !x || !x.closest) return;
+      if ((c = x.closest(".copy"))) {
+        q = c.getAttribute("data-copy");
+        if (q === null) { t = c.closest(".term"); t = t && t.querySelector("pre"); q = t ? t.textContent : ""; }
+        if (/\/mcp\b/.test(q)) B("copy_mcp_url"); else if (/^curl /.test(q)) B("copy_curl");
+      } else if ((a = x.closest("a"))) {
+        if (/SKILL\.md$/.test(a.getAttribute("href") || "")) B("copy_skill_md");
+        else if (a.closest("a.primary,.memo-foot a")) B("cta_click");
+      }
+    }, true);
+  }
+
   // ---- copy to clipboard (works on http(s) and file://) ---------------------------------------------
   function copyText(text) {
     if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text);
@@ -440,7 +457,7 @@
   }
 
   document.addEventListener("DOMContentLoaded", function () {
-    initTheme(); initCopy(); tick(); setInterval(tick, 30000);
+    initTheme(); initCopy(); initBeaconHooks(); tick(); setInterval(tick, 30000);
     initIndex(); initRequest(); initInspector(); initPreflight();
     if ($("#insp-list")) loadData().catch(function () { /* static sheet and drawer links keep working */ });
   });
