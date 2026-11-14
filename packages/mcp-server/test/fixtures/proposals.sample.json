@@ -1,0 +1,151 @@
+{
+ "schema": "pacta.governance_proposals_feed.v1",
+ "generated_at": "2026-11-13T20:00:00Z",
+ "generated_from": [
+  "/api/v1/onboarding.json",
+  "/api/v1/index.json"
+ ],
+ "counts": {
+  "total": 5,
+  "by_forum": {
+   "aave": 2,
+   "euler": 1,
+   "morpho": 1,
+   "sky": 1
+  }
+ },
+ "proposals": [
+  {
+   "proposal_id": "aave-25128",
+   "forum": "aave",
+   "topic_id": 25128,
+   "title": "Fixture: Aave V3 Ethereum risk-parameter update",
+   "forum_url": "https://governance.aave.com/t/fixture-aave-v3-ethereum-risk-parameter-update/25128",
+   "chain": "ethereum",
+   "chain_id": 1,
+   "pinned_block_number": 23800000,
+   "pinned_block_hash": "0xa1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+   "source_feed": "/api/v1/onboarding.json",
+   "source_record_ids": [
+    "fixture-aave-v3-ethereum-executor-lvl1"
+   ],
+   "brief_url": "https://pacta.wtf/briefs/fixture-aave-25128/",
+   "control_plane_summary": [
+    "Executor_Lvl1 owns PoolConfigurator admin roles (fixture text)",
+    "Governance voting delay pinned at the block above (fixture text)"
+   ],
+   "recommended_sentinel_predicates": [
+    "AdminUpgradePredicate",
+    "PausePrivilegeEscalationPredicate"
+   ],
+   "repro_commands": [
+    "cast call 0x1111111111111111111111111111111111111111 \"owner()(address)\" --block 23800000 --rpc-url $ETH_RPC_URL",
+    "cast block 23800000 --field hash --rpc-url $ETH_RPC_URL"
+   ]
+  },
+  {
+   "proposal_id": "aave-25301",
+   "forum": "aave",
+   "topic_id": 25301,
+   "title": "Fixture: Aave V3 Base cap adjustment",
+   "forum_url": "https://governance.aave.com/t/fixture-aave-v3-base-cap-adjustment/25301",
+   "chain": "base",
+   "chain_id": 8453,
+   "pinned_block_number": 38200000,
+   "pinned_block_hash": "0xb2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2",
+   "source_feed": "/api/v1/index.json",
+   "source_record_ids": [
+    "fixture-aave-v3-base-pool-configurator"
+   ],
+   "brief_url": null,
+   "control_plane_summary": [
+    "Supply cap set through the Base cross-chain executor (fixture text)"
+   ],
+   "recommended_sentinel_predicates": [
+    "CapSupplyViolationPredicate"
+   ],
+   "repro_commands": [
+    "cast call 0x2222222222222222222222222222222222222222 \"getReserveData(address)\" 0x3333333333333333333333333333333333333333 --block 38200000 --rpc-url $BASE_RPC_URL",
+    "cast block 38200000 --field hash --rpc-url $BASE_RPC_URL"
+   ]
+  },
+  {
+   "proposal_id": "euler-1204",
+   "forum": "euler",
+   "topic_id": 1204,
+   "title": "Fixture: Euler vault governor change",
+   "forum_url": "https://forum.euler.finance/t/fixture-euler-vault-governor-change/1204",
+   "chain": "ethereum",
+   "chain_id": 1,
+   "pinned_block_number": 23800100,
+   "pinned_block_hash": "0xc3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3",
+   "source_feed": "/api/v1/index.json",
+   "source_record_ids": [
+    "fixture-euler-evk-governor"
+   ],
+   "brief_url": "https://pacta.wtf/briefs/fixture-euler-1204/",
+   "control_plane_summary": [
+    "Vault governorAdmin is a TimelockController (fixture text)"
+   ],
+   "recommended_sentinel_predicates": [
+    "AdminUpgradePredicate",
+    "OracleGovernanceSwapPredicate"
+   ],
+   "repro_commands": [
+    "cast call 0x4444444444444444444444444444444444444444 \"governorAdmin()(address)\" --block 23800100 --rpc-url $ETH_RPC_URL"
+   ]
+  },
+  {
+   "proposal_id": "morpho-842",
+   "forum": "morpho",
+   "topic_id": 842,
+   "title": "Fixture: Morpho Vault V2 curator role update",
+   "forum_url": "https://forum.morpho.org/t/fixture-morpho-vault-v2-curator-role-update/842",
+   "chain": "base",
+   "chain_id": 8453,
+   "pinned_block_number": 38200500,
+   "pinned_block_hash": "0xd4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4d4",
+   "source_feed": "/api/v1/onboarding.json",
+   "source_record_ids": [
+    "fixture-morpho-vault-v2-base"
+   ],
+   "brief_url": null,
+   "control_plane_summary": [
+    "Vault V2 curator and sentinel roles read at the pinned block (fixture text)"
+   ],
+   "recommended_sentinel_predicates": [
+    "CapSupplyViolationPredicate",
+    "PausePrivilegeEscalationPredicate"
+   ],
+   "repro_commands": [
+    "cast call 0x5555555555555555555555555555555555555555 \"curator()(address)\" --block 38200500 --rpc-url $BASE_RPC_URL"
+   ]
+  },
+  {
+   "proposal_id": "sky-27015",
+   "forum": "sky",
+   "topic_id": 27015,
+   "title": "Fixture: Sky executive spell review",
+   "forum_url": "https://forum.skyeco.com/t/fixture-sky-executive-spell-review/27015",
+   "chain": "ethereum",
+   "chain_id": 1,
+   "pinned_block_number": 23800200,
+   "pinned_block_hash": "0xe5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5",
+   "source_feed": "/api/v1/index.json",
+   "source_record_ids": [
+    "fixture-sky-pause-proxy",
+    "fixture-sky-chief"
+   ],
+   "brief_url": "https://pacta.wtf/briefs/fixture-sky-27015/",
+   "control_plane_summary": [
+    "Pause proxy delay pinned at the block above (fixture text)"
+   ],
+   "recommended_sentinel_predicates": [
+    "AdminUpgradePredicate"
+   ],
+   "repro_commands": [
+    "cast call 0x6666666666666666666666666666666666666666 \"delay()(uint256)\" --block 23800200 --rpc-url $ETH_RPC_URL"
+   ]
+  }
+ ]
+}

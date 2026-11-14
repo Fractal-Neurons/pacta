@@ -1,0 +1,51 @@
+{
+  "name": "@pacta/mcp-server",
+  "version": "0.1.0",
+  "mcpName": "io.github.fractal-neurons/pacta",
+  "description": "Zero-dependency MCP server for Pacta DeFi control-plane telemetry, Base EAS commitments, and x402 Base USDC live scans.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./src/server.mjs",
+  "types": "./index.d.ts",
+  "bin": {
+    "pacta-mcp": "./bin/pacta-mcp.mjs"
+  },
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./src/server.mjs"
+    },
+    "./x402": "./src/x402.mjs"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "index.d.ts",
+    "README.md",
+    "SKILL.md",
+    "server.json"
+  ],
+  "scripts": {
+    "start": "node ./bin/pacta-mcp.mjs",
+    "test": "node --test ./test/server.test.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Fractal-Neurons/pacta.git",
+    "directory": "packages/mcp-server"
+  },
+  "homepage": "https://pacta.wtf/",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "x402",
+    "defi",
+    "timelock",
+    "eas",
+    "base",
+    "usdc"
+  ],
+  "engines": {
+    "node": ">=18.19.0"
+  }
+}

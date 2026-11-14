@@ -1,0 +1,321 @@
+import type { Readable, Writable } from "node:stream";
+
+export interface Eip712Domain {
+  name: string;
+  version: string;
+  chainId: number;
+  verifyingContract: string;
+}
+
+export interface TransferWithAuthorizationMessage {
+  from: string;
+  to: string;
+  value: string;
+  validAfter: string;
+  validBefore: string;
+  nonce: string;
+}
+
+export interface TransferWithAuthorizationTypedData {
+  domain: Eip712Domain;
+  primaryType: "TransferWithAuthorization";
+  types: Record<string, Array<{ name: string; type: string }>>;
+  message: TransferWithAuthorizationMessage;
+}
+
+export interface PactaServerOptions {
+  fetchImpl?: typeof fetch;
+  indexData?: Record<string, unknown>;
+  indexPath?: string;
+  specPath?: string;
+  indexUrls?: readonly string[];
+  /** In-memory proposals feed (validated like a fetched one). */
+  proposalsData?: Record<string, unknown>;
+  /** Local proposals feed path. Default PACTA_PROPOSALS_PATH. When set, no network fetch is made for proposals. */
+  proposalsPath?: string;
+  /** Proposals feed URLs tried in order. Default PROPOSALS_URLS. */
+  proposalsUrls?: readonly string[];
+  x402Url?: string | null;
+  apiBaseUrl?: string | null;
+  nowSeconds?: number;
+  /** Per-fetch timeout (ms, 1..60000). Default 8000 or PACTA_X402_TIMEOUT_MS. */
+  timeoutMs?: number | string;
+  /** Per-payment cap in atomic USDC. Default "1000000" or PACTA_X402_MAX_ATOMIC; clamped to HARD_MAX_ATOMIC. */
+  maxAtomic?: string | number | bigint;
+  input?: Readable;
+  output?: Writable;
+}
+
+export interface JsonRpcRequest {
+  jsonrpc: "2.0";
+  id?: string | number | null;
+  method: string;
+  params?: Record<string, unknown>;
+}
+
+export interface JsonRpcResponse {
+  jsonrpc: "2.0";
+  id: string | number | null;
+  result?: unknown;
+  error?: { code: number; message: string };
+}
+
+export declare const SERVER_INFO: Readonly<{ name: "@pacta/mcp-server"; version: string }>;
+export declare const SUPPORTED_PROTOCOL_VERSION: "2024-11-05";
+export declare const INDEX_URLS: ReadonlyArray<string>;
+export declare const PROPOSALS_URLS: ReadonlyArray<string>;
+export declare const PROPOSALS_SCHEMA: "pacta.governance_proposals_feed.v1";
+export declare const PROPOSAL_FORUMS: ReadonlyArray<ProposalForum>;
+
+export type ProposalForum = "aave" | "euler" | "morpho" | "sky";
+
+export interface GovernanceProposal {
+  proposal_id: string;
+  forum: ProposalForum;
+  topic_id: number;
+  title: string;
+  forum_url: string;
+  chain: "ethereum" | "base";
+  chain_id: 1 | 8453;
+  pinned_block_number: number;
+  pinned_block_hash: string;
+  source_feed: "/api/v1/onboarding.json" | "/api/v1/index.json";
+  source_record_ids: string[];
+  brief_url: string | null;
+  control_plane_summary: string[];
+  recommended_sentinel_predicates: string[];
+  repro_commands: string[];
+}
+
+export interface GovernanceProposalsFeed {
+  schema: "pacta.governance_proposals_feed.v1";
+  generated_at: string;
+  generated_from: string[];
+  counts: { total: number; by_forum: Partial<Record<ProposalForum, number>> };
+  proposals: GovernanceProposal[];
+}
+
+export interface ListProposalsArgs {
+  forum?: ProposalForum;
+  topic_id?: number;
+  chain?: "ethereum" | "base";
+  /** 1..100, default 25. */
+  limit?: number;
+  /** Include repro_commands (default false). */
+  include_repro?: boolean;
+}
+
+/** pacta_list_proposals result. repro_commands is present only when include_repro is true. */
+export interface ListProposalsResult {
+  source: string;
+  schema: "pacta.governance_proposals_feed.v1";
+  generated_at: string | null;
+  counts: GovernanceProposalsFeed["counts"] | null;
+  filters: Omit<ListProposalsArgs, "limit" | "include_repro"> & { limit: number; include_repro: boolean };
+  total_in_feed: number;
+  matched_count: number;
+  returned_count: number;
+  proposals: Array<Omit<GovernanceProposal, "repro_commands"> & { repro_commands?: string[] }>;
+}
+
+/** Validates a feed (object or JSON text). Throws X402Error "invalid_feed" with details.reason. */
+export declare function parseProposalsFeed(input: unknown, source?: string): GovernanceProposalsFeed;
+export declare const DEFAULT_ANCHORING: Readonly<Record<string, unknown>>;
+export declare const FREE_TOOLS: ReadonlyArray<Record<string, unknown>>;
+export declare const PAID_TOOLS: ReadonlyArray<Record<string, unknown>>;
+export declare const TOOL_DEFINITIONS: ReadonlyArray<Record<string, unknown>>;
+export declare const PAID_ROUTES: Readonly<Record<string, Record<string, string>>>;
+export declare const X402_DEFAULTS: Readonly<Record<string, unknown>>;
+
+export declare function buildTransferWithAuthorizationTypedData(
+  options: Record<string, unknown>
+): TransferWithAuthorizationTypedData;
+
+export declare function encodeXPaymentHeader(options: {
+  signature: string;
+  authorization: TransferWithAuthorizationMessage;
+  network?: string;
+}): string;
+
+/** Stable error codes surfaced by the x402 path and the free feed loaders (thrown as X402Error, rendered as JSON in MCP tool results). */
+export type X402ErrorCode =
+  | "x402_disabled"
+  | "invalid_config"
+  | "invalid_argument"
+  | "invalid_x_payment"
+  | "malformed_header"
+  | "rejected_challenge"
+  | "timeout"
+  | "network_error"
+  | "response_too_large"
+  | "upstream_http_error"
+  | "unverified_settlement"
+  | "feed_unavailable"
+  | "invalid_feed";
+
+export declare class X402Error extends Error {
+  constructor(code: X402ErrorCode | string, message: string, details?: Record<string, unknown>);
+  readonly name: "X402Error";
+  readonly code: X402ErrorCode | string;
+  readonly details: Record<string, unknown>;
+  toJSON(): { error: string; code: string } & Record<string, unknown>;
+}
+
+export declare const ALLOWED_PAY_TO: ReadonlyArray<string>;
+export declare const BASE_USDC: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913";
+export declare const BASE_CHAIN_ID: 8453;
+export declare const DEFAULT_MAX_ATOMIC: "1000000";
+export declare const HARD_MAX_ATOMIC: "5000000";
+
+export interface PaymentRequirementsEntry {
+  x402Version: 1;
+  scheme: "exact";
+  network: "base";
+  chainId: 8453;
+  maxAmountRequired: string;
+  resource?: string;
+  description?: string;
+  mimeType: string;
+  payTo: string;
+  maxTimeoutSeconds: number;
+  asset: string;
+  extra: { name: "USD Coin"; version: "2" };
+}
+
+export interface XPaymentEnvelope {
+  x402Version: 1;
+  scheme: "exact";
+  network: "base";
+  payload: { signature: string; authorization: TransferWithAuthorizationMessage };
+}
+
+export interface XPaymentValidationOptions {
+  routeMaxAmountRequired?: string;
+  maxAtomic?: string | number | bigint;
+  allowedPayTo?: ReadonlyArray<string>;
+  nowSeconds?: number;
+  maxTimeoutSeconds?: number;
+  maxLength?: number;
+}
+
+export declare function validateXPaymentHeader(
+  header: unknown,
+  options?: XPaymentValidationOptions
+):
+  | { ok: true; payment: XPaymentEnvelope }
+  | { ok: false; error: { code: "invalid_x_payment"; reason: string; message: string } };
+
+export declare function validateAcceptsEntry(
+  entry: unknown,
+  options?: {
+    containerVersion?: unknown;
+    routeMaxAmountRequired?: string;
+    maxAtomic?: string | number | bigint;
+    allowedPayTo?: ReadonlyArray<string>;
+    maxTimeoutSecondsCeiling?: number;
+    /**
+     * Required: the exact absolute URL that was requested. The entry's `resource` (absolute, or relative to the request
+     * origin) must have the same origin and pathname, else resource_origin_mismatch / resource_path_mismatch.
+     * Missing or relative -> missing_expected_resource. The normalized entry's `resource` is this URL.
+     */
+    expectedResource?: string;
+  }
+): { ok: true; reasons: []; entry: PaymentRequirementsEntry } | { ok: false; reasons: string[] };
+
+export declare function selectPaymentRequirements(options: {
+  bodyText?: string;
+  headers?: { get(name: string): string | null };
+  routeSpec: { maxAmountRequired: string };
+  maxAtomic?: string | number | bigint;
+  /** The exact absolute URL requested; every accepts[] entry is bound to it (origin + pathname). */
+  resource: string;
+  sourceLabel?: string;
+}): {
+  selected: PaymentRequirementsEntry;
+  selectedFrom: { source: string; index: number };
+  rejected: Array<{ source: string; index: number; reasons: string[] }>;
+  sourceErrors: Array<{ source: string; reason: string }>;
+  upstreamError?: string;
+};
+
+/** Normalized gateway receipt. payTo / amount are present only when the gateway sent them (then they matched). */
+export interface PaymentReceipt {
+  success: true;
+  network: "base";
+  transaction: string;
+  payer: string;
+  payTo?: string;
+  amount?: string;
+}
+
+/**
+ * Validates the gateway's X-PAYMENT-RESPONSE header assertion: payer == expectedPayer; payTo / recipient / to ==
+ * expectedPayTo (allowlist if omitted) and amount / value == expectedValue when present. Does NOT verify the
+ * transaction on-chain.
+ */
+export declare function validatePaymentReceipt(
+  raw: unknown,
+  options: { expectedPayer: string; expectedPayTo?: string; expectedValue?: string }
+): { ok: true; receipt: PaymentReceipt } | { ok: false; reason: string };
+
+/**
+ * Successful paid call. The client checks the gateway's receipt header against the signed authorization but does not
+ * independently verify the settlement transaction on-chain: onchainReceiptVerified is always false.
+ */
+export interface PaidResourceResult {
+  status: number;
+  paymentRequired: false;
+  paid: true;
+  gatewayReceiptVerified: true;
+  onchainReceiptVerified: false;
+  settlementVerificationScope: "gateway_header_assertion";
+  resource: string;
+  paymentReceipt: PaymentReceipt;
+  data: unknown;
+}
+
+export declare function decodeStrictBase64Json(
+  raw: unknown,
+  options?: { maxLength?: number }
+): { ok: true; value: unknown } | { ok: false; reason: string };
+
+export declare function resolveMaxAtomic(input: unknown): { maxAtomic: bigint; warning: string | null };
+
+/** Ethereum Keccak-256 (not SHA3-256). Returns 64 lowercase hex chars, no 0x. */
+export declare function keccak256Hex(input: Uint8Array | string): string;
+export declare function toChecksumAddress(address: string): string;
+/** 0x + 40 hex; if mixed-case, the EIP-55 checksum must be correct. */
+export declare function isValidAddress(value: unknown): boolean;
+
+export declare function callX402Resource(options: {
+  fetchImpl?: typeof fetch;
+  baseUrl: string | null;
+  routeSpec: Record<string, string>;
+  query?: Record<string, unknown>;
+  xPaymentHeader?: string;
+  payer?: string;
+  validBeforeSeconds?: number;
+  nonce?: string;
+  nowSeconds?: number;
+  maxAtomic?: string | number | bigint;
+  timeoutMs?: number;
+  maxResponseBytes?: number;
+}): Promise<PaidResourceResult | Record<string, unknown>>;
+
+export declare class PactaMcpServer {
+  constructor(options?: PactaServerOptions);
+  readonly maxAtomic: string;
+  readonly timeoutMs: number;
+  readonly configWarnings: string[];
+  getTools(): ReadonlyArray<Record<string, unknown>>;
+  loadSpec(): Promise<Record<string, unknown> | null>;
+  loadIndex(): Promise<{ source: string; index: Record<string, unknown> }>;
+  loadProposals(): Promise<{ source: string; feed: GovernanceProposalsFeed }>;
+  callTool(name: string, args?: Record<string, unknown>): Promise<unknown>;
+  handleMessage(msg: JsonRpcRequest): Promise<JsonRpcResponse | null>;
+}
+
+export declare function startStdioServer(options?: PactaServerOptions): {
+  server: PactaMcpServer;
+  close: () => void;
+};

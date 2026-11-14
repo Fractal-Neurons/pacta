@@ -1,0 +1,70 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
+  "name": "io.github.fractal-neurons/pacta",
+  "title": "Pacta",
+  "description": "Pinned-block DeFi control-plane records, governance proposals, Base EAS anchors, x402 live scans.",
+  "repository": {
+    "url": "https://github.com/Fractal-Neurons/pacta",
+    "source": "github",
+    "subfolder": "packages/mcp-server"
+  },
+  "version": "0.1.0",
+  "websiteUrl": "https://pacta.wtf/",
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "@pacta/mcp-server",
+      "version": "0.1.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "PACTA_INDEX_PATH",
+          "description": "Local path to a Pacta index.json; overrides the https://pacta.wtf/api/v1/index.json feed.",
+          "format": "filepath",
+          "isRequired": false,
+          "isSecret": false
+        },
+        {
+          "name": "PACTA_PROPOSALS_PATH",
+          "description": "Local path to a Pacta proposals.json; overrides the https://pacta.wtf/api/v1/proposals.json feed.",
+          "format": "filepath",
+          "isRequired": false,
+          "isSecret": false
+        },
+        {
+          "name": "PACTA_SPEC_PATH",
+          "description": "Local path to a Pacta spec JSON (anchoring overrides and a local index snapshot fallback).",
+          "format": "filepath",
+          "isRequired": false,
+          "isSecret": false
+        },
+        {
+          "name": "PACTA_X402_URL",
+          "description": "x402 gateway URL; the canonical live gateway is https://pacta-x402.pacta.workers.dev. Unset: paid tools are disabled and only free tools are listed.",
+          "format": "string",
+          "isRequired": false,
+          "isSecret": false
+        },
+        {
+          "name": "PACTA_X402_MAX_ATOMIC",
+          "description": "Per-payment cap in atomic Base USDC (6 decimals). Default 1000000 ($1.00); hard ceiling 5000000.",
+          "format": "number",
+          "default": "1000000",
+          "isRequired": false,
+          "isSecret": false
+        },
+        {
+          "name": "PACTA_X402_TIMEOUT_MS",
+          "description": "Timeout in ms for every outbound fetch (feeds, discovery, paid calls). Range 1 to 60000.",
+          "format": "number",
+          "default": "8000",
+          "isRequired": false,
+          "isSecret": false
+        }
+      ]
+    }
+  ]
+}

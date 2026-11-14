@@ -1,0 +1,69 @@
+name: Pacta MCP Server CI & Registry Release
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "packages/mcp-server/**"
+      - ".github/workflows/mcp-server.yml"
+  pull_request:
+    paths:
+      - "packages/mcp-server/**"
+      - ".github/workflows/mcp-server.yml"
+  workflow_dispatch:
+    inputs:
+      publish_npm_and_mcp_registry:
+        description: "Publish @pacta/mcp-server to npm and io.github.fractal-neurons/pacta to registry.modelcontextprotocol.io"
+        required: true
+        type: boolean
+        default: false
+
+jobs:
+  test-mcp-server:
+    name: Run Zero-Dependency MCP Server Suite (Node 22)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Run MCP server unit & protocol tests
+        working-directory: packages/mcp-server
+        run: node --test ./test/server.test.mjs
+
+  publish-mcp-server:
+    name: Publish to npm & MCP Registry (Manual OIDC Release)
+    needs: test-mcp-server
+    if: github.event_name == 'workflow_dispatch' && inputs.publish_npm_and_mcp_registry == true && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22 for npm registry
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Publish @pacta/mcp-server to npm
+        working-directory: packages/mcp-server
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --provenance --access public
+
+      - name: Publish io.github.fractal-neurons/pacta to registry.modelcontextprotocol.io
+        working-directory: packages/mcp-server
+        run: |
+          curl -fsSL "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" | tar xz mcp-publisher
+          ./mcp-publisher login github-oidc
+          ./mcp-publisher publish

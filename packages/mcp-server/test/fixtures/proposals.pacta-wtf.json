@@ -1,0 +1,438 @@
+{
+ "counts": {
+  "by_forum": {
+   "aave": 6,
+   "euler": 2,
+   "morpho": 1,
+   "sky": 1
+  },
+  "total": 10
+ },
+ "generated_at": "2026-11-13T21:40:42Z",
+ "generated_by": "tools/build_b2a_feeds.py",
+ "generated_from": [
+  "/api/v1/onboarding.json",
+  "/api/v1/index.json"
+ ],
+ "note": "Observed on-chain state at the pinned block for each governance thread. Read-only; Pacta never posts on these forums.",
+ "proposals": [
+  {
+   "brief_url": "https://pacta.wtf/briefs/circle-cirbtc-eth/",
+   "chain": "ethereum",
+   "chain_id": 1,
+   "control_plane_summary": [
+    "Upgrade authority: proxy admin() = 0xC9cE…a9BD, EOA (no contract code); 0 transactions sent. Implementation 0x4350…02dd; version() = “2”.",
+    "Operational roles: owner() 0xd501…5182 (EOA (no contract code); 0 transactions sent); pauser() 0xabde…A222 (EOA (no contract code); 0 transactions sent); blacklister() 0xb5BE…1D79 (EOA (no contract code); 495 transactions sent); masterMinter() 0xC0Cc…87A2 (contract (5,346 bytes of code), owner() 0x5183…2256: EOA (no contract code); 9 transactions sent).",
+    "None of these roles sits behind an on-chain TimelockController or multisig contract at the pinned block: upgrade, pause, blacklist and minter configuration take effect in the transaction that calls them. Key custody (HSM / MPC) is off-chain and not observable here."
+   ],
+   "forum": "aave",
+   "forum_url": "https://governance.aave.com/t/25128",
+   "pinned_block_hash": "0x8efc8256deb932e65b5117f040db264dc8200850636d90eecd5daccb99979f4d",
+   "pinned_block_number": 26408330,
+   "proposal_id": "aave-25128",
+   "recommended_sentinel_predicates": [
+    "AdminUpgradePredicate",
+    "PausePrivilegeEscalationPredicate",
+    "CapSupplyViolationPredicate"
+   ],
+   "relation": "direct_target: the asset or market this proposal asks to onboard",
+   "repro_commands": [
+    "cast block 26408330 --field hash --rpc-url \"$ETH_RPC_URL\"  # expect 0x8efc8256deb932e65b5117f040db264dc8200850636d90eecd5daccb99979f4d",
+    "cast call 0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E \"totalSupply()\" --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast call 0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E \"decimals()\" --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast call 0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E \"version()\" --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast call 0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E \"paused()\" --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast call 0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E \"admin()\" --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast call 0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E \"implementation()\" --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast call 0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E \"owner()\" --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast call 0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E \"masterMinter()\" --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast call 0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E \"pauser()\" --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast call 0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E \"blacklister()\" --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast call 0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E \"rescuer()\" --block 26408330 --rpc-url \"$ETH_RPC_URL\""
+   ],
+   "source_feed": "/api/v1/onboarding.json",
+   "source_record_ids": [
+    "circle-cirbtc-eth"
+   ],
+   "title": "[ARFC] Onboard cirBTC on Aave v3 Core and Aave V4 Core",
+   "topic_id": 25128
+  },
+  {
+   "brief_url": "https://pacta.wtf/briefs/paxos-paxgy-eth/",
+   "chain": "ethereum",
+   "chain_id": 1,
+   "control_plane_summary": [
+    "owner() of the vault, accountant, teller and manager is the TimelockController 0x0DcC…df08 (getMinDelay() = 86,400s). The RolesAuthority 0xC444…99DD is also owned by it. Owner-only changes (including setManageRoot, which no role holds) therefore wait at least 24 hours.",
+    "Timelock roles (9 events replayed): DEFAULT_ADMIN_ROLE → 0x0DcC…df08; PROPOSER_ROLE → 0x0000…3f2F; EXECUTOR_ROLE → 0x0000…3f2F, 0x1D60…9312, 0x317e…A024, 0x4143…652C, 0x6Be5…526E, 0xFBf7…1A5e; CANCELLER_ROLE → 0x0000…3f2F.",
+    "Capabilities granted through the RolesAuthority execute with no delay. updateExchangeRate is held by the 3-of-5 Safe 0x0000…3f2F and by 0x1755…4B56 (EOA (no contract code); 8,269 transactions sent). The accountant bounds each update: upper 10004 bps, lower 10000 bps of the current rate, at least 3,600s apart (current rate 1.004425 PAXG per PAXGy; platform / performance fee 0 / 0 bps). In the upstream Veda AccountantWithRateProviders source, an update outside these bounds or sooner than the minimum delay stores the new rate and pauses the accountant instead of reverting (the deployed bytecode was not compared with that source here).",
+    "Full role → capability → holder map below, replayed from 68 RolesAuthority events (blocks 25,740,680–26,408,330). Selectors without a public signature are shown as raw 4-byte values.",
+    "Teller 0x41AB…A6f7: isPaused() = false, shareLockPeriod() = 0s. The previous teller 0x5C43…fe72 is paused (isPaused() = true)."
+   ],
+   "forum": "aave",
+   "forum_url": "https://governance.aave.com/t/25499",
+   "pinned_block_hash": "0x8efc8256deb932e65b5117f040db264dc8200850636d90eecd5daccb99979f4d",
+   "pinned_block_number": 26408330,
+   "proposal_id": "aave-25499",
+   "recommended_sentinel_predicates": [
+    "AdminUpgradePredicate",
+    "PausePrivilegeEscalationPredicate",
+    "CapSupplyViolationPredicate"
+   ],
+   "relation": "direct_target: the asset or market this proposal asks to onboard",
+   "repro_commands": [
+    "cast block 26408330 --field hash --rpc-url \"$ETH_RPC_URL\"  # expect 0x8efc8256deb932e65b5117f040db264dc8200850636d90eecd5daccb99979f4d",
+    "cast call 0x6c6494Fd9962eB98B94ffA48F6679058F820700e \"totalSupply()\" --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast call 0x6c6494Fd9962eB98B94ffA48F6679058F820700e \"decimals()\" --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast call 0x6c6494Fd9962eB98B94ffA48F6679058F820700e \"owner()\" --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast call 0x6c6494Fd9962eB98B94ffA48F6679058F820700e \"authority()\" --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast call 0x0DcC87BC40E775A8207eB2e65b68CF51964cdf08 \"getMinDelay()\" --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast call 0xC444dA4DF6AF6A9A3891a720c1712a4188d899DD \"owner()\" --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast call 0x397e38359f169748a02bc11f98D4f451FE88C1fd \"accountantState()\" --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast call 0x397e38359f169748a02bc11f98D4f451FE88C1fd \"getRate()\" --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast call 0x397e38359f169748a02bc11f98D4f451FE88C1fd \"owner()\" --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast call 0x41AB5d8387e60E30AACCF11357C306f6d875A6f7 \"isPaused()\" --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast call 0x41AB5d8387e60E30AACCF11357C306f6d875A6f7 \"owner()\" --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast call 0x41AB5d8387e60E30AACCF11357C306f6d875A6f7 \"shareLockPeriod()\" --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast call 0x5C43aD60Beb32F88D14296fEF67ec0F329f3fe72 \"isPaused()\" --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast call 0x353741aBa79974a90F88594f6CBd1a9c54651015 \"owner()\" --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast call 0x0000000000417626Ef34D62C4DC189b021603f2F \"getThreshold()\" --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast call 0x0000000000417626Ef34D62C4DC189b021603f2F \"getOwners()\" --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast code 0x1755397BEc366a1e1160d8aE0106C60E7e344B56 --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast nonce 0x1755397BEc366a1e1160d8aE0106C60E7e344B56 --block 26408330 --rpc-url \"$ETH_RPC_URL\""
+   ],
+   "source_feed": "/api/v1/onboarding.json",
+   "source_record_ids": [
+    "paxos-paxgy-eth"
+   ],
+   "title": "[ARFC] Onboard PAXGy to Aave V4 Global Dollar Hub",
+   "topic_id": 25499
+  },
+  {
+   "brief_url": null,
+   "chain": "ethereum",
+   "chain_id": 1,
+   "control_plane_summary": [
+    "Maple Finance V2 / Syrup — EIP-1967 Proxy Admin Slot vs. GovernorTimelock [parameter_delta, Sprint 6, block 26401540]: EIP-1967 admin slot holds 4-of-7 Maple DAO Safe (0xd6d4Bcde6c816F17889f1Dd3000aF0261B03a196); Globals.governor() (0x804a6F5F667170F545Bf14e5DDB48C70B788390C) points to GovernorTimelock (0x2eFFf88747EB5a3FF00d4d8d0f0800E306C0426b, getMinDelay = 259200s / 3d); syrupUSDC (0x80ac24aA929eaF5013f6436cdA2a7ba190f5Cc0b) totalAssets = 898,551,580.57 units (6 dec). Documented: Governor admin actions documentation describes GovernorTimelock (3-day delay) governance path."
+   ],
+   "forum": "aave",
+   "forum_url": "https://governance.aave.com/t/arfc-onboard-syrupusdc-to-aave-v4-on-arc/25721",
+   "pinned_block_hash": "0x49324aaf84b0ffd4e21026c5345272788bff377f0f86fcdb74280cdfc32a9641",
+   "pinned_block_number": 26401540,
+   "proposal_id": "aave-25721",
+   "recommended_sentinel_predicates": [
+    "AdminUpgradePredicate",
+    "OracleGovernanceSwapPredicate"
+   ],
+   "record_urls": [
+    "https://pacta.wtf/#r-maple-v2-syrup-ppm-admin"
+   ],
+   "relation": "issuer_control_plane: the proposed collateral's issuer permission layer",
+   "repro_commands": [
+    "cast storage 0xBe10aDcE8B6E3E02Db384E7FaDA5395DD113D8b3 0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103 --block 26401540 --rpc-url \"$ETH_RPC_URL\"",
+    "cast block 26401540 --field hash --rpc-url \"$ETH_RPC_URL\"  # expect 0x49324aaf84b0ffd4e21026c5345272788bff377f0f86fcdb74280cdfc32a9641"
+   ],
+   "source_feed": "/api/v1/index.json",
+   "source_record_ids": [
+    "maple-v2-syrup-ppm-admin"
+   ],
+   "title": "[ARFC] Onboard syrupUSDC to Aave V4 on Arc",
+   "topic_id": 25721
+  },
+  {
+   "brief_url": "https://pacta.wtf/briefs/ethena-ops-0x0ca0-0x1fe5/",
+   "chain": "ethereum",
+   "chain_id": 1,
+   "control_plane_summary": [
+    "Ethena (USDe / sUSDe) — EthenaTimelockController 1d delay — queued RLUSD & USAT collateral onboarding [parameter_delta, Sprint 14, block 26406106]: getMinDelay() = 86400s (1d). Operations 0x1fe5e3e892708310bbfcf50efc03a1b8e21e0d0042035d7e8315e0cd5f26d85b (ETA 1794651635, 2026-11-14 10:20:35 UTC) and 0x0ca0fcc4856b87f3df9a74532bd60db58d1310c27c17e7d9bfa8a56846f57a90 (ETA 1794651743, 2026-11-14 10:22:23 UTC) are pending. Both call EthenaMinting (0xe3490297a08d6fC8Da46Edb7B6142E4F461b62D3).addSupportedAsset (0x7cfbc42f) for RLUSD and USAT as STABLE with 200M / 20M USDe-per-block mint / redeem caps, the same as the USDC / USDT configuration. EthenaMinting.stablesDeltaLimit() = 0. Documented: key-trust-assumptions.md lists 7-day time-locks (see the Sprint 7 record); public brief https://pacta.wtf/briefs/ethena-ops-0x0ca0-0x1fe5/."
+   ],
+   "forum": "aave",
+   "forum_url": "https://governance.aave.com/t/direct-to-aip-onboard-pt-susde-28jan2027-to-aave-v3-plasma-instance/25902",
+   "pinned_block_hash": "0xcb24dfb0b8af01dff9550fbbf6eb589b30d29b9625f41af56c188ae10d086ecf",
+   "pinned_block_number": 26406106,
+   "proposal_id": "aave-25902",
+   "recommended_sentinel_predicates": [
+    "AdminUpgradePredicate",
+    "CapSupplyViolationPredicate"
+   ],
+   "record_urls": [
+    "https://pacta.wtf/#r-ethena-minting-rlusd-usat-onboarding-ops"
+   ],
+   "relation": "issuer_control_plane: queued Ethena minting-collateral changes underlying sUSDe",
+   "repro_commands": [
+    "cast call 0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94 \"getMinDelay()\" --block 26406106 --rpc-url \"$ETH_RPC_URL\"",
+    "cast block 26406106 --field hash --rpc-url \"$ETH_RPC_URL\"  # expect 0xcb24dfb0b8af01dff9550fbbf6eb589b30d29b9625f41af56c188ae10d086ecf"
+   ],
+   "source_feed": "/api/v1/index.json",
+   "source_record_ids": [
+    "ethena-minting-rlusd-usat-onboarding-ops"
+   ],
+   "title": "[Direct-To-AIP] Onboard PT-sUSDe-28JAN2027 to Aave V3 Plasma Instance",
+   "topic_id": 25902
+  },
+  {
+   "brief_url": "https://pacta.wtf/briefs/tether-usat-eth/",
+   "chain": "ethereum",
+   "chain_id": 1,
+   "control_plane_summary": [
+    "USAT 0x0704…8b68 is an EIP-1967 proxy: implementation 0x8B98…4d0e, ProxyAdmin 0x3e4C…d9C7 whose owner() is 0x62b3…c5Cb. USAT.owner() is the same address.",
+    "That controller is a legacy MultiSigWallet (submit / confirm / execute; 5,705 bytes), required() = 3 of 5 owners. It is not a TimelockController: an upgrade or owner action executes as soon as the third confirmation lands.",
+    "Linked queue: Ethena timelock 0xE8Dc…7c94 (86,400s delay) holds two pending operations (isOperationPending = true / true) that add RLUSD and USAT to EthenaMinting; the USAT operation becomes executable at 2026-11-14 10:22:23 UTC. See the Ethena pre-execution brief.",
+    "The forum thread assesses the bridged USAT on Avalanche; this brief covers the canonical Ethereum token whose redemption and credit exposure that bridged asset inherits."
+   ],
+   "forum": "aave",
+   "forum_url": "https://governance.aave.com/t/25927",
+   "pinned_block_hash": "0x8efc8256deb932e65b5117f040db264dc8200850636d90eecd5daccb99979f4d",
+   "pinned_block_number": 26408330,
+   "proposal_id": "aave-25927",
+   "recommended_sentinel_predicates": [
+    "AdminUpgradePredicate",
+    "PausePrivilegeEscalationPredicate",
+    "CapSupplyViolationPredicate"
+   ],
+   "relation": "direct_target: the asset or market this proposal asks to onboard",
+   "repro_commands": [
+    "cast block 26408330 --field hash --rpc-url \"$ETH_RPC_URL\"  # expect 0x8efc8256deb932e65b5117f040db264dc8200850636d90eecd5daccb99979f4d",
+    "cast call 0x07041776f5007ACa2A54844F50503a18A72A8b68 \"totalSupply()\" --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast call 0x07041776f5007ACa2A54844F50503a18A72A8b68 \"decimals()\" --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast storage 0x07041776f5007ACa2A54844F50503a18A72A8b68 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast storage 0x07041776f5007ACa2A54844F50503a18A72A8b68 0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103 --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast call 0x07041776f5007ACa2A54844F50503a18A72A8b68 \"owner()\" --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast call 0x62b3a0f6ffc5efd7692053A9040fE44F9AC8c5Cb \"required()\" --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast call 0x62b3a0f6ffc5efd7692053A9040fE44F9AC8c5Cb \"getOwners()\" --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast code 0x62b3a0f6ffc5efd7692053A9040fE44F9AC8c5Cb --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast call 0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94 \"getMinDelay()\" --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast call 0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94 \"isOperationPending(bytes32)\" 0x1fe5e3e892708310bbfcf50efc03a1b8e21e0d0042035d7e8315e0cd5f26d85b --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast call 0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94 \"isOperationPending(bytes32)\" 0x0ca0fcc4856b87f3df9a74532bd60db58d1310c27c17e7d9bfa8a56846f57a90 --block 26408330 --rpc-url \"$ETH_RPC_URL\"",
+    "cast call 0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94 \"getTimestamp(bytes32)\" 0x0ca0fcc4856b87f3df9a74532bd60db58d1310c27c17e7d9bfa8a56846f57a90 --block 26408330 --rpc-url \"$ETH_RPC_URL\""
+   ],
+   "source_feed": "/api/v1/onboarding.json",
+   "source_record_ids": [
+    "tether-usat-eth"
+   ],
+   "title": "Tether America USD (USAT) on Aave Avalanche Assessments",
+   "topic_id": 25927
+  },
+  {
+   "brief_url": null,
+   "chain": "ethereum",
+   "chain_id": 1,
+   "control_plane_summary": [
+    "Ethena (USDe / sUSDe) — TimelockController MinDelay & Dev Multisig Quorum [parameter_delta, Sprint 7, block 26401638]: getMinDelay() = 86400s (1 day); Dev Multisig (0x3B0AAf6e6fCd4a7cEEf8c92C32DFeA9E64dC1862) getThreshold() = 5, getOwners().length = 10 (5-of-10 Gnosis Safe). Documented: key-trust-assumptions.md lists 7-day time-locks and 7 signatures (key-addresses.md lists 5/11); Risk Committee forum topic 810 (Jul 2026) notes 1-day delay."
+   ],
+   "forum": "aave",
+   "forum_url": "https://governance.aave.com/t/direct-to-aip-ethena-e-mode-consolidation-on-aave-v3/26304",
+   "pinned_block_hash": "0xe62ad2969617ad07c23bec298c3d5e197ea7c3084f7f66c90d2eb51d04c6273e",
+   "pinned_block_number": 26401638,
+   "proposal_id": "aave-26304",
+   "recommended_sentinel_predicates": [
+    "AdminUpgradePredicate"
+   ],
+   "record_urls": [
+    "https://pacta.wtf/#r-ethena-admin-timelock-and-dev-safe"
+   ],
+   "relation": "issuer_control_plane: Ethena admin timelock and operating Safe",
+   "repro_commands": [
+    "cast call 0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94 \"getMinDelay()\" --block 26401638 --rpc-url \"$ETH_RPC_URL\"",
+    "cast block 26401638 --field hash --rpc-url \"$ETH_RPC_URL\"  # expect 0xe62ad2969617ad07c23bec298c3d5e197ea7c3084f7f66c90d2eb51d04c6273e"
+   ],
+   "source_feed": "/api/v1/index.json",
+   "source_record_ids": [
+    "ethena-admin-timelock-and-dev-safe"
+   ],
+   "title": "[Direct-to-AIP] Ethena E-Mode Consolidation on Aave V3",
+   "topic_id": 26304
+  },
+  {
+   "brief_url": "https://pacta.wtf/briefs/efix-efixdi-base/",
+   "chain": "base",
+   "chain_id": 8453,
+   "control_plane_summary": [
+    "One 2-of-3 Safe, 0x9040…EeD4 (getThreshold() = 2), is governorAdmin() of the USDC vault, governor() of the EulerRouter (= 0x9040…EeD4) and holds DEFAULT_ADMIN_ROLE on efixDI+. No TimelockController sits between that Safe and these contracts, so the router's oracle configuration, LTVs and caps can be changed by one executed 2-of-3 Safe transaction, with no enforced on-chain delay.",
+    "The router prices efixDI+ through the custom adapter 0x9CD2…7788 (name() = “efixDI/USDC par x ChainlinkBRLUSD”). Borrow / liquidation LTV 70% / 77%, interest fee 15%.",
+    "Supply cap 3,440.00 USDC, borrow cap 23,000.00 USDC; total assets 3,480.37 USDC, borrows 3,135.58 USDC (90.1% utilization).",
+    "MINTER_ROLE on efixDI+ is held directly by 0x8f8C…CCb1, an account with no contract code (0 bytes) and 1,159 transactions sent, which is also one of the three signers of the governor Safe. Calls gated only by MINTER_ROLE need no second signature and no delay.",
+    "efixDI+ AccessControl role history (19 events, blocks 41,724,585–57,050,397): DEFAULT_ADMIN_ROLE → 0x9040…EeD4 (2-of-3 Safe); PAUSER_ROLE → 0x9040…EeD4 (2-of-3 Safe); MINTER_ROLE → 0x8f8C…CCb1 (EOA, 1,159 txs, signer of 0x9040…EeD4).",
+    "EFIX.owner() = 0x7C54…7537: an EOA carrying an EIP-7702 delegation designator to 0xdf02…8792, 156 transactions sent. It is not a Safe or a timelock."
+   ],
+   "forum": "euler",
+   "forum_url": "https://forum.euler.finance/t/1850",
+   "pinned_block_hash": "0xd6d02efb420f81b3f0e095d78453362c4488afb9adc0f8e1c411bb265beb88a7",
+   "pinned_block_number": 57050397,
+   "proposal_id": "euler-1850",
+   "recommended_sentinel_predicates": [
+    "AdminUpgradePredicate",
+    "OracleGovernanceSwapPredicate",
+    "PausePrivilegeEscalationPredicate",
+    "CapSupplyViolationPredicate"
+   ],
+   "relation": "direct_target: the asset or market this proposal asks to onboard",
+   "repro_commands": [
+    "cast block 57050397 --field hash --rpc-url \"$BASE_RPC_URL\"  # expect 0xd6d02efb420f81b3f0e095d78453362c4488afb9adc0f8e1c411bb265beb88a7",
+    "cast call 0xe276BB91E0C63C0BC6ABdd3Dc37DF324f90e3956 \"governorAdmin()\" --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0xe276BB91E0C63C0BC6ABdd3Dc37DF324f90e3956 \"oracle()\" --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0xe276BB91E0C63C0BC6ABdd3Dc37DF324f90e3956 \"caps()\" --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0xe276BB91E0C63C0BC6ABdd3Dc37DF324f90e3956 \"LTVBorrow(address)\" 0x008a506c6b6138F47B82f6a0b8Fc7FE375C102e9 --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0xe276BB91E0C63C0BC6ABdd3Dc37DF324f90e3956 \"LTVLiquidation(address)\" 0x008a506c6b6138F47B82f6a0b8Fc7FE375C102e9 --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0xe276BB91E0C63C0BC6ABdd3Dc37DF324f90e3956 \"interestFee()\" --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0xe276BB91E0C63C0BC6ABdd3Dc37DF324f90e3956 \"totalAssets()\" --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0xe276BB91E0C63C0BC6ABdd3Dc37DF324f90e3956 \"totalBorrows()\" --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0x008a506c6b6138F47B82f6a0b8Fc7FE375C102e9 \"governorAdmin()\" --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0x008a506c6b6138F47B82f6a0b8Fc7FE375C102e9 \"asset()\" --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0x5F655525A46B968CF388865CeBC0c0B79A8F8a2b \"governor()\" --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0x5F655525A46B968CF388865CeBC0c0B79A8F8a2b \"getConfiguredOracle(address,address)\" 0xF5cA55f3ea5Bcd180aEa6dF9E05a0E63A66f5608 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913 --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0x9CD219A773d94BBECdD1bb0ae413c45f72737788 \"name()\" --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0x9040b4E9e1F8C96dC6dEF1a2d6f4105D8535EeD4 \"getThreshold()\" --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0x9040b4E9e1F8C96dC6dEF1a2d6f4105D8535EeD4 \"getOwners()\" --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0xF5cA55f3ea5Bcd180aEa6dF9E05a0E63A66f5608 \"totalSupply()\" --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0xF5cA55f3ea5Bcd180aEa6dF9E05a0E63A66f5608 \"paused()\" --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0xF5cA55f3ea5Bcd180aEa6dF9E05a0E63A66f5608 \"hasRole(bytes32,address)\" 0x0000000000000000000000000000000000000000000000000000000000000000 0x9040b4E9e1F8C96dC6dEF1a2d6f4105D8535EeD4 --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0xF5cA55f3ea5Bcd180aEa6dF9E05a0E63A66f5608 \"hasRole(bytes32,address)\" 0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6 0x8f8CD5cC7131BF24fE9BF674D58de6dC624dCCb1 --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast nonce 0x8f8CD5cC7131BF24fE9BF674D58de6dC624dCCb1 --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast code 0x8f8CD5cC7131BF24fE9BF674D58de6dC624dCCb1 --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0x400a8DE2bF8fc4A63000A7E77103eDAE897CB9a3 \"owner()\" --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast code 0x7C54Dccd6fC5DB73b34f32aCA4d1631E054c7537 --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast nonce 0x7C54Dccd6fC5DB73b34f32aCA4d1631E054c7537 --block 57050397 --rpc-url \"$BASE_RPC_URL\""
+   ],
+   "source_feed": "/api/v1/onboarding.json",
+   "source_record_ids": [
+    "efix-efixdi-base"
+   ],
+   "title": "efixDI/USDC on Base — tokenized Brazilian DI fund, D+0 NAV redemption (governedPerspective whitelist)",
+   "topic_id": 1850
+  },
+  {
+   "brief_url": "https://pacta.wtf/briefs/kerne-kusd-base/",
+   "chain": "base",
+   "chain_id": 8453,
+   "control_plane_summary": [
+    "The market layer has no governor: governorAdmin() returns 0x0000…0000 on the USDC vault and 0x0000…0000 on the kUSD escrow vault, and EulerRouter.governor() returns 0x0000…0000. Oracle, LTVs and caps cannot be changed by anyone.",
+    "Caps are unset and cannot be set: supply cap none (AmountCap 0), borrow cap none (AmountCap 0). Exposure limits exist only in the curator vault that allocates to this market.",
+    "kUSD is priced at a fixed rate: getQuote(1e18 kUSD → USDC) = 1.00 USDC from 0x8f27…D2D3. Borrow / liquidation LTV 60.00% / 65.00%. No market price feeds liquidations, so lender recovery depends on kUSD redemption and its backing.",
+    "kUSD implements AccessControl (supportsInterface(0x7965db0b) = true). DEFAULT_ADMIN_ROLE on kUSD is held by the TimelockController 0x36A1…0D72 (hasRole = true; getMinDelay() = 172,800s, 48h). The 2-of-3 Safe 0x52d3…4877 is its proposer, executor and canceller (true / true / true) and does not hold DEFAULT_ADMIN_ROLE on kUSD itself.",
+    "MINTER_ROLE is held by 0xaBDE…9803 (kUSD() = 0x5C2E…0AA3, paused() = false), whose DEFAULT_ADMIN_ROLE is the same timelock (true). Role changes on kUSD and on the minter pass a 48-hour public queue.",
+    "kUSD AccessControl role history (16 events, blocks 44,448,090–57,050,397): DEFAULT_ADMIN_ROLE → 0x36A1…0D72 (contract, 6,536 bytes); MINTER_ROLE → 0xaBDE…9803 (contract, 11,376 bytes).",
+    "kUSD admin TimelockController role history (4 events, blocks 49,495,127–57,050,397): DEFAULT_ADMIN_ROLE → 0x36A1…0D72 (contract, 6,536 bytes); PROPOSER_ROLE → 0x52d3…4877 (2-of-3 Safe); EXECUTOR_ROLE → 0x52d3…4877 (2-of-3 Safe); CANCELLER_ROLE → 0x52d3…4877 (2-of-3 Safe).",
+    "kUSD minter contract role history (11 events, blocks 48,469,020–57,050,397): DEFAULT_ADMIN_ROLE → 0x36A1…0D72 (contract, 6,536 bytes); MANAGER_ROLE → 0x36A1…0D72 (contract, 6,536 bytes), 0xC47a…Cc8E (contract, 1,012 bytes)."
+   ],
+   "forum": "euler",
+   "forum_url": "https://forum.euler.finance/t/1862",
+   "pinned_block_hash": "0xd6d02efb420f81b3f0e095d78453362c4488afb9adc0f8e1c411bb265beb88a7",
+   "pinned_block_number": 57050397,
+   "proposal_id": "euler-1862",
+   "recommended_sentinel_predicates": [
+    "AdminUpgradePredicate",
+    "OracleGovernanceSwapPredicate",
+    "PausePrivilegeEscalationPredicate",
+    "CapSupplyViolationPredicate"
+   ],
+   "relation": "direct_target: the asset or market this proposal asks to onboard",
+   "repro_commands": [
+    "cast block 57050397 --field hash --rpc-url \"$BASE_RPC_URL\"  # expect 0xd6d02efb420f81b3f0e095d78453362c4488afb9adc0f8e1c411bb265beb88a7",
+    "cast call 0x5C2EfdF0D8D286959b42308966bc2B97f5680AA3 \"totalSupply()\" --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0x5C2EfdF0D8D286959b42308966bc2B97f5680AA3 \"decimals()\" --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0x5C2EfdF0D8D286959b42308966bc2B97f5680AA3 \"symbol()\" --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0x5C2EfdF0D8D286959b42308966bc2B97f5680AA3 \"supportsInterface(bytes4)\" 0x7965db0b00000000000000000000000000000000000000000000000000000000 --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0xe87c294E1139C31770727193e3Be0ccEd73d6AA3 \"governorAdmin()\" --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0xe87c294E1139C31770727193e3Be0ccEd73d6AA3 \"oracle()\" --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0xe87c294E1139C31770727193e3Be0ccEd73d6AA3 \"caps()\" --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0xe87c294E1139C31770727193e3Be0ccEd73d6AA3 \"LTVBorrow(address)\" 0xD3800ceb6bBeB90101ed5d5A46017fE846c9509e --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0xe87c294E1139C31770727193e3Be0ccEd73d6AA3 \"LTVLiquidation(address)\" 0xD3800ceb6bBeB90101ed5d5A46017fE846c9509e --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0xe87c294E1139C31770727193e3Be0ccEd73d6AA3 \"totalAssets()\" --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0xe87c294E1139C31770727193e3Be0ccEd73d6AA3 \"totalBorrows()\" --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0xD3800ceb6bBeB90101ed5d5A46017fE846c9509e \"governorAdmin()\" --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0xD3800ceb6bBeB90101ed5d5A46017fE846c9509e \"asset()\" --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0xD3800ceb6bBeB90101ed5d5A46017fE846c9509e \"totalAssets()\" --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0xB95407727d33fB2E444966fd0B7D0E7767Ce019E \"governor()\" --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0xB95407727d33fB2E444966fd0B7D0E7767Ce019E \"getConfiguredOracle(address,address)\" 0x5C2EfdF0D8D286959b42308966bc2B97f5680AA3 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913 --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0x8f27228f02E798c17B7d6b270F32F8EC6afDD2D3 \"getQuote(uint256,address,address)\" 1000000000000000000 0x5C2EfdF0D8D286959b42308966bc2B97f5680AA3 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913 --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0x52d3E450bA6c299B1B07298F1E87DD74732D4877 \"getThreshold()\" --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0x52d3E450bA6c299B1B07298F1E87DD74732D4877 \"getOwners()\" --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0x5C2EfdF0D8D286959b42308966bc2B97f5680AA3 \"hasRole(bytes32,address)\" 0x0000000000000000000000000000000000000000000000000000000000000000 0x52d3E450bA6c299B1B07298F1E87DD74732D4877 --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0x5C2EfdF0D8D286959b42308966bc2B97f5680AA3 \"hasRole(bytes32,address)\" 0x0000000000000000000000000000000000000000000000000000000000000000 0x36A14976980B7Dd33136f6613545EB0A2C0a0D72 --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0x36A14976980B7Dd33136f6613545EB0A2C0a0D72 \"getMinDelay()\" --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0x36A14976980B7Dd33136f6613545EB0A2C0a0D72 \"hasRole(bytes32,address)\" 0xb09aa5aeb3702cfd50b6b62bc4532604938f21248a27a1d5ca736082b6819cc1 0x52d3E450bA6c299B1B07298F1E87DD74732D4877 --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0x36A14976980B7Dd33136f6613545EB0A2C0a0D72 \"hasRole(bytes32,address)\" 0xd8aa0f3194971a2a116679f7c2090f6939c8d4e01a2a8d7e41d55e5351469e63 0x52d3E450bA6c299B1B07298F1E87DD74732D4877 --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0x36A14976980B7Dd33136f6613545EB0A2C0a0D72 \"hasRole(bytes32,address)\" 0xfd643c72710c63c0180259aba6b2d05451e3591a24e58b62239378085726f783 0x52d3E450bA6c299B1B07298F1E87DD74732D4877 --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0x5C2EfdF0D8D286959b42308966bc2B97f5680AA3 \"hasRole(bytes32,address)\" 0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6 0xaBDE1138aa1Ce88d1dF06422C0c3b05D70569803 --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0xaBDE1138aa1Ce88d1dF06422C0c3b05D70569803 \"kUSD()\" --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0xaBDE1138aa1Ce88d1dF06422C0c3b05D70569803 \"paused()\" --block 57050397 --rpc-url \"$BASE_RPC_URL\"",
+    "cast call 0xaBDE1138aa1Ce88d1dF06422C0c3b05D70569803 \"hasRole(bytes32,address)\" 0x0000000000000000000000000000000000000000000000000000000000000000 0x36A14976980B7Dd33136f6613545EB0A2C0a0D72 --block 57050397 --rpc-url \"$BASE_RPC_URL\""
+   ],
+   "source_feed": "/api/v1/onboarding.json",
+   "source_record_ids": [
+    "kerne-kusd-base"
+   ],
+   "title": "kUSD/USDC isolated market on Euler Base: deployed, ungoverned, and an underwriting packet for curators",
+   "topic_id": 1862
+  },
+  {
+   "brief_url": null,
+   "chain": "ethereum",
+   "chain_id": 1,
+   "control_plane_summary": [
+    "Morpho Blue Core — Sampled Singleton Owner & Fee/LLTV Bounds [aligned_baseline, Sprint 3, block 26401070]: Morpho Blue owner() = 0xcBa28b38103307Ec8dA98377ffF9816C164f9AFa and sampled fee/LLTV bounds match documentation at block 26401070. Documented: Morpho Blue core singleton ownership and immutable fee/LLTV bound specification.",
+    "MetaMorpho (Re7 WETH vs. Re7 USDT) — Sampled MetaMorpho Vault Guardian Configuration [parameter_delta, Sprint 5, block 26401405]: Re7 WETH owner() = 0xE86399fE6d7007FdEcb08A2ee1434Ee677a04433 (2-of-4 Safe), timelock() = 259200s (3d), guardian() = 0x0000000000000000000000000000000000000000, pendingGuardian() = (0x0, 0); peer Re7 USDT (0x95EeF579155cd2C5510F312c8fA39208c3Be01a8) sets guardian() = 0x2F80ba89362f86a9acC71BFfE5EcF4997F52BDd4 (Aragon Guardian). Documented: Peer Re7 curated vault architecture and Aragon guardian integration."
+   ],
+   "forum": "morpho",
+   "forum_url": "https://forum.morpho.org/t/rfc-a-user-centric-defi-collateral-transparency-framework-phase-1/2301",
+   "pinned_block_hash": "0x26e155e1569d436406a52ecee31c94d8d8ef2ca4c45d82211a84c8c802be1510",
+   "pinned_block_number": 26401405,
+   "proposal_id": "morpho-2301",
+   "recommended_sentinel_predicates": [
+    "AdminUpgradePredicate",
+    "PausePrivilegeEscalationPredicate",
+    "CapSupplyViolationPredicate"
+   ],
+   "record_urls": [
+    "https://pacta.wtf/#r-morpho-blue-singleton-owner",
+    "https://pacta.wtf/#r-metamorpho-re7-weth-guardian-parity"
+   ],
+   "relation": "framework_reference: block-pinned Morpho Blue and MetaMorpho control-plane observations the framework discusses",
+   "repro_commands": [
+    "cast call 0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb \"owner()\" --block 26401070 --rpc-url \"$ETH_RPC_URL\"",
+    "cast block 26401070 --field hash --rpc-url \"$ETH_RPC_URL\"  # expect 0xcf55f6a42ae610c1f8766b5c2fb676d91f178469fa10ef777eccbb76f6506234",
+    "cast call 0x78Fc2c2eD1A4cDb5402365934aE5648aDAd094d0 \"guardian()\" --block 26401405 --rpc-url \"$ETH_RPC_URL\"",
+    "cast block 26401405 --field hash --rpc-url \"$ETH_RPC_URL\"  # expect 0x26e155e1569d436406a52ecee31c94d8d8ef2ca4c45d82211a84c8c802be1510"
+   ],
+   "source_feed": "/api/v1/index.json",
+   "source_record_ids": [
+    "morpho-blue-singleton-owner",
+    "metamorpho-re7-weth-guardian-parity"
+   ],
+   "title": "[RFC] A User-centric DeFi Collateral Transparency Framework - Phase 1",
+   "topic_id": 2301
+  },
+  {
+   "brief_url": null,
+   "chain": "ethereum",
+   "chain_id": 1,
+   "control_plane_summary": [
+    "Spark / Sky — Sampled PoolAddressesProvider Owner & GSM Delay [aligned_baseline, Sprint 7, block 26401638]: GSM_PAUSE_PROXY.delay() = 172800s (48 hours); Spark PoolAddressesProvider (0x02C3eA4e34C0cBd694D2adFa2c690EECbC1793eE) owner() = 0x3300f198988e4C9C63F75dF86De36421f06af8c4 (SPARK_PROXY). Documented: Sky 48-hour Governance Security Module (GSM) delay and Spark SubDAO proxy ownership."
+   ],
+   "forum": "sky",
+   "forum_url": "https://forum.skyeco.com/t/november-19-2026-proposed-changes-to-spark-for-upcoming-spell/28390",
+   "pinned_block_hash": "0xe62ad2969617ad07c23bec298c3d5e197ea7c3084f7f66c90d2eb51d04c6273e",
+   "pinned_block_number": 26401638,
+   "proposal_id": "sky-28390",
+   "recommended_sentinel_predicates": [
+    "AdminUpgradePredicate",
+    "PausePrivilegeEscalationPredicate"
+   ],
+   "record_urls": [
+    "https://pacta.wtf/#r-spark-sky-gsm-pause-delay"
+   ],
+   "relation": "governance_path: the GSM pause delay every Spark spell passes through",
+   "repro_commands": [
+    "cast call 0xbE286431454714F511008713973d3B053A2d38f3 \"delay()\" --block 26401638 --rpc-url \"$ETH_RPC_URL\"",
+    "cast block 26401638 --field hash --rpc-url \"$ETH_RPC_URL\"  # expect 0xe62ad2969617ad07c23bec298c3d5e197ea7c3084f7f66c90d2eb51d04c6273e"
+   ],
+   "source_feed": "/api/v1/index.json",
+   "source_record_ids": [
+    "spark-sky-gsm-pause-delay"
+   ],
+   "title": "[November 19, 2026] Proposed Changes to Spark for Upcoming Spell",
+   "topic_id": 28390
+  }
+ ],
+ "schema": "pacta.governance_proposals_feed.v1"
+}
