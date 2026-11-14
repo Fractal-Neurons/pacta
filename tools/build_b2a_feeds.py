@@ -350,9 +350,11 @@ or a live collateral onboarding proposal. Pacta publishes {m['records_indexed']}
 - Remote MCP, zero install: `{MCP_REMOTE_URL}` (Streamable HTTP). Claude Code: `claude mcp add --transport http pacta {MCP_REMOTE_URL}`.
   Tools: {", ".join(f"`{t}`" for t in REMOTE_TOOLS)}.
 - One call: `curl -s "{X402_URL}/v1/check/preflight?chain=ethereum&address=0x..."` returns `verdict`, `riskScore` (0-100), proxy /
-  implementation, `controller` (eoa, multisig_safe, timelock, contract or none), `canUpgradeZeroDelay`, `capabilities`
-  (pause, blacklist, upgrade) and `pinnedBlock` + `pinnedBlockHash`. Verdicts: `IMMUTABLE_NO_ADMIN`, `TIMELOCK_PROTECTED`,
-  `MULTISIG_NO_TIMELOCK`, `INSTANT_EOA_ADMIN_RISK`, `UNDEPLOYED_OR_EOA`, `UNCLASSIFIED_CONTRACT_CONTROLLER`.
+  implementation (EIP-1967, EIP-1822 or beacon), `controller` (eoa, multisig_safe, timelock, contract,
+  access_control_enumerable, access_control or none), `canUpgradeZeroDelay`, `capabilities` (pause, blacklist, upgrade) and
+  `pinnedBlock` + `pinnedBlockHash`. Verdicts: `IMMUTABLE_NO_ADMIN`, `TIMELOCK_PROTECTED`, `ZERO_DELAY_TIMELOCK_RISK` (0 s
+  timelock: no exit window), `MULTISIG_NO_TIMELOCK`, `INSTANT_EOA_ADMIN_RISK`, `UNDEPLOYED_OR_EOA`,
+  `UNCLASSIFIED_CONTRACT_CONTROLLER` (never treat it as safe).
 - OpenAPI 3.1: `{OPENAPI_URL}`. Every route takes GET query parameters or a POST JSON body. {RATE_LIMIT_PER_MIN} requests / minute per caller.
 - Protocol safety records: `{BASE}/protocols/`.
 

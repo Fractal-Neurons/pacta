@@ -204,7 +204,7 @@ export const PAID_TOOLS = Object.freeze([
   {
     name: "pacta_check_preflight",
     description:
-      "Gateway tool (requires PACTA_X402_URL; x402 $0.01 Base USDC when metered). One-call pre-execution safety check of a contract before an agent interacts with it: verdict (IMMUTABLE_NO_ADMIN / TIMELOCK_PROTECTED / MULTISIG_NO_TIMELOCK / INSTANT_EOA_ADMIN_RISK / UNCLASSIFIED_CONTRACT_CONTROLLER / UNDEPLOYED_OR_EOA), 0-100 risk score, proxy + implementation, controller kind, zero-delay upgradeability, pause / blacklist / upgrade capabilities, pinned block. " +
+      "Gateway tool (requires PACTA_X402_URL; x402 $0.01 Base USDC when metered). One-call pre-execution safety check of a contract before an agent interacts with it: verdict (IMMUTABLE_NO_ADMIN / TIMELOCK_PROTECTED / ZERO_DELAY_TIMELOCK_RISK / MULTISIG_NO_TIMELOCK / INSTANT_EOA_ADMIN_RISK / UNCLASSIFIED_CONTRACT_CONTROLLER / UNDEPLOYED_OR_EOA), 0-100 risk score, proxy + implementation, controller kind, zero-delay upgradeability, pause / blacklist / upgrade capabilities, pinned block. " +
       FREE_LAUNCH_HINT,
     inputSchema: objSchema(
       {

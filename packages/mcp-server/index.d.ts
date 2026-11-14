@@ -135,11 +135,12 @@ export interface PreflightCheck {
   pinnedBlock: number;
   pinnedBlockHash?: string;
   blockTimestamp?: number;
-  verdict: "IMMUTABLE_NO_ADMIN" | "TIMELOCK_PROTECTED" | "MULTISIG_NO_TIMELOCK" | "INSTANT_EOA_ADMIN_RISK" | "UNCLASSIFIED_CONTRACT_CONTROLLER" | "UNDEPLOYED_OR_EOA";
+  verdict: "IMMUTABLE_NO_ADMIN" | "TIMELOCK_PROTECTED" | "ZERO_DELAY_TIMELOCK_RISK" | "MULTISIG_NO_TIMELOCK" | "INSTANT_EOA_ADMIN_RISK" | "UNCLASSIFIED_CONTRACT_CONTROLLER" | "UNDEPLOYED_OR_EOA";
   /** 0..100; null when there is no contract. */
   riskScore: number | null;
   isContract: boolean;
   isProxy: boolean;
+  proxyType?: "eip1967" | "eip1967_beacon" | "eip1822" | null;
   implementation: string | null;
   beacon?: string | null;
   hasAdminSlot: boolean;
@@ -148,11 +149,14 @@ export interface PreflightCheck {
   paused: boolean | null;
   controller: {
     address: string | null;
-    kind: "none" | "eoa" | "multisig_safe" | "timelock" | "contract";
+    kind: "none" | "eoa" | "multisig_safe" | "timelock" | "contract" | "access_control_enumerable" | "access_control";
     safeThreshold: number | null;
     timelockDelaySec: number | null;
     safeOwnerCount?: number;
     proxyAdmin?: string;
+    beacon?: string;
+    /** DEFAULT_ADMIN_ROLE member count when kind is access_control_enumerable. */
+    roleAdminCount?: number;
     source?: string | null;
   };
   summary: string;

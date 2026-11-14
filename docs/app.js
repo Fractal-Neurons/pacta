@@ -344,12 +344,18 @@
   // ---- live pre-flight checker (free API; runs only on an explicit submit / preset click) ---------------
   var ADDR_RE = /^0x[0-9a-fA-F]{40}$/;
   var SLOT_IMPL = "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc";
-  var VERDICT_CLASS = { IMMUTABLE_NO_ADMIN: "", TIMELOCK_PROTECTED: "protect", MULTISIG_NO_TIMELOCK: "delta",
+  var SLOT_BEACON = "0xa3f0ad74e5423aebfd80d3ef4346578335a9a72aeaee59ff6cb3582b35133d50";
+  var SLOT_PROXIABLE = "0xc5f16f0fcc639fa48a6947836d9850f504798523bf8c9a3a87d5876cf622bcf7";
+  var VERDICT_CLASS = { IMMUTABLE_NO_ADMIN: "", TIMELOCK_PROTECTED: "protect", ZERO_DELAY_TIMELOCK_RISK: "delta", MULTISIG_NO_TIMELOCK: "delta",
     INSTANT_EOA_ADMIN_RISK: "delta", UNCLASSIFIED_CONTRACT_CONTROLLER: "delta", UNDEPLOYED_OR_EOA: "" };
   function pfCasts(r) {
     var rpc = r.chain === "base" ? "$BASE_RPC_URL" : "$ETH_RPC_URL", b = " --block " + r.pinnedBlock + " --rpc-url " + rpc, c = [];
     c.push("cast code " + r.address + b);
-    c.push("cast storage " + r.address + " " + SLOT_IMPL + b);
+    c.push("cast storage " + r.address + " " + (r.proxyType === "eip1822" ? SLOT_PROXIABLE : r.proxyType === "eip1967_beacon" ? SLOT_BEACON : SLOT_IMPL) + b);
+    if (r.proxyType === "eip1967_beacon" && ADDR_RE.test(String(r.beacon || ""))) {
+      c.push("cast call " + r.beacon + ' "implementation()(address)"' + b);
+      c.push("cast call " + r.beacon + ' "owner()(address)"' + b);
+    }
     c.push("cast call " + r.address + ' "owner()(address)"' + b);
     var k = r.controller || {};
     if (k.address && k.kind === "multisig_safe") c.push("cast call " + k.address + ' "getThreshold()(uint256)"' + b);
@@ -366,6 +372,7 @@
     var ctl = String(k.kind || "none");
     if (typeof k.safeThreshold === "number") ctl += " (" + k.safeThreshold + "-of-" + (typeof k.safeOwnerCount === "number" ? k.safeOwnerCount : "?") + ")";
     if (typeof k.timelockDelaySec === "number") ctl += " (" + secs(k.timelockDelaySec) + " delay)";
+    if (typeof k.roleAdminCount === "number") ctl += " (" + k.roleAdminCount + " DEFAULT_ADMIN_ROLE members)";
     out.appendChild(el("p", { "class": "pf-verdict" }, [badge(null, String(r.verdict), VERDICT_CLASS[r.verdict] || "delta"), " Risk " + risk]));
     out.appendChild(el("p", { text: String(r.summary || "") }));
     out.appendChild(el("dl", { "class": "pf-dl" }, [

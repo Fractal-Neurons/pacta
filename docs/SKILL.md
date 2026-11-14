@@ -15,9 +15,11 @@ or a live collateral onboarding proposal. Pacta publishes 37 block-pinned record
 - Remote MCP, zero install: `https://pacta-x402.pacta.workers.dev/mcp` (Streamable HTTP). Claude Code: `claude mcp add --transport http pacta https://pacta-x402.pacta.workers.dev/mcp`.
   Tools: `pacta_check_preflight`, `pacta_scan_control_plane`, `pacta_scan_timelock_op`, `pacta_scan_proposal_diff`, `pacta_get_live_timelocks`.
 - One call: `curl -s "https://pacta-x402.pacta.workers.dev/v1/check/preflight?chain=ethereum&address=0x..."` returns `verdict`, `riskScore` (0-100), proxy /
-  implementation, `controller` (eoa, multisig_safe, timelock, contract or none), `canUpgradeZeroDelay`, `capabilities`
-  (pause, blacklist, upgrade) and `pinnedBlock` + `pinnedBlockHash`. Verdicts: `IMMUTABLE_NO_ADMIN`, `TIMELOCK_PROTECTED`,
-  `MULTISIG_NO_TIMELOCK`, `INSTANT_EOA_ADMIN_RISK`, `UNDEPLOYED_OR_EOA`, `UNCLASSIFIED_CONTRACT_CONTROLLER`.
+  implementation (EIP-1967, EIP-1822 or beacon), `controller` (eoa, multisig_safe, timelock, contract,
+  access_control_enumerable, access_control or none), `canUpgradeZeroDelay`, `capabilities` (pause, blacklist, upgrade) and
+  `pinnedBlock` + `pinnedBlockHash`. Verdicts: `IMMUTABLE_NO_ADMIN`, `TIMELOCK_PROTECTED`, `ZERO_DELAY_TIMELOCK_RISK` (0 s
+  timelock: no exit window), `MULTISIG_NO_TIMELOCK`, `INSTANT_EOA_ADMIN_RISK`, `UNDEPLOYED_OR_EOA`,
+  `UNCLASSIFIED_CONTRACT_CONTROLLER` (never treat it as safe).
 - OpenAPI 3.1: `https://pacta-x402.pacta.workers.dev/openapi.json`. Every route takes GET query parameters or a POST JSON body. 60 requests / minute per caller.
 - Protocol safety records: `https://pacta.wtf/protocols/`.
 
