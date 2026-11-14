@@ -212,6 +212,40 @@ def load():
     return idx, radar
 
 
+# RPC-pinned records (docs/api/v1/rpc-pinned.json): block-pinned read-only observations that are NOT EAS-attested (no sprint
+# number, no summary document, no Base EAS UID). They get /protocols/<slug>/ pages next to the index.json Sprint records but
+# never touch index.json, its counts or its EAS anchoring.
+PINNED_SRC = os.path.join(DOCS, "api", "v1", "rpc-pinned.json")
+PINNED_SCHEMA = "pacta.rpc_pinned_records.v1"
+CHAINS = {"ethereum": ("Ethereum", "Ethereum Mainnet (chain id 1)", "$ETH_RPC_URL"), "base": ("Base", "Base Mainnet (chain id 8453)", "$BASE_RPC_URL")}
+
+
+def load_pinned(path=None):
+    p = json.load(open(path or PINNED_SRC))
+    assert p["schema"] == PINNED_SCHEMA and p["attestation"]["eas_attested"] is False and p["attestation"]["base_eas_uid"] is None
+    for e in p["entries"]:
+        assert e["provenance"] == "rpc_pinned" and e["base_eas_uid"] is None and "sprint" not in e and "summary_doc" not in e, e["id"]
+        assert e["chain"] in CHAINS and e["rpc_env_var"] == CHAINS[e["chain"]][2], e["id"]
+    return p
+
+
+def is_pinned(e):
+    return e.get("provenance") == "rpc_pinned"
+
+
+def site_protocols(idx, pinned=None):
+    """Every published /protocols/<slug>/ page, sorted by name: the index.json Sprint protocols (Base-EAS-anchored) plus the
+    RPC-pinned protocols (routed by their own slug). {name: {"slug", "entries", "pinned"}}; names and slugs never collide."""
+    pinned = load_pinned() if pinned is None else pinned
+    out = {n: {"slug": protocol_slug(n), "entries": es, "pinned": False} for n, es in protocol_groups(idx).items()}
+    for e in sorted(pinned["entries"], key=lambda e: e["id"]):
+        assert e["protocol"] not in out or out[e["protocol"]]["pinned"], f'{e["protocol"]}: already an index.json protocol'
+        out.setdefault(e["protocol"], {"slug": e["slug"], "entries": [], "pinned": True})["entries"].append(e)
+    slugs = [v["slug"] for v in out.values()]
+    assert len(slugs) == len(set(slugs)) and all(re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", x) for x in slugs), "protocol slug collision / shape"
+    return dict(sorted(out.items(), key=lambda kv: kv[0].lower()))
+
+
 def counts(idx):
     m = idx["summary_metrics"]
     a = idx["onchain_anchoring"]
@@ -255,13 +289,14 @@ def dot(c):
 
 def cast_line(e):
     """Runnable cast commands for a record (full signature + all arguments). Mirrors castCmd() in docs/app.js."""
-    rpc = '--rpc-url "$ETH_RPC_URL"'
+    rpc = f'--rpc-url "{e.get("rpc_env_var", "$ETH_RPC_URL")}"'
     if e["check_type"] == "eth_getStorageAt":
         first = f'cast storage {e["target_contract"]} \\\n  {e["selector_or_slot"]} \\\n  --block {e["block_number"]} {rpc}'
     else:
         args = (" " + " ".join(e["call_args"])) if e.get("call_args") else ""
         first = f'cast call {e["target_contract"]} \\\n  "{e["call_signature"]}"{args} \\\n  --block {e["block_number"]} {rpc}'
-    return f'{first}\ncast block {e["block_number"]} --field hash {rpc}\n# expect {e["block_hash"]}'
+    extra = "".join(f'\ncast call {x["to"]} "{x["signature"]}" --block {e["block_number"]} {rpc}' for x in e.get("extra_calls", []))
+    return f'{first}{extra}\ncast block {e["block_number"]} --field hash {rpc}\n# expect {e["block_hash"]}'
 
 
 def term(cmd, title="Reproduce on any archive node"):
@@ -558,13 +593,15 @@ def pricing_section(home=""):
 </div></section>"""
 
 
-def protocol_options(idx):
+def protocol_options(idx, pinned=None):
     names = []
     for e in sorted_entries(idx):
         n = e["protocol"]
         if n not in names:
             names.append(n)
-    return sorted(names, key=str.lower)
+    pinned = load_pinned() if pinned is None else pinned
+    names += [e["protocol"] for e in pinned["entries"] if e["protocol"] not in names]
+    return sorted(set(names), key=str.lower)
 
 
 def pay_panel(idx):
@@ -794,26 +831,29 @@ def load_forum_digest(path=None):
         return normalize_forum_digest(json.load(fh))
 
 
-def address_index(idx):
-    """{"ethereum:0x<lower 40 hex>": family} from every target_contract in index.json (chain ethereum unless the entry says Base)."""
+def address_index(idx, pinned=None):
+    """{"<chain>:0x<lower 40 hex>": family} from every target_contract in index.json (chain ethereum unless the entry says Base)
+    and every RPC-pinned record's target and paired protocol contract (their own chain)."""
+    pinned = load_pinned() if pinned is None else pinned
     out = {}
-    for e in sorted(idx["entries"], key=lambda e: e["id"]):
-        a = str(e.get("target_contract", "")).lower()
-        if not re.fullmatch(r"0x[0-9a-f]{40}", a):
-            continue
-        chain = "base" if str(e.get("chain", "")).lower() == "base" or e.get("chain_id") == 8453 else "ethereum"
-        out.setdefault(f"{chain}:{a}", protocol_family(e["protocol"]))
+    for e in sorted(idx["entries"], key=lambda e: e["id"]) + sorted(pinned["entries"], key=lambda e: e["id"]):
+        for a in (e.get("target_contract"), e.get("paired_contract")):
+            a = str(a or "").lower()
+            if not re.fullmatch(r"0x[0-9a-f]{40}", a):
+                continue
+            chain = "base" if str(e.get("chain", "")).lower() == "base" or e.get("chain_id") == 8453 else "ethereum"
+            out.setdefault(f"{chain}:{a}", protocol_family(e["protocol"]))
     return dict(sorted(out.items()))
 
 
-def forum_digest_doc(idx, digest):
+def forum_digest_doc(idx, digest, pinned=None):
     d = normalize_forum_digest(digest)
-    d["addressIndex"] = address_index(idx)
+    d["addressIndex"] = address_index(idx, pinned)
     return d
 
 
-def forum_digest_json(idx, digest):
-    return json.dumps(forum_digest_doc(idx, digest), indent=2, ensure_ascii=False) + "\n"
+def forum_digest_json(idx, digest, pinned=None):
+    return json.dumps(forum_digest_doc(idx, digest, pinned), indent=2, ensure_ascii=False) + "\n"
 
 
 def governance_discussions(name, digest):
@@ -839,10 +879,28 @@ def governance_section(name, digest, home="../../"):
             f'<div class="tbl-wrap"><table><thead><tr><th>Topic</th><th>Last post</th></tr></thead><tbody>{rows}</tbody></table></div></section>\n')
 
 
-def protocol_page(name, entries, idx, radar, digest=None):
-    """Static, deterministic protocol safety record (no wall-clock time): every indexed surface with its pinned block."""
+CONTROLLER_KIND = {"multisig_safe": "Safe", "timelock": "Timelock", "contract_controller": "Contract"}
+
+
+def controller_dd(e):
+    """Who controls an RPC-pinned record's target, as observed (kind, address, Safe quorum, owner of a controller contract)."""
+    a, k, q, up = e.get("controller_address"), e.get("controller_kind"), e.get("safe_quorum"), e.get("upstream_controller")
+    if not a:
+        return "No single-key owner or admin getter (immutable or role-scoped modules)"
+    lbl = f"{q} Safe" if k == "multisig_safe" and q else CONTROLLER_KIND.get(k, "Contract")
+    out = f"{E(lbl)} {hexref(a)}"
+    if up:
+        uk = e.get("upstream_kind")
+        ulbl = f"{q} Safe" if uk == "multisig_safe" and q else CONTROLLER_KIND.get(uk, "contract")
+        out += f" · owned by {E(ulbl)} {hexref(up)}"
+    return out
+
+
+def protocol_page(name, entries, idx, radar, digest=None, slug=None):
+    """Static, deterministic protocol safety record (no wall-clock time): every indexed surface with its pinned block.
+    index.json Sprint records (Base-EAS-anchored) and RPC-pinned records (not EAS-attested) are labelled as such."""
     digest = load_forum_digest() if digest is None else digest
-    slug = protocol_slug(name)
+    slug = slug or protocol_slug(name)
     url = f"{BASE_URL}/protocols/{slug}/"
     c = counts(idx)
     count_line = f'{c["sprints"]} Sprints · {c["records"]} Indexed Records'
@@ -850,15 +908,24 @@ def protocol_page(name, entries, idx, radar, digest=None):
     cat = entries[0]["category"]
     targets = sorted({e["target_contract"] for e in entries})
     first = entries[0]
+    pinned = all(is_pinned(e) for e in entries)
+    assert pinned or not any(is_pinned(e) for e in entries), f"{name}: mixed provenance"
+    chains = sorted({e.get("chain", "ethereum") for e in entries}, key=list(CHAINS).index)
+    chain_txt = " and ".join(CHAINS[ch][0] for ch in chains)
+    n = len(entries)
     records = ""
     for e in entries:
+        ch = CHAINS[e.get("chain", "ethereum")][0]
+        prov = "RPC-pinned, not EAS-attested" if pinned else f'sprint {E(str(e["sprint"]))}'
+        ctrl = f'<dt>Controller</dt><dd>{controller_dd(e)}</dd>' if pinned else ""
+        doc_lbl = "Documentation." if pinned else "Documented."
         records += (f'<article class="memo-sec" id="{E(e["id"])}"><h2>{E(e["surface"])}</h2>'
                     f'<dl class="memo-meta"><dt>Status</dt><dd>{badge(e["classification"])}</dd>'
                     f'<dt>Target</dt><dd>{E(e["target_label"])} {hexref(e["target_contract"])}</dd>'
-                    f'<dt>Pinned block</dt><dd>Ethereum <span class="num">#{int(e["block_number"]):,}</span> · sprint {E(str(e["sprint"]))}</dd>'
-                    f'<dt>Block hash</dt><dd>{hexref(e["block_hash"], 10, 6)}</dd></dl>'
+                    f'<dt>Pinned block</dt><dd>{ch} <span class="num">#{int(e["block_number"]):,}</span> · {prov}</dd>'
+                    f'<dt>Block hash</dt><dd>{hexref(e["block_hash"], 10, 6)}</dd>{ctrl}</dl>'
                     f'<p><b>Observed on-chain.</b> {E(e["onchain_observed"])}</p>'
-                    f'<p><b>Documented.</b> {E(e["documented_reference"])}</p>'
+                    f'<p><b>{doc_lbl}</b> {E(e["documented_reference"])}</p>'
                     f'{term(cast_line(e))}</article>\n')
     ops = ""
     for it in radar_for(name, radar):
@@ -867,73 +934,107 @@ def protocol_page(name, entries, idx, radar, digest=None):
         ops += (f'<article class="memo-sec"><h2>Queued timelock operations</h2><p>{E(it["title"])}. {E(it["summary"])}</p>'
                 f'<p>Timelock {hexref(it["timelock"])} · {secs(it["min_delay_seconds"])} minimum delay · <a href="../../{E(it["brief"])}">Pre-execution brief →</a></p>'
                 f'<ul>{lis}</ul></article>\n')
-    curl = f'curl -s "{API}/v1/check/preflight?chain=ethereum&address={first["target_contract"]}"'
+    provenance = ""
+    if pinned:
+        provenance = (f'<section class="memo-sec" id="provenance"><h2>Provenance</h2><p>RPC-pinned {"record" if n == 1 else "records"}: read over public '
+                      f'JSON-RPC at the {chain_txt} block shown below and independently re-read at the same block by a second Pacta seat. '
+                      f'{"It is" if n == 1 else "They are"} <b>not EAS-attested</b>: no sprint number, no summary document and no Base EAS UID. '
+                      f'Machine-readable: <a href="../../api/v1/rpc-pinned.json">/api/v1/rpc-pinned.json</a>. The Base-EAS-attested Sprint records '
+                      f'are in <a href="../../api/v1/index.json">/api/v1/index.json</a>.</p></section>\n')
+    curl = f'curl -s "{API}/v1/check/preflight?chain={first.get("chain", "ethereum")}&address={first["target_contract"]}"'
+    surfaces = f'{n} indexed {"surface" if n == 1 else "surfaces"}'
+    data_url = f"{BASE_URL}/api/v1/rpc-pinned.json" if pinned else f"{BASE_URL}/api/v1/index.json"
     ld = {"@context": "https://schema.org", "@type": "Dataset", "name": f"{name} control-plane safety record",
           "description": f"Block-pinned control-plane observations for {name} ({cat}): proxy admins, Safe quorums, roles and timelock delays, "
-                         f"compared with the protocol's documentation. {len(entries)} indexed surface(s).",
+                         + (f"read over public JSON-RPC (RPC-pinned; not EAS-attested). {surfaces}." if pinned
+                            else f"compared with the protocol's documentation. {surfaces}."),
           "url": url, "isAccessibleForFree": True, "keywords": [name, cat, "DeFi", "control plane", "timelock", "proxy admin", "Safe multisig"],
           "creator": {"@type": "Organization", "name": "Pacta by Fractal Neurons", "url": f"{BASE_URL}/"},
-          "distribution": [{"@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": f"{BASE_URL}/api/v1/index.json"}],
+          "distribution": [{"@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": data_url}],
           "variableMeasured": [e["surface"] for e in entries],
-          "spatialCoverage": "Ethereum Mainnet (chain id 1)",
+          "spatialCoverage": "; ".join(CHAINS[ch][1] for ch in chains),
           "temporalCoverage": f"block {min(int(e['block_number']) for e in entries)}/{max(int(e['block_number']) for e in entries)}"}
+    crumbs = {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Pacta", "item": f"{BASE_URL}/"},
+        {"@type": "ListItem", "position": 2, "name": "Protocols", "item": f"{BASE_URL}/protocols/"},
+        {"@type": "ListItem", "position": 3, "name": name, "item": url}]}
     ld_json = json.dumps(ld, ensure_ascii=False, sort_keys=True).replace("</", "<\\/")
+    crumbs_json = json.dumps(crumbs, ensure_ascii=False, sort_keys=True).replace("</", "<\\/")
     title = f"{name}: control-plane safety record"
-    desc = f"Who can upgrade, pause or change {name}: {len(entries)} block-pinned control-plane {"check" if len(entries) == 1 else "checks"} with cast reproductions and a free live pre-flight API."
+    desc = (f"Who can upgrade, pause or change {name}: {n} block-pinned control-plane {'check' if n == 1 else 'checks'} with "
+            f"{'a cast reproduction' if n == 1 else 'cast reproductions'} and a free live pre-flight API.")
+    pin_clause = (f"pinned to a canonical {chain_txt} block over public JSON-RPC (not EAS-attested), with the protocol's documentation linked" if pinned
+                  else f"{'' if n == 1 else 'each '}pinned to a canonical {chain_txt} block and compared with what the protocol documents")
+    codes = ", ".join(f'<code class="mono">{E(t)}</code>' for t in targets)
+    lede = (f'{n} indexed control-plane {"surface" if n == 1 else "surfaces"} for {E(name)}, {pin_clause}. '
+            f'{"Contract" if len(targets) == 1 else "Contracts"}: {codes}.')
     body = f"""<body>
 {topbar("../../")}
 <main id="main" class="memo-wrap">
 <div class="crumbs"><a href="../../">Pacta</a> / <a href="../">Protocols</a> / {E(name)}</div>
 <article class="memo">
 <header><span class="tier">{E(cat)}</span><h1>{E(title)}</h1>
-<p class="lede">{len(entries)} indexed control-plane surface(s) for {E(name)}, each pinned to a canonical Ethereum block and compared with what the protocol documents. Contracts: {", ".join(f'<code class="mono">{E(t)}</code>' for t in targets)}.</p></header>
+<p class="lede">{lede}</p></header>
 <section class="memo-sec"><h2>Check it live (free)</h2><p>The pre-flight API re-reads the controller, proxy and capabilities of a contract at the latest block. No key, no wallet.</p>
 {term(curl, "Live pre-flight check")}<p>MCP: <code class="mono">{E(MCP_URL)}</code> · tool <code>pacta_check_preflight</code>.</p></section>
-{governance_section(name, digest)}{records}{ops}</article>
+{provenance}{governance_section(name, digest)}{records}{ops}</article>
 <div class="memo-foot"><span>Read-only on-chain analysis. Not investment advice. Exploit-sensitive vulnerabilities are never published here; they go through Immunefi or Cantina bounty programmes.</span><a href="../../request/?tier=clearance">Clear findings in 24h · {E(CLEARANCE_PRICE)} →</a></div>
 </main>
 {footer(count_line, reg, "../../")}
 <script type="application/ld+json">{ld_json}</script>
+<script type="application/ld+json">{crumbs_json}</script>
 </body></html>
 """
     return head(f"{name} control-plane safety · Pacta", desc, url, prefix="../../", og_title=title, og_type="article") + "\n" + body
 
 
-def protocols_index_page(idx, groups):
+def protocols_index_page(idx, sp=None):
+    """/protocols/: every published protocol page (index.json Sprint protocols + RPC-pinned protocols), with provenance."""
+    sp = site_protocols(idx) if sp is None else sp
     c = counts(idx)
     count_line = f'{c["sprints"]} Sprints · {c["records"]} Indexed Records'
     reg = idx["onchain_anchoring"]["commitment_registry"]
-    rows = "".join(f'<tr><td><a href="{protocol_slug(n)}/">{E(n)}</a></td><td>{E(es[0]["category"])}</td><td class="num">{len(es)}</td>'
-                   f'<td>{" ".join(badge(cl) for cl in sorted({e["classification"] for e in es}))}</td></tr>' for n, es in groups.items())
-    ld = {"@context": "https://schema.org", "@type": "ItemList", "name": "Pacta protocol control-plane safety records",
-          "itemListElement": [{"@type": "ListItem", "position": i + 1, "url": f"{BASE_URL}/protocols/{protocol_slug(n)}/", "name": n}
-                              for i, n in enumerate(groups)]}
+    n_surf = sum(len(v["entries"]) for v in sp.values())
+    n_pin = sum(len(v["entries"]) for v in sp.values() if v["pinned"])
+
+    def prov(v):
+        if v["pinned"]:
+            return '<span class="muted">RPC-pinned</span>'
+        ss = sorted({e["sprint"] for e in v["entries"]})
+        return f'Sprint{"s" if len(ss) > 1 else ""} {", ".join(str(x) for x in ss)} · Base EAS'
+
+    rows = "".join(f'<tr><td><a href="{v["slug"]}/">{E(n)}</a></td><td>{E(v["entries"][0]["category"])}</td>'
+                   f'<td>{" · ".join(sorted({CHAINS[e.get("chain", "ethereum")][0] for e in v["entries"]}))}</td><td class="num">{len(v["entries"])}</td>'
+                   f'<td>{" ".join(badge(cl) for cl in sorted({e["classification"] for e in v["entries"]}))}</td><td>{prov(v)}</td></tr>' for n, v in sp.items())
+    ld = {"@context": "https://schema.org", "@type": "ItemList", "name": "Pacta protocol control-plane safety records", "numberOfItems": len(sp),
+          "itemListElement": [{"@type": "ListItem", "position": i + 1, "url": f"{BASE_URL}/protocols/{v['slug']}/", "name": n}
+                              for i, (n, v) in enumerate(sp.items())]}
     ld_json = json.dumps(ld, ensure_ascii=False, sort_keys=True).replace("</", "<\\/")
     body = f"""<body>
 {topbar("../")}
 <main id="main">
 <section class="sec"><div class="wrap">
 <div class="crumbs"><a href="../">Pacta</a> / Protocols</div>
-<div class="sec-head"><span class="n">→</span><h2>Protocol safety records</h2><span class="aside">{len(groups)} protocols · {c["records"]} block-pinned surfaces</span></div>
-<p class="sec-intro">Who can upgrade, pause or change each protocol, pinned to canonical Ethereum blocks. Check any other contract live and free with <code>/v1/check/preflight</code>.</p>
-<table class="ix"><thead><tr><th>Protocol</th><th>Category</th><th>Surfaces</th><th>Status</th></tr></thead><tbody>{rows}</tbody></table>
+<div class="sec-head"><span class="n">→</span><h2>Protocol safety records</h2><span class="aside">{len(sp)} protocols · {n_surf} block-pinned surfaces</span></div>
+<p class="sec-intro">Who can upgrade, pause or change each protocol, pinned to canonical Ethereum and Base blocks. The {c["records"]} Sprint records are anchored on Base by EAS attestations; the {n_pin} RPC-pinned records are reproducible with <code>cast</code> but not yet EAS-attested. Check any other contract live and free with <code>/v1/check/preflight</code>.</p>
+<table class="ix"><thead><tr><th>Protocol</th><th>Category</th><th>Chain</th><th>Surfaces</th><th>Status</th><th>Provenance</th></tr></thead><tbody>{rows}</tbody></table>
 </div></section>
 </main>
 {footer(count_line, reg, "../")}
 <script type="application/ld+json">{ld_json}</script>
 </body></html>
 """
-    return head("Protocol control-plane safety records · Pacta", f"Block-pinned control-plane safety records for {len(groups)} DeFi protocols.",
+    return head("Protocol control-plane safety records · Pacta", f"Block-pinned control-plane safety records for {len(sp)} DeFi protocols.",
                 f"{BASE_URL}/protocols/", prefix="../", og_title="Protocol control-plane safety records") + "\n" + body
 
 
-def not_found_page(idx):
+def not_found_page(idx, sp=None):
     """docs/404.html: GitHub Pages serves it for any missing path, so every link is root-relative. data-nf on <main>
     makes the beacon (b.js) send not_found_404 (sanitised path, plus the slug for /protocols/<slug>/...) instead of page_load."""
     c = counts(idx)
     count_line = f'{c["sprints"]} Sprints · {c["records"]} Indexed Records'
     reg = idx["onchain_anchoring"]["commitment_registry"]
-    n_protocols = len({e["protocol"] for e in idx["entries"]})
+    n_protocols = len(site_protocols(idx) if sp is None else sp)
     claude = f"claude mcp add --transport http pacta {MCP_URL}"
     snippet = lambda label, value: f'<div class="qs-snip"><span class="qs-l">{label}</span><code class="mono">{E(value)}</code>{copy_btn(value)}</div>'
     body = f"""<body>
@@ -1080,6 +1181,7 @@ def llms(idx, radar):
         f"- [{BASE_URL}/.well-known/agent.json]({BASE_URL}/.well-known/agent.json) (A2A Agent Card) · [{BASE_URL}/.well-known/mcp.json]({BASE_URL}/.well-known/mcp.json) (MCP manifest) · [{BASE_URL}/SKILL.md]({BASE_URL}/SKILL.md) (portable agent skill).", "",
         "## Data",
         f"- [{BASE_URL}/api/v1/index.json]({BASE_URL}/api/v1/index.json): schema `{idx['schema']}`; `summary_metrics` (sprints_completed={c['sprints']}, records_indexed={c['records']}, parameter_deltas={c['delta']}, protective_deltas={c['protect']}, aligned_baselines={c['aligned']}); each entry has id, protocol, category, sprint, block_number, block_hash, classification, surface, target_contract, target_label, check_type, selector_or_slot, call_signature, call_args, repro_calldata, onchain_observed, documented_reference, observed/documented delay seconds, summary_doc, summary_sha256, base_eas_uid.",
+        f"- [{BASE_URL}/api/v1/rpc-pinned.json]({BASE_URL}/api/v1/rpc-pinned.json): schema `{PINNED_SCHEMA}`; {len(load_pinned()['entries'])} RPC-pinned control-plane records on Ethereum and Base (block number + hash, cast reproduction). NOT EAS-attested: no sprint, summary document or Base EAS UID.",
         f"- [{BASE_URL}/api/v1/radar.json]({BASE_URL}/api/v1/radar.json): queued timelock operations, refreshed at finalized block {r['block_number']} ({r['block_time_utc']}).",
         f"- [{BASE_URL}/api/v1/forum-digest.json]({BASE_URL}/api/v1/forum-digest.json): schema `{FORUM_SCHEMA}`; read-only digest of active governance forum topics plus `addressIndex` (chain:address -> protocol family).", "",
         "## Live pre-execution briefs",
@@ -1136,20 +1238,21 @@ def main():
     onb = load_onboarding()
     for b in onb["briefs"]:
         w(f"briefs/{b['slug']}/index.html", onboarding_page(b, idx))
-    B2A.write_all(DOCS, idx, radar, onb)          # proposals.json, llms-full.txt, .well-known/{agent,mcp}.json, SKILL.md
+    pinned = load_pinned()                        # docs/api/v1/rpc-pinned.json (RPC-pinned, not EAS-attested)
+    B2A.write_all(DOCS, idx, radar, onb, pinned)  # proposals.json, llms-full.txt, .well-known/{agent,mcp}.json, SKILL.md
     w("llms.txt", llms(idx, radar))
-    groups = protocol_groups(idx)
+    sp = site_protocols(idx, pinned)
     digest = load_forum_digest()                  # data/forum-digest.json (optional; missing = empty digest)
-    w("api/v1/forum-digest.json", forum_digest_json(idx, digest))
-    for name, es in groups.items():
-        w(f"protocols/{protocol_slug(name)}/index.html", protocol_page(name, es, idx, radar, digest))
-    w("protocols/index.html", protocols_index_page(idx, groups))
-    w("404.html", not_found_page(idx))           # GitHub Pages serves it for any missing path
+    w("api/v1/forum-digest.json", forum_digest_json(idx, digest, pinned))
+    for name, v in sp.items():
+        w(f"protocols/{v['slug']}/index.html", protocol_page(name, v["entries"], idx, radar, digest, v["slug"]))
+    w("protocols/index.html", protocols_index_page(idx, sp))
+    w("404.html", not_found_page(idx, sp))       # GitHub Pages serves it for any missing path
     w("robots.txt", ROBOTS_TXT)
     urls = ["/", "/request/", "/llms.txt", "/api/v1/index.json", "/api/v1/radar.json"] + [f"/briefs/{k}/" for k in BRIEFS] + \
         [f"/briefs/{b['slug']}/" for b in load_onboarding()["briefs"]] + (["/api/v1/onboarding.json"] if load_onboarding()["briefs"] else []) + \
-        ["/api/v1/proposals.json", "/llms-full.txt", "/SKILL.md", "/.well-known/agent.json", "/.well-known/mcp.json", "/demos/swapio-x402/", "/protocols/"] + \
-        [f"/protocols/{protocol_slug(n)}/" for n in groups]
+        ["/api/v1/proposals.json", "/api/v1/rpc-pinned.json", "/llms-full.txt", "/SKILL.md", "/.well-known/agent.json", "/.well-known/mcp.json",
+         "/demos/swapio-x402/", "/protocols/"] + [f"/protocols/{v['slug']}/" for v in sp.values()]
     w("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
       + "".join(f"  <url><loc>{BASE_URL}{u}</loc><lastmod>{today}</lastmod></url>\n" for u in urls) + "</urlset>\n")
     w(".well-known/security.txt", f"Contact: mailto:{CONTACT}\nExpires: 2027-11-13T00:00:00.000Z\nPreferred-Languages: en\n"

@@ -61,5 +61,5 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npm publish --provenance --access public
 
-      # The MCP Registry entry (io.github.fractal-neurons/pacta) is published only by publish-mcp.yml (pinned,
+      # The MCP Registry entry (io.github.Fractal-Neurons/pacta) is published only by publish-mcp.yml (pinned,
       # checksum-verified mcp-publisher, remotes-only manifest), so the two workflows never race on a version.

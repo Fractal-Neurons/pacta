@@ -504,9 +504,9 @@ def main():
     sys.dont_write_bytecode = True                            # no __pycache__ writes into a possibly read-only checkout
     import build_b2a_feeds as B2A
     b2a_files = ["api/v1/proposals.json", "llms-full.txt", ".well-known/agent.json", ".well-known/mcp.json", "SKILL.md"]
-    rendered = B2A.render_all(idx, radar, onb)               # in memory: no scratch files, works with a read-only HOME
+    rendered = B2A.render_all(idx, radar, onb, json.loads(read("docs/api/v1/rpc-pinned.json")))   # in memory: no scratch files
     drift = [f for f in b2a_files if rendered.get(f, "").encode() != read("docs/" + f, "rb")] + sorted(set(rendered) - set(b2a_files))
-    check("B2A feeds are a byte-identical deterministic build of index/radar/onboarding.json (no hand edits, no wall clock)", not drift, str(drift))
+    check("B2A feeds are a byte-identical deterministic build of index/radar/onboarding/rpc-pinned.json (no hand edits, no wall clock)", not drift, str(drift))
     prop = json.loads(read("docs/api/v1/proposals.json"))
     PKEYS = {"proposal_id", "forum", "topic_id", "title", "forum_url", "relation", "chain", "chain_id", "pinned_block_number", "pinned_block_hash",
              "source_feed", "source_record_ids", "brief_url", "control_plane_summary", "recommended_sentinel_predicates", "repro_commands"}
@@ -546,7 +546,7 @@ def main():
           all(k in card for k in ("protocolVersion", "name", "description", "url", "version", "provider", "documentationUrl", "capabilities",
                                    "defaultInputModes", "defaultOutputModes", "skills")) and len(card["skills"]) >= 3
           and card["x402"]["payTo"] == B2A.PAY_TO and card["x402"]["asset"] == B2A.USDC_BASE and card["x402"]["chainId"] == 8453
-          and man["name"] == "io.github.fractal-neurons/pacta" and man["transport"]["type"] == "streamable-http" and man["transport"]["url"] == "https://pacta-x402.pacta.workers.dev/mcp"
+          and man["name"] == "io.github.Fractal-Neurons/pacta" and man["transport"]["type"] == "streamable-http" and man["transport"]["url"] == "https://pacta-x402.pacta.workers.dev/mcp"
           and {t_["type"] for t_ in man.get("transports", [])} >= {"streamable-http", "stdio"} and "pacta_list_proposals" in {t["name"] for t in man["tools"]}
           and man["status"].startswith("publication_pending") and not unresolved, f"unresolved {unresolved[:3]}")
     skill = read("docs/SKILL.md")
@@ -636,21 +636,23 @@ def main():
     idx_ = json.load(open(os.path.join(DOCS, "api", "v1", "index.json")))
     radar_ = json.load(open(os.path.join(DOCS, "api", "v1", "radar.json")))
     groups = BS.protocol_groups(idx_)
+    pinned_ = json.loads(read("docs/api/v1/rpc-pinned.json"))
+    site_ = BS.site_protocols(idx_, pinned_)
     prot_bad, sm = [], read("docs/sitemap.xml")
-    for name, es in groups.items():
-        slug = BS.protocol_slug(name)
+    for name, v in site_.items():
+        slug, es = v["slug"], v["entries"]
         rel = f"docs/protocols/{slug}/index.html"
         if not os.path.exists(os.path.join(ROOT, rel)):
             prot_bad.append(f"{slug}: missing"); continue
         t = read(rel)
-        if t != BS.protocol_page(name, es, idx_, radar_):
+        if t != BS.protocol_page(name, es, idx_, radar_, slug=slug):
             prot_bad.append(f"{slug}: not a deterministic rebuild")
         lds = re.findall(r'<script type="application/ld\+json">(.*?)</script>', t, re.S)
         try:
             ld_ok = bool(lds) and all(json.loads(x).get("@context") == "https://schema.org" for x in lds)
         except ValueError:
             ld_ok = False
-        if not ld_ok:
+        if not ld_ok or len(lds) != 2 or '"BreadcrumbList"' not in t:
             prot_bad.append(f"{slug}: JSON-LD")
         if not all(str(e["block_number"]) in t.replace(",", "") and e["block_hash"] in t for e in es):
             prot_bad.append(f"{slug}: pinned block/hash")
@@ -661,10 +663,38 @@ def main():
         if f"<loc>{BS.BASE_URL}/protocols/{slug}/</loc>" not in sm:
             prot_bad.append(f"{slug}: sitemap")
     pidx = read("docs/protocols/index.html") if os.path.exists(os.path.join(DOCS, "protocols", "index.html")) else ""
-    pidx_ok = bool(pidx) and pidx == BS.protocols_index_page(idx_, groups) and f"<loc>{BS.BASE_URL}/protocols/</loc>" in sm \
-        and all(f'href="{BS.protocol_slug(n)}/"' in pidx for n in groups) and '"@type": "ItemList"' in pidx.replace('"@type":"ItemList"', '"@type": "ItemList"')
-    check(f"/protocols/<slug>/ SEO pages: one per indexed protocol ({len(groups)}), deterministic, schema.org JSON-LD, pinned block + hash, cast repro, preflight quickstart, in the sitemap; /protocols/ index (ItemList)",
-          not prot_bad and pidx_ok and len(groups) == len({e["protocol"] for e in idx_["entries"]}), f"bad {prot_bad[:4]}; index {pidx_ok}")
+    pidx_ok = bool(pidx) and pidx == BS.protocols_index_page(idx_, site_) and f"<loc>{BS.BASE_URL}/protocols/</loc>" in sm \
+        and all(f'href="{v["slug"]}/"' in pidx for v in site_.values()) and '"@type": "ItemList"' in pidx.replace('"@type":"ItemList"', '"@type": "ItemList"')
+    on_disk = sorted(d for d in os.listdir(os.path.join(DOCS, "protocols")) if os.path.isdir(os.path.join(DOCS, "protocols", d)))
+    check(f"/protocols/<slug>/ SEO pages: one per published protocol ({len(site_)} = {len(groups)} index.json + {len(site_) - len(groups)} RPC-pinned), deterministic, Dataset + BreadcrumbList JSON-LD, pinned block + hash, cast repro, preflight quickstart, in the sitemap; /protocols/ index (ItemList); no stray protocol directories",
+          not prot_bad and pidx_ok and len(groups) == len({e["protocol"] for e in idx_["entries"]}) and len(site_) == 53
+          and on_disk == sorted(v["slug"] for v in site_.values()), f"bad {prot_bad[:4]}; index {pidx_ok}; dirs {len(on_disk)}")
+
+    # RPC-pinned records: a separate, explicitly NOT EAS-attested dataset; never merged into index.json or its EAS counts
+    pin_bad = []
+    heads = pinned_.get("pinned_heads", {})
+    idx_slugs = {BS.protocol_slug(e["protocol"]) for e in idx_["entries"]}
+    for e in pinned_.get("entries", []):
+        h = heads.get(e["chain"], {})
+        if e.get("base_eas_uid") is not None or e.get("provenance") != "rpc_pinned" or any(k in e for k in ("sprint", "summary_doc", "summary_sha256")):
+            pin_bad.append(f'{e["id"]}: attestation fields')
+        if (e["block_number"], e["block_hash"]) != (h.get("block_number"), h.get("block_hash")) or e["chain_id"] != h.get("chain_id"):
+            pin_bad.append(f'{e["id"]}: block != pinned head')
+        if not all(eip55_ok(a) for a in (e["target_contract"], e.get("controller_address"), e.get("upstream_controller"), e.get("paired_contract")) if a):
+            pin_bad.append(f'{e["id"]}: EIP-55')
+        if e["slug"] in idx_slugs or e["rpc_env_var"] != {"ethereum": "$ETH_RPC_URL", "base": "$BASE_RPC_URL"}[e["chain"]]:
+            pin_bad.append(f'{e["id"]}: slug / rpc')
+        if e["check_type"] == "eth_call" and "0x" + keccak(e["call_signature"].encode()).hex()[:8] != e["selector_or_slot"]:
+            pin_bad.append(f'{e["id"]}: selector')
+        pt = read(f'docs/protocols/{e["slug"]}/index.html')
+        ld0 = json.loads(re.findall(r'<script type="application/ld\+json">(.*?)</script>', pt, re.S)[0])
+        if ("not EAS-attested" not in pt or "/api/v1/rpc-pinned.json" not in pt or "· sprint" in pt or "easscan" in pt
+                or ld0["distribution"][0]["contentUrl"] != f"{BS.BASE_URL}/api/v1/rpc-pinned.json" or f'--rpc-url &quot;{e["rpc_env_var"]}&quot;' not in pt):
+            pin_bad.append(f'{e["id"]}: page provenance')
+    check("rpc-pinned.json (pacta.rpc_pinned_records.v1): 20 records (12 Ethereum + 8 Base), NOT EAS-attested (attestation.eas_attested false, base_eas_uid null, no sprint / summary fields), every block = the chain's pinned head (number + hash), EIP-55 addresses, selector = keccak(signature), slugs disjoint from index.json; each page says not EAS-attested, links rpc-pinned.json (Dataset distribution too), uses the chain's RPC variable; index.json untouched (37 records)",
+          pinned_.get("schema") == "pacta.rpc_pinned_records.v1" and pinned_.get("attestation", {}).get("eas_attested") is False
+          and pinned_.get("summary") == {"protocols": 20, "records": 20, "ethereum": 12, "base": 8} and len(pinned_.get("entries", [])) == 20
+          and not pin_bad and len(idx_["entries"]) == 37, f"bad {pin_bad[:4]}")
 
     robots = read("docs/robots.txt")
     bots = ["GPTBot", "OAI-SearchBot", "ClaudeBot", "PerplexityBot", "Googlebot", "*"]
@@ -678,7 +708,7 @@ def main():
     srv_r = json.loads(read("packages/mcp-server/server.remote.json"))
     dockerfile = read("packages/mcp-server/Dockerfile")
     reg_ok = {
-        "glama.json": glama == {"$schema": "https://glama.ai/mcp/schemas/server.json", "maintainers": ["pacta-fractal-neurons"]},
+        "glama.json": glama == {"$schema": "https://glama.ai/mcp/schemas/server.json", "maintainers": ["pacta-fractal-neurons", "ben-grokvisor"]},
         "smithery.yaml": bool(re.search(r"^startCommand:\n  type: stdio$", smith, re.M)) and "dockerfile: packages/mcp-server/Dockerfile" in smith
                          and MCP_ in smith and '"/app/bin/pacta-mcp.mjs"' in smith,
         "server.json remotes": srv.get("remotes") == [{"type": "streamable-http", "url": MCP_}] and srv_r.get("remotes") == srv["remotes"]
@@ -802,6 +832,10 @@ def main():
     want_ai = {}
     for e in sorted(idx_["entries"], key=lambda e: e["id"]):
         want_ai.setdefault("ethereum:" + e["target_contract"].lower(), BS.protocol_family(e["protocol"]))
+    for e in sorted(pinned_["entries"], key=lambda e: e["id"]):               # RPC-pinned targets + paired protocol contracts, own chain
+        for a in (e["target_contract"], e.get("paired_contract")):
+            if a:
+                want_ai.setdefault(f'{e["chain"]}:{a.lower()}', BS.protocol_family(e["protocol"]))
     fd_ok = {
         "schema": fd.get("schema") == "pacta.forum_digest.v1" and fd.get("readOnly") is True and isinstance(fd.get("forums"), dict)
                   and isinstance(fd.get("discussions"), list) and list(fd) == ["schema", "generatedAt", "readOnly", "forums", "discussions", "addressIndex"],
@@ -810,12 +844,12 @@ def main():
         "families": BS.protocol_family("Aave V3 / GHO") == "aave" and BS.protocol_family("Morpho Blue Core") == "morpho"
                     and BS.protocol_family("MetaMorpho (Re7 WETH vs. Re7 USDT)") == "morpho" and BS.protocol_family("Spark / Sky") == "sky"
                     and BS.protocol_family("Lido (stETH / Dual Governance)") == "lido" and BS.protocol_family("Compound V3 (Comet)") == "compound",
-        "deterministic rebuild": fd_raw == BS.forum_digest_json(idx_, src_digest) == BS.forum_digest_json(idx_, json.loads(json.dumps(src_digest))),
+        "deterministic rebuild": fd_raw == BS.forum_digest_json(idx_, src_digest, pinned_) == BS.forum_digest_json(idx_, json.loads(json.dumps(src_digest)), pinned_),
         "no wall clock": "datetime" not in BS.forum_digest_json.__code__.co_names and "now" not in BS.forum_digest_json.__code__.co_names,
     }
     gov_pages = sorted(r for r, t in pages.items() if "Active governance discussions" in t)
-    expect_gov = sorted(os.path.join("protocols", BS.protocol_slug(n), "index.html") for n in groups if BS.governance_discussions(n, src_digest))
-    check(f"forum-digest.json (pacta.forum_digest.v1): readOnly, deterministic addressIndex for all {len(want_ai)} index targets (chain:lowercase address -> family); governance sections only where the family has discussions",
+    expect_gov = sorted(os.path.join("protocols", v["slug"], "index.html") for n, v in site_.items() if BS.governance_discussions(n, src_digest))
+    check(f"forum-digest.json (pacta.forum_digest.v1): readOnly, deterministic addressIndex for all {len(want_ai)} index + RPC-pinned targets (chain:lowercase address -> family); governance sections only where the family has discussions",
           all(fd_ok.values()) and gov_pages == expect_gov, f"{ {k: v for k, v in fd_ok.items() if not v} }; rendered {gov_pages[:3]} expected {expect_gov[:3]}")
     # synthetic digest, in memory only (clearly fake topics on the real forum hosts; never written to data/ or docs/)
     syn = {"schema": "pacta.forum_digest.v1", "generatedAt": "2026-01-01T00:00:00Z", "readOnly": True,
@@ -858,7 +892,7 @@ def main():
                                            and "sha256sum -c" in wf and "checksums.txt" in wf and "releases/latest" not in wf,
         "oidc login + remotes-only publish": "mcp-publisher login github-oidc" in wf and "mcp-publisher publish" in wf
                                              and re.search(r'cp packages/mcp-server/server\.remote\.json "\$ws/server\.json"', wf) is not None and 'ws="$RUNNER_TEMP/' in wf
-                                             and "io.github.fractal-neurons/pacta" in wf.split("\nname:", 1)[0],
+                                             and "io.github.Fractal-Neurons/pacta" in wf.split("\nname:", 1)[0],
         "no secrets / PATs": not re.search(r"secrets\.|GITHUB_TOKEN|_PAT\b|NPM_TOKEN|login github\b(?!-oidc)|--token", wf),
     }
     check(".github/workflows/publish-mcp.yml: push to main + workflow_dispatch, id-token: write + contents: read only, pinned sha256-verified mcp-publisher, github-oidc login, publishes server.remote.json (staged in the runner temp dir), no secrets",

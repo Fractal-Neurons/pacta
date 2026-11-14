@@ -1,4 +1,4 @@
-# Publishes the remotes-only manifest io.github.fractal-neurons/pacta (packages/mcp-server/server.remote.json: the
+# Publishes the remotes-only manifest io.github.Fractal-Neurons/pacta (packages/mcp-server/server.remote.json: the
 # Streamable HTTP endpoint https://pacta-x402.pacta.workers.dev/mcp, no npm package) to registry.modelcontextprotocol.io.
 # Auth is GitHub OIDC (id-token: write): no secrets, no PATs. mcp-publisher is a pinned release, checked against a pinned
 # SHA-256 and the release's own checksums file before it runs. The registry rejects re-publishing an existing version,
@@ -54,7 +54,7 @@ jobs:
           mkdir -p "$ws"
           cp packages/mcp-server/server.remote.json "$ws/server.json"
 
-      - name: Log in with GitHub OIDC and publish io.github.fractal-neurons/pacta
+      - name: Log in with GitHub OIDC and publish io.github.Fractal-Neurons/pacta
         run: |
           set -euo pipefail
           cd "$RUNNER_TEMP/mcp-registry"

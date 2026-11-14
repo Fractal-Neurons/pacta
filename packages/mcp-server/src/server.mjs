@@ -33,7 +33,7 @@ import {
   validatePaymentSignatureHeader,
 } from "./x402.mjs";
 
-export const SERVER_INFO = Object.freeze({ name: "@pacta/mcp-server", version: "0.1.0" });
+export const SERVER_INFO = Object.freeze({ name: "@pacta/mcp-server", version: "0.1.1" });
 export const SUPPORTED_PROTOCOL_VERSION = "2024-11-05";
 
 const REGISTRY = "0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872";

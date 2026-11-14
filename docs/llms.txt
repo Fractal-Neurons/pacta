@@ -17,6 +17,7 @@ Pacta checks who can change the rules of DeFi protocols (proxy admins, timelock 
 
 ## Data
 - [https://pacta.wtf/api/v1/index.json](https://pacta.wtf/api/v1/index.json): schema `pacta.counterparty_control_index.v1`; `summary_metrics` (sprints_completed=14, records_indexed=37, parameter_deltas=14, protective_deltas=4, aligned_baselines=19); each entry has id, protocol, category, sprint, block_number, block_hash, classification, surface, target_contract, target_label, check_type, selector_or_slot, call_signature, call_args, repro_calldata, onchain_observed, documented_reference, observed/documented delay seconds, summary_doc, summary_sha256, base_eas_uid.
+- [https://pacta.wtf/api/v1/rpc-pinned.json](https://pacta.wtf/api/v1/rpc-pinned.json): schema `pacta.rpc_pinned_records.v1`; 20 RPC-pinned control-plane records on Ethereum and Base (block number + hash, cast reproduction). NOT EAS-attested: no sprint, summary document or Base EAS UID.
 - [https://pacta.wtf/api/v1/radar.json](https://pacta.wtf/api/v1/radar.json): queued timelock operations, refreshed at finalized block 26406890 (2026-11-13 15:18 UTC).
 - [https://pacta.wtf/api/v1/forum-digest.json](https://pacta.wtf/api/v1/forum-digest.json): schema `pacta.forum_digest.v1`; read-only digest of active governance forum topics plus `addressIndex` (chain:address -> protocol family).
 

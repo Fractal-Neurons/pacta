@@ -51,7 +51,7 @@
   "/llms.txt": "https://pacta.wtf/llms.txt"
  },
  "homepage": "https://pacta.wtf/",
- "name": "io.github.fractal-neurons/pacta",
+ "name": "io.github.Fractal-Neurons/pacta",
  "openapi": "https://pacta-x402.pacta.workers.dev/openapi.json",
  "package": "@pacta/mcp-server",
  "status": "publication_pending: @pacta/mcp-server is not yet published to npm or the MCP registry. Use the remote MCP server now (no install): https://pacta-x402.pacta.workers.dev/mcp. The stdio server runs from a clone of the repository: node packages/mcp-server/bin/pacta-mcp.mjs.",

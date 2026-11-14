@@ -61,7 +61,7 @@ test("server.json: registry schema shape (required fields, limits, known keys)",
   for (const k of ["name", "description", "version"]) assert.equal(typeof SERVER[k], "string", k);
   assert.match(SERVER.name, /^[a-zA-Z0-9.-]+\/[a-zA-Z0-9._-]+$/);
   assert.ok(SERVER.name.length >= 3 && SERVER.name.length <= 200);
-  assert.equal(SERVER.name, "io.github.fractal-neurons/pacta");
+  assert.equal(SERVER.name, "io.github.Fractal-Neurons/pacta");
   assert.ok(SERVER.description.length >= 1 && SERVER.description.length <= 100, `description is ${SERVER.description.length} chars`);
   assert.ok(!SERVER.title || SERVER.title.length <= 100);
   assert.doesNotMatch(SERVER.version, VERSION_RANGE);

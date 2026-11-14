@@ -1,7 +1,7 @@
 ---
 name: pacta-protocol-commitments
 description: Run Pacta's free pre-execution check on any Ethereum or Base contract before an agent approves, deposits into or calls it (who can upgrade, pause or blacklist it, how fast), query the free block-pinned DeFi control-plane feeds, verify any value on an archive node, and map live Aave / Euler / Morpho / Sky governance proposals to on-chain state.
-version: "0.1.0"
+version: "0.1.1"
 homepage: https://pacta.wtf/
 ---
 
@@ -44,7 +44,7 @@ cast block <N> --field hash --rpc-url "$ETH_RPC_URL"   # must equal the recorded
 
 Use EIP-1898 `{"blockHash": "<hash>", "requireCanonical": true}` when calling eth_call directly.
 
-## MCP server (io.github.fractal-neurons/pacta)
+## MCP server (io.github.Fractal-Neurons/pacta)
 publication_pending: @pacta/mcp-server is not yet published to npm or the MCP registry. Use the remote MCP server now (no install): https://pacta-x402.pacta.workers.dev/mcp. The stdio server runs from a clone of the repository: node packages/mcp-server/bin/pacta-mcp.mjs.
 
 - `pacta_list_commitments` (free): Filter indexed records (protocol, classification, sprint, limit)

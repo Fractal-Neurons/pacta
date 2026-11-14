@@ -145,7 +145,7 @@ Stable codes: `x402_disabled`, `invalid_config`, `invalid_argument`, `invalid_x_
 
 ## MCP registry and agent skill
 
-- `server.json` is the manifest for the official MCP registry (`registry.modelcontextprotocol.io`, schema `2025-10-17`). The server name is `io.github.fractal-neurons/pacta`, and `package.json` carries the matching `mcpName`, which the registry uses for npm ownership verification. Its `environmentVariables` must list exactly the variables read in `src/`, and the tests enforce that.
+- `server.json` is the manifest for the official MCP registry (`registry.modelcontextprotocol.io`, schema `2025-10-17`). The server name is `io.github.Fractal-Neurons/pacta`, and `package.json` carries the matching `mcpName`, which the registry uses for npm ownership verification. Its `environmentVariables` must list exactly the variables read in `src/`, and the tests enforce that.
 - `server.json` also lists the hosted endpoint under `remotes` (`streamable-http`, `https://pacta-x402.pacta.workers.dev/mcp`). The registry checks that an npm package exists, and `@pacta/mcp-server` is not published yet, so `server.remote.json` is a remote-only twin (same name, version and metadata, no `packages`) that can be registered first. The tests keep the two files in step.
 - `SKILL.md` is a portable agent skill (`pacta-protocol-commitments`). It covers the free feeds, replaying a record with `cast call … --block N` and checking the block hash, these tools, and when an x402 payment is justified.
 

@@ -15,6 +15,7 @@
   <url><loc>https://pacta.wtf/briefs/tether-usat-eth/</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://pacta.wtf/api/v1/onboarding.json</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://pacta.wtf/api/v1/proposals.json</loc><lastmod>2026-11-14</lastmod></url>
+  <url><loc>https://pacta.wtf/api/v1/rpc-pinned.json</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://pacta.wtf/llms-full.txt</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://pacta.wtf/SKILL.md</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://pacta.wtf/.well-known/agent.json</loc><lastmod>2026-11-14</lastmod></url>
@@ -22,6 +23,12 @@
   <url><loc>https://pacta.wtf/demos/swapio-x402/</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/aave-v3-gho/</loc><lastmod>2026-11-14</lastmod></url>
+  <url><loc>https://pacta.wtf/protocols/across-protocol-hubpool/</loc><lastmod>2026-11-14</lastmod></url>
+  <url><loc>https://pacta.wtf/protocols/aerodrome-finance-base/</loc><lastmod>2026-11-14</lastmod></url>
+  <url><loc>https://pacta.wtf/protocols/balancer-v2-vault-timelock/</loc><lastmod>2026-11-14</lastmod></url>
+  <url><loc>https://pacta.wtf/protocols/bedrock-unieth/</loc><lastmod>2026-11-14</lastmod></url>
+  <url><loc>https://pacta.wtf/protocols/beefy-finance-base/</loc><lastmod>2026-11-14</lastmod></url>
+  <url><loc>https://pacta.wtf/protocols/centrifuge-liquidity-pools-base/</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/compound-v3-comet/</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/convex-finance/</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/curve-finance-crvusd/</loc><lastmod>2026-11-14</lastmod></url>
@@ -29,8 +36,11 @@
   <url><loc>https://pacta.wtf/protocols/ethena-usde-susde/</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/ether-fi-core-eeth-weeth/</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/ether-fi-liquid-veda-boringvault/</loc><lastmod>2026-11-14</lastmod></url>
+  <url><loc>https://pacta.wtf/protocols/euler-v2-evk/</loc><lastmod>2026-11-14</lastmod></url>
+  <url><loc>https://pacta.wtf/protocols/extra-finance-base/</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/f-x-protocol-v2/</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/fluid-instadapp/</loc><lastmod>2026-11-14</lastmod></url>
+  <url><loc>https://pacta.wtf/protocols/frax-ether-sfrxeth/</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/gearbox-v3-v3-1/</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/inverse-finance-firm/</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/kelp-dao-rseth/</loc><lastmod>2026-11-14</lastmod></url>
@@ -41,17 +51,28 @@
   <url><loc>https://pacta.wtf/protocols/maple-finance-v2-syrup/</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/mellow-protocol-lido-earn/</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/metamorpho-re7-weth-vs-re7-usdt/</loc><lastmod>2026-11-14</lastmod></url>
+  <url><loc>https://pacta.wtf/protocols/moonwell-lending-base/</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/morpho-blue-core/</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/ondo-finance-ousg-flux-finance/</loc><lastmod>2026-11-14</lastmod></url>
+  <url><loc>https://pacta.wtf/protocols/origin-superoeth-base/</loc><lastmod>2026-11-14</lastmod></url>
+  <url><loc>https://pacta.wtf/protocols/pendle-finance-v2/</loc><lastmod>2026-11-14</lastmod></url>
+  <url><loc>https://pacta.wtf/protocols/puffer-finance-pufeth/</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/renzo-protocol-ezeth/</loc><lastmod>2026-11-14</lastmod></url>
+  <url><loc>https://pacta.wtf/protocols/reserve-protocol-rtoken/</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/resolv-usr-rlp/</loc><lastmod>2026-11-14</lastmod></url>
+  <url><loc>https://pacta.wtf/protocols/rocket-pool-reth/</loc><lastmod>2026-11-14</lastmod></url>
+  <url><loc>https://pacta.wtf/protocols/safe-singleton-core/</loc><lastmod>2026-11-14</lastmod></url>
+  <url><loc>https://pacta.wtf/protocols/seamless-protocol-base/</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/spark-sky/</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/stader-labs-ethx/</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/stakewise-v3-oseth/</loc><lastmod>2026-11-14</lastmod></url>
+  <url><loc>https://pacta.wtf/protocols/superform-v2-base/</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/superstate-ustb-uscc/</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/swell-sweth-rsweth/</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/symbiotic-core/</loc><lastmod>2026-11-14</lastmod></url>
+  <url><loc>https://pacta.wtf/protocols/synthetix-v3-core/</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/treehouse-tree-teth/</loc><lastmod>2026-11-14</lastmod></url>
+  <url><loc>https://pacta.wtf/protocols/uniswap-governance-timelock/</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/usual-money-usd0-usd0/</loc><lastmod>2026-11-14</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/yearn-v3/</loc><lastmod>2026-11-14</lastmod></url>
 </urlset>

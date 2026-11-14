@@ -408,7 +408,7 @@ async function beaconScenario() {
     const canon = "https://pacta.wtf/protocols/" + input.protocolSlug + "/";
     const pageFor = (url) => JSON.parse(JSON.stringify(input.protocol).split(canon).join(url));
     const pages = (input.protocolSlugs || []).map((sl) => run(pageFor("https://pacta.wtf/protocols/" + sl + "/"), input.app, { path: "/protocols/" + sl + "/", beacon: B }).events()[0]);
-    res.b_c1_all_protocol_slugs_kept = pages.length === 33 && pages.every((e, i) => e.p === "/protocols/" + input.protocolSlugs[i] + "/" && e.t === input.protocolSlugs[i]);
+    res.b_c1_all_protocol_slugs_kept = pages.length === 53 && pages.every((e, i) => e.p === "/protocols/" + input.protocolSlugs[i] + "/" && e.t === input.protocolSlugs[i]);
     const mismatch = run(input.protocol, input.app, { path: "/protocols/alice-jones/", beacon: B }).events()[0];
     const brief = run(pageFor("https://pacta.wtf/briefs/etherfi-op-0x244e/"), input.app, { path: "/briefs/etherfi-op-0x244e/", beacon: B }).events()[0];
     res.b_c2_slug_only_from_canonical = same(mismatch, { v: 1, e: "page_load", p: "/other" }) && same(brief, { v: 1, e: "page_load", p: "/briefs/etherfi-op-0x244e/" })

@@ -5,7 +5,7 @@ Writes (called from tools/build_site.py; never hand-edited):
                                   proposals mapped to block-pinned control-plane observations
   docs/llms-full.txt              single-file reference corpus for LLM, coding and DeFi agents
   docs/.well-known/agent.json     A2A Agent Card (skills, feeds, Base EAS anchor, x402 payment descriptor)
-  docs/.well-known/mcp.json       MCP discovery manifest for @pacta/mcp-server (io.github.fractal-neurons/pacta)
+  docs/.well-known/mcp.json       MCP discovery manifest for @pacta/mcp-server (io.github.Fractal-Neurons/pacta)
   docs/SKILL.md                   portable agent skill (YAML frontmatter)
 
 Determinism: no wall-clock input. Every timestamp is taken from the source feeds, every list is sorted by a stable key,
@@ -53,9 +53,9 @@ X402_BARE_PROBE = ("A bare GET (no query) or zero-byte POST with no payment head
 X402_RECEIPT_NOTE = ("A settled call returns 200 with both PAYMENT-RESPONSE and X-PAYMENT-RESPONSE (base64 {success, transaction, network, payer}). "
                      "That receipt is the facilitator's settlement assertion bound to the payer; the MCP client checks it against the signed "
                      "authorization but does not look the transaction up on Base (onchainReceiptVerified: false).")
-MCP_NAME = "io.github.fractal-neurons/pacta"
+MCP_NAME = "io.github.Fractal-Neurons/pacta"
 MCP_PACKAGE = "@pacta/mcp-server"
-MCP_VERSION = "0.1.0"                                            # @pacta/mcp-server package.json version (SKILL.md is shipped in it)
+MCP_VERSION = "0.1.1"                                            # @pacta/mcp-server package.json version (SKILL.md is shipped in it)
 MCP_ENV = [("PACTA_INDEX_PATH", "Local snapshot of /api/v1/index.json (offline use)"),
            ("PACTA_PROPOSALS_PATH", "Local snapshot of /api/v1/proposals.json"),
            ("PACTA_SPEC_PATH", "Local spec JSON (anchoring overrides, local index fallback)"),
@@ -188,7 +188,7 @@ MCP_STATUS = (f"publication_pending: @pacta/mcp-server is not yet published to n
               f"(no install): {MCP_REMOTE_URL}. The stdio server runs from a clone of the repository: {STDIO_FROM_SOURCE}.")
 
 
-def llms_full(idx, radar, prop, onb):
+def llms_full(idx, radar, prop, onb, pinned=None):
     a, m = idx["onchain_anchoring"], idx["summary_metrics"]
     L = ["# Pacta — full agent reference (llms-full.txt)", "",
          "> Block-pinned DeFi control-plane observations for AI agents: who can change a protocol's rules (proxy admins, timelocks, "
@@ -242,6 +242,12 @@ def llms_full(idx, radar, prop, onb):
     for e in sorted(idx["entries"], key=lambda e: (-e["sprint"], e["id"])):
         L.append(f"- {e['id']} [{e['classification']}] {e['protocol']} — {e['surface']} · Sprint {e['sprint']} · block {e['block_number']} "
                  f"({e['block_hash']}) · target {e['target_contract']} · {e['onchain_observed']}")
+    if pinned:
+        L += ["", "## RPC-pinned records (from /api/v1/rpc-pinned.json; NOT EAS-attested)",
+              "No sprint number, summary document or Base EAS UID: block-pinned public JSON-RPC reads, independently re-read at the same block."]
+        for e in sorted(pinned["entries"], key=lambda e: e["id"]):
+            L.append(f"- {e['id']} [{e['classification']}] {e['protocol']} — {e['surface']} · {e['chain_label']} block {e['block_number']} "
+                     f"({e['block_hash']}) · target {e['target_contract']} · {e['onchain_observed']} · page {BASE}/protocols/{e['slug']}/")
     L += ["", "## Scope",
           "- Observations of on-chain state at the stated blocks; not code audits, reserve attestations or investment advice.",
           "- Exploit-sensitive vulnerabilities are never published here; they go through Immunefi or Cantina bounty programmes.",
@@ -408,20 +414,21 @@ Environment (all optional, none secret):
 """
 
 
-def render_all(idx, radar, onb):
-    """Pure function: {relative path under docs/: file text}. No filesystem access (used by verify_site_v2.py)."""
+def render_all(idx, radar, onb, pinned=None):
+    """Pure function: {relative path under docs/: file text}. No filesystem access (used by verify_site_v2.py). `pinned` is the
+    parsed docs/api/v1/rpc-pinned.json (RPC-pinned records, not EAS-attested), listed in llms-full.txt in their own section."""
     prop = proposals(idx, onb)
     return {
         "api/v1/proposals.json": json.dumps(prop, indent=1, sort_keys=True, ensure_ascii=False) + "\n",
-        "llms-full.txt": llms_full(idx, radar, prop, onb),
+        "llms-full.txt": llms_full(idx, radar, prop, onb, pinned),
         ".well-known/agent.json": json.dumps(agent_card(prop, onb, idx), indent=1, sort_keys=True, ensure_ascii=False) + "\n",
         ".well-known/mcp.json": json.dumps(mcp_manifest(idx, onb), indent=1, sort_keys=True, ensure_ascii=False) + "\n",
         "SKILL.md": skill_md(prop, idx),
     }
 
 
-def write_all(docs, idx, radar, onb):
-    files = render_all(idx, radar, onb)
+def write_all(docs, idx, radar, onb, pinned=None):
+    files = render_all(idx, radar, onb, pinned)
     for rel, text in files.items():
         p = os.path.join(docs, rel)
         os.makedirs(os.path.dirname(p), exist_ok=True)
