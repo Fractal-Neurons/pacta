@@ -127,6 +127,8 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--a
 .badge.delta { color: var(--amber); background: var(--amber-bg); border-color: var(--amber-line); }
 .badge.protect, .badge.ok, .badge.final { color: var(--green); background: var(--green-bg); border-color: var(--green-line); }
 .badge.plain::before { display: none; }
+.badge.observed { border-style: dashed; background: transparent; }  /* RPC-observed baseline: neutral, no doc-comparison claim */
+pre.llms { white-space: pre-wrap; word-break: break-word; font: 12.5px/1.55 var(--mono); }
 .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--gray); flex: none; }
 .dot.delta { background: var(--amber); }
 .dot.protect { background: var(--green); }

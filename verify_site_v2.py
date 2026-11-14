@@ -31,6 +31,7 @@ import datetime as dt
 import glob
 import hashlib
 import html.parser
+import html
 import json
 import os
 import re
@@ -696,11 +697,63 @@ def main():
           and pinned_.get("summary") == {"protocols": 20, "records": 20, "ethereum": 12, "base": 8} and len(pinned_.get("entries", [])) == 20
           and not pin_bad and len(idx_["entries"]) == 37, f"bad {pin_bad[:4]}")
 
+    pv_ = json.loads(read("docs/api/v1/rpc-pinned.json"))
+    w2_pages = {e["slug"]: read(f'docs/protocols/{e["slug"]}/index.html') for e in pv_["entries"]}
+    hub_ = read("docs/protocols/index.html")
+    hub_rows = {sl: re.search(rf'<tr><td><a href="{sl}/">.*?</tr>', hub_).group(0) for sl in w2_pages}
+    f1_ok = {
+        "all 20 rpc_observed": [e["classification"] for e in pv_["entries"]] == ["rpc_observed"] * 20,
+        "documentation not compared": all(e.get("documentation_comparison") == "not_assessed" and e["documented_delay_seconds"] is None
+                                          and "publishes" not in e["documented_reference"] and "does not compare" in e["documented_reference"] for e in pv_["entries"]),
+        "pages: RPC-observed badge only": all('<span class="badge observed">RPC-observed baseline</span>' in t and "Aligned baseline" not in t
+                                              and "Parameter delta" not in t and "not assessed" in t for t in w2_pages.values()),
+        "hub rows: RPC-observed badge only": all("RPC-observed baseline" in r and "Aligned baseline" not in r and "Parameter delta" not in r for r in hub_rows.values()),
+        "defined in llms.txt + llms-full.txt": all("rpc_observed (on-chain control plane pinned at an archive block height" in read(f) or
+                                                   "Classification rpc_observed: on-chain control plane pinned at an archive block height" in read(f)
+                                                   for f in ("docs/llms.txt", "docs/llms-full.txt")),
+        "mcp.json packageVersion 0.1.1": json.loads(read("docs/.well-known/mcp.json")).get("packageVersion") == "0.1.1"
+                                         == json.loads(read("packages/mcp-server/package.json"))["version"],
+        "llms-full names v0.1.1": "@pacta/mcp-server v0.1.1" in read("docs/llms-full.txt"),
+    }
+    check("Codex F1: all 20 RPC-pinned records are classification rpc_observed with documentation linked but not compared (no 'publishes' claim, no documented delays); their pages and /protocols/ rows show only the neutral 'RPC-observed baseline' badge; rpc_observed defined in llms.txt + llms-full.txt; mcp.json packageVersion 0.1.1; llms-full names v0.1.1",
+          all(f1_ok.values()), str([k for k, v in f1_ok.items() if not v]))
+    bare = []
+    for dp, _dn, fns in os.walk(ROOT):
+        if os.sep + ".git" in dp:
+            continue
+        for fn in fns:
+            if fn.endswith((".py", ".md", ".txt", ".html", ".mjs", ".js", ".ts")):
+                t = read(os.path.relpath(os.path.join(dp, fn), ROOT))
+                for m in re.finditer(r"urlopen\(\s*[\"'](https://(?:pacta-x402\.pacta\.workers\.dev|pacta\.wtf)[^\"']*)", t):
+                    bare.append(f"{fn}: {m.group(1)[:60]}")
+    check("no bare Python urlopen('https://pacta-x402...' / 'https://pacta.wtf...'): every Python call to Pacta hosts goes through Request(..., headers={'User-Agent': 'pacta-preflight/1.0'}) (bare Python-urllib gets Cloudflare 403 / 1010)",
+          not bare, str(bare[:4]))
+
     robots = read("docs/robots.txt")
-    bots = ["GPTBot", "OAI-SearchBot", "ClaudeBot", "PerplexityBot", "Googlebot", "*"]
-    robots_ok = all(re.search(rf"^User-agent: {re.escape(b)}\nAllow: /$", robots, re.M) for b in bots) \
-        and not re.search(r"^Disallow:\s*\S", robots, re.M) and f"Sitemap: {BS.BASE_URL}/sitemap.xml" in robots
-    check("robots.txt welcomes GPTBot, OAI-SearchBot, ClaudeBot, PerplexityBot, Googlebot and * (no Disallow) and points at the sitemap", robots_ok)
+    robots_ok = robots == "User-agent: *\nAllow: /\n\nSitemap: https://pacta.wtf/sitemap.xml\n" == BS.ROBOTS_TXT \
+        and "Google-Extended" not in robots and "Disallow" not in robots
+    check("robots.txt is exactly 'User-agent: *' / 'Allow: /' / sitemap (RFC 9309 admits every crawler; no bot-name stanzas, so no Google-Extended "
+          "opt-out matcher can misfire on Gemini url_context; no Disallow)", robots_ok, repr(robots[:120]))
+
+    # P0 task-0efd2038252a: unrestricted indexing / snippet meta on every generated page; /llms/ HTML mirror of llms.txt
+    meta_ok_ = f'<meta name="robots" content="{BS.ROBOTS_META}">'
+    gen_pages = sorted(r for r in pages if not r.startswith("demos" + os.sep))
+    meta_bad = [r for r in gen_pages if len(re.findall(r'<meta name="robots"', pages[r])) != 1
+                or (f'<meta name="robots" content="{BS.ROBOTS_META_404}">' if r == "404.html" else meta_ok_) not in pages[r][:pages[r].index("</head>")]]
+    llms_t = read("docs/llms.txt")
+    lm = pages.get(os.path.join("llms", "index.html"), "")
+    llms_ok = {
+        "deterministic": lm == BS.llms_html(idx, llms_t),
+        "exact llms.txt text": f'<pre class="llms" data-llms-mirror>{html.escape(llms_t)}</pre>' in lm,
+        "canonical + text/plain alternate": f'<link rel="canonical" href="{BS.BASE_URL}/llms/">' in lm
+            and f'<link rel="alternate" type="text/plain" href="{BS.BASE_URL}/llms.txt" title="llms.txt (plain text)">' in lm,
+        "links llms.txt + llms-full.txt + b.js": 'href="../llms.txt"' in lm and 'href="../llms-full.txt"' in lm and 'src="../b.js"' in lm,
+        "in sitemap": f"<loc>{BS.BASE_URL}/llms/</loc>" in read("docs/sitemap.xml"),
+        "linked from the home head + footer": 'href="llms/" title="llms.txt (HTML mirror)"' in pages["index.html"] and '<a href="llms/">llms (HTML)</a>' in pages["index.html"],
+        "semantic main / article / pre": re.search(r'<main id="main"[^>]*>.*<article class="memo">.*<pre class="llms"', lm, re.S) is not None,
+    }
+    check(f"robots meta '{BS.ROBOTS_META}' exactly once in the head of all {len(gen_pages)} generated pages (404.html: noindex variant); /llms/ is an HTML mirror of llms.txt (exact escaped text, canonical, text/plain alternate, in the sitemap, linked from head + footer)",
+          not meta_bad and len(gen_pages) >= 66 and all(llms_ok.values()), f"meta bad {meta_bad[:4]}; llms {[k for k, v in llms_ok.items() if not v]}")
 
     glama = json.loads(read("glama.json"))
     smith = read("smithery.yaml")
@@ -810,7 +863,7 @@ def main():
     nf_tw = nf_raw.find(b">", nf_raw.find(b'name="twitter:image"')) + 1
     nf_ok = {
         "head budget": bool(nf) and 0 <= nf_b < 2500 and 0 < nf_tw - nf_h <= 1200 and "<style" not in nf and "data:image/" not in nf,
-        "noindex + data-nf": '<meta name="robots" content="noindex">' in nf[:nf_b] and re.search(r'<main id="main"[^>]* data-nf>', nf) is not None,
+        "noindex + data-nf": f'<meta name="robots" content="{BS.ROBOTS_META_404}">' in nf[:nf_b] and re.search(r'<main id="main"[^>]* data-nf>', nf) is not None,
         "root-relative navigation": all(f'href="{h}"' in nf for h in ("/protocols/", "/#preflight", "/request/", "/styles.css", "/llms.txt")) and 'src="/b.js"' in nf
                                     and not re.search(r'(?:href|src)="(?!/|https://|#)', nf),
         "remote MCP URL + copy": f'data-copy="{MCP_}"' in nf and f"claude mcp add --transport http pacta {MCP_}" in nf,

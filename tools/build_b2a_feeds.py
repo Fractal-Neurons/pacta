@@ -202,7 +202,7 @@ def llms_full(idx, radar, prop, onb, pinned=None):
          "1. Take the record's target, call signature and arguments, block number and block hash.",
          "2. Run the listed `cast call … --block N` (or eth_call with EIP-1898 {blockHash, requireCanonical: true}) on any archive node.",
          "3. Run `cast block N --field hash` and compare with the recorded block hash.", "",
-         "## MCP server", f"- Name: {MCP_NAME} · package {MCP_PACKAGE} · transport stdio.", f"- Status: {MCP_STATUS}",
+         "## MCP server", f"- Name: {MCP_NAME} · package {MCP_PACKAGE} v{MCP_VERSION} · transport stdio.", f"- Status: {MCP_STATUS}",
          f"- Remote MCP (primary, zero install, Streamable HTTP): {MCP_REMOTE_URL} · Claude Code: `claude mcp add --transport http pacta {MCP_REMOTE_URL}` · "
          f"MCP client config: {{\"mcpServers\": {{\"pacta\": {{\"url\": \"{MCP_REMOTE_URL}\"}}}}}} · remote tools: {', '.join(REMOTE_TOOLS)}.",
          f"- Local stdio server (from a clone; npm publication pending): `{STDIO_FROM_SOURCE}`. OpenAPI 3.1: {OPENAPI_URL}.",
@@ -244,7 +244,9 @@ def llms_full(idx, radar, prop, onb, pinned=None):
                  f"({e['block_hash']}) · target {e['target_contract']} · {e['onchain_observed']}")
     if pinned:
         L += ["", "## RPC-pinned records (from /api/v1/rpc-pinned.json; NOT EAS-attested)",
-              "No sprint number, summary document or Base EAS UID: block-pinned public JSON-RPC reads, independently re-read at the same block."]
+              "No sprint number, summary document or Base EAS UID: block-pinned public JSON-RPC reads, independently re-read at the same block.",
+              "Classification rpc_observed: on-chain control plane pinned at an archive block height over JSON-RPC; documentation parameter "
+              "comparison unassessed (documentation is linked for reference only)."]
         for e in sorted(pinned["entries"], key=lambda e: e["id"]):
             L.append(f"- {e['id']} [{e['classification']}] {e['protocol']} — {e['surface']} · {e['chain_label']} block {e['block_number']} "
                      f"({e['block_hash']}) · target {e['target_contract']} · {e['onchain_observed']} · page {BASE}/protocols/{e['slug']}/")
@@ -314,7 +316,7 @@ def agent_card(prop, onb, idx):
 
 def mcp_manifest(idx, onb):
     return {
-        "name": MCP_NAME, "title": "Pacta", "package": MCP_PACKAGE,
+        "name": MCP_NAME, "title": "Pacta", "package": MCP_PACKAGE, "packageVersion": MCP_VERSION,
         "description": "Block-pinned DeFi control-plane commitments, Base EAS attestations and governance proposals for agents.",
         "version": max(idx["generated_at"], onb["generated_at"])[:10].replace("-", "."), "homepage": f"{BASE}/", "documentation": f"{BASE}/llms-full.txt",
         "status": MCP_STATUS,

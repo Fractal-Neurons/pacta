@@ -413,7 +413,7 @@ async function beaconScenario() {
     const brief = run(pageFor("https://pacta.wtf/briefs/etherfi-op-0x244e/"), input.app, { path: "/briefs/etherfi-op-0x244e/", beacon: B }).events()[0];
     res.b_c2_slug_only_from_canonical = same(mismatch, { v: 1, e: "page_load", p: "/other" }) && same(brief, { v: 1, e: "page_load", p: "/briefs/etherfi-op-0x244e/" })
       && same(run(input.protocol, input.app, { path: "/protocols/" + input.protocolSlug + "/index.html", beacon: B }).events()[0].p, "/protocols/" + input.protocolSlug + "/");
-    const views = [["/request", "/request/"], ["/protocols", "/protocols/"], ["/briefs/etherfi-op-0x244e/", "/other"],
+    const views = [["/request", "/request/"], ["/protocols", "/protocols/"], ["/llms", "/llms/"], ["/llms/index.html", "/llms/"], ["/llms/x", "/other"], ["/briefs/etherfi-op-0x244e/", "/other"],
       ["/protocols/aave-v3-gho/", "/other"], ["/demos/swapio-x402/", "/other"], ["/reset/alice%40example.org/x", "/other"]];   // index page: canonical is "/"
     res.b_c1_page_paths = views.every(([path, want]) => run(input.index, input.app, { path, beacon: B }).events()[0].p === want);
     const mcp = p.document.querySelectorAll("button[data-copy]").find(b => /\/mcp$/.test(b.getAttribute("data-copy")));

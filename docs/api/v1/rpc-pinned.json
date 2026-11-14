@@ -268,7 +268,8 @@
       "base_eas_uid": null,
       "block_number": 26414499,
       "block_hash": "0xb83fee0a1d10d5fb8510d87ee9e33b180acac3208a7d00162a6a6f97789c0978",
-      "classification": "aligned_baseline",
+      "classification": "rpc_observed",
+      "documentation_comparison": "not_assessed",
       "surface": "AcrossHubPool · 3-of-5 Safe Control Plane",
       "target_contract": "0xc186fA914353c44b2E33eBE05f21846F1048bEda",
       "target_label": "AcrossHubPool",
@@ -300,11 +301,11 @@
         }
       ],
       "onchain_observed": "AcrossHubPool (0xc186fA914353c44b2E33eBE05f21846F1048bEda) verified on Ethereum Mainnet at canonical block #26,414,499 (19,572 bytes runtime code). EIP-1967 implementation and admin storage slots are both zero (non-EIP-1967 contract). Direct owner() returns 0xB524735356985D2f267FA010D681f061DfF03715, verified via getThreshold() and getOwners() as a 3-of-5 Safe multisig.",
-      "documented_reference": "Official Across Protocol (HubPool) deployment and governance documentation (https://docs.across.to/reference/contract-addresses/mainnet-chain-id-1; governance: https://forum.across.to/) publishes AcrossHubPool (0xc186fA914353c44b2E33eBE05f21846F1048bEda) on Ethereum.",
       "observed_delay_seconds": null,
       "documented_delay_seconds": null,
       "docs_url": "https://docs.across.to/reference/contract-addresses/mainnet-chain-id-1",
-      "governance_url": "https://forum.across.to/"
+      "governance_url": "https://forum.across.to/",
+      "documented_reference": "Across Protocol (HubPool) documentation is linked for reference (https://docs.across.to/reference/contract-addresses/mainnet-chain-id-1; governance: https://forum.across.to/). This RPC-pinned record does not compare documentation parameters with the on-chain state."
     },
     {
       "id": "aerodrome-finance-base-control-plane",
@@ -321,7 +322,8 @@
       "base_eas_uid": null,
       "block_number": 57421449,
       "block_hash": "0x36147f7f0b6d2a0a94975e98b14c979034930dbe6f9905a5b0bcb2ab45ba35b0",
-      "classification": "aligned_baseline",
+      "classification": "rpc_observed",
+      "documentation_comparison": "not_assessed",
       "surface": "AerodromePoolFactory & AerodromeVoter Control Plane",
       "target_contract": "0x420DD381b31aEf6683db6B902084cB0FFECe40Da",
       "target_label": "AerodromePoolFactory",
@@ -344,11 +346,11 @@
       "repro_calldata": null,
       "extra_calls": [],
       "onchain_observed": "AerodromePoolFactory (0x420DD381b31aEf6683db6B902084cB0FFECe40Da) verified on Base Mainnet at canonical block #57,421,449 (3,516 bytes runtime code). EIP-1967 implementation and admin storage slots are both zero (non-EIP-1967 contract). Paired protocol control contract AerodromeVoter (0x16613524e02ad97eDfeF371bC883F2F5d6C480A5, 16,912 bytes) verified live at the same block.",
-      "documented_reference": "Official Aerodrome Finance (Base) deployment and governance documentation (https://aerodrome.finance/security; governance: https://aerodrome.finance/vote) publishes AerodromePoolFactory (0x420DD381b31aEf6683db6B902084cB0FFECe40Da) on Base.",
       "observed_delay_seconds": null,
       "documented_delay_seconds": null,
       "docs_url": "https://aerodrome.finance/security",
-      "governance_url": "https://aerodrome.finance/vote"
+      "governance_url": "https://aerodrome.finance/vote",
+      "documented_reference": "Aerodrome Finance (Base) documentation is linked for reference (https://aerodrome.finance/security; governance: https://aerodrome.finance/vote). This RPC-pinned record does not compare documentation parameters with the on-chain state."
     },
     {
       "id": "balancer-v2-vault-timelock-control-plane",
@@ -365,7 +367,8 @@
       "base_eas_uid": null,
       "block_number": 26414499,
       "block_hash": "0xb83fee0a1d10d5fb8510d87ee9e33b180acac3208a7d00162a6a6f97789c0978",
-      "classification": "aligned_baseline",
+      "classification": "rpc_observed",
+      "documentation_comparison": "not_assessed",
       "surface": "BalancerV2Vault · Non-Proxy Bytecode & Role Architecture",
       "target_contract": "0xBA12222222228d8Ba445958a75a0704d566BF2C8",
       "target_label": "BalancerV2Vault",
@@ -388,11 +391,11 @@
       "repro_calldata": "0xaaabadc5",
       "extra_calls": [],
       "onchain_observed": "BalancerV2Vault (0xBA12222222228d8Ba445958a75a0704d566BF2C8) verified on Ethereum Mainnet at canonical block #26,414,499 (24,512 bytes runtime code). EIP-1967 implementation and admin storage slots are both zero (non-EIP-1967 contract). Direct getAuthorizer() returns governance controller contract 0x6048A8c631Fb7e77EcA533Cf9C29784e482391e7.",
-      "documented_reference": "Official Balancer V2 Vault & TimelockAuthorizer deployment and governance documentation (https://docs.balancer.fi/reference/contracts/deployment-addresses/mainnet.html; governance: https://forum.balancer.fi/) publishes BalancerV2Vault (0xBA12222222228d8Ba445958a75a0704d566BF2C8) on Ethereum.",
       "observed_delay_seconds": null,
       "documented_delay_seconds": null,
-      "docs_url": "https://docs.balancer.fi/reference/contracts/deployment-addresses/mainnet.html",
-      "governance_url": "https://forum.balancer.fi/"
+      "docs_url": "https://docs.balancer.fi/",
+      "governance_url": "https://forum.balancer.fi/",
+      "documented_reference": "Balancer V2 Vault & TimelockAuthorizer documentation is linked for reference (https://docs.balancer.fi/; governance: https://forum.balancer.fi/). This RPC-pinned record does not compare documentation parameters with the on-chain state."
     },
     {
       "id": "bedrock-unieth-control-plane",
@@ -409,7 +412,8 @@
       "base_eas_uid": null,
       "block_number": 26414499,
       "block_hash": "0xb83fee0a1d10d5fb8510d87ee9e33b180acac3208a7d00162a6a6f97789c0978",
-      "classification": "aligned_baseline",
+      "classification": "rpc_observed",
+      "documentation_comparison": "not_assessed",
       "surface": "RockXStakingProxy · 3-of-5 Safe Control Plane",
       "target_contract": "0xF1376bceF0f78459C0Ed0ba5ddce976F1ddF51F4",
       "target_label": "RockXStakingProxy",
@@ -441,11 +445,11 @@
         }
       ],
       "onchain_observed": "RockXStakingProxy (0xF1376bceF0f78459C0Ed0ba5ddce976F1ddF51F4) verified on Ethereum Mainnet at canonical block #26,414,499 (2,118 bytes runtime code). EIP-1967 implementation slot resolves to 0x8a94866dF557Bb7FCe88EfF9917237286098e590, EIP-1967 admin slot = ProxyAdmin (0xa5F2B6AB5B38b88Ba221741b3A189999b4c889C6). Direct owner() returns 0xAeE017052DF6Ac002647229D58B786E380B9721A, verified via getThreshold() and getOwners() as a 3-of-5 Safe multisig.",
-      "documented_reference": "Official Bedrock (uniETH) deployment and governance documentation (https://docs.bedrock.technology/multi-asset-liquid-staking/unieth/smart-contracts; governance: https://docs.bedrock.technology/) publishes RockXStakingProxy (0xF1376bceF0f78459C0Ed0ba5ddce976F1ddF51F4) on Ethereum.",
       "observed_delay_seconds": null,
       "documented_delay_seconds": null,
-      "docs_url": "https://docs.bedrock.technology/multi-asset-liquid-staking/unieth/smart-contracts",
-      "governance_url": "https://docs.bedrock.technology/"
+      "docs_url": "https://docs.bedrock.technology/",
+      "governance_url": "https://docs.bedrock.technology/",
+      "documented_reference": "Bedrock (uniETH) documentation is linked for reference (https://docs.bedrock.technology/; governance: https://docs.bedrock.technology/). This RPC-pinned record does not compare documentation parameters with the on-chain state."
     },
     {
       "id": "beefy-finance-base-control-plane",
@@ -462,7 +466,8 @@
       "base_eas_uid": null,
       "block_number": 57421449,
       "block_hash": "0x36147f7f0b6d2a0a94975e98b14c979034930dbe6f9905a5b0bcb2ab45ba35b0",
-      "classification": "parameter_delta",
+      "classification": "rpc_observed",
+      "documentation_comparison": "not_assessed",
       "surface": "BeefyFeeConfig_Base · 3-of-6 Safe Control Plane",
       "target_contract": "0xfc69704cC3cAac545cC7577009Ea4AA04F1a61Eb",
       "target_label": "BeefyFeeConfig_Base",
@@ -498,11 +503,11 @@
         }
       ],
       "onchain_observed": "BeefyFeeConfig_Base (0xfc69704cC3cAac545cC7577009Ea4AA04F1a61Eb) verified on Base Mainnet at canonical block #57,421,449 (2,112 bytes runtime code). EIP-1967 implementation slot resolves to 0xAb35d11199216c7F7368080Cf41beD8f3AbBc4E4, EIP-1967 admin slot = ProxyAdmin (0x2b0C9702A4724f2BFe7922DB92c4082098533c62). Direct owner() returns 0x6FfaCA7C3B38Ec2d631D86e15f328ee6eF6C6226, verified via getThreshold() and getOwners() as a 3-of-6 Safe multisig. Companion timelock BeefyVaultOwnerTimelock_Base (0x09D19184F46A32213DF06b981122e06882B61309) reports minimum delay 0s (0s).",
-      "documented_reference": "Official Beefy Finance (Base) deployment and governance documentation (https://docs.beefy.finance/developer-documentation/contract-addresses; governance: https://vote.beefy.finance/) publishes BeefyFeeConfig_Base (0xfc69704cC3cAac545cC7577009Ea4AA04F1a61Eb) on Base.",
       "observed_delay_seconds": 0,
       "documented_delay_seconds": null,
-      "docs_url": "https://docs.beefy.finance/developer-documentation/contract-addresses",
-      "governance_url": "https://vote.beefy.finance/"
+      "docs_url": "https://docs.beefy.finance/safety/contracts-and-timelocks",
+      "governance_url": "https://vote.beefy.finance/",
+      "documented_reference": "Beefy Finance (Base) documentation is linked for reference (https://docs.beefy.finance/safety/contracts-and-timelocks; governance: https://vote.beefy.finance/). This RPC-pinned record does not compare documentation parameters with the on-chain state."
     },
     {
       "id": "centrifuge-liquidity-pools-base-control-plane",
@@ -519,7 +524,8 @@
       "base_eas_uid": null,
       "block_number": 57421449,
       "block_hash": "0x36147f7f0b6d2a0a94975e98b14c979034930dbe6f9905a5b0bcb2ab45ba35b0",
-      "classification": "aligned_baseline",
+      "classification": "rpc_observed",
+      "documentation_comparison": "not_assessed",
       "surface": "CentrifugeRoot_Base · Non-Proxy Bytecode & Role Architecture",
       "target_contract": "0x7Ed48C31f2fdC40d37407cBaBf0870B2b688368f",
       "target_label": "CentrifugeRoot_Base",
@@ -542,11 +548,11 @@
       "repro_calldata": null,
       "extra_calls": [],
       "onchain_observed": "CentrifugeRoot_Base (0x7Ed48C31f2fdC40d37407cBaBf0870B2b688368f) verified on Base Mainnet at canonical block #57,421,449 (2,618 bytes runtime code). EIP-1967 implementation and admin storage slots are both zero (non-EIP-1967 contract). No single-key Ownable or ProxyAdmin getter exposed on the primary entry contract; permissions follow immutable or role-scoped module architecture.",
-      "documented_reference": "Official Centrifuge V3 Root (Base) deployment and governance documentation (https://docs.centrifuge.io/developer/deployments/; governance: https://gov.centrifuge.io/) publishes CentrifugeRoot_Base (0x7Ed48C31f2fdC40d37407cBaBf0870B2b688368f) on Base.",
       "observed_delay_seconds": null,
       "documented_delay_seconds": null,
-      "docs_url": "https://docs.centrifuge.io/developer/deployments/",
-      "governance_url": "https://gov.centrifuge.io/"
+      "docs_url": "https://github.com/centrifuge/liquidity-pools",
+      "governance_url": "https://gov.centrifuge.io/",
+      "documented_reference": "Centrifuge V3 Root (Base) documentation is linked for reference (https://github.com/centrifuge/liquidity-pools; governance: https://gov.centrifuge.io/). This RPC-pinned record does not compare documentation parameters with the on-chain state."
     },
     {
       "id": "euler-v2-evk-control-plane",
@@ -563,7 +569,8 @@
       "base_eas_uid": null,
       "block_number": 26414499,
       "block_hash": "0xb83fee0a1d10d5fb8510d87ee9e33b180acac3208a7d00162a6a6f97789c0978",
-      "classification": "aligned_baseline",
+      "classification": "rpc_observed",
+      "documentation_comparison": "not_assessed",
       "surface": "EulerEVaultFactory & EthereumVaultConnector Control Plane",
       "target_contract": "0x29a56a1b8214D9Cf7c5561811750D5cBDb45CC8e",
       "target_label": "EulerEVaultFactory",
@@ -586,11 +593,11 @@
       "repro_calldata": null,
       "extra_calls": [],
       "onchain_observed": "EulerEVaultFactory (0x29a56a1b8214D9Cf7c5561811750D5cBDb45CC8e) verified on Ethereum Mainnet at canonical block #26,414,499 (5,631 bytes runtime code). EIP-1967 implementation and admin storage slots are both zero (non-EIP-1967 contract). Paired protocol control contract EthereumVaultConnector (0x0C9a3dd6b8F28529d72d7f9cE918D493519EE383, 21,989 bytes) verified live at the same block.",
-      "documented_reference": "Official Euler V2 (EVK & EVC) deployment and governance documentation (https://docs.euler.finance/; governance: https://forum.euler.finance/) publishes EulerEVaultFactory (0x29a56a1b8214D9Cf7c5561811750D5cBDb45CC8e) on Ethereum.",
       "observed_delay_seconds": null,
       "documented_delay_seconds": null,
       "docs_url": "https://docs.euler.finance/",
-      "governance_url": "https://forum.euler.finance/"
+      "governance_url": "https://forum.euler.finance/",
+      "documented_reference": "Euler V2 (EVK & EVC) documentation is linked for reference (https://docs.euler.finance/; governance: https://forum.euler.finance/). This RPC-pinned record does not compare documentation parameters with the on-chain state."
     },
     {
       "id": "extra-finance-base-control-plane",
@@ -607,7 +614,8 @@
       "base_eas_uid": null,
       "block_number": 57421449,
       "block_hash": "0x36147f7f0b6d2a0a94975e98b14c979034930dbe6f9905a5b0bcb2ab45ba35b0",
-      "classification": "aligned_baseline",
+      "classification": "rpc_observed",
+      "documentation_comparison": "not_assessed",
       "surface": "ExtraLendingPool_Base · Non-Proxy Bytecode & Role Architecture",
       "target_contract": "0xBB505c54D71E9e599cB8435b4F0cEEc05fC71cbD",
       "target_label": "ExtraLendingPool_Base",
@@ -630,11 +638,11 @@
       "repro_calldata": "0x8da5cb5b",
       "extra_calls": [],
       "onchain_observed": "ExtraLendingPool_Base (0xBB505c54D71E9e599cB8435b4F0cEEc05fC71cbD) verified on Base Mainnet at canonical block #57,421,449 (20,198 bytes runtime code). EIP-1967 implementation and admin storage slots are both zero (non-EIP-1967 contract). Direct owner() returns governance controller contract 0x5a70429e0e5c7BE9E5F83B497C18F5AC82345113.",
-      "documented_reference": "Official Extra Finance (Base) deployment and governance documentation (https://docs.extrafi.io/extra_finance/contracts/contract-addresses; governance: https://snapshot.org/#/extrafi.eth) publishes ExtraLendingPool_Base (0xBB505c54D71E9e599cB8435b4F0cEEc05fC71cbD) on Base.",
       "observed_delay_seconds": null,
       "documented_delay_seconds": null,
-      "docs_url": "https://docs.extrafi.io/extra_finance/contracts/contract-addresses",
-      "governance_url": "https://snapshot.org/#/extrafi.eth"
+      "docs_url": "https://docs.extrafi.io/",
+      "governance_url": "https://snapshot.org/#/extrafi.eth",
+      "documented_reference": "Extra Finance (Base) documentation is linked for reference (https://docs.extrafi.io/; governance: https://snapshot.org/#/extrafi.eth). This RPC-pinned record does not compare documentation parameters with the on-chain state."
     },
     {
       "id": "frax-ether-sfrxeth-control-plane",
@@ -651,7 +659,8 @@
       "base_eas_uid": null,
       "block_number": 26414499,
       "block_hash": "0xb83fee0a1d10d5fb8510d87ee9e33b180acac3208a7d00162a6a6f97789c0978",
-      "classification": "aligned_baseline",
+      "classification": "rpc_observed",
+      "documentation_comparison": "not_assessed",
       "surface": "frxETHMinter · 4-of-7 Safe & 2d Governance Timelock",
       "target_contract": "0xbAFA44EFE7901E04E39Dad13167D089C559c1138",
       "target_label": "frxETHMinter",
@@ -687,11 +696,11 @@
         }
       ],
       "onchain_observed": "frxETHMinter (0xbAFA44EFE7901E04E39Dad13167D089C559c1138) verified on Ethereum Mainnet at canonical block #26,414,499 (12,312 bytes runtime code). EIP-1967 implementation and admin storage slots are both zero (non-EIP-1967 contract). Direct owner() returns 0x8306300ffd616049FD7e4b0354a64Da835c1A81C, verified via getThreshold() and getOwners() as a 4-of-7 Safe multisig. Companion timelock FraxGovernanceTimelock (0x8412ebf45bAC1B340BbE8F318b928C466c4E39CA) reports minimum delay 172,800s (2d).",
-      "documented_reference": "Official Frax Ether (frxETH / sfrxETH) deployment and governance documentation (https://docs.frax.finance/smart-contracts/frxeth-and-sfrxeth; governance: https://gov.frax.finance/) publishes frxETHMinter (0xbAFA44EFE7901E04E39Dad13167D089C559c1138) on Ethereum.",
       "observed_delay_seconds": 172800,
-      "documented_delay_seconds": 172800,
-      "docs_url": "https://docs.frax.finance/smart-contracts/frxeth-and-sfrxeth",
-      "governance_url": "https://gov.frax.finance/"
+      "documented_delay_seconds": null,
+      "docs_url": "https://docs.frax.com/",
+      "governance_url": "https://gov.frax.finance/",
+      "documented_reference": "Frax Ether (frxETH / sfrxETH) documentation is linked for reference (https://docs.frax.com/; governance: https://gov.frax.finance/). This RPC-pinned record does not compare documentation parameters with the on-chain state."
     },
     {
       "id": "moonwell-lending-base-control-plane",
@@ -708,7 +717,8 @@
       "base_eas_uid": null,
       "block_number": 57421449,
       "block_hash": "0x36147f7f0b6d2a0a94975e98b14c979034930dbe6f9905a5b0bcb2ab45ba35b0",
-      "classification": "aligned_baseline",
+      "classification": "rpc_observed",
+      "documentation_comparison": "not_assessed",
       "surface": "MoonwellUnitroller_Base · Admin Contract Owned by a 3-of-5 Safe",
       "target_contract": "0xfBb21d0380beE3312B33c4353c8936a0F13EF26C",
       "target_label": "MoonwellUnitroller_Base",
@@ -744,11 +754,11 @@
         }
       ],
       "onchain_observed": "MoonwellUnitroller_Base (0xfBb21d0380beE3312B33c4353c8936a0F13EF26C) verified on Base Mainnet at canonical block #57,421,449 (1,412 bytes runtime code). EIP-1967 implementation and admin storage slots are both zero (non-EIP-1967 contract). Direct admin() returns contract 0x8b621804a7637b781e2BbD58e256a591F2dF7d51 (8,658 bytes runtime code; not a Safe: getThreshold() reverts). That contract's owner() is 0x446342AF4F3bCD374276891C6bb3411bf2F8779E, verified via getThreshold() and getOwners() as a 3-of-5 Safe multisig.",
-      "documented_reference": "Official Moonwell (Base) deployment and governance documentation (https://docs.moonwell.fi/moonwell/developers/contracts; governance: https://forum.moonwell.fi/) publishes MoonwellUnitroller_Base (0xfBb21d0380beE3312B33c4353c8936a0F13EF26C) on Base.",
       "observed_delay_seconds": null,
       "documented_delay_seconds": null,
-      "docs_url": "https://docs.moonwell.fi/moonwell/developers/contracts",
-      "governance_url": "https://forum.moonwell.fi/"
+      "docs_url": "https://docs.moonwell.fi/",
+      "governance_url": "https://forum.moonwell.fi/",
+      "documented_reference": "Moonwell (Base) documentation is linked for reference (https://docs.moonwell.fi/; governance: https://forum.moonwell.fi/). This RPC-pinned record does not compare documentation parameters with the on-chain state."
     },
     {
       "id": "origin-superoeth-base-control-plane",
@@ -765,7 +775,8 @@
       "base_eas_uid": null,
       "block_number": 57421449,
       "block_hash": "0x36147f7f0b6d2a0a94975e98b14c979034930dbe6f9905a5b0bcb2ab45ba35b0",
-      "classification": "aligned_baseline",
+      "classification": "rpc_observed",
+      "documentation_comparison": "not_assessed",
       "surface": "SuperOETHb_VaultProxy · 2d Timelock Admin Path",
       "target_contract": "0xDBFeFD2e8460a6Ee4955A68582F85708BAEA60A3",
       "target_label": "SuperOETHb_VaultProxy",
@@ -793,11 +804,11 @@
         }
       ],
       "onchain_observed": "SuperOETHb_VaultProxy (0xDBFeFD2e8460a6Ee4955A68582F85708BAEA60A3) verified on Base Mainnet at canonical block #57,421,449 (2,402 bytes runtime code). EIP-1967 implementation slot resolves to 0xCcd483cE093682D7D9a41e645EEb710AFaa88249, EIP-1967 admin slot = zero (UUPS / internal upgrade authority). Direct admin() returns timelock controller 0xf817cb3092179083c48c014688D98B72fB61464f with minimum delay 172,800s (2d).",
-      "documented_reference": "Official Origin Protocol (SuperOETHb Base) deployment and governance documentation (https://docs.originprotocol.com/contracts/base; governance: https://ousd-governance.discourse.group/) publishes SuperOETHb_VaultProxy (0xDBFeFD2e8460a6Ee4955A68582F85708BAEA60A3) on Base.",
       "observed_delay_seconds": 172800,
-      "documented_delay_seconds": 172800,
-      "docs_url": "https://docs.originprotocol.com/contracts/base",
-      "governance_url": "https://ousd-governance.discourse.group/"
+      "documented_delay_seconds": null,
+      "docs_url": "https://docs.originprotocol.com/",
+      "governance_url": "https://snapshot.org/#/ousdgov.eth",
+      "documented_reference": "Origin Protocol (SuperOETHb Base) documentation is linked for reference (https://docs.originprotocol.com/; governance: https://snapshot.org/#/ousdgov.eth). This RPC-pinned record does not compare documentation parameters with the on-chain state."
     },
     {
       "id": "pendle-finance-v2-control-plane",
@@ -814,7 +825,8 @@
       "base_eas_uid": null,
       "block_number": 26414499,
       "block_hash": "0xb83fee0a1d10d5fb8510d87ee9e33b180acac3208a7d00162a6a6f97789c0978",
-      "classification": "aligned_baseline",
+      "classification": "rpc_observed",
+      "documentation_comparison": "not_assessed",
       "surface": "VotingEscrowPendleMainchain · 3-of-5 Safe Control Plane",
       "target_contract": "0x4f30A9D41B80ecC5B94306AB4364951AE3170210",
       "target_label": "VotingEscrowPendleMainchain",
@@ -846,11 +858,11 @@
         }
       ],
       "onchain_observed": "VotingEscrowPendleMainchain (0x4f30A9D41B80ecC5B94306AB4364951AE3170210) verified on Ethereum Mainnet at canonical block #26,414,499 (13,144 bytes runtime code). EIP-1967 implementation and admin storage slots are both zero (non-EIP-1967 contract). Direct owner() returns 0x8119EC16F0573B7dAc7C0CB94EB504FB32456ee1, verified via getThreshold() and getOwners() as a 3-of-5 Safe multisig.",
-      "documented_reference": "Official Pendle Finance V2 deployment and governance documentation (https://docs.pendle.finance/Developers/Deployments/Ethereum; governance: https://app.pendle.finance/vependle/overview) publishes VotingEscrowPendleMainchain (0x4f30A9D41B80ecC5B94306AB4364951AE3170210) on Ethereum.",
       "observed_delay_seconds": null,
       "documented_delay_seconds": null,
-      "docs_url": "https://docs.pendle.finance/Developers/Deployments/Ethereum",
-      "governance_url": "https://app.pendle.finance/vependle/overview"
+      "docs_url": "https://docs.pendle.finance/",
+      "governance_url": "https://app.pendle.finance/vependle/overview",
+      "documented_reference": "Pendle Finance V2 documentation is linked for reference (https://docs.pendle.finance/; governance: https://app.pendle.finance/vependle/overview). This RPC-pinned record does not compare documentation parameters with the on-chain state."
     },
     {
       "id": "puffer-finance-pufeth-control-plane",
@@ -867,7 +879,8 @@
       "base_eas_uid": null,
       "block_number": 26414499,
       "block_hash": "0xb83fee0a1d10d5fb8510d87ee9e33b180acac3208a7d00162a6a6f97789c0978",
-      "classification": "aligned_baseline",
+      "classification": "rpc_observed",
+      "documentation_comparison": "not_assessed",
       "surface": "PufferVaultV2 (pufETH) · EIP-1967 Proxy & Upgrade Authority",
       "target_contract": "0xD9A442856C234a39a81a089C06451EBAa4306a72",
       "target_label": "PufferVaultV2 (pufETH)",
@@ -890,11 +903,11 @@
       "repro_calldata": "0xbf7e214f",
       "extra_calls": [],
       "onchain_observed": "PufferVaultV2 (pufETH) (0xD9A442856C234a39a81a089C06451EBAa4306a72) verified on Ethereum Mainnet at canonical block #26,414,499 (163 bytes runtime code). EIP-1967 implementation slot resolves to 0x3b2fdFdEFE919dBcCE0bc5ac426097d5523B8AFA, EIP-1967 admin slot = zero (UUPS / internal upgrade authority). Direct authority() returns governance controller contract 0x8c1686069474410E6243425f4a10177a94EBEE11.",
-      "documented_reference": "Official Puffer Finance (pufETH) deployment and governance documentation (https://docs.puffer.fi/protocol/deployments/; governance: https://forum.puffer.fi/) publishes PufferVaultV2 (pufETH) (0xD9A442856C234a39a81a089C06451EBAa4306a72) on Ethereum.",
       "observed_delay_seconds": null,
       "documented_delay_seconds": null,
-      "docs_url": "https://docs.puffer.fi/protocol/deployments/",
-      "governance_url": "https://forum.puffer.fi/"
+      "docs_url": "https://docs.puffer.fi/",
+      "governance_url": "https://snapshot.org/#/pufferdao.eth",
+      "documented_reference": "Puffer Finance (pufETH) documentation is linked for reference (https://docs.puffer.fi/; governance: https://snapshot.org/#/pufferdao.eth). This RPC-pinned record does not compare documentation parameters with the on-chain state."
     },
     {
       "id": "reserve-protocol-rtoken-control-plane",
@@ -911,7 +924,8 @@
       "base_eas_uid": null,
       "block_number": 26414499,
       "block_hash": "0xb83fee0a1d10d5fb8510d87ee9e33b180acac3208a7d00162a6a6f97789c0978",
-      "classification": "aligned_baseline",
+      "classification": "rpc_observed",
+      "documentation_comparison": "not_assessed",
       "surface": "ReserveRToken_eUSD · EIP-1967 Proxy & Upgrade Authority",
       "target_contract": "0xA0d69E286B938e21CBf7E51D71F6A4c8918f482F",
       "target_label": "ReserveRToken_eUSD",
@@ -934,11 +948,11 @@
       "repro_calldata": null,
       "extra_calls": [],
       "onchain_observed": "ReserveRToken_eUSD (0xA0d69E286B938e21CBf7E51D71F6A4c8918f482F) verified on Ethereum Mainnet at canonical block #26,414,499 (686 bytes runtime code). EIP-1967 implementation slot resolves to 0x258ce833CF9AD19208372763A00aA1565Dd40b3C, EIP-1967 admin slot = zero (UUPS / internal upgrade authority). No single-key Ownable or ProxyAdmin getter exposed on the primary entry contract; permissions follow immutable or role-scoped module architecture.",
-      "documented_reference": "Official Reserve Protocol (eUSD RToken) deployment and governance documentation (https://reserve.org/protocol/; governance: https://forum.reserve.org/) publishes ReserveRToken_eUSD (0xA0d69E286B938e21CBf7E51D71F6A4c8918f482F) on Ethereum.",
       "observed_delay_seconds": null,
       "documented_delay_seconds": null,
-      "docs_url": "https://reserve.org/protocol/",
-      "governance_url": "https://forum.reserve.org/"
+      "docs_url": "https://reserve.org/",
+      "governance_url": "https://forum.reserve.org/",
+      "documented_reference": "Reserve Protocol (eUSD RToken) documentation is linked for reference (https://reserve.org/; governance: https://forum.reserve.org/). This RPC-pinned record does not compare documentation parameters with the on-chain state."
     },
     {
       "id": "rocket-pool-reth-control-plane",
@@ -955,7 +969,8 @@
       "base_eas_uid": null,
       "block_number": 26414499,
       "block_hash": "0xb83fee0a1d10d5fb8510d87ee9e33b180acac3208a7d00162a6a6f97789c0978",
-      "classification": "aligned_baseline",
+      "classification": "rpc_observed",
+      "documentation_comparison": "not_assessed",
       "surface": "RocketTokenRETH & RocketStorage Control Plane",
       "target_contract": "0xae78736Cd615f374D3085123A210448E74Fc6393",
       "target_label": "RocketTokenRETH",
@@ -978,11 +993,11 @@
       "repro_calldata": null,
       "extra_calls": [],
       "onchain_observed": "RocketTokenRETH (0xae78736Cd615f374D3085123A210448E74Fc6393) verified on Ethereum Mainnet at canonical block #26,414,499 (8,800 bytes runtime code). EIP-1967 implementation and admin storage slots are both zero (non-EIP-1967 contract). Paired protocol control contract RocketStorage (0x1d8f8f00cfa6758d7bE78336684788Fb0ee0Fa46, 11,270 bytes) verified live at the same block.",
-      "documented_reference": "Official Rocket Pool (rETH) deployment and governance documentation (https://docs.rocketpool.net/overview/contracts-integrations; governance: https://dao.rocketpool.net/) publishes RocketTokenRETH (0xae78736Cd615f374D3085123A210448E74Fc6393) on Ethereum.",
       "observed_delay_seconds": null,
       "documented_delay_seconds": null,
       "docs_url": "https://docs.rocketpool.net/overview/contracts-integrations",
-      "governance_url": "https://dao.rocketpool.net/"
+      "governance_url": "https://dao.rocketpool.net/",
+      "documented_reference": "Rocket Pool (rETH) documentation is linked for reference (https://docs.rocketpool.net/overview/contracts-integrations; governance: https://dao.rocketpool.net/). This RPC-pinned record does not compare documentation parameters with the on-chain state."
     },
     {
       "id": "safe-singleton-core-control-plane",
@@ -999,7 +1014,8 @@
       "base_eas_uid": null,
       "block_number": 26414499,
       "block_hash": "0xb83fee0a1d10d5fb8510d87ee9e33b180acac3208a7d00162a6a6f97789c0978",
-      "classification": "aligned_baseline",
+      "classification": "rpc_observed",
+      "documentation_comparison": "not_assessed",
       "surface": "SafeSingleton_v1_4_1 & SafeProxyFactory_v1_4_1 Control Plane",
       "target_contract": "0x41675C099F32341bf84BFc5382aF534df5C7461a",
       "target_label": "SafeSingleton_v1_4_1",
@@ -1022,11 +1038,11 @@
       "repro_calldata": null,
       "extra_calls": [],
       "onchain_observed": "SafeSingleton_v1_4_1 (0x41675C099F32341bf84BFc5382aF534df5C7461a) verified on Ethereum Mainnet at canonical block #26,414,499 (23,579 bytes runtime code). EIP-1967 implementation and admin storage slots are both zero (non-EIP-1967 contract). Paired protocol control contract SafeProxyFactory_v1_4_1 (0x4e1DCf7AD4e460CfD30791CCC4F9c8a4f820ec67, 3,054 bytes) verified live at the same block.",
-      "documented_reference": "Official Safe Smart Account (v1.4.1 Singleton) deployment and governance documentation (https://docs.safe.global/reference-smart-account/deployments; governance: https://forum.safe.global/) publishes SafeSingleton_v1_4_1 (0x41675C099F32341bf84BFc5382aF534df5C7461a) on Ethereum.",
       "observed_delay_seconds": null,
       "documented_delay_seconds": null,
-      "docs_url": "https://docs.safe.global/reference-smart-account/deployments",
-      "governance_url": "https://forum.safe.global/"
+      "docs_url": "https://docs.safe.global/",
+      "governance_url": "https://forum.safe.global/",
+      "documented_reference": "Safe Smart Account (v1.4.1 Singleton) documentation is linked for reference (https://docs.safe.global/; governance: https://forum.safe.global/). This RPC-pinned record does not compare documentation parameters with the on-chain state."
     },
     {
       "id": "seamless-protocol-base-control-plane",
@@ -1043,7 +1059,8 @@
       "base_eas_uid": null,
       "block_number": 57421449,
       "block_hash": "0x36147f7f0b6d2a0a94975e98b14c979034930dbe6f9905a5b0bcb2ab45ba35b0",
-      "classification": "aligned_baseline",
+      "classification": "rpc_observed",
+      "documentation_comparison": "not_assessed",
       "surface": "SeamlessPoolAddressesProvider · Non-Proxy Bytecode & Role Architecture",
       "target_contract": "0x0E02EB705be325407707662C6f6d3466E939f3a0",
       "target_label": "SeamlessPoolAddressesProvider",
@@ -1066,11 +1083,11 @@
       "repro_calldata": null,
       "extra_calls": [],
       "onchain_observed": "SeamlessPoolAddressesProvider (0x0E02EB705be325407707662C6f6d3466E939f3a0) verified on Base Mainnet at canonical block #57,421,449 (9,779 bytes runtime code). EIP-1967 implementation and admin storage slots are both zero (non-EIP-1967 contract). No single-key Ownable or ProxyAdmin getter exposed on the primary entry contract; permissions follow immutable or role-scoped module architecture.",
-      "documented_reference": "Official Seamless Protocol (Base) deployment and governance documentation (https://docs.seamlessprotocol.com/technical/smart-contracts; governance: https://seamlessprotocol.discourse.group/) publishes SeamlessPoolAddressesProvider (0x0E02EB705be325407707662C6f6d3466E939f3a0) on Base.",
       "observed_delay_seconds": null,
       "documented_delay_seconds": null,
       "docs_url": "https://docs.seamlessprotocol.com/technical/smart-contracts",
-      "governance_url": "https://seamlessprotocol.discourse.group/"
+      "governance_url": "https://seamlessprotocol.com/",
+      "documented_reference": "Seamless Protocol (Base) documentation is linked for reference (https://docs.seamlessprotocol.com/technical/smart-contracts; governance: https://seamlessprotocol.com/). This RPC-pinned record does not compare documentation parameters with the on-chain state."
     },
     {
       "id": "superform-v2-base-control-plane",
@@ -1087,7 +1104,8 @@
       "base_eas_uid": null,
       "block_number": 57421449,
       "block_hash": "0x36147f7f0b6d2a0a94975e98b14c979034930dbe6f9905a5b0bcb2ab45ba35b0",
-      "classification": "aligned_baseline",
+      "classification": "rpc_observed",
+      "documentation_comparison": "not_assessed",
       "surface": "SuperGovernor & SuperVaultAggregator Control Plane",
       "target_contract": "0xB5396ef2bF8CA360cEB4166b77AFb2bed20e74d4",
       "target_label": "SuperGovernor",
@@ -1110,11 +1128,11 @@
       "repro_calldata": null,
       "extra_calls": [],
       "onchain_observed": "SuperGovernor (0xB5396ef2bF8CA360cEB4166b77AFb2bed20e74d4) verified on Base Mainnet at canonical block #57,421,449 (15,614 bytes runtime code). EIP-1967 implementation and admin storage slots are both zero (non-EIP-1967 contract). Paired protocol control contract SuperVaultAggregator (0x10AC0b33e1C4501CF3ec1cB1AE51ebfdbd2d4698, 21,772 bytes) verified live at the same block.",
-      "documented_reference": "Official Superform Core v2 (Base) deployment and governance documentation (https://docs.superform.xyz/deployment-addresses; governance: https://docs.superform.xyz/operate/permissions) publishes SuperGovernor (0xB5396ef2bF8CA360cEB4166b77AFb2bed20e74d4) on Base.",
       "observed_delay_seconds": null,
       "documented_delay_seconds": null,
       "docs_url": "https://docs.superform.xyz/deployment-addresses",
-      "governance_url": "https://docs.superform.xyz/operate/permissions"
+      "governance_url": "https://docs.superform.xyz/operate/permissions",
+      "documented_reference": "Superform Core v2 (Base) documentation is linked for reference (https://docs.superform.xyz/deployment-addresses; governance: https://docs.superform.xyz/operate/permissions). This RPC-pinned record does not compare documentation parameters with the on-chain state."
     },
     {
       "id": "synthetix-v3-core-control-plane",
@@ -1131,7 +1149,8 @@
       "base_eas_uid": null,
       "block_number": 26414499,
       "block_hash": "0xb83fee0a1d10d5fb8510d87ee9e33b180acac3208a7d00162a6a6f97789c0978",
-      "classification": "aligned_baseline",
+      "classification": "rpc_observed",
+      "documentation_comparison": "not_assessed",
       "surface": "SynthetixCoreProxy · 4-of-7 Safe Control Plane",
       "target_contract": "0xffffffaEff0B96Ea8e4f94b2253f31abdD875847",
       "target_label": "SynthetixCoreProxy",
@@ -1163,11 +1182,11 @@
         }
       ],
       "onchain_observed": "SynthetixCoreProxy (0xffffffaEff0B96Ea8e4f94b2253f31abdD875847) verified on Ethereum Mainnet at canonical block #26,414,499 (344 bytes runtime code). EIP-1967 implementation and admin storage slots are both zero (non-EIP-1967 contract). Direct owner() returns 0xEb3107117FEAd7de89Cd14D463D340A2E6917769, verified via getThreshold() and getOwners() as a 4-of-7 Safe multisig.",
-      "documented_reference": "Official Synthetix V3 Core deployment and governance documentation (https://docs.synthetix.io/v/v3/for-developers/addresses; governance: https://governance.synthetix.io/) publishes SynthetixCoreProxy (0xffffffaEff0B96Ea8e4f94b2253f31abdD875847) on Ethereum.",
       "observed_delay_seconds": null,
       "documented_delay_seconds": null,
       "docs_url": "https://docs.synthetix.io/v/v3/for-developers/addresses",
-      "governance_url": "https://governance.synthetix.io/"
+      "governance_url": "https://governance.synthetix.io/",
+      "documented_reference": "Synthetix V3 Core documentation is linked for reference (https://docs.synthetix.io/v/v3/for-developers/addresses; governance: https://governance.synthetix.io/). This RPC-pinned record does not compare documentation parameters with the on-chain state."
     },
     {
       "id": "uniswap-governance-timelock-control-plane",
@@ -1184,7 +1203,8 @@
       "base_eas_uid": null,
       "block_number": 26414499,
       "block_hash": "0xb83fee0a1d10d5fb8510d87ee9e33b180acac3208a7d00162a6a6f97789c0978",
-      "classification": "aligned_baseline",
+      "classification": "rpc_observed",
+      "documentation_comparison": "not_assessed",
       "surface": "UniswapV3Factory · Owner Contract under the 2d Governance Timelock",
       "target_contract": "0x1F98431c8aD98523631AE4a59f267346ea31F984",
       "target_label": "UniswapV3Factory",
@@ -1216,11 +1236,11 @@
         }
       ],
       "onchain_observed": "UniswapV3Factory (0x1F98431c8aD98523631AE4a59f267346ea31F984) verified on Ethereum Mainnet at canonical block #26,414,499 (24,535 bytes runtime code). EIP-1967 implementation and admin storage slots are both zero (non-EIP-1967 contract). Direct owner() returns contract 0xf2371551Fe3937Db7c750f4DfABe5c2fFFdcBf5A (7,266 bytes runtime code; exposes no timelock delay getter). That contract's owner() is the Uniswap governance Timelock 0x1a9C8182C09F50C8318d769245beA52c32BE35BC, whose delay() returns 172,800s (2d).",
-      "documented_reference": "Official Uniswap V3 & Governance Timelock deployment and governance documentation (https://docs.uniswap.org/contracts/v3/reference/deployments/ethereum-deployments; governance: https://gov.uniswap.org/) publishes UniswapV3Factory (0x1F98431c8aD98523631AE4a59f267346ea31F984) on Ethereum.",
       "observed_delay_seconds": 172800,
-      "documented_delay_seconds": 172800,
+      "documented_delay_seconds": null,
       "docs_url": "https://docs.uniswap.org/contracts/v3/reference/deployments/ethereum-deployments",
-      "governance_url": "https://gov.uniswap.org/"
+      "governance_url": "https://gov.uniswap.org/",
+      "documented_reference": "Uniswap V3 & Governance Timelock documentation is linked for reference (https://docs.uniswap.org/contracts/v3/reference/deployments/ethereum-deployments; governance: https://gov.uniswap.org/). This RPC-pinned record does not compare documentation parameters with the on-chain state."
     }
   ]
 }

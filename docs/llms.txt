@@ -37,7 +37,7 @@ Pacta checks who can change the rules of DeFi protocols (proxy admins, timelock 
 
 ## Methodology
 - Scanner seats replay read-only eth_call / eth_getStorageAt at the cited block (two independent archive RPCs); an isolated verifier seat re-checks selectors, EIP-55 checksums, EIP-1967 slots and arithmetic offline.
-- Classifications: parameter_delta (on-chain differs from docs), protective_delta (a change that strengthens controls), aligned_baseline (on-chain matches docs).
+- Classifications: parameter_delta (on-chain differs from docs), protective_delta (a change that strengthens controls), aligned_baseline (on-chain matches docs), rpc_observed (on-chain control plane pinned at an archive block height over JSON-RPC; documentation parameter comparison unassessed).
 - Exploit-sensitive vulnerabilities are never published here. They go through the protocol’s Immunefi or Cantina bounty programme, or to a partner audit firm under a 15% referral partnership.
 
 ## Access

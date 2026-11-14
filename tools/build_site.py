@@ -132,7 +132,11 @@ def hexref(value, a=6, b=4):
     return f'<span class="addr" title="{E(value)}">{E(short(value, a, b))}</span>{copy_btn(value)}'
 
 
-def head(title, desc, url, prefix="", og_title=OG_TITLE, og_type="website", image=f"{BASE_URL}/og-preview.png", extra=""):
+ROBOTS_META = "index, follow, max-snippet:-1, max-image-preview:large"     # unrestricted indexing, snippets and grounding
+ROBOTS_META_404 = "noindex, follow, max-snippet:-1, max-image-preview:large"   # 404.html: never index the not-found page itself
+
+
+def head(title, desc, url, prefix="", og_title=OG_TITLE, og_type="website", image=f"{BASE_URL}/og-preview.png", extra="", robots=ROBOTS_META):
     """Order matters: everything social/agent-relevant comes first and stays inside the first 1.2 KB.
     b.js is the first-party beacon (docs/b.js, < 1.5 KB): no cookies, no storage ids, no third parties, honours DNT."""
     t, d = E(title), E(desc)
@@ -155,11 +159,13 @@ def head(title, desc, url, prefix="", og_title=OG_TITLE, og_type="website", imag
         f'<meta name="twitter:title" content="{E(og_title)}">',
         f'<meta name="twitter:description" content="{d}">',
         f'<meta name="twitter:image" content="{image}">',
+        f'<meta name="robots" content="{robots}">',
     ] + ([extra] if extra else []) + [
         f'<link rel="icon" href="{prefix}favicon.svg" type="image/svg+xml">',
         f'<link rel="icon" href="{prefix}favicon.png" type="image/png" sizes="32x32">',
         f'<link rel="stylesheet" href="{prefix}styles.css">',
         f'<link rel="alternate" type="text/markdown" href="{prefix}llms.txt" title="llms.txt">',
+        f'<link rel="alternate" type="text/html" href="{prefix}llms/" title="llms.txt (HTML mirror)">',
         '<script>document.documentElement.className="js";try{if(localStorage.getItem("pacta-theme")==="slate")'
         'document.documentElement.dataset.theme="slate"}catch(e){}</script>',
         f'<script src="{prefix}app.js" defer></script>',
@@ -195,7 +201,7 @@ def footer(count_line, reg, home=""):
     return (f'<footer class="ftr"><div class="wrap">'
             f'<span>Pacta · Fractal Neurons · pacta.base.eth · {E(count_line)}</span>'
             f'<nav aria-label="Footer"><a href="{REPO}" target="_blank" rel="noopener">GitHub</a>'
-            f'<a href="{home}api/v1/index.json">JSON feed</a><a href="{home}llms.txt">llms.txt</a>'
+            f'<a href="{home}api/v1/index.json">JSON feed</a><a href="{home}llms.txt">llms.txt</a><a href="{home}llms/">llms (HTML)</a>'
             f'<a href="https://basescan.org/address/{E(reg)}" target="_blank" rel="noopener">Base registry</a>'
             f'<a href="{home}.well-known/security.txt">security.txt</a>'
             f'<a href="{home}{"#request" if home == "" else "request/"}">Contact</a></nav>'
@@ -275,7 +281,12 @@ def anchoring_text(c):
 
 
 CLASS_LABEL = {"parameter_delta": ("delta", "Parameter delta"), "protective_delta": ("protect", "Protective delta"),
-               "aligned_baseline": ("", "Aligned baseline")}
+               "aligned_baseline": ("", "Aligned baseline"),
+               # RPC-pinned records: on-chain control plane pinned at an archive block; documentation comparison not assessed
+               "rpc_observed": ("observed", "RPC-observed baseline")}
+CLASS_DEFINITIONS = ("parameter_delta (on-chain differs from docs), protective_delta (a change that strengthens controls), aligned_baseline "
+                     "(on-chain matches docs), rpc_observed (on-chain control plane pinned at an archive block height over JSON-RPC; "
+                     "documentation parameter comparison unassessed)")
 
 
 def badge(c):
@@ -918,7 +929,7 @@ def protocol_page(name, entries, idx, radar, digest=None, slug=None):
         ch = CHAINS[e.get("chain", "ethereum")][0]
         prov = "RPC-pinned, not EAS-attested" if pinned else f'sprint {E(str(e["sprint"]))}'
         ctrl = f'<dt>Controller</dt><dd>{controller_dd(e)}</dd>' if pinned else ""
-        doc_lbl = "Documentation." if pinned else "Documented."
+        doc_lbl = "Documentation (linked, not compared)." if pinned else "Documented."
         records += (f'<article class="memo-sec" id="{E(e["id"])}"><h2>{E(e["surface"])}</h2>'
                     f'<dl class="memo-meta"><dt>Status</dt><dd>{badge(e["classification"])}</dd>'
                     f'<dt>Target</dt><dd>{E(e["target_label"])} {hexref(e["target_contract"])}</dd>'
@@ -939,6 +950,8 @@ def protocol_page(name, entries, idx, radar, digest=None, slug=None):
         provenance = (f'<section class="memo-sec" id="provenance"><h2>Provenance</h2><p>RPC-pinned {"record" if n == 1 else "records"}: read over public '
                       f'JSON-RPC at the {chain_txt} block shown below and independently re-read at the same block by a second Pacta seat. '
                       f'{"It is" if n == 1 else "They are"} <b>not EAS-attested</b>: no sprint number, no summary document and no Base EAS UID. '
+                      f'Status <b>RPC-observed baseline</b>: the on-chain control plane is pinned at block height; whether it matches the '
+                      f'protocol\'s documented parameters is <b>not assessed</b> here (the documentation is linked for reference). '
                       f'Machine-readable: <a href="../../api/v1/rpc-pinned.json">/api/v1/rpc-pinned.json</a>. The Base-EAS-attested Sprint records '
                       f'are in <a href="../../api/v1/index.json">/api/v1/index.json</a>.</p></section>\n')
     curl = f'curl -s "{API}/v1/check/preflight?chain={first.get("chain", "ethereum")}&address={first["target_contract"]}"'
@@ -963,7 +976,8 @@ def protocol_page(name, entries, idx, radar, digest=None, slug=None):
     title = f"{name}: control-plane safety record"
     desc = (f"Who can upgrade, pause or change {name}: {n} block-pinned control-plane {'check' if n == 1 else 'checks'} with "
             f"{'a cast reproduction' if n == 1 else 'cast reproductions'} and a free live pre-flight API.")
-    pin_clause = (f"pinned to a canonical {chain_txt} block over public JSON-RPC (not EAS-attested), with the protocol's documentation linked" if pinned
+    pin_clause = (f"with its controller and timelock state pinned to a canonical {chain_txt} block over archive JSON-RPC (not EAS-attested; "
+                  f"documentation parameters are linked, not compared)" if pinned
                   else f"{'' if n == 1 else 'each '}pinned to a canonical {chain_txt} block and compared with what the protocol documents")
     codes = ", ".join(f'<code class="mono">{E(t)}</code>' for t in targets)
     lede = (f'{n} indexed control-plane {"surface" if n == 1 else "surfaces"} for {E(name)}, {pin_clause}. '
@@ -1060,7 +1074,7 @@ def not_found_page(idx, sp=None):
 </body></html>
 """
     return head("Page not found · Pacta", "This page does not exist. Pacta: free pre-execution contract checks for AI agents.", f"{BASE_URL}/404.html",
-                prefix="/", og_title="Page not found · Pacta", extra='<meta name="robots" content="noindex">') + "\n" + body
+                prefix="/", og_title="Page not found · Pacta", robots=ROBOTS_META_404) + "\n" + body
 
 
 def page(idx, radar):
@@ -1193,7 +1207,7 @@ def llms(idx, radar):
         f"- [{BASE_URL}/demos/swapio-x402/]({BASE_URL}/demos/swapio-x402/): 90-second x402 storyboard (TreasuryGuard) with a live, on-chain-verified Base USDC settlement receipt.", "",
         "## Methodology",
         "- Scanner seats replay read-only eth_call / eth_getStorageAt at the cited block (two independent archive RPCs); an isolated verifier seat re-checks selectors, EIP-55 checksums, EIP-1967 slots and arithmetic offline.",
-        "- Classifications: parameter_delta (on-chain differs from docs), protective_delta (a change that strengthens controls), aligned_baseline (on-chain matches docs).",
+        f"- Classifications: {CLASS_DEFINITIONS}.",
         f"- {VULN_ROUTE}", "",
         "## Access",
         "- Free and real-time for everyone, including vault curators, allocators and AI risk agents: every indexed record, the timelock radar, the briefs, /api/v1/*.json and this file. No key, no delay, no paywall; curators never pay.", "",
@@ -1216,10 +1230,32 @@ def llms(idx, radar):
     return "\n".join(lines)
 
 
-ROBOTS_TXT = ("# AI search engines and agent crawlers are welcome: everything here is public, free and read-only.\n"
-              + "".join(f"User-agent: {b}\nAllow: /\n\n" for b in ("GPTBot", "OAI-SearchBot", "ChatGPT-User", "ClaudeBot", "Claude-User",
-                                                                   "Claude-SearchBot", "PerplexityBot", "Perplexity-User", "Googlebot", "Google-Extended", "Bingbot"))
-              + f"User-agent: *\nAllow: /\n\nSitemap: {BASE_URL}/sitemap.xml\n")
+def llms_html(idx, text):
+    """docs/llms/index.html: the exact llms.txt text in a semantic HTML page (some chat URL fetchers only accept text/html)."""
+    c = counts(idx)
+    count_line = f'{c["sprints"]} Sprints · {c["records"]} Indexed Records'
+    reg = idx["onchain_anchoring"]["commitment_registry"]
+    alt = f'<link rel="alternate" type="text/plain" href="{BASE_URL}/llms.txt" title="llms.txt (plain text)">'
+    body = f"""<body>
+{topbar("../")}
+<main id="main" class="memo-wrap">
+<div class="crumbs"><a href="../">Pacta</a> / llms.txt</div>
+<article class="memo">
+<header><span class="tier">For agents</span><h1>llms.txt (HTML mirror)</h1>
+<p class="lede">The same text as <a href="../llms.txt">/llms.txt</a> (plain text), rendered as HTML for fetchers that only read web pages. The complete single-file reference is <a href="../llms-full.txt">/llms-full.txt</a>.</p></header>
+<pre class="llms" data-llms-mirror>{E(text)}</pre>
+</article>
+</main>
+{footer(count_line, reg, "../")}
+</body></html>
+"""
+    return head("llms.txt · Pacta (HTML mirror)", "Pacta llms.txt as HTML: free pre-execution contract checks for AI agents, feeds, MCP and data.",
+                f"{BASE_URL}/llms/", prefix="../", og_title="Pacta llms.txt", extra=alt) + "\n" + body
+
+
+ROBOTS_TXT = "User-agent: *\nAllow: /\n\nSitemap: https://pacta.wtf/sitemap.xml\n"
+# RFC 9309: "User-agent: *" + "Allow: /" already admits every crawler. No bot-name stanzas: an explicit Google-Extended
+# stanza tripped a naive opt-out matcher in Gemini's url_context fetcher even when paired with Allow: /.
 
 
 def main():
@@ -1240,7 +1276,9 @@ def main():
         w(f"briefs/{b['slug']}/index.html", onboarding_page(b, idx))
     pinned = load_pinned()                        # docs/api/v1/rpc-pinned.json (RPC-pinned, not EAS-attested)
     B2A.write_all(DOCS, idx, radar, onb, pinned)  # proposals.json, llms-full.txt, .well-known/{agent,mcp}.json, SKILL.md
-    w("llms.txt", llms(idx, radar))
+    llms_text = llms(idx, radar)
+    w("llms.txt", llms_text)
+    w("llms/index.html", llms_html(idx, llms_text))
     sp = site_protocols(idx, pinned)
     digest = load_forum_digest()                  # data/forum-digest.json (optional; missing = empty digest)
     w("api/v1/forum-digest.json", forum_digest_json(idx, digest, pinned))
@@ -1251,7 +1289,7 @@ def main():
     w("robots.txt", ROBOTS_TXT)
     urls = ["/", "/request/", "/llms.txt", "/api/v1/index.json", "/api/v1/radar.json"] + [f"/briefs/{k}/" for k in BRIEFS] + \
         [f"/briefs/{b['slug']}/" for b in load_onboarding()["briefs"]] + (["/api/v1/onboarding.json"] if load_onboarding()["briefs"] else []) + \
-        ["/api/v1/proposals.json", "/api/v1/rpc-pinned.json", "/llms-full.txt", "/SKILL.md", "/.well-known/agent.json", "/.well-known/mcp.json",
+        ["/api/v1/proposals.json", "/api/v1/rpc-pinned.json", "/llms/", "/llms-full.txt", "/SKILL.md", "/.well-known/agent.json", "/.well-known/mcp.json",
          "/demos/swapio-x402/", "/protocols/"] + [f"/protocols/{v['slug']}/" for v in sp.values()]
     w("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
       + "".join(f"  <url><loc>{BASE_URL}{u}</loc><lastmod>{today}</lastmod></url>\n" for u in urls) + "</urlset>\n")

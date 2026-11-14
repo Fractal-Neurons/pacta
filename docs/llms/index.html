@@ -1,0 +1,106 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>llms.txt · Pacta (HTML mirror)</title>
+<meta name="description" content="Pacta llms.txt as HTML: free pre-execution contract checks for AI agents, feeds, MCP and data.">
+<link rel="canonical" href="https://pacta.wtf/llms/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Pacta by Fractal Neurons">
+<meta property="og:title" content="Pacta llms.txt">
+<meta property="og:description" content="Pacta llms.txt as HTML: free pre-execution contract checks for AI agents, feeds, MCP and data.">
+<meta property="og:url" content="https://pacta.wtf/llms/">
+<meta property="og:image" content="https://pacta.wtf/og-preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Pacta llms.txt">
+<meta name="twitter:description" content="Pacta llms.txt as HTML: free pre-execution contract checks for AI agents, feeds, MCP and data.">
+<meta name="twitter:image" content="https://pacta.wtf/og-preview.png">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+<link rel="alternate" type="text/plain" href="https://pacta.wtf/llms.txt" title="llms.txt (plain text)">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../favicon.png" type="image/png" sizes="32x32">
+<link rel="stylesheet" href="../styles.css">
+<link rel="alternate" type="text/markdown" href="../llms.txt" title="llms.txt">
+<link rel="alternate" type="text/html" href="../llms/" title="llms.txt (HTML mirror)">
+<script>document.documentElement.className="js";try{if(localStorage.getItem("pacta-theme")==="slate")document.documentElement.dataset.theme="slate"}catch(e){}</script>
+<script src="../app.js" defer></script>
+<script src="../b.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar"><div class="wrap"><a class="brand" href="../"><img src="../favicon.svg" alt="" width="22" height="22">PACTA<small>by Fractal Neurons</small></a><nav class="nav" aria-label="Sections"><a href="../#preflight">Free API</a><a href="../protocols/">Protocols</a><a href="../#inspector">Inspector</a><a href="../#radar">Radar</a><a href="../#findings">Findings</a><a href="../#index">Index</a><a href="../#verify">Verify</a><a href="../#pricing">Pricing</a><a href="../#faq">FAQ</a></nav><div class="tools"><button class="tt" type="button" aria-label="Theme: Paper (switch to Slate)"><span data-t="paper" class="on">Paper</span><span data-t="slate">Slate</span></button><a class="btn sm primary" href="../request/">Request coverage</a></div></div></header>
+<main id="main" class="memo-wrap">
+<div class="crumbs"><a href="../">Pacta</a> / llms.txt</div>
+<article class="memo">
+<header><span class="tier">For agents</span><h1>llms.txt (HTML mirror)</h1>
+<p class="lede">The same text as <a href="../llms.txt">/llms.txt</a> (plain text), rendered as HTML for fetchers that only read web pages. The complete single-file reference is <a href="../llms-full.txt">/llms-full.txt</a>.</p></header>
+<pre class="llms" data-llms-mirror># Pacta (by Fractal Neurons)
+
+&gt; Free pre-execution contract and governance safety API for AI agents (launch: $0, no API key, no wallet), plus block-pinned DeFi control-plane snapshots and timelock alerts. 14 Sprints · 37 Indexed Records.
+
+Pacta checks who can change the rules of DeFi protocols (proxy admins, timelock delays, Safe quorums, roles) and compares that with what the protocols document. Every record is a read-only on-chain observation pinned to an Ethereum Mainnet block number and canonical block hash.
+
+## Free API for agents (launch: $0, no API key, no wallet)
+- Remote MCP (Streamable HTTP, zero install): https://pacta-x402.pacta.workers.dev/mcp · Claude Code: `claude mcp add --transport http pacta https://pacta-x402.pacta.workers.dev/mcp` · Cursor: `{&quot;mcpServers&quot;: {&quot;pacta&quot;: {&quot;url&quot;: &quot;https://pacta-x402.pacta.workers.dev/mcp&quot;}}}`. Tools: pacta_check_preflight, pacta_scan_control_plane, pacta_scan_timelock_op, pacta_scan_proposal_diff, pacta_get_live_timelocks (all read-only).
+- One call: `curl -s &quot;https://pacta-x402.pacta.workers.dev/v1/check/preflight?chain=ethereum&amp;address=0x...&quot;` returns a verdict (IMMUTABLE_NO_ADMIN, TIMELOCK_PROTECTED, ZERO_DELAY_TIMELOCK_RISK, MULTISIG_NO_TIMELOCK, INSTANT_EOA_ADMIN_RISK, UNDEPLOYED_OR_EOA, UNCLASSIFIED_CONTRACT_CONTROLLER), a 0-100 risk score, proxy / admin / timelock breakdown and pause / blacklist / upgrade capabilities, pinned to a block hash.
+- [https://pacta-x402.pacta.workers.dev/openapi.json](https://pacta-x402.pacta.workers.dev/openapi.json): OpenAPI 3.1 for ChatGPT Actions, LangChain and OpenAPI tools; every route takes GET query parameters or a POST JSON body. 60 requests / minute per caller; free during the launch (pricingMode free_launch), x402 v1 + v2 ready.
+- [https://pacta.wtf/protocols/](https://pacta.wtf/protocols/): per-protocol control-plane safety records.
+
+## Agent feeds
+- [https://pacta.wtf/llms-full.txt](https://pacta.wtf/llms-full.txt): complete single-file reference (feeds, MCP tools, x402, anchoring, every record, proposal and queued operation).
+- [https://pacta.wtf/api/v1/proposals.json](https://pacta.wtf/api/v1/proposals.json): schema `pacta.governance_proposals_feed.v1`; live Aave / Euler / Morpho / Sky proposals mapped to block-pinned observations.
+- [https://pacta.wtf/.well-known/agent.json](https://pacta.wtf/.well-known/agent.json) (A2A Agent Card) · [https://pacta.wtf/.well-known/mcp.json](https://pacta.wtf/.well-known/mcp.json) (MCP manifest) · [https://pacta.wtf/SKILL.md](https://pacta.wtf/SKILL.md) (portable agent skill).
+
+## Data
+- [https://pacta.wtf/api/v1/index.json](https://pacta.wtf/api/v1/index.json): schema `pacta.counterparty_control_index.v1`; `summary_metrics` (sprints_completed=14, records_indexed=37, parameter_deltas=14, protective_deltas=4, aligned_baselines=19); each entry has id, protocol, category, sprint, block_number, block_hash, classification, surface, target_contract, target_label, check_type, selector_or_slot, call_signature, call_args, repro_calldata, onchain_observed, documented_reference, observed/documented delay seconds, summary_doc, summary_sha256, base_eas_uid.
+- [https://pacta.wtf/api/v1/rpc-pinned.json](https://pacta.wtf/api/v1/rpc-pinned.json): schema `pacta.rpc_pinned_records.v1`; 20 RPC-pinned control-plane records on Ethereum and Base (block number + hash, cast reproduction). NOT EAS-attested: no sprint, summary document or Base EAS UID.
+- [https://pacta.wtf/api/v1/radar.json](https://pacta.wtf/api/v1/radar.json): queued timelock operations, refreshed at finalized block 26406890 (2026-11-13 15:18 UTC).
+- [https://pacta.wtf/api/v1/forum-digest.json](https://pacta.wtf/api/v1/forum-digest.json): schema `pacta.forum_digest.v1`; read-only digest of active governance forum topics plus `addressIndex` (chain:address -&gt; protocol family).
+
+## Live pre-execution briefs
+- [https://pacta.wtf/briefs/ethena-ops-0x0ca0-0x1fe5/](https://pacta.wtf/briefs/ethena-ops-0x0ca0-0x1fe5/): Pre-execution brief: two queued Ethena timelock operations onboard RLUSD and USAT to EthenaMinting at 200M / 20M USDe-per-block caps (1-day delay; ETAs 2026-11-14 10:20–10:22 UTC).
+- [https://pacta.wtf/briefs/etherfi-op-0x244e/](https://pacta.wtf/briefs/etherfi-op-0x244e/): Pre-execution brief: ether.fi operation 0x244e…359f moves the EtherfiL1SyncPoolETH LayerZero V2 delegate behind the 10-day EtherFiTimelock (ETA 2026-11-20 16:54 UTC).
+- [https://pacta.wtf/briefs/treehouse-op-0x2f11/](https://pacta.wtf/briefs/treehouse-op-0x2f11/): Pre-execution brief: a queued 5-day timelock operation upgrades the Treehouse TREE token (not tETH) and installs a 5-of-7 Safe blacklister (ETA 2026-11-17 04:51 UTC).
+
+## Live onboarding verification briefs (assets proposed as collateral; block-pinned)
+- [https://pacta.wtf/api/v1/onboarding.json](https://pacta.wtf/api/v1/onboarding.json): schema `pacta.onboarding_briefs.v1`; every check with call, calldata, raw result and decoded value; role maps replayed from events.
+- [https://pacta.wtf/briefs/kerne-kusd-base/](https://pacta.wtf/briefs/kerne-kusd-base/): kUSD/USDC Euler Base market: ungoverned vaults and router, no caps, fixed 1.00 USDC oracle; kUSD and its minter administered through a 48h TimelockController (2-of-3 Safe proposer). (Euler forum #1862; Base Mainnet block 57050397)
+- [https://pacta.wtf/briefs/efix-efixdi-base/](https://pacta.wtf/briefs/efix-efixdi-base/): efixDI/USDC Euler Base market: one 2-of-3 Safe governs vault, router and token admin with no timelock; efixDI+ MINTER_ROLE held by a single signer EOA; custom NAV oracle. (Euler forum #1850; Base Mainnet block 57050397)
+- [https://pacta.wtf/briefs/circle-cirbtc-eth/](https://pacta.wtf/briefs/circle-cirbtc-eth/): cirBTC (Circle FiatToken): upgrade admin, owner, pauser and blacklister are EOAs; no on-chain timelock or multisig. (Aave governance #25128; Ethereum Mainnet block 26408330)
+- [https://pacta.wtf/briefs/paxos-paxgy-eth/](https://pacta.wtf/briefs/paxos-paxgy-eth/): PAXGy BoringVault: 24h TimelockController owner; full RolesAuthority role -&gt; capability -&gt; holder map; exchange-rate bounds. (Aave governance #25499; Ethereum Mainnet block 26408330)
+- [https://pacta.wtf/briefs/tether-usat-eth/](https://pacta.wtf/briefs/tether-usat-eth/): USAT (Ethereum): EIP-1967 proxy controlled by a 3-of-5 legacy MultiSigWallet with no timelock; linked pending Ethena ops. (Aave governance #25927; Ethereum Mainnet block 26408330)
+- [https://pacta.wtf/demos/swapio-x402/](https://pacta.wtf/demos/swapio-x402/): 90-second x402 storyboard (TreasuryGuard) with a live, on-chain-verified Base USDC settlement receipt.
+
+## Methodology
+- Scanner seats replay read-only eth_call / eth_getStorageAt at the cited block (two independent archive RPCs); an isolated verifier seat re-checks selectors, EIP-55 checksums, EIP-1967 slots and arithmetic offline.
+- Classifications: parameter_delta (on-chain differs from docs), protective_delta (a change that strengthens controls), aligned_baseline (on-chain matches docs), rpc_observed (on-chain control plane pinned at an archive block height over JSON-RPC; documentation parameter comparison unassessed).
+- Exploit-sensitive vulnerabilities are never published here. They go through the protocol’s Immunefi or Cantina bounty programme, or to a partner audit firm under a 15% referral partnership.
+
+## Access
+- Free and real-time for everyone, including vault curators, allocators and AI risk agents: every indexed record, the timelock radar, the briefs, /api/v1/*.json and this file. No key, no delay, no paywall; curators never pay.
+
+## On-chain anchoring (Base, chain id 8453)
+- PactaCommitmentRegistry: `0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872` (Sourcify verified); attester `pacta.base.eth` (`0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09`).
+- EAS schema: `0x7ff485bc1159dff3c70eefcb9dff2d65be990301760c2d53799e5a45e3badf83`. 16 Base EAS sprint attestations cover Sprints 1–16; Sprints 15–16 records join the public index after review.
+- Multi-attest tx, Sprints 1–12: `0x8c53e155a4b2f28ffbf069f1b65952fc8f7d81740f362b8aafb39493c6bd001b`
+- Multi-attest tx, Sprints 13–16: `0x11546aac53e3fe57fa6ac9f7e4397f06c58b6803252e099eb9349eca00f2edbf`
+- Per-sprint attestation UIDs: `onchain_anchoring.sprint_eas_attestations` in /api/v1/index.json; each record&#x27;s `base_eas_uid`.
+
+## Engagements (collateral issuers)
+- 24h Collateral Onboarding &amp; Delta Clearance Attestation: $5,000 USDC flat (optional continuous Aligned badge maintenance: $1,500 / month). Canonical block-pinned control-plane audit, GitBook / config reconciliation PR, Base Mainnet EAS Aligned attestation in PactaCommitmentRegistry, and a Curator Diligence Dossier (PDF + JSON) for Morpho, Euler, Aave and Sky forum proposals. Clears open parameter_delta flags or onboards a new asset.
+- Payment: USDC on Base (`0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`) or Ethereum (`0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48`) to the Pacta treasury (EOA) `0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14` (same address on both chains).
+- Community queue: free, unscheduled (typically 6–8 weeks).
+- Request: https://pacta.wtf/request/ (builds a scope brief; opens a pre-filled GitHub intake issue or Gmail compose, or copies the brief).
+
+## x402 API (live; free during the launch)
+- On-demand scans of contracts outside the index. Free launch: every route answers HTTP 200 at $0 with no payment header (pricingMode free_launch); the x402 flow below applies only when the operator switches pricingMode to x402_paid. Live gateway: https://pacta-x402.pacta.workers.dev (Cloudflare Worker, x402Versions [1, 2]: v1 network `base` with `X-PAYMENT` / `X-PAYMENT-RESPONSE`, v2 network `eip155:8453` with `PAYMENT-REQUIRED` / `PAYMENT-SIGNATURE` / `PAYMENT-RESPONSE`; USDC on Base, payTo `0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09`, maxTimeoutSeconds 60). Routes (x402_paid prices): `GET /v1/check/preflight?chain=&amp;address=` ($0.01), `GET /v1/scan/control-plane?chain=&amp;address=` ($0.10), `GET /v1/scan/timelock-op?chain=&amp;timelock=&amp;opId=` ($0.25), `GET /v1/scan/proposal-diff?forum=&amp;topicId=` ($0.15), `GET /v1/briefs/live-timelocks` ($0.10); free `/health`, `/.well-known/x402` (Bazaar discovery), `/v1/sample/control-plane`. A bare GET (no query) or zero-byte POST with no payment header on a paid route returns HTTP 402 with both challenges; the Bazaar extension carries a JSON Schema draft 2020-12 schema.
+- Remote MCP: https://pacta-x402.pacta.workers.dev/mcp (free, no install). Local stdio server (from a clone of the repo; npm publication pending): set `PACTA_X402_URL=https://pacta-x402.pacta.workers.dev` to enable the scan tools; in x402_paid mode pay with `xPaymentHeader` (v1) or `paymentSignatureHeader` (v2). Settlement receipts are the facilitator&#x27;s assertion (onchainReceiptVerified: false).
+
+## Contact
+- pacta@dri.network · https://github.com/Fractal-Neurons/pacta · https://fractalneurons.com · security: https://pacta.wtf/.well-known/security.txt
+</pre>
+</article>
+</main>
+<footer class="ftr"><div class="wrap"><span>Pacta · Fractal Neurons · pacta.base.eth · 14 Sprints · 37 Indexed Records</span><nav aria-label="Footer"><a href="https://github.com/Fractal-Neurons/pacta" target="_blank" rel="noopener">GitHub</a><a href="../api/v1/index.json">JSON feed</a><a href="../llms.txt">llms.txt</a><a href="../llms/">llms (HTML)</a><a href="https://basescan.org/address/0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872" target="_blank" rel="noopener">Base registry</a><a href="../.well-known/security.txt">security.txt</a><a href="../request/">Contact</a></nav></div></footer>
+</body></html>
