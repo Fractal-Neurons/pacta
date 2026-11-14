@@ -97,6 +97,12 @@
    "description": "Live state of tracked queued timelock operations",
    "name": "pacta_live_timelocks",
    "price": "$0.10"
+  },
+  {
+   "access": "x402",
+   "description": "Re-run a tracked governance proposal's pinned reads live, pinned-vs-live diffs (forum, topicId)",
+   "name": "pacta_scan_proposal_diff",
+   "price": "$0.15"
   }
  ],
  "transport": {
@@ -120,7 +126,63 @@
   "discovery": "https://pacta-x402.pacta.workers.dev/.well-known/x402",
   "enableWith": "PACTA_X402_URL=https://pacta-x402.pacta.workers.dev",
   "gatewayUrl": "https://pacta-x402.pacta.workers.dev",
+  "maxTimeoutSeconds": 60,
+  "networks": [
+   "base",
+   "eip155:8453"
+  ],
+  "onchainReceiptVerified": false,
   "optIn": true,
-  "payTo": "0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09"
+  "paidRoutes": [
+   {
+    "amount": "100000",
+    "path": "/v1/scan/control-plane",
+    "priceUsd": "$0.10"
+   },
+   {
+    "amount": "250000",
+    "path": "/v1/scan/timelock-op",
+    "priceUsd": "$0.25"
+   },
+   {
+    "amount": "150000",
+    "path": "/v1/scan/proposal-diff",
+    "priceUsd": "$0.15"
+   },
+   {
+    "amount": "100000",
+    "path": "/v1/briefs/live-timelocks",
+    "priceUsd": "$0.10"
+   }
+  ],
+  "payTo": "0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09",
+  "toolPaymentArguments": {
+   "preference": "x402Version",
+   "v1": "xPaymentHeader",
+   "v2": "paymentSignatureHeader"
+  },
+  "wire": {
+   "v1": {
+    "amountField": "maxAmountRequired",
+    "challenge": "402 JSON body",
+    "network": "base",
+    "paymentHeader": "X-PAYMENT",
+    "receiptHeader": "X-PAYMENT-RESPONSE",
+    "x402Version": 1
+   },
+   "v2": {
+    "amountField": "amount",
+    "bazaarSchema": "https://json-schema.org/draft/2020-12/schema",
+    "challenge": "PAYMENT-REQUIRED header (base64 JSON)",
+    "network": "eip155:8453",
+    "paymentHeader": "PAYMENT-SIGNATURE",
+    "receiptHeader": "PAYMENT-RESPONSE",
+    "x402Version": 2
+   }
+  },
+  "x402Versions": [
+   1,
+   2
+  ]
  }
 }

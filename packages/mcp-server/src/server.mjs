@@ -28,6 +28,9 @@ import {
   resolveMaxAtomic,
   resolveTimeoutMs,
   fetchTextWithTimeout,
+  encodePaymentSignatureHeader,
+  BASE_NETWORK_V2,
+  validatePaymentSignatureHeader,
 } from "./x402.mjs";
 
 export const SERVER_INFO = Object.freeze({ name: "@pacta/mcp-server", version: "0.1.0" });
@@ -135,7 +138,16 @@ const objSchema = (properties = {}, required) => ({
 
 const CHAIN_PROP = { type: "string", enum: ["ethereum", "base"] };
 const PAID_AUTH_PROPS = {
-  xPaymentHeader: { type: "string", description: "Base64 x402 v1 X-PAYMENT header." },
+  xPaymentHeader: { type: "string", description: "Base64 x402 v1 X-PAYMENT header (network base)." },
+  paymentSignatureHeader: {
+    type: "string",
+    description: "Base64 x402 v2 PAYMENT-SIGNATURE header (network eip155:8453). Send this OR xPaymentHeader, not both.",
+  },
+  x402Version: {
+    type: "integer",
+    enum: [1, 2],
+    description: "Preferred x402 version for the 402 challenge (default 1). Both are validated under the same pins.",
+  },
   payer: { type: "string", description: "0x payer address for 402 EIP-712 typedData." },
   validBeforeSeconds: {
     type: "integer",
@@ -205,6 +217,22 @@ export const PAID_TOOLS = Object.freeze([
     inputSchema: objSchema(
       { chain: CHAIN_PROP, timelock: { type: "string" }, opId: { type: "string" }, ...PAID_AUTH_PROPS },
       ["timelock", "opId"]
+    ),
+  },
+  {
+    name: "pacta_scan_proposal_diff",
+    description:
+      "Paid x402 ($0.15 Base USDC, requires PACTA_X402_URL): re-run a tracked governance proposal's pinned control-plane reads live and return pinned-vs-live diffs. The proposal must be listed in https://pacta.wtf/api/v1/proposals.json as <forum>-<topicId>.",
+    inputSchema: objSchema(
+      {
+        forum: { type: "string", enum: [...PROPOSAL_FORUMS] },
+        topicId: {
+          type: ["string", "integer"],
+          description: "Forum topic id (positive integer, at most 10 digits), as in pacta_list_proposals topic_id.",
+        },
+        ...PAID_AUTH_PROPS,
+      },
+      ["forum", "topicId"]
     ),
   },
 ]);
@@ -353,6 +381,8 @@ export class PactaMcpServer {
       routeSpec,
       query,
       xPaymentHeader: args.xPaymentHeader,
+      paymentSignatureHeader: args.paymentSignatureHeader,
+      x402Version: args.x402Version,
       payer: args.payer,
       validBeforeSeconds: args.validBeforeSeconds,
       nonce: args.nonce,
@@ -534,6 +564,16 @@ export class PactaMcpServer {
         return this._paid(PAID_ROUTES.scanTimelockOp, { chain, timelock: args.timelock, opId: args.opId }, args);
       }
 
+      case "pacta_scan_proposal_diff": {
+        if (!this.x402Url) return this._paid(PAID_ROUTES.scanProposalDiff, {}, args);
+        if (!PROPOSAL_FORUMS.includes(args.forum)) throw new X402Error("invalid_argument", `forum must be one of ${PROPOSAL_FORUMS.join(", ")}.`);
+        const topicId = typeof args.topicId === "number" && Number.isSafeInteger(args.topicId) ? String(args.topicId) : args.topicId;
+        if (typeof topicId !== "string" || !/^[1-9][0-9]{0,9}$/.test(topicId)) {
+          throw new X402Error("invalid_argument", "topicId must be a positive integer (at most 10 digits).");
+        }
+        return this._paid(PAID_ROUTES.scanProposalDiff, { forum: args.forum, topicId }, args);
+      }
+
       default:
         throw Object.assign(new Error(`Unknown tool: ${name}`), { code: -32602 });
     }
@@ -628,6 +668,9 @@ export function startStdioServer(options = {}) {
 
 export {
   encodeXPaymentHeader,
+  encodePaymentSignatureHeader,
+  BASE_NETWORK_V2,
+  validatePaymentSignatureHeader,
   buildTransferWithAuthorizationTypedData,
   X402_DEFAULTS,
   PAID_ROUTES,

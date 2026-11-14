@@ -554,6 +554,25 @@ def main():
     check("canonical live x402 gateway https://pacta-x402.pacta.workers.dev in agent.json, mcp.json, llms.txt, llms-full.txt, SKILL.md; no stale 'pending' wording",
           B2A.X402_URL == X402 and all(surfaces.values()) and not stale,
           f"missing {[k for k, v in surfaces.items() if not v]}; stale {stale}")
+    paid_paths = ["/v1/scan/control-plane", "/v1/scan/timelock-op", "/v1/scan/proposal-diff", "/v1/briefs/live-timelocks"]
+    v2_tokens = ["eip155:8453", "PAYMENT-REQUIRED", "PAYMENT-SIGNATURE"]
+    v2_surfaces = {"SKILL.md": skill, "agent.json": read("docs/.well-known/agent.json"), "mcp.json": read("docs/.well-known/mcp.json"),
+                   "llms.txt": llms_now, "llms-full.txt": full}
+    has_v2_version = lambda t: bool(re.search(r'x402Versions?"?:?\s*\[\s*1\s*,\s*2\s*\]', t))
+    v2_missing = {k: [tok for tok in v2_tokens if tok not in t] + ([] if has_v2_version(t) else ["x402Versions [1, 2]"]) for k, t in v2_surfaces.items()}
+    v2_missing = {k: v for k, v in v2_missing.items() if v}
+    skill_paths = [p_ for p_ in paid_paths if f"{X402}{p_}" not in skill]
+    card_routes = {r_["path"]: r_ for r_ in card["x402"]["routes"]}
+    wire_ok = (card["x402"].get("x402Versions") == [1, 2] and card["x402"].get("networks") == ["base", "eip155:8453"]
+               and card["x402"].get("maxTimeoutSeconds") == 60 and card["x402"]["wire"]["v2"]["paymentHeader"] == "PAYMENT-SIGNATURE"
+               and card["x402"]["wire"]["v2"]["receiptHeader"] == "PAYMENT-RESPONSE" and card["x402"]["wire"]["v1"]["paymentHeader"] == "X-PAYMENT"
+               and card["x402"]["settlement"]["onchainReceiptVerified"] is False and sorted(card_routes) == sorted(paid_paths)
+               and {p_: card_routes[p_]["amount"] for p_ in paid_paths} == {"/v1/scan/control-plane": "100000", "/v1/scan/timelock-op": "250000",
+                                                                          "/v1/scan/proposal-diff": "150000", "/v1/briefs/live-timelocks": "100000"}
+               and man["x402"].get("x402Versions") == [1, 2] and man["x402"].get("onchainReceiptVerified") is False
+               and "pacta_scan_proposal_diff" in {t["name"] for t in man["tools"]})
+    check("x402 v1 + v2 on all 5 agent surfaces: SKILL.md lists the 4 paid routes; x402Versions [1, 2] / eip155:8453 / PAYMENT-REQUIRED / PAYMENT-SIGNATURE everywhere; agent.json wire + prices; onchainReceiptVerified false",
+          not v2_missing and not skill_paths and wire_ok, f"missing {v2_missing}; SKILL paths missing {skill_paths}; wire_ok {wire_ok}")
     near = []
     for f in ["docs/" + x for x in b2a_files] + ["docs/llms.txt", "docs/index.html", "README.md"]:
         t = read(f)

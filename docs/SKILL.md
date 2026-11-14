@@ -42,6 +42,7 @@ publication_pending: @pacta/mcp-server is not yet published to npm or the MCP re
 - `pacta_scan_control_plane` (x402 $0.10): Live control-plane scan of a contract (chain, address)
 - `pacta_scan_timelock_op` (x402 $0.25): Live TimelockController operation state (timelock, opId)
 - `pacta_live_timelocks` (x402 $0.10): Live state of tracked queued timelock operations
+- `pacta_scan_proposal_diff` (x402 $0.15): Re-run a tracked governance proposal's pinned reads live, pinned-vs-live diffs (forum, topicId)
 
 Environment (all optional, none secret):
 - `PACTA_INDEX_PATH`: Local snapshot of /api/v1/index.json (offline use)
@@ -54,8 +55,18 @@ Environment (all optional, none secret):
 ## x402 (optional, only for live scans of contracts not in the index)
 - Live gateway: `https://pacta-x402.pacta.workers.dev` (discovery `https://pacta-x402.pacta.workers.dev/.well-known/x402`; free `/health` and `/v1/sample/control-plane`).
 - The MCP paid tools are opt-in: set `PACTA_X402_URL=https://pacta-x402.pacta.workers.dev` to enable them.
-- Base (8453), scheme `exact`, USDC `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`, payTo `0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09`. Never sign for any other `payTo`.
-- Prices: control-plane scan $0.10, timelock operation $0.25, proposal diff $0.15, live timelocks $0.10. Default client cap $1.00.
+- Base (8453), scheme `exact`, USDC `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`, payTo `0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09`, `maxTimeoutSeconds` 60. Never sign for any other `payTo`.
+- Paid routes (GET query or POST JSON body with the same names; default client cap $1.00):
+  - `https://pacta-x402.pacta.workers.dev/v1/scan/control-plane` ($0.10, `100000` atomic USDC): `?chain=ethereum|base&address=0x…`
+  - `https://pacta-x402.pacta.workers.dev/v1/scan/timelock-op` ($0.25, `250000` atomic USDC): `?chain=ethereum|base&timelock=0x…&opId=0x…`
+  - `https://pacta-x402.pacta.workers.dev/v1/scan/proposal-diff` ($0.15, `150000` atomic USDC): `?forum=aave|euler|morpho|sky&topicId=<id>`
+  - `https://pacta-x402.pacta.workers.dev/v1/briefs/live-timelocks` ($0.10, `100000` atomic USDC)
+- `x402Versions: [1, 2]`, `networks: ["base", "eip155:8453"]`:
+  - x402 v1: 402 JSON body (`x402Version: 1`, `network: "base"`, `maxAmountRequired`), pay with `X-PAYMENT`, receipt `X-PAYMENT-RESPONSE`.
+  - x402 v2: `PAYMENT-REQUIRED` header (base64 JSON, `x402Version: 2`, `network: "eip155:8453"`, `amount`, `extensions.bazaar` with a JSON Schema draft 2020-12 schema), pay with `PAYMENT-SIGNATURE`, receipt `PAYMENT-RESPONSE`.
+- Bare probe: a bare `GET` (no query) or zero-byte `POST` with no payment header returns HTTP 402 with both challenges.
+- MCP tools take `xPaymentHeader` (v1) or `paymentSignatureHeader` (v2); `x402Version` picks the challenge to answer.
+- A settled call returns 200 with both PAYMENT-RESPONSE and X-PAYMENT-RESPONSE (base64 {success, transaction, network, payer}). That receipt is the facilitator's settlement assertion bound to the payer; the MCP client checks it against the signed authorization but does not look the transaction up on Base (onchainReceiptVerified: false).
 - Pacta Treasury `0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14` is an EOA (externally owned account) that receives issuer clearance payments; it is not an x402 payTo.
 
 ## Anchoring (Base, chain id 8453)

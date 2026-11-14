@@ -29,12 +29,24 @@ git clone https://github.com/Fractal-Neurons/pacta.git
   - `pacta_get_anchoring`: returns the Base (`8453`) `PactaCommitmentRegistry` (`0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872`), the EAS Schema (`0x7ff485bc1159dff3c70eefcb9dff2d65be990301760c2d53799e5a45e3badf83`), and `pacta.base.eth`.
   - `pacta_x402_discover`: reports `PACTA_X402_URL` status, the live gateway `x402_gateway_url` and the local-spec payment requirements (labelled `source: "local_spec"`, validated by the same rules as upstream challenges). When `PACTA_X402_URL` is set, it also fetches `/.well-known/x402` and `/v1/sample/control-plane` for information only.
 - **Live gateway.** The canonical Pacta x402 edge Worker is live at `https://pacta-x402.pacta.workers.dev` (Cloudflare; free `/health`, `/.well-known/x402`, `/v1/sample/control-plane`). `pacta_get_anchoring` and `pacta_x402_discover` report it as `x402_gateway_url` even while paid tools are off. To opt in, set `PACTA_X402_URL=https://pacta-x402.pacta.workers.dev`.
-- **Optional Paid `x402` v1 Base USDC Tools** (enabled only when `PACTA_X402_URL` is set; when unset, `tools/list` shows only the free tools and paid calls return `x402_disabled`):
-  - `pacta_scan_control_plane` (`$0.10` = `100000` atomic)
-  - `pacta_live_timelocks` (`$0.10` = `100000` atomic)
-  - `pacta_scan_timelock_op` (`$0.25` = `250000` atomic)
+- **Optional Paid `x402` v1 + v2 Base USDC Tools** (enabled only when `PACTA_X402_URL` is set; when unset, `tools/list` shows only the free tools and paid calls return `x402_disabled`):
+  - `pacta_scan_control_plane` → `/v1/scan/control-plane` (`$0.10` = `100000` atomic; `chain`, `address`)
+  - `pacta_live_timelocks` → `/v1/briefs/live-timelocks` (`$0.10` = `100000` atomic)
+  - `pacta_scan_timelock_op` → `/v1/scan/timelock-op` (`$0.25` = `250000` atomic; `chain`, `timelock`, `opId`)
+  - `pacta_scan_proposal_diff` → `/v1/scan/proposal-diff` (`$0.15` = `150000` atomic; `forum` = `aave` | `euler` | `morpho` | `sky`, `topicId` = the forum topic id). The proposal must be listed in `https://pacta.wtf/api/v1/proposals.json`.
 
-  If you omit `xPaymentHeader`, the tool returns the upstream `402` as a validated `PaymentRequirements` entry plus EIP-712 `TransferWithAuthorization` `typedData`. Sign that typedData yourself (the server holds no keys), base64-encode the x402 envelope, and call the tool again with `xPaymentHeader`.
+  The live Worker answers every paid route in both protocol versions. A bare request (no query, no payment header) gets the 402 immediately.
+  - **x402 v1**: the 402 JSON body (`x402Version: 1`, `network: "base"`, `maxAmountRequired`). Pay with `xPaymentHeader`, sent as `X-PAYMENT`. The receipt is `X-PAYMENT-RESPONSE`.
+  - **x402 v2**: the `PAYMENT-REQUIRED` header (base64 JSON, `x402Version: 2`, `network: "eip155:8453"`, `amount`, `extensions.bazaar` with a JSON Schema 2020-12 schema). Pay with `paymentSignatureHeader`, sent as `PAYMENT-SIGNATURE`. The receipt is `PAYMENT-RESPONSE`.
+
+  If you send no payment argument, the tool returns the upstream `402` as a validated requirements entry for the version picked by `x402Version` (default `1`), along with:
+  - `availableVersions` and `alternativeAccepts` for the other valid version;
+  - EIP-712 `TransferWithAuthorization` `typedData`;
+  - the envelope template for that version (`xPaymentEnvelopeTemplate` for v1, `paymentSignatureEnvelopeTemplate` for v2).
+
+  Every challenge entry, v1 or v2, passes the same pins: allowlisted `payTo`, Base USDC, the `PACTA_X402_MAX_ATOMIC` cap, the route price, the `maxTimeoutSeconds` ceiling, and binding to the requested URL. Anything else is `rejected_challenge`. Sign the typedData yourself (the server holds no keys), base64-encode the envelope, and call the tool again with `xPaymentHeader` (v1) or `paymentSignatureHeader` (v2), never both.
+
+  A paid call succeeds only with a 2xx and a valid `PAYMENT-RESPONSE` / `X-PAYMENT-RESPONSE` receipt on that version's network, whose payer, payTo and amount match your authorization. The receipt is the facilitator's assertion and is not looked up on Base (`onchainReceiptVerified: false`).
 
 ## Environment variables
 

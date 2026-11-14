@@ -299,7 +299,9 @@ test("accepts[]: rogue payTo, wrong asset, wrong network, chainId != 8453, bad c
   assert.deepEqual(eReasons(goodEntry({ chainId: "84532" })), ["bad_chain_id"]);
   assert.deepEqual(eReasons(goodEntry({ extra: { name: "USD Coin", version: "2", chainId: 1 } })), ["bad_chain_id"]);
   assert.deepEqual(eReasons(goodEntry({ scheme: "upto" })), ["bad_scheme"]);
-  assert.deepEqual(eReasons(goodEntry(), { ...EOPTS, containerVersion: 2 }), ["bad_x402_version"]);
+  // a v1-shaped entry inside a v2 container is judged by v2 rules: wrong network name, no `amount`
+  assert.deepEqual(eReasons(goodEntry(), { ...EOPTS, containerVersion: 2 }), ["bad_network", "bad_amount"]);
+  assert.deepEqual(eReasons(goodEntry(), { ...EOPTS, containerVersion: 3 }), ["bad_x402_version"]);
   assert.deepEqual(eReasons(goodEntry(), { routeMaxAmountRequired: "100000", expectedResource: RESOURCE }), ["bad_x402_version"]); // version missing
   assert.deepEqual(eReasons(goodEntry({ extra: { name: "USDC", version: "2" } })), ["bad_extra"]);
   assert.deepEqual(eReasons(goodEntry({ extra: undefined })), ["bad_extra"]);

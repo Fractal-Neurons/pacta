@@ -34,6 +34,8 @@ export const SNIPPET_LENGTH = 300;
 // Canonical live Pacta x402 edge Worker (Cloudflare). Published for discovery only: paid tools stay opt-in and are
 // enabled solely by setting PACTA_X402_URL (defaultBaseUrl stays null, so nothing is ever paid without that choice).
 export const X402_GATEWAY_URL = "https://pacta-x402.pacta.workers.dev";
+/** CAIP-2 network id used by x402 v2 for Base mainnet (v1 uses the legacy name "base"). */
+export const BASE_NETWORK_V2 = "eip155:8453";
 
 export const X402_DEFAULTS = Object.freeze({
   deploymentStatus: "live_opt_in",
@@ -43,8 +45,14 @@ export const X402_DEFAULTS = Object.freeze({
   timeoutEnvVar: "PACTA_X402_TIMEOUT_MS",
   defaultBaseUrl: null,
   x402Version: 1,
+  x402Versions: Object.freeze([1, 2]),
   scheme: "exact",
   network: "base",
+  networkV2: BASE_NETWORK_V2,
+  networks: Object.freeze(["base", BASE_NETWORK_V2]),
+  paymentHeaders: Object.freeze({ 1: "X-PAYMENT", 2: "PAYMENT-SIGNATURE" }),
+  challengeHeaderV2: "PAYMENT-REQUIRED",
+  receiptHeaders: Object.freeze(["PAYMENT-RESPONSE", "X-PAYMENT-RESPONSE"]),
   chainId: BASE_CHAIN_ID,
   asset: BASE_USDC,
   payTo: ALLOWED_PAY_TO[0],
@@ -81,6 +89,12 @@ export const PAID_ROUTES = Object.freeze({
     maxAmountRequired: "250000",
     description: "Pinned-block OpenZeppelin TimelockController operation state and delay.",
   }),
+  scanProposalDiff: Object.freeze({
+    path: "/v1/scan/proposal-diff",
+    priceUsdc: "0.15",
+    maxAmountRequired: "150000",
+    description: "Re-runs a tracked governance proposal's pinned control-plane reads live and returns pinned-vs-live diffs.",
+  }),
 });
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -88,8 +102,9 @@ export const PAID_ROUTES = Object.freeze({
 // ---------------------------------------------------------------------------------------------------------------
 
 /**
- * Stable `code` values: x402_disabled, invalid_config, invalid_argument, invalid_x_payment, malformed_header,
- * rejected_challenge, timeout, network_error, response_too_large, upstream_http_error, unverified_settlement.
+ * Stable `code` values: x402_disabled, invalid_config, invalid_argument, invalid_x_payment, invalid_payment_signature,
+ * malformed_header, rejected_challenge, timeout, network_error, response_too_large, upstream_http_error,
+ * unverified_settlement.
  */
 export class X402Error extends Error {
   constructor(code, message, details = {}) {
@@ -267,6 +282,18 @@ export function validateXPaymentHeader(
   if (!isPlainObject(payload) || !hasOnlyKeys(payload, ["signature", "authorization"])) {
     return bad("bad_payload", "payload must be an object with signature and authorization.");
   }
+  const auth = checkExactAuthorization(payload, { routeMaxAmountRequired, maxAtomic, allowedPayTo, nowSeconds, maxTimeoutSeconds });
+  if (!auth.ok) return bad(auth.reason, auth.message);
+  return { ok: true, payment: { x402Version: 1, scheme: "exact", network: "base", payload: auth.payload } };
+}
+
+/**
+ * EIP-3009 `exact` payload checks shared by x402 v1 (X-PAYMENT) and v2 (PAYMENT-SIGNATURE): 65-byte signature,
+ * exact authorization keys, EIP-55 from/to, allowlisted recipient, value <= cap and <= route price, validity window
+ * within `maxTimeoutSeconds`, 32-byte nonce. Returns the normalized payload.
+ */
+function checkExactAuthorization(payload, { routeMaxAmountRequired, maxAtomic, allowedPayTo, nowSeconds, maxTimeoutSeconds }) {
+  const bad = (reason, message) => ({ ok: false, reason, message });
   if (!isSignature65(payload.signature)) return bad("bad_signature", "signature must be 65-byte 0x hex.");
   const a = payload.authorization;
   if (!isPlainObject(a) || !hasOnlyKeys(a, AUTH_KEYS) || !AUTH_KEYS.every((k) => k in a)) {
@@ -302,23 +329,86 @@ export function validateXPaymentHeader(
 
   return {
     ok: true,
-    payment: {
-      x402Version: 1,
-      scheme: "exact",
-      network: "base",
-      payload: {
-        signature: payload.signature,
-        authorization: {
-          from: a.from,
-          to: a.to,
-          value: a.value,
-          validAfter: a.validAfter,
-          validBefore: a.validBefore,
-          nonce: a.nonce,
-        },
-      },
+    payload: {
+      signature: payload.signature,
+      authorization: { from: a.from, to: a.to, value: a.value, validAfter: a.validAfter, validBefore: a.validBefore, nonce: a.nonce },
     },
   };
+}
+
+const V2_PAYMENT_KEYS = ["x402Version", "scheme", "network", "accepted", "payload", "resource", "extensions"];
+const V2_ACCEPTED_KEYS = ["scheme", "network", "amount", "asset", "payTo", "maxTimeoutSeconds", "extra"];
+
+/**
+ * Validate a base64 x402 v2 PAYMENT-SIGNATURE header under the same pins as v1. `scheme` / `network` may sit in the
+ * standard `accepted` requirement, at the top level, or both: every value given must be "exact" / "eip155:8453" and
+ * each must be given at least once. Any `accepted` field present must satisfy the pins (Base USDC, allowlisted payTo,
+ * amount <= cap and <= route price and == authorization.value, maxTimeoutSeconds within the ceiling, USDC EIP-712
+ * extra). An optional `resource` ({url} or string) must name `expectedResource` (origin + pathname). Never throws.
+ * @returns {{ ok: true, payment: object } | { ok: false, error: { code: "invalid_payment_signature", reason, message } }}
+ */
+export function validatePaymentSignatureHeader(
+  header,
+  {
+    routeMaxAmountRequired,
+    maxAtomic = DEFAULT_MAX_ATOMIC,
+    allowedPayTo = ALLOWED_PAY_TO,
+    nowSeconds,
+    maxTimeoutSeconds = MAX_TIMEOUT_SECONDS_CEILING,
+    maxLength = MAX_X_PAYMENT_LENGTH,
+    expectedResource,
+  } = {}
+) {
+  const bad = (reason, message) => ({
+    ok: false,
+    error: { code: "invalid_payment_signature", reason, message: `Invalid PAYMENT-SIGNATURE: ${message}` },
+  });
+  const dec = decodeStrictBase64Json(header, { maxLength });
+  if (!dec.ok) return bad(dec.reason, `header failed strict base64/UTF-8/JSON decoding (${dec.reason}).`);
+  const p = dec.value;
+  if (!isPlainObject(p)) return bad("not_object", "decoded JSON must be an object.");
+  if (!hasOnlyKeys(p, V2_PAYMENT_KEYS)) return bad("unexpected_field", "unexpected top-level field.");
+  if (p.x402Version !== 2) return bad("bad_x402_version", "x402Version must be 2.");
+  const acc = p.accepted;
+  if (acc !== undefined && (!isPlainObject(acc) || !hasOnlyKeys(acc, V2_ACCEPTED_KEYS))) {
+    return bad("bad_accepted", `accepted must be an object with only ${V2_ACCEPTED_KEYS.join(",")}.`);
+  }
+  const pick = (k) => [p[k], acc && acc[k]].filter((v) => v !== undefined);
+  const schemes = pick("scheme");
+  const networks = pick("network");
+  if (!schemes.length || schemes.some((v) => v !== "exact")) return bad("bad_scheme", 'scheme must be "exact".');
+  if (!networks.length || networks.some((v) => v !== BASE_NETWORK_V2)) return bad("bad_network", `network must be "${BASE_NETWORK_V2}".`);
+  const payload = p.payload;
+  if (!isPlainObject(payload) || !hasOnlyKeys(payload, ["signature", "authorization"])) {
+    return bad("bad_payload", "payload must be an object with signature and authorization.");
+  }
+  const auth = checkExactAuthorization(payload, { routeMaxAmountRequired, maxAtomic, allowedPayTo, nowSeconds, maxTimeoutSeconds });
+  if (!auth.ok) return bad(auth.reason, auth.message);
+  const a = auth.payload.authorization;
+  if (acc) {
+    if (acc.asset !== undefined && (!isAddress(acc.asset) || !sameAddress(acc.asset, BASE_USDC))) return bad("bad_asset", "accepted.asset must be Base USDC.");
+    if (acc.payTo !== undefined && (!isValidAddress(acc.payTo) || !isAllowedPayTo(acc.payTo, allowedPayTo) || !sameAddress(acc.payTo, a.to))) {
+      return bad("recipient_not_allowed", "accepted.payTo must be an allowed Pacta recipient equal to authorization.to.");
+    }
+    if (acc.amount !== undefined) {
+      const amt = parsePositiveAtomic(acc.amount);
+      if (amt === null) return bad("bad_value", "accepted.amount must be a positive integer string.");
+      if (amt !== BigInt(a.value)) return bad("value_mismatch", "accepted.amount must equal authorization.value.");
+    }
+    if (acc.maxTimeoutSeconds !== undefined && (!Number.isSafeInteger(acc.maxTimeoutSeconds) || acc.maxTimeoutSeconds <= 0 || acc.maxTimeoutSeconds > MAX_TIMEOUT_SECONDS_CEILING)) {
+      return bad("bad_max_timeout", "accepted.maxTimeoutSeconds is out of range.");
+    }
+    if (acc.extra !== undefined && (!isPlainObject(acc.extra) || acc.extra.name !== "USD Coin" || acc.extra.version !== "2")) {
+      return bad("bad_extra", "accepted.extra must be the USD Coin / 2 EIP-712 domain.");
+    }
+  }
+  if (p.resource !== undefined) {
+    const url = typeof p.resource === "string" ? p.resource : isPlainObject(p.resource) ? p.resource.url : undefined;
+    const exp = parseExpectedResource(expectedResource);
+    if (resourceBindingReasons(typeof url === "string" ? url : 0, exp).length) return bad("resource_mismatch", "resource does not name the requested route.");
+  }
+  if (p.extensions !== undefined && !isPlainObject(p.extensions)) return bad("bad_extensions", "extensions must be an object.");
+  return { ok: true, payment: { x402Version: 2, scheme: "exact", network: BASE_NETWORK_V2, payload: auth.payload } };
 }
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -382,6 +472,7 @@ export function validateAcceptsEntry(
   entry,
   {
     containerVersion,
+    containerResource,
     routeMaxAmountRequired,
     maxAtomic = DEFAULT_MAX_ATOMIC,
     allowedPayTo = ALLOWED_PAY_TO,
@@ -394,9 +485,10 @@ export function validateAcceptsEntry(
   const expected = parseExpectedResource(expectedResource);
   const reasons = [];
   const version = entry.x402Version !== undefined ? entry.x402Version : containerVersion;
-  if (version !== 1) reasons.push("bad_x402_version");
+  if (version !== 1 && version !== 2) reasons.push("bad_x402_version");
+  const v2 = version === 2;
   if (entry.scheme !== "exact") reasons.push("bad_scheme");
-  if (entry.network !== "base") reasons.push("bad_network");
+  if (entry.network !== (v2 ? BASE_NETWORK_V2 : "base")) reasons.push("bad_network");
   if (!chainIdOk(entry.chainId) || (isPlainObject(entry.extra) && !chainIdOk(entry.extra.chainId))) {
     reasons.push("bad_chain_id");
   }
@@ -412,7 +504,8 @@ export function validateAcceptsEntry(
     if (payToProblem === "bad_checksum") reasons.push("bad_pay_to_checksum");
   }
 
-  const amount = parsePositiveAtomic(entry.maxAmountRequired);
+  const amountField = v2 ? "amount" : "maxAmountRequired"; // v1: maxAmountRequired; v2: amount
+  const amount = parsePositiveAtomic(entry[amountField]);
   if (amount === null) reasons.push("bad_amount");
   else {
     if (amount > BigInt(resolveMaxAtomic(maxAtomic).maxAtomic)) reasons.push("amount_over_cap");
@@ -426,7 +519,8 @@ export function validateAcceptsEntry(
 
   if (!isPlainObject(entry.extra) || entry.extra.name !== "USD Coin" || entry.extra.version !== "2") reasons.push("bad_extra");
 
-  if (!localSpec) reasons.push(...resourceBindingReasons(entry.resource, expected));
+  // v2 binds the resource at the container level ({resource: {url}}); an entry-level resource, when present, wins.
+  if (!localSpec) reasons.push(...resourceBindingReasons(entry.resource !== undefined ? entry.resource : containerResource, expected));
 
   if (reasons.length) return { ok: false, reasons };
   const bounded = (v, n) => (typeof v === "string" ? v.slice(0, n) : undefined);
@@ -434,11 +528,11 @@ export function validateAcceptsEntry(
     ok: true,
     reasons: [],
     entry: {
-      x402Version: 1,
+      x402Version: v2 ? 2 : 1,
       scheme: "exact",
-      network: "base",
+      network: v2 ? BASE_NETWORK_V2 : "base",
       chainId: BASE_CHAIN_ID,
-      maxAmountRequired: entry.maxAmountRequired,
+      ...(v2 ? { amount: entry.amount } : { maxAmountRequired: entry.maxAmountRequired }),
       ...(expected ? { resource: expectedResource } : {}),
       ...(bounded(entry.description, 512) !== undefined ? { description: bounded(entry.description, 512) } : {}),
       mimeType: bounded(entry.mimeType, 128) ?? "application/json",
@@ -477,8 +571,10 @@ function collectCandidates(sourceName, value, out, sourceErrors) {
   if (Array.isArray(value)) {
     value.forEach((entry, index) => out.push({ source: sourceName, index, entry, containerVersion: undefined }));
   } else if (isPlainObject(value) && Array.isArray(value.accepts)) {
+    const r = value.resource;
+    const containerResource = isPlainObject(r) ? r.url : r;
     value.accepts.forEach((entry, index) =>
-      out.push({ source: sourceName, index, entry, containerVersion: value.x402Version })
+      out.push({ source: sourceName, index, entry, containerVersion: value.x402Version, containerResource })
     );
   } else {
     sourceErrors.push({ source: sourceName, reason: "no_accepts_array" });
@@ -486,11 +582,13 @@ function collectCandidates(sourceName, value, out, sourceErrors) {
 }
 
 /**
- * Extract and validate every accepts[] entry from a 402 (JSON body, base64 Payment-Required / X-Payment-Required,
- * WWW-Authenticate). Returns the first valid normalized entry, or a rejected_challenge X402Error with per-entry
- * reasons. Never falls back to an unvalidated entry.
+ * Extract and validate every accepts[] entry from a 402: the JSON body (x402 v1), the base64 PAYMENT-REQUIRED header
+ * (x402 v2; also v1-shaped) / X-Payment-Required, and WWW-Authenticate. Every entry is checked under the same pins
+ * (Base USDC, payTo allowlist, cap, route price, timeout ceiling, resource binding). Returns the first valid entry of
+ * `preferVersion` (default 1), else the first valid entry of any version, or a rejected_challenge X402Error with
+ * per-entry reasons. Never falls back to an unvalidated entry.
  */
-export function selectPaymentRequirements({ bodyText, headers, routeSpec, maxAtomic, resource, sourceLabel = "upstream_402" }) {
+export function selectPaymentRequirements({ bodyText, headers, routeSpec, maxAtomic, resource, sourceLabel = "upstream_402", preferVersion = 1 }) {
   const candidates = [];
   const sourceErrors = [];
   let upstreamError;
@@ -525,17 +623,30 @@ export function selectPaymentRequirements({ bodyText, headers, routeSpec, maxAto
   else if (www) collectCandidates("www-authenticate", www.value, candidates, sourceErrors);
 
   const rejected = [];
+  const valid = [];
   for (const c of candidates) {
     const r = validateAcceptsEntry(c.entry, {
       containerVersion: c.containerVersion,
+      containerResource: c.containerResource,
       routeMaxAmountRequired: routeSpec.maxAmountRequired,
       maxAtomic,
       expectedResource: resource,
     });
-    if (r.ok) {
-      return { selected: r.entry, selectedFrom: { source: c.source, index: c.index }, rejected, sourceErrors, upstreamError };
-    }
-    rejected.push({ source: c.source, index: c.index, reasons: r.reasons });
+    if (r.ok) valid.push({ entry: r.entry, from: { source: c.source, index: c.index } });
+    else rejected.push({ source: c.source, index: c.index, reasons: r.reasons });
+  }
+  if (valid.length) {
+    const pick = valid.find((v) => v.entry.x402Version === preferVersion) ?? valid[0];
+    const alternatives = valid.filter((v) => v !== pick && v.entry.x402Version !== pick.entry.x402Version).map((v) => v.entry);
+    return {
+      selected: pick.entry,
+      selectedFrom: pick.from,
+      alternatives,
+      availableVersions: [...new Set(valid.map((v) => v.entry.x402Version))].sort(),
+      rejected,
+      sourceErrors,
+      upstreamError,
+    };
   }
   throw new X402Error(
     "rejected_challenge",
@@ -559,14 +670,14 @@ const RECEIPT_AMOUNT_FIELDS = ["amount", "value"];
  * and amount / value == authorization.value. It does NOT look the transaction up on-chain.
  * @returns {{ ok: true, receipt: object } | { ok: false, reason: string }}
  */
-export function validatePaymentReceipt(raw, { expectedPayer, expectedPayTo, expectedValue } = {}) {
+export function validatePaymentReceipt(raw, { expectedPayer, expectedPayTo, expectedValue, network = "base" } = {}) {
   if (raw === null || raw === undefined) return { ok: false, reason: "missing_receipt" };
   const dec = decodeStrictBase64Json(raw);
   if (!dec.ok) return { ok: false, reason: `receipt_${dec.reason}` };
   const r = dec.value;
   if (!isPlainObject(r)) return { ok: false, reason: "receipt_not_object" };
   if (r.success !== true) return { ok: false, reason: "receipt_not_success" };
-  if (r.network !== "base") return { ok: false, reason: "receipt_bad_network" };
+  if (r.network !== network) return { ok: false, reason: "receipt_bad_network" };
   if (!isBytes32(r.transaction) || /^0x0{64}$/.test(r.transaction)) return { ok: false, reason: "receipt_bad_transaction" };
   if (r.payer === undefined || r.payer === null || r.payer === "") return { ok: false, reason: "receipt_missing_payer" };
   if (!isValidAddress(r.payer)) return { ok: false, reason: "receipt_bad_payer" };
@@ -599,7 +710,7 @@ export function validatePaymentReceipt(raw, { expectedPayer, expectedPayTo, expe
     ok: true,
     receipt: {
       success: true,
-      network: "base",
+      network,
       transaction: r.transaction,
       payer: r.payer,
       ...(payTo !== undefined ? { payTo } : {}),
@@ -622,7 +733,7 @@ export function buildPaymentRequirements(routeSpec, resource) {
     description: routeSpec.description,
     mimeType: "application/json",
     payTo: routeSpec.payTo || X402_DEFAULTS.payTo,
-    maxTimeoutSeconds: 300,
+    maxTimeoutSeconds: 60, // the live Worker's MAX_TIMEOUT_S
     asset: routeSpec.asset || X402_DEFAULTS.asset,
     extra: { name: "USD Coin", version: "2" },
   };
@@ -711,6 +822,46 @@ export function buildTransferWithAuthorizationTypedData({
       nonce: resolvedNonce,
     },
   };
+}
+
+/**
+ * Base64 x402 v2 PAYMENT-SIGNATURE header: {x402Version: 2, accepted, resource?, payload}. `accepted` is the
+ * validated v2 requirement from the 402 (scheme exact, network eip155:8453, amount, asset, payTo, maxTimeoutSeconds,
+ * extra); `resource` is the route URL without query.
+ */
+export function encodePaymentSignatureHeader({ signature, authorization, accepted, resource }) {
+  if (!isSignature65(signature)) fail("invalid_argument", "Invalid 65-byte EIP-3009 signature.");
+  if (!isPlainObject(authorization)) fail("invalid_argument", "authorization must be an object.");
+  if (!isPlainObject(accepted)) fail("invalid_argument", "accepted must be the validated v2 requirement object.");
+  const a = authorization;
+  const acc = {
+    scheme: "exact",
+    network: BASE_NETWORK_V2,
+    amount: String(accepted.amount ?? a.value),
+    asset: BASE_USDC,
+    payTo: accepted.payTo,
+    maxTimeoutSeconds: accepted.maxTimeoutSeconds,
+    extra: { name: "USD Coin", version: "2" },
+  };
+  return Buffer.from(
+    JSON.stringify({
+      x402Version: 2,
+      accepted: acc,
+      ...(typeof resource === "string" ? { resource: { url: resource } } : {}),
+      payload: {
+        signature,
+        authorization: {
+          from: a.from,
+          to: a.to,
+          value: String(a.value),
+          validAfter: String(a.validAfter),
+          validBefore: String(a.validBefore),
+          nonce: a.nonce,
+        },
+      },
+    }),
+    "utf8"
+  ).toString("base64");
 }
 
 export function encodeXPaymentHeader({ signature, authorization, network = X402_DEFAULTS.network }) {
@@ -845,11 +996,14 @@ function assertBaseUrl(baseUrl) {
 }
 
 /**
- * Call a paid x402 route.
- * - Without xPaymentHeader: expects 402; returns a challenge built ONLY from a validated accepts[] entry.
- * - With xPaymentHeader: validates it locally first (no network on failure); requires 2xx AND a valid
- *   X-PAYMENT-RESPONSE receipt whose payer == authorization.from (and payTo / amount, when present, == authorization
- *   to / value), else throws unverified_settlement. The receipt is not checked on-chain (onchainReceiptVerified: false).
+ * Call a paid x402 route (x402 v1 or v2).
+ * - Without a payment header: expects 402; returns a challenge built ONLY from a validated accepts[] entry (v1 body
+ *   or v2 PAYMENT-REQUIRED header; `x402Version` picks the preferred one, default 1) plus the EIP-712 typedData and
+ *   the envelope template for that version (X-PAYMENT for v1, PAYMENT-SIGNATURE for v2).
+ * - With xPaymentHeader (v1) or paymentSignatureHeader (v2), never both: validates it locally first (no network on
+ *   failure); requires 2xx AND a valid PAYMENT-RESPONSE / X-PAYMENT-RESPONSE receipt on that version's network whose
+ *   payer == authorization.from (and payTo / amount, when present, == authorization to / value), else throws
+ *   unverified_settlement. The receipt is not checked on-chain (onchainReceiptVerified: false).
  * Throws X402Error on every failure path.
  */
 export async function callX402Resource({
@@ -858,6 +1012,8 @@ export async function callX402Resource({
   routeSpec,
   query = {},
   xPaymentHeader,
+  paymentSignatureHeader,
+  x402Version,
   payer,
   validBeforeSeconds,
   nonce,
@@ -882,24 +1038,39 @@ export async function callX402Resource({
     fail("invalid_argument", `validBeforeSeconds must be an integer in 30..${MAX_TIMEOUT_SECONDS_CEILING}.`);
   }
 
-  const paid = xPaymentHeader !== undefined && xPaymentHeader !== null;
-  let payment = null;
-  if (paid) {
-    const v = validateXPaymentHeader(xPaymentHeader, {
-      routeMaxAmountRequired: routeSpec.maxAmountRequired,
-      maxAtomic,
-      nowSeconds,
-    });
-    if (!v.ok) fail(v.error.code, v.error.message, { reason: v.error.reason });
-    payment = v.payment;
+  if (x402Version !== undefined && x402Version !== null && x402Version !== 1 && x402Version !== 2) {
+    fail("invalid_argument", "x402Version must be 1 or 2.");
   }
+  const hasV1 = xPaymentHeader !== undefined && xPaymentHeader !== null;
+  const hasV2 = paymentSignatureHeader !== undefined && paymentSignatureHeader !== null;
+  if (hasV1 && hasV2) fail("invalid_argument", "Send exactly one of xPaymentHeader (x402 v1) and paymentSignatureHeader (x402 v2).");
+  const paid = hasV1 || hasV2;
 
   const url = new URL(routeSpec.path, baseUrl);
   for (const [k, val] of Object.entries(query)) {
     if (val !== undefined && val !== null && val !== "") url.searchParams.set(k, String(val));
   }
   const resource = url.toString();
-  const headers = { Accept: "application/json", ...(paid ? { "X-PAYMENT": xPaymentHeader } : {}) };
+  const routeUrl = url.origin + url.pathname; // v2 resource binding: no query
+
+  let payment = null;
+  if (paid) {
+    const v = hasV1
+      ? validateXPaymentHeader(xPaymentHeader, { routeMaxAmountRequired: routeSpec.maxAmountRequired, maxAtomic, nowSeconds })
+      : validatePaymentSignatureHeader(paymentSignatureHeader, {
+          routeMaxAmountRequired: routeSpec.maxAmountRequired,
+          maxAtomic,
+          nowSeconds,
+          expectedResource: resource,
+        });
+    if (!v.ok) fail(v.error.code, v.error.message, { reason: v.error.reason });
+    payment = v.payment;
+  }
+  const headers = {
+    Accept: "application/json",
+    ...(hasV1 ? { "X-PAYMENT": xPaymentHeader } : {}),
+    ...(hasV2 ? { "PAYMENT-SIGNATURE": paymentSignatureHeader } : {}),
+  };
 
   // redirect: "error" — never let a 3xx carry the X-PAYMENT header (or a challenge) to another origin.
   const { res, text } = await fetchTextWithTimeout(
@@ -926,11 +1097,17 @@ export async function callX402Resource({
         ...(upstreamError ? { upstreamError } : {}),
       });
     }
-    const rawReceipt = res.headers?.get?.("x-payment-response") ?? res.headers?.get?.("payment-response") ?? null;
+    const h = (k) => res.headers?.get?.(k) ?? null;
+    const rawReceipt = hasV2 ? h("payment-response") ?? h("x-payment-response") : h("x-payment-response") ?? h("payment-response");
     const auth = payment.payload.authorization;
-    const rv = validatePaymentReceipt(rawReceipt, { expectedPayer: auth.from, expectedPayTo: auth.to, expectedValue: auth.value });
+    const rv = validatePaymentReceipt(rawReceipt, {
+      expectedPayer: auth.from,
+      expectedPayTo: auth.to,
+      expectedValue: auth.value,
+      network: payment.network,
+    });
     if (!rv.ok) {
-      fail("unverified_settlement", `Paid response has no valid X-PAYMENT-RESPONSE settlement receipt (${rv.reason}); body withheld.`, {
+      fail("unverified_settlement", `Paid response has no valid PAYMENT-RESPONSE / X-PAYMENT-RESPONSE settlement receipt (${rv.reason}); body withheld.`, {
         reason: rv.reason,
         status,
         resource,
@@ -946,6 +1123,7 @@ export async function callX402Resource({
       status,
       paymentRequired: false,
       paid: true,
+      x402Version: payment.x402Version,
       // The receipt is the gateway's header assertion, checked against our authorization. The client does not look
       // the settlement transaction up on Base, so on-chain settlement is NOT independently verified.
       gatewayReceiptVerified: true,
@@ -958,13 +1136,14 @@ export async function callX402Resource({
   }
 
   if (status === 402) {
-    const sel = selectPaymentRequirements({ bodyText: text, headers: res.headers, routeSpec, maxAtomic, resource });
+    const sel = selectPaymentRequirements({ bodyText: text, headers: res.headers, routeSpec, maxAtomic, resource, preferVersion: x402Version ?? 1 });
     const entry = sel.selected;
+    const isV2 = entry.x402Version === 2;
     const ttl = Math.min(validBeforeSeconds ?? 300, entry.maxTimeoutSeconds);
     const eip712TypedData = buildTransferWithAuthorizationTypedData({
       payer: payer || ZERO_ADDRESS,
       payTo: entry.payTo,
-      value: entry.maxAmountRequired,
+      value: isV2 ? entry.amount : entry.maxAmountRequired,
       ttlSeconds: ttl,
       nonce: nonce ?? undefined,
       nowSeconds: nowSecondsOr(nowSeconds),
@@ -975,23 +1154,50 @@ export async function callX402Resource({
       source: "upstream_402",
       resource,
       priceUsdc: routeSpec.priceUsdc,
-      x402Version: 1,
+      x402Version: entry.x402Version,
+      availableVersions: sel.availableVersions,
       accepts: [entry],
+      ...(sel.alternatives.length ? { alternativeAccepts: sel.alternatives } : {}),
       selectedFrom: sel.selectedFrom,
       rejectedEntries: sel.rejected,
       ...(sel.sourceErrors.length ? { sourceErrors: sel.sourceErrors } : {}),
       validBeforeSecondsApplied: ttl,
       eip712TypedData,
-      xPaymentEnvelopeTemplate: {
-        headerName: "X-PAYMENT",
-        encoding: "base64(JSON)",
-        jsonShape: {
-          x402Version: 1,
-          scheme: "exact",
-          network: "base",
-          payload: { signature: "0x<65-byte-signature>", authorization: eip712TypedData.message },
-        },
-      },
+      ...(isV2
+        ? {
+            paymentSignatureEnvelopeTemplate: {
+              headerName: "PAYMENT-SIGNATURE",
+              toolArgument: "paymentSignatureHeader",
+              encoding: "base64(JSON)",
+              jsonShape: {
+                x402Version: 2,
+                accepted: {
+                  scheme: "exact",
+                  network: BASE_NETWORK_V2,
+                  amount: entry.amount,
+                  asset: entry.asset,
+                  payTo: entry.payTo,
+                  maxTimeoutSeconds: entry.maxTimeoutSeconds,
+                  extra: entry.extra,
+                },
+                resource: { url: routeUrl },
+                payload: { signature: "0x<65-byte-signature>", authorization: eip712TypedData.message },
+              },
+            },
+          }
+        : {
+            xPaymentEnvelopeTemplate: {
+              headerName: "X-PAYMENT",
+              toolArgument: "xPaymentHeader",
+              encoding: "base64(JSON)",
+              jsonShape: {
+                x402Version: 1,
+                scheme: "exact",
+                network: "base",
+                payload: { signature: "0x<65-byte-signature>", authorization: eip712TypedData.message },
+              },
+            },
+          }),
       ...(sel.upstreamError ? { upstreamError: sel.upstreamError } : {}),
     };
   }

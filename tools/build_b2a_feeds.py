@@ -29,6 +29,22 @@ TREASURY = "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14"          # Pacta Treasur
 USDC_BASE = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"
 X402_URL = "https://pacta-x402.pacta.workers.dev"              # canonical live x402 edge Worker (Cloudflare; owner-deployed)
 X402_FREE = ["/health", "/.well-known/x402", "/v1/sample/control-plane"]
+X402_NETWORK_V2 = "eip155:8453"                                  # CAIP-2 Base mainnet (x402 v2); v1 uses "base"
+X402_MAX_TIMEOUT_S = 60                                          # live Worker MAX_TIMEOUT_S (v1 and v2 requirements)
+JSON_SCHEMA_2020_12 = "https://json-schema.org/draft/2020-12/schema"
+# Live Worker wire contract (pacta-core packages/x402-edge-worker/worker.mjs): both protocol versions on every paid route.
+X402_WIRE = {
+    "v1": {"x402Version": 1, "network": "base", "amountField": "maxAmountRequired", "challenge": "402 JSON body",
+           "paymentHeader": "X-PAYMENT", "receiptHeader": "X-PAYMENT-RESPONSE"},
+    "v2": {"x402Version": 2, "network": X402_NETWORK_V2, "amountField": "amount", "challenge": "PAYMENT-REQUIRED header (base64 JSON)",
+           "paymentHeader": "PAYMENT-SIGNATURE", "receiptHeader": "PAYMENT-RESPONSE", "bazaarSchema": JSON_SCHEMA_2020_12},
+}
+X402_BARE_PROBE = ("A bare GET (no query) or zero-byte POST with no payment header on any paid URL returns HTTP 402 at once: the v1 JSON body "
+                   "(x402Version 1, network base, maxAmountRequired) plus the v2 PAYMENT-REQUIRED header (x402Version 2, network eip155:8453, "
+                   "amount, extensions.bazaar with a JSON Schema draft 2020-12 schema).")
+X402_RECEIPT_NOTE = ("A settled call returns 200 with both PAYMENT-RESPONSE and X-PAYMENT-RESPONSE (base64 {success, transaction, network, payer}). "
+                     "That receipt is the facilitator's settlement assertion bound to the payer; the MCP client checks it against the signed "
+                     "authorization but does not look the transaction up on Base (onchainReceiptVerified: false).")
 MCP_NAME = "io.github.fractal-neurons/pacta"
 MCP_PACKAGE = "@pacta/mcp-server"
 MCP_VERSION = "0.1.0"                                            # @pacta/mcp-server package.json version (SKILL.md is shipped in it)
@@ -146,7 +162,8 @@ MCP_TOOLS = [("pacta_list_commitments", "free", "Filter indexed records (protoco
              ("pacta_x402_discover", "free", "x402 gateway status and discovery manifest (only when PACTA_X402_URL is set)"),
              ("pacta_scan_control_plane", "x402 $0.10", "Live control-plane scan of a contract (chain, address)"),
              ("pacta_scan_timelock_op", "x402 $0.25", "Live TimelockController operation state (timelock, opId)"),
-             ("pacta_live_timelocks", "x402 $0.10", "Live state of tracked queued timelock operations")]
+             ("pacta_live_timelocks", "x402 $0.10", "Live state of tracked queued timelock operations"),
+             ("pacta_scan_proposal_diff", "x402 $0.15", "Re-run a tracked governance proposal's pinned reads live, pinned-vs-live diffs (forum, topicId)")]
 X402_ROUTES = [("/v1/scan/control-plane?chain=ethereum|base&address=0x…", "100000", "$0.10"),
                ("/v1/scan/timelock-op?chain=ethereum|base&timelock=0x…&opId=0x…", "250000", "$0.25"),
                ("/v1/scan/proposal-diff?forum=aave|euler|morpho|sky&topicId=<id>", "150000", "$0.15"),
@@ -178,13 +195,19 @@ def llms_full(idx, radar, prop, onb):
          "## MCP server", f"- Name: {MCP_NAME} · package {MCP_PACKAGE} · transport stdio.", f"- Status: {MCP_STATUS}",
          f"- Install (after publication): `npx -y {MCP_PACKAGE}`; MCP client config: {{\"mcpServers\": {{\"pacta\": {{\"command\": \"npx\", \"args\": [\"-y\", \"{MCP_PACKAGE}\"]}}}}}}",
          "- Tools:"] + [f"  - {n} ({p}): {d}" for n, p, d in MCP_TOOLS] + [
-         f"- Paid tools are disabled unless PACTA_X402_URL is set (opt-in: PACTA_X402_URL={X402_URL}); the client refuses any 402 challenge whose payTo, asset or network differ "
-         "from the values below, or whose amount exceeds $1.00 by default.", "",
+         f"- Paid tools are disabled unless PACTA_X402_URL is set (opt-in: PACTA_X402_URL={X402_URL}); the client refuses any 402 challenge (v1 body or v2 "
+         "PAYMENT-REQUIRED header) whose payTo, asset or network differ from the values below, or whose amount exceeds $1.00 by default. Pay with "
+         "xPaymentHeader (x402 v1) or paymentSignatureHeader (x402 v2).", "",
          "## x402 micropayments (optional; only for live scans of unindexed contracts)",
          f"- Network: Base (chain id 8453) · scheme exact · asset USDC {USDC_BASE} · payTo {PAY_TO} (attester EOA, pacta.base.eth).",
          f"- Pacta Treasury: {TREASURY} (an externally owned account; the PactaCommitmentRegistry treasury slot).",
-         f"- Live gateway: {X402_URL} (Cloudflare Worker; x402 v1, PayAI facilitator).",
-         "- Paid routes:"] + [f"  - GET {X402_URL}{r}: {atomic} atomic USDC ({usd})" for r, atomic, usd in X402_ROUTES] + [
+         f"- Live gateway: {X402_URL} (Cloudflare Worker; x402Versions [1, 2]; PayAI facilitator; maxTimeoutSeconds {X402_MAX_TIMEOUT_S}).",
+         "- x402 v1: network base · amount field maxAmountRequired · challenge in the 402 JSON body · pay with X-PAYMENT · receipt X-PAYMENT-RESPONSE.",
+         f"- x402 v2: network {X402_NETWORK_V2} · amount field amount · challenge in the PAYMENT-REQUIRED header (base64 JSON) · pay with PAYMENT-SIGNATURE · "
+         f"receipt PAYMENT-RESPONSE · extensions.bazaar carries a JSON Schema draft 2020-12 schema ({JSON_SCHEMA_2020_12}).",
+         f"- Bare probe: {X402_BARE_PROBE}",
+         f"- Settlement: {X402_RECEIPT_NOTE}",
+         "- Paid routes (GET query or POST JSON body with the same names):"] + [f"  - GET {X402_URL}{r}: {atomic} atomic USDC ({usd})" for r, atomic, usd in X402_ROUTES] + [
          "- Free: " + ", ".join(f"GET {X402_URL}{p}" for p in X402_FREE) + " (/.well-known/x402 is the Bazaar discovery manifest, discoverable: true).", "",
          "## On-chain anchoring (Base, chain id 8453)",
          f"- PactaCommitmentRegistry {REGISTRY} (Sourcify verified); attester pacta.base.eth {a['attester_eoa']}.",
@@ -228,7 +251,7 @@ def agent_card(prop, onb, idx):
         "capabilities": {"streaming": False, "pushNotifications": False, "stateTransitionHistory": False},
         "defaultInputModes": ["application/json", "text/plain"],
         "defaultOutputModes": ["application/json", "text/markdown"],
-        "authentication": {"schemes": ["none"], "notes": "Static feeds need no auth. Paid live scans use x402 (HTTP 402 + X-PAYMENT) instead of accounts or keys."},
+        "authentication": {"schemes": ["none"], "notes": "Static feeds need no auth. Paid live scans use x402 instead of accounts or keys: v1 (HTTP 402 + X-PAYMENT) or v2 (PAYMENT-REQUIRED + PAYMENT-SIGNATURE)."},
         "skills": [
             {"id": "control-plane-lookup", "name": "Control-plane lookup",
              "description": "Who can upgrade, pause, mint or change delays for a DeFi protocol, at a canonical block, with a cast reproduction.",
@@ -248,10 +271,15 @@ def agent_card(prop, onb, idx):
         ],
         "endpoints": {"feeds": {p: f"{BASE}{p}" for p, _ in FEEDS}, "mcp_manifest": f"{BASE}/.well-known/mcp.json", "skill": f"{BASE}/SKILL.md",
                       "x402_gateway": X402_URL},
-        "x402": {"x402Version": 1, "scheme": "exact", "network": "base", "chainId": 8453, "asset": USDC_BASE, "payTo": PAY_TO,
-                 "status": "live", "gatewayUrl": X402_URL, "discovery": f"{X402_URL}/.well-known/x402",
+        "x402": {"x402Version": 1, "x402Versions": [1, 2], "scheme": "exact", "network": "base", "networks": ["base", X402_NETWORK_V2],
+                 "chainId": 8453, "asset": USDC_BASE, "payTo": PAY_TO, "maxTimeoutSeconds": X402_MAX_TIMEOUT_S,
+                 "status": "live", "gatewayUrl": X402_URL, "discovery": f"{X402_URL}/.well-known/x402", "wire": X402_WIRE,
+                 "bareProbe": X402_BARE_PROBE, "settlement": {"receiptHeaders": ["PAYMENT-RESPONSE", "X-PAYMENT-RESPONSE"],
+                                                              "onchainReceiptVerified": False, "note": X402_RECEIPT_NOTE},
                  "free": [f"{X402_URL}{p}" for p in X402_FREE],
-                 "routes": [{"path": r.split("?")[0], "query": (r.split("?")[1] if "?" in r else ""), "maxAmountRequired": atomic, "priceUsd": usd} for r, atomic, usd in X402_ROUTES]},
+                 "routes": [{"path": r.split("?")[0], "url": X402_URL + r.split("?")[0], "methods": ["GET", "POST"],
+                             "query": (r.split("?")[1] if "?" in r else ""), "maxAmountRequired": atomic, "amount": atomic, "priceUsd": usd}
+                            for r, atomic, usd in X402_ROUTES]},
         "anchoring": {"chainId": 8453, "registry": REGISTRY, "easSchema": EAS_SCHEMA, "attester": idx["onchain_anchoring"]["attester_eoa"],
                       "treasury": {"address": TREASURY, "label": "Pacta Treasury", "kind": "externally owned account"}},
     }
@@ -269,7 +297,11 @@ def mcp_manifest(idx, onb):
         "feeds": {p: f"{BASE}{p}" for p, _ in FEEDS},
         "verification": {"chainId": 8453, "registry": REGISTRY, "easSchema": EAS_SCHEMA, "method": "eth_call with EIP-1898 {blockHash, requireCanonical: true}"},
         "x402": {"gatewayUrl": X402_URL, "discovery": f"{X402_URL}/.well-known/x402", "enableWith": f"PACTA_X402_URL={X402_URL}",
-                 "optIn": True, "payTo": PAY_TO, "asset": USDC_BASE, "chainId": 8453},
+                 "optIn": True, "payTo": PAY_TO, "asset": USDC_BASE, "chainId": 8453, "x402Versions": [1, 2],
+                 "networks": ["base", X402_NETWORK_V2], "maxTimeoutSeconds": X402_MAX_TIMEOUT_S, "wire": X402_WIRE,
+                 "toolPaymentArguments": {"v1": "xPaymentHeader", "v2": "paymentSignatureHeader", "preference": "x402Version"},
+                 "onchainReceiptVerified": False,
+                 "paidRoutes": [{"path": r.split("?")[0], "amount": atomic, "priceUsd": usd} for r, atomic, usd in X402_ROUTES]},
     }
 
 
@@ -312,8 +344,16 @@ Environment (all optional, none secret):
 ## x402 (optional, only for live scans of contracts not in the index)
 - Live gateway: `{X402_URL}` (discovery `{X402_URL}/.well-known/x402`; free `/health` and `/v1/sample/control-plane`).
 - The MCP paid tools are opt-in: set `PACTA_X402_URL={X402_URL}` to enable them.
-- Base (8453), scheme `exact`, USDC `{USDC_BASE}`, payTo `{PAY_TO}`. Never sign for any other `payTo`.
-- Prices: control-plane scan $0.10, timelock operation $0.25, proposal diff $0.15, live timelocks $0.10. Default client cap $1.00.
+- Base (8453), scheme `exact`, USDC `{USDC_BASE}`, payTo `{PAY_TO}`, `maxTimeoutSeconds` {X402_MAX_TIMEOUT_S}. Never sign for any other `payTo`.
+- Paid routes (GET query or POST JSON body with the same names; default client cap $1.00):
+""" + "\n".join(f"  - `{X402_URL}{r.split('?')[0]}` ({usd}, `{atomic}` atomic USDC)" + (f": `?{r.split('?')[1]}`" if "?" in r else "")
+                for r, atomic, usd in X402_ROUTES) + f"""
+- `x402Versions: [1, 2]`, `networks: ["base", "{X402_NETWORK_V2}"]`:
+  - x402 v1: 402 JSON body (`x402Version: 1`, `network: "base"`, `maxAmountRequired`), pay with `X-PAYMENT`, receipt `X-PAYMENT-RESPONSE`.
+  - x402 v2: `PAYMENT-REQUIRED` header (base64 JSON, `x402Version: 2`, `network: "{X402_NETWORK_V2}"`, `amount`, `extensions.bazaar` with a JSON Schema draft 2020-12 schema), pay with `PAYMENT-SIGNATURE`, receipt `PAYMENT-RESPONSE`.
+- Bare probe: a bare `GET` (no query) or zero-byte `POST` with no payment header returns HTTP 402 with both challenges.
+- MCP tools take `xPaymentHeader` (v1) or `paymentSignatureHeader` (v2); `x402Version` picks the challenge to answer.
+- {X402_RECEIPT_NOTE}
 - Pacta Treasury `{TREASURY}` is an EOA (externally owned account) that receives issuer clearance payments; it is not an x402 payTo.
 
 ## Anchoring (Base, chain id 8453)

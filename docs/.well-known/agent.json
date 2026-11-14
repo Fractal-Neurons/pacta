@@ -11,7 +11,7 @@
   }
  },
  "authentication": {
-  "notes": "Static feeds need no auth. Paid live scans use x402 (HTTP 402 + X-PAYMENT) instead of accounts or keys.",
+  "notes": "Static feeds need no auth. Paid live scans use x402 instead of accounts or keys: v1 (HTTP 402 + X-PAYMENT) or v2 (PAYMENT-REQUIRED + PAYMENT-SIGNATURE).",
   "schemes": [
    "none"
   ]
@@ -142,6 +142,7 @@
  "version": "2026.11.13",
  "x402": {
   "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+  "bareProbe": "A bare GET (no query) or zero-byte POST with no payment header on any paid URL returns HTTP 402 at once: the v1 JSON body (x402Version 1, network base, maxAmountRequired) plus the v2 PAYMENT-REQUIRED header (x402Version 2, network eip155:8453, amount, extensions.bazaar with a JSON Schema draft 2020-12 schema).",
   "chainId": 8453,
   "discovery": "https://pacta-x402.pacta.workers.dev/.well-known/x402",
   "free": [
@@ -150,36 +151,96 @@
    "https://pacta-x402.pacta.workers.dev/v1/sample/control-plane"
   ],
   "gatewayUrl": "https://pacta-x402.pacta.workers.dev",
+  "maxTimeoutSeconds": 60,
   "network": "base",
+  "networks": [
+   "base",
+   "eip155:8453"
+  ],
   "payTo": "0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09",
   "routes": [
    {
+    "amount": "100000",
     "maxAmountRequired": "100000",
+    "methods": [
+     "GET",
+     "POST"
+    ],
     "path": "/v1/scan/control-plane",
     "priceUsd": "$0.10",
-    "query": "chain=ethereum|base&address=0x…"
+    "query": "chain=ethereum|base&address=0x…",
+    "url": "https://pacta-x402.pacta.workers.dev/v1/scan/control-plane"
    },
    {
+    "amount": "250000",
     "maxAmountRequired": "250000",
+    "methods": [
+     "GET",
+     "POST"
+    ],
     "path": "/v1/scan/timelock-op",
     "priceUsd": "$0.25",
-    "query": "chain=ethereum|base&timelock=0x…&opId=0x…"
+    "query": "chain=ethereum|base&timelock=0x…&opId=0x…",
+    "url": "https://pacta-x402.pacta.workers.dev/v1/scan/timelock-op"
    },
    {
+    "amount": "150000",
     "maxAmountRequired": "150000",
+    "methods": [
+     "GET",
+     "POST"
+    ],
     "path": "/v1/scan/proposal-diff",
     "priceUsd": "$0.15",
-    "query": "forum=aave|euler|morpho|sky&topicId=<id>"
+    "query": "forum=aave|euler|morpho|sky&topicId=<id>",
+    "url": "https://pacta-x402.pacta.workers.dev/v1/scan/proposal-diff"
    },
    {
+    "amount": "100000",
     "maxAmountRequired": "100000",
+    "methods": [
+     "GET",
+     "POST"
+    ],
     "path": "/v1/briefs/live-timelocks",
     "priceUsd": "$0.10",
-    "query": ""
+    "query": "",
+    "url": "https://pacta-x402.pacta.workers.dev/v1/briefs/live-timelocks"
    }
   ],
   "scheme": "exact",
+  "settlement": {
+   "note": "A settled call returns 200 with both PAYMENT-RESPONSE and X-PAYMENT-RESPONSE (base64 {success, transaction, network, payer}). That receipt is the facilitator's settlement assertion bound to the payer; the MCP client checks it against the signed authorization but does not look the transaction up on Base (onchainReceiptVerified: false).",
+   "onchainReceiptVerified": false,
+   "receiptHeaders": [
+    "PAYMENT-RESPONSE",
+    "X-PAYMENT-RESPONSE"
+   ]
+  },
   "status": "live",
-  "x402Version": 1
+  "wire": {
+   "v1": {
+    "amountField": "maxAmountRequired",
+    "challenge": "402 JSON body",
+    "network": "base",
+    "paymentHeader": "X-PAYMENT",
+    "receiptHeader": "X-PAYMENT-RESPONSE",
+    "x402Version": 1
+   },
+   "v2": {
+    "amountField": "amount",
+    "bazaarSchema": "https://json-schema.org/draft/2020-12/schema",
+    "challenge": "PAYMENT-REQUIRED header (base64 JSON)",
+    "network": "eip155:8453",
+    "paymentHeader": "PAYMENT-SIGNATURE",
+    "receiptHeader": "PAYMENT-RESPONSE",
+    "x402Version": 2
+   }
+  },
+  "x402Version": 1,
+  "x402Versions": [
+   1,
+   2
+  ]
  }
 }

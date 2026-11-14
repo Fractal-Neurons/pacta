@@ -32,13 +32,18 @@ Generated deterministically from the feeds below (data as of 2026-11-13T21:40:42
   - pacta_scan_control_plane (x402 $0.10): Live control-plane scan of a contract (chain, address)
   - pacta_scan_timelock_op (x402 $0.25): Live TimelockController operation state (timelock, opId)
   - pacta_live_timelocks (x402 $0.10): Live state of tracked queued timelock operations
-- Paid tools are disabled unless PACTA_X402_URL is set (opt-in: PACTA_X402_URL=https://pacta-x402.pacta.workers.dev); the client refuses any 402 challenge whose payTo, asset or network differ from the values below, or whose amount exceeds $1.00 by default.
+  - pacta_scan_proposal_diff (x402 $0.15): Re-run a tracked governance proposal's pinned reads live, pinned-vs-live diffs (forum, topicId)
+- Paid tools are disabled unless PACTA_X402_URL is set (opt-in: PACTA_X402_URL=https://pacta-x402.pacta.workers.dev); the client refuses any 402 challenge (v1 body or v2 PAYMENT-REQUIRED header) whose payTo, asset or network differ from the values below, or whose amount exceeds $1.00 by default. Pay with xPaymentHeader (x402 v1) or paymentSignatureHeader (x402 v2).
 
 ## x402 micropayments (optional; only for live scans of unindexed contracts)
 - Network: Base (chain id 8453) · scheme exact · asset USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913 · payTo 0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09 (attester EOA, pacta.base.eth).
 - Pacta Treasury: 0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14 (an externally owned account; the PactaCommitmentRegistry treasury slot).
-- Live gateway: https://pacta-x402.pacta.workers.dev (Cloudflare Worker; x402 v1, PayAI facilitator).
-- Paid routes:
+- Live gateway: https://pacta-x402.pacta.workers.dev (Cloudflare Worker; x402Versions [1, 2]; PayAI facilitator; maxTimeoutSeconds 60).
+- x402 v1: network base · amount field maxAmountRequired · challenge in the 402 JSON body · pay with X-PAYMENT · receipt X-PAYMENT-RESPONSE.
+- x402 v2: network eip155:8453 · amount field amount · challenge in the PAYMENT-REQUIRED header (base64 JSON) · pay with PAYMENT-SIGNATURE · receipt PAYMENT-RESPONSE · extensions.bazaar carries a JSON Schema draft 2020-12 schema (https://json-schema.org/draft/2020-12/schema).
+- Bare probe: A bare GET (no query) or zero-byte POST with no payment header on any paid URL returns HTTP 402 at once: the v1 JSON body (x402Version 1, network base, maxAmountRequired) plus the v2 PAYMENT-REQUIRED header (x402Version 2, network eip155:8453, amount, extensions.bazaar with a JSON Schema draft 2020-12 schema).
+- Settlement: A settled call returns 200 with both PAYMENT-RESPONSE and X-PAYMENT-RESPONSE (base64 {success, transaction, network, payer}). That receipt is the facilitator's settlement assertion bound to the payer; the MCP client checks it against the signed authorization but does not look the transaction up on Base (onchainReceiptVerified: false).
+- Paid routes (GET query or POST JSON body with the same names):
   - GET https://pacta-x402.pacta.workers.dev/v1/scan/control-plane?chain=ethereum|base&address=0x…: 100000 atomic USDC ($0.10)
   - GET https://pacta-x402.pacta.workers.dev/v1/scan/timelock-op?chain=ethereum|base&timelock=0x…&opId=0x…: 250000 atomic USDC ($0.25)
   - GET https://pacta-x402.pacta.workers.dev/v1/scan/proposal-diff?forum=aave|euler|morpho|sky&topicId=<id>: 150000 atomic USDC ($0.15)

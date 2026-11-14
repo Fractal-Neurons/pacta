@@ -48,7 +48,7 @@ test("in-process tools/list + tools/call: valid 402 challenge, rogue 402 rejecte
     },
   });
   const list = await srv.handleMessage({ jsonrpc: "2.0", id: 1, method: "tools/list" });
-  assert.equal(list.result.tools.length, 7);
+  assert.equal(list.result.tools.length, 8);
   const tl = list.result.tools.find((t) => t.name === "pacta_scan_timelock_op");
   assert.equal(tl.inputSchema.properties.validBeforeSeconds.maximum, 600);
 
@@ -152,7 +152,7 @@ test("stdio stream wrapper: initialize + tools/list + structured paid error", as
   const lines = await out.waitFor(4);
   h.close();
   assert.equal(lines[0].result.serverInfo.name, "@pacta/mcp-server");
-  assert.equal(lines[1].result.tools.length, 7);
+  assert.equal(lines[1].result.tools.length, 8);
   const err = JSON.parse(lines[2].result.content[0].text);
   assert.equal(lines[2].result.isError, true);
   assert.equal(err.code, "upstream_http_error");

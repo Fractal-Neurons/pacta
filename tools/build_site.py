@@ -779,8 +779,8 @@ def llms(idx, radar):
         "- Community queue: free, unscheduled (typically 6–8 weeks).",
         f"- Request: {BASE_URL}/request/ (builds a scope brief; opens a pre-filled GitHub intake issue or Gmail compose, or copies the brief).", "",
         "## x402 API (live)",
-        f"- On-demand scans of contracts outside the index; the indexed data above stays free. Live gateway: {B2A.X402_URL} (Cloudflare Worker, x402 v1, USDC on Base, payTo `{B2A.PAY_TO}`). Routes: `GET /v1/scan/control-plane?chain=&address=` ($0.10), `GET /v1/scan/timelock-op?chain=&timelock=&opId=` ($0.25), `GET /v1/scan/proposal-diff?forum=&topicId=` ($0.15), `GET /v1/briefs/live-timelocks` ($0.10); free `/health`, `/.well-known/x402` (Bazaar discovery), `/v1/sample/control-plane`.",
-        f"- MCP: set `PACTA_X402_URL={B2A.X402_URL}` to enable the paid tools (opt-in).", "",
+        f"- On-demand scans of contracts outside the index; the indexed data above stays free. Live gateway: {B2A.X402_URL} (Cloudflare Worker, x402Versions [1, 2]: v1 network `base` with `X-PAYMENT` / `X-PAYMENT-RESPONSE`, v2 network `{B2A.X402_NETWORK_V2}` with `PAYMENT-REQUIRED` / `PAYMENT-SIGNATURE` / `PAYMENT-RESPONSE`; USDC on Base, payTo `{B2A.PAY_TO}`, maxTimeoutSeconds {B2A.X402_MAX_TIMEOUT_S}). Routes: `GET /v1/scan/control-plane?chain=&address=` ($0.10), `GET /v1/scan/timelock-op?chain=&timelock=&opId=` ($0.25), `GET /v1/scan/proposal-diff?forum=&topicId=` ($0.15), `GET /v1/briefs/live-timelocks` ($0.10); free `/health`, `/.well-known/x402` (Bazaar discovery), `/v1/sample/control-plane`. A bare GET (no query) or zero-byte POST with no payment header on a paid route returns HTTP 402 with both challenges; the Bazaar extension carries a JSON Schema draft 2020-12 schema.",
+        f"- MCP: set `PACTA_X402_URL={B2A.X402_URL}` to enable the paid tools (opt-in); pay with `xPaymentHeader` (v1) or `paymentSignatureHeader` (v2). Settlement receipts are the facilitator's assertion (onchainReceiptVerified: false).", "",
         "## Contact",
         f"- {CONTACT} · {REPO} · {FN} · security: {BASE_URL}/.well-known/security.txt", "",
     ]

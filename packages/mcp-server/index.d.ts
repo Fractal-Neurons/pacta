@@ -137,12 +137,58 @@ export declare function encodeXPaymentHeader(options: {
   network?: string;
 }): string;
 
+/** CAIP-2 network id for Base mainnet used by x402 v2 ("eip155:8453"); x402 v1 uses "base". */
+export declare const BASE_NETWORK_V2: "eip155:8453";
+
+/** x402 v2 requirement as returned in a validated 402 (`accepts[0]` when x402Version is 2). */
+export interface PaymentRequirementsEntryV2 {
+  x402Version: 2;
+  scheme: "exact";
+  network: "eip155:8453";
+  chainId: 8453;
+  amount: string;
+  resource?: string;
+  description?: string;
+  mimeType: string;
+  payTo: string;
+  maxTimeoutSeconds: number;
+  asset: string;
+  extra: { name: "USD Coin"; version: "2" };
+}
+
+/** Base64 x402 v2 PAYMENT-SIGNATURE header: {x402Version: 2, accepted, resource?: {url}, payload}. */
+export declare function encodePaymentSignatureHeader(options: {
+  signature: string;
+  authorization: TransferWithAuthorizationMessage;
+  accepted: { amount?: string; payTo: string; maxTimeoutSeconds: number };
+  resource?: string;
+}): string;
+
+export interface PaymentSignatureEnvelope {
+  x402Version: 2;
+  scheme: "exact";
+  network: "eip155:8453";
+  payload: { signature: string; authorization: TransferWithAuthorizationMessage };
+}
+
+/**
+ * Validates a base64 x402 v2 PAYMENT-SIGNATURE header under the same pins as v1 (allowlisted payTo, Base USDC, cap,
+ * route price, validity window). scheme/network may be in `accepted`, at the top level, or both.
+ */
+export declare function validatePaymentSignatureHeader(
+  header: unknown,
+  options?: XPaymentValidationOptions & { expectedResource?: string }
+):
+  | { ok: true; payment: PaymentSignatureEnvelope }
+  | { ok: false; error: { code: "invalid_payment_signature"; reason: string; message: string } };
+
 /** Stable error codes surfaced by the x402 path and the free feed loaders (thrown as X402Error, rendered as JSON in MCP tool results). */
 export type X402ErrorCode =
   | "x402_disabled"
   | "invalid_config"
   | "invalid_argument"
   | "invalid_x_payment"
+  | "invalid_payment_signature"
   | "malformed_header"
   | "rejected_challenge"
   | "timeout"
@@ -208,7 +254,10 @@ export declare function validateXPaymentHeader(
 export declare function validateAcceptsEntry(
   entry: unknown,
   options?: {
+    /** 1 (network base, maxAmountRequired) or 2 (network eip155:8453, amount); an entry-level x402Version wins. */
     containerVersion?: unknown;
+    /** v2 binds the resource at the container level ({resource: {url}}); used when the entry has no resource. */
+    containerResource?: unknown;
     routeMaxAmountRequired?: string;
     maxAtomic?: string | number | bigint;
     allowedPayTo?: ReadonlyArray<string>;
@@ -220,7 +269,7 @@ export declare function validateAcceptsEntry(
      */
     expectedResource?: string;
   }
-): { ok: true; reasons: []; entry: PaymentRequirementsEntry } | { ok: false; reasons: string[] };
+): { ok: true; reasons: []; entry: PaymentRequirementsEntry | PaymentRequirementsEntryV2 } | { ok: false; reasons: string[] };
 
 export declare function selectPaymentRequirements(options: {
   bodyText?: string;
@@ -230,9 +279,14 @@ export declare function selectPaymentRequirements(options: {
   /** The exact absolute URL requested; every accepts[] entry is bound to it (origin + pathname). */
   resource: string;
   sourceLabel?: string;
+  /** Preferred x402 version (default 1); falls back to the first valid entry of any version. */
+  preferVersion?: 1 | 2;
 }): {
-  selected: PaymentRequirementsEntry;
+  selected: PaymentRequirementsEntry | PaymentRequirementsEntryV2;
   selectedFrom: { source: string; index: number };
+  /** Valid entries of the other version (e.g. the v2 PAYMENT-REQUIRED header when v1 was selected). */
+  alternatives: Array<PaymentRequirementsEntry | PaymentRequirementsEntryV2>;
+  availableVersions: Array<1 | 2>;
   rejected: Array<{ source: string; index: number; reasons: string[] }>;
   sourceErrors: Array<{ source: string; reason: string }>;
   upstreamError?: string;
@@ -241,7 +295,8 @@ export declare function selectPaymentRequirements(options: {
 /** Normalized gateway receipt. payTo / amount are present only when the gateway sent them (then they matched). */
 export interface PaymentReceipt {
   success: true;
-  network: "base";
+  /** "base" for x402 v1, "eip155:8453" for x402 v2. */
+  network: "base" | "eip155:8453";
   transaction: string;
   payer: string;
   payTo?: string;
@@ -255,7 +310,7 @@ export interface PaymentReceipt {
  */
 export declare function validatePaymentReceipt(
   raw: unknown,
-  options: { expectedPayer: string; expectedPayTo?: string; expectedValue?: string }
+  options: { expectedPayer: string; expectedPayTo?: string; expectedValue?: string; network?: "base" | "eip155:8453" }
 ): { ok: true; receipt: PaymentReceipt } | { ok: false; reason: string };
 
 /**
@@ -266,6 +321,7 @@ export interface PaidResourceResult {
   status: number;
   paymentRequired: false;
   paid: true;
+  x402Version: 1 | 2;
   gatewayReceiptVerified: true;
   onchainReceiptVerified: false;
   settlementVerificationScope: "gateway_header_assertion";
@@ -292,7 +348,12 @@ export declare function callX402Resource(options: {
   baseUrl: string | null;
   routeSpec: Record<string, string>;
   query?: Record<string, unknown>;
+  /** x402 v1 payment (network base). Send this OR paymentSignatureHeader, never both. */
   xPaymentHeader?: string;
+  /** x402 v2 payment (network eip155:8453), sent as PAYMENT-SIGNATURE. */
+  paymentSignatureHeader?: string;
+  /** Preferred version when answering a 402 challenge (default 1). */
+  x402Version?: 1 | 2;
   payer?: string;
   validBeforeSeconds?: number;
   nonce?: string;
