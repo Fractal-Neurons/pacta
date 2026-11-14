@@ -1,0 +1,46 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Curve Finance (crvUSD) control-plane safety · Pacta</title>
+<meta name="description" content="Who can upgrade, pause or change Curve Finance (crvUSD): 1 block-pinned control-plane check(s) with cast reproductions and a free live pre-flight API.">
+<link rel="canonical" href="https://pacta.wtf/protocols/curve-finance-crvusd/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Pacta by Fractal Neurons">
+<meta property="og:title" content="Curve Finance (crvUSD): control-plane safety record">
+<meta property="og:description" content="Who can upgrade, pause or change Curve Finance (crvUSD): 1 block-pinned control-plane check(s) with cast reproductions and a free live pre-flight API.">
+<meta property="og:url" content="https://pacta.wtf/protocols/curve-finance-crvusd/">
+<meta property="og:image" content="https://pacta.wtf/og-preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Curve Finance (crvUSD): control-plane safety record">
+<meta name="twitter:description" content="Who can upgrade, pause or change Curve Finance (crvUSD): 1 block-pinned control-plane check(s) with cast reproductions and a free live pre-flight API.">
+<meta name="twitter:image" content="https://pacta.wtf/og-preview.png">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../../favicon.png" type="image/png" sizes="32x32">
+<link rel="stylesheet" href="../../styles.css">
+<link rel="alternate" type="text/markdown" href="../../llms.txt" title="llms.txt">
+<script>document.documentElement.className="js";try{if(localStorage.getItem("pacta-theme")==="slate")document.documentElement.dataset.theme="slate"}catch(e){}</script>
+<script src="../../app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar"><div class="wrap"><a class="brand" href="../../"><img src="../../favicon.svg" alt="" width="22" height="22">PACTA<small>by Fractal Neurons</small></a><nav class="nav" aria-label="Sections"><a href="../../#preflight">Free API</a><a href="../../#inspector">Inspector</a><a href="../../#radar">Radar</a><a href="../../#findings">Findings</a><a href="../../#index">Index</a><a href="../../#verify">Verify</a><a href="../../#pricing">Pricing</a><a href="../../#faq">FAQ</a></nav><div class="tools"><button class="tt" type="button" aria-label="Theme: Paper (switch to Slate)"><span data-t="paper" class="on">Paper</span><span data-t="slate">Slate</span></button><a class="btn sm primary" href="../../request/">Request coverage</a></div></div></header>
+<main id="main" class="memo-wrap">
+<div class="crumbs"><a href="../../">Pacta</a> / <a href="../">Protocols</a> / Curve Finance (crvUSD)</div>
+<article class="memo">
+<header><span class="tier">Decentralized Stablecoin &amp; Lending</span><h1>Curve Finance (crvUSD): control-plane safety record</h1>
+<p class="lede">1 indexed control-plane surface(s) for Curve Finance (crvUSD), each pinned to a canonical Ethereum block and compared with what the protocol documents. Contracts: <code class="mono">0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC</code>.</p></header>
+<section class="memo-sec"><h2>Check it live (free)</h2><p>The pre-flight API re-reads the controller, proxy and capabilities of a contract at the latest block. No key, no wallet.</p>
+<div class="term"><div class="term-h"><span>Live pre-flight check</span><button class="copy" type="button" data-copy-term>Copy command</button></div><pre>curl -s &quot;https://pacta-x402.pacta.workers.dev/v1/check/preflight?chain=ethereum&amp;address=0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC&quot;</pre></div><p>MCP: <code class="mono">https://pacta-x402.pacta.workers.dev/mcp</code> · tool <code>pacta_check_preflight</code>.</p></section>
+<article class="memo-sec" id="curve-crvusd-factory-lending-owner-proxy"><h2>ControllerFactory Admin Proxy &amp; EmergencyDAO Debt-Ceiling Guard</h2><dl class="memo-meta"><dt>Status</dt><dd><span class="badge delta">Parameter delta</span></dd><dt>Target</dt><dd>crvUSD ControllerFactory <span class="addr" title="0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC">0xC933…38BC</span><button class="copy" type="button" data-copy="0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC">Copy</button></dd><dt>Pinned block</dt><dd>Ethereum <span class="num">#26,403,523</span> · sprint 11</dd><dt>Block hash</dt><dd><span class="addr" title="0xfc7beaa2338e8054577c0b101b641bc42afca2af39cb85d3fc13cbee32d4681a">0xfc7beaa2…d4681a</span><button class="copy" type="button" data-copy="0xfc7beaa2338e8054577c0b101b641bc42afca2af39cb85d3fc13cbee32d4681a">Copy</button></dd></dl><p><b>Observed on-chain.</b> ControllerFactory (0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC) admin() = LendingOwnerProxy (0xeDA020b067872717901916a3B8C724C21f6080d1), where dao() = CurveOwnershipAgent (0x40907540d8a6C65c637785e8f8B742ae6b0b9968, Aragon voteTime = 604800s / 7d on 0xE478de485ad2fe566d49342Cbd03E49ed7DB3356) and emergency_dao() = 5-of-9 EmergencyDAO Safe (0x467947EE34aF926cF1DCac093870f613C96B1E0c); crvUSD (0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E) minter() = ControllerFactory, totalSupply = 2,134,809,204.98 crvUSD; debt_ceiling(0x370a449FeBb9411c95bf897021377fe0B7D100c0) = 1,000,000,000 crvUSD.</p><p><b>Documented.</b> curvefi/docs docs/developer/crvusd/factory.md states &#x27;Only its admin, the CurveOwnershipAgent, can call to add a market&#x27;; LendingOwnerProxy intermediate wrapper added at block 26300155.</p><div class="term"><div class="term-h"><span>Reproduce on any archive node</span><button class="copy" type="button" data-copy-term>Copy command</button></div><pre>cast call 0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC \
+  &quot;admin()&quot; \
+  --block 26403523 --rpc-url &quot;$ETH_RPC_URL&quot;
+cast block 26403523 --field hash --rpc-url &quot;$ETH_RPC_URL&quot;
+# expect 0xfc7beaa2338e8054577c0b101b641bc42afca2af39cb85d3fc13cbee32d4681a</pre></div></article>
+</article>
+<div class="memo-foot"><span>Read-only on-chain analysis. Not investment advice. Exploit-sensitive vulnerabilities are never published here; they go through Immunefi or Cantina bounty programmes.</span><a href="../../request/?tier=clearance">Clear findings in 24h · $5,000 USDC →</a></div>
+</main>
+<footer class="ftr"><div class="wrap"><span>Pacta · Fractal Neurons · pacta.base.eth · 14 Sprints · 37 Indexed Records</span><nav aria-label="Footer"><a href="https://github.com/Fractal-Neurons/pacta" target="_blank" rel="noopener">GitHub</a><a href="../../api/v1/index.json">JSON feed</a><a href="../../llms.txt">llms.txt</a><a href="https://basescan.org/address/0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872" target="_blank" rel="noopener">Base registry</a><a href="../../.well-known/security.txt">security.txt</a><a href="../../request/">Contact</a></nav></div></footer>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Dataset", "creator": {"@type": "Organization", "name": "Pacta by Fractal Neurons", "url": "https://pacta.wtf/"}, "description": "Block-pinned control-plane observations for Curve Finance (crvUSD) (Decentralized Stablecoin & Lending): proxy admins, Safe quorums, roles and timelock delays, compared with the protocol's documentation. 1 indexed surface(s).", "distribution": [{"@type": "DataDownload", "contentUrl": "https://pacta.wtf/api/v1/index.json", "encodingFormat": "application/json"}], "isAccessibleForFree": true, "keywords": ["Curve Finance (crvUSD)", "Decentralized Stablecoin & Lending", "DeFi", "control plane", "timelock", "proxy admin", "Safe multisig"], "name": "Curve Finance (crvUSD) control-plane safety record", "spatialCoverage": "Ethereum Mainnet (chain id 1)", "temporalCoverage": "block 26403523/26403523", "url": "https://pacta.wtf/protocols/curve-finance-crvusd/", "variableMeasured": ["ControllerFactory Admin Proxy & EmergencyDAO Debt-Ceiling Guard"]}</script>
+</body></html>

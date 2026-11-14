@@ -446,9 +446,11 @@ def main():
                 "community_pay_panel_hidden", "community_tx_field_hidden", "community_github_tier_exact", "community_no_tx_anywhere",
                 "community_click_not_prevented", "clearance_restores_pay_panel", "prefill_selects_community",
                 "prefill_unknown_tier_keeps_clearance", "homepage_plan_button_preselects",
-                "hash_ok #r-[unclosed", "hash_ok #r-x\\", 'hash_ok #r-"]', "hash_ok #r-%E0%A4%A", "valid_hash_opens_drawer"]
+                "hash_ok #r-[unclosed", "hash_ok #r-x\\", 'hash_ok #r-"]', "hash_ok #r-%E0%A4%A", "valid_hash_opens_drawer",
+                "pf_present", "pf_no_fetch_on_load", "pf_preset_fetches_once", "pf_renders_verdict", "pf_text_only", "pf_cast_commands",
+                "pf_invalid_address_no_fetch", "pf_http_error_reported"]
     failed_b = [k for k in expected if res.get(k) is not True] + (["harness_error: " + res["harness_error"][:200]] if "harness_error" in res else [])
-    check("app.js behaviour: clearance/community tracks, payment panel, tx-hash + forum prefill; malformed #hash never throws", not failed_b,
+    check("app.js behaviour: clearance/community tracks, payment panel, tx-hash + forum prefill; malformed #hash never throws; live pre-flight checker (explicit click only, text-only render, cast repro, errors)", not failed_b,
           f"{len(expected) - len([k for k in expected if res.get(k) is not True])}/{len(expected)} assertions; failed {failed_b[:4]}")
 
     # live onboarding verification briefs (rendered from docs/api/v1/onboarding.json by tools/onboarding_scan.py + build_site.py)
@@ -530,11 +532,12 @@ def main():
     card, man = json.loads(read("docs/.well-known/agent.json")), json.loads(read("docs/.well-known/mcp.json"))
     eps = list(card.get("endpoints", {}).get("feeds", {}).values()) + [card["endpoints"]["mcp_manifest"], card["endpoints"]["skill"]] + list(man["feeds"].values())
     unresolved = [u for u in eps if not os.path.exists(os.path.join(DOCS, u.replace(base + "/", "")))]
-    check("agent.json (A2A card: name/url/version/provider/capabilities/modes/skills/x402) + mcp.json (name, stdio, tools, status): endpoints resolve",
+    check("agent.json (A2A card: name/url/version/provider/capabilities/modes/skills/x402) + mcp.json (name, remote streamable-http + stdio transports, tools, status): endpoints resolve",
           all(k in card for k in ("protocolVersion", "name", "description", "url", "version", "provider", "documentationUrl", "capabilities",
                                    "defaultInputModes", "defaultOutputModes", "skills")) and len(card["skills"]) >= 3
           and card["x402"]["payTo"] == B2A.PAY_TO and card["x402"]["asset"] == B2A.USDC_BASE and card["x402"]["chainId"] == 8453
-          and man["name"] == "io.github.fractal-neurons/pacta" and man["transport"]["type"] == "stdio" and "pacta_list_proposals" in {t["name"] for t in man["tools"]}
+          and man["name"] == "io.github.fractal-neurons/pacta" and man["transport"]["type"] == "streamable-http" and man["transport"]["url"] == "https://pacta-x402.pacta.workers.dev/mcp"
+          and {t_["type"] for t_ in man.get("transports", [])} >= {"streamable-http", "stdio"} and "pacta_list_proposals" in {t["name"] for t in man["tools"]}
           and man["status"].startswith("publication_pending") and not unresolved, f"unresolved {unresolved[:3]}")
     skill = read("docs/SKILL.md")
     fm = re.match(r"---\n(.*?)\n---\n", skill, re.S)
@@ -547,14 +550,14 @@ def main():
                 and card["endpoints"].get("x402_gateway") == X402 and card["x402"].get("discovery") == X402 + "/.well-known/x402",
                 "mcp.json": man.get("x402", {}).get("gatewayUrl") == X402 and man["x402"].get("enableWith") == "PACTA_X402_URL=" + X402
                 and any(e["name"] == "PACTA_X402_URL" and X402 in e["description"] for e in man["environment"]),
-                "llms.txt": X402 in llms_now and "## x402 API (live)" in llms_now, "llms-full.txt": f"Live gateway: {X402}" in full and f"GET {X402}/v1/scan/control-plane" in full,
+                "llms.txt": X402 in llms_now and "## x402 API (live" in llms_now, "llms-full.txt": f"Live gateway: {X402}" in full and f"GET {X402}/v1/scan/control-plane" in full,
                 "SKILL.md": f"Live gateway: `{X402}`" in skill and f"PACTA_X402_URL={X402}" in skill}
     stale = [f for f in ["docs/" + x for x in b2a_files] + ["docs/llms.txt"]
              if re.search(r"deployment pending|planned, not live|not yet live|api\.pacta\.wtf|<worker-origin>", read(f))]
     check("canonical live x402 gateway https://pacta-x402.pacta.workers.dev in agent.json, mcp.json, llms.txt, llms-full.txt, SKILL.md; no stale 'pending' wording",
           B2A.X402_URL == X402 and all(surfaces.values()) and not stale,
           f"missing {[k for k, v in surfaces.items() if not v]}; stale {stale}")
-    paid_paths = ["/v1/scan/control-plane", "/v1/scan/timelock-op", "/v1/scan/proposal-diff", "/v1/briefs/live-timelocks"]
+    paid_paths = ["/v1/check/preflight", "/v1/scan/control-plane", "/v1/scan/timelock-op", "/v1/scan/proposal-diff", "/v1/briefs/live-timelocks"]
     v2_tokens = ["eip155:8453", "PAYMENT-REQUIRED", "PAYMENT-SIGNATURE"]
     v2_surfaces = {"SKILL.md": skill, "agent.json": read("docs/.well-known/agent.json"), "mcp.json": read("docs/.well-known/mcp.json"),
                    "llms.txt": llms_now, "llms-full.txt": full}
@@ -567,11 +570,11 @@ def main():
                and card["x402"].get("maxTimeoutSeconds") == 60 and card["x402"]["wire"]["v2"]["paymentHeader"] == "PAYMENT-SIGNATURE"
                and card["x402"]["wire"]["v2"]["receiptHeader"] == "PAYMENT-RESPONSE" and card["x402"]["wire"]["v1"]["paymentHeader"] == "X-PAYMENT"
                and card["x402"]["settlement"]["onchainReceiptVerified"] is False and sorted(card_routes) == sorted(paid_paths)
-               and {p_: card_routes[p_]["amount"] for p_ in paid_paths} == {"/v1/scan/control-plane": "100000", "/v1/scan/timelock-op": "250000",
+               and {p_: card_routes[p_]["amount"] for p_ in paid_paths} == {"/v1/check/preflight": "10000", "/v1/scan/control-plane": "100000", "/v1/scan/timelock-op": "250000",
                                                                           "/v1/scan/proposal-diff": "150000", "/v1/briefs/live-timelocks": "100000"}
                and man["x402"].get("x402Versions") == [1, 2] and man["x402"].get("onchainReceiptVerified") is False
                and "pacta_scan_proposal_diff" in {t["name"] for t in man["tools"]})
-    check("x402 v1 + v2 on all 5 agent surfaces: SKILL.md lists the 4 paid routes; x402Versions [1, 2] / eip155:8453 / PAYMENT-REQUIRED / PAYMENT-SIGNATURE everywhere; agent.json wire + prices; onchainReceiptVerified false",
+    check("x402 v1 + v2 on all 5 agent surfaces: SKILL.md lists the 5 metered routes; x402Versions [1, 2] / eip155:8453 / PAYMENT-REQUIRED / PAYMENT-SIGNATURE everywhere; agent.json wire + prices; onchainReceiptVerified false",
           not v2_missing and not skill_paths and wire_ok, f"missing {v2_missing}; SKILL paths missing {skill_paths}; wire_ok {wire_ok}")
     near = []
     for f in ["docs/" + x for x in b2a_files] + ["docs/llms.txt", "docs/index.html", "README.md"]:
@@ -580,6 +583,117 @@ def main():
             if re.search(r"\bSafe\b|\bmultisig\b|\bGnosis\b", t[max(0, mm.start() - 120): mm.end() + 120], re.I):
                 near.append(f)
     check("0x4348…Ed14 is never labelled a Safe / multisig anywhere in the agent feeds, llms.txt, homepage or README", not near, str(near))
+
+    # ---- free agent launch (Phase B): hero quickstarts, live checker, pricing, no dead npx, protocol pages, robots, registries ----
+    import build_site as BS
+    API_ = "https://pacta-x402.pacta.workers.dev"
+    MCP_ = API_ + "/mcp"
+    home = read("docs/index.html")
+    req_page = read("docs/request/index.html")
+    hero = home[home.find('<section class="hero"'):home.find("</section>", home.find('<section class="hero"'))]
+    hero_ok = (BS.H1.replace("&", "&amp;") in hero
+               and f'<code class="mono">claude mcp add --transport http pacta {MCP_}</code>' in hero
+               and "&quot;url&quot;: &quot;" + MCP_ + "&quot;" in hero
+               and re.search(r'<code class="mono">curl -s &quot;' + re.escape(API_) + r'/v1/check/preflight\?chain=', hero) is not None
+               and all(f'href="{h}"' in hero for h in (API_ + "/openapi.json", "SKILL.md", "llms.txt", ".well-known/agent.json")))
+    pf = re.search(r'<section class="sec" id="preflight">.*?</section>', home, re.S)
+    pf_ok = bool(pf) and f'data-api="{API_}"' in pf.group(0) and 'id="pf-form"' in pf.group(0) and 'id="pf-out"' in pf.group(0) \
+        and len(re.findall(r'data-pf-address="0x[0-9a-fA-F]{40}"', pf.group(0))) >= 3 and 'name="chain"' in pf.group(0) and 'name="address"' in pf.group(0)
+    check("free-launch hero: H1, remote MCP (Claude Code + Cursor), curl /v1/check/preflight, OpenAPI / SKILL / llms.txt / agent.json links; live #preflight checker (form, presets, output)",
+          hero_ok and pf_ok, f"hero {hero_ok}; checker {pf_ok}")
+    pr = re.search(r'<section class="sec" id="pricing">.*?</section>', home, re.S)
+    pricing_ok = bool(pr) and "$0" in pr.group(0) and "Free launch" in pr.group(0) and "60 requests / minute" in pr.group(0) \
+        and "High volume, SLA &amp; on-chain clearance" in pr.group(0) and "remote MCP" in pr.group(0).lower().replace("remote mcp", "remote MCP")
+    req_ok = "free with no key" in req_page and "#preflight" in req_page and "High volume" in req_page
+    check("pricing: $0 free launch tier (60 req/min, 5 endpoints + remote MCP) and the high-volume SLA / on-chain clearance tier, on #pricing and /request/",
+          pricing_ok and req_ok, f"#pricing {pricing_ok}; /request/ {req_ok}")
+
+    DEAD_NPX = re.compile(r"npx\s+(?:-y\s+|--yes\s+)?@pacta/mcp-server")
+    npx_scope = sorted(set(
+        [os.path.relpath(f, ROOT) for f in glob.glob(os.path.join(DOCS, "**", "*"), recursive=True)
+         if os.path.isfile(f) and f.endswith((".html", ".txt", ".json", ".md", ".js", ".xml"))]
+        + ["README.md", "glama.json", "smithery.yaml", "packages/mcp-server/README.md", "packages/mcp-server/SKILL.md",
+           "packages/mcp-server/server.json", "packages/mcp-server/server.remote.json", "packages/mcp-server/Dockerfile"]))
+    dead = [f for f in npx_scope if DEAD_NPX.search(read(f))]
+    primary = {"docs/index.html": home, "docs/request/index.html": req_page, "docs/SKILL.md": read("docs/SKILL.md"),
+               "docs/.well-known/mcp.json": read("docs/.well-known/mcp.json"), "docs/llms.txt": read("docs/llms.txt"),
+               "docs/llms-full.txt": read("docs/llms-full.txt"), "README.md": read("README.md")}
+    no_remote = [k for k, t in primary.items() if MCP_ not in t or "/v1/check/preflight" not in t]
+    check("unshipped npm install removed: 0 'npx @pacta/mcp-server' strings on the site, feeds, README, server.json, glama.json, smithery.yaml; remote MCP + /v1/check/preflight on every primary surface",
+          not dead and not no_remote and len(npx_scope) > 50, f"{len(npx_scope)} files scanned; dead npx in {dead}; missing remote/preflight in {no_remote}")
+
+    idx_ = json.load(open(os.path.join(DOCS, "api", "v1", "index.json")))
+    radar_ = json.load(open(os.path.join(DOCS, "api", "v1", "radar.json")))
+    groups = BS.protocol_groups(idx_)
+    prot_bad, sm = [], read("docs/sitemap.xml")
+    for name, es in groups.items():
+        slug = BS.protocol_slug(name)
+        rel = f"docs/protocols/{slug}/index.html"
+        if not os.path.exists(os.path.join(ROOT, rel)):
+            prot_bad.append(f"{slug}: missing"); continue
+        t = read(rel)
+        if t != BS.protocol_page(name, es, idx_, radar_):
+            prot_bad.append(f"{slug}: not a deterministic rebuild")
+        lds = re.findall(r'<script type="application/ld\+json">(.*?)</script>', t, re.S)
+        try:
+            ld_ok = bool(lds) and all(json.loads(x).get("@context") == "https://schema.org" for x in lds)
+        except ValueError:
+            ld_ok = False
+        if not ld_ok:
+            prot_bad.append(f"{slug}: JSON-LD")
+        if not all(str(e["block_number"]) in t.replace(",", "") and e["block_hash"] in t for e in es):
+            prot_bad.append(f"{slug}: pinned block/hash")
+        if "cast call" not in t and "cast storage" not in t:
+            prot_bad.append(f"{slug}: cast repro")
+        if f"{API_}/v1/check/preflight" not in t:
+            prot_bad.append(f"{slug}: preflight quickstart")
+        if f"<loc>{BS.BASE_URL}/protocols/{slug}/</loc>" not in sm:
+            prot_bad.append(f"{slug}: sitemap")
+    pidx = read("docs/protocols/index.html") if os.path.exists(os.path.join(DOCS, "protocols", "index.html")) else ""
+    pidx_ok = bool(pidx) and pidx == BS.protocols_index_page(idx_, groups) and f"<loc>{BS.BASE_URL}/protocols/</loc>" in sm \
+        and all(f'href="{BS.protocol_slug(n)}/"' in pidx for n in groups) and '"@type": "ItemList"' in pidx.replace('"@type":"ItemList"', '"@type": "ItemList"')
+    check(f"/protocols/<slug>/ SEO pages: one per indexed protocol ({len(groups)}), deterministic, schema.org JSON-LD, pinned block + hash, cast repro, preflight quickstart, in the sitemap; /protocols/ index (ItemList)",
+          not prot_bad and pidx_ok and len(groups) == len({e["protocol"] for e in idx_["entries"]}), f"bad {prot_bad[:4]}; index {pidx_ok}")
+
+    robots = read("docs/robots.txt")
+    bots = ["GPTBot", "OAI-SearchBot", "ClaudeBot", "PerplexityBot", "Googlebot", "*"]
+    robots_ok = all(re.search(rf"^User-agent: {re.escape(b)}\nAllow: /$", robots, re.M) for b in bots) \
+        and not re.search(r"^Disallow:\s*\S", robots, re.M) and f"Sitemap: {BS.BASE_URL}/sitemap.xml" in robots
+    check("robots.txt welcomes GPTBot, OAI-SearchBot, ClaudeBot, PerplexityBot, Googlebot and * (no Disallow) and points at the sitemap", robots_ok)
+
+    glama = json.loads(read("glama.json"))
+    smith = read("smithery.yaml")
+    srv = json.loads(read("packages/mcp-server/server.json"))
+    srv_r = json.loads(read("packages/mcp-server/server.remote.json"))
+    dockerfile = read("packages/mcp-server/Dockerfile")
+    reg_ok = {
+        "glama.json": glama == {"$schema": "https://glama.ai/mcp/schemas/server.json", "maintainers": ["pacta-fractal-neurons"]},
+        "smithery.yaml": bool(re.search(r"^startCommand:\n  type: stdio$", smith, re.M)) and "dockerfile: packages/mcp-server/Dockerfile" in smith
+                         and MCP_ in smith and '"/app/bin/pacta-mcp.mjs"' in smith,
+        "server.json remotes": srv.get("remotes") == [{"type": "streamable-http", "url": MCP_}] and srv_r.get("remotes") == srv["remotes"]
+                               and "packages" not in srv_r and srv_r["name"] == srv["name"] and srv_r["version"] == srv["version"],
+        "Dockerfile stdio": 'ENTRYPOINT ["node", "/app/bin/pacta-mcp.mjs"]' in dockerfile and "EXPOSE" not in dockerfile,
+    }
+    check("registries: glama.json (schema + maintainer), smithery.yaml (stdio from the Dockerfile + remote URL), server.json + server.remote.json remotes (streamable-http), Dockerfile stdio entrypoint",
+          all(reg_ok.values()), str({k: v for k, v in reg_ok.items() if not v}))
+
+    remote_tools = ["pacta_check_preflight", "pacta_scan_control_plane", "pacta_scan_timelock_op", "pacta_scan_proposal_diff", "pacta_get_live_timelocks"]
+    man_ = json.loads(read("docs/.well-known/mcp.json"))
+    card_ = json.loads(read("docs/.well-known/agent.json"))
+    man_remote = next((t_ for t_ in man_.get("transports", []) if t_.get("type") == "streamable-http"), {})
+    srv_src = read("packages/mcp-server/src/server.mjs")
+    surfaces5 = {
+        "mcp.json": man_remote.get("url") == MCP_ and man_remote.get("tools") == remote_tools,
+        "agent.json": card_.get("endpoints", {}).get("mcp_remote") == MCP_ and card_.get("pricing", {}).get("mode") == "free_launch"
+                      and card_["x402"].get("pricingMode") == "free_launch" and card_["skills"][0]["id"] == "contract-preflight",
+        "SKILL.md": all(n in primary["docs/SKILL.md"] for n in remote_tools),
+        "llms.txt": all(n in primary["docs/llms.txt"] for n in remote_tools) and "## Free API for agents" in primary["docs/llms.txt"],
+        "llms-full.txt": all(n in primary["docs/llms-full.txt"] for n in remote_tools),
+        "@pacta/mcp-server": 'name: "pacta_check_preflight"' in srv_src and "PAID_ROUTES.checkPreflight" in srv_src,
+        "SKILL.md copies": read("packages/mcp-server/SKILL.md") == primary["docs/SKILL.md"],
+    }
+    check("remote MCP: 5 tools (pacta_check_preflight first) on mcp.json, agent.json (free_launch pricing), SKILL.md, llms.txt, llms-full.txt; @pacta/mcp-server ships pacta_check_preflight; SKILL.md copies byte-identical",
+          all(surfaces5.values()), str({k: v for k, v in surfaces5.items() if not v}))
 
     # private identifiers must never be published: compared by SHA-256 of lowercased tokens, so the
     # repository itself never contains the literal identifiers this check guards against

@@ -1,0 +1,46 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Yearn V3 control-plane safety · Pacta</title>
+<meta name="description" content="Who can upgrade, pause or change Yearn V3: 1 block-pinned control-plane check(s) with cast reproductions and a free live pre-flight API.">
+<link rel="canonical" href="https://pacta.wtf/protocols/yearn-v3/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Pacta by Fractal Neurons">
+<meta property="og:title" content="Yearn V3: control-plane safety record">
+<meta property="og:description" content="Who can upgrade, pause or change Yearn V3: 1 block-pinned control-plane check(s) with cast reproductions and a free live pre-flight API.">
+<meta property="og:url" content="https://pacta.wtf/protocols/yearn-v3/">
+<meta property="og:image" content="https://pacta.wtf/og-preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Yearn V3: control-plane safety record">
+<meta name="twitter:description" content="Who can upgrade, pause or change Yearn V3: 1 block-pinned control-plane check(s) with cast reproductions and a free live pre-flight API.">
+<meta name="twitter:image" content="https://pacta.wtf/og-preview.png">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../../favicon.png" type="image/png" sizes="32x32">
+<link rel="stylesheet" href="../../styles.css">
+<link rel="alternate" type="text/markdown" href="../../llms.txt" title="llms.txt">
+<script>document.documentElement.className="js";try{if(localStorage.getItem("pacta-theme")==="slate")document.documentElement.dataset.theme="slate"}catch(e){}</script>
+<script src="../../app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar"><div class="wrap"><a class="brand" href="../../"><img src="../../favicon.svg" alt="" width="22" height="22">PACTA<small>by Fractal Neurons</small></a><nav class="nav" aria-label="Sections"><a href="../../#preflight">Free API</a><a href="../../#inspector">Inspector</a><a href="../../#radar">Radar</a><a href="../../#findings">Findings</a><a href="../../#index">Index</a><a href="../../#verify">Verify</a><a href="../../#pricing">Pricing</a><a href="../../#faq">FAQ</a></nav><div class="tools"><button class="tt" type="button" aria-label="Theme: Paper (switch to Slate)"><span data-t="paper" class="on">Paper</span><span data-t="slate">Slate</span></button><a class="btn sm primary" href="../../request/">Request coverage</a></div></div></header>
+<main id="main" class="memo-wrap">
+<div class="crumbs"><a href="../../">Pacta</a> / <a href="../">Protocols</a> / Yearn V3</div>
+<article class="memo">
+<header><span class="tier">Yield Aggregation Vaults</span><h1>Yearn V3: control-plane safety record</h1>
+<p class="lede">1 indexed control-plane surface(s) for Yearn V3, each pinned to a canonical Ethereum block and compared with what the protocol documents. Contracts: <code class="mono">0xb3bd6B2E61753C311EFbCF0111f75D29706D9a41</code>.</p></header>
+<section class="memo-sec"><h2>Check it live (free)</h2><p>The pre-flight API re-reads the controller, proxy and capabilities of a contract at the latest block. No key, no wallet.</p>
+<div class="term"><div class="term-h"><span>Live pre-flight check</span><button class="copy" type="button" data-copy-term>Copy command</button></div><pre>curl -s &quot;https://pacta-x402.pacta.workers.dev/v1/check/preflight?chain=ethereum&amp;address=0xb3bd6B2E61753C311EFbCF0111f75D29706D9a41&quot;</pre></div><p>MCP: <code class="mono">https://pacta-x402.pacta.workers.dev/mcp</code> · tool <code>pacta_check_preflight</code>.</p></section>
+<article class="memo-sec" id="yearn-v3-role-manager-timelock"><h2>Sampled RoleManager.governance() Timelock Wiring</h2><dl class="memo-meta"><dt>Status</dt><dd><span class="badge protect">Protective delta</span></dd><dt>Target</dt><dd>RoleManager <span class="addr" title="0xb3bd6B2E61753C311EFbCF0111f75D29706D9a41">0xb3bd…9a41</span><button class="copy" type="button" data-copy="0xb3bd6B2E61753C311EFbCF0111f75D29706D9a41">Copy</button></dd><dt>Pinned block</dt><dd>Ethereum <span class="num">#26,401,725</span> · sprint 8</dd><dt>Block hash</dt><dd><span class="addr" title="0xec3820f0a9db32c01728e66f78dc1958e410269e1077fd1db53df4fbce2ad7a1">0xec3820f0…2ad7a1</span><button class="copy" type="button" data-copy="0xec3820f0a9db32c01728e66f78dc1958e410269e1077fd1db53df4fbce2ad7a1">Copy</button></dd></dl><p><b>Observed on-chain.</b> governance() = 0x88Ba032be87d5EF1fbE87336B7090767F367BF73 (TimelockController, getMinDelay() = 604800s / 7 days); getDaddy() = 0xFEB4acf3df3cDEA7399794D0869ef76A6EfAff52 (6-of-9 ychad.eth Safe); getBrain() = 0x16388463d60FFE0661Cf7F1f31a7D658aC790ff7 (3-of-6 Safe).</p><p><b>Documented.</b> yearn-devdocs security overview previously noted governance was not behind a timelock (live deployment enforces stricter 7-day TimelockController).</p><div class="term"><div class="term-h"><span>Reproduce on any archive node</span><button class="copy" type="button" data-copy-term>Copy command</button></div><pre>cast call 0xb3bd6B2E61753C311EFbCF0111f75D29706D9a41 \
+  &quot;governance()&quot; \
+  --block 26401725 --rpc-url &quot;$ETH_RPC_URL&quot;
+cast block 26401725 --field hash --rpc-url &quot;$ETH_RPC_URL&quot;
+# expect 0xec3820f0a9db32c01728e66f78dc1958e410269e1077fd1db53df4fbce2ad7a1</pre></div></article>
+</article>
+<div class="memo-foot"><span>Read-only on-chain analysis. Not investment advice. Exploit-sensitive vulnerabilities are never published here; they go through Immunefi or Cantina bounty programmes.</span><a href="../../request/?tier=clearance">Clear findings in 24h · $5,000 USDC →</a></div>
+</main>
+<footer class="ftr"><div class="wrap"><span>Pacta · Fractal Neurons · pacta.base.eth · 14 Sprints · 37 Indexed Records</span><nav aria-label="Footer"><a href="https://github.com/Fractal-Neurons/pacta" target="_blank" rel="noopener">GitHub</a><a href="../../api/v1/index.json">JSON feed</a><a href="../../llms.txt">llms.txt</a><a href="https://basescan.org/address/0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872" target="_blank" rel="noopener">Base registry</a><a href="../../.well-known/security.txt">security.txt</a><a href="../../request/">Contact</a></nav></div></footer>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Dataset", "creator": {"@type": "Organization", "name": "Pacta by Fractal Neurons", "url": "https://pacta.wtf/"}, "description": "Block-pinned control-plane observations for Yearn V3 (Yield Aggregation Vaults): proxy admins, Safe quorums, roles and timelock delays, compared with the protocol's documentation. 1 indexed surface(s).", "distribution": [{"@type": "DataDownload", "contentUrl": "https://pacta.wtf/api/v1/index.json", "encodingFormat": "application/json"}], "isAccessibleForFree": true, "keywords": ["Yearn V3", "Yield Aggregation Vaults", "DeFi", "control plane", "timelock", "proxy admin", "Safe multisig"], "name": "Yearn V3 control-plane safety record", "spatialCoverage": "Ethereum Mainnet (chain id 1)", "temporalCoverage": "block 26401725/26401725", "url": "https://pacta.wtf/protocols/yearn-v3/", "variableMeasured": ["Sampled RoleManager.governance() Timelock Wiring"]}</script>
+</body></html>

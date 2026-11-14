@@ -1,0 +1,46 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Superstate (USTB / USCC) control-plane safety · Pacta</title>
+<meta name="description" content="Who can upgrade, pause or change Superstate (USTB / USCC): 1 block-pinned control-plane check(s) with cast reproductions and a free live pre-flight API.">
+<link rel="canonical" href="https://pacta.wtf/protocols/superstate-ustb-uscc/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Pacta by Fractal Neurons">
+<meta property="og:title" content="Superstate (USTB / USCC): control-plane safety record">
+<meta property="og:description" content="Who can upgrade, pause or change Superstate (USTB / USCC): 1 block-pinned control-plane check(s) with cast reproductions and a free live pre-flight API.">
+<meta property="og:url" content="https://pacta.wtf/protocols/superstate-ustb-uscc/">
+<meta property="og:image" content="https://pacta.wtf/og-preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Superstate (USTB / USCC): control-plane safety record">
+<meta name="twitter:description" content="Who can upgrade, pause or change Superstate (USTB / USCC): 1 block-pinned control-plane check(s) with cast reproductions and a free live pre-flight API.">
+<meta name="twitter:image" content="https://pacta.wtf/og-preview.png">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../../favicon.png" type="image/png" sizes="32x32">
+<link rel="stylesheet" href="../../styles.css">
+<link rel="alternate" type="text/markdown" href="../../llms.txt" title="llms.txt">
+<script>document.documentElement.className="js";try{if(localStorage.getItem("pacta-theme")==="slate")document.documentElement.dataset.theme="slate"}catch(e){}</script>
+<script src="../../app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar"><div class="wrap"><a class="brand" href="../../"><img src="../../favicon.svg" alt="" width="22" height="22">PACTA<small>by Fractal Neurons</small></a><nav class="nav" aria-label="Sections"><a href="../../#preflight">Free API</a><a href="../../#inspector">Inspector</a><a href="../../#radar">Radar</a><a href="../../#findings">Findings</a><a href="../../#index">Index</a><a href="../../#verify">Verify</a><a href="../../#pricing">Pricing</a><a href="../../#faq">FAQ</a></nav><div class="tools"><button class="tt" type="button" aria-label="Theme: Paper (switch to Slate)"><span data-t="paper" class="on">Paper</span><span data-t="slate">Slate</span></button><a class="btn sm primary" href="../../request/">Request coverage</a></div></div></header>
+<main id="main" class="memo-wrap">
+<div class="crumbs"><a href="../../">Pacta</a> / <a href="../">Protocols</a> / Superstate (USTB / USCC)</div>
+<article class="memo">
+<header><span class="tier">Institutional RWA / Tokenized Funds</span><h1>Superstate (USTB / USCC): control-plane safety record</h1>
+<p class="lede">1 indexed control-plane surface(s) for Superstate (USTB / USCC), each pinned to a canonical Ethereum block and compared with what the protocol documents. Contracts: <code class="mono">0x43415eB6ff9DB7E26A15b704e7A3eDCe97d31C4e</code>.</p></header>
+<section class="memo-sec"><h2>Check it live (free)</h2><p>The pre-flight API re-reads the controller, proxy and capabilities of a contract at the latest block. No key, no wallet.</p>
+<div class="term"><div class="term-h"><span>Live pre-flight check</span><button class="copy" type="button" data-copy-term>Copy command</button></div><pre>curl -s &quot;https://pacta-x402.pacta.workers.dev/v1/check/preflight?chain=ethereum&amp;address=0x43415eB6ff9DB7E26A15b704e7A3eDCe97d31C4e&quot;</pre></div><p>MCP: <code class="mono">https://pacta-x402.pacta.workers.dev/mcp</code> · tool <code>pacta_check_preflight</code>.</p></section>
+<article class="memo-sec" id="superstate-ustb-uscc-fee-and-usdc-alignment"><h2>Sampled USDC Subscription Fee &amp; Fund Supply Alignment</h2><dl class="memo-meta"><dt>Status</dt><dd><span class="badge">Aligned baseline</span></dd><dt>Target</dt><dd>Superstate USTB <span class="addr" title="0x43415eB6ff9DB7E26A15b704e7A3eDCe97d31C4e">0x4341…1C4e</span><button class="copy" type="button" data-copy="0x43415eB6ff9DB7E26A15b704e7A3eDCe97d31C4e">Copy</button></dd><dt>Pinned block</dt><dd>Ethereum <span class="num">#26,403,676</span> · sprint 12</dd><dt>Block hash</dt><dd><span class="addr" title="0xf4246ca23c4c38d520de16080a11b5186d04c8242b2c85edcb04c455d291c3ae">0xf4246ca2…91c3ae</span><button class="copy" type="button" data-copy="0xf4246ca23c4c38d520de16080a11b5186d04c8242b2c85edcb04c455d291c3ae">Copy</button></dd></dl><p><b>Observed on-chain.</b> Sampled USTB (0x43415eB6ff9DB7E26A15b704e7A3eDCe97d31C4e) supportedStablecoins(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48) returns sweep destination 0x774AE279c21B6a17a6E2BD5ab5398FF98F398807 and subscription fee = 0 for USDC; USTB totalSupply = 39,459,575.14 USTB (6 dec), USCC (0x14d60E7FDC0D71d8611742720E4C50E7a974020c) totalSupply = 4,066,680.13 USCC (6 dec).</p><p><b>Documented.</b> docs.superstate.com/investors/smart-contracts.md states &#x27;At time of writing, fees are set to 0 and only USDC is supported.&#x27;</p><div class="term"><div class="term-h"><span>Reproduce on any archive node</span><button class="copy" type="button" data-copy-term>Copy command</button></div><pre>cast call 0x43415eB6ff9DB7E26A15b704e7A3eDCe97d31C4e \
+  &quot;supportedStablecoins(address)&quot; 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48 \
+  --block 26403676 --rpc-url &quot;$ETH_RPC_URL&quot;
+cast block 26403676 --field hash --rpc-url &quot;$ETH_RPC_URL&quot;
+# expect 0xf4246ca23c4c38d520de16080a11b5186d04c8242b2c85edcb04c455d291c3ae</pre></div></article>
+</article>
+<div class="memo-foot"><span>Read-only on-chain analysis. Not investment advice. Exploit-sensitive vulnerabilities are never published here; they go through Immunefi or Cantina bounty programmes.</span><a href="../../request/?tier=clearance">Clear findings in 24h · $5,000 USDC →</a></div>
+</main>
+<footer class="ftr"><div class="wrap"><span>Pacta · Fractal Neurons · pacta.base.eth · 14 Sprints · 37 Indexed Records</span><nav aria-label="Footer"><a href="https://github.com/Fractal-Neurons/pacta" target="_blank" rel="noopener">GitHub</a><a href="../../api/v1/index.json">JSON feed</a><a href="../../llms.txt">llms.txt</a><a href="https://basescan.org/address/0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872" target="_blank" rel="noopener">Base registry</a><a href="../../.well-known/security.txt">security.txt</a><a href="../../request/">Contact</a></nav></div></footer>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Dataset", "creator": {"@type": "Organization", "name": "Pacta by Fractal Neurons", "url": "https://pacta.wtf/"}, "description": "Block-pinned control-plane observations for Superstate (USTB / USCC) (Institutional RWA / Tokenized Funds): proxy admins, Safe quorums, roles and timelock delays, compared with the protocol's documentation. 1 indexed surface(s).", "distribution": [{"@type": "DataDownload", "contentUrl": "https://pacta.wtf/api/v1/index.json", "encodingFormat": "application/json"}], "isAccessibleForFree": true, "keywords": ["Superstate (USTB / USCC)", "Institutional RWA / Tokenized Funds", "DeFi", "control plane", "timelock", "proxy admin", "Safe multisig"], "name": "Superstate (USTB / USCC) control-plane safety record", "spatialCoverage": "Ethereum Mainnet (chain id 1)", "temporalCoverage": "block 26403676/26403676", "url": "https://pacta.wtf/protocols/superstate-ustb-uscc/", "variableMeasured": ["Sampled USDC Subscription Fee & Fund Supply Alignment"]}</script>
+</body></html>

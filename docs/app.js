@@ -1,5 +1,6 @@
-// Pacta site v3: theme, live countdowns, copy buttons, control-plane inspector, index filter + drawers, request builder.
-// No wallet, no trackers, no third-party requests: data comes from this site's own /api/v1/*.json files.
+// Pacta site v3: theme, live countdowns, copy buttons, live pre-flight checker, control-plane inspector, index filter + drawers,
+// request builder. No wallet, no trackers. Data comes from this site's own /api/v1/*.json files; the one exception is the
+// pre-flight checker, which calls Pacta's own free API (data-api on .pf) only after an explicit submit or preset click.
 // Record text is inserted with textContent (never innerHTML). Every control works without a mail client.
 (function () {
   "use strict";
@@ -340,9 +341,81 @@
     update();
   }
 
+  // ---- live pre-flight checker (free API; runs only on an explicit submit / preset click) ---------------
+  var ADDR_RE = /^0x[0-9a-fA-F]{40}$/;
+  var SLOT_IMPL = "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc";
+  var VERDICT_CLASS = { IMMUTABLE_NO_ADMIN: "", TIMELOCK_PROTECTED: "protect", MULTISIG_NO_TIMELOCK: "delta",
+    INSTANT_EOA_ADMIN_RISK: "delta", UNCLASSIFIED_CONTRACT_CONTROLLER: "delta", UNDEPLOYED_OR_EOA: "" };
+  function pfCasts(r) {
+    var rpc = r.chain === "base" ? "$BASE_RPC_URL" : "$ETH_RPC_URL", b = " --block " + r.pinnedBlock + " --rpc-url " + rpc, c = [];
+    c.push("cast code " + r.address + b);
+    c.push("cast storage " + r.address + " " + SLOT_IMPL + b);
+    c.push("cast call " + r.address + ' "owner()(address)"' + b);
+    var k = r.controller || {};
+    if (k.address && k.kind === "multisig_safe") c.push("cast call " + k.address + ' "getThreshold()(uint256)"' + b);
+    if (k.address && k.kind === "timelock") c.push("cast call " + k.address + ' "getMinDelay()(uint256)"' + b);
+    return c;
+  }
+  function pfRow(k, v) { return el("div", {}, [el("dt", { text: k }), el("dd", {}, [v])]); }
+  function pfAddr(v) { return ADDR_RE.test(String(v || "")) ? el("span", {}, hexref(v, 8, 6)) : "none"; }
+  function pfRender(out, r) {
+    out.textContent = "";
+    var caps = r.capabilities || {}, k = r.controller || {};
+    var capList = Object.keys(caps).filter(function (x) { return caps[x] === true; });
+    var risk = typeof r.riskScore === "number" ? String(r.riskScore) + "/100" : "n/a";
+    var ctl = String(k.kind || "none");
+    if (typeof k.safeThreshold === "number") ctl += " (" + k.safeThreshold + "-of-" + (typeof k.safeOwnerCount === "number" ? k.safeOwnerCount : "?") + ")";
+    if (typeof k.timelockDelaySec === "number") ctl += " (" + secs(k.timelockDelaySec) + " delay)";
+    out.appendChild(el("p", { "class": "pf-verdict" }, [badge(null, String(r.verdict), VERDICT_CLASS[r.verdict] || "delta"), " Risk " + risk]));
+    out.appendChild(el("p", { text: String(r.summary || "") }));
+    out.appendChild(el("dl", { "class": "pf-dl" }, [
+      pfRow("Chain / block", String(r.chain) + " · block " + num(r.pinnedBlock)),
+      pfRow("Contract", pfAddr(r.address)),
+      pfRow("Proxy", r.isProxy ? "yes" : "no"),
+      pfRow("Implementation", pfAddr(r.implementation)),
+      pfRow("Controller", ADDR_RE.test(String(k.address || "")) ? el("span", {}, [ctl + " ", pfAddr(k.address)]) : ctl),
+      pfRow("Zero-delay upgrade", r.canUpgradeZeroDelay === true ? "yes" : r.canUpgradeZeroDelay === false ? "no" : "unknown"),
+      pfRow("Capabilities", capList.length ? capList.join(", ") : "none seen"),
+      pfRow("Paused", r.paused === true ? "yes" : r.paused === false ? "no" : "n/a")]));
+    if (r.isContract !== false && ADDR_RE.test(String(r.address)) && /^\d+$/.test(String(r.pinnedBlock)))
+      out.appendChild(term(pfCasts(r).join("\n"), "Verify it yourself (Foundry cast, pinned block)"));
+  }
+  function initPreflight() {
+    var box = $(".pf"), form = $("#pf-form"), out = $("#pf-out");
+    if (!box || !form || !out) return;
+    var api = box.getAttribute("data-api") || "", chainSel = $('select[name="chain"]', form), addr = $('input[name="address"]', form);
+    if (!chainSel || !addr || !/^https:\/\//.test(api)) return;
+    var seq = 0;
+    function msg(t) { out.textContent = ""; out.appendChild(el("p", { "class": "note", text: t })); }
+    function run() {
+      var a = String(addr.value || "").trim(), ch = chainSel.value === "base" ? "base" : "ethereum";
+      if (!ADDR_RE.test(a)) { msg("Enter a 0x-prefixed, 40-hex-character contract address."); return; }
+      if (typeof fetch !== "function") { msg("This browser cannot call the API; use the curl command above."); return; }
+      var my = ++seq;
+      msg("Checking " + short(a, 6, 4) + " on " + ch + " at the latest block…");
+      fetch(api + "/v1/check/preflight?chain=" + ch + "&address=" + a, { headers: { Accept: "application/json" } })
+        .then(function (res) { return res.json().then(function (b) { return { status: res.status, body: b }; }); })
+        .then(function (x) {
+          if (my !== seq) return;
+          var b = x.body || {}, r = b.verdict ? b : (b.result && b.result.verdict ? b.result : null);
+          if (x.status === 200 && r) pfRender(out, r);
+          else msg("The API answered HTTP " + x.status + (b.error ? " (" + String(b.error) + ")" : "") + (b.detail ? ": " + String(b.detail) : "."));
+        })
+        .catch(function () { if (my === seq) msg("Could not reach the API. Try again, or use the curl command above."); });
+    }
+    form.addEventListener("submit", function (ev) { ev.preventDefault(); run(); });
+    $$("[data-pf-address]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        chainSel.value = b.getAttribute("data-pf-chain") === "base" ? "base" : "ethereum";
+        addr.value = b.getAttribute("data-pf-address") || "";
+        run();
+      });
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     initTheme(); initCopy(); tick(); setInterval(tick, 30000);
-    initIndex(); initRequest(); initInspector();
+    initIndex(); initRequest(); initInspector(); initPreflight();
     if ($("#insp-list")) loadData().catch(function () { /* static sheet and drawer links keep working */ });
   });
 })();

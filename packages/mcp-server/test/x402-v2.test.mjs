@@ -73,14 +73,14 @@ const v2Payment = (route, { shape = "accepted", top = {}, accepted = {}, authO =
 };
 const receipt = (o = {}) => b64({ success: true, transaction: TX, network: BASE_NETWORK_V2, payer: FROM, ...o });
 
-test("X402_DEFAULTS and PAID_ROUTES advertise v1 + v2 and all 4 live Worker routes", () => {
+test("X402_DEFAULTS and PAID_ROUTES advertise v1 + v2 and all 5 live Worker routes", () => {
   assert.deepEqual(X402_DEFAULTS.x402Versions, [1, 2]);
   assert.deepEqual(X402_DEFAULTS.networks, ["base", "eip155:8453"]);
   assert.deepEqual(X402_DEFAULTS.paymentHeaders, { 1: "X-PAYMENT", 2: "PAYMENT-SIGNATURE" });
   assert.equal(BASE_NETWORK_V2, "eip155:8453");
   assert.deepEqual(
     Object.values(PAID_ROUTES).map((r) => [r.path, r.maxAmountRequired]).sort(),
-    [["/v1/briefs/live-timelocks", "100000"], ["/v1/scan/control-plane", "100000"], ["/v1/scan/proposal-diff", "150000"], ["/v1/scan/timelock-op", "250000"]]
+    [["/v1/briefs/live-timelocks", "100000"], ["/v1/check/preflight", "10000"], ["/v1/scan/control-plane", "100000"], ["/v1/scan/proposal-diff", "150000"], ["/v1/scan/timelock-op", "250000"]]
   );
 });
 
@@ -233,4 +233,45 @@ test("pacta_scan_proposal_diff: listed with the Worker contract, GET /v1/scan/pr
   const paid = await paidSrv.callTool("pacta_scan_proposal_diff", { forum: "aave", topicId: "25128", paymentSignatureHeader: hdr });
   assert.deepEqual([paid.paid, paid.x402Version, paid.data.proposalId, paid.paymentReceipt.amount], [true, 2, "aave-25128", "150000"]);
   assert.equal(fp.calls[0].init.headers["PAYMENT-SIGNATURE"], hdr);
+});
+
+test("pacta_check_preflight: Worker contract GET /v1/check/preflight?chain=&address=[&block=], $0.01 challenge when metered, free-launch 200 as unpaid data", async () => {
+  const tool = PAID_TOOLS.find((t) => t.name === "pacta_check_preflight");
+  assert.ok(tool && /\$0\.01/.test(tool.description) && /Free during the launch/.test(tool.description));
+  assert.equal(PAID_TOOLS[0].name, "pacta_check_preflight");
+  assert.deepEqual(tool.inputSchema.required, ["chain", "address"]);
+  assert.deepEqual(tool.inputSchema.properties.chain.enum, ["ethereum", "base"]);
+  const R = PAID_ROUTES.checkPreflight, URL_ = `${BASE_URL}${R.path}`;
+  assert.deepEqual([R.path, R.priceUsdc, R.maxAmountRequired], ["/v1/check/preflight", "0.01", "10000"]);
+  // free launch: the live Worker answers 200 with no payment header; the tool returns it as unpaid data
+  const verdict = { schema: "pacta.preflight_check.v1", verdict: "TIMELOCK_PROTECTED", riskScore: 15, pinnedBlock: 23800000 };
+  const free = recordingFetch(() => mockRes(200, verdict));
+  const srv = new PactaMcpServer({ x402Url: BASE_URL, fetchImpl: free, nowSeconds: NOW });
+  assert.ok(srv.getTools().some((t) => t.name === "pacta_check_preflight"));
+  const r = await srv.callTool("pacta_check_preflight", { chain: "base", address: FROM });
+  assert.equal(free.calls[0].url, `${URL_}?chain=base&address=${FROM}`);
+  assert.equal(free.calls[0].init.method, "GET");
+  assert.equal(free.calls[0].init.headers["X-PAYMENT"], undefined);
+  assert.equal(free.calls[0].init.headers["PAYMENT-SIGNATURE"], undefined);
+  assert.deepEqual([r.status, r.paid, r.paymentRequired, r.data.verdict], [200, false, false, "TIMELOCK_PROTECTED"]);
+  await srv.callTool("pacta_check_preflight", { chain: "ethereum", address: FROM, block: "23800000" });
+  assert.equal(free.calls[1].url, `${URL_}?chain=ethereum&address=${FROM}&block=23800000`);
+  // metered mode: the $0.01 challenge is validated like every other route
+  const { body, header } = worker402(R, URL_);
+  const f = recordingFetch(() => mockRes(402, body, { "PAYMENT-REQUIRED": b64(header) }));
+  const paidMode = new PactaMcpServer({ x402Url: BASE_URL, fetchImpl: f, nowSeconds: NOW });
+  const ch = await paidMode.callTool("pacta_check_preflight", { chain: "base", address: FROM, x402Version: 2, payer: FROM });
+  assert.deepEqual([ch.status, ch.x402Version, ch.accepts[0].amount, ch.priceUsdc], [402, 2, "10000", "0.01"]);
+  for (const bad of [{ chain: "polygon", address: FROM }, { chain: "base", address: "0x1234" }, { chain: "base" },
+    { chain: "base", address: FROM, block: "pending" }, { chain: "base", address: FROM, block: 1 }, { chain: "base", address: FROM, block: "0x" }]) {
+    const n = f.calls.length;
+    await assert.rejects(paidMode.callTool("pacta_check_preflight", bad), (e) => e.code === "invalid_argument", JSON.stringify(bad));
+    assert.equal(f.calls.length, n, "invalid arguments never fetch");
+  }
+  // gateway unset: x402_disabled, no network
+  const off = recordingFetch(() => mockRes(500, {}));
+  const offSrv = new PactaMcpServer({ x402Url: "", fetchImpl: off, nowSeconds: NOW });
+  assert.ok(!offSrv.getTools().some((t) => t.name === "pacta_check_preflight"));
+  await assert.rejects(offSrv.callTool("pacta_check_preflight", { chain: "base", address: FROM }), (e) => e.code === "x402_disabled");
+  assert.equal(off.calls.length, 0);
 });

@@ -2,7 +2,7 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
   "name": "io.github.fractal-neurons/pacta",
   "title": "Pacta",
-  "description": "Pinned-block DeFi control-plane records, governance proposals, Base EAS anchors, x402 live scans.",
+  "description": "Free pre-execution contract checks for AI agents: preflight, control-plane scans, EAS anchors.",
   "repository": {
     "url": "https://github.com/Fractal-Neurons/pacta",
     "source": "github",
@@ -65,6 +65,12 @@
           "isSecret": false
         }
       ]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://pacta-x402.pacta.workers.dev/mcp"
     }
   ]
 }

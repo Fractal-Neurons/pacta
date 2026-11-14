@@ -1,0 +1,46 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Liquity V2 (BOLD) control-plane safety · Pacta</title>
+<meta name="description" content="Who can upgrade, pause or change Liquity V2 (BOLD): 1 block-pinned control-plane check(s) with cast reproductions and a free live pre-flight API.">
+<link rel="canonical" href="https://pacta.wtf/protocols/liquity-v2-bold/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Pacta by Fractal Neurons">
+<meta property="og:title" content="Liquity V2 (BOLD): control-plane safety record">
+<meta property="og:description" content="Who can upgrade, pause or change Liquity V2 (BOLD): 1 block-pinned control-plane check(s) with cast reproductions and a free live pre-flight API.">
+<meta property="og:url" content="https://pacta.wtf/protocols/liquity-v2-bold/">
+<meta property="og:image" content="https://pacta.wtf/og-preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Liquity V2 (BOLD): control-plane safety record">
+<meta name="twitter:description" content="Who can upgrade, pause or change Liquity V2 (BOLD): 1 block-pinned control-plane check(s) with cast reproductions and a free live pre-flight API.">
+<meta name="twitter:image" content="https://pacta.wtf/og-preview.png">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../../favicon.png" type="image/png" sizes="32x32">
+<link rel="stylesheet" href="../../styles.css">
+<link rel="alternate" type="text/markdown" href="../../llms.txt" title="llms.txt">
+<script>document.documentElement.className="js";try{if(localStorage.getItem("pacta-theme")==="slate")document.documentElement.dataset.theme="slate"}catch(e){}</script>
+<script src="../../app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar"><div class="wrap"><a class="brand" href="../../"><img src="../../favicon.svg" alt="" width="22" height="22">PACTA<small>by Fractal Neurons</small></a><nav class="nav" aria-label="Sections"><a href="../../#preflight">Free API</a><a href="../../#inspector">Inspector</a><a href="../../#radar">Radar</a><a href="../../#findings">Findings</a><a href="../../#index">Index</a><a href="../../#verify">Verify</a><a href="../../#pricing">Pricing</a><a href="../../#faq">FAQ</a></nav><div class="tools"><button class="tt" type="button" aria-label="Theme: Paper (switch to Slate)"><span data-t="paper" class="on">Paper</span><span data-t="slate">Slate</span></button><a class="btn sm primary" href="../../request/">Request coverage</a></div></div></header>
+<main id="main" class="memo-wrap">
+<div class="crumbs"><a href="../../">Pacta</a> / <a href="../">Protocols</a> / Liquity V2 (BOLD)</div>
+<article class="memo">
+<header><span class="tier">Immutable CDP Stablecoin</span><h1>Liquity V2 (BOLD): control-plane safety record</h1>
+<p class="lede">1 indexed control-plane surface(s) for Liquity V2 (BOLD), each pinned to a canonical Ethereum block and compared with what the protocol documents. Contracts: <code class="mono">0x6440f144b7e50D6a8439336510312d2F54beB01D</code>.</p></header>
+<section class="memo-sec"><h2>Check it live (free)</h2><p>The pre-flight API re-reads the controller, proxy and capabilities of a contract at the latest block. No key, no wallet.</p>
+<div class="term"><div class="term-h"><span>Live pre-flight check</span><button class="copy" type="button" data-copy-term>Copy command</button></div><pre>curl -s &quot;https://pacta-x402.pacta.workers.dev/v1/check/preflight?chain=ethereum&amp;address=0x6440f144b7e50D6a8439336510312d2F54beB01D&quot;</pre></div><p>MCP: <code class="mono">https://pacta-x402.pacta.workers.dev/mcp</code> · tool <code>pacta_check_preflight</code>.</p></section>
+<article class="memo-sec" id="liquity-v2-bold-immutability"><h2>Sampled Owner &amp; EIP-1967 Slot Alignment</h2><dl class="memo-meta"><dt>Status</dt><dd><span class="badge">Aligned baseline</span></dd><dt>Target</dt><dd>BOLD Token <span class="addr" title="0x6440f144b7e50D6a8439336510312d2F54beB01D">0x6440…B01D</span><button class="copy" type="button" data-copy="0x6440f144b7e50D6a8439336510312d2F54beB01D">Copy</button></dd><dt>Pinned block</dt><dd>Ethereum <span class="num">#26,401,540</span> · sprint 6</dd><dt>Block hash</dt><dd><span class="addr" title="0x49324aaf84b0ffd4e21026c5345272788bff377f0f86fcdb74280cdfc32a9641">0x49324aaf…2a9641</span><button class="copy" type="button" data-copy="0x49324aaf84b0ffd4e21026c5345272788bff377f0f86fcdb74280cdfc32a9641">Copy</button></dd></dl><p><b>Observed on-chain.</b> BOLD.owner() = 0x0; Governance (0x807DEf5E7d057DF05C796F4bc75C3Fe82Bd6EeE1) owner() = 0x0; CollateralRegistry (0xf949982B91C8c61e952B3bA942cbbfaef5386684) EIP-1967 implementation slot = 0x00...00.</p><p><b>Documented.</b> Liquity V2 immutability and non-upgradeable core specification.</p><div class="term"><div class="term-h"><span>Reproduce on any archive node</span><button class="copy" type="button" data-copy-term>Copy command</button></div><pre>cast call 0x6440f144b7e50D6a8439336510312d2F54beB01D \
+  &quot;owner()&quot; \
+  --block 26401540 --rpc-url &quot;$ETH_RPC_URL&quot;
+cast block 26401540 --field hash --rpc-url &quot;$ETH_RPC_URL&quot;
+# expect 0x49324aaf84b0ffd4e21026c5345272788bff377f0f86fcdb74280cdfc32a9641</pre></div></article>
+</article>
+<div class="memo-foot"><span>Read-only on-chain analysis. Not investment advice. Exploit-sensitive vulnerabilities are never published here; they go through Immunefi or Cantina bounty programmes.</span><a href="../../request/?tier=clearance">Clear findings in 24h · $5,000 USDC →</a></div>
+</main>
+<footer class="ftr"><div class="wrap"><span>Pacta · Fractal Neurons · pacta.base.eth · 14 Sprints · 37 Indexed Records</span><nav aria-label="Footer"><a href="https://github.com/Fractal-Neurons/pacta" target="_blank" rel="noopener">GitHub</a><a href="../../api/v1/index.json">JSON feed</a><a href="../../llms.txt">llms.txt</a><a href="https://basescan.org/address/0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872" target="_blank" rel="noopener">Base registry</a><a href="../../.well-known/security.txt">security.txt</a><a href="../../request/">Contact</a></nav></div></footer>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Dataset", "creator": {"@type": "Organization", "name": "Pacta by Fractal Neurons", "url": "https://pacta.wtf/"}, "description": "Block-pinned control-plane observations for Liquity V2 (BOLD) (Immutable CDP Stablecoin): proxy admins, Safe quorums, roles and timelock delays, compared with the protocol's documentation. 1 indexed surface(s).", "distribution": [{"@type": "DataDownload", "contentUrl": "https://pacta.wtf/api/v1/index.json", "encodingFormat": "application/json"}], "isAccessibleForFree": true, "keywords": ["Liquity V2 (BOLD)", "Immutable CDP Stablecoin", "DeFi", "control plane", "timelock", "proxy admin", "Safe multisig"], "name": "Liquity V2 (BOLD) control-plane safety record", "spatialCoverage": "Ethereum Mainnet (chain id 1)", "temporalCoverage": "block 26401540/26401540", "url": "https://pacta.wtf/protocols/liquity-v2-bold/", "variableMeasured": ["Sampled Owner & EIP-1967 Slot Alignment"]}</script>
+</body></html>

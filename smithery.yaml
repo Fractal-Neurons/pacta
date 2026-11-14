@@ -1,0 +1,37 @@
+# Smithery config for the Pacta MCP server: free pre-execution contract checks for AI agents.
+#
+# Two ways to connect:
+#   1. Remote (zero install, preferred): Streamable HTTP at https://pacta-x402.pacta.workers.dev/mcp
+#      (5 read-only tools, free during the launch: no API key, no wallet). Register it as an external
+#      remote server with that URL; nothing below is needed for it.
+#   2. stdio (this file): the zero-dependency Node server in packages/mcp-server, built from its Dockerfile.
+#      The npm package @pacta/mcp-server is not published yet, so there is no npx form.
+runtime: container
+build:
+  dockerfile: packages/mcp-server/Dockerfile
+  dockerBuildPath: packages/mcp-server
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties:
+      x402Url:
+        type: string
+        default: https://pacta-x402.pacta.workers.dev
+        description: Pacta gateway base URL for the live tools (pre-flight check, control-plane / timelock / proposal scans). Free during the launch. Empty string = static-feed tools only.
+      maxAtomic:
+        type: string
+        default: "1000000"
+        description: Per-payment cap in atomic Base USDC (6 decimals), used only if metering is switched on. Hard ceiling 5000000.
+  commandFunction: |-
+    (config) => ({
+      command: "node",
+      args: ["/app/bin/pacta-mcp.mjs"],
+      env: {
+        PACTA_X402_URL: config.x402Url ?? "https://pacta-x402.pacta.workers.dev",
+        PACTA_X402_MAX_ATOMIC: config.maxAtomic ?? "1000000"
+      }
+    })
+  exampleConfig:
+    x402Url: https://pacta-x402.pacta.workers.dev
+    maxAtomic: "1000000"

@@ -183,3 +183,13 @@ test("0x4348… is never called a Safe (SKILL.md, README.md, server.json); SKILL
   }
   assert.ok(SKILL.match(ADDR)?.length >= 1);
 });
+
+test("server.json advertises the live remote MCP endpoint; server.remote.json is a remote-only twin (registrable before npm publish)", () => {
+  const MCP = "https://pacta-x402.pacta.workers.dev/mcp";
+  assert.deepEqual(SERVER.remotes, [{ type: "streamable-http", url: MCP }]);
+  const REMOTE = JSON.parse(read("server.remote.json"));
+  subset(REMOTE, SERVER_KEYS, "server.remote.json");
+  assert.equal(REMOTE.packages, undefined);
+  assert.deepEqual(REMOTE.remotes, SERVER.remotes);
+  for (const k of ["$schema", "name", "title", "description", "repository", "version", "websiteUrl"]) assert.deepEqual(REMOTE[k], SERVER[k], k);
+});

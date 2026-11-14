@@ -52,67 +52,110 @@
  },
  "homepage": "https://pacta.wtf/",
  "name": "io.github.fractal-neurons/pacta",
+ "openapi": "https://pacta-x402.pacta.workers.dev/openapi.json",
  "package": "@pacta/mcp-server",
- "status": "publication_pending: @pacta/mcp-server is not yet published to npm or the MCP registry; the install commands below apply once it is. Until then use the free HTTPS feeds directly.",
+ "status": "publication_pending: @pacta/mcp-server is not yet published to npm or the MCP registry. Use the remote MCP server now (no install): https://pacta-x402.pacta.workers.dev/mcp. The stdio server runs from a clone of the repository: node packages/mcp-server/bin/pacta-mcp.mjs.",
  "title": "Pacta",
  "tools": [
   {
    "access": "free",
    "description": "Filter indexed records (protocol, classification, sprint, limit)",
+   "effectivePriceUsd": "0.00",
    "name": "pacta_list_commitments",
    "price": null
   },
   {
    "access": "free",
    "description": "Base EAS anchoring: PactaCommitmentRegistry, schema, sprint attestation UIDs",
+   "effectivePriceUsd": "0.00",
    "name": "pacta_get_anchoring",
    "price": null
   },
   {
    "access": "free",
    "description": "Governance proposals feed (forum, topic_id, chain, limit, include_repro)",
+   "effectivePriceUsd": "0.00",
    "name": "pacta_list_proposals",
    "price": null
   },
   {
    "access": "free",
    "description": "x402 gateway status and discovery manifest (only when PACTA_X402_URL is set)",
+   "effectivePriceUsd": "0.00",
    "name": "pacta_x402_discover",
    "price": null
   },
   {
-   "access": "x402",
+   "access": "free_launch",
+   "description": "Pre-execution check of a contract: verdict, 0-100 risk score, proxy / admin / timelock, capabilities (chain, address, block)",
+   "effectivePriceUsd": "0.00",
+   "name": "pacta_check_preflight",
+   "price": "$0.01"
+  },
+  {
+   "access": "free_launch",
    "description": "Live control-plane scan of a contract (chain, address)",
+   "effectivePriceUsd": "0.00",
    "name": "pacta_scan_control_plane",
    "price": "$0.10"
   },
   {
-   "access": "x402",
+   "access": "free_launch",
    "description": "Live TimelockController operation state (timelock, opId)",
+   "effectivePriceUsd": "0.00",
    "name": "pacta_scan_timelock_op",
    "price": "$0.25"
   },
   {
-   "access": "x402",
+   "access": "free_launch",
    "description": "Live state of tracked queued timelock operations",
+   "effectivePriceUsd": "0.00",
    "name": "pacta_live_timelocks",
    "price": "$0.10"
   },
   {
-   "access": "x402",
+   "access": "free_launch",
    "description": "Re-run a tracked governance proposal's pinned reads live, pinned-vs-live diffs (forum, topicId)",
+   "effectivePriceUsd": "0.00",
    "name": "pacta_scan_proposal_diff",
    "price": "$0.15"
   }
  ],
  "transport": {
-  "args": [
-   "-y",
-   "@pacta/mcp-server"
+  "auth": "none",
+  "pricingMode": "free_launch",
+  "tools": [
+   "pacta_check_preflight",
+   "pacta_scan_control_plane",
+   "pacta_scan_timelock_op",
+   "pacta_scan_proposal_diff",
+   "pacta_get_live_timelocks"
   ],
-  "command": "npx",
-  "type": "stdio"
+  "type": "streamable-http",
+  "url": "https://pacta-x402.pacta.workers.dev/mcp"
  },
+ "transports": [
+  {
+   "install": "none",
+   "tools": [
+    "pacta_check_preflight",
+    "pacta_scan_control_plane",
+    "pacta_scan_timelock_op",
+    "pacta_scan_proposal_diff",
+    "pacta_get_live_timelocks"
+   ],
+   "type": "streamable-http",
+   "url": "https://pacta-x402.pacta.workers.dev/mcp"
+  },
+  {
+   "args": [
+    "packages/mcp-server/bin/pacta-mcp.mjs"
+   ],
+   "command": "node",
+   "install": "from a clone of the repository (npm publication pending)",
+   "type": "stdio"
+  }
+ ],
  "verification": {
   "chainId": 8453,
   "easSchema": "0x7ff485bc1159dff3c70eefcb9dff2d65be990301760c2d53799e5a45e3badf83",
@@ -134,6 +177,11 @@
   "onchainReceiptVerified": false,
   "optIn": true,
   "paidRoutes": [
+   {
+    "amount": "10000",
+    "path": "/v1/check/preflight",
+    "priceUsd": "$0.01"
+   },
    {
     "amount": "100000",
     "path": "/v1/scan/control-plane",

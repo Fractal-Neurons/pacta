@@ -37,10 +37,17 @@ E = html.escape
 CONTACT = "pacta@dri.network"
 REPO = "https://github.com/Fractal-Neurons/pacta"
 FN = "https://fractalneurons.com"
-TITLE = "Pacta · DeFi control-plane monitoring"
-DESC = "Block-pinned DeFi control-plane snapshots and timelock alerts."
-OG_TITLE = "Know when your DeFi collateral’s rules change — before they do"
-H1 = "Know when the people who control your DeFi collateral can change the rules — before they do."
+TITLE = "Pacta · Free pre-execution API for AI agents"
+DESC = "Free pre-execution contract checks for AI agents. No API key, no wallet."
+OG_TITLE = "Free pre-execution contract safety checks for AI agents"
+H1 = "Free Pre-Execution Contract & Governance Safety API for AI Agents — Zero API Key, Zero Wallet, 1 Call"
+API = "https://pacta-x402.pacta.workers.dev"          # live Cloudflare Worker (free launch: $0, no key, no wallet)
+MCP_URL, OPENAPI_URL = API + "/mcp", API + "/openapi.json"
+RATE_LIMIT = "60 requests / minute per caller"
+# Live checker presets: (label, chain, address). Public contracts; the ETHx token is an indexed record (Stader, sprint 12).
+PREFLIGHT_PRESETS = [("USDC on Base", "base", "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"),
+                     ("USDC on Ethereum", "ethereum", "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"),
+                     ("Stader ETHx", "ethereum", "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b")]
 BRIEFS = {
     "ethena-ops-0x0ca0-0x1fe5": "Pre-execution brief: two queued Ethena timelock operations onboard RLUSD and USAT to EthenaMinting "
                                 "at 200M / 20M USDe-per-block caps (1-day delay; ETAs 2026-11-14 10:20–10:22 UTC).",
@@ -49,7 +56,7 @@ BRIEFS = {
     "treehouse-op-0x2f11": "Pre-execution brief: a queued 5-day timelock operation upgrades the Treehouse TREE token (not tETH) "
                            "and installs a 5-of-7 Safe blacklister (ETA 2026-11-17 04:51 UTC).",
 }
-NAV = [("inspector", "Inspector"), ("radar", "Radar"), ("findings", "Findings"), ("index", "Index"), ("verify", "Verify"),
+NAV = [("preflight", "Free API"), ("inspector", "Inspector"), ("radar", "Radar"), ("findings", "Findings"), ("index", "Index"), ("verify", "Verify"),
        ("pricing", "Pricing"), ("faq", "FAQ")]
 # Engagement tracks shown in #pricing and offered by the request builder. key -> (title, price, unit, summary, GitHub dropdown option)
 # One commercial offer (for collateral issuers) plus the free community queue. The public data itself (every indexed
@@ -513,21 +520,28 @@ def pricing_section(home=""):
         return (f'<div class="plan{" feat" if feat else ""}"><span class="tier">{tier}</span><h3>{E(title)}</h3>'
                 f'<div class="price">{price}{f"<small>{unit}</small>" if unit else ""}</div>{addon}<ul>{lis}</ul>'
                 f'<a class="btn{" primary" if feat else ""}" href="{req}{"" if home == "" else "?tier=" + key}" data-tier="{key}">{cta} <span class="arr">→</span></a></div>')
-    plans = (plan("community", "Curators, allocators &amp; AI risk agents",
-                  ["Every indexed record, the timelock radar and pre-execution briefs, free and real-time",
-                   "JSON feed and llms.txt with no key, no delay and no paywall", "Inspector and <code>cast</code> reproductions",
-                   "Suggest a protocol: community queue, unscheduled (typically 6–8 weeks)"], "Join the community queue",
-                  title="Open risk feed", price="Free<small>real-time</small>")
-             + plan("clearance", "Collateral issuers",
+    free_lis = "".join(f"<li>{b}</li>" for b in [
+        "All 5 endpoints: <code>/v1/check/preflight</code>, control-plane, timelock-op, proposal-diff, live timelocks",
+        f"Remote MCP (5 read-only tools) at <code>{E(MCP_URL)}</code> and OpenAPI 3.1",
+        f"{E(RATE_LIMIT)}; 5-minute edge cache on unpinned checks",
+        "Every indexed record, the timelock radar and briefs, free and real-time; no key, no delay, no paywall",
+        "x402 v1 + v2 (USDC on Base) is wired in for metered use later; nothing to set up today"])
+    free_plan = (f'<div class="plan feat"><span class="tier">AI agents, agent builders &amp; risk teams</span><h3>Free launch</h3>'
+                 f'<div class="price">$0<small>no API key · no wallet</small></div><ul>{free_lis}</ul>'
+                 f'<a class="btn primary" href="{"" if home == "" else home}#preflight">Run a check in one call <span class="arr">→</span></a>'
+                 f'<a class="plan-sub" href="{req}{"" if home == "" else "?tier=community"}" data-tier="community">Suggest a protocol for the free community queue →</a></div>')
+    plans = (free_plan
+             + plan("clearance", "High volume, SLA &amp; on-chain clearance",
                     ["Canonical block-pinned control-plane audit of your proxy admins, Safes, roles and timelocks",
                      "GitBook / config reconciliation PR wherever docs and on-chain state differ",
                      "Base Mainnet EAS <i>Aligned</i> attestation in PactaCommitmentRegistry, clearing open <code>parameter_delta</code> flags",
                      "Paste-ready Curator Diligence Dossier (PDF + JSON) for Morpho, Euler, Aave and Sky forum proposals",
+                     "Dedicated rate limits and an SLA for high-volume agent traffic: scoped in the request builder",
                      "USDC on Base or Ethereum; payment details are in the request builder"],
-                    "Book a 24h clearance", feat=True,
+                    "Request SLA or a 24h clearance", feat=False,
                     addon=f'<p class="addon">Optional: continuous <i>Aligned</i> badge maintenance, {E(MONITORING_PRICE)}</p>'))
     return f"""<section class="sec" id="pricing"><div class="wrap">
-<div class="sec-head"><span class="n">07</span><h2>Engagements</h2><span class="aside">All public data is free and real-time. One paid service, for collateral issuers.</span></div>
+<div class="sec-head"><span class="n">07</span><h2>Pricing</h2><span class="aside">The API, MCP server and all public data are free during the launch. Paid work is optional: high-volume SLAs and on-chain clearance.</span></div>
 <div class="plans two">{plans}</div>
 <p class="note">{E(VULN_ROUTE)}</p>
 </div></section>"""
@@ -643,6 +657,143 @@ def about_section(idx):
 </div></section>"""
 
 
+def quickstart_block():
+    """Above-the-fold, copyable agent quickstarts. Remote MCP and curl come first: the npm package is not published yet."""
+    claude = f"claude mcp add --transport http pacta {MCP_URL}"
+    cursor = '{"mcpServers": {"pacta": {"url": "' + MCP_URL + '"}}}'
+    curl = f'curl -s "{API}/v1/check/preflight?chain=ethereum&address=0xA35b1B31Ce002FBF2058D22F30f95D405200A15b"'
+    snippet = lambda label, value: (f'<div class="qs-snip"><span class="qs-l">{label}</span><code class="mono">{E(value)}</code>{copy_btn(value)}</div>')
+    return (f'<div class="qs" aria-label="Agent quickstarts">'
+            f'<div class="qs-item"><span class="tier">1 · Remote MCP, zero install</span><h3>Claude Code, Cursor, any MCP client</h3>'
+            f'{snippet("Claude Code", claude)}{snippet("Cursor mcp.json", cursor)}{snippet("Any MCP client (Streamable HTTP)", MCP_URL)}</div>'
+            f'<div class="qs-item"><span class="tier">2 · One curl</span><h3>Pre-flight check</h3>{snippet("Shell", curl)}'
+            f'<p class="note">Returns a verdict, a 0–100 risk score, proxy / admin / timelock breakdown and the pinned block.</p></div>'
+            f'<div class="qs-item"><span class="tier">3 · OpenAPI, Actions &amp; skills</span><h3>ChatGPT Actions, LangChain, skills</h3>'
+            f'<p class="qs-links"><a href="{OPENAPI_URL}">openapi.json (3.1)</a><a href="SKILL.md">SKILL.md</a><a href="llms.txt">llms.txt</a>'
+            f'<a href=".well-known/agent.json">agent.json</a><a href=".well-known/mcp.json">mcp.json</a></p>'
+            f'<p class="note">$0 during the launch: no API key, no wallet, {E(RATE_LIMIT)}.</p></div>'
+            f'</div>')
+
+
+def preflight_section():
+    """Live checker: app.js calls the free API on an explicit click and renders text only (textContent)."""
+    presets = "".join(f'<button class="btn sm" type="button" data-pf-chain="{c}" data-pf-address="{a}">{E(l)}</button>' for l, c, a in PREFLIGHT_PRESETS)
+    return f"""<section class="sec" id="preflight"><div class="wrap">
+<div class="sec-head"><span class="n">00</span><h2>Live pre-flight check</h2><span class="aside">Calls the free API at {E(API)} when you press the button. Nothing is sent before that.</span></div>
+<div class="pf" data-api="{API}">
+<form class="pf-form" id="pf-form" autocomplete="off"><label>Chain<select name="chain"><option value="ethereum">Ethereum</option><option value="base">Base</option></select></label>
+<label class="pf-addr">Contract address<input type="text" name="address" placeholder="0x…" maxlength="42" spellcheck="false" required></label>
+<button class="btn primary" type="submit">Run pre-flight</button></form>
+<div class="pf-presets"><span>Try:</span>{presets}</div>
+<div class="pf-out" id="pf-out" aria-live="polite"><p class="note">The verdict, risk score, proxy, admin and timelock breakdown and the <code>cast</code> commands to verify it appear here.</p></div>
+<noscript><p class="note">Without JavaScript, use the curl command above.</p></noscript>
+</div>
+</div></section>"""
+
+
+def protocol_slug(name):
+    return re.sub(r"-{2,}", "-", re.sub(r"[^a-z0-9]+", "-", name.lower())).strip("-")
+
+
+def protocol_groups(idx):
+    groups = {}
+    for e in idx["entries"]:
+        groups.setdefault(e["protocol"], []).append(e)
+    return {k: sorted(v, key=lambda e: (e["sprint"], e["id"])) for k, v in sorted(groups.items(), key=lambda kv: kv[0].lower())}
+
+
+def radar_for(name, radar):
+    key = name.lower()
+    return [it for it in radar["items"] if it["protocol"].lower() in key or key.startswith(it["protocol"].lower())]
+
+
+def protocol_page(name, entries, idx, radar):
+    """Static, deterministic protocol safety record (no wall-clock time): every indexed surface with its pinned block."""
+    slug = protocol_slug(name)
+    url = f"{BASE_URL}/protocols/{slug}/"
+    c = counts(idx)
+    count_line = f'{c["sprints"]} Sprints · {c["records"]} Indexed Records'
+    reg = idx["onchain_anchoring"]["commitment_registry"]
+    cat = entries[0]["category"]
+    targets = sorted({e["target_contract"] for e in entries})
+    first = entries[0]
+    records = ""
+    for e in entries:
+        records += (f'<article class="memo-sec" id="{E(e["id"])}"><h2>{E(e["surface"])}</h2>'
+                    f'<dl class="memo-meta"><dt>Status</dt><dd>{badge(e["classification"])}</dd>'
+                    f'<dt>Target</dt><dd>{E(e["target_label"])} {hexref(e["target_contract"])}</dd>'
+                    f'<dt>Pinned block</dt><dd>Ethereum <span class="num">#{int(e["block_number"]):,}</span> · sprint {E(str(e["sprint"]))}</dd>'
+                    f'<dt>Block hash</dt><dd>{hexref(e["block_hash"], 10, 6)}</dd></dl>'
+                    f'<p><b>Observed on-chain.</b> {E(e["onchain_observed"])}</p>'
+                    f'<p><b>Documented.</b> {E(e["documented_reference"])}</p>'
+                    f'{term(cast_line(e))}</article>\n')
+    ops = ""
+    for it in radar_for(name, radar):
+        lis = "".join(f'<li><code class="mono">{E(o["op_id"])}</code> · ETA {E(utc(o["eta"], True))} · {"pending" if o["pending"] else ("done" if o["done"] else "cancelled or unknown")}</li>'
+                      for o in it["operations"])
+        ops += (f'<article class="memo-sec"><h2>Queued timelock operations</h2><p>{E(it["title"])}. {E(it["summary"])}</p>'
+                f'<p>Timelock {hexref(it["timelock"])} · {secs(it["min_delay_seconds"])} minimum delay · <a href="../../{E(it["brief"])}">Pre-execution brief →</a></p>'
+                f'<ul>{lis}</ul></article>\n')
+    curl = f'curl -s "{API}/v1/check/preflight?chain=ethereum&address={first["target_contract"]}"'
+    ld = {"@context": "https://schema.org", "@type": "Dataset", "name": f"{name} control-plane safety record",
+          "description": f"Block-pinned control-plane observations for {name} ({cat}): proxy admins, Safe quorums, roles and timelock delays, "
+                         f"compared with the protocol's documentation. {len(entries)} indexed surface(s).",
+          "url": url, "isAccessibleForFree": True, "keywords": [name, cat, "DeFi", "control plane", "timelock", "proxy admin", "Safe multisig"],
+          "creator": {"@type": "Organization", "name": "Pacta by Fractal Neurons", "url": f"{BASE_URL}/"},
+          "distribution": [{"@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": f"{BASE_URL}/api/v1/index.json"}],
+          "variableMeasured": [e["surface"] for e in entries],
+          "spatialCoverage": "Ethereum Mainnet (chain id 1)",
+          "temporalCoverage": f"block {min(int(e['block_number']) for e in entries)}/{max(int(e['block_number']) for e in entries)}"}
+    ld_json = json.dumps(ld, ensure_ascii=False, sort_keys=True).replace("</", "<\\/")
+    title = f"{name}: control-plane safety record"
+    desc = f"Who can upgrade, pause or change {name}: {len(entries)} block-pinned control-plane check(s) with cast reproductions and a free live pre-flight API."
+    body = f"""<body>
+{topbar("../../")}
+<main id="main" class="memo-wrap">
+<div class="crumbs"><a href="../../">Pacta</a> / <a href="../">Protocols</a> / {E(name)}</div>
+<article class="memo">
+<header><span class="tier">{E(cat)}</span><h1>{E(title)}</h1>
+<p class="lede">{len(entries)} indexed control-plane surface(s) for {E(name)}, each pinned to a canonical Ethereum block and compared with what the protocol documents. Contracts: {", ".join(f'<code class="mono">{E(t)}</code>' for t in targets)}.</p></header>
+<section class="memo-sec"><h2>Check it live (free)</h2><p>The pre-flight API re-reads the controller, proxy and capabilities of a contract at the latest block. No key, no wallet.</p>
+{term(curl, "Live pre-flight check")}<p>MCP: <code class="mono">{E(MCP_URL)}</code> · tool <code>pacta_check_preflight</code>.</p></section>
+{records}{ops}</article>
+<div class="memo-foot"><span>Read-only on-chain analysis. Not investment advice. Exploit-sensitive vulnerabilities are never published here; they go through Immunefi or Cantina bounty programmes.</span><a href="../../request/?tier=clearance">Clear findings in 24h · {E(CLEARANCE_PRICE)} →</a></div>
+</main>
+{footer(count_line, reg, "../../")}
+<script type="application/ld+json">{ld_json}</script>
+</body></html>
+"""
+    return head(f"{name} control-plane safety · Pacta", desc, url, prefix="../../", og_title=title, og_type="article") + "\n" + body
+
+
+def protocols_index_page(idx, groups):
+    c = counts(idx)
+    count_line = f'{c["sprints"]} Sprints · {c["records"]} Indexed Records'
+    reg = idx["onchain_anchoring"]["commitment_registry"]
+    rows = "".join(f'<tr><td><a href="{protocol_slug(n)}/">{E(n)}</a></td><td>{E(es[0]["category"])}</td><td class="num">{len(es)}</td>'
+                   f'<td>{" ".join(badge(cl) for cl in sorted({e["classification"] for e in es}))}</td></tr>' for n, es in groups.items())
+    ld = {"@context": "https://schema.org", "@type": "ItemList", "name": "Pacta protocol control-plane safety records",
+          "itemListElement": [{"@type": "ListItem", "position": i + 1, "url": f"{BASE_URL}/protocols/{protocol_slug(n)}/", "name": n}
+                              for i, n in enumerate(groups)]}
+    ld_json = json.dumps(ld, ensure_ascii=False, sort_keys=True).replace("</", "<\\/")
+    body = f"""<body>
+{topbar("../")}
+<main id="main">
+<section class="sec"><div class="wrap">
+<div class="crumbs"><a href="../">Pacta</a> / Protocols</div>
+<div class="sec-head"><span class="n">→</span><h2>Protocol safety records</h2><span class="aside">{len(groups)} protocols · {c["records"]} block-pinned surfaces</span></div>
+<p class="sec-intro">Who can upgrade, pause or change each protocol, pinned to canonical Ethereum blocks. Check any other contract live and free with <code>/v1/check/preflight</code>.</p>
+<table class="ix"><thead><tr><th>Protocol</th><th>Category</th><th>Surfaces</th><th>Status</th></tr></thead><tbody>{rows}</tbody></table>
+</div></section>
+</main>
+{footer(count_line, reg, "../")}
+<script type="application/ld+json">{ld_json}</script>
+</body></html>
+"""
+    return head("Protocol control-plane safety records · Pacta", f"Block-pinned control-plane safety records for {len(groups)} DeFi protocols.",
+                f"{BASE_URL}/protocols/", prefix="../", og_title="Protocol control-plane safety records") + "\n" + body
+
+
 def page(idx, radar):
     c = counts(idx)
     r = radar["refreshed_at"]
@@ -654,18 +805,20 @@ def page(idx, radar):
 {topbar()}
 <main id="main">
 <section class="hero"><div class="wrap">
-<div class="eyebrow">For vault curators, allocators, risk teams and collateral issuers</div>
+<div class="eyebrow">For AI agents, agent builders, vault curators and risk teams</div>
 <h1>{E(H1)}</h1>
-<p class="lede">Pacta pins the proxy admins, Safe quorums, roles and timelock delays behind your collateral to canonical Ethereum blocks, checks them against what each protocol documents, and briefs you before a queued change can execute.</p>
-<div class="ctas"><a class="btn primary" href="#request">Request coverage <span class="arr">→</span></a><a class="btn" href="#inspector">Inspect a protocol</a></div>
+<p class="lede">Before an agent approves, deposits into or calls a contract, one request tells it who can change that contract (an EOA, a Safe, a timelock, or nobody), how fast, and whether it can pause, blacklist or upgrade. Every answer is pinned to a block hash and reproducible with <code>cast</code>.</p>
+{quickstart_block()}
+<div class="ctas"><a class="btn primary" href="#preflight">Run a free check <span class="arr">→</span></a><a class="btn" href="protocols/">Protocol safety records</a><a class="btn" href="#inspector">Inspect a protocol</a></div>
 <div class="livebar"><span class="dot live"></span><b>{n_ops} timelock operations queued across {len(radar["items"])} protocols.</b> Next: {E(nxt["protocol"])}, <span class="countdown" data-eta="{nxt["eta"]}">ETA {E(utc(nxt["eta"]))}</span> · <a href="#radar">Radar →</a></div>
 <div class="ledger">
 <div><b>{c["sprints"]}</b><span>Sprints completed</span><small>Ethereum Mainnet control-plane reviews</small></div>
 <div><b>{c["records"]}</b><span>Verified surfaces</span><small>Each pinned to a canonical block hash</small></div>
 <div><b>{c["eas_n"]}</b><span>Base EAS attestations</span><small>Sprints {c["eas_from"]}–{c["eas_to"]}{"; " + c["pending"] + " hash-pinned" if c["pending"] else ""}{"; " + c["later"] + " records after review" if c["later"] else ""}</small></div>
-<div><b>24h</b><span>Issuer clearance SLA</span><small>{E(CLEARANCE_PRICE)} flat · Base EAS <i>Aligned</i> attestation</small></div>
+<div><b>$0</b><span>Free launch API</span><small>{E(RATE_LIMIT)} · no key · no wallet</small></div>
 </div>
 </div></section>
+{preflight_section()}
 {inspector(idx, c)}
 {radar_section(radar)}
 {onboarding_section(load_onboarding())}
@@ -687,14 +840,14 @@ def request_page(idx):
     c = counts(idx)
     count_line = f'{c["sprints"]} Sprints · {c["records"]} Indexed Records'
     reg = idx["onchain_anchoring"]["commitment_registry"]
-    desc = "Book a 24h collateral clearance attestation ($5,000 USDC) or join the free community queue."
+    desc = "The API is free for agents ($0, no key). Teams: request high-volume SLA access or a 24h collateral clearance attestation ($5,000 USDC)."
     body = f"""<body>
 {topbar("../")}
 <main id="main">
 <section class="sec" id="request"><div class="wrap">
 <div class="crumbs"><a href="../">Pacta</a> / Request coverage</div>
 <div class="sec-head"><span class="n">→</span><h2>Request coverage</h2><span class="aside">Nothing is sent until you choose a channel</span></div>
-<p class="sec-intro">Pick a track and the protocols you hold, run or issue. The scope brief builds in your browser; open it as a pre-filled GitHub intake issue, compose it in Gmail, or copy it with our address. Public data stays free either way.</p>
+<p class="sec-intro">Agents do not need this page: the API, MCP server and all public data are free with no key (<a href="../#preflight">start here</a>). For high-volume SLA access or an on-chain clearance, pick a track and the protocols you hold, run or issue. The scope brief builds in your browser; open it as a pre-filled GitHub intake issue, compose it in Gmail, or copy it with our address. Public data stays free either way.</p>
 {request_builder(idx, "../")}
 </div></section>
 {pricing_section("../")}
@@ -746,8 +899,13 @@ def llms(idx, radar):
     r = radar["refreshed_at"]
     lines = [
         "# Pacta (by Fractal Neurons)", "",
-        f"> Block-pinned control-plane snapshots and pre-execution timelock alerts for DeFi collateral. {c['sprints']} Sprints · {c['records']} Indexed Records.", "",
+        f"> Free pre-execution contract and governance safety API for AI agents (launch: $0, no API key, no wallet), plus block-pinned DeFi control-plane snapshots and timelock alerts. {c['sprints']} Sprints · {c['records']} Indexed Records.", "",
         "Pacta checks who can change the rules of DeFi protocols (proxy admins, timelock delays, Safe quorums, roles) and compares that with what the protocols document. Every record is a read-only on-chain observation pinned to an Ethereum Mainnet block number and canonical block hash.", "",
+        "## Free API for agents (launch: $0, no API key, no wallet)",
+        f"- Remote MCP (Streamable HTTP, zero install): {MCP_URL} · Claude Code: `claude mcp add --transport http pacta {MCP_URL}` · Cursor: `{{\"mcpServers\": {{\"pacta\": {{\"url\": \"{MCP_URL}\"}}}}}}`. Tools: pacta_check_preflight, pacta_scan_control_plane, pacta_scan_timelock_op, pacta_scan_proposal_diff, pacta_get_live_timelocks (all read-only).",
+        f"- One call: `curl -s \"{API}/v1/check/preflight?chain=ethereum&address=0x...\"` returns a verdict (IMMUTABLE_NO_ADMIN, TIMELOCK_PROTECTED, MULTISIG_NO_TIMELOCK, INSTANT_EOA_ADMIN_RISK, UNDEPLOYED_OR_EOA, UNCLASSIFIED_CONTRACT_CONTROLLER), a 0-100 risk score, proxy / admin / timelock breakdown and pause / blacklist / upgrade capabilities, pinned to a block hash.",
+        f"- [{OPENAPI_URL}]({OPENAPI_URL}): OpenAPI 3.1 for ChatGPT Actions, LangChain and OpenAPI tools; every route takes GET query parameters or a POST JSON body. {RATE_LIMIT}; free during the launch (pricingMode free_launch), x402 v1 + v2 ready.",
+        f"- [{BASE_URL}/protocols/]({BASE_URL}/protocols/): per-protocol control-plane safety records.", "",
         "## Agent feeds",
         f"- [{BASE_URL}/llms-full.txt]({BASE_URL}/llms-full.txt): complete single-file reference (feeds, MCP tools, x402, anchoring, every record, proposal and queued operation).",
         f"- [{BASE_URL}/api/v1/proposals.json]({BASE_URL}/api/v1/proposals.json): schema `pacta.governance_proposals_feed.v1`; live Aave / Euler / Morpho / Sky proposals mapped to block-pinned observations.",
@@ -778,13 +936,19 @@ def llms(idx, radar):
         f"- Payment: USDC on Base (`{USDC['Base']}`) or Ethereum (`{USDC['Ethereum']}`) to the Pacta treasury `{a['treasury_admin']}` (same address on both chains).",
         "- Community queue: free, unscheduled (typically 6–8 weeks).",
         f"- Request: {BASE_URL}/request/ (builds a scope brief; opens a pre-filled GitHub intake issue or Gmail compose, or copies the brief).", "",
-        "## x402 API (live)",
-        f"- On-demand scans of contracts outside the index; the indexed data above stays free. Live gateway: {B2A.X402_URL} (Cloudflare Worker, x402Versions [1, 2]: v1 network `base` with `X-PAYMENT` / `X-PAYMENT-RESPONSE`, v2 network `{B2A.X402_NETWORK_V2}` with `PAYMENT-REQUIRED` / `PAYMENT-SIGNATURE` / `PAYMENT-RESPONSE`; USDC on Base, payTo `{B2A.PAY_TO}`, maxTimeoutSeconds {B2A.X402_MAX_TIMEOUT_S}). Routes: `GET /v1/scan/control-plane?chain=&address=` ($0.10), `GET /v1/scan/timelock-op?chain=&timelock=&opId=` ($0.25), `GET /v1/scan/proposal-diff?forum=&topicId=` ($0.15), `GET /v1/briefs/live-timelocks` ($0.10); free `/health`, `/.well-known/x402` (Bazaar discovery), `/v1/sample/control-plane`. A bare GET (no query) or zero-byte POST with no payment header on a paid route returns HTTP 402 with both challenges; the Bazaar extension carries a JSON Schema draft 2020-12 schema.",
-        f"- MCP: set `PACTA_X402_URL={B2A.X402_URL}` to enable the paid tools (opt-in); pay with `xPaymentHeader` (v1) or `paymentSignatureHeader` (v2). Settlement receipts are the facilitator's assertion (onchainReceiptVerified: false).", "",
+        "## x402 API (live; free during the launch)",
+        f"- On-demand scans of contracts outside the index. Free launch: every route answers HTTP 200 at $0 with no payment header (pricingMode free_launch); the x402 flow below applies only when the operator switches pricingMode to x402_paid. Live gateway: {B2A.X402_URL} (Cloudflare Worker, x402Versions [1, 2]: v1 network `base` with `X-PAYMENT` / `X-PAYMENT-RESPONSE`, v2 network `{B2A.X402_NETWORK_V2}` with `PAYMENT-REQUIRED` / `PAYMENT-SIGNATURE` / `PAYMENT-RESPONSE`; USDC on Base, payTo `{B2A.PAY_TO}`, maxTimeoutSeconds {B2A.X402_MAX_TIMEOUT_S}). Routes (x402_paid prices): `GET /v1/check/preflight?chain=&address=` ($0.01), `GET /v1/scan/control-plane?chain=&address=` ($0.10), `GET /v1/scan/timelock-op?chain=&timelock=&opId=` ($0.25), `GET /v1/scan/proposal-diff?forum=&topicId=` ($0.15), `GET /v1/briefs/live-timelocks` ($0.10); free `/health`, `/.well-known/x402` (Bazaar discovery), `/v1/sample/control-plane`. A bare GET (no query) or zero-byte POST with no payment header on a paid route returns HTTP 402 with both challenges; the Bazaar extension carries a JSON Schema draft 2020-12 schema.",
+        f"- Remote MCP: {MCP_URL} (free, no install). Local stdio server (from a clone of the repo; npm publication pending): set `PACTA_X402_URL={B2A.X402_URL}` to enable the scan tools; in x402_paid mode pay with `xPaymentHeader` (v1) or `paymentSignatureHeader` (v2). Settlement receipts are the facilitator's assertion (onchainReceiptVerified: false).", "",
         "## Contact",
         f"- {CONTACT} · {REPO} · {FN} · security: {BASE_URL}/.well-known/security.txt", "",
     ]
     return "\n".join(lines)
+
+
+ROBOTS_TXT = ("# AI search engines and agent crawlers are welcome: everything here is public, free and read-only.\n"
+              + "".join(f"User-agent: {b}\nAllow: /\n\n" for b in ("GPTBot", "OAI-SearchBot", "ChatGPT-User", "ClaudeBot", "Claude-User",
+                                                                   "Claude-SearchBot", "PerplexityBot", "Perplexity-User", "Googlebot", "Google-Extended", "Bingbot"))
+              + f"User-agent: *\nAllow: /\n\nSitemap: {BASE_URL}/sitemap.xml\n")
 
 
 def main():
@@ -805,10 +969,15 @@ def main():
         w(f"briefs/{b['slug']}/index.html", onboarding_page(b, idx))
     B2A.write_all(DOCS, idx, radar, onb)          # proposals.json, llms-full.txt, .well-known/{agent,mcp}.json, SKILL.md
     w("llms.txt", llms(idx, radar))
-    w("robots.txt", f"User-agent: *\nAllow: /\n\nSitemap: {BASE_URL}/sitemap.xml\n")
+    groups = protocol_groups(idx)
+    for name, es in groups.items():
+        w(f"protocols/{protocol_slug(name)}/index.html", protocol_page(name, es, idx, radar))
+    w("protocols/index.html", protocols_index_page(idx, groups))
+    w("robots.txt", ROBOTS_TXT)
     urls = ["/", "/request/", "/llms.txt", "/api/v1/index.json", "/api/v1/radar.json"] + [f"/briefs/{k}/" for k in BRIEFS] + \
         [f"/briefs/{b['slug']}/" for b in load_onboarding()["briefs"]] + (["/api/v1/onboarding.json"] if load_onboarding()["briefs"] else []) + \
-        ["/api/v1/proposals.json", "/llms-full.txt", "/SKILL.md", "/.well-known/agent.json", "/.well-known/mcp.json", "/demos/swapio-x402/"]
+        ["/api/v1/proposals.json", "/llms-full.txt", "/SKILL.md", "/.well-known/agent.json", "/.well-known/mcp.json", "/demos/swapio-x402/", "/protocols/"] + \
+        [f"/protocols/{protocol_slug(n)}/" for n in groups]
     w("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
       + "".join(f"  <url><loc>{BASE_URL}{u}</loc><lastmod>{today}</lastmod></url>\n" for u in urls) + "</urlset>\n")
     w(".well-known/security.txt", f"Contact: mailto:{CONTACT}\nExpires: 2027-11-13T00:00:00.000Z\nPreferred-Languages: en\n"

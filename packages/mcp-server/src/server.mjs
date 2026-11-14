@@ -197,10 +197,28 @@ export const FREE_TOOLS = Object.freeze([
   },
 ]);
 
+const BLOCK_RE = /^(latest|0x[0-9a-fA-F]{1,14}|0|[1-9][0-9]{0,15})$/;
+const FREE_LAUNCH_HINT = "Free during the launch (the live gateway answers $0, no payment); x402 price applies only if metering is switched on.";
+
 export const PAID_TOOLS = Object.freeze([
   {
+    name: "pacta_check_preflight",
+    description:
+      "Gateway tool (requires PACTA_X402_URL; x402 $0.01 Base USDC when metered). One-call pre-execution safety check of a contract before an agent interacts with it: verdict (IMMUTABLE_NO_ADMIN / TIMELOCK_PROTECTED / MULTISIG_NO_TIMELOCK / INSTANT_EOA_ADMIN_RISK / UNCLASSIFIED_CONTRACT_CONTROLLER / UNDEPLOYED_OR_EOA), 0-100 risk score, proxy + implementation, controller kind, zero-delay upgradeability, pause / blacklist / upgrade capabilities, pinned block. " +
+      FREE_LAUNCH_HINT,
+    inputSchema: objSchema(
+      {
+        chain: CHAIN_PROP,
+        address: { type: "string" },
+        block: { type: "string", description: 'Block to pin: "latest" (default), a decimal block number or 0x-hex.' },
+        ...PAID_AUTH_PROPS,
+      },
+      ["chain", "address"]
+    ),
+  },
+  {
     name: "pacta_scan_control_plane",
-    description: "Paid x402 ($0.10 Base USDC, requires PACTA_X402_URL): pinned-block EVM control-plane scan.",
+    description: "Gateway tool (requires PACTA_X402_URL; x402 $0.10 Base USDC when metered): pinned-block EVM control-plane scan. " + FREE_LAUNCH_HINT,
     inputSchema: objSchema({ chain: CHAIN_PROP, address: { type: "string" }, ...PAID_AUTH_PROPS }, [
       "chain",
       "address",
@@ -208,12 +226,12 @@ export const PAID_TOOLS = Object.freeze([
   },
   {
     name: "pacta_live_timelocks",
-    description: "Paid x402 ($0.10 Base USDC, requires PACTA_X402_URL): live tracked DeFi TimelockController operations.",
+    description: "Gateway tool (requires PACTA_X402_URL; x402 $0.10 Base USDC when metered): live tracked DeFi TimelockController operations. " + FREE_LAUNCH_HINT,
     inputSchema: objSchema({ ...PAID_AUTH_PROPS }),
   },
   {
     name: "pacta_scan_timelock_op",
-    description: "Paid x402 ($0.25 Base USDC, requires PACTA_X402_URL): pinned-block OZ TimelockController operation state.",
+    description: "Gateway tool (requires PACTA_X402_URL; x402 $0.25 Base USDC when metered): pinned-block OZ TimelockController operation state. " + FREE_LAUNCH_HINT,
     inputSchema: objSchema(
       { chain: CHAIN_PROP, timelock: { type: "string" }, opId: { type: "string" }, ...PAID_AUTH_PROPS },
       ["timelock", "opId"]
@@ -222,7 +240,8 @@ export const PAID_TOOLS = Object.freeze([
   {
     name: "pacta_scan_proposal_diff",
     description:
-      "Paid x402 ($0.15 Base USDC, requires PACTA_X402_URL): re-run a tracked governance proposal's pinned control-plane reads live and return pinned-vs-live diffs. The proposal must be listed in https://pacta.wtf/api/v1/proposals.json as <forum>-<topicId>.",
+      "Gateway tool (requires PACTA_X402_URL; x402 $0.15 Base USDC when metered): re-run a tracked governance proposal's pinned control-plane reads live and return pinned-vs-live diffs. The proposal must be listed in https://pacta.wtf/api/v1/proposals.json as <forum>-<topicId>. " +
+      FREE_LAUNCH_HINT,
     inputSchema: objSchema(
       {
         forum: { type: "string", enum: [...PROPOSAL_FORUMS] },
@@ -544,6 +563,16 @@ export class PactaMcpServer {
           wellKnown,
           sampleControlPlane,
         };
+      }
+
+      case "pacta_check_preflight": {
+        if (!this.x402Url) return this._paid(PAID_ROUTES.checkPreflight, {}, args);
+        if (args.chain !== "ethereum" && args.chain !== "base") throw new X402Error("invalid_argument", "Invalid chain.");
+        if (!isValidAddress(args.address)) throw new X402Error("invalid_argument", "Invalid contract address (EIP-55 checksum enforced when mixed-case).");
+        if (args.block !== undefined && args.block !== null && (typeof args.block !== "string" || !BLOCK_RE.test(args.block))) {
+          throw new X402Error("invalid_argument", 'block must be "latest", a decimal block number or 0x-hex.');
+        }
+        return this._paid(PAID_ROUTES.checkPreflight, { chain: args.chain, address: args.address, block: args.block ?? undefined }, args);
       }
 
       case "pacta_scan_control_plane":

@@ -1,0 +1,46 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Symbiotic Core control-plane safety · Pacta</title>
+<meta name="description" content="Who can upgrade, pause or change Symbiotic Core: 1 block-pinned control-plane check(s) with cast reproductions and a free live pre-flight API.">
+<link rel="canonical" href="https://pacta.wtf/protocols/symbiotic-core/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Pacta by Fractal Neurons">
+<meta property="og:title" content="Symbiotic Core: control-plane safety record">
+<meta property="og:description" content="Who can upgrade, pause or change Symbiotic Core: 1 block-pinned control-plane check(s) with cast reproductions and a free live pre-flight API.">
+<meta property="og:url" content="https://pacta.wtf/protocols/symbiotic-core/">
+<meta property="og:image" content="https://pacta.wtf/og-preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Symbiotic Core: control-plane safety record">
+<meta name="twitter:description" content="Who can upgrade, pause or change Symbiotic Core: 1 block-pinned control-plane check(s) with cast reproductions and a free live pre-flight API.">
+<meta name="twitter:image" content="https://pacta.wtf/og-preview.png">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../../favicon.png" type="image/png" sizes="32x32">
+<link rel="stylesheet" href="../../styles.css">
+<link rel="alternate" type="text/markdown" href="../../llms.txt" title="llms.txt">
+<script>document.documentElement.className="js";try{if(localStorage.getItem("pacta-theme")==="slate")document.documentElement.dataset.theme="slate"}catch(e){}</script>
+<script src="../../app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar"><div class="wrap"><a class="brand" href="../../"><img src="../../favicon.svg" alt="" width="22" height="22">PACTA<small>by Fractal Neurons</small></a><nav class="nav" aria-label="Sections"><a href="../../#preflight">Free API</a><a href="../../#inspector">Inspector</a><a href="../../#radar">Radar</a><a href="../../#findings">Findings</a><a href="../../#index">Index</a><a href="../../#verify">Verify</a><a href="../../#pricing">Pricing</a><a href="../../#faq">FAQ</a></nav><div class="tools"><button class="tt" type="button" aria-label="Theme: Paper (switch to Slate)"><span data-t="paper" class="on">Paper</span><span data-t="slate">Slate</span></button><a class="btn sm primary" href="../../request/">Request coverage</a></div></div></header>
+<main id="main" class="memo-wrap">
+<div class="crumbs"><a href="../../">Pacta</a> / <a href="../">Protocols</a> / Symbiotic Core</div>
+<article class="memo">
+<header><span class="tier">Restaking Infrastructure</span><h1>Symbiotic Core: control-plane safety record</h1>
+<p class="lede">1 indexed control-plane surface(s) for Symbiotic Core, each pinned to a canonical Ethereum block and compared with what the protocol documents. Contracts: <code class="mono">0xAEb6bdd95c502390db8f52c8909F703E9Af6a346</code>.</p></header>
+<section class="memo-sec"><h2>Check it live (free)</h2><p>The pre-flight API re-reads the controller, proxy and capabilities of a contract at the latest block. No key, no wallet.</p>
+<div class="term"><div class="term-h"><span>Live pre-flight check</span><button class="copy" type="button" data-copy-term>Copy command</button></div><pre>curl -s &quot;https://pacta-x402.pacta.workers.dev/v1/check/preflight?chain=ethereum&amp;address=0xAEb6bdd95c502390db8f52c8909F703E9Af6a346&quot;</pre></div><p>MCP: <code class="mono">https://pacta-x402.pacta.workers.dev/mcp</code> · tool <code>pacta_check_preflight</code>.</p></section>
+<article class="memo-sec" id="symbiotic-core-immutable-registries-and-safes"><h2>Sampled Non-Upgradeable Core Registries &amp; Factory/Adapter Safes</h2><dl class="memo-meta"><dt>Status</dt><dd><span class="badge">Aligned baseline</span></dd><dt>Target</dt><dd>Symbiotic VaultFactory <span class="addr" title="0xAEb6bdd95c502390db8f52c8909F703E9Af6a346">0xAEb6…a346</span><button class="copy" type="button" data-copy="0xAEb6bdd95c502390db8f52c8909F703E9Af6a346">Copy</button></dd><dt>Pinned block</dt><dd>Ethereum <span class="num">#26,403,121</span> · sprint 10</dd><dt>Block hash</dt><dd><span class="addr" title="0x71acee2313a2c8eacd7d2c87667dc505310b3e9224d84eaebb71d5a890ef9d1c">0x71acee23…ef9d1c</span><button class="copy" type="button" data-copy="0x71acee2313a2c8eacd7d2c87667dc505310b3e9224d84eaebb71d5a890ef9d1c">Copy</button></dd></dl><p><b>Observed on-chain.</b> VaultFactory (0xAEb6bdd95c502390db8f52c8909F703E9Af6a346), OperatorRegistry (0xAd817a6Bc954F678451A71363f04150FDD81Af9F), and NetworkRegistry (0xC773b1011461e7314CF05f97d95aa8e92C1Fd8aA) hold zero EIP-1967 implementation/admin slots (0x00...00); VaultFactory.owner() = 2-of-3 Gnosis Safe (0x5721ce64Ee0D772Ce613b62D411350091C544cD0); AdapterRegistry (0x788823C9579A049D986eB76718bC758C0998594a) owner() = 3-of-5 Gnosis Safe (0xf6BB2e64Bd201A862f2Fe5461fc7Ef01e2040b6A).</p><p><b>Documented.</b> Symbiotic Core architecture specifies non-upgradeable core registries and multisig-governed implementation/adapter whitelists.</p><div class="term"><div class="term-h"><span>Reproduce on any archive node</span><button class="copy" type="button" data-copy-term>Copy command</button></div><pre>cast storage 0xAEb6bdd95c502390db8f52c8909F703E9Af6a346 \
+  0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc \
+  --block 26403121 --rpc-url &quot;$ETH_RPC_URL&quot;
+cast block 26403121 --field hash --rpc-url &quot;$ETH_RPC_URL&quot;
+# expect 0x71acee2313a2c8eacd7d2c87667dc505310b3e9224d84eaebb71d5a890ef9d1c</pre></div></article>
+</article>
+<div class="memo-foot"><span>Read-only on-chain analysis. Not investment advice. Exploit-sensitive vulnerabilities are never published here; they go through Immunefi or Cantina bounty programmes.</span><a href="../../request/?tier=clearance">Clear findings in 24h · $5,000 USDC →</a></div>
+</main>
+<footer class="ftr"><div class="wrap"><span>Pacta · Fractal Neurons · pacta.base.eth · 14 Sprints · 37 Indexed Records</span><nav aria-label="Footer"><a href="https://github.com/Fractal-Neurons/pacta" target="_blank" rel="noopener">GitHub</a><a href="../../api/v1/index.json">JSON feed</a><a href="../../llms.txt">llms.txt</a><a href="https://basescan.org/address/0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872" target="_blank" rel="noopener">Base registry</a><a href="../../.well-known/security.txt">security.txt</a><a href="../../request/">Contact</a></nav></div></footer>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Dataset", "creator": {"@type": "Organization", "name": "Pacta by Fractal Neurons", "url": "https://pacta.wtf/"}, "description": "Block-pinned control-plane observations for Symbiotic Core (Restaking Infrastructure): proxy admins, Safe quorums, roles and timelock delays, compared with the protocol's documentation. 1 indexed surface(s).", "distribution": [{"@type": "DataDownload", "contentUrl": "https://pacta.wtf/api/v1/index.json", "encodingFormat": "application/json"}], "isAccessibleForFree": true, "keywords": ["Symbiotic Core", "Restaking Infrastructure", "DeFi", "control plane", "timelock", "proxy admin", "Safe multisig"], "name": "Symbiotic Core control-plane safety record", "spatialCoverage": "Ethereum Mainnet (chain id 1)", "temporalCoverage": "block 26403121/26403121", "url": "https://pacta.wtf/protocols/symbiotic-core/", "variableMeasured": ["Sampled Non-Upgradeable Core Registries & Factory/Adapter Safes"]}</script>
+</body></html>

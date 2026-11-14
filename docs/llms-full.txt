@@ -22,13 +22,15 @@ Generated deterministically from the feeds below (data as of 2026-11-13T21:40:42
 
 ## MCP server
 - Name: io.github.fractal-neurons/pacta · package @pacta/mcp-server · transport stdio.
-- Status: publication_pending: @pacta/mcp-server is not yet published to npm or the MCP registry; the install commands below apply once it is. Until then use the free HTTPS feeds directly.
-- Install (after publication): `npx -y @pacta/mcp-server`; MCP client config: {"mcpServers": {"pacta": {"command": "npx", "args": ["-y", "@pacta/mcp-server"]}}}
+- Status: publication_pending: @pacta/mcp-server is not yet published to npm or the MCP registry. Use the remote MCP server now (no install): https://pacta-x402.pacta.workers.dev/mcp. The stdio server runs from a clone of the repository: node packages/mcp-server/bin/pacta-mcp.mjs.
+- Remote MCP (primary, zero install, Streamable HTTP): https://pacta-x402.pacta.workers.dev/mcp · Claude Code: `claude mcp add --transport http pacta https://pacta-x402.pacta.workers.dev/mcp` · MCP client config: {"mcpServers": {"pacta": {"url": "https://pacta-x402.pacta.workers.dev/mcp"}}} · remote tools: pacta_check_preflight, pacta_scan_control_plane, pacta_scan_timelock_op, pacta_scan_proposal_diff, pacta_get_live_timelocks.
+- Local stdio server (from a clone; npm publication pending): `node packages/mcp-server/bin/pacta-mcp.mjs`. OpenAPI 3.1: https://pacta-x402.pacta.workers.dev/openapi.json.
 - Tools:
   - pacta_list_commitments (free): Filter indexed records (protocol, classification, sprint, limit)
   - pacta_get_anchoring (free): Base EAS anchoring: PactaCommitmentRegistry, schema, sprint attestation UIDs
   - pacta_list_proposals (free): Governance proposals feed (forum, topic_id, chain, limit, include_repro)
   - pacta_x402_discover (free): x402 gateway status and discovery manifest (only when PACTA_X402_URL is set)
+  - pacta_check_preflight (x402 $0.01): Pre-execution check of a contract: verdict, 0-100 risk score, proxy / admin / timelock, capabilities (chain, address, block)
   - pacta_scan_control_plane (x402 $0.10): Live control-plane scan of a contract (chain, address)
   - pacta_scan_timelock_op (x402 $0.25): Live TimelockController operation state (timelock, opId)
   - pacta_live_timelocks (x402 $0.10): Live state of tracked queued timelock operations
@@ -38,12 +40,14 @@ Generated deterministically from the feeds below (data as of 2026-11-13T21:40:42
 ## x402 micropayments (optional; only for live scans of unindexed contracts)
 - Network: Base (chain id 8453) · scheme exact · asset USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913 · payTo 0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09 (attester EOA, pacta.base.eth).
 - Pacta Treasury: 0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14 (an externally owned account; the PactaCommitmentRegistry treasury slot).
-- Live gateway: https://pacta-x402.pacta.workers.dev (Cloudflare Worker; x402Versions [1, 2]; PayAI facilitator; maxTimeoutSeconds 60).
+- Live gateway: https://pacta-x402.pacta.workers.dev (Cloudflare Worker; pricingMode free_launch; x402Versions [1, 2]; PayAI facilitator; maxTimeoutSeconds 60).
+- Free launch: every route answers HTTP 200 at $0 with no API key and no wallet (60 requests / minute per caller). The x402 prices below apply only if the operator switches pricingMode to x402_paid.
 - x402 v1: network base · amount field maxAmountRequired · challenge in the 402 JSON body · pay with X-PAYMENT · receipt X-PAYMENT-RESPONSE.
 - x402 v2: network eip155:8453 · amount field amount · challenge in the PAYMENT-REQUIRED header (base64 JSON) · pay with PAYMENT-SIGNATURE · receipt PAYMENT-RESPONSE · extensions.bazaar carries a JSON Schema draft 2020-12 schema (https://json-schema.org/draft/2020-12/schema).
 - Bare probe: A bare GET (no query) or zero-byte POST with no payment header on any paid URL returns HTTP 402 at once: the v1 JSON body (x402Version 1, network base, maxAmountRequired) plus the v2 PAYMENT-REQUIRED header (x402Version 2, network eip155:8453, amount, extensions.bazaar with a JSON Schema draft 2020-12 schema).
 - Settlement: A settled call returns 200 with both PAYMENT-RESPONSE and X-PAYMENT-RESPONSE (base64 {success, transaction, network, payer}). That receipt is the facilitator's settlement assertion bound to the payer; the MCP client checks it against the signed authorization but does not look the transaction up on Base (onchainReceiptVerified: false).
 - Paid routes (GET query or POST JSON body with the same names):
+  - GET https://pacta-x402.pacta.workers.dev/v1/check/preflight?chain=ethereum|base&address=0x…: 10000 atomic USDC ($0.01)
   - GET https://pacta-x402.pacta.workers.dev/v1/scan/control-plane?chain=ethereum|base&address=0x…: 100000 atomic USDC ($0.10)
   - GET https://pacta-x402.pacta.workers.dev/v1/scan/timelock-op?chain=ethereum|base&timelock=0x…&opId=0x…: 250000 atomic USDC ($0.25)
   - GET https://pacta-x402.pacta.workers.dev/v1/scan/proposal-diff?forum=aave|euler|morpho|sky&topicId=<id>: 150000 atomic USDC ($0.15)

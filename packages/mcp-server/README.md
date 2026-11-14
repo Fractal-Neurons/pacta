@@ -1,10 +1,24 @@
 # `@pacta/mcp-server`
 
-Zero-dependency Node.js MCP stdio server for [Pacta](https://pacta.wtf/) DeFi control-plane commitments and Base Mainnet EAS attestations, with optional `x402` v1 Base USDC live scan tools when `PACTA_X402_URL` is configured.
+Zero-dependency Node.js MCP stdio server for [Pacta](https://pacta.wtf/) DeFi control-plane commitments and Base Mainnet EAS attestations, with live gateway tools (pre-flight check, control-plane / timelock / proposal scans) when `PACTA_X402_URL` is configured. The gateway is **free during the launch**: $0, no API key, no wallet, 60 requests / minute per caller. The x402 v1 + v2 Base USDC prices below apply only if metering is switched on.
 
-The server is stdio-only. It never opens a listening socket, and the test suite checks that statically.
+This package is stdio-only. It never opens a listening socket, and the test suite checks that statically. It is **not published on npm yet**: run it from a clone, or use the hosted remote endpoint.
 
-## Usage (Zero-Install Local Clone)
+## Fastest: hosted remote MCP (zero install)
+
+The live gateway serves the same gateway tools over Streamable HTTP at `https://pacta-x402.pacta.workers.dev/mcp`:
+
+```bash
+claude mcp add --transport http pacta https://pacta-x402.pacta.workers.dev/mcp
+```
+
+```json
+{ "mcpServers": { "pacta": { "url": "https://pacta-x402.pacta.workers.dev/mcp" } } }
+```
+
+Or call the API directly: `curl -s "https://pacta-x402.pacta.workers.dev/v1/check/preflight?chain=ethereum&address=0x…"`. OpenAPI 3.1: `https://pacta-x402.pacta.workers.dev/openapi.json`.
+
+## Usage (stdio, zero-install local clone)
 
 ```bash
 git clone https://github.com/Fractal-Neurons/pacta.git
@@ -15,7 +29,8 @@ git clone https://github.com/Fractal-Neurons/pacta.git
   "mcpServers": {
     "pacta": {
       "command": "node",
-      "args": ["/path/to/pacta/packages/mcp-server/bin/pacta-mcp.mjs"]
+      "args": ["/path/to/pacta/packages/mcp-server/bin/pacta-mcp.mjs"],
+      "env": { "PACTA_X402_URL": "https://pacta-x402.pacta.workers.dev" }
     }
   }
 }
@@ -29,13 +44,14 @@ git clone https://github.com/Fractal-Neurons/pacta.git
   - `pacta_get_anchoring`: returns the Base (`8453`) `PactaCommitmentRegistry` (`0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872`), the EAS Schema (`0x7ff485bc1159dff3c70eefcb9dff2d65be990301760c2d53799e5a45e3badf83`), and `pacta.base.eth`.
   - `pacta_x402_discover`: reports `PACTA_X402_URL` status, the live gateway `x402_gateway_url` and the local-spec payment requirements (labelled `source: "local_spec"`, validated by the same rules as upstream challenges). When `PACTA_X402_URL` is set, it also fetches `/.well-known/x402` and `/v1/sample/control-plane` for information only.
 - **Live gateway.** The canonical Pacta x402 edge Worker is live at `https://pacta-x402.pacta.workers.dev` (Cloudflare; free `/health`, `/.well-known/x402`, `/v1/sample/control-plane`). `pacta_get_anchoring` and `pacta_x402_discover` report it as `x402_gateway_url` even while paid tools are off. To opt in, set `PACTA_X402_URL=https://pacta-x402.pacta.workers.dev`.
-- **Optional Paid `x402` v1 + v2 Base USDC Tools** (enabled only when `PACTA_X402_URL` is set; when unset, `tools/list` shows only the free tools and paid calls return `x402_disabled`):
+- **Gateway tools, free during the launch; optional `x402` v1 + v2 Base USDC metering** (enabled only when `PACTA_X402_URL` is set; when unset, `tools/list` shows only the static-feed tools and gateway calls return `x402_disabled`). While the gateway is in free-launch mode it answers HTTP 200 with no payment header, and the tool returns that as unpaid data (`paid: false`). The prices are the metered x402 prices:
+  - `pacta_check_preflight` → `/v1/check/preflight` (`$0.01` = `10000` atomic; `chain`, `address`, optional `block` = `latest` | decimal | 0x-hex). Verdict (`IMMUTABLE_NO_ADMIN` / `TIMELOCK_PROTECTED` / `MULTISIG_NO_TIMELOCK` / `INSTANT_EOA_ADMIN_RISK` / `UNCLASSIFIED_CONTRACT_CONTROLLER` / `UNDEPLOYED_OR_EOA`), 0–100 risk score, proxy + implementation, controller kind, zero-delay upgradeability, pause / blacklist / upgrade capabilities, pinned block.
   - `pacta_scan_control_plane` → `/v1/scan/control-plane` (`$0.10` = `100000` atomic; `chain`, `address`)
   - `pacta_live_timelocks` → `/v1/briefs/live-timelocks` (`$0.10` = `100000` atomic)
   - `pacta_scan_timelock_op` → `/v1/scan/timelock-op` (`$0.25` = `250000` atomic; `chain`, `timelock`, `opId`)
   - `pacta_scan_proposal_diff` → `/v1/scan/proposal-diff` (`$0.15` = `150000` atomic; `forum` = `aave` | `euler` | `morpho` | `sky`, `topicId` = the forum topic id). The proposal must be listed in `https://pacta.wtf/api/v1/proposals.json`.
 
-  The live Worker answers every paid route in both protocol versions. A bare request (no query, no payment header) gets the 402 immediately.
+  When metering is on, the live Worker answers every metered route in both protocol versions. A bare request (no query, no payment header) gets the 402 immediately.
   - **x402 v1**: the 402 JSON body (`x402Version: 1`, `network: "base"`, `maxAmountRequired`). Pay with `xPaymentHeader`, sent as `X-PAYMENT`. The receipt is `X-PAYMENT-RESPONSE`.
   - **x402 v2**: the `PAYMENT-REQUIRED` header (base64 JSON, `x402Version: 2`, `network: "eip155:8453"`, `amount`, `extensions.bazaar` with a JSON Schema 2020-12 schema). Pay with `paymentSignatureHeader`, sent as `PAYMENT-SIGNATURE`. The receipt is `PAYMENT-RESPONSE`.
 
@@ -130,6 +146,7 @@ Stable codes: `x402_disabled`, `invalid_config`, `invalid_argument`, `invalid_x_
 ## MCP registry and agent skill
 
 - `server.json` is the manifest for the official MCP registry (`registry.modelcontextprotocol.io`, schema `2025-10-17`). The server name is `io.github.fractal-neurons/pacta`, and `package.json` carries the matching `mcpName`, which the registry uses for npm ownership verification. Its `environmentVariables` must list exactly the variables read in `src/`, and the tests enforce that.
+- `server.json` also lists the hosted endpoint under `remotes` (`streamable-http`, `https://pacta-x402.pacta.workers.dev/mcp`). The registry checks that an npm package exists, and `@pacta/mcp-server` is not published yet, so `server.remote.json` is a remote-only twin (same name, version and metadata, no `packages`) that can be registered first. The tests keep the two files in step.
 - `SKILL.md` is a portable agent skill (`pacta-protocol-commitments`). It covers the free feeds, replaying a record with `cast call … --block N` and checking the block hash, these tools, and when an x402 payment is justified.
 
 ## Tests

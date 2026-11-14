@@ -71,6 +71,12 @@ export const X402_DEFAULTS = Object.freeze({
 });
 
 export const PAID_ROUTES = Object.freeze({
+  checkPreflight: Object.freeze({
+    path: "/v1/check/preflight",
+    priceUsdc: "0.01",
+    maxAmountRequired: "10000",
+    description: "One-call pre-execution safety check: verdict, 0-100 risk score, proxy / controller breakdown, pause / blacklist / upgrade capabilities, pinned block.",
+  }),
   scanControlPlane: Object.freeze({
     path: "/v1/scan/control-plane",
     priceUsdc: "0.10",

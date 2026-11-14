@@ -1,6 +1,6 @@
 // Behavioral harness for docs/app.js: runs the real script against a minimal synthetic DOM built from the real
 // generated HTML (parsed by verify_site_v2.py with html.parser and passed as JSON on stdin). Pure node: no network,
-// no HTTP server or listener, no files written. Prints one JSON object with every assertion result.
+// no HTTP server or listener, no files written; the pre-flight checker gets a mock fetch. Prints one JSON object with every assertion result.
 //
 //   stdin: {"app": "<app.js source>", "request": <dom tree>, "index": <dom tree>, "rowId": "<a real record id>"}
 //   tree node: ["tag", {attrs}, [children...]] or a text string
@@ -133,6 +133,7 @@ function run(tree, app, loc) {
   document.nodeType = 9; document.appendChild(html);
   document.documentElement = html; document.body = body;
   document.createElement = tag => new Element(tag, {});
+  document.createTextNode = t => new Text(String(t));
   document.getElementById = id => document.querySelectorAll("[id]").find(e => e.getAttribute("id") === id) || null;
   document.execCommand = () => true;
   const winListeners = {};
@@ -144,7 +145,7 @@ function run(tree, app, loc) {
     window, document, location, navigator: {}, URLSearchParams, console, Promise, JSON, Date, Math,
     localStorage: { getItem: () => null, setItem: () => {} },
     setTimeout: () => 0, clearTimeout: () => {}, setInterval: () => 0,
-    fetch: () => Promise.reject(new Error("network disabled in harness"))
+    fetch: loc.fetch || (() => Promise.reject(new Error("network disabled in harness")))
   };
   vm.createContext(ctx);
   vm.runInContext(app, ctx, { filename: "app.js" });
@@ -234,4 +235,48 @@ try {
 } catch (e) {
   res.harness_error = String(e && e.stack || e);
 }
-process.stdout.write(JSON.stringify(res));
+
+// (i) live pre-flight checker: nothing is fetched on load; a preset fetches the free API exactly once; the response is
+// rendered as text only (an HTML-looking summary stays text); cast commands carry the pinned block; bad input and
+// HTTP errors never throw and never fetch. Mock fetch only: no network.
+const PF_EXAMPLE = { schema: "pacta.preflight_check.v1", chain: "base", chainId: 8453, address: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+  pinnedBlock: 23800000, pinnedBlockHash: "0x" + "ab".repeat(32), verdict: "MULTISIG_NO_TIMELOCK", riskScore: 60, isContract: true, isProxy: true,
+  implementation: "0x2222222222222222222222222222222222222222", hasAdminSlot: true, canUpgradeZeroDelay: true,
+  capabilities: { pause: true, blacklist: false, upgrade: true }, paused: false,
+  controller: { address: "0x3333333333333333333333333333333333333333", kind: "multisig_safe", safeThreshold: 3, timelockDelaySec: null, safeOwnerCount: 5 },
+  summary: "<img src=x onerror=alert(1)> 3-of-5 Safe" };
+const flush = () => new Promise(r => setImmediate(r));
+async function preflightScenario() {
+  const calls = [];
+  let reply = { status: 200, body: PF_EXAMPLE };
+  const fetchMock = (url) => {   // the inspector loads this site's own /api/v1 JSON; only API calls are counted
+    if (!/\/v1\/check\/preflight/.test(String(url))) return Promise.reject(new Error("site data not needed here"));
+    calls.push(String(url)); const r = reply; return Promise.resolve({ status: r.status, json: () => Promise.resolve(r.body) });
+  };
+  const p = run(input.index, input.app, { path: "/", fetch: fetchMock });
+  const d = p.document, out = d.getElementById("pf-out"), box = d.querySelector(".pf");
+  res.pf_present = !!out && !!box && /^https:\/\//.test(box.getAttribute("data-api") || "");
+  res.pf_no_fetch_on_load = calls.length === 0;
+  const preset = d.querySelectorAll("[data-pf-address]")[0];
+  preset.dispatchEvent(new Event_("click"));
+  await flush(); await flush(); await flush();
+  const want = box.getAttribute("data-api") + "/v1/check/preflight?chain=" + preset.getAttribute("data-pf-chain") + "&address=" + preset.getAttribute("data-pf-address");
+  res.pf_preset_fetches_once = calls.length === 1 && calls[0] === want;
+  const txt = out.textContent;
+  res.pf_renders_verdict = txt.includes("MULTISIG_NO_TIMELOCK") && txt.includes("Risk 60/100") && txt.includes("multisig_safe (3-of-5)") && txt.includes("pause, upgrade");
+  res.pf_text_only = out.querySelectorAll("img").length === 0 && txt.includes("<img src=x onerror=alert(1)>");
+  res.pf_cast_commands = txt.includes("cast storage " + PF_EXAMPLE.address + " 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc --block 23800000")
+    && txt.includes('"getThreshold()(uint256)" --block 23800000') && txt.includes("--rpc-url $BASE_RPC_URL");
+  const form = d.getElementById("pf-form"), addr = form.querySelector('input[name="address"]');
+  addr.value = "0x123"; const sev = new Event_("submit"); form.dispatchEvent(sev);
+  await flush();
+  res.pf_invalid_address_no_fetch = calls.length === 1 && sev.defaultPrevented === true && /40-hex/.test(out.textContent);
+  reply = { status: 429, body: { error: "rate_limited", detail: "60 requests / minute" } };
+  addr.value = PF_EXAMPLE.address; form.dispatchEvent(new Event_("submit"));
+  await flush(); await flush(); await flush();
+  res.pf_http_error_reported = calls.length === 2 && /HTTP 429 \(rate_limited\)/.test(out.textContent);
+}
+(async () => {
+  try { await preflightScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
+  process.stdout.write(JSON.stringify(res));
+})();

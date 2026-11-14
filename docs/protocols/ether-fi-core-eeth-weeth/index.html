@@ -1,0 +1,52 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ether.fi Core (eETH / weETH) control-plane safety · Pacta</title>
+<meta name="description" content="Who can upgrade, pause or change ether.fi Core (eETH / weETH): 2 block-pinned control-plane check(s) with cast reproductions and a free live pre-flight API.">
+<link rel="canonical" href="https://pacta.wtf/protocols/ether-fi-core-eeth-weeth/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Pacta by Fractal Neurons">
+<meta property="og:title" content="ether.fi Core (eETH / weETH): control-plane safety record">
+<meta property="og:description" content="Who can upgrade, pause or change ether.fi Core (eETH / weETH): 2 block-pinned control-plane check(s) with cast reproductions and a free live pre-flight API.">
+<meta property="og:url" content="https://pacta.wtf/protocols/ether-fi-core-eeth-weeth/">
+<meta property="og:image" content="https://pacta.wtf/og-preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ether.fi Core (eETH / weETH): control-plane safety record">
+<meta name="twitter:description" content="Who can upgrade, pause or change ether.fi Core (eETH / weETH): 2 block-pinned control-plane check(s) with cast reproductions and a free live pre-flight API.">
+<meta name="twitter:image" content="https://pacta.wtf/og-preview.png">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../../favicon.png" type="image/png" sizes="32x32">
+<link rel="stylesheet" href="../../styles.css">
+<link rel="alternate" type="text/markdown" href="../../llms.txt" title="llms.txt">
+<script>document.documentElement.className="js";try{if(localStorage.getItem("pacta-theme")==="slate")document.documentElement.dataset.theme="slate"}catch(e){}</script>
+<script src="../../app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar"><div class="wrap"><a class="brand" href="../../"><img src="../../favicon.svg" alt="" width="22" height="22">PACTA<small>by Fractal Neurons</small></a><nav class="nav" aria-label="Sections"><a href="../../#preflight">Free API</a><a href="../../#inspector">Inspector</a><a href="../../#radar">Radar</a><a href="../../#findings">Findings</a><a href="../../#index">Index</a><a href="../../#verify">Verify</a><a href="../../#pricing">Pricing</a><a href="../../#faq">FAQ</a></nav><div class="tools"><button class="tt" type="button" aria-label="Theme: Paper (switch to Slate)"><span data-t="paper" class="on">Paper</span><span data-t="slate">Slate</span></button><a class="btn sm primary" href="../../request/">Request coverage</a></div></div></header>
+<main id="main" class="memo-wrap">
+<div class="crumbs"><a href="../../">Pacta</a> / <a href="../">Protocols</a> / ether.fi Core (eETH / weETH)</div>
+<article class="memo">
+<header><span class="tier">Liquid Staking &amp; Restaking</span><h1>ether.fi Core (eETH / weETH): control-plane safety record</h1>
+<p class="lede">2 indexed control-plane surface(s) for ether.fi Core (eETH / weETH), each pinned to a canonical Ethereum block and compared with what the protocol documents. Contracts: <code class="mono">0x9f26d4C958fD811A1F59B01B86Be7dFFc9d20761</code>.</p></header>
+<section class="memo-sec"><h2>Check it live (free)</h2><p>The pre-flight API re-reads the controller, proxy and capabilities of a contract at the latest block. No key, no wallet.</p>
+<div class="term"><div class="term-h"><span>Live pre-flight check</span><button class="copy" type="button" data-copy-term>Copy command</button></div><pre>curl -s &quot;https://pacta-x402.pacta.workers.dev/v1/check/preflight?chain=ethereum&amp;address=0x9f26d4C958fD811A1F59B01B86Be7dFFc9d20761&quot;</pre></div><p>MCP: <code class="mono">https://pacta-x402.pacta.workers.dev/mcp</code> · tool <code>pacta_check_preflight</code>.</p></section>
+<article class="memo-sec" id="etherfi-core-timelocks"><h2>Sampled Upgrade &amp; Operating Timelock Delays</h2><dl class="memo-meta"><dt>Status</dt><dd><span class="badge">Aligned baseline</span></dd><dt>Target</dt><dd>ether.fi Upgrade Timelock <span class="addr" title="0x9f26d4C958fD811A1F59B01B86Be7dFFc9d20761">0x9f26…0761</span><button class="copy" type="button" data-copy="0x9f26d4C958fD811A1F59B01B86Be7dFFc9d20761">Copy</button></dd><dt>Pinned block</dt><dd>Ethereum <span class="num">#26,401,638</span> · sprint 7</dd><dt>Block hash</dt><dd><span class="addr" title="0xe62ad2969617ad07c23bec298c3d5e197ea7c3084f7f66c90d2eb51d04c6273e">0xe62ad296…c6273e</span><button class="copy" type="button" data-copy="0xe62ad2969617ad07c23bec298c3d5e197ea7c3084f7f66c90d2eb51d04c6273e">Copy</button></dd></dl><p><b>Observed on-chain.</b> Upgrade Timelock getMinDelay() = 864000s (10 days); Operating Timelock (0xcD425f44758a08BaAB3C4908f3e3dE5776e45d7a) getMinDelay() = 172800s (2 days); LiquidityPool (0x308861A430be4cce5502d0A12724771Fc6DaF216) getTotalPooledEther = 2,276,605.53 ETH.</p><p><b>Documented.</b> Sampled Upgrade (10d) and Operating (2d) TimelockController delays verified at block 26401638.</p><div class="term"><div class="term-h"><span>Reproduce on any archive node</span><button class="copy" type="button" data-copy-term>Copy command</button></div><pre>cast call 0x9f26d4C958fD811A1F59B01B86Be7dFFc9d20761 \
+  &quot;getMinDelay()&quot; \
+  --block 26401638 --rpc-url &quot;$ETH_RPC_URL&quot;
+cast block 26401638 --field hash --rpc-url &quot;$ETH_RPC_URL&quot;
+# expect 0xe62ad2969617ad07c23bec298c3d5e197ea7c3084f7f66c90d2eb51d04c6273e</pre></div></article>
+<article class="memo-sec" id="etherfi-core-timelock-op-0x244e"><h2>Core Upgrade Timelock (10d) — queued LayerZero V2 setDelegate to Timelock</h2><dl class="memo-meta"><dt>Status</dt><dd><span class="badge protect">Protective delta</span></dd><dt>Target</dt><dd>EtherFiTimelock <span class="addr" title="0x9f26d4C958fD811A1F59B01B86Be7dFFc9d20761">0x9f26…0761</span><button class="copy" type="button" data-copy="0x9f26d4C958fD811A1F59B01B86Be7dFFc9d20761">Copy</button></dd><dt>Pinned block</dt><dd>Ethereum <span class="num">#26,405,302</span> · sprint 13</dd><dt>Block hash</dt><dd><span class="addr" title="0xe05f4fd5698556131e7514b3a8eb24960962a768f8e0bfe0e99e3f1681127f65">0xe05f4fd5…127f65</span><button class="copy" type="button" data-copy="0xe05f4fd5698556131e7514b3a8eb24960962a768f8e0bfe0e99e3f1681127f65">Copy</button></dd></dl><p><b>Observed on-chain.</b> getMinDelay() = 864000s (10d); operation 0x244e3f6c3df722246c471cee58804dd34c7703fce9cee1eadc1c5a85f171359f: isOperationPending() = true, getTimestamp() = 1795193651 (2026-11-20 16:54:11 UTC). The scheduled call EtherfiL1SyncPoolETH (0xD789870beA40D056A4d26055d0bEFcC8755DA146).setDelegate(EtherFiTimelock) puts the LayerZero V2 endpoint delegate behind the 10-day timelock.</p><p><b>Documented.</b> Public pre-execution brief https://pacta.wtf/briefs/etherfi-op-0x244e/ (decoded calldata, storage-layout and delegate trace).</p><div class="term"><div class="term-h"><span>Reproduce on any archive node</span><button class="copy" type="button" data-copy-term>Copy command</button></div><pre>cast call 0x9f26d4C958fD811A1F59B01B86Be7dFFc9d20761 \
+  &quot;getMinDelay()&quot; \
+  --block 26405302 --rpc-url &quot;$ETH_RPC_URL&quot;
+cast block 26405302 --field hash --rpc-url &quot;$ETH_RPC_URL&quot;
+# expect 0xe05f4fd5698556131e7514b3a8eb24960962a768f8e0bfe0e99e3f1681127f65</pre></div></article>
+<article class="memo-sec"><h2>Queued timelock operations</h2><p>ether.fi — LayerZero V2 delegate moved behind the 10-day timelock. EtherfiL1SyncPoolETH.setDelegate(EtherFiTimelock): protective hardening of the OApp&#x27;s messaging configuration.</p><p>Timelock <span class="addr" title="0x9f26d4C958fD811A1F59B01B86Be7dFFc9d20761">0x9f26…0761</span><button class="copy" type="button" data-copy="0x9f26d4C958fD811A1F59B01B86Be7dFFc9d20761">Copy</button> · 10d minimum delay · <a href="../../briefs/etherfi-op-0x244e/">Pre-execution brief →</a></p><ul><li><code class="mono">0x244e3f6c3df722246c471cee58804dd34c7703fce9cee1eadc1c5a85f171359f</code> · ETA 2026-11-20 16:54:11 UTC · pending</li></ul></article>
+</article>
+<div class="memo-foot"><span>Read-only on-chain analysis. Not investment advice. Exploit-sensitive vulnerabilities are never published here; they go through Immunefi or Cantina bounty programmes.</span><a href="../../request/?tier=clearance">Clear findings in 24h · $5,000 USDC →</a></div>
+</main>
+<footer class="ftr"><div class="wrap"><span>Pacta · Fractal Neurons · pacta.base.eth · 14 Sprints · 37 Indexed Records</span><nav aria-label="Footer"><a href="https://github.com/Fractal-Neurons/pacta" target="_blank" rel="noopener">GitHub</a><a href="../../api/v1/index.json">JSON feed</a><a href="../../llms.txt">llms.txt</a><a href="https://basescan.org/address/0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872" target="_blank" rel="noopener">Base registry</a><a href="../../.well-known/security.txt">security.txt</a><a href="../../request/">Contact</a></nav></div></footer>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Dataset", "creator": {"@type": "Organization", "name": "Pacta by Fractal Neurons", "url": "https://pacta.wtf/"}, "description": "Block-pinned control-plane observations for ether.fi Core (eETH / weETH) (Liquid Staking & Restaking): proxy admins, Safe quorums, roles and timelock delays, compared with the protocol's documentation. 2 indexed surface(s).", "distribution": [{"@type": "DataDownload", "contentUrl": "https://pacta.wtf/api/v1/index.json", "encodingFormat": "application/json"}], "isAccessibleForFree": true, "keywords": ["ether.fi Core (eETH / weETH)", "Liquid Staking & Restaking", "DeFi", "control plane", "timelock", "proxy admin", "Safe multisig"], "name": "ether.fi Core (eETH / weETH) control-plane safety record", "spatialCoverage": "Ethereum Mainnet (chain id 1)", "temporalCoverage": "block 26401638/26405302", "url": "https://pacta.wtf/protocols/ether-fi-core-eeth-weeth/", "variableMeasured": ["Sampled Upgrade & Operating Timelock Delays", "Core Upgrade Timelock (10d) — queued LayerZero V2 setDelegate to Timelock"]}</script>
+</body></html>

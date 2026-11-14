@@ -11,7 +11,7 @@
   }
  },
  "authentication": {
-  "notes": "Static feeds need no auth. Paid live scans use x402 instead of accounts or keys: v1 (HTTP 402 + X-PAYMENT) or v2 (PAYMENT-REQUIRED + PAYMENT-SIGNATURE).",
+  "notes": "No API key, no account, no wallet during the free launch. If metered mode is switched on later, live scans use x402 instead of keys: v1 (HTTP 402 + X-PAYMENT) or v2 (PAYMENT-REQUIRED + PAYMENT-SIGNATURE).",
   "schemes": [
    "none"
   ]
@@ -29,7 +29,7 @@
   "application/json",
   "text/markdown"
  ],
- "description": "Block-pinned DeFi control-plane intelligence for agents: proxy admins, timelocks, Safe quorums and roles behind collateral, compared with documentation and live governance proposals. Free static JSON feeds; optional x402 pay-per-call live scans on Base.",
+ "description": "Free pre-execution contract and governance safety API for AI agents (launch: $0, no API key, no wallet): who can upgrade, pause or blacklist a contract, how fast, pinned to a block hash. Plus block-pinned DeFi control-plane records, live governance proposals and a timelock radar. Remote MCP and OpenAPI 3.1; x402 v1 + v2 ready.",
  "documentationUrl": "https://pacta.wtf/llms-full.txt",
  "endpoints": {
   "feeds": {
@@ -44,17 +44,52 @@
    "/llms.txt": "https://pacta.wtf/llms.txt"
   },
   "mcp_manifest": "https://pacta.wtf/.well-known/mcp.json",
+  "mcp_remote": "https://pacta-x402.pacta.workers.dev/mcp",
+  "openapi": "https://pacta-x402.pacta.workers.dev/openapi.json",
+  "preflight": "https://pacta-x402.pacta.workers.dev/v1/check/preflight",
+  "protocols": "https://pacta.wtf/protocols/",
   "skill": "https://pacta.wtf/SKILL.md",
   "x402_gateway": "https://pacta-x402.pacta.workers.dev"
  },
  "iconUrl": "https://pacta.wtf/favicon.png",
  "name": "Pacta",
+ "pricing": {
+  "apiKey": false,
+  "mode": "free_launch",
+  "note": "Free launch: every route answers HTTP 200 at $0 with no API key and no wallet (60 requests / minute per caller). The x402 prices below apply only if the operator switches pricingMode to x402_paid.",
+  "priceUsd": "0.00",
+  "rateLimitPerMinute": 60,
+  "wallet": false
+ },
  "protocolVersion": "0.3.0",
  "provider": {
   "organization": "Fractal Neurons",
   "url": "https://fractalneurons.com"
  },
  "skills": [
+  {
+   "description": "Before approving, depositing into or calling a contract: who controls it (EOA, Safe, timelock, nobody), how fast it can change, and whether it can pause, blacklist or upgrade. Free, one call.",
+   "examples": [
+    "GET https://pacta-x402.pacta.workers.dev/v1/check/preflight?chain=base&address=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+    "MCP tool pacta_check_preflight {\"chain\": \"ethereum\", \"address\": \"0x...\"}"
+   ],
+   "id": "contract-preflight",
+   "inputModes": [
+    "application/json"
+   ],
+   "name": "Pre-execution contract check",
+   "outputModes": [
+    "application/json"
+   ],
+   "tags": [
+    "preflight",
+    "agent-safety",
+    "proxy",
+    "timelock",
+    "multisig",
+    "free"
+   ]
+  },
   {
    "description": "Who can upgrade, pause, mint or change delays for a DeFi protocol, at a canonical block, with a cast reproduction.",
    "examples": [
@@ -158,9 +193,24 @@
    "eip155:8453"
   ],
   "payTo": "0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09",
+  "pricingMode": "free_launch",
   "routes": [
    {
+    "amount": "10000",
+    "effectivePriceUsd": "0.00",
+    "maxAmountRequired": "10000",
+    "methods": [
+     "GET",
+     "POST"
+    ],
+    "path": "/v1/check/preflight",
+    "priceUsd": "$0.01",
+    "query": "chain=ethereum|base&address=0x…",
+    "url": "https://pacta-x402.pacta.workers.dev/v1/check/preflight"
+   },
+   {
     "amount": "100000",
+    "effectivePriceUsd": "0.00",
     "maxAmountRequired": "100000",
     "methods": [
      "GET",
@@ -173,6 +223,7 @@
    },
    {
     "amount": "250000",
+    "effectivePriceUsd": "0.00",
     "maxAmountRequired": "250000",
     "methods": [
      "GET",
@@ -185,6 +236,7 @@
    },
    {
     "amount": "150000",
+    "effectivePriceUsd": "0.00",
     "maxAmountRequired": "150000",
     "methods": [
      "GET",
@@ -197,6 +249,7 @@
    },
    {
     "amount": "100000",
+    "effectivePriceUsd": "0.00",
     "maxAmountRequired": "100000",
     "methods": [
      "GET",

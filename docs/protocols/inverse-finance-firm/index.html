@@ -1,0 +1,51 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Inverse Finance (FiRM) control-plane safety · Pacta</title>
+<meta name="description" content="Who can upgrade, pause or change Inverse Finance (FiRM): 2 block-pinned control-plane check(s) with cast reproductions and a free live pre-flight API.">
+<link rel="canonical" href="https://pacta.wtf/protocols/inverse-finance-firm/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Pacta by Fractal Neurons">
+<meta property="og:title" content="Inverse Finance (FiRM): control-plane safety record">
+<meta property="og:description" content="Who can upgrade, pause or change Inverse Finance (FiRM): 2 block-pinned control-plane check(s) with cast reproductions and a free live pre-flight API.">
+<meta property="og:url" content="https://pacta.wtf/protocols/inverse-finance-firm/">
+<meta property="og:image" content="https://pacta.wtf/og-preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Inverse Finance (FiRM): control-plane safety record">
+<meta name="twitter:description" content="Who can upgrade, pause or change Inverse Finance (FiRM): 2 block-pinned control-plane check(s) with cast reproductions and a free live pre-flight API.">
+<meta name="twitter:image" content="https://pacta.wtf/og-preview.png">
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../../favicon.png" type="image/png" sizes="32x32">
+<link rel="stylesheet" href="../../styles.css">
+<link rel="alternate" type="text/markdown" href="../../llms.txt" title="llms.txt">
+<script>document.documentElement.className="js";try{if(localStorage.getItem("pacta-theme")==="slate")document.documentElement.dataset.theme="slate"}catch(e){}</script>
+<script src="../../app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar"><div class="wrap"><a class="brand" href="../../"><img src="../../favicon.svg" alt="" width="22" height="22">PACTA<small>by Fractal Neurons</small></a><nav class="nav" aria-label="Sections"><a href="../../#preflight">Free API</a><a href="../../#inspector">Inspector</a><a href="../../#radar">Radar</a><a href="../../#findings">Findings</a><a href="../../#index">Index</a><a href="../../#verify">Verify</a><a href="../../#pricing">Pricing</a><a href="../../#faq">FAQ</a></nav><div class="tools"><button class="tt" type="button" aria-label="Theme: Paper (switch to Slate)"><span data-t="paper" class="on">Paper</span><span data-t="slate">Slate</span></button><a class="btn sm primary" href="../../request/">Request coverage</a></div></div></header>
+<main id="main" class="memo-wrap">
+<div class="crumbs"><a href="../../">Pacta</a> / <a href="../">Protocols</a> / Inverse Finance (FiRM)</div>
+<article class="memo">
+<header><span class="tier">Fixed-Rate Lending</span><h1>Inverse Finance (FiRM): control-plane safety record</h1>
+<p class="lede">2 indexed control-plane surface(s) for Inverse Finance (FiRM), each pinned to a canonical Ethereum block and compared with what the protocol documents. Contracts: <code class="mono">0x01ECA33e20a4c379Bd8A5361f896A7dd2bAE4ce8</code>, <code class="mono">0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7</code>.</p></header>
+<section class="memo-sec"><h2>Check it live (free)</h2><p>The pre-flight API re-reads the controller, proxy and capabilities of a contract at the latest block. No key, no wallet.</p>
+<div class="term"><div class="term-h"><span>Live pre-flight check</span><button class="copy" type="button" data-copy-term>Copy command</button></div><pre>curl -s &quot;https://pacta-x402.pacta.workers.dev/v1/check/preflight?chain=ethereum&amp;address=0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7&quot;</pre></div><p>MCP: <code class="mono">https://pacta-x402.pacta.workers.dev/mcp</code> · tool <code>pacta_check_preflight</code>.</p></section>
+<article class="memo-sec" id="inverse-finance-firm-policy-safe"><h2>Policy Committee Safe Quorum &amp; GovernorMills Timelock</h2><dl class="memo-meta"><dt>Status</dt><dd><span class="badge delta">Parameter delta</span></dd><dt>Target</dt><dd>Policy Committee Safe <span class="addr" title="0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7">0x4b6c…F1B7</span><button class="copy" type="button" data-copy="0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7">Copy</button></dd><dt>Pinned block</dt><dd>Ethereum <span class="num">#26,399,876</span> · sprint 1</dd><dt>Block hash</dt><dd><span class="addr" title="0x8bf896b892683ff3267b88b367ab015a70cf5caf53542eb405f4f648f6bcde8a">0x8bf896b8…bcde8a</span><button class="copy" type="button" data-copy="0x8bf896b892683ff3267b88b367ab015a70cf5caf53542eb405f4f648f6bcde8a">Copy</button></dd></dl><p><b>Observed on-chain.</b> GovernorMills (0xBeCCB6bb0aa4ab551966A7E4B97cec74bb359Bf6) guardian() wrapper (0x941c2699eC7E55a50Bde030d8E1e70649839259D) references Policy Committee Safe (0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7) with getThreshold() = 4, getOwners().length = 7 (4-of-7 Gnosis Safe); GovernorMills.timelock() (0x926dF14a23BE491164dCF93f4c468A50ef659D5B) delay() = 172800s (48h).</p><p><b>Documented.</b> Working-groups governance documentation lists 5-of-9 Policy Committee multisig.</p><div class="term"><div class="term-h"><span>Reproduce on any archive node</span><button class="copy" type="button" data-copy-term>Copy command</button></div><pre>cast call 0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7 \
+  &quot;getThreshold()&quot; \
+  --block 26399876 --rpc-url &quot;$ETH_RPC_URL&quot;
+cast block 26399876 --field hash --rpc-url &quot;$ETH_RPC_URL&quot;
+# expect 0x8bf896b892683ff3267b88b367ab015a70cf5caf53542eb405f4f648f6bcde8a</pre></div></article>
+<article class="memo-sec" id="inverse-firm-borrowcontroller-staleness-sentinel"><h2>BorrowController stalenessThreshold 0-sentinel — queued 48h fix for sDOLA market</h2><dl class="memo-meta"><dt>Status</dt><dd><span class="badge protect">Protective delta</span></dd><dt>Target</dt><dd>FiRM BorrowController <span class="addr" title="0x01ECA33e20a4c379Bd8A5361f896A7dd2bAE4ce8">0x01EC…4ce8</span><button class="copy" type="button" data-copy="0x01ECA33e20a4c379Bd8A5361f896A7dd2bAE4ce8">Copy</button></dd><dt>Pinned block</dt><dd>Ethereum <span class="num">#26,406,106</span> · sprint 14</dd><dt>Block hash</dt><dd><span class="addr" title="0xcb24dfb0b8af01dff9550fbbf6eb589b30d29b9625f41af56c188ae10d086ecf">0xcb24dfb0…086ecf</span><button class="copy" type="button" data-copy="0xcb24dfb0b8af01dff9550fbbf6eb589b30d29b9625f41af56c188ae10d086ecf">Copy</button></dd></dl><p><b>Observed on-chain.</b> Timelock (0x926dF14a23BE491164dCF93f4c468A50ef659D5B) delay() = 172800s (48h), and the Timelock is BorrowController.operator(). stalenessThreshold(sDOLA market 0xC45E9c231ab5D9Bd3F1131E7901B100D8D236C4d) = 0, which disables the oracle staleness check (isPriceStale returns false when the threshold is 0). A queued Timelock transaction (queuedTransactions = true) sets it to 86500s at eta 1794633827 (2026-11-14 05:23:47 UTC), which enables the check (protective).</p><p><b>Documented.</b> Verified BorrowController source (Sourcify exact_match): &#x27;if(marketStalenessThreshold == 0) return false;&#x27;.</p><div class="term"><div class="term-h"><span>Reproduce on any archive node</span><button class="copy" type="button" data-copy-term>Copy command</button></div><pre>cast call 0x01ECA33e20a4c379Bd8A5361f896A7dd2bAE4ce8 \
+  &quot;stalenessThreshold(address)&quot; 0xC45E9c231ab5D9Bd3F1131E7901B100D8D236C4d \
+  --block 26406106 --rpc-url &quot;$ETH_RPC_URL&quot;
+cast block 26406106 --field hash --rpc-url &quot;$ETH_RPC_URL&quot;
+# expect 0xcb24dfb0b8af01dff9550fbbf6eb589b30d29b9625f41af56c188ae10d086ecf</pre></div></article>
+</article>
+<div class="memo-foot"><span>Read-only on-chain analysis. Not investment advice. Exploit-sensitive vulnerabilities are never published here; they go through Immunefi or Cantina bounty programmes.</span><a href="../../request/?tier=clearance">Clear findings in 24h · $5,000 USDC →</a></div>
+</main>
+<footer class="ftr"><div class="wrap"><span>Pacta · Fractal Neurons · pacta.base.eth · 14 Sprints · 37 Indexed Records</span><nav aria-label="Footer"><a href="https://github.com/Fractal-Neurons/pacta" target="_blank" rel="noopener">GitHub</a><a href="../../api/v1/index.json">JSON feed</a><a href="../../llms.txt">llms.txt</a><a href="https://basescan.org/address/0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872" target="_blank" rel="noopener">Base registry</a><a href="../../.well-known/security.txt">security.txt</a><a href="../../request/">Contact</a></nav></div></footer>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Dataset", "creator": {"@type": "Organization", "name": "Pacta by Fractal Neurons", "url": "https://pacta.wtf/"}, "description": "Block-pinned control-plane observations for Inverse Finance (FiRM) (Fixed-Rate Lending): proxy admins, Safe quorums, roles and timelock delays, compared with the protocol's documentation. 2 indexed surface(s).", "distribution": [{"@type": "DataDownload", "contentUrl": "https://pacta.wtf/api/v1/index.json", "encodingFormat": "application/json"}], "isAccessibleForFree": true, "keywords": ["Inverse Finance (FiRM)", "Fixed-Rate Lending", "DeFi", "control plane", "timelock", "proxy admin", "Safe multisig"], "name": "Inverse Finance (FiRM) control-plane safety record", "spatialCoverage": "Ethereum Mainnet (chain id 1)", "temporalCoverage": "block 26399876/26406106", "url": "https://pacta.wtf/protocols/inverse-finance-firm/", "variableMeasured": ["Policy Committee Safe Quorum & GovernorMills Timelock", "BorrowController stalenessThreshold 0-sentinel — queued 48h fix for sDOLA market"]}</script>
+</body></html>

@@ -116,7 +116,7 @@ test("setting PACTA_X402_URL enables all 8 free + paid x402 tools and live disco
         : mockJson(200, { chain: "base" }),
   });
   const list = await srv.handleMessage({ jsonrpc: "2.0", id: 1, method: "tools/list" });
-  assert.equal(list.result.tools.length, 8);
+  assert.equal(list.result.tools.length, 9);
 
   const out = await srv.callTool("pacta_x402_discover");
   assert.equal(out.enabled, true);
