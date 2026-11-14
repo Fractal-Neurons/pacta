@@ -1,8 +1,11 @@
 // Behavioral harness for docs/app.js: runs the real script against a minimal synthetic DOM built from the real
 // generated HTML (parsed by verify_site_v2.py with html.parser and passed as JSON on stdin). Pure node: no network,
-// no HTTP server or listener, no files written; the pre-flight checker gets a mock fetch. Prints one JSON object with every assertion result.
+// no HTTP server or listener, no files written; the pre-flight checker gets a mock fetch and the first-party beacon (docs/b.js)
+// a recording navigator.sendBeacon mock. Prints one JSON object with every assertion result.
 //
-//   stdin: {"app": "<app.js source>", "request": <dom tree>, "index": <dom tree>, "rowId": "<a real record id>"}
+//   stdin: {"app": "<app.js source>", "request": <dom tree>, "index": <dom tree>, "rowId": "<a real record id>",
+//           "beacon": "<b.js source>", "protocol": <dom tree of /protocols/<protocolSlug>/>, "protocolSlug": "<slug>",
+//           "notfound": <dom tree of 404.html>}
 //   tree node: ["tag", {attrs}, [children...]] or a text string
 "use strict";
 const vm = require("vm");
@@ -136,21 +139,32 @@ function run(tree, app, loc) {
   document.createTextNode = t => new Text(String(t));
   document.getElementById = id => document.querySelectorAll("[id]").find(e => e.getAttribute("id") === id) || null;
   document.execCommand = () => true;
+  document.referrer = loc.referrer || "";
+  html.scrollHeight = 4000;
   const winListeners = {};
-  const location = { href: "https://pacta.wtf" + loc.path + (loc.search || "") + (loc.hash || ""), search: loc.search || "", hash: loc.hash || "" };
+  const location = { href: "https://pacta.wtf" + loc.path + (loc.search || "") + (loc.hash || ""), search: loc.search || "", hash: loc.hash || "",
+    pathname: loc.path, protocol: loc.protocol || "https:", hostname: "pacta.wtf" };
   const window = {
-    addEventListener: (t, fn) => { (winListeners[t] = winListeners[t] || []).push(fn); }, isSecureContext: false, location
+    addEventListener: (t, fn) => { (winListeners[t] = winListeners[t] || []).push(fn); }, isSecureContext: false, location,
+    scrollY: 0, innerHeight: 800
   };
+  // navigator.sendBeacon is a recording mock (no network); loc.nav overrides it (e.g. doNotTrack, or no sendBeacon at all)
+  const beacons = [];
+  const navigator = Object.assign({ sendBeacon: (url, body) => { beacons.push({ url, body }); return true; } }, loc.nav || {});
   const ctx = {
-    window, document, location, navigator: {}, URLSearchParams, console, Promise, JSON, Date, Math,
+    window, document, location, navigator, URLSearchParams, URL, AbortController: loc.noAbort ? undefined : AbortController,
+    console, Promise, JSON, Date, Math,
     localStorage: { getItem: () => null, setItem: () => {} },
     setTimeout: () => 0, clearTimeout: () => {}, setInterval: () => 0,
     fetch: loc.fetch || (() => Promise.reject(new Error("network disabled in harness")))
   };
   vm.createContext(ctx);
-  vm.runInContext(app, ctx, { filename: "app.js" });
+  // deferred scripts run in document order (app.js, then b.js), both before DOMContentLoaded
+  if (app) vm.runInContext(app, ctx, { filename: "app.js" });
+  if (loc.beacon) vm.runInContext(loc.beacon, ctx, { filename: "b.js" });
   document.dispatchEvent(new Event_("DOMContentLoaded"));
-  return { document, window, winListeners, location, Event_ };
+  const events = () => beacons.map(b => JSON.parse(b.body));
+  return { document, window, winListeners, location, Event_, beacons, events };
 }
 
 // ---------- scenarios ----------
@@ -232,6 +246,16 @@ try {
   }
   p = run(input.index, input.app, { path: "/", hash: "#r-" + input.rowId });
   res.valid_hash_opens_drawer = p.document.getElementById("r-" + input.rowId).classList.contains("open");
+  // (i0) the hero livebar names the next ETA that has not elapsed yet (tick() runs on DOMContentLoaded)
+  {
+    const lb = p.document.querySelector(".livebar");
+    const pairs = (lb && lb.getAttribute("data-etas") || "").split(";").map((x) => x.split("|"));
+    const nowS = Math.floor(Date.now() / 1000), want = pairs.find((x) => parseInt(x[0], 10) > nowS);
+    const lp = lb && lb.querySelector(".lb-p"), cd = lb && lb.querySelector(".countdown"), nx = lb && lb.querySelector(".lb-next");
+    res.livebar_skips_elapsed_etas = !!lb && pairs.length >= 2 && (want
+      ? lp.textContent === want[1] && cd.getAttribute("data-eta") === want[0]
+      : /past its ETA/.test(nx.textContent));
+  }
 } catch (e) {
   res.harness_error = String(e && e.stack || e);
 }
@@ -276,7 +300,129 @@ async function preflightScenario() {
   await flush(); await flush(); await flush();
   res.pf_http_error_reported = calls.length === 2 && /HTTP 429 \(rate_limited\)/.test(out.textContent);
 }
+// (j) Codex F1 regression: a valid check is in flight, then an invalid address is submitted; the stale HTTP 200 resolves
+// afterwards and must not overwrite the input error. The superseded request is aborted (AbortController).
+async function staleResponseScenario() {
+  const calls = [], signals = [];
+  let release = null;
+  const fetchMock = (url, opts) => {
+    if (!/\/v1\/check\/preflight/.test(String(url))) return Promise.reject(new Error("site data not needed here"));
+    calls.push(String(url)); signals.push(opts && opts.signal);
+    return new Promise(r => { release = () => r({ status: 200, json: () => Promise.resolve(PF_EXAMPLE) }); });
+  };
+  const p = run(input.index, input.app, { path: "/", fetch: fetchMock });
+  const d = p.document, out = d.getElementById("pf-out"), form = d.getElementById("pf-form"), addr = form.querySelector('input[name="address"]');
+  addr.value = PF_EXAMPLE.address; form.dispatchEvent(new Event_("submit"));
+  await flush();
+  const pending = calls.length === 1 && /Checking/.test(out.textContent);
+  addr.value = "0xnot-an-address"; form.dispatchEvent(new Event_("submit"));
+  await flush();
+  release(); await flush(); await flush(); await flush();
+  res.pf_f1_stale_200_keeps_input_error = pending && calls.length === 1 && /40-hex/.test(out.textContent) && !out.textContent.includes("MULTISIG_NO_TIMELOCK");
+  res.pf_f1_previous_request_aborted = !!signals[0] && signals[0].aborted === true;
+  // same guarantee where AbortController does not exist (the sequence number alone protects the output)
+  const p2 = run(input.index, input.app, { path: "/", fetch: fetchMock, noAbort: true });
+  const f2 = p2.document.getElementById("pf-form"), a2 = f2.querySelector('input[name="address"]'), o2 = p2.document.getElementById("pf-out");
+  a2.value = PF_EXAMPLE.address; f2.dispatchEvent(new Event_("submit")); await flush();
+  a2.value = ""; f2.dispatchEvent(new Event_("submit")); await flush();
+  release(); await flush(); await flush(); await flush();
+  res.pf_f1_no_abortcontroller_still_safe = calls.length === 2 && signals[1] === undefined && /40-hex/.test(o2.textContent) && !o2.textContent.includes("MULTISIG_NO_TIMELOCK");
+}
+
+// (k) first-party beacon (docs/b.js) with a recording navigator.sendBeacon mock: payloads, copy hooks, scroll once, DNT,
+// fetch fallback, 404, live-checker hook. Nothing leaves the process.
+const BEACON = "https://pacta-x402.pacta.workers.dev/v1/telemetry/beacon";
+const canon = x => Array.isArray(x) ? x.map(canon) : x && typeof x === "object" ? Object.keys(x).sort().reduce((o, k) => (o[k] = canon(x[k]), o), {}) : x;
+const same = (a, b) => JSON.stringify(canon(a)) === JSON.stringify(canon(b));   // key order does not matter
+function click(el) { const ev = new Event_("click"); el.dispatchEvent(ev); return ev; }
+async function beaconScenario() {
+  if (!input.beacon) { res.beacon_error = "no beacon source"; return; }
+  const B = input.beacon;
+  // page_load: referrer host + utm_source, string body to the first-party endpoint, nothing else on load
+  let p = run(input.index, input.app, { path: "/", search: "?utm_source=Twitter&x=1", referrer: "https://news.ycombinator.com/item?id=1", beacon: B });
+  res.b_page_load_payload = p.beacons.length === 1 && p.beacons[0].url === BEACON && typeof p.beacons[0].body === "string"
+    && same(p.events()[0], { v: 1, e: "page_load", p: "/", r: "news.ycombinator.com", u: "twitter" });
+  res.b_hook_exposed = typeof p.window.pactaBeacon === "function";
+  // copy hooks, by what the button copies / the link points to
+  const d = p.document, n0 = p.beacons.length;
+  const copyMcp = d.querySelectorAll("button[data-copy]").find(b => /\/mcp$/.test(b.getAttribute("data-copy")));
+  const copyCurl = d.querySelectorAll("button[data-copy]").find(b => /^curl /.test(b.getAttribute("data-copy")));
+  const skill = d.querySelectorAll("a[href]").find(a => a.getAttribute("href") === "SKILL.md");
+  const cta = d.querySelectorAll("a.primary")[0];
+  click(copyMcp); click(copyCurl); click(skill); click(cta);
+  res.b_copy_and_cta_events = same(p.events().slice(n0).map(e => e.e), ["copy_mcp_url", "copy_curl", "copy_skill_md", "cta_click"])
+    && p.events().slice(n0).every(e => e.p === "/" && !("r" in e) && !("u" in e));
+  // scroll_50 / scroll_90 fire once each
+  const scroll = y => { p.window.scrollY = y; (p.winListeners.scroll || []).forEach(fn => fn({})); };
+  const n1 = p.beacons.length;
+  scroll(100); scroll(1300); scroll(1400); scroll(2900); scroll(3200); scroll(1300);
+  res.b_scroll_once_each = same(p.events().slice(n1).map(e => e.e), ["scroll_50", "scroll_90"]);
+  // the live checker reports chain:address (lowercased) through the hook
+  const calls = [];
+  const fetchMock = (url) => {
+    if (!/\/v1\/check\/preflight/.test(String(url))) return Promise.reject(new Error("site data not needed here"));
+    calls.push(String(url)); return Promise.resolve({ status: 200, json: () => Promise.resolve(PF_EXAMPLE) });
+  };
+  p = run(input.index, input.app, { path: "/", beacon: B, fetch: fetchMock });
+  const f = p.document.getElementById("pf-form");
+  f.querySelector('select[name="chain"]').value = "base";
+  f.querySelector('input[name="address"]').value = PF_EXAMPLE.address;
+  f.dispatchEvent(new Event_("submit")); await flush(); await flush(); await flush();
+  const lc = p.events().filter(e => e.e === "live_checker_submit");
+  res.b_live_checker_submit = lc.length === 1 && lc[0].t === "base:" + PF_EXAMPLE.address.toLowerCase() && calls.length === 1
+    && p.document.getElementById("pf-out").textContent.includes("MULTISIG_NO_TIMELOCK");
+  f.querySelector('input[name="address"]').value = "0x12"; f.dispatchEvent(new Event_("submit")); await flush();
+  res.b_invalid_submit_not_reported = p.events().filter(e => e.e === "live_checker_submit").length === 1;
+  // same-site referrer = "self"; protocol pages add t=slug and protocol_view; the term copy button = copy_curl
+  if (input.protocol) {
+    const path = "/protocols/" + input.protocolSlug + "/";
+    p = run(input.protocol, input.app, { path, referrer: "https://pacta.wtf/protocols/", beacon: B });
+    res.b_protocol_view = same(p.events(), [{ v: 1, e: "page_load", p: path, r: "self", t: input.protocolSlug }, { v: 1, e: "protocol_view", p: path, t: input.protocolSlug }]);
+    const termBtn = p.document.querySelectorAll("button[data-copy-term]").find(b => /^curl /.test(b.closest(".term").querySelector("pre").textContent));
+    const n2 = p.beacons.length; click(termBtn);
+    const foot = p.document.querySelector(".memo-foot a"); click(foot);
+    res.b_protocol_copy_curl_and_cta = same(p.events().slice(n2).map(e => e.e), ["copy_curl", "cta_click"]);
+  }
+  // 404: not_found_404 instead of page_load, sanitised path, slug for /protocols/<slug>/...; bad characters -> "/"
+  if (input.notfound) {
+    p = run(input.notfound, input.app, { path: "/protocols/no-such-protocol/extra", search: "?utm_source=newsletter", beacon: B });
+    res.b_not_found_404 = same(p.events(), [{ v: 1, e: "not_found_404", p: "/protocols/no-such-protocol/extra", u: "newsletter", t: "no-such-protocol" }]);
+    p = run(input.notfound, input.app, { path: "/a@b/" + "x".repeat(200), beacon: B });
+    const long = run(input.notfound, input.app, { path: "/" + "y".repeat(200), beacon: B });
+    res.b_not_found_path_sanitised = same(p.events(), [{ v: 1, e: "not_found_404", p: "/" }]) && long.events()[0].p === "/" + "y".repeat(119);
+    const mcp = p.document.querySelectorAll("button[data-copy]").find(b => /\/mcp$/.test(b.getAttribute("data-copy")));
+    if (mcp) click(mcp);
+    res.b_not_found_copy_mcp = !!mcp && p.events().length === 2 && p.events()[1].e === "copy_mcp_url";
+  }
+  // Do Not Track: nothing at all (no beacon, no fetch), the hook stays callable; plain http (local previews): nothing
+  const sent = [];
+  const rec = (url, opts) => {   // records beacon traffic only; app.js's own site-data fetch (api/v1/index.json) is refused
+    if (String(url) !== BEACON) return Promise.reject(new Error("site data not needed here"));
+    sent.push([url, opts]); return Promise.resolve({ status: 0, type: "opaque" });
+  };
+  p = run(input.index, input.app, { path: "/", beacon: B, nav: { doNotTrack: "1" }, fetch: rec });
+  click(p.document.querySelectorAll("button[data-copy]").find(b => /\/mcp$/.test(b.getAttribute("data-copy"))));
+  p.window.scrollY = 3500; (p.winListeners.scroll || []).forEach(fn => fn({}));
+  p.window.pactaBeacon("live_checker_submit", "ethereum:0x" + "1".repeat(40));
+  res.b_dnt_sends_nothing = p.beacons.length === 0 && sent.length === 0 && typeof p.window.pactaBeacon === "function";
+  p = run(input.index, input.app, { path: "/", beacon: B, protocol: "http:", fetch: rec });
+  res.b_non_https_sends_nothing = p.beacons.length === 0 && sent.length === 0;
+  // no sendBeacon: fetch keepalive no-cors with the same string body
+  p = run(input.index, input.app, { path: "/", beacon: B, nav: { sendBeacon: undefined }, fetch: rec });
+  await flush();
+  res.b_fetch_fallback = sent.length === 1 && sent[0][0] === BEACON && sent[0][1].method === "POST" && sent[0][1].keepalive === true
+    && sent[0][1].mode === "no-cors" && same(JSON.parse(sent[0][1].body), { v: 1, e: "page_load", p: "/" });
+  // no cookies, no storage: the beacon run never touches document.cookie or localStorage
+  let touched = false;
+  const trap = { get: () => { touched = true; return ""; }, set: () => { touched = true; } };
+  const t0 = run(input.index, null, { path: "/", beacon: B });   // b.js alone
+  Object.defineProperty(t0.document, "cookie", trap);
+  click(t0.document.querySelectorAll("button[data-copy]")[0]);
+  res.b_no_cookie_access = !touched && t0.events().length >= 1;
+}
 (async () => {
   try { await preflightScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
+  try { await staleResponseScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
+  try { await beaconScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
   process.stdout.write(JSON.stringify(res));
 })();

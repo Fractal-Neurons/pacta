@@ -18,6 +18,7 @@ Pacta checks who can change the rules of DeFi protocols (proxy admins, timelock 
 ## Data
 - [https://pacta.wtf/api/v1/index.json](https://pacta.wtf/api/v1/index.json): schema `pacta.counterparty_control_index.v1`; `summary_metrics` (sprints_completed=14, records_indexed=37, parameter_deltas=14, protective_deltas=4, aligned_baselines=19); each entry has id, protocol, category, sprint, block_number, block_hash, classification, surface, target_contract, target_label, check_type, selector_or_slot, call_signature, call_args, repro_calldata, onchain_observed, documented_reference, observed/documented delay seconds, summary_doc, summary_sha256, base_eas_uid.
 - [https://pacta.wtf/api/v1/radar.json](https://pacta.wtf/api/v1/radar.json): queued timelock operations, refreshed at finalized block 26406890 (2026-11-13 15:18 UTC).
+- [https://pacta.wtf/api/v1/forum-digest.json](https://pacta.wtf/api/v1/forum-digest.json): schema `pacta.forum_digest.v1`; read-only digest of active governance forum topics plus `addressIndex` (chain:address -> protocol family).
 
 ## Live pre-execution briefs
 - [https://pacta.wtf/briefs/ethena-ops-0x0ca0-0x1fe5/](https://pacta.wtf/briefs/ethena-ops-0x0ca0-0x1fe5/): Pre-execution brief: two queued Ethena timelock operations onboard RLUSD and USAT to EthenaMinting at 200M / 20M USDe-per-block caps (1-day delay; ETAs 2026-11-14 10:20–10:22 UTC).
@@ -50,7 +51,7 @@ Pacta checks who can change the rules of DeFi protocols (proxy admins, timelock 
 
 ## Engagements (collateral issuers)
 - 24h Collateral Onboarding & Delta Clearance Attestation: $5,000 USDC flat (optional continuous Aligned badge maintenance: $1,500 / month). Canonical block-pinned control-plane audit, GitBook / config reconciliation PR, Base Mainnet EAS Aligned attestation in PactaCommitmentRegistry, and a Curator Diligence Dossier (PDF + JSON) for Morpho, Euler, Aave and Sky forum proposals. Clears open parameter_delta flags or onboards a new asset.
-- Payment: USDC on Base (`0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`) or Ethereum (`0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48`) to the Pacta treasury `0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14` (same address on both chains).
+- Payment: USDC on Base (`0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`) or Ethereum (`0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48`) to the Pacta treasury (EOA) `0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14` (same address on both chains).
 - Community queue: free, unscheduled (typically 6–8 weeks).
 - Request: https://pacta.wtf/request/ (builds a scope brief; opens a pre-filled GitHub intake issue or Gmail compose, or copies the brief).
 

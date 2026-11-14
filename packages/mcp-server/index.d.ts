@@ -168,6 +168,9 @@ export declare const DEFAULT_ANCHORING: Readonly<Record<string, unknown>>;
 export declare const FREE_TOOLS: ReadonlyArray<Record<string, unknown>>;
 export declare const PAID_TOOLS: ReadonlyArray<Record<string, unknown>>;
 export declare const TOOL_DEFINITIONS: ReadonlyArray<Record<string, unknown>>;
+/** Accepted alternative tool names -> canonical name (accepted in tools/call, not listed). */
+export declare const TOOL_ALIASES: Readonly<Record<string, string>>;
+export declare function canonicalToolName(name: unknown): unknown;
 export declare const PAID_ROUTES: Readonly<Record<string, Record<string, string>>>;
 export declare const X402_DEFAULTS: Readonly<Record<string, unknown>>;
 

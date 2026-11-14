@@ -1,0 +1,62 @@
+# Publishes the remotes-only manifest io.github.fractal-neurons/pacta (packages/mcp-server/server.remote.json: the
+# Streamable HTTP endpoint https://pacta-x402.pacta.workers.dev/mcp, no npm package) to registry.modelcontextprotocol.io.
+# Auth is GitHub OIDC (id-token: write): no secrets, no PATs. mcp-publisher is a pinned release, checked against a pinned
+# SHA-256 and the release's own checksums file before it runs. The registry rejects re-publishing an existing version,
+# so bump "version" in server.remote.json (and server.json) to publish an update.
+name: Publish remote MCP server to the MCP Registry
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "packages/mcp-server/server.remote.json"
+      - ".github/workflows/publish-mcp.yml"
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+concurrency:
+  group: publish-mcp-registry
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: mcp-publisher publish (server.remote.json)
+    runs-on: ubuntu-latest
+    env:
+      MCP_PUBLISHER_VERSION: "v1.8.9"
+      MCP_PUBLISHER_ASSET: "mcp-publisher_linux_amd64.tar.gz"
+      # sha256 of mcp-publisher_linux_amd64.tar.gz in release v1.8.9 (listed in registry_1.8.9_checksums.txt)
+      MCP_PUBLISHER_SHA256: "4d527ca8f1ced0394c962dc925c2a4a4addef441cbefd62501c875e9481823a8"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install pinned mcp-publisher
+        run: |
+          set -euo pipefail
+          dir="$RUNNER_TEMP/mcp-publisher"
+          mkdir -p "$dir"
+          base="https://github.com/modelcontextprotocol/registry/releases/download/${MCP_PUBLISHER_VERSION}"
+          curl -fsSL -o "$dir/$MCP_PUBLISHER_ASSET" "$base/$MCP_PUBLISHER_ASSET"
+          curl -fsSL -o "$dir/checksums.txt" "$base/registry_${MCP_PUBLISHER_VERSION#v}_checksums.txt"
+          grep -qx "${MCP_PUBLISHER_SHA256}  ${MCP_PUBLISHER_ASSET}" "$dir/checksums.txt"
+          (cd "$dir" && echo "${MCP_PUBLISHER_SHA256}  ${MCP_PUBLISHER_ASSET}" | sha256sum -c -)
+          tar -xzf "$dir/$MCP_PUBLISHER_ASSET" -C "$dir" mcp-publisher
+          echo "$dir" >> "$GITHUB_PATH"
+
+      - name: Stage server.remote.json as server.json (runner temp dir, not the repo)
+        run: |
+          set -euo pipefail
+          ws="$RUNNER_TEMP/mcp-registry"
+          mkdir -p "$ws"
+          cp packages/mcp-server/server.remote.json "$ws/server.json"
+
+      - name: Log in with GitHub OIDC and publish io.github.fractal-neurons/pacta
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/mcp-registry"
+          mcp-publisher login github-oidc
+          mcp-publisher publish

@@ -56,7 +56,7 @@ BRIEFS = {
     "treehouse-op-0x2f11": "Pre-execution brief: a queued 5-day timelock operation upgrades the Treehouse TREE token (not tETH) "
                            "and installs a 5-of-7 Safe blacklister (ETA 2026-11-17 04:51 UTC).",
 }
-NAV = [("preflight", "Free API"), ("inspector", "Inspector"), ("radar", "Radar"), ("findings", "Findings"), ("index", "Index"), ("verify", "Verify"),
+NAV = [("preflight", "Free API"), ("protocols/", "Protocols"), ("inspector", "Inspector"), ("radar", "Radar"), ("findings", "Findings"), ("index", "Index"), ("verify", "Verify"),
        ("pricing", "Pricing"), ("faq", "FAQ")]
 # Engagement tracks shown in #pricing and offered by the request builder. key -> (title, price, unit, summary, GitHub dropdown option)
 # One commercial offer (for collateral issuers) plus the free community queue. The public data itself (every indexed
@@ -132,8 +132,9 @@ def hexref(value, a=6, b=4):
     return f'<span class="addr" title="{E(value)}">{E(short(value, a, b))}</span>{copy_btn(value)}'
 
 
-def head(title, desc, url, prefix="", og_title=OG_TITLE, og_type="website", image=f"{BASE_URL}/og-preview.png"):
-    """Order matters: everything social/agent-relevant comes first and stays inside the first 1.2 KB."""
+def head(title, desc, url, prefix="", og_title=OG_TITLE, og_type="website", image=f"{BASE_URL}/og-preview.png", extra=""):
+    """Order matters: everything social/agent-relevant comes first and stays inside the first 1.2 KB.
+    b.js is the first-party beacon (docs/b.js, < 1.5 KB): no cookies, no storage ids, no third parties, honours DNT."""
     t, d = E(title), E(desc)
     parts = [
         '<!doctype html><html lang="en"><head>',
@@ -154,6 +155,7 @@ def head(title, desc, url, prefix="", og_title=OG_TITLE, og_type="website", imag
         f'<meta name="twitter:title" content="{E(og_title)}">',
         f'<meta name="twitter:description" content="{d}">',
         f'<meta name="twitter:image" content="{image}">',
+    ] + ([extra] if extra else []) + [
         f'<link rel="icon" href="{prefix}favicon.svg" type="image/svg+xml">',
         f'<link rel="icon" href="{prefix}favicon.png" type="image/png" sizes="32x32">',
         f'<link rel="stylesheet" href="{prefix}styles.css">',
@@ -161,14 +163,23 @@ def head(title, desc, url, prefix="", og_title=OG_TITLE, og_type="website", imag
         '<script>document.documentElement.className="js";try{if(localStorage.getItem("pacta-theme")==="slate")'
         'document.documentElement.dataset.theme="slate"}catch(e){}</script>',
         f'<script src="{prefix}app.js" defer></script>',
+        f'<script src="{prefix}b.js" defer></script>',
         "</head>",
     ]
     return "\n".join(parts)
 
 
+def livebar_etas(radar):
+    """Every queued ETA as "eta|protocol;…" (ascending), so app.js can move "Next" past ETAs that have elapsed since the
+    deterministic build; the no-JS text names the earliest ETA and is dated by the radar block."""
+    pairs = sorted({(int(op["eta"]), it["protocol"]) for it in radar["items"] for op in it.get("operations", []) if op.get("eta")}
+                   | {(int(it["eta"]), it["protocol"]) for it in radar["items"] if it.get("eta")})
+    return ";".join(f"{eta}|{name.replace(';', ',').replace('|', '/')}" for eta, name in pairs)
+
+
 def topbar(home=""):
     """home = "" on the homepage, "../" or "../../" on sub-pages."""
-    links = "".join(f'<a href="{home}#{k}">{lbl}</a>' for k, lbl in NAV)
+    links = "".join(f'<a href="{home}{k if k.endswith("/") else "#" + k}">{lbl}</a>' for k, lbl in NAV)   # "x/" = a page
     req = "#request" if home == "" else f"{home}request/"
     return (f'<a class="skip" href="#main">Skip to content</a>\n'
             f'<header class="topbar"><div class="wrap">'
@@ -560,8 +571,8 @@ def pay_panel(idx):
     treasury = idx["onchain_anchoring"]["treasury_admin"]
     rows = "".join(f'<dt>USDC on {k}</dt><dd>{hexref(v)}</dd>' for k, v in USDC.items())
     return (f'<div class="pay" id="req-pay"><span class="label">Payment · 24h clearance</span>'
-            f'<p>{E(CLEARANCE_PRICE)} flat, sent to the Pacta treasury on Base or Ethereum. USDC only; the same address on both chains.</p>'
-            f'<dl class="kv"><dt>Pacta treasury</dt><dd><span class="mono full">{treasury}</span>{copy_btn(treasury)}</dd>{rows}</dl>'
+            f'<p>{E(CLEARANCE_PRICE)} flat, sent to the Pacta treasury (EOA) on Base or Ethereum. USDC only; the same address on both chains.</p>'
+            f'<dl class="kv"><dt>Pacta treasury (EOA)</dt><dd><span class="mono full">{treasury}</span>{copy_btn(treasury)}</dd>{rows}</dl>'
             f'<p class="hint">Paid already? Add the transaction hash on the left. Otherwise send the brief first: the 24-hour window '
             f'starts once scope and payment are both confirmed.</p></div>')
 
@@ -707,8 +718,130 @@ def radar_for(name, radar):
     return [it for it in radar["items"] if it["protocol"].lower() in key or key.startswith(it["protocol"].lower())]
 
 
-def protocol_page(name, entries, idx, radar):
+# ---- governance forum digest (read-only; CONTRACTS §3) ---------------------------------------------------------------
+# Optional source data/forum-digest.json (written by the read-only Discourse poller). Missing = empty digest. The build
+# republishes it at /api/v1/forum-digest.json with an addressIndex that lets the gateway attach discussions to a
+# preflight response. Deterministic: no wall clock; ordering and filtering depend only on the inputs.
+FORUM_DIGEST_SRC = os.path.join(ROOT, "data", "forum-digest.json")
+FORUM_SCHEMA = "pacta.forum_digest.v1"
+FORUM_FAMILIES = ("aave", "euler", "morpho", "sky", "compound", "lido", "arbitrum", "uniswap", "curve", "frax")
+# The family is the first word of the protocol name, lowercased. Two indexed names start with a word that is not the
+# forum family that governs them: MetaMorpho vaults (Morpho forum) and Spark (a Sky star; forum.sky.money).
+FAMILY_ALIAS = {"metamorpho": "morpho", "spark": "sky"}
+GOV_MAX = 5
+_ISO = re.compile(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?(Z|[+-]\d{2}:\d{2})")
+_HOST = re.compile(r"[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+")
+
+
+def protocol_family(name):
+    words = re.findall(r"[a-z0-9]+", name.lower())
+    w0 = words[0] if words else ""
+    return FAMILY_ALIAS.get(w0, w0)
+
+
+def empty_forum_digest():
+    return {"schema": FORUM_SCHEMA, "generatedAt": None, "readOnly": True, "forums": {}, "discussions": []}
+
+
+def _iso_or_none(v):
+    return v if isinstance(v, str) and _ISO.fullmatch(v) else None
+
+
+def _int(v):
+    return v if isinstance(v, int) and not isinstance(v, bool) and v >= 0 else None
+
+
+def _discussion(d):
+    """One validated discussion (known keys only) or None. The url must be https on the discussion's own forum host."""
+    if not isinstance(d, dict):
+        return None
+    forum, proto, tid, title, url = d.get("forum"), d.get("protocol"), _int(d.get("topicId")), d.get("title"), d.get("url")
+    if not (isinstance(forum, str) and _HOST.fullmatch(forum) and isinstance(proto, str) and re.fullmatch(r"[a-z0-9-]{1,40}", proto)
+            and tid is not None and isinstance(title, str) and title.strip() and isinstance(url, str)):
+        return None
+    pu = urllib.parse.urlsplit(url)
+    if pu.scheme != "https" or pu.hostname != forum or pu.username or pu.password or pu.port:
+        return None
+    strs = lambda v: sorted({x.strip() for x in v if isinstance(x, str) and x.strip()})[:12] if isinstance(v, list) else []
+    return {"forum": forum, "protocol": proto, "topicId": tid, "title": " ".join(title.split())[:300], "url": url,
+            "createdAt": _iso_or_none(d.get("createdAt")), "lastPostedAt": _iso_or_none(d.get("lastPostedAt")),
+            "postsCount": _int(d.get("postsCount")) or 0, "tags": strs(d.get("tags")), "riskTerms": strs(d.get("riskTerms"))}
+
+
+def normalize_forum_digest(src):
+    """Validate a pacta.forum_digest.v1 document; drop malformed discussions; deterministic order (forum, topicId)."""
+    if not isinstance(src, dict) or src.get("schema") != FORUM_SCHEMA:
+        raise ValueError(f"forum digest: schema must be {FORUM_SCHEMA}")
+    forums = {}
+    for host, f in sorted((src.get("forums") or {}).items()):
+        if isinstance(host, str) and _HOST.fullmatch(host) and isinstance(f, dict) and isinstance(f.get("protocol"), str):
+            forums[host] = {"protocol": f["protocol"], "lastPolledAt": _iso_or_none(f.get("lastPolledAt"))}
+    seen, ds = set(), []
+    for d in src.get("discussions") or []:
+        n = _discussion(d)
+        if n and (n["forum"], n["topicId"]) not in seen:
+            seen.add((n["forum"], n["topicId"]))
+            ds.append(n)
+    ds.sort(key=lambda d: (d["forum"], d["topicId"]))
+    return {"schema": FORUM_SCHEMA, "generatedAt": _iso_or_none(src.get("generatedAt")), "readOnly": True, "forums": forums, "discussions": ds}
+
+
+def load_forum_digest(path=None):
+    path = path or FORUM_DIGEST_SRC
+    if not os.path.exists(path):
+        return empty_forum_digest()
+    with open(path) as fh:
+        return normalize_forum_digest(json.load(fh))
+
+
+def address_index(idx):
+    """{"ethereum:0x<lower 40 hex>": family} from every target_contract in index.json (chain ethereum unless the entry says Base)."""
+    out = {}
+    for e in sorted(idx["entries"], key=lambda e: e["id"]):
+        a = str(e.get("target_contract", "")).lower()
+        if not re.fullmatch(r"0x[0-9a-f]{40}", a):
+            continue
+        chain = "base" if str(e.get("chain", "")).lower() == "base" or e.get("chain_id") == 8453 else "ethereum"
+        out.setdefault(f"{chain}:{a}", protocol_family(e["protocol"]))
+    return dict(sorted(out.items()))
+
+
+def forum_digest_doc(idx, digest):
+    d = normalize_forum_digest(digest)
+    d["addressIndex"] = address_index(idx)
+    return d
+
+
+def forum_digest_json(idx, digest):
+    return json.dumps(forum_digest_doc(idx, digest), indent=2, ensure_ascii=False) + "\n"
+
+
+def governance_discussions(name, digest):
+    """At most GOV_MAX discussions of the protocol's family, newest lastPostedAt first (ties: higher topicId first)."""
+    fam = protocol_family(name)
+    ds = [d for d in normalize_forum_digest(digest)["discussions"] if d["protocol"] == fam]
+    return sorted(ds, key=lambda d: (d["lastPostedAt"] or "", d["topicId"], d["forum"]), reverse=True)[:GOV_MAX]
+
+
+def governance_section(name, digest, home="../../"):
+    ds = governance_discussions(name, digest)
+    if not ds:
+        return ""
+    rows = ""
+    for d in ds:
+        meta = f'{d["forum"]} · {d["postsCount"]} post{"" if d["postsCount"] == 1 else "s"}' + (f' · {", ".join(d["riskTerms"])}' if d["riskTerms"] else "")
+        rows += (f'<tr><td><a href="{E(d["url"])}" target="_blank" rel="noopener nofollow">{E(d["title"])} ↗</a>'
+                 f'<br><span class="muted">{E(meta)}</span></td><td class="num">{E((d["lastPostedAt"] or "—")[:10])}</td></tr>')
+    hosts = ", ".join(sorted({d["forum"] for d in ds}))
+    return (f'<section class="memo-sec" id="governance"><h2>Active governance discussions</h2>'
+            f'<p>Most recently active public topics on {E(hosts)}, from a read-only digest '
+            f'(<a href="{home}api/v1/forum-digest.json">/api/v1/forum-digest.json</a>). Pacta reads these forums and never posts to them.</p>'
+            f'<div class="tbl-wrap"><table><thead><tr><th>Topic</th><th>Last post</th></tr></thead><tbody>{rows}</tbody></table></div></section>\n')
+
+
+def protocol_page(name, entries, idx, radar, digest=None):
     """Static, deterministic protocol safety record (no wall-clock time): every indexed surface with its pinned block."""
+    digest = load_forum_digest() if digest is None else digest
     slug = protocol_slug(name)
     url = f"{BASE_URL}/protocols/{slug}/"
     c = counts(idx)
@@ -746,7 +879,7 @@ def protocol_page(name, entries, idx, radar):
           "temporalCoverage": f"block {min(int(e['block_number']) for e in entries)}/{max(int(e['block_number']) for e in entries)}"}
     ld_json = json.dumps(ld, ensure_ascii=False, sort_keys=True).replace("</", "<\\/")
     title = f"{name}: control-plane safety record"
-    desc = f"Who can upgrade, pause or change {name}: {len(entries)} block-pinned control-plane check(s) with cast reproductions and a free live pre-flight API."
+    desc = f"Who can upgrade, pause or change {name}: {len(entries)} block-pinned control-plane {"check" if len(entries) == 1 else "checks"} with cast reproductions and a free live pre-flight API."
     body = f"""<body>
 {topbar("../../")}
 <main id="main" class="memo-wrap">
@@ -756,7 +889,7 @@ def protocol_page(name, entries, idx, radar):
 <p class="lede">{len(entries)} indexed control-plane surface(s) for {E(name)}, each pinned to a canonical Ethereum block and compared with what the protocol documents. Contracts: {", ".join(f'<code class="mono">{E(t)}</code>' for t in targets)}.</p></header>
 <section class="memo-sec"><h2>Check it live (free)</h2><p>The pre-flight API re-reads the controller, proxy and capabilities of a contract at the latest block. No key, no wallet.</p>
 {term(curl, "Live pre-flight check")}<p>MCP: <code class="mono">{E(MCP_URL)}</code> · tool <code>pacta_check_preflight</code>.</p></section>
-{records}{ops}</article>
+{governance_section(name, digest)}{records}{ops}</article>
 <div class="memo-foot"><span>Read-only on-chain analysis. Not investment advice. Exploit-sensitive vulnerabilities are never published here; they go through Immunefi or Cantina bounty programmes.</span><a href="../../request/?tier=clearance">Clear findings in 24h · {E(CLEARANCE_PRICE)} →</a></div>
 </main>
 {footer(count_line, reg, "../../")}
@@ -794,6 +927,41 @@ def protocols_index_page(idx, groups):
                 f"{BASE_URL}/protocols/", prefix="../", og_title="Protocol control-plane safety records") + "\n" + body
 
 
+def not_found_page(idx):
+    """docs/404.html: GitHub Pages serves it for any missing path, so every link is root-relative. data-nf on <main>
+    makes the beacon (b.js) send not_found_404 (sanitised path, plus the slug for /protocols/<slug>/...) instead of page_load."""
+    c = counts(idx)
+    count_line = f'{c["sprints"]} Sprints · {c["records"]} Indexed Records'
+    reg = idx["onchain_anchoring"]["commitment_registry"]
+    n_protocols = len({e["protocol"] for e in idx["entries"]})
+    claude = f"claude mcp add --transport http pacta {MCP_URL}"
+    snippet = lambda label, value: f'<div class="qs-snip"><span class="qs-l">{label}</span><code class="mono">{E(value)}</code>{copy_btn(value)}</div>'
+    body = f"""<body>
+{topbar("/")}
+<main id="main" class="memo-wrap" data-nf>
+<div class="crumbs"><a href="/">Pacta</a> / Page not found</div>
+<article class="memo">
+<header><span class="tier">404 · Not found</span><h1>This page does not exist</h1>
+<p class="lede">The link may be old or mistyped. Everything Pacta publishes is free and one click away.</p></header>
+<section class="memo-sec"><h2>Where to go</h2>
+<dl class="deflist">
+<div><dt><a href="/protocols/">Protocol safety records →</a></dt><dd>Block-pinned control-plane records for {n_protocols} DeFi protocols, each with a <code>cast</code> reproduction.</dd></div>
+<div><dt><a href="/#preflight">Run a free pre-flight check →</a></dt><dd>Who can upgrade, pause or change any contract on Ethereum or Base. No key, no wallet.</dd></div>
+<div><dt><a href="/request/">Request coverage →</a></dt><dd>High-volume SLA access or a 24h collateral clearance attestation.</dd></div>
+<div><dt>For agents</dt><dd><a href="/llms.txt">llms.txt</a> · <a href="/SKILL.md">SKILL.md</a> · <a href="/.well-known/agent.json">agent.json</a> · <a href="/api/v1/index.json">/api/v1/index.json</a></dd></div>
+</dl></section>
+<section class="memo-sec"><h2>Remote MCP server (free)</h2>
+<p>Five read-only tools over Streamable HTTP, zero install. Tool <code>pacta_check_preflight</code> runs the same check as the live checker on the homepage.</p>
+{snippet("Any MCP client (Streamable HTTP)", MCP_URL)}{snippet("Claude Code", claude)}</section>
+</article>
+</main>
+{footer(count_line, reg, "/")}
+</body></html>
+"""
+    return head("Page not found · Pacta", "This page does not exist. Pacta: free pre-execution contract checks for AI agents.", f"{BASE_URL}/404.html",
+                prefix="/", og_title="Page not found · Pacta", extra='<meta name="robots" content="noindex">') + "\n" + body
+
+
 def page(idx, radar):
     c = counts(idx)
     r = radar["refreshed_at"]
@@ -810,7 +978,7 @@ def page(idx, radar):
 <p class="lede">Before an agent approves, deposits into or calls a contract, one request tells it who can change that contract (an EOA, a Safe, a timelock, or nobody), how fast, and whether it can pause, blacklist or upgrade. Every answer is pinned to a block hash and reproducible with <code>cast</code>.</p>
 {quickstart_block()}
 <div class="ctas"><a class="btn primary" href="#preflight">Run a free check <span class="arr">→</span></a><a class="btn" href="protocols/">Protocol safety records</a><a class="btn" href="#inspector">Inspect a protocol</a></div>
-<div class="livebar"><span class="dot live"></span><b>{n_ops} timelock operations queued across {len(radar["items"])} protocols.</b> Next: {E(nxt["protocol"])}, <span class="countdown" data-eta="{nxt["eta"]}">ETA {E(utc(nxt["eta"]))}</span> · <a href="#radar">Radar →</a></div>
+<div class="livebar" data-etas="{E(livebar_etas(radar))}"><span class="dot live"></span><b>{n_ops} timelock operations queued across {len(radar["items"])} protocols.</b> <span class="lb-next">Next: <span class="lb-p">{E(nxt["protocol"])}</span>, <span class="countdown" data-eta="{nxt["eta"]}">ETA {E(utc(nxt["eta"]))}</span></span> <small class="lb-asof">(as of radar block {r["block_number"]:,})</small> · <a href="#radar">Radar →</a></div>
 <div class="ledger">
 <div><b>{c["sprints"]}</b><span>Sprints completed</span><small>Ethereum Mainnet control-plane reviews</small></div>
 <div><b>{c["records"]}</b><span>Verified surfaces</span><small>Each pinned to a canonical block hash</small></div>
@@ -912,7 +1080,8 @@ def llms(idx, radar):
         f"- [{BASE_URL}/.well-known/agent.json]({BASE_URL}/.well-known/agent.json) (A2A Agent Card) · [{BASE_URL}/.well-known/mcp.json]({BASE_URL}/.well-known/mcp.json) (MCP manifest) · [{BASE_URL}/SKILL.md]({BASE_URL}/SKILL.md) (portable agent skill).", "",
         "## Data",
         f"- [{BASE_URL}/api/v1/index.json]({BASE_URL}/api/v1/index.json): schema `{idx['schema']}`; `summary_metrics` (sprints_completed={c['sprints']}, records_indexed={c['records']}, parameter_deltas={c['delta']}, protective_deltas={c['protect']}, aligned_baselines={c['aligned']}); each entry has id, protocol, category, sprint, block_number, block_hash, classification, surface, target_contract, target_label, check_type, selector_or_slot, call_signature, call_args, repro_calldata, onchain_observed, documented_reference, observed/documented delay seconds, summary_doc, summary_sha256, base_eas_uid.",
-        f"- [{BASE_URL}/api/v1/radar.json]({BASE_URL}/api/v1/radar.json): queued timelock operations, refreshed at finalized block {r['block_number']} ({r['block_time_utc']}).", "",
+        f"- [{BASE_URL}/api/v1/radar.json]({BASE_URL}/api/v1/radar.json): queued timelock operations, refreshed at finalized block {r['block_number']} ({r['block_time_utc']}).",
+        f"- [{BASE_URL}/api/v1/forum-digest.json]({BASE_URL}/api/v1/forum-digest.json): schema `{FORUM_SCHEMA}`; read-only digest of active governance forum topics plus `addressIndex` (chain:address -> protocol family).", "",
         "## Live pre-execution briefs",
     ] + [f"- [{BASE_URL}/briefs/{k}/]({BASE_URL}/briefs/{k}/): {v}" for k, v in BRIEFS.items()] + [
         "", "## Live onboarding verification briefs (assets proposed as collateral; block-pinned)",
@@ -933,7 +1102,7 @@ def llms(idx, radar):
         "- Per-sprint attestation UIDs: `onchain_anchoring.sprint_eas_attestations` in /api/v1/index.json; each record's `base_eas_uid`.", "",
         "## Engagements (collateral issuers)",
         f"- 24h Collateral Onboarding & Delta Clearance Attestation: {CLEARANCE_PRICE} flat (optional continuous Aligned badge maintenance: {MONITORING_PRICE}). Canonical block-pinned control-plane audit, GitBook / config reconciliation PR, Base Mainnet EAS Aligned attestation in PactaCommitmentRegistry, and a Curator Diligence Dossier (PDF + JSON) for Morpho, Euler, Aave and Sky forum proposals. Clears open parameter_delta flags or onboards a new asset.",
-        f"- Payment: USDC on Base (`{USDC['Base']}`) or Ethereum (`{USDC['Ethereum']}`) to the Pacta treasury `{a['treasury_admin']}` (same address on both chains).",
+        f"- Payment: USDC on Base (`{USDC['Base']}`) or Ethereum (`{USDC['Ethereum']}`) to the Pacta treasury (EOA) `{a['treasury_admin']}` (same address on both chains).",
         "- Community queue: free, unscheduled (typically 6–8 weeks).",
         f"- Request: {BASE_URL}/request/ (builds a scope brief; opens a pre-filled GitHub intake issue or Gmail compose, or copies the brief).", "",
         "## x402 API (live; free during the launch)",
@@ -970,9 +1139,12 @@ def main():
     B2A.write_all(DOCS, idx, radar, onb)          # proposals.json, llms-full.txt, .well-known/{agent,mcp}.json, SKILL.md
     w("llms.txt", llms(idx, radar))
     groups = protocol_groups(idx)
+    digest = load_forum_digest()                  # data/forum-digest.json (optional; missing = empty digest)
+    w("api/v1/forum-digest.json", forum_digest_json(idx, digest))
     for name, es in groups.items():
-        w(f"protocols/{protocol_slug(name)}/index.html", protocol_page(name, es, idx, radar))
+        w(f"protocols/{protocol_slug(name)}/index.html", protocol_page(name, es, idx, radar, digest))
     w("protocols/index.html", protocols_index_page(idx, groups))
+    w("404.html", not_found_page(idx))           # GitHub Pages serves it for any missing path
     w("robots.txt", ROBOTS_TXT)
     urls = ["/", "/request/", "/llms.txt", "/api/v1/index.json", "/api/v1/radar.json"] + [f"/briefs/{k}/" for k in BRIEFS] + \
         [f"/briefs/{b['slug']}/" for b in load_onboarding()["briefs"]] + (["/api/v1/onboarding.json"] if load_onboarding()["briefs"] else []) + \

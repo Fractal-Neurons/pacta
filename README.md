@@ -24,7 +24,7 @@ One call tells an agent who can upgrade, pause or blacklist a contract before it
 - **Remote MCP (zero install):** `claude mcp add --transport http pacta https://pacta-x402.pacta.workers.dev/mcp`. Cursor and other clients: `{"mcpServers": {"pacta": {"url": "https://pacta-x402.pacta.workers.dev/mcp"}}}`. 5 read-only tools: `pacta_check_preflight`, `pacta_scan_control_plane`, `pacta_scan_timelock_op`, `pacta_scan_proposal_diff`, `pacta_get_live_timelocks`.
 - **One curl:** `curl -s "https://pacta-x402.pacta.workers.dev/v1/check/preflight?chain=ethereum&address=0xA35b1B31Ce002FBF2058D22F30f95D405200A15b"`
 - **OpenAPI 3.1** (ChatGPT Actions, LangChain): [`openapi.json`](https://pacta-x402.pacta.workers.dev/openapi.json) · agent skill [`SKILL.md`](https://pacta.wtf/SKILL.md) · [`llms.txt`](https://pacta.wtf/llms.txt) · [`agent.json`](https://pacta.wtf/.well-known/agent.json) · [`mcp.json`](https://pacta.wtf/.well-known/mcp.json)
-- **stdio from a clone:** `node packages/mcp-server/bin/pacta-mcp.mjs` with `PACTA_X402_URL=https://pacta-x402.pacta.workers.dev` ([`packages/mcp-server`](packages/mcp-server); Docker: `packages/mcp-server/Dockerfile`). The npm package is not published yet.
+- **stdio from a clone:** `node packages/mcp-server/bin/pacta-mcp.mjs` with `PACTA_X402_URL=https://pacta-x402.pacta.workers.dev` ([`packages/mcp-server`](packages/mcp-server); Docker: the root [`Dockerfile`](Dockerfile) or `packages/mcp-server/Dockerfile`). The npm package is not published yet.
 - **Per-protocol safety records:** [`pacta.wtf/protocols/`](https://pacta.wtf/protocols/)
 
 x402 v1 + v2 (USDC on Base) is wired in for metered use later; nothing to set up today. High-volume SLAs and on-chain EAS clearance: [`pacta.wtf/request/`](https://pacta.wtf/request/).
@@ -92,6 +92,12 @@ forge test --no-match-test "testFork" -vv
 # 2. Full suite including block-pinned Ethereum Mainnet archive smoke tests
 ETH_RPC_URL="https://gateway.tenderly.co/public/mainnet" forge test -vv
 ```
+
+---
+
+## Analytics & privacy
+
+pacta.wtf loads one first-party script, [`docs/b.js`](docs/b.js) (under 1.5 KB, no dependencies), that sends anonymous page events (page load, protocol page view, 50% / 90% scroll, copy of the MCP URL / curl / SKILL.md link, primary call-to-action clicks, live-checker submits, 404s) with `navigator.sendBeacon` to Pacta's own gateway, `https://pacta-x402.pacta.workers.dev/v1/telemetry/beacon`. Each event carries only the path, the referrer host, `utm_source` and a protocol slug or checked contract address. No cookie is set and no identifier is stored in localStorage (the only stored value is your Paper / Slate theme choice), no third-party analytics are loaded, and browsers that send Do Not Track (`navigator.doNotTrack = "1"`) send nothing. The gateway keeps aggregate counts only, with no raw IP, User-Agent, full referrer URL or query string. Its numbers are observed client metadata (User-Agent families, MCP `clientInfo`, beacon events): they are not verified humans and not revenue.
 
 ---
 

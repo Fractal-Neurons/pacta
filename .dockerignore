@@ -1,0 +1,4 @@
+# Root Docker builds (Dockerfile) only need the MCP server package.
+*
+!packages/mcp-server/
+packages/mcp-server/test/

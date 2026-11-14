@@ -17,7 +17,7 @@ import {
   validatePaymentReceipt,
   validatePaymentSignatureHeader,
 } from "../src/x402.mjs";
-import { PactaMcpServer, PAID_TOOLS } from "../src/server.mjs";
+import { PactaMcpServer, PAID_TOOLS, TOOL_ALIASES, TOOL_DEFINITIONS, canonicalToolName } from "../src/server.mjs";
 
 const NOW = 1794580000;
 const PAYTO = ALLOWED_PAY_TO[0];
@@ -274,4 +274,22 @@ test("pacta_check_preflight: Worker contract GET /v1/check/preflight?chain=&addr
   assert.ok(!offSrv.getTools().some((t) => t.name === "pacta_check_preflight"));
   await assert.rejects(offSrv.callTool("pacta_check_preflight", { chain: "base", address: FROM }), (e) => e.code === "x402_disabled");
   assert.equal(off.calls.length, 0);
+});
+
+test("tool alias: pacta_get_live_timelocks (the remote MCP name) runs pacta_live_timelocks; it is accepted, not listed; prototype keys are not aliases", async () => {
+  assert.equal(canonicalToolName("pacta_get_live_timelocks"), "pacta_live_timelocks");
+  for (const k of ["constructor", "__proto__", "toString", "pacta_live_timelocks"]) assert.equal(canonicalToolName(k), k);
+  assert.ok(!TOOL_DEFINITIONS.some((t) => t.name in TOOL_ALIASES));
+  const body = { schema: "pacta.live_timelocks.v1", count: 0, operations: [] };
+  const f = recordingFetch(() => mockRes(200, body));
+  const srv = new PactaMcpServer({ x402Url: BASE_URL, fetchImpl: f, nowSeconds: NOW });
+  assert.ok(!srv.getTools().some((t) => t.name === "pacta_get_live_timelocks"));
+  const a = await srv.callTool("pacta_live_timelocks", {});
+  const b = await srv.callTool("pacta_get_live_timelocks", {});
+  assert.deepEqual([a.status, b.status, a.data, b.data], [200, 200, body, body]);
+  assert.deepEqual(f.calls.map((c) => c.url), [`${BASE_URL}/v1/briefs/live-timelocks`, `${BASE_URL}/v1/briefs/live-timelocks`]);
+  const rpc = await srv.handleMessage({ jsonrpc: "2.0", id: 9, method: "tools/call", params: { name: "pacta_get_live_timelocks", arguments: {} } });
+  assert.equal(rpc.result.isError, false);
+  const bad = await srv.handleMessage({ jsonrpc: "2.0", id: 10, method: "tools/call", params: { name: "constructor", arguments: {} } });
+  assert.equal(bad.error.code, -32602);
 });

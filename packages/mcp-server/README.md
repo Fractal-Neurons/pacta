@@ -47,7 +47,7 @@ git clone https://github.com/Fractal-Neurons/pacta.git
 - **Gateway tools, free during the launch; optional `x402` v1 + v2 Base USDC metering** (enabled only when `PACTA_X402_URL` is set; when unset, `tools/list` shows only the static-feed tools and gateway calls return `x402_disabled`). While the gateway is in free-launch mode it answers HTTP 200 with no payment header, and the tool returns that as unpaid data (`paid: false`). The prices are the metered x402 prices:
   - `pacta_check_preflight` → `/v1/check/preflight` (`$0.01` = `10000` atomic; `chain`, `address`, optional `block` = `latest` | decimal | 0x-hex). Verdict (`IMMUTABLE_NO_ADMIN` / `TIMELOCK_PROTECTED` / `ZERO_DELAY_TIMELOCK_RISK` / `MULTISIG_NO_TIMELOCK` / `INSTANT_EOA_ADMIN_RISK` / `UNCLASSIFIED_CONTRACT_CONTROLLER` / `UNDEPLOYED_OR_EOA`), 0–100 risk score, proxy + implementation, controller kind, zero-delay upgradeability, pause / blacklist / upgrade capabilities, pinned block.
   - `pacta_scan_control_plane` → `/v1/scan/control-plane` (`$0.10` = `100000` atomic; `chain`, `address`)
-  - `pacta_live_timelocks` → `/v1/briefs/live-timelocks` (`$0.10` = `100000` atomic)
+  - `pacta_live_timelocks` → `/v1/briefs/live-timelocks` (`$0.10` = `100000` atomic). `pacta_get_live_timelocks`, the name used by the hosted remote MCP, is accepted as an alias in `tools/call`; it is not listed separately.
   - `pacta_scan_timelock_op` → `/v1/scan/timelock-op` (`$0.25` = `250000` atomic; `chain`, `timelock`, `opId`)
   - `pacta_scan_proposal_diff` → `/v1/scan/proposal-diff` (`$0.15` = `150000` atomic; `forum` = `aave` | `euler` | `morpho` | `sky`, `topicId` = the forum topic id). The proposal must be listed in `https://pacta.wtf/api/v1/proposals.json`.
 

@@ -1,5 +1,5 @@
 // Pacta site v3: theme, live countdowns, copy buttons, live pre-flight checker, control-plane inspector, index filter + drawers,
-// request builder. No wallet, no trackers. Data comes from this site's own /api/v1/*.json files; the one exception is the
+// request builder. No wallet, no third-party trackers (the optional first-party beacon, b.js, is separate). Data comes from this site's own /api/v1/*.json files; the one exception is the
 // pre-flight checker, which calls Pacta's own free API (data-api on .pf) only after an explicit submit or preset click.
 // Record text is inserted with textContent (never innerHTML). Every control works without a mail client.
 (function () {
@@ -38,8 +38,20 @@
     var d = Math.floor(sec / 86400), h = Math.floor(sec % 86400 / 3600), m = Math.floor(sec % 3600 / 60);
     return (d ? d + "d " : "") + h + "h " + m + "m";
   }
+  // the hero livebar names the next queued ETA that has not elapsed yet (the static build names the earliest one)
+  function advanceLivebar(now) {
+    var lb = $(".livebar[data-etas]"); if (!lb) return;
+    var next = (lb.getAttribute("data-etas") || "").split(";").map(function (x) {
+      var i = x.indexOf("|"); return { eta: parseInt(x.slice(0, i), 10), p: x.slice(i + 1) };
+    }).filter(function (o) { return o.eta > now && o.p; })[0];
+    var p = $(".lb-p", lb), cd = $(".countdown", lb), wrap = $(".lb-next", lb);
+    if (!p || !cd || !wrap) return;
+    if (next) { p.textContent = next.p; cd.setAttribute("data-eta", String(next.eta)); }
+    else { wrap.textContent = "Next: every queued operation is past its ETA; check the Radar for execution state"; }
+  }
   function tick() {
     var now = Math.floor(Date.now() / 1000);
+    advanceLivebar(now);
     $$("[data-eta]").forEach(function (n) {
       var eta = parseInt(n.getAttribute("data-eta"), 10);
       if (!eta) return;
@@ -392,15 +404,22 @@
     if (!box || !form || !out) return;
     var api = box.getAttribute("data-api") || "", chainSel = $('select[name="chain"]', form), addr = $('input[name="address"]', form);
     if (!chainSel || !addr || !/^https:\/\//.test(api)) return;
-    var seq = 0;
+    var seq = 0, ctl = null;
     function msg(t) { out.textContent = ""; out.appendChild(el("p", { "class": "note", text: t })); }
     function run() {
+      // Every submit (valid or not) supersedes the previous one: bump seq and abort any in-flight request BEFORE the
+      // input checks, so a stale response can never overwrite a later validation message.
+      var my = ++seq;
+      if (ctl) { try { ctl.abort(); } catch (e) { /* already settled */ } ctl = null; }
       var a = String(addr.value || "").trim(), ch = chainSel.value === "base" ? "base" : "ethereum";
       if (!ADDR_RE.test(a)) { msg("Enter a 0x-prefixed, 40-hex-character contract address."); return; }
       if (typeof fetch !== "function") { msg("This browser cannot call the API; use the curl command above."); return; }
-      var my = ++seq;
+      // First-party beacon hook (docs/b.js); optional: the checker works the same without it.
+      if (typeof window.pactaBeacon === "function") { try { window.pactaBeacon("live_checker_submit", ch + ":" + a.toLowerCase()); } catch (e) { /* ignore */ } }
+      var opts = { headers: { Accept: "application/json" } };
+      if (typeof AbortController === "function") { ctl = new AbortController(); opts.signal = ctl.signal; }
       msg("Checking " + short(a, 6, 4) + " on " + ch + " at the latest block…");
-      fetch(api + "/v1/check/preflight?chain=" + ch + "&address=" + a, { headers: { Accept: "application/json" } })
+      fetch(api + "/v1/check/preflight?chain=" + ch + "&address=" + a, opts)
         .then(function (res) { return res.json().then(function (b) { return { status: res.status, body: b }; }); })
         .then(function (x) {
           if (my !== seq) return;

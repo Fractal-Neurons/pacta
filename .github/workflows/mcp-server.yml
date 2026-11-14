@@ -1,4 +1,4 @@
-name: Pacta MCP Server CI & Registry Release
+name: Pacta MCP Server CI & npm Release
 
 on:
   push:
@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
     inputs:
       publish_npm_and_mcp_registry:
-        description: "Publish @pacta/mcp-server to npm and io.github.fractal-neurons/pacta to registry.modelcontextprotocol.io"
+        description: "Publish @pacta/mcp-server to npm (the MCP Registry entry is published by publish-mcp.yml)"
         required: true
         type: boolean
         default: false
@@ -38,7 +38,7 @@ jobs:
         run: node --test ./test/server.test.mjs
 
   publish-mcp-server:
-    name: Publish to npm & MCP Registry (Manual OIDC Release)
+    name: Publish to npm (manual release)
     needs: test-mcp-server
     if: github.event_name == 'workflow_dispatch' && inputs.publish_npm_and_mcp_registry == true && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
@@ -61,9 +61,5 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npm publish --provenance --access public
 
-      - name: Publish io.github.fractal-neurons/pacta to registry.modelcontextprotocol.io
-        working-directory: packages/mcp-server
-        run: |
-          curl -fsSL "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" | tar xz mcp-publisher
-          ./mcp-publisher login github-oidc
-          ./mcp-publisher publish
+      # The MCP Registry entry (io.github.fractal-neurons/pacta) is published only by publish-mcp.yml (pinned,
+      # checksum-verified mcp-publisher, remotes-only manifest), so the two workflows never race on a version.

@@ -175,12 +175,14 @@ def dom_tree(text):
     return next(n for n in t.root[2] if isinstance(n, list) and n[0] == "html")
 
 
-def app_behaviour(appjs, request_html, index_html, row_id):
-    """Run docs/app.js under node against a synthetic DOM of the real pages. No network, no listener, no files."""
+def app_behaviour(appjs, request_html, index_html, row_id, beacon="", protocol_html="", protocol_slug="", notfound_html=""):
+    """Run docs/app.js (and the docs/b.js beacon) under node against a synthetic DOM of the real pages. No network, no listener, no files."""
     node = shutil.which("node")
     if not node:
         return {"harness_error": "node not found"}
-    payload = json.dumps({"app": appjs, "request": dom_tree(request_html), "index": dom_tree(index_html), "rowId": row_id})
+    payload = json.dumps({"app": appjs, "request": dom_tree(request_html), "index": dom_tree(index_html), "rowId": row_id, "beacon": beacon,
+                          "protocol": dom_tree(protocol_html) if protocol_html else None, "protocolSlug": protocol_slug,
+                          "notfound": dom_tree(notfound_html) if notfound_html else None})
     out = subprocess.run([node, os.path.join(ROOT, "tools", "app_harness.js")], input=payload, capture_output=True, text=True, timeout=120)
     try:
         return json.loads(out.stdout)
@@ -418,7 +420,10 @@ def main():
                 continue
             path, _, frag = h.partition("#")
             path = path.split("?")[0]
-            target = os.path.normpath(os.path.join(os.path.dirname(rel), path)) if path else rel
+            if path.startswith("/"):                      # root-relative (404.html): resolve against docs/
+                target = os.path.normpath(path.lstrip("/")) if path.strip("/") else ""
+            else:
+                target = os.path.normpath(os.path.join(os.path.dirname(rel), path)) if path else rel
             if path.endswith("/") or (path and os.path.isdir(os.path.join(DOCS, target))):
                 target = os.path.join(target, "index.html")
             if not os.path.exists(os.path.join(DOCS, target)):
@@ -439,14 +444,17 @@ def main():
     check("briefs share the site chrome and stylesheet (no inline styles)", not chrome, str(chrome))
 
     # behaviour: run app.js against a synthetic DOM of the real /request/ and homepage markup
-    res = app_behaviour(appjs, pages.get(os.path.join("request", "index.html"), ""), page, entries[0]["id"])
+    beacon_js = read("docs/b.js") if os.path.exists(os.path.join(DOCS, "b.js")) else ""
+    res = app_behaviour(appjs, pages.get(os.path.join("request", "index.html"), ""), page, entries[0]["id"], beacon=beacon_js,
+                        protocol_html=pages.get(os.path.join("protocols", "aave-v3-gho", "index.html"), ""), protocol_slug="aave-v3-gho",
+                        notfound_html=pages.get("404.html", ""))
     expected = ["default_is_clearance", "clearance_pay_panel_shown", "clearance_tx_field_shown", "clearance_github_href",
                 "clearance_github_tier_exact", "clearance_brief_has_price_and_treasury", "tx_valid_in_brief", "tx_valid_in_github",
                 "forum_in_brief_and_github", "tx_valid_not_flagged", "tx_invalid_flagged", "tx_invalid_not_in_github",
                 "community_pay_panel_hidden", "community_tx_field_hidden", "community_github_tier_exact", "community_no_tx_anywhere",
                 "community_click_not_prevented", "clearance_restores_pay_panel", "prefill_selects_community",
                 "prefill_unknown_tier_keeps_clearance", "homepage_plan_button_preselects",
-                "hash_ok #r-[unclosed", "hash_ok #r-x\\", 'hash_ok #r-"]', "hash_ok #r-%E0%A4%A", "valid_hash_opens_drawer",
+                "hash_ok #r-[unclosed", "hash_ok #r-x\\", 'hash_ok #r-"]', "hash_ok #r-%E0%A4%A", "valid_hash_opens_drawer", "livebar_skips_elapsed_etas",
                 "pf_present", "pf_no_fetch_on_load", "pf_preset_fetches_once", "pf_renders_verdict", "pf_text_only", "pf_cast_commands",
                 "pf_invalid_address_no_fetch", "pf_http_error_reported"]
     failed_b = [k for k in expected if res.get(k) is not True] + (["harness_error: " + res["harness_error"][:200]] if "harness_error" in res else [])
@@ -613,7 +621,8 @@ def main():
         [os.path.relpath(f, ROOT) for f in glob.glob(os.path.join(DOCS, "**", "*"), recursive=True)
          if os.path.isfile(f) and f.endswith((".html", ".txt", ".json", ".md", ".js", ".xml"))]
         + ["README.md", "glama.json", "smithery.yaml", "packages/mcp-server/README.md", "packages/mcp-server/SKILL.md",
-           "packages/mcp-server/server.json", "packages/mcp-server/server.remote.json", "packages/mcp-server/Dockerfile"]))
+           "packages/mcp-server/server.json", "packages/mcp-server/server.remote.json", "packages/mcp-server/Dockerfile", "Dockerfile",
+           ".github/workflows/publish-mcp.yml"]))
     dead = [f for f in npx_scope if DEAD_NPX.search(read(f))]
     primary = {"docs/index.html": home, "docs/request/index.html": req_page, "docs/SKILL.md": read("docs/SKILL.md"),
                "docs/.well-known/mcp.json": read("docs/.well-known/mcp.json"), "docs/llms.txt": read("docs/llms.txt"),
@@ -694,6 +703,175 @@ def main():
     }
     check("remote MCP: 5 tools (pacta_check_preflight first) on mcp.json, agent.json (free_launch pricing), SKILL.md, llms.txt, llms-full.txt; @pacta/mcp-server ships pacta_check_preflight; SKILL.md copies byte-identical",
           all(surfaces5.values()), str({k: v for k, v in surfaces5.items() if not v}))
+
+    # ---- Phase C: first-party beacon, 404, governance forum digest, MCP Registry workflow, root Dockerfile ----
+    BEACON_URL = API_ + "/v1/telemetry/beacon"
+    bjs_raw = read("docs/b.js", "rb") if os.path.exists(os.path.join(DOCS, "b.js")) else b""
+    bjs = bjs_raw.decode()
+    b_urls = set(re.findall(r"https?://[^\s\"'`)]+", bjs))
+    b_events = {"page_load", "scroll_50", "scroll_90", "copy_mcp_url", "copy_curl", "copy_skill_md", "cta_click", "protocol_view", "not_found_404"}
+    beacon_static = {
+        "size < 1500 bytes": 0 < len(bjs_raw) < 1500,
+        "only the first-party endpoint": b_urls == {BEACON_URL},
+        "sendBeacon(url, string) + keepalive no-cors fallback": "sendBeacon(U,b)" in bjs.replace(" ", "") and "JSON.stringify" in bjs
+                                                               and re.search(r'keepalive:\s*(!0|true)', bjs) is not None and '"no-cors"' in bjs,
+        "Do Not Track gate": re.search(r'\.doNotTrack\s*!=\s*"1"', bjs) is not None,
+        "every contract event": all(f'"{e}"' in bjs for e in b_events) and "live_checker_submit" in appjs,
+        "no cookie / storage / fingerprint APIs": not re.search(r"cookie|localStorage|sessionStorage|indexedDB|userAgent|canvas|crypto|Math\.random|Date\.now",
+                                                                re.sub(r"/\*.*?\*/", "", bjs, flags=re.S)),
+    }
+    check(f"beacon docs/b.js ({len(bjs_raw)} bytes): < 1.5 KB, posts only to {BEACON_URL} via sendBeacon (string body; fetch keepalive no-cors fallback), DNT gate, all 9 page events (+ live_checker_submit from app.js), no cookie/storage/fingerprint APIs",
+          all(beacon_static.values()), str({k: v for k, v in beacon_static.items() if not v}))
+    script_re = re.compile(r'<script\b([^>]*)>(.*?)</script>', re.S)
+    no_beacon, third, bad_inline = [], [], []
+    for rel, text in sorted(pages.items()):
+        bpos_ = text.find("<body")
+        srcs = [re.search(r'src="([^"]+)"', a).group(1) for a, _ in script_re.findall(text) if 'src="' in a]
+        b_src = [x for x in srcs if x.split("/")[-1] == "b.js"]
+        ok_b = len(b_src) == 1 and f'<script src="{b_src[0]}" defer></script>' in text[:bpos_] and \
+            os.path.normpath(b_src[0].lstrip("/") if b_src[0].startswith("/") else os.path.join(os.path.dirname(rel), b_src[0])) == "b.js"
+        if not ok_b:
+            no_beacon.append(rel)
+        for tag_, attr_ in re.findall(r'<(script|link|img|iframe|source|video|audio)\b([^>]*)>', text):
+            for u in re.findall(r'\b(?:src|href)="([^"]+)"', attr_):
+                if (tag_ != "link" or re.search(r'rel="(?:stylesheet|icon|preload|modulepreload|prefetch)"', attr_)) and \
+                        (u.startswith("//") or (re.match(r"https?://", u) and urllib_host(u) not in ("pacta.wtf",))):
+                    third.append(f"{rel}: <{tag_}> {u}")
+        for attrs_, body_ in script_re.findall(text):
+            if "src=" in attrs_ or "application/ld+json" in attrs_:
+                continue
+            if re.search(r"fetch\(\s*[\"'`](?:https?:)?//|document\.cookie|sessionStorage|indexedDB|sendBeacon|XMLHttpRequest|new Image\b|WebSocket", body_) or \
+                    set(re.findall(r'localStorage\.(?:getItem|setItem)\("([^"]+)"', body_)) - {"pacta-theme"}:
+                bad_inline.append(rel)
+    check(f"beacon loaded (defer, in <head>) on every HTML page incl. 404.html ({len(pages)} pages); no third-party script/style/image hosts; inline scripts make no requests",
+          not no_beacon and not third and not bad_inline and "404.html" in pages, f"missing beacon {no_beacon[:4]}; third-party {third[:4]}; inline {bad_inline[:4]}")
+    page_js = {"docs/app.js": appjs, "docs/b.js": bjs}
+    ls_keys = set(re.findall(r'localStorage\.(?:getItem|setItem)\("([^"]+)"', appjs))
+    js_bad = sorted(f for f, t in page_js.items() if re.search(r"document\.cookie|sessionStorage|indexedDB|XMLHttpRequest|new Image\b|WebSocket|EventSource|importScripts|createElement\(\s*\"script", t))
+    data_api = set(re.findall(r'data-api="([^"]+)"', "".join(pages.values())))
+    app_fetch = len(re.findall(r"\bfetch\(", appjs))
+    check("no cookies, no storage identifiers, no third-party requests in page scripts: localStorage only for the theme preference; app.js fetches only this site's JSON and the first-party API (data-api)",
+          not js_bad and ls_keys == {"pacta-theme"} and appjs.count("localStorage") == 2 and data_api <= {API_}
+          and app_fetch == 2 and 'fetch(document.documentElement.getAttribute("data-api") || "api/v1/index.json")' in appjs
+          and 'fetch(api + "/v1/check/preflight?chain=" + ch + "&address=" + a, opts)' in appjs,
+          f"bad {js_bad}; localStorage keys {sorted(ls_keys)}; data-api {sorted(data_api)}; fetch {app_fetch}")
+    b_keys = ["b_page_load_payload", "b_hook_exposed", "b_copy_and_cta_events", "b_scroll_once_each", "b_live_checker_submit", "b_invalid_submit_not_reported",
+              "b_protocol_view", "b_protocol_copy_curl_and_cta", "b_not_found_404", "b_not_found_path_sanitised", "b_not_found_copy_mcp",
+              "b_dnt_sends_nothing", "b_non_https_sends_nothing", "b_fetch_fallback", "b_no_cookie_access"]
+    failed_bk = [k for k in b_keys if res.get(k) is not True] + (["harness_error: " + res["harness_error"][:200]] if "harness_error" in res else [])
+    check("beacon behaviour (node harness, mocked navigator.sendBeacon): page_load {r, u}, same-site r=self, protocol_view t=slug, copy_mcp_url / copy_curl / copy_skill_md / cta_click hooks, scroll_50/90 once, live_checker_submit t=chain:address, 404 path sanitised, DNT and http send nothing, fetch keepalive fallback",
+          not failed_bk, f"{len(b_keys) - len([k for k in b_keys if res.get(k) is not True])}/{len(b_keys)}; failed {failed_bk[:4]}")
+    f1_keys = ["pf_f1_stale_200_keeps_input_error", "pf_f1_previous_request_aborted", "pf_f1_no_abortcontroller_still_safe"]
+    run_src = appjs[appjs.find("function run()"):appjs.find("form.addEventListener(\"submit\"", appjs.find("function run()"))]
+    f1_static = run_src.find("++seq") != -1 and run_src.find("++seq") < run_src.find("ADDR_RE.test") and run_src.find(".abort()") < run_src.find("ADDR_RE.test")
+    check("F1 regression: a pending valid pre-flight is superseded (seq bumped + AbortController.abort before validation); an invalid submit's error is never overwritten by the stale HTTP 200",
+          f1_static and all(res.get(k) is True for k in f1_keys), f"static {f1_static}; {[k for k in f1_keys if res.get(k) is not True]}")
+
+    nf = pages.get("404.html", "")
+    nf_raw = nf.encode()
+    nf_h, nf_b = nf_raw.find(b"<head>"), nf_raw.find(b"<body")
+    nf_tw = nf_raw.find(b">", nf_raw.find(b'name="twitter:image"')) + 1
+    nf_ok = {
+        "head budget": bool(nf) and 0 <= nf_b < 2500 and 0 < nf_tw - nf_h <= 1200 and "<style" not in nf and "data:image/" not in nf,
+        "noindex + data-nf": '<meta name="robots" content="noindex">' in nf[:nf_b] and re.search(r'<main id="main"[^>]* data-nf>', nf) is not None,
+        "root-relative navigation": all(f'href="{h}"' in nf for h in ("/protocols/", "/#preflight", "/request/", "/styles.css", "/llms.txt")) and 'src="/b.js"' in nf
+                                    and not re.search(r'(?:href|src)="(?!/|https://|#)', nf),
+        "remote MCP URL + copy": f'data-copy="{MCP_}"' in nf and f"claude mcp add --transport http pacta {MCP_}" in nf,
+        "deterministic build": nf == BS.not_found_page(idx_),
+        "not in sitemap": "/404.html" not in sm,
+    }
+    check("404.html: same head rules (<body> < 2500 B, OG/X in 1.2 KB, no inline style), noindex, root-relative links to /protocols/ and /#preflight, remote MCP URL, fires not_found_404 (harness), deterministic",
+          all(nf_ok.values()) and res.get("b_not_found_404") is True, str({k: v for k, v in nf_ok.items() if not v}))
+
+    # forum digest (CONTRACTS §3, site side)
+    fd_path = os.path.join(DOCS, "api", "v1", "forum-digest.json")
+    fd_raw = read("docs/api/v1/forum-digest.json") if os.path.exists(fd_path) else ""
+    try:
+        fd = json.loads(fd_raw)
+    except ValueError:
+        fd = {}
+    src_digest = BS.load_forum_digest()
+    ai = fd.get("addressIndex", {})
+    want_ai = {}
+    for e in sorted(idx_["entries"], key=lambda e: e["id"]):
+        want_ai.setdefault("ethereum:" + e["target_contract"].lower(), BS.protocol_family(e["protocol"]))
+    fd_ok = {
+        "schema": fd.get("schema") == "pacta.forum_digest.v1" and fd.get("readOnly") is True and isinstance(fd.get("forums"), dict)
+                  and isinstance(fd.get("discussions"), list) and list(fd) == ["schema", "generatedAt", "readOnly", "forums", "discussions", "addressIndex"],
+        "addressIndex": ai == want_ai and list(ai) == sorted(ai) and all(re.fullmatch(r"(ethereum|base):0x[0-9a-f]{40}", k) for k in ai)
+                        and all(re.fullmatch(r"[a-z0-9]+", v) for v in ai.values()),
+        "families": BS.protocol_family("Aave V3 / GHO") == "aave" and BS.protocol_family("Morpho Blue Core") == "morpho"
+                    and BS.protocol_family("MetaMorpho (Re7 WETH vs. Re7 USDT)") == "morpho" and BS.protocol_family("Spark / Sky") == "sky"
+                    and BS.protocol_family("Lido (stETH / Dual Governance)") == "lido" and BS.protocol_family("Compound V3 (Comet)") == "compound",
+        "deterministic rebuild": fd_raw == BS.forum_digest_json(idx_, src_digest) == BS.forum_digest_json(idx_, json.loads(json.dumps(src_digest))),
+        "no wall clock": "datetime" not in BS.forum_digest_json.__code__.co_names and "now" not in BS.forum_digest_json.__code__.co_names,
+    }
+    gov_pages = sorted(r for r, t in pages.items() if "Active governance discussions" in t)
+    expect_gov = sorted(os.path.join("protocols", BS.protocol_slug(n), "index.html") for n in groups if BS.governance_discussions(n, src_digest))
+    check(f"forum-digest.json (pacta.forum_digest.v1): readOnly, deterministic addressIndex for all {len(want_ai)} index targets (chain:lowercase address -> family); governance sections only where the family has discussions",
+          all(fd_ok.values()) and gov_pages == expect_gov, f"{ {k: v for k, v in fd_ok.items() if not v} }; rendered {gov_pages[:3]} expected {expect_gov[:3]}")
+    # synthetic digest, in memory only (clearly fake topics on the real forum hosts; never written to data/ or docs/)
+    syn = {"schema": "pacta.forum_digest.v1", "generatedAt": "2026-01-01T00:00:00Z", "readOnly": True,
+           "forums": {"governance.aave.com": {"protocol": "aave", "lastPolledAt": "2026-01-01T00:00:00Z"}},
+           "discussions": [{"forum": "governance.aave.com", "protocol": "aave", "topicId": 900000 + i, "title": f"SYNTHETIC verifier topic {i}" + (" <b>x</b>" if i == 6 else ""),
+                            "url": f"https://governance.aave.com/t/synthetic-verifier-topic/{900000 + i}", "createdAt": "2026-01-01T00:00:00Z",
+                            "lastPostedAt": f"2026-01-{10 + i:02d}T00:00:00Z", "postsCount": i, "tags": ["synthetic"], "riskTerms": ["cap"] if i % 2 else []}
+                           for i in range(1, 8)]
+           + [{"forum": "governance.aave.com", "protocol": "aave", "topicId": 999999, "title": "SYNTHETIC wrong host", "url": "https://evil.example.invalid/t/1",
+               "lastPostedAt": "2026-02-01T00:00:00Z", "postsCount": 1},
+              {"forum": "forum.euler.finance", "protocol": "euler", "topicId": 999998, "title": "SYNTHETIC euler topic",
+               "url": "https://forum.euler.finance/t/synthetic/999998", "lastPostedAt": "2026-02-02T00:00:00Z", "postsCount": 2}]}
+    aave_name = next(n for n in groups if BS.protocol_family(n) == "aave")
+    morpho_name = next(n for n in groups if BS.protocol_family(n) == "morpho")
+    aave_es = groups[aave_name]
+    syn_page = BS.protocol_page(aave_name, aave_es, idx_, radar_, syn)
+    sec = re.search(r'<section class="memo-sec" id="governance">.*?</section>', syn_page, re.S)
+    titles = re.findall(r"SYNTHETIC verifier topic (\d)", sec.group(0)) if sec else []
+    empty = BS.empty_forum_digest()
+    syn_doc = BS.forum_digest_doc(idx_, syn)
+    syn_ok = {
+        "rendered, max 5, newest first": titles == ["7", "6", "5", "4", "3"],
+        "escaped, https on the forum host only": bool(sec) and "&lt;b&gt;x&lt;/b&gt;" in sec.group(0) and "<b>x</b>" not in sec.group(0)
+                                                 and "evil.example.invalid" not in syn_page and 'rel="noopener nofollow"' in sec.group(0),
+        "other families unaffected": "Active governance discussions" not in BS.protocol_page(morpho_name, groups[morpho_name], idx_, radar_, syn),
+        "empty digest renders nothing": BS.governance_section(aave_name, empty) == "" and "Active governance discussions" not in BS.protocol_page(aave_name, aave_es, idx_, radar_, empty),
+        "normalised doc": [d["topicId"] for d in syn_doc["discussions"]] == [999998] + list(range(900001, 900008)) and syn_doc["addressIndex"] == want_ai
+                          and BS.forum_digest_json(idx_, syn) == BS.forum_digest_json(idx_, syn),
+    }
+    check("governance discussions (synthetic in-memory digest via the generator): <= 5 newest first on the matching family page, HTML-escaped, foreign-host URLs dropped, nothing for other families or an empty digest",
+          all(syn_ok.values()), str({k: v for k, v in syn_ok.items() if not v}))
+
+    wf_path = os.path.join(ROOT, ".github", "workflows", "publish-mcp.yml")
+    wf = read(".github/workflows/publish-mcp.yml") if os.path.exists(wf_path) else ""
+    wf_ok = {
+        "triggers": re.search(r"^on:\n  push:\n    branches: \[\"main\"\]", wf, re.M) is not None and re.search(r"^  workflow_dispatch:", wf, re.M) is not None,
+        "permissions": re.search(r"^permissions:\n  id-token: write\n  contents: read$", wf, re.M) is not None and "write-all" not in wf
+                       and len(re.findall(r"^\s*[\w-]+:\s*write\b", wf, re.M)) == 1,
+        "pinned + verified mcp-publisher": re.search(r'MCP_PUBLISHER_VERSION: "v\d+\.\d+\.\d+"', wf) is not None and re.search(r'MCP_PUBLISHER_SHA256: "[0-9a-f]{64}"', wf) is not None
+                                           and "sha256sum -c" in wf and "checksums.txt" in wf and "releases/latest" not in wf,
+        "oidc login + remotes-only publish": "mcp-publisher login github-oidc" in wf and "mcp-publisher publish" in wf
+                                             and re.search(r'cp packages/mcp-server/server\.remote\.json "\$ws/server\.json"', wf) is not None and 'ws="$RUNNER_TEMP/' in wf
+                                             and "io.github.fractal-neurons/pacta" in wf.split("\nname:", 1)[0],
+        "no secrets / PATs": not re.search(r"secrets\.|GITHUB_TOKEN|_PAT\b|NPM_TOKEN|login github\b(?!-oidc)|--token", wf),
+    }
+    check(".github/workflows/publish-mcp.yml: push to main + workflow_dispatch, id-token: write + contents: read only, pinned sha256-verified mcp-publisher, github-oidc login, publishes server.remote.json (staged in the runner temp dir), no secrets",
+          all(wf_ok.values()), str({k: v for k, v in wf_ok.items() if not v}))
+    df = read("Dockerfile") if os.path.exists(os.path.join(ROOT, "Dockerfile")) else ""
+    copies = re.findall(r"^COPY\s+(.+)$", df, re.M)
+    df_ok = {
+        "base": re.search(r"^FROM node:22-alpine$", df, re.M) is not None and len(re.findall(r"^FROM ", df, re.M)) == 1,
+        "copies only packages/mcp-server": bool(copies) and all(all(x.startswith("packages/mcp-server/") for x in c.split()[:-1]) for c in copies)
+                                            and {"packages/mcp-server/bin", "packages/mcp-server/src"} <= {x for c in copies for x in c.split()[:-1]},
+        "gateway env": f"ENV PACTA_X402_URL={API_}" in df,
+        "stdio entrypoint, no EXPOSE": 'ENTRYPOINT ["node", "/app/bin/pacta-mcp.mjs"]' in df and "EXPOSE" not in df and "RUN npm" not in df,
+        "no Smithery": "smithery" not in df.lower() and "smithery" not in wf.lower() and "smithery" not in nf.lower(),
+    }
+    check("root Dockerfile (glama.ai): node:22-alpine, copies only packages/mcp-server, PACTA_X402_URL = live gateway, stdio ENTRYPOINT node /app/bin/pacta-mcp.mjs, no EXPOSE",
+          all(df_ok.values()), str({k: v for k, v in df_ok.items() if not v}))
+    readme = read("README.md")
+    priv = readme[readme.find("## Analytics & privacy"):][:1500] if "## Analytics & privacy" in readme else ""
+    check("README: Analytics & privacy note (first-party beacon, no cookies, Do Not Track, observed client metadata only)",
+          bool(priv) and all(t in priv for t in ("first-party", "cookie", "Do Not Track", "observed client metadata", "/v1/telemetry/beacon")))
 
     # private identifiers must never be published: compared by SHA-256 of lowercased tokens, so the
     # repository itself never contains the literal identifiers this check guards against

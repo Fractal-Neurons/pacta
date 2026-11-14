@@ -257,6 +257,10 @@ export const PAID_TOOLS = Object.freeze([
 ]);
 
 export const TOOL_DEFINITIONS = Object.freeze([...FREE_TOOLS, ...PAID_TOOLS]);
+/** Accepted alternative tool names (the hosted remote MCP calls this tool pacta_get_live_timelocks); not listed. */
+export const TOOL_ALIASES = Object.freeze(Object.assign(Object.create(null), { pacta_get_live_timelocks: "pacta_live_timelocks" }));
+export const canonicalToolName = (name) =>
+  typeof name === "string" && Object.prototype.hasOwnProperty.call(TOOL_ALIASES, name) ? TOOL_ALIASES[name] : name;
 
 const rpcResult = (id, result) => ({ jsonrpc: "2.0", id, result });
 const rpcError = (id, code, message) => ({ jsonrpc: "2.0", id, error: { code, message } });
@@ -412,6 +416,7 @@ export class PactaMcpServer {
   }
 
   async callTool(name, args = {}) {
+    name = canonicalToolName(name);
     if (!args || typeof args !== "object" || Array.isArray(args)) {
       throw Object.assign(new Error("Arguments must be an object."), { code: -32602 });
     }
@@ -625,7 +630,7 @@ export class PactaMcpServer {
       if (msg.method === "ping") return rpcResult(msg.id, {});
       if (msg.method === "tools/list") return rpcResult(msg.id, { tools: this.getTools() });
       if (msg.method === "tools/call") {
-        const toolName = msg.params?.name;
+        const toolName = canonicalToolName(msg.params?.name);
         if (!toolName || !TOOL_DEFINITIONS.some((t) => t.name === toolName)) {
           return rpcError(msg.id, -32602, `Unknown tool: ${toolName ?? ""}`);
         }
