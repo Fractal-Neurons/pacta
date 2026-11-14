@@ -387,25 +387,34 @@ async function beaconScenario() {
   // (Phase C.1): only /protocols/<safe-slug>/ keeps its slug (and t); anything else is "/404"; IP / local referrers are dropped
   if (input.notfound) {
     p = run(input.notfound, input.app, { path: "/protocols/pendle-finance-v2", search: "?utm_source=newsletter", referrer: "https://github.com/x/y?z=1", beacon: B });
-    res.b_not_found_404 = same(p.events(), [{ v: 1, e: "not_found_404", p: "/protocols/pendle-finance-v2/", r: "github.com", u: "newsletter", t: "pendle-finance-v2" }]);
+    res.b_not_found_404 = same(p.events(), [{ v: 1, e: "not_found_404", p: "/404", r: "github.com", u: "newsletter" }]);   // Phase C.2: every 404 is "/404", never a slug
     const spec = run(input.notfound, input.app, { path: "/reset/alice%40example.org/private-token", referrer: "https://192.0.2.44/secret", beacon: B });
     const spec2 = run(input.notfound, input.app, { path: "/protocols/pendle-finance-v2", referrer: "https://github.com/some/repo", beacon: B });
     res.b_c1_spec_payloads = same(spec.events(), [{ v: 1, e: "not_found_404", p: "/404" }])
-      && same(spec2.events(), [{ v: 1, e: "not_found_404", p: "/protocols/pendle-finance-v2/", t: "pendle-finance-v2", r: "github.com" }]);
+      && same(spec2.events(), [{ v: 1, e: "not_found_404", p: "/404", r: "github.com" }])
+      && same(run(input.notfound, input.app, { path: "/protocols/alice-jones", beacon: B }).events(), [{ v: 1, e: "not_found_404", p: "/404" }]);   // Codex F1 probe
     const redact = [["/protocols/no-such-protocol/extra", "/404"], ["/protocols/alice%40example.org", "/404"], ["/protocols/reset-token", "/404"],
       ["/users/john/secret", "/404"], ["/briefs/etherfi-op-0x244e/", "/404"], ["/a@b/" + "x".repeat(200), "/404"], ["/protocols/Aave", "/404"]];
     res.b_not_found_path_sanitised = redact.every(([path, want]) => { const e = run(input.notfound, input.app, { path, beacon: B }).events(); return same(e, [{ v: 1, e: "not_found_404", p: want }]); });
     const ref = (r) => run(input.index, input.app, { path: "/", referrer: r, beacon: B }).events()[0];
     res.b_c1_referrers_redacted = ["https://192.0.2.44/", "https://10.0.0.1:8080/x", "https://[::1]/", "https://localhost/", "https://box.local/",
-      "https://printer.lan/", "https://192-0-2-44.nip.io/", "https://c0a8002c.sslip.io/", "https://2130706433/", "https://0x7f000001/", "http://intranet/"]
+      "https://printer.lan/", "https://192-0-2-44.nip.io/", "https://c0a8002c.sslip.io/", "https://2130706433/", "https://0x7f000001/", "http://intranet/",
+      "https://box.corp/x", "https://box.intranet/x"]
       .every((r) => !("r" in ref(r))) && ref("https://news.ycombinator.com/item?id=1").r === "news.ycombinator.com";
     const utm = (q) => run(input.index, input.app, { path: "/", search: q, beacon: B }).events()[0];
     res.b_c1_utm_redacted = ["?utm_source=192.0.2.44", "?utm_source=alice.bob", "?utm_source=user-123456", "?utm_source=reset-token", "?utm_source=1abc",
       "?utm_source=" + "x".repeat(25), "?utm_source=alice%40example.org"].every((q) => !("u" in utm(q))) && utm("?utm_source=Twitter").u === "twitter";
-    const pages = (input.protocolSlugs || []).map((sl) => run(input.notfound, input.app, { path: "/protocols/" + sl + "/", beacon: B }).events()[0]);
-    res.b_c1_all_protocol_slugs_kept = pages.length >= 33 && pages.every((e, i) => e.p === "/protocols/" + input.protocolSlugs[i] + "/" && e.t === input.protocolSlugs[i]);
-    const views = [["/request", "/request/"], ["/protocols", "/protocols/"], ["/briefs/etherfi-op-0x244e/", "/briefs/etherfi-op-0x244e/"],
-      ["/protocols/aave-v3-gho/index.html", "/protocols/aave-v3-gho/"], ["/demos/swapio-x402/", "/other"], ["/reset/alice%40example.org/x", "/other"]];
+    // a slug is taken only from a real page: the path must equal the page's <link rel="canonical"> (Phase C.2)
+    const canon = "https://pacta.wtf/protocols/" + input.protocolSlug + "/";
+    const pageFor = (url) => JSON.parse(JSON.stringify(input.protocol).split(canon).join(url));
+    const pages = (input.protocolSlugs || []).map((sl) => run(pageFor("https://pacta.wtf/protocols/" + sl + "/"), input.app, { path: "/protocols/" + sl + "/", beacon: B }).events()[0]);
+    res.b_c1_all_protocol_slugs_kept = pages.length === 33 && pages.every((e, i) => e.p === "/protocols/" + input.protocolSlugs[i] + "/" && e.t === input.protocolSlugs[i]);
+    const mismatch = run(input.protocol, input.app, { path: "/protocols/alice-jones/", beacon: B }).events()[0];
+    const brief = run(pageFor("https://pacta.wtf/briefs/etherfi-op-0x244e/"), input.app, { path: "/briefs/etherfi-op-0x244e/", beacon: B }).events()[0];
+    res.b_c2_slug_only_from_canonical = same(mismatch, { v: 1, e: "page_load", p: "/other" }) && same(brief, { v: 1, e: "page_load", p: "/briefs/etherfi-op-0x244e/" })
+      && same(run(input.protocol, input.app, { path: "/protocols/" + input.protocolSlug + "/index.html", beacon: B }).events()[0].p, "/protocols/" + input.protocolSlug + "/");
+    const views = [["/request", "/request/"], ["/protocols", "/protocols/"], ["/briefs/etherfi-op-0x244e/", "/other"],
+      ["/protocols/aave-v3-gho/", "/other"], ["/demos/swapio-x402/", "/other"], ["/reset/alice%40example.org/x", "/other"]];   // index page: canonical is "/"
     res.b_c1_page_paths = views.every(([path, want]) => run(input.index, input.app, { path, beacon: B }).events()[0].p === want);
     const mcp = p.document.querySelectorAll("button[data-copy]").find(b => /\/mcp$/.test(b.getAttribute("data-copy")));
     if (mcp) click(mcp);
