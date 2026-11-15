@@ -1,0 +1,67 @@
+{
+  "slot": "1",
+  "issue": "https://github.com/Fractal-Neurons/pacta/issues/21",
+  "chainId": "1",
+  "contractAddress": "0x101E583EE2F83a8BD0bBa202938bbadC6b8795c0",
+  "protocol": "Upshift",
+  "tvlReference": "https://defillama.com/protocol/upshift",
+  "pactaSlug": null,
+  "blockNumber": "26422499",
+  "blockHash": "0xb4652bdfb9a0d83cb08d05e0b34ac0cdb7543ac47fc1cba1b0ecfff83d26f6ba",
+  "priorPin": null,
+  "castCommands": [
+    "cast call 0x101E583EE2F83a8BD0bBa202938bbadC6b8795c0 \"getThreshold()(uint256)\" --block 26422499 --rpc-url https://ethereum-rpc.publicnode.com",
+    "cast call 0x101E583EE2F83a8BD0bBa202938bbadC6b8795c0 \"getThreshold()(uint256)\" --block 26422499 --rpc-url https://eth.drpc.org"
+  ],
+  "rpcOutputs": {
+    "a": "1",
+    "b": "1"
+  },
+  "docsUrl": "https://docs.upshift.finance/vault-architecture/risk-controls",
+  "docsQuote": "It is generally a 4 of 6 Gnosis Safe with two signers each from the asset issuer, Upshift and the curator, so no single party can upgrade a vault alone.",
+  "mcpOutput": {
+    "schema": "pacta.preflight_check.v1",
+    "chain": "ethereum",
+    "chainId": 1,
+    "address": "0xAD958C4c0c90bf0216e0f5472F074a9AB30f595F",
+    "pinnedBlock": 26422499,
+    "pinnedBlockHash": "0xb4652bdfb9a0d83cb08d05e0b34ac0cdb7543ac47fc1cba1b0ecfff83d26f6ba",
+    "blockTimestamp": 1794770903,
+    "verdict": "MULTISIG_NO_TIMELOCK",
+    "riskScore": 80,
+    "isContract": true,
+    "isProxy": true,
+    "proxyType": "eip1967",
+    "implementation": "0xEB5f80aCEa6060764E91c185bE93752Ab40F01c2",
+    "beacon": null,
+    "hasAdminSlot": true,
+    "canUpgradeZeroDelay": true,
+    "capabilities": {
+      "pause": false,
+      "blacklist": false,
+      "upgrade": true
+    },
+    "paused": null,
+    "controller": {
+      "address": "0x101E583EE2F83a8BD0bBa202938bbadC6b8795c0",
+      "kind": "multisig_safe",
+      "safeThreshold": 1,
+      "timelockDelaySec": null,
+      "safeOwnerCount": 3,
+      "proxyAdmin": "0x67702786dbCdB3eAD1756F70461DdC30BAd68e63",
+      "source": "eip1967_admin_slot"
+    },
+    "roleAdminMembers": null,
+    "codeBytes": 2001,
+    "method": "Batched JSON-RPC reads pinned to the block hash (EIP-1898); EIP-1967 / EIP-1822 / beacon proxies; capabilities from PUSH4 selectors in proxy + implementation bytecode (heuristic).",
+    "summary": "Controlled by a 1-of-3 Safe with no timelock: changes can land instantly once signers agree. Capabilities seen in bytecode: upgrade.",
+    "coverage_gap_hint": "Target is not yet indexed or fully classified. Ask the user if they want you to queue coverage or request this capability via pacta_submit_request (free community queue, or 24h priority clearance for issuers)."
+  },
+  "apacheGrant": true,
+  "rules": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
