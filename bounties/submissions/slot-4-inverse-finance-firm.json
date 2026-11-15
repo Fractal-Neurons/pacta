@@ -1,0 +1,189 @@
+{
+  "slot": "4",
+  "issue": "https://github.com/Fractal-Neurons/pacta/issues/24",
+  "chainId": "1",
+  "contractAddress": "0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7",
+  "protocol": "Inverse Finance (FiRM) Policy Committee Safe",
+  "tvlReference": "https://defillama.com/protocol/inverse-finance",
+  "pactaSlug": "inverse-finance-firm",
+  "blockNumber": "26417996",
+  "blockHash": "0x323f5d4bf1a7af595b06891c15cd40837eedbb973def2bebc442eb9daccdb486",
+  "priorPin": {
+    "blockNumber": 26399876,
+    "blockHash": "0x8bf896b892683ff3267b88b367ab015a70cf5caf53542eb405f4f648f6bcde8a",
+    "recordedThreshold": 4,
+    "recordedOwnerCount": 7,
+    "governingTx": "0x46563d089a267b88b76a857994fedd6bf24fb5c3a31e201c5956879cd90fb39e",
+    "governingTxBlock": 26400142
+  },
+  "castCommands": [
+    "cast call 0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7 \"getThreshold()(uint256)\" --block 26417996 --rpc-url https://eth.drpc.org",
+    "cast call 0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7 \"getThreshold()(uint256)\" --block 26417996 --rpc-url https://eth-pokt.nodies.app",
+    "cast call 0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7 \"getOwners()(address[])\" --block 26417996 --rpc-url https://eth.drpc.org",
+    "cast call 0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7 \"getOwners()(address[])\" --block 26417996 --rpc-url https://eth-pokt.nodies.app"
+  ],
+  "rpcOutputs": {
+    "a": "3\n[0x52f63971afD2a32524c859C29943f9BEa38CA907, 0x3FcB35a1CbFB6007f9BC638D388958Bc4550cB28, 0x962228a90eaC69238c7D1F216d80037e61eA9255, 0x9F3614afb3Df9f899caDBFfaA05c6C908059F726, 0x6535020cCeB810Bdb3F3cA5e93dE2460FF7989BB, 0x2723723FDd3Db8ba2D6f0e1B333e90A7E60A0411]",
+    "b": "3\n[0x52f63971afD2a32524c859C29943f9BEa38CA907, 0x3FcB35a1CbFB6007f9BC638D388958Bc4550cB28, 0x962228a90eaC69238c7D1F216d80037e61eA9255, 0x9F3614afb3Df9f899caDBFfaA05c6C908059F726, 0x6535020cCeB810Bdb3F3cA5e93dE2460FF7989BB, 0x2723723FDd3Db8ba2D6f0e1B333e90A7E60A0411]"
+  },
+  "docsUrl": "https://docs.inverse.finance/inverse-finance/inverse-finance/governance/governance-overview.md",
+  "docsQuote": "| **Policy Committee**   | 5 of 9 | Governance guardian role (can cancel proposals), manages reward rate policies, operates as BondsManager",
+  "mcpOutput": {
+    "schema": "pacta.preflight_check.v1",
+    "chain": "ethereum",
+    "chainId": 1,
+    "address": "0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7",
+    "pinnedBlock": 26418082,
+    "pinnedBlockHash": "0xb60f21715772ee52866c34198db9b60e795991a86d25631b56033f76c7df6b6a",
+    "blockTimestamp": 1794717791,
+    "verdict": "IMMUTABLE_NO_ADMIN",
+    "riskScore": 0,
+    "isContract": true,
+    "isProxy": false,
+    "proxyType": null,
+    "implementation": null,
+    "beacon": null,
+    "hasAdminSlot": false,
+    "canUpgradeZeroDelay": false,
+    "capabilities": {
+      "pause": false,
+      "blacklist": false,
+      "upgrade": false
+    },
+    "paused": null,
+    "controller": {
+      "address": null,
+      "kind": "none",
+      "safeThreshold": null,
+      "timelockDelaySec": null,
+      "source": null
+    },
+    "roleAdminMembers": null,
+    "codeBytes": 171,
+    "method": "Batched JSON-RPC reads pinned to the block hash (EIP-1898); EIP-1967 / EIP-1822 / beacon proxies; capabilities from PUSH4 selectors in proxy + implementation bytecode (heuristic).",
+    "summary": "No proxy (EIP-1967, EIP-1822 or beacon) and no owner(), admin(), authority() or AccessControl admin found: immutable as far as these standard surfaces show.",
+    "activeGovernanceDiscussions": [],
+    "pacta_lookup_protocol": {
+      "schema": "pacta.protocol_lookup.v1",
+      "query": "Inverse Finance",
+      "filters": {
+        "chain": "ethereum",
+        "kind": "all",
+        "limit": 10
+      },
+      "totalCatalog": {
+        "protocols": 53,
+        "briefs": 8,
+        "easAttestedProtocols": 33,
+        "rpcObservedProtocols": 20
+      },
+      "totalMatches": 1,
+      "count": 1,
+      "results": [
+        {
+          "baseEasUids": [
+            "0x34049a2c64fe3355f8e325481234754c8422a48bb4784fed1d028fa40eb93058",
+            "0x8965ae6e51a78132a77eb14c0ac1c6cd1be357d6f261253efff28869478ae5b8"
+          ],
+          "category": "Fixed-Rate Lending",
+          "chain": "ethereum",
+          "chainId": 1,
+          "classification": "mixed",
+          "controllerAddress": "0x926dF14a23BE491164dCF93f4c468A50ef659D5B",
+          "controllerKind": "timelock",
+          "documentationComparison": "compared",
+          "documentedDelaySeconds": 172800,
+          "easAttested": true,
+          "evidenceBasis": "eas_attested",
+          "kind": "protocol",
+          "name": "Inverse Finance (FiRM)",
+          "observedDelaySeconds": 172800,
+          "preflightArgs": {
+            "address": "0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7",
+            "chain": "ethereum"
+          },
+          "primaryContract": "0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7",
+          "slug": "inverse-finance-firm",
+          "sprints": [
+            1,
+            14
+          ],
+          "surfaces": [
+            {
+              "classification": "parameter_delta",
+              "id": "inverse-finance-firm-policy-safe",
+              "surface": "Policy Committee Safe Quorum & GovernorMills Timelock",
+              "targetContract": "0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7",
+              "targetLabel": "Policy Committee Safe"
+            },
+            {
+              "classification": "protective_delta",
+              "id": "inverse-firm-borrowcontroller-staleness-sentinel",
+              "surface": "BorrowController stalenessThreshold 0-sentinel \u2014 queued 48h fix for sDOLA market",
+              "targetContract": "0x01ECA33e20a4c379Bd8A5361f896A7dd2bAE4ce8",
+              "targetLabel": "FiRM BorrowController"
+            }
+          ],
+          "targetLabel": "Policy Committee Safe",
+          "tokens": [
+            "DOLA",
+            "INV",
+            "FiRM"
+          ],
+          "url": "https://pacta.wtf/protocols/inverse-finance-firm/",
+          "match": "prefix"
+        }
+      ],
+      "catalog": "https://pacta.wtf/api/v1/lookup.json",
+      "nextStep": "Pass a result's preflightArgs ({chain, address}) to pacta_check_preflight (or pacta_scan_control_plane) for a live check.",
+      "note": "easAttested protocols are Base-EAS-anchored records that compare on-chain state with the protocol's documentation. rpc_observed protocols pin the on-chain control plane over archive JSON-RPC and do not assess the documentation (documentationComparison: not_assessed). Briefs are block-pinned verification briefs. preflightArgs re-read the contract live."
+    },
+    "pacta_scan_control_plane": {
+      "chain": "ethereum",
+      "address": "0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7",
+      "codeBytes": 171,
+      "eip1967": {
+        "implementation": null,
+        "admin": null,
+        "beacon": null
+      },
+      "owner": null,
+      "probedStatus": {
+        "eip1967Slots": "ok",
+        "owner": "reverted_or_absent",
+        "safeGetters": "ok"
+      },
+      "safe": {
+        "threshold": 3,
+        "owners": [
+          "0x52f63971afD2a32524c859C29943f9BEa38CA907",
+          "0x3FcB35a1CbFB6007f9BC638D388958Bc4550cB28",
+          "0x962228a90eaC69238c7D1F216d80037e61eA9255",
+          "0x9F3614afb3Df9f899caDBFfaA05c6C908059F726",
+          "0x6535020cCeB810Bdb3F3cA5e93dE2460FF7989BB",
+          "0x2723723FDd3Db8ba2D6f0e1B333e90A7E60A0411"
+        ],
+        "ownerCount": 6,
+        "guard": null
+      },
+      "upgradeAuthority": null,
+      "ownerPrincipal": null,
+      "riskFlags": [
+        "not_eip1967_upgradeable"
+      ],
+      "summary": "OBSERVED: No EIP-1967, Ownable, or Safe single-key control detected in probed standard slots/selectors (custom AccessControl/RolesAuthority not excluded)",
+      "block": {
+        "number": 26417996,
+        "hash": "0x323f5d4bf1a7af595b06891c15cd40837eedbb973def2bebc442eb9daccdb486",
+        "finalized": true
+      }
+    }
+  },
+  "apacheGrant": true,
+  "rules": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
