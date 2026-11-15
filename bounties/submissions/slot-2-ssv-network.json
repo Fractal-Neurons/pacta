@@ -1,0 +1,35 @@
+{
+  "slot": "2",
+  "issue": "https://github.com/Fractal-Neurons/pacta/issues/22",
+  "chainId": "1",
+  "contractAddress": "0xDD9BC35aE942eF0cFa76930954a156B3fF30a4E1",
+  "protocol": "SSV Network",
+  "tvlReference": "https://defillama.com/protocol/ssv-network",
+  "pactaSlug": null,
+  "blockNumber": "26418525",
+  "blockHash": "0xf9d50b2f8666e3e48f6d4cd4c88978d77087d6fbe8af908314514a509a633171",
+  "priorPin": null,
+  "castCommands": [
+    "cast call 0xDD9BC35aE942eF0cFa76930954a156B3fF30a4E1 \"owner()(address)\" --block 26418525 --rpc-url https://ethereum.publicnode.com",
+    "cast call 0xDD9BC35aE942eF0cFa76930954a156B3fF30a4E1 \"owner()(address)\" --block 26418525 --rpc-url https://eth.meowrpc.com"
+  ],
+  "rpcOutputs": {
+    "a": "0xb35096b074fdb9bBac63E3AdaE0Bbde512B2E6b6",
+    "b": "0xb35096b074fdb9bBac63E3AdaE0Bbde512B2E6b6"
+  },
+  "docsUrl": "https://docs.ssv.network/developers/smart-contracts",
+  "docsQuote": "SSV DAO Treasury 0xb35096b074fdb9bBac63E3AdaE0Bbde512B2E6b6 treasury.ssvnetwork.eth",
+  "mcpOutput": {
+    "schema": "pacta.preflight_check.v1",
+    "verdict": "SAFE_MULTISIG",
+    "contract": "0xDD9BC35aE942eF0cFa76930954a156B3fF30a4E1",
+    "owner": "0xb35096b074fdb9bBac63E3AdaE0Bbde512B2E6b6"
+  },
+  "apacheGrant": true,
+  "rules": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
