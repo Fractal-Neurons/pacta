@@ -1,0 +1,75 @@
+{
+  "slot": "2",
+  "issue": "https://github.com/Fractal-Neurons/pacta/issues/22",
+  "chainId": "1",
+  "contractAddress": "0x101E583EE2F83a8BD0bBa202938bbadC6b8795c0",
+  "protocol": "Upshift",
+  "tvlReference": "https://defillama.com/protocol/upshift",
+  "pactaSlug": null,
+  "blockNumber": "26420400",
+  "blockHash": "0x8b23de52e2bc9633fd19bd5c21aa1a8cfcbfd594dc187e56e1f269b29159634a",
+  "priorPin": null,
+  "castCommands": [
+    "cast call 0x101E583EE2F83a8BD0bBa202938bbadC6b8795c0 \"getThreshold()(uint256)\" --block 26420400 --rpc-url https://gateway.tenderly.co/public/mainnet",
+    "cast call 0x101E583EE2F83a8BD0bBa202938bbadC6b8795c0 \"getThreshold()(uint256)\" --block 26420400 --rpc-url https://eth.drpc.org"
+  ],
+  "rpcOutputs": {
+    "a": "1",
+    "b": "1"
+  },
+  "docsUrl": "https://docs.upshift.finance/vault-architecture/risk-controls",
+  "docsQuote": "It is generally a 4 of 6 Gnosis Safe with two signers each from the asset issuer, Upshift and the curator, so no single party can upgrade a vault alone.",
+  "mcpOutput": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"chain\": \"ethereum\",\n  \"address\": \"0x101E583EE2F83a8BD0bBa202938bbadC6b8795c0\",\n  \"block\": {\n    \"number\": 26420523,\n    \"hash\": \"0xee51d37797fea6217a3ec49c4794fa292e7c0edf03bfafe0f1ede247725c4cac\",\n    \"timestamp\": 1794747131\n  },\n  \"codeBytes\": 171,\n  \"eip1967\": {\n    \"implementation\": null,\n    \"admin\": null,\n    \"beacon\": null\n  },\n  \"owner\": null,\n  \"probedStatus\": {\n    \"eip1967Slots\": \"ok\",\n    \"owner\": \"reverted_or_absent\",\n    \"safeGetters\": \"ok\"\n  },\n  \"safe\": {\n    \"threshold\": 1,\n    \"owners\": [\n      \"0x3fc6ABc9041bf99F9C393a726feD7690d1825e42\",\n      \"0x4EA4987211EbE22E83aAAFc1b38aaa6127C101eF\",\n      \"0x5524EBe33D9C00d7c56b609072c5D84BD7cefFD9\"\n    ],\n    \"ownerCount\": 3,\n    \"guard\": null\n  },\n  \"upgradeAuthority\": null,\n  \"ownerPrincipal\": null,\n  \"riskFlags\": [\n    \"not_eip1967_upgradeable\"\n  ],\n  \"summary\": \"OBSERVED: No EIP-1967, Ownable, or Safe single-key control detected in probed standard slots/selectors (custom AccessControl/RolesAuthority not excluded)\"\n}"
+      }
+    ],
+    "structuredContent": {
+      "chain": "ethereum",
+      "address": "0x101E583EE2F83a8BD0bBa202938bbadC6b8795c0",
+      "block": {
+        "number": 26420523,
+        "hash": "0xee51d37797fea6217a3ec49c4794fa292e7c0edf03bfafe0f1ede247725c4cac",
+        "timestamp": 1794747131
+      },
+      "codeBytes": 171,
+      "eip1967": {
+        "implementation": null,
+        "admin": null,
+        "beacon": null
+      },
+      "owner": null,
+      "probedStatus": {
+        "eip1967Slots": "ok",
+        "owner": "reverted_or_absent",
+        "safeGetters": "ok"
+      },
+      "safe": {
+        "threshold": 1,
+        "owners": [
+          "0x3fc6ABc9041bf99F9C393a726feD7690d1825e42",
+          "0x4EA4987211EbE22E83aAAFc1b38aaa6127C101eF",
+          "0x5524EBe33D9C00d7c56b609072c5D84BD7cefFD9"
+        ],
+        "ownerCount": 3,
+        "guard": null
+      },
+      "upgradeAuthority": null,
+      "ownerPrincipal": null,
+      "riskFlags": [
+        "not_eip1967_upgradeable"
+      ],
+      "summary": "OBSERVED: No EIP-1967, Ownable, or Safe single-key control detected in probed standard slots/selectors (custom AccessControl/RolesAuthority not excluded)"
+    },
+    "isError": false
+  },
+  "apacheGrant": true,
+  "rules": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
