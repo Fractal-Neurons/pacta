@@ -1,0 +1,67 @@
+{
+  "slot": "2",
+  "issue": "https://github.com/Fractal-Neurons/pacta/issues/22",
+  "chainId": "1",
+  "contractAddress": "0x9e2b6378ee8ad2A4A95Fe481d63CAba8FB0EBBF9",
+  "protocol": "Alchemix DAO Treasury Multisig",
+  "tvlReference": "https://defillama.com/protocol/alchemix",
+  "pactaSlug": null,
+  "blockNumber": "26419828",
+  "blockHash": "0x6b32eaa24ce5a222ab458eba85876bb16a7b405b1a3adb8c145742c69d797371",
+  "priorPin": null,
+  "castCommands": [
+    "cast call 0x9e2b6378ee8ad2A4A95Fe481d63CAba8FB0EBBF9 \"getThreshold()(uint256)\" --block 26419828 --rpc-url https://gateway.tenderly.co/public/mainnet",
+    "cast call 0x9e2b6378ee8ad2A4A95Fe481d63CAba8FB0EBBF9 \"getOwners()(address[])\" --block 26419828 --rpc-url https://gateway.tenderly.co/public/mainnet",
+    "cast call 0x9e2b6378ee8ad2A4A95Fe481d63CAba8FB0EBBF9 \"getThreshold()(uint256)\" --block 26419828 --rpc-url https://rpc.mevblocker.io",
+    "cast call 0x9e2b6378ee8ad2A4A95Fe481d63CAba8FB0EBBF9 \"getOwners()(address[])\" --block 26419828 --rpc-url https://rpc.mevblocker.io"
+  ],
+  "rpcOutputs": {
+    "a": "3",
+    "b": "3"
+  },
+  "docsUrl": "https://blockworks.com/token-transparency/filing/alchemix",
+  "docsQuote": "The DAO multisig is 4/7 and has all authority to execute transactions",
+  "mcpOutput": {
+    "schema": "pacta.preflight_check.v1",
+    "chain": "ethereum",
+    "chainId": 1,
+    "address": "0x9e2b6378ee8ad2A4A95Fe481d63CAba8FB0EBBF9",
+    "pinnedBlock": 26419828,
+    "pinnedBlockHash": "0x6b32eaa24ce5a222ab458eba85876bb16a7b405b1a3adb8c145742c69d797371",
+    "blockTimestamp": 1794738779,
+    "verdict": "IMMUTABLE_NO_ADMIN",
+    "riskScore": 0,
+    "isContract": true,
+    "isProxy": false,
+    "proxyType": null,
+    "implementation": null,
+    "beacon": null,
+    "hasAdminSlot": false,
+    "canUpgradeZeroDelay": false,
+    "capabilities": {
+      "pause": false,
+      "blacklist": false,
+      "upgrade": false
+    },
+    "paused": null,
+    "controller": {
+      "address": null,
+      "kind": "none",
+      "safeThreshold": null,
+      "timelockDelaySec": null,
+      "source": null
+    },
+    "roleAdminMembers": null,
+    "codeBytes": 170,
+    "method": "Batched JSON-RPC reads pinned to the block hash (EIP-1898); EIP-1967 / EIP-1822 / beacon proxies; capabilities from PUSH4 selectors in proxy + implementation bytecode (heuristic).",
+    "summary": "No proxy (EIP-1967, EIP-1822 or beacon) and no owner(), admin(), authority() or AccessControl admin found: immutable as far as these standard surfaces show.",
+    "coverage_gap_hint": "Target is not yet indexed or fully classified. Ask the user if they want you to queue coverage or request this capability via pacta_submit_request (free community queue, or 24h priority clearance for issuers)."
+  },
+  "apacheGrant": true,
+  "rules": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
