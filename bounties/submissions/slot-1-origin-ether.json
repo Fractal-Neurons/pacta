@@ -1,0 +1,80 @@
+{
+  "slot": "1",
+  "issue": "https://github.com/Fractal-Neurons/pacta/issues/21",
+  "chainId": "1",
+  "contractAddress": "0x4FF1b9D9ba8558F5EAfCec096318eA0d8b541971",
+  "protocol": "Origin Ether (OETH)",
+  "tvlReference": "https://defillama.com/protocol/origin-ether",
+  "pactaSlug": null,
+  "blockNumber": "26420400",
+  "blockHash": "0x8b23de52e2bc9633fd19bd5c21aa1a8cfcbfd594dc187e56e1f269b29159634a",
+  "priorPin": null,
+  "castCommands": [
+    "cast call 0x4FF1b9D9ba8558F5EAfCec096318eA0d8b541971 \"getOwners()(address[])\" --block 26420400 --rpc-url https://gateway.tenderly.co/public/mainnet",
+    "cast call 0x4FF1b9D9ba8558F5EAfCec096318eA0d8b541971 \"getOwners()(address[])\" --block 26420400 --rpc-url https://eth.drpc.org"
+  ],
+  "rpcOutputs": {
+    "a": "[0x052c01a2a88fa6Cba8Fc2DBEf39a442A140a35e3, 0x397729229B3d824Ca1B93e6E25e7CB197973df33, 0x15ff3859Af506d6e4D7e5FDf335628Fc1e3ef1CE, 0x6AC8d65Dc698aE07263E3A98Aa698C33060b4A13, 0xFdf6C62D170A1943D89cAB0B9fA2FA6ee0550190, 0x9990C10ceb3c3d1E08060EAc7e977279Fd7A5920, 0xEF4Cb0D9ce195d18858c62E1d49504438D937276, 0x091994E67ed0Be1527A83c7A16f8B74Ca9a53D53]",
+    "b": "[0x052c01a2a88fa6Cba8Fc2DBEf39a442A140a35e3, 0x397729229B3d824Ca1B93e6E25e7CB197973df33, 0x15ff3859Af506d6e4D7e5FDf335628Fc1e3ef1CE, 0x6AC8d65Dc698aE07263E3A98Aa698C33060b4A13, 0xFdf6C62D170A1943D89cAB0B9fA2FA6ee0550190, 0x9990C10ceb3c3d1E08060EAc7e977279Fd7A5920, 0xEF4Cb0D9ce195d18858c62E1d49504438D937276, 0x091994E67ed0Be1527A83c7A16f8B74Ca9a53D53]"
+  },
+  "docsUrl": "https://docs.originprotocol.com/yield-bearing-tokens/core-concepts/yield-smoothing",
+  "docsQuote": "This smoothing feature is configured by two variables that are managed by the Guardian (2 of 9 Safe) for each yield token",
+  "mcpOutput": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"chain\": \"ethereum\",\n  \"address\": \"0x4FF1b9D9ba8558F5EAfCec096318eA0d8b541971\",\n  \"block\": {\n    \"number\": 26420492,\n    \"hash\": \"0xa6ca4ec206283400662cf0c75a8e8531f6efa46670de0226150557ca8fc7c456\",\n    \"timestamp\": 1794746747\n  },\n  \"codeBytes\": 171,\n  \"eip1967\": {\n    \"implementation\": null,\n    \"admin\": null,\n    \"beacon\": null\n  },\n  \"owner\": null,\n  \"probedStatus\": {\n    \"eip1967Slots\": \"ok\",\n    \"owner\": \"reverted_or_absent\",\n    \"safeGetters\": \"ok\"\n  },\n  \"safe\": {\n    \"threshold\": 2,\n    \"owners\": [\n      \"0x052c01a2a88fa6Cba8Fc2DBEf39a442A140a35e3\",\n      \"0x397729229B3d824Ca1B93e6E25e7CB197973df33\",\n      \"0x15ff3859Af506d6e4D7e5FDf335628Fc1e3ef1CE\",\n      \"0x6AC8d65Dc698aE07263E3A98Aa698C33060b4A13\",\n      \"0xFdf6C62D170A1943D89cAB0B9fA2FA6ee0550190\",\n      \"0x9990C10ceb3c3d1E08060EAc7e977279Fd7A5920\",\n      \"0xEF4Cb0D9ce195d18858c62E1d49504438D937276\",\n      \"0x091994E67ed0Be1527A83c7A16f8B74Ca9a53D53\"\n    ],\n    \"ownerCount\": 8,\n    \"guard\": null\n  },\n  \"upgradeAuthority\": null,\n  \"ownerPrincipal\": null,\n  \"riskFlags\": [\n    \"not_eip1967_upgradeable\"\n  ],\n  \"summary\": \"OBSERVED: No EIP-1967, Ownable, or Safe single-key control detected in probed standard slots/selectors (custom AccessControl/RolesAuthority not excluded)\"\n}"
+      }
+    ],
+    "structuredContent": {
+      "chain": "ethereum",
+      "address": "0x4FF1b9D9ba8558F5EAfCec096318eA0d8b541971",
+      "block": {
+        "number": 26420492,
+        "hash": "0xa6ca4ec206283400662cf0c75a8e8531f6efa46670de0226150557ca8fc7c456",
+        "timestamp": 1794746747
+      },
+      "codeBytes": 171,
+      "eip1967": {
+        "implementation": null,
+        "admin": null,
+        "beacon": null
+      },
+      "owner": null,
+      "probedStatus": {
+        "eip1967Slots": "ok",
+        "owner": "reverted_or_absent",
+        "safeGetters": "ok"
+      },
+      "safe": {
+        "threshold": 2,
+        "owners": [
+          "0x052c01a2a88fa6Cba8Fc2DBEf39a442A140a35e3",
+          "0x397729229B3d824Ca1B93e6E25e7CB197973df33",
+          "0x15ff3859Af506d6e4D7e5FDf335628Fc1e3ef1CE",
+          "0x6AC8d65Dc698aE07263E3A98Aa698C33060b4A13",
+          "0xFdf6C62D170A1943D89cAB0B9fA2FA6ee0550190",
+          "0x9990C10ceb3c3d1E08060EAc7e977279Fd7A5920",
+          "0xEF4Cb0D9ce195d18858c62E1d49504438D937276",
+          "0x091994E67ed0Be1527A83c7A16f8B74Ca9a53D53"
+        ],
+        "ownerCount": 8,
+        "guard": null
+      },
+      "upgradeAuthority": null,
+      "ownerPrincipal": null,
+      "riskFlags": [
+        "not_eip1967_upgradeable"
+      ],
+      "summary": "OBSERVED: No EIP-1967, Ownable, or Safe single-key control detected in probed standard slots/selectors (custom AccessControl/RolesAuthority not excluded)"
+    },
+    "isError": false
+  },
+  "apacheGrant": true,
+  "rules": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
