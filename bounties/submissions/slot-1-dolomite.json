@@ -1,0 +1,82 @@
+{
+  "slot": 1,
+  "issue": "https://github.com/Fractal-Neurons/pacta/issues/21",
+  "chainId": 1,
+  "contractAddress": "0xC2B66E247daE5Ee749Ae1d827190115F3653dE06",
+  "protocol": "Dolomite",
+  "tvlReference": "https://api.llama.fi/protocol/dolomite",
+  "pactaSlug": null,
+  "blockNumber": 26418444,
+  "blockHash": "0x33afc268d6f169b2f0d7b065341958e8658093efd8e78197b9e708469de410d3",
+  "priorPin": null,
+  "castCommands": [
+    "cast call 0xC2B66E247daE5Ee749Ae1d827190115F3653dE06 'secondsTimeLocked()(uint256)' --block 26418444 --rpc-url https://eth-mainnet.public.blastapi.io",
+    "cast call 0xC2B66E247daE5Ee749Ae1d827190115F3653dE06 'secondsTimeLocked()(uint256)' --block 26418444 --rpc-url https://eth.drpc.org"
+  ],
+  "rpcOutputs": {
+    "a": "300",
+    "b": "300"
+  },
+  "docsUrl": "https://docs.dolomite.io/admin-privileges.md",
+  "docsQuote": "At the time of launch, the delay on the delayed multi signature wallet is 1 day (86,400 seconds).",
+  "mcpOutput": {
+    "schema": "pacta.protocol_lookup.v1",
+    "query": "dolomite",
+    "filters": {
+      "chain": null,
+      "kind": "all",
+      "limit": 10
+    },
+    "totalCatalog": {
+      "protocols": 53,
+      "briefs": 8,
+      "easAttestedProtocols": 33,
+      "rpcObservedProtocols": 20
+    },
+    "totalMatches": 0,
+    "count": 0,
+    "results": [],
+    "catalog": "https://pacta.wtf/api/v1/lookup.json",
+    "nextStep": "Pass a result's preflightArgs ({chain, address}) to pacta_check_preflight (or pacta_scan_control_plane) for a live check.",
+    "note": "easAttested protocols are Base-EAS-anchored records that compare on-chain state with the protocol's documentation. rpc_observed protocols pin the on-chain control plane over archive JSON-RPC and do not assess the documentation (documentationComparison: not_assessed). Briefs are block-pinned verification briefs. preflightArgs re-read the contract live.",
+    "hint": "No match. Call again with an empty query to list what Pacta tracks, or pass a known 0x contract address straight to pacta_check_preflight.",
+    "coverage_gap_hint": "Target is not yet indexed or fully classified. Ask the user if they want you to queue coverage or request this capability via pacta_submit_request (free community queue, or 24h priority clearance for issuers)."
+  },
+  "apacheGrant": true,
+  "rules": [
+    true,
+    true,
+    true,
+    true
+  ],
+  "evidence": {
+    "interpretation": "DolomiteMargin on Ethereum mainnet is owned by DolomiteOwnerV2, the delayed multisig wallet the docs describe. The docs state that all admin transactions involving DolomiteMargin must wait the secondsTimeLocked delay, and the only delay figure the official docs publish anywhere is 1 day (86,400 seconds), with a stated intention to raise it over time. On chain at the pinned block, secondsTimeLocked() is 300 seconds (5 minutes), 288x shorter than documented. Non-whitelisted admin actions therefore take effect after 5 minutes, not 1 day.",
+    "chainOfControl": {
+      "dolomiteMarginOwner": {
+        "command": "cast call 0x003Ca23Fd5F0ca87D01F6eC6CD14A8AE60c2b97D 'owner()(address)' --block 26418444 --rpc-url https://eth-mainnet.public.blastapi.io",
+        "output": "0xC2B66E247daE5Ee749Ae1d827190115F3653dE06",
+        "note": "Identical output on both endpoints."
+      },
+      "adminSafe": {
+        "thresholdCommand": "cast call 0xa75c21C5BE284122a87A37a76cc6C4DD3E55a1D4 'getThreshold()(uint256)' --block 26418444 --rpc-url https://eth-mainnet.public.blastapi.io",
+        "thresholdOutput": "2",
+        "ownersOutput": "[0x70c7F3e7eA2d6aA817Aa209e714a4AB643838634, 0x42acD316D82F2c016bc5570746b739E812eDD22D, 0xbDEf2b2051E2aE113297ee8301e011FD71A83738]",
+        "hasRoleCommand": "cast call 0xC2B66E247daE5Ee749Ae1d827190115F3653dE06 'hasRole(bytes32,address)(bool)' 0x0000000000000000000000000000000000000000000000000000000000000000 0xa75c21C5BE284122a87A37a76cc6C4DD3E55a1D4 --block 26418444 --rpc-url https://eth-mainnet.public.blastapi.io",
+        "hasRoleOutput": "true",
+        "note": "The Gnosis Safe behind DolomiteOwnerV2 holds DEFAULT_ADMIN_ROLE on it (hasRole verified on both endpoints) and is 2-of-3, matching the docs' separate 2/3 Safe claim; only the delay figure mismatches."
+      },
+      "arbitrumContrast": {
+        "blockNumber": 524378426,
+        "blockHash": "0xc84156af1d8f655c3818a43036988455d1fd441bde3acdd138ad43a19414f516",
+        "marginOwnerCommand": "cast call 0x6a76986201E1906eb8d887Bb4Ad74b55888617af 'owner()(address)' --block 524378426 --rpc-url https://arb1.arbitrum.io/rpc",
+        "marginOwnerOutput": "0xE412991Fb026df586C2f2F9EE06ACaD1A34f585B",
+        "secondsTimeLockedCommand": "cast call 0xE412991Fb026df586C2f2F9EE06ACaD1A34f585B 'secondsTimeLocked()(uint256)' --block 524378426 --rpc-url https://arb1.arbitrum.io/rpc",
+        "secondsTimeLockedOutput": "86400 [8.64e4]",
+        "note": "Confirmed identically on arb1.arbitrum.io and arbitrum-one.public.blastapi.io: Dolomite's Arbitrum deployment still enforces exactly the documented 86,400 seconds, so the 300-second value is an Ethereum-specific divergence, not a global parameter change."
+      }
+    },
+    "tvlNote": "DefiLlama reported Ethereum TVL $107,712,938 for Dolomite at research time (2026-11-15, re-checked at submission), above the $25M slot floor.",
+    "docsCaveat": "The docs sentence is framed 'at the time of launch' with an intention to raise the delay incrementally; the live Ethereum value was instead lowered to 300 seconds and the docs were never updated with a new figure. No other delay figure appears anywhere in the official docs.",
+    "docsSecondaryQuote": "all admin transactions involving the `DolomiteMargin` protocol require that `secondsTimeLocked` amount of time must be waited before the transaction effectuates."
+  }
+}
