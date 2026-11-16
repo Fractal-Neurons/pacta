@@ -1,0 +1,71 @@
+{
+  "slot": "3",
+  "issue": "https://github.com/Fractal-Neurons/pacta/issues/23",
+  "chainId": "8453",
+  "contractAddress": "0x2a2E9AD314760D61A25Eb2c691498986b75dc051",
+  "protocol": "Arrakis Modular",
+  "tvlReference": "https://defillama.com/protocol/arrakis-modular",
+  "pactaSlug": null,
+  "blockNumber": "57779621",
+  "blockHash": "0x65721bcffaaf53ab2738f909a28c6846d3b16fbba36a507485ce63165693b5c5",
+  "priorPin": null,
+  "castCommands": [
+    "cast call 0x2a2E9AD314760D61A25Eb2c691498986b75dc051 \"hasRole(bytes32,address)(bool)\" 0xb09aa5aeb3702cfd50b6b62bc4532604938f21248a27a1d5ca736082b6819cc1 0x81a1e7f34b9babf172087cf5df8a4df6500e9d4d --block 57779621 --rpc-url https://mainnet.base.org",
+    "cast call 0x2a2E9AD314760D61A25Eb2c691498986b75dc051 \"hasRole(bytes32,address)(bool)\" 0xb09aa5aeb3702cfd50b6b62bc4532604938f21248a27a1d5ca736082b6819cc1 0x81a1e7f34b9babf172087cf5df8a4df6500e9d4d --block 57779621 --rpc-url https://base-rpc.publicnode.com"
+  ],
+  "rpcOutputs": {
+    "a": "true",
+    "b": "true"
+  },
+  "docsUrl": "https://docs.arrakis.fi/text/arrakisModular/architecture/configuration.html",
+  "docsQuote": "All Public Vault ownership is immutably behind a multi-day timelock (controlled by the Arrakis DAO) so that LPs are guaranteed to have time to react to any changes in configuration.",
+  "mcpOutput": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"chain\": \"base\",\n  \"address\": \"0x96544F7a4D325464a1d214C597846a50F9306d93\",\n  \"block\": {\n    \"number\": 57788285,\n    \"hash\": \"0xaad92b2cd5b7dc38ee771615c56699861051ec1c3781e5544b84609fb22d4ca1\",\n    \"timestamp\": 1794748032\n  },\n  \"codeBytes\": 11968,\n  \"eip1967\": {\n    \"implementation\": null,\n    \"admin\": null,\n    \"beacon\": null\n  },\n  \"owner\": \"0x2a2E9AD314760D61A25Eb2c691498986b75dc051\",\n  \"probedStatus\": {\n    \"eip1967Slots\": \"ok\",\n    \"owner\": \"ok\",\n    \"safeGetters\": \"reverted_or_absent\"\n  },\n  \"upgradeAuthority\": null,\n  \"ownerPrincipal\": {\n    \"address\": \"0x2a2E9AD314760D61A25Eb2c691498986b75dc051\",\n    \"codeBytes\": 9349,\n    \"type\": \"timelock_oz\",\n    \"minDelaySeconds\": 172800\n  },\n  \"riskFlags\": [\n    \"not_eip1967_upgradeable\",\n    \"owner_timelock_172800s\"\n  ],\n  \"summary\": \"OBSERVED: No EIP-1967, Ownable, or Safe single-key control detected in probed standard slots/selectors (custom AccessControl/RolesAuthority not excluded)\"\n}"
+      }
+    ],
+    "structuredContent": {
+      "chain": "base",
+      "address": "0x96544F7a4D325464a1d214C597846a50F9306d93",
+      "block": {
+        "number": 57788285,
+        "hash": "0xaad92b2cd5b7dc38ee771615c56699861051ec1c3781e5544b84609fb22d4ca1",
+        "timestamp": 1794748032
+      },
+      "codeBytes": 11968,
+      "eip1967": {
+        "implementation": null,
+        "admin": null,
+        "beacon": null
+      },
+      "owner": "0x2a2E9AD314760D61A25Eb2c691498986b75dc051",
+      "probedStatus": {
+        "eip1967Slots": "ok",
+        "owner": "ok",
+        "safeGetters": "reverted_or_absent"
+      },
+      "upgradeAuthority": null,
+      "ownerPrincipal": {
+        "address": "0x2a2E9AD314760D61A25Eb2c691498986b75dc051",
+        "codeBytes": 9349,
+        "type": "timelock_oz",
+        "minDelaySeconds": 172800
+      },
+      "riskFlags": [
+        "not_eip1967_upgradeable",
+        "owner_timelock_172800s"
+      ],
+      "summary": "OBSERVED: No EIP-1967, Ownable, or Safe single-key control detected in probed standard slots/selectors (custom AccessControl/RolesAuthority not excluded)"
+    },
+    "isError": false
+  },
+  "apacheGrant": true,
+  "rules": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
