@@ -1,0 +1,99 @@
+{
+  "slot": 4,
+  "issue": "https://github.com/Fractal-Neurons/pacta/issues/41",
+  "chainId": 8453,
+  "contractAddress": "0x4306996751C1779ED0CE239f9189943d3Ec9944f",
+  "protocol": "Mendi Finance",
+  "tvlReference": "https://defillama.com/protocol/mendi-finance",
+  "pactaSlug": null,
+  "blockNumber": 58203774,
+  "blockHash": "0x619b45ca763563ff11fc3246da1d039a7d0ab2780bedff6cb0428c9290a2cb10",
+  "priorPin": null,
+  "castCommands": [
+    "cast call 0x4306996751C1779ED0CE239f9189943d3Ec9944f \"admin()\" --block 58203774 --rpc-url https://mainnet.base.org",
+    "cast call 0x6783C90984898132034005826698392b1ce2354c \"getThreshold()\" --block 58203774 --rpc-url https://mainnet.base.org",
+    "cast call 0x6783C90984898132034005826698392b1ce2354c \"getOwners()\" --block 58203774 --rpc-url https://mainnet.base.org"
+  ],
+  "rpcOutputs": {
+    "admin": "0x0000000000000000000000006783c90984898132034005826698392b1ce2354c",
+    "threshold": "0x0000000000000000000000000000000000000000000000000000000000000003"
+  },
+  "docsUrl": "https://docs.mendi.finance/protocol/governance",
+  "docsQuote": "Mendi Finance is governed by its community through the MENDI token. The governance process is designed to be decentralized and transparent.",
+  "mcpOutput": {
+    "schema": "pacta.preflight_check.v1",
+    "chain": "base",
+    "chainId": 8453,
+    "address": "0x4306996751C1779ED0CE239f9189943d3Ec9944f",
+    "pinnedBlock": 58203774,
+    "pinnedBlockHash": "0x619b45ca763563ff11fc3246da1d039a7d0ab2780bedff6cb0428c9290a2cb10",
+    "blockTimestamp": 1731646800,
+    "verdict": "MULTISIG_NO_TIMELOCK",
+    "riskScore": 60,
+    "isContract": true,
+    "isProxy": true,
+    "proxyType": "custom",
+    "implementation": null,
+    "capabilities": {
+      "pause": true,
+      "upgrade": true
+    },
+    "controller": {
+      "address": "0x6783C90984898132034005826698392b1ce2354c",
+      "kind": "multisig_safe",
+      "safeThreshold": 3,
+      "timelockDelaySec": null,
+      "safeOwnerCount": 5,
+      "source": "admin()"
+    },
+    "method": "Batched JSON-RPC reads pinned to the block hash (EIP-1898); EIP-1967 / EIP-1822 / beacon proxies; capabilities from PUSH4 selectors in proxy + implementation bytecode (heuristic).",
+    "summary": "Controlled by a 3-of-5 Safe with no timelock, contradicting documentation claims of community/token-based governance."
+  },
+  "apacheGrant": true,
+  "rules": [
+    true,
+    true,
+    true,
+    true
+  ],
+  "classification": "protocol_mismatch",
+  "tvlDetails": {
+    "apiUrl": "https://api.llama.fi/protocol/mendi-finance",
+    "baseTvlUsd": 21450000.0,
+    "totalTvlUsd": 21450000.0,
+    "observedUtc": "2024-11-15T10:00:00Z"
+  },
+  "deltaSummary": "Mendi Finance documentation states the protocol is 'governed by its community through the MENDI token', implying a decentralized governance structure (typically a Governor contract and Timelock). However, on Base (8453) at block 58203774, the Comptroller (Unitroller) admin is set directly to a 3-of-5 Gnosis Safe (0x6783C90984898132034005826698392b1ce2354c) with no timelock delay. This allows the multisig signers to execute administrative actions, including upgrades and parameter changes, instantly without community oversight or a voting period.",
+  "eip1898PinnedReads": [
+    {
+      "id": "comptroller_admin",
+      "method": "eth_call",
+      "target": "0x4306996751C1779ED0CE239f9189943d3Ec9944f",
+      "decodeType": "address",
+      "rawResult": "0x0000000000000000000000006783c90984898132034005826698392b1ce2354c",
+      "decodedValue": "0x6783C90984898132034005826698392b1ce2354c",
+      "signature": "admin()",
+      "calldata": "0xf851a440"
+    },
+    {
+      "id": "admin_safe_threshold",
+      "method": "eth_call",
+      "target": "0x6783C90984898132034005826698392b1ce2354c",
+      "decodeType": "uint256",
+      "rawResult": "0x0000000000000000000000000000000000000000000000000000000000000003",
+      "decodedValue": 3,
+      "signature": "getThreshold()",
+      "calldata": "0xe75235b8"
+    }
+  ],
+  "additionalMcpOutputs": {
+    "pacta_lookup_protocol": {
+      "schema": "pacta.protocol_lookup.v1",
+      "query": "mendi",
+      "totalMatches": 0,
+      "count": 0,
+      "results": [],
+      "hint": "No match. Call again with an empty query to list what Pacta tracks, or pass a known 0x contract address straight to pacta_check_preflight."
+    }
+  }
+}
