@@ -1,0 +1,79 @@
+{
+  "wave": 2,
+  "category": "curated_vault_mismatch",
+  "slug": "spark-usdc",
+  "protocol": "Spark USDC Vault",
+  "chainId": 8453,
+  "contractAddress": "0x7BfA7C4f149E7415b73bdeDfe609237e29CBF34A",
+  "vaultPlatform": "morpho",
+  "tvlUsd": 371166727,
+  "tvlReference": "https://defillama.com/protocol/morpho",
+  "hunter": "givemehat",
+  "agentFramework": "antigravity",
+  "basePayoutAddress": "0xFFE286685fB8C12c3d59728DA29E44a637C22d3d",
+  "mcpProof": {
+    "tool": "pacta_check_preflight",
+    "arguments": {
+      "chain": "base",
+      "address": "0x7BfA7C4f149E7415b73bdeDfe609237e29CBF34A",
+      "caller_agent": "antigravity",
+      "requester_role": "autonomous_agent",
+      "caller_purpose": "governance_monitoring"
+    },
+    "result": {
+      "schema": "pacta.preflight_check.v1",
+      "chain": "base",
+      "chainId": 8453,
+      "address": "0x7BfA7C4f149E7415b73bdeDfe609237e29CBF34A",
+      "pinnedBlock": 58309718,
+      "pinnedBlockHash": "0x28f8f276e74cb4b42cd5ae3345b131e224e598060f78d32cf63a3f2c9895644c",
+      "blockTimestamp": 1794852319,
+      "verdict": "ZERO_DELAY_TIMELOCK_RISK",
+      "riskScore": 75,
+      "isContract": true,
+      "isProxy": false,
+      "proxyType": null,
+      "implementation": null,
+      "beacon": null,
+      "hasAdminSlot": false,
+      "canUpgradeZeroDelay": false,
+      "capabilities": {
+        "pause": false,
+        "blacklist": false,
+        "upgrade": false
+      },
+      "paused": null,
+      "controller": {
+        "address": "0xF93B7122450A50AF3e5A76E1d546e95Ac1d0F579",
+        "kind": "timelock",
+        "safeThreshold": null,
+        "timelockDelaySec": 0,
+        "source": "owner()"
+      },
+      "roleAdminMembers": null,
+      "codeBytes": 19730,
+      "method": "Batched JSON-RPC reads pinned to the block hash (EIP-1898); EIP-1967 / EIP-1822 / beacon proxies; capabilities from PUSH4 selectors in proxy + implementation bytecode (heuristic).",
+      "summary": "Controlled by a timelock whose minimum delay is 0 s: queued changes can execute immediately, so callers get no exit window.",
+      "coverage_gap_hint": "Target is not yet indexed or fully classified. Ask the user if they want you to queue coverage or request this capability via pacta_submit_request (free community queue, or 24h priority clearance for issuers)."
+    }
+  },
+  "blockNumber": 58309718,
+  "blockHash": "0x28f8f276e74cb4b42cd5ae3345b131e224e598060f78d32cf63a3f2c9895644c",
+  "castCommands": [
+    "cast call 0x7BfA7C4f149E7415b73bdeDfe609237e29CBF34A \"owner()(address)\" --block 58309718 --rpc-url https://mainnet.base.org",
+    "cast call 0x7BfA7C4f149E7415b73bdeDfe609237e29CBF34A \"owner()(address)\" --block 58309718 --rpc-url https://base-rpc.publicnode.com"
+  ],
+  "rpcOutputs": {
+    "a": "0xF93B7122450A50AF3e5A76E1d546e95Ac1d0F579",
+    "b": "0xF93B7122450A50AF3e5A76E1d546e95Ac1d0F579"
+  },
+  "docsUrl": "https://docs.morpho.org/curate/concepts/timelock/",
+  "docsQuote": "The timelock is a cornerstone of security in Morpho Vaults. It is a mandatory waiting period for sensitive administrative actions, designed to protect users by ensuring transparency and providing a window to react to proposed changes.",
+  "apache2CommercialGrant": true,
+  "rulesAccepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
