@@ -1,0 +1,43 @@
+{
+  "slot": 1,
+  "issue": "https://github.com/Fractal-Neurons/pacta/issues/21",
+  "chainId": 1,
+  "contractAddress": "0xF930EBBd05eF8b25B1797b9b2109DDC9B0d43063",
+  "protocol": "Stake DAO",
+  "tvlReference": "https://defillama.com/protocol/stake-dao",
+  "pactaSlug": "n/a",
+  "blockNumber": 26422051,
+  "blockHash": "0x8eec7b2bd49efecd252ea631e8800a8159eae4c81b74f3c745e27537519ae7d0",
+  "priorPin": "n/a",
+  "castCommands": [
+    "cast call 0xF930EBBd05eF8b25B1797b9b2109DDC9B0d43063 \"getThreshold()\" --block 26422051 --rpc-url https://ethereum-rpc.publicnode.com",
+    "cast call 0xF930EBBd05eF8b25B1797b9b2109DDC9B0d43063 \"getThreshold()\" --block 26422051 --rpc-url https://eth.drpc.org",
+    "cast storage 0xF930EBBd05eF8b25B1797b9b2109DDC9B0d43063 4 --block 26422051 --rpc-url https://ethereum-rpc.publicnode.com",
+    "cast storage 0xF930EBBd05eF8b25B1797b9b2109DDC9B0d43063 4 --block 26422051 --rpc-url https://eth.drpc.org"
+  ],
+  "rpcOutputs": {
+    "a": "getThreshold() = 0x0000000000000000000000000000000000000000000000000000000000000003 (3); eth_getStorageAt slot 3 (ownerCount) = 0x0000000000000000000000000000000000000000000000000000000000000005 (5); eth_getStorageAt slot 4 (threshold) = 0x0000000000000000000000000000000000000000000000000000000000000003 (3); getOwners() = [0xf2875cb91c35e0ddc9b76b15e2aae236d393efff, 0xe3268adb23043b3acc7083e96912aeeb4feb4df2, 0x07c2d0e24530199e2c9a15bfed4496d8e3798003, 0x4046b37ffc36b0c723d7fc64e0c763b698d81934, 0xeb9f416fa098697d95e70b20439f19097eb741ed]",
+    "b": "getThreshold() = 0x0000000000000000000000000000000000000000000000000000000000000003 (3); eth_getStorageAt slot 3 (ownerCount) = 0x0000000000000000000000000000000000000000000000000000000000000005 (5); eth_getStorageAt slot 4 (threshold) = 0x0000000000000000000000000000000000000000000000000000000000000003 (3); getOwners() = [0xf2875cb91c35e0ddc9b76b15e2aae236d393efff, 0xe3268adb23043b3acc7083e96912aeeb4feb4df2, 0x07c2d0e24530199e2c9a15bfed4496d8e3798003, 0x4046b37ffc36b0c723d7fc64e0c763b698d81934, 0xeb9f416fa098697d95e70b20439f19097eb741ed]"
+  },
+  "docsUrl": "https://docs.stakedao.org/treasury",
+  "docsQuote": "All wallets use a 4-of-7 multisig structure.",
+  "mcpOutput": {
+    "schema": "pacta.protocol_lookup.v1",
+    "query": "Stake DAO",
+    "totalMatches": 0,
+    "count": 0,
+    "results": [],
+    "totalCatalog": {
+      "protocols": 62,
+      "briefs": 8
+    },
+    "catalog": "https://pacta.wtf/api/v1/lookup.json"
+  },
+  "apacheGrant": true,
+  "rules": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
