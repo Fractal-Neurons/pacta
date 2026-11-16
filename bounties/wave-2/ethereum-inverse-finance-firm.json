@@ -1,0 +1,90 @@
+{
+  "wave": 2,
+  "category": "post_pin_drift",
+  "slug": "inverse-finance-firm",
+  "protocol": "Inverse Finance (FiRM)",
+  "chainId": 1,
+  "contractAddress": "0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7",
+  "pactaSlug": "inverse-finance-firm",
+  "priorPin": "Pacta pinned block 26399876 (Policy Committee Safe surface; slug latest pin 26406106)",
+  "hunter": "alkeke45-cpu",
+  "basePayoutAddress": "0x411fb1627cFcb10074b34844812B26d43aF70c6e",
+  "mcpProof": {
+    "tool": "pacta_scan_control_plane",
+    "arguments": {
+      "chain": "ethereum",
+      "address": "0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7",
+      "caller_agent": "custom-agent",
+      "requester_role": "security_researcher",
+      "caller_purpose": "security_audit"
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\n  \"chain\": \"ethereum\",\n  \"address\": \"0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7\",\n  \"block\": {\n    \"number\": 26429975,\n    \"hash\": \"0xed9757569c1834b61fce8e4b0d302c57af454379f90500fed95453185d51dfd1\",\n    \"timestamp\": 1794860819\n  },\n  \"codeBytes\": 171,\n  \"eip1967\": {\n    \"implementation\": null,\n    \"admin\": null,\n    \"beacon\": null\n  },\n  \"owner\": null,\n  \"probedStatus\": {\n    \"eip1967Slots\": \"ok\",\n    \"owner\": \"reverted_or_absent\",\n    \"safeGetters\": \"ok\"\n  },\n  \"safe\": {\n    \"threshold\": 3,\n    \"owners\": [\n      \"0x52f63971afD2a32524c859C29943f9BEa38CA907\",\n      \"0x3FcB35a1CbFB6007f9BC638D388958Bc4550cB28\",\n      \"0x962228a90eaC69238c7D1F216d80037e61eA9255\",\n      \"0x9F3614afb3Df9f899caDBFfaA05c6C908059F726\",\n      \"0x6535020cCeB810Bdb3F3cA5e93dE2460FF7989BB\",\n      \"0x2723723FDd3Db8ba2D6f0e1B333e90A7E60A0411\"\n    ],\n    \"ownerCount\": 6,\n    \"guard\": null\n  },\n  \"upgradeAuthority\": null,\n  \"ownerPrincipal\": null,\n  \"riskFlags\": [\n    \"not_eip1967_upgradeable\"\n  ],\n  \"summary\": \"OBSERVED: No EIP-1967, Ownable, or Safe single-key control detected in probed standard slots/selectors (custom AccessControl/RolesAuthority not excluded)\"\n}"
+        }
+      ],
+      "structuredContent": {
+        "chain": "ethereum",
+        "address": "0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7",
+        "block": {
+          "number": 26429975,
+          "hash": "0xed9757569c1834b61fce8e4b0d302c57af454379f90500fed95453185d51dfd1",
+          "timestamp": 1794860819
+        },
+        "codeBytes": 171,
+        "eip1967": {
+          "implementation": null,
+          "admin": null,
+          "beacon": null
+        },
+        "owner": null,
+        "probedStatus": {
+          "eip1967Slots": "ok",
+          "owner": "reverted_or_absent",
+          "safeGetters": "ok"
+        },
+        "safe": {
+          "threshold": 3,
+          "owners": [
+            "0x52f63971afD2a32524c859C29943f9BEa38CA907",
+            "0x3FcB35a1CbFB6007f9BC638D388958Bc4550cB28",
+            "0x962228a90eaC69238c7D1F216d80037e61eA9255",
+            "0x9F3614afb3Df9f899caDBFfaA05c6C908059F726",
+            "0x6535020cCeB810Bdb3F3cA5e93dE2460FF7989BB",
+            "0x2723723FDd3Db8ba2D6f0e1B333e90A7E60A0411"
+          ],
+          "ownerCount": 6,
+          "guard": null
+        },
+        "upgradeAuthority": null,
+        "ownerPrincipal": null,
+        "riskFlags": [
+          "not_eip1967_upgradeable"
+        ],
+        "summary": "OBSERVED: No EIP-1967, Ownable, or Safe single-key control detected in probed standard slots/selectors (custom AccessControl/RolesAuthority not excluded)"
+      },
+      "isError": false
+    }
+  },
+  "blockNumber": 26429808,
+  "blockHash": "0x6452ca9d0a80b76d20540df5f180af1ec3b9a0de24df54c01dc3b4dd062365a9",
+  "castCommands": [
+    "cast call 0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7 \"getThreshold()(uint256)\" --block 26429808 --rpc-url https://eth.drpc.org",
+    "cast call 0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7 \"getThreshold()(uint256)\" --block 26429808 --rpc-url https://eth-mainnet.public.blastapi.io"
+  ],
+  "rpcOutputs": {
+    "a": "3",
+    "b": "3"
+  },
+  "docsUrl": "https://pacta.wtf/api/v1/index.json",
+  "docsQuote": "Policy Committee Safe (0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7) with getThreshold() = 4, getOwners().length = 7 (4-of-7 Gnosis Safe)",
+  "apache2CommercialGrant": true,
+  "rulesAccepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
