@@ -1,0 +1,80 @@
+{
+  "wave": 2,
+  "category": "curated_vault_mismatch",
+  "slug": "gauntlet-usdc-prime",
+  "protocol": "Gauntlet USDC Prime",
+  "chainId": 8453,
+  "contractAddress": "0xeE8F4eC5672F09119b96Ab6fB59C27E1b7e44b61",
+  "vaultPlatform": "morpho",
+  "tvlUsd": 396046080,
+  "tvlReference": "https://defillama.com/protocol/morpho",
+  "hunter": "givemehat",
+  "agentFramework": "antigravity",
+  "basePayoutAddress": "0xFFE286685fB8C12c3d59728DA29E44a637C22d3d",
+  "mcpProof": {
+    "tool": "pacta_check_preflight",
+    "arguments": {
+      "chain": "base",
+      "address": "0xeE8F4eC5672F09119b96Ab6fB59C27E1b7e44b61",
+      "caller_agent": "antigravity",
+      "requester_role": "autonomous_agent",
+      "caller_purpose": "governance_monitoring"
+    },
+    "result": {
+      "schema": "pacta.preflight_check.v1",
+      "chain": "base",
+      "chainId": 8453,
+      "address": "0xeE8F4eC5672F09119b96Ab6fB59C27E1b7e44b61",
+      "pinnedBlock": 58305747,
+      "pinnedBlockHash": "0xcd6de21dee0b6944a7f32def75cbd341b682e887a79e08346944ea5e41028c0c",
+      "blockTimestamp": 1794851525,
+      "verdict": "MULTISIG_NO_TIMELOCK",
+      "riskScore": 55,
+      "isContract": true,
+      "isProxy": false,
+      "proxyType": null,
+      "implementation": null,
+      "beacon": null,
+      "hasAdminSlot": false,
+      "canUpgradeZeroDelay": false,
+      "capabilities": {
+        "pause": false,
+        "blacklist": false,
+        "upgrade": false
+      },
+      "paused": null,
+      "controller": {
+        "address": "0x5a4E19842e09000a582c20A4f524C26Fb48Dd4D0",
+        "kind": "multisig_safe",
+        "safeThreshold": 4,
+        "timelockDelaySec": null,
+        "safeOwnerCount": 7,
+        "source": "owner()"
+      },
+      "roleAdminMembers": null,
+      "codeBytes": 19340,
+      "method": "Batched JSON-RPC reads pinned to the block hash (EIP-1898); EIP-1967 / EIP-1822 / beacon proxies; capabilities from PUSH4 selectors in proxy + implementation bytecode (heuristic).",
+      "summary": "Controlled by a 4-of-7 Safe with no timelock: changes can land instantly once signers agree.",
+      "coverage_gap_hint": "Target is not yet indexed or fully classified. Ask the user if they want you to queue coverage or request this capability via pacta_submit_request (free community queue, or 24h priority clearance for issuers)."
+    }
+  },
+  "blockNumber": 58305747,
+  "blockHash": "0xcd6de21dee0b6944a7f32def75cbd341b682e887a79e08346944ea5e41028c0c",
+  "castCommands": [
+    "cast call 0xeE8F4eC5672F09119b96Ab6fB59C27E1b7e44b61 \"owner()(address)\" --block 58305747 --rpc-url https://mainnet.base.org",
+    "cast call 0xeE8F4eC5672F09119b96Ab6fB59C27E1b7e44b61 \"owner()(address)\" --block 58305747 --rpc-url https://base-rpc.publicnode.com"
+  ],
+  "rpcOutputs": {
+    "a": "0x5a4E19842e09000a582c20A4f524C26Fb48Dd4D0",
+    "b": "0x5a4E19842e09000a582c20A4f524C26Fb48Dd4D0"
+  },
+  "docsUrl": "https://docs.morpho.org/curate/concepts/timelock/",
+  "docsQuote": "The timelock is a cornerstone of security in Morpho Vaults. It is a mandatory waiting period for sensitive administrative actions, designed to protect users by ensuring transparency and providing a window to react to proposed changes.",
+  "apache2CommercialGrant": true,
+  "rulesAccepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
