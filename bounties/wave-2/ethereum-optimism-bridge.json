@@ -1,0 +1,86 @@
+{
+  "wave": 2,
+  "category": "protocol_mismatch",
+  "slug": "optimism-bridge",
+  "protocol": "Optimism Bridge",
+  "chainId": 1,
+  "contractAddress": "0x2A82Ae142b2e62Cb7D10b55E323ACB1Cab663a26",
+  "hunter": "alkeke45-cpu",
+  "basePayoutAddress": "0x411fb1627cFcb10074b34844812B26d43aF70c6e",
+  "mcpProof": {
+    "tool": "pacta_check_preflight",
+    "arguments": {
+      "chain": "ethereum",
+      "address": "0x2A82Ae142b2e62Cb7D10b55E323ACB1Cab663a26",
+      "caller_agent": "custom-agent",
+      "requester_role": "security_researcher",
+      "caller_purpose": "security_audit"
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\n  \"schema\": \"pacta.preflight_check.v1\",\n  \"chain\": \"ethereum\",\n  \"chainId\": 1,\n  \"address\": \"0x2A82Ae142b2e62Cb7D10b55E323ACB1Cab663a26\",\n  \"pinnedBlock\": 26428927,\n  \"pinnedBlockHash\": \"0x7ee41d2e0bc6433ed0cb87df8860c61b92c72d30e4c3b1067a437adc7ec3c004\",\n  \"blockTimestamp\": 1794848219,\n  \"verdict\": \"IMMUTABLE_NO_ADMIN\",\n  \"riskScore\": 0,\n  \"isContract\": true,\n  \"isProxy\": false,\n  \"proxyType\": null,\n  \"implementation\": null,\n  \"beacon\": null,\n  \"hasAdminSlot\": false,\n  \"canUpgradeZeroDelay\": false,\n  \"capabilities\": {\n    \"pause\": false,\n    \"blacklist\": false,\n    \"upgrade\": false\n  },\n  \"paused\": null,\n  \"controller\": {\n    \"address\": null,\n    \"kind\": \"none\",\n    \"safeThreshold\": null,\n    \"timelockDelaySec\": null,\n    \"source\": null\n  },\n  \"roleAdminMembers\": null,\n  \"codeBytes\": 171,\n  \"method\": \"Batched JSON-RPC reads pinned to the block hash (EIP-1898); EIP-1967 / EIP-1822 / beacon proxies; capabilities from PUSH4 selectors in proxy + implementation bytecode (heuristic).\",\n  \"summary\": \"No proxy (EIP-1967, EIP-1822 or beacon) and no owner(), admin(), authority() or AccessControl admin found: immutable as far as these standard surfaces show.\",\n  \"coverage_gap_hint\": \"Target is not yet indexed or fully classified. Ask the user if they want you to queue coverage or request this capability via pacta_submit_request (free community queue, or 24h priority clearance for issuers).\"\n}"
+        }
+      ],
+      "structuredContent": {
+        "schema": "pacta.preflight_check.v1",
+        "chain": "ethereum",
+        "chainId": 1,
+        "address": "0x2A82Ae142b2e62Cb7D10b55E323ACB1Cab663a26",
+        "pinnedBlock": 26428927,
+        "pinnedBlockHash": "0x7ee41d2e0bc6433ed0cb87df8860c61b92c72d30e4c3b1067a437adc7ec3c004",
+        "blockTimestamp": 1794848219,
+        "verdict": "IMMUTABLE_NO_ADMIN",
+        "riskScore": 0,
+        "isContract": true,
+        "isProxy": false,
+        "proxyType": null,
+        "implementation": null,
+        "beacon": null,
+        "hasAdminSlot": false,
+        "canUpgradeZeroDelay": false,
+        "capabilities": {
+          "pause": false,
+          "blacklist": false,
+          "upgrade": false
+        },
+        "paused": null,
+        "controller": {
+          "address": null,
+          "kind": "none",
+          "safeThreshold": null,
+          "timelockDelaySec": null,
+          "source": null
+        },
+        "roleAdminMembers": null,
+        "codeBytes": 171,
+        "method": "Batched JSON-RPC reads pinned to the block hash (EIP-1898); EIP-1967 / EIP-1822 / beacon proxies; capabilities from PUSH4 selectors in proxy + implementation bytecode (heuristic).",
+        "summary": "No proxy (EIP-1967, EIP-1822 or beacon) and no owner(), admin(), authority() or AccessControl admin found: immutable as far as these standard surfaces show.",
+        "coverage_gap_hint": "Target is not yet indexed or fully classified. Ask the user if they want you to queue coverage or request this capability via pacta_submit_request (free community queue, or 24h priority clearance for issuers)."
+      },
+      "isError": false
+    }
+  },
+  "blockNumber": 26428853,
+  "blockHash": "0x3ff48b029c111c7cb0bc776e9693cf6e1ca2f19a929b4d77898b2e53faa38736",
+  "castCommands": [
+    "cast call 0x2A82Ae142b2e62Cb7D10b55E323ACB1Cab663a26 \"getThreshold()(uint256)\" --block 26428853 --rpc-url https://ethereum-rpc.publicnode.com",
+    "cast call 0x2A82Ae142b2e62Cb7D10b55E323ACB1Cab663a26 \"getThreshold()(uint256)\" --block 26428853 --rpc-url https://eth.drpc.org"
+  ],
+  "rpcOutputs": {
+    "a": "1",
+    "b": "1"
+  },
+  "docsUrl": "https://docs.optimism.io/op-stack/protocol/privileged-roles",
+  "docsQuote": "Mint Manager Owner is a 3-of-5 multisig.",
+  "tvlUsd": 439884944,
+  "tvlReference": "https://api.llama.fi/protocol/optimism-bridge",
+  "apache2CommercialGrant": true,
+  "rulesAccepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
