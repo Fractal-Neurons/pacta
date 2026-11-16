@@ -1,0 +1,79 @@
+{
+  "wave": 2,
+  "category": "curated_vault_mismatch",
+  "slug": "1337-usdc",
+  "protocol": "1337 USDC",
+  "chainId": 1,
+  "contractAddress": "0x94643e86aa5E38DDAc6c7791C1297f4E40cD96c1",
+  "vaultPlatform": "morpho",
+  "tvlUsd": 601953940,
+  "tvlReference": "https://defillama.com/protocol/morpho",
+  "hunter": "givemehat",
+  "agentFramework": "antigravity",
+  "basePayoutAddress": "0xFFE286685fB8C12c3d59728DA29E44a637C22d3d",
+  "mcpProof": {
+    "tool": "pacta_check_preflight",
+    "arguments": {
+      "chain": "ethereum",
+      "address": "0x94643e86aa5E38DDAc6c7791C1297f4E40cD96c1",
+      "caller_agent": "antigravity",
+      "requester_role": "autonomous_agent",
+      "caller_purpose": "governance_monitoring"
+    },
+    "result": {
+      "schema": "pacta.preflight_check.v1",
+      "chain": "ethereum",
+      "chainId": 1,
+      "address": "0x94643e86aa5E38DDAc6c7791C1297f4E40cD96c1",
+      "pinnedBlock": 26429279,
+      "pinnedBlockHash": "0x38a6489274324578a317e57680f8a6c650f87a62a5570b6e2fd434156f3908a1",
+      "blockTimestamp": 1794852443,
+      "verdict": "INSTANT_EOA_ADMIN_RISK",
+      "riskScore": 90,
+      "isContract": true,
+      "isProxy": false,
+      "proxyType": null,
+      "implementation": null,
+      "beacon": null,
+      "hasAdminSlot": false,
+      "canUpgradeZeroDelay": false,
+      "capabilities": {
+        "pause": false,
+        "blacklist": false,
+        "upgrade": false
+      },
+      "paused": null,
+      "controller": {
+        "address": "0x1467b99d8FEC651CB85a4498BFf47094cBA95250",
+        "kind": "eoa",
+        "safeThreshold": null,
+        "timelockDelaySec": null,
+        "source": "owner()"
+      },
+      "roleAdminMembers": null,
+      "codeBytes": 19730,
+      "method": "Batched JSON-RPC reads pinned to the block hash (EIP-1898); EIP-1967 / EIP-1822 / beacon proxies; capabilities from PUSH4 selectors in proxy + implementation bytecode (heuristic).",
+      "summary": "Controlled by a single externally owned account: one key can change this contract instantly.",
+      "coverage_gap_hint": "Target is not yet indexed or fully classified. Ask the user if they want you to queue coverage or request this capability via pacta_submit_request (free community queue, or 24h priority clearance for issuers)."
+    }
+  },
+  "blockNumber": 26429279,
+  "blockHash": "0x38a6489274324578a317e57680f8a6c650f87a62a5570b6e2fd434156f3908a1",
+  "castCommands": [
+    "cast call 0x94643e86aa5E38DDAc6c7791C1297f4E40cD96c1 \"owner()(address)\" --block 26429279 --rpc-url https://ethereum-rpc.publicnode.com",
+    "cast call 0x94643e86aa5E38DDAc6c7791C1297f4E40cD96c1 \"owner()(address)\" --block 26429279 --rpc-url https://rpc.mevblocker.io"
+  ],
+  "rpcOutputs": {
+    "a": "0x1467b99d8FEC651CB85a4498BFf47094cBA95250",
+    "b": "0x1467b99d8FEC651CB85a4498BFf47094cBA95250"
+  },
+  "docsUrl": "https://docs.morpho.org/curate/concepts/timelock/",
+  "docsQuote": "The timelock is a cornerstone of security in Morpho Vaults. It is a mandatory waiting period for sensitive administrative actions, designed to protect users by ensuring transparency and providing a window to react to proposed changes.",
+  "apache2CommercialGrant": true,
+  "rulesAccepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
