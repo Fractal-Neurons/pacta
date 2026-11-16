@@ -1,0 +1,68 @@
+{
+  "slot": "3",
+  "issue": "https://github.com/Fractal-Neurons/pacta/issues/23",
+  "chainId": "8453",
+  "contractAddress": "0x9c4ec768c28520B50860ea7a15bd7213a9fF58bf",
+  "protocol": "Compound V3 (Comet cUSDCv3)",
+  "tvlReference": "https://defillama.com/protocol/compound-v3",
+  "pactaSlug": null,
+  "blockNumber": "57839244",
+  "blockHash": "0xa79ada1a532b7a01be9479db7fa5cf54fde853567e0c742d0f8cc7bc191c1d62",
+  "priorPin": null,
+  "castCommands": [
+    "cast storage 0x9c4ec768c28520B50860ea7a15bd7213a9fF58bf 0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103 --block 57839244 --rpc-url https://mainnet.base.org",
+    "cast storage 0x9c4ec768c28520B50860ea7a15bd7213a9fF58bf 0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103 --block 57839244 --rpc-url https://base-rpc.publicnode.com"
+  ],
+  "rpcOutputs": {
+    "a": "0x000000000000000000000000bde8f31d2ddda895264e27dd990fab3dc87b372d",
+    "b": "0x000000000000000000000000bde8f31d2ddda895264e27dd990fab3dc87b372d"
+  },
+  "docsUrl": "https://docs.compound.finance/v2/governance/",
+  "docsQuote": "The Timelock has a hard-coded minimum delay which is the least amount of notice possible for a governance action.",
+  "mcpOutput": {
+    "schema": "pacta.preflight_check.v1",
+    "chain": "base",
+    "chainId": 8453,
+    "address": "0x9c4ec768c28520B50860ea7a15bd7213a9fF58bf",
+    "pinnedBlock": 57839244,
+    "pinnedBlockHash": "0xa79ada1a532b7a01be9479db7fa5cf54fde853567e0c742d0f8cc7bc191c1d62",
+    "blockTimestamp": 1794758224,
+    "verdict": "TIMELOCK_PROTECTED",
+    "riskScore": 15,
+    "isContract": true,
+    "isProxy": true,
+    "proxyType": "eip1967",
+    "implementation": "0x3a82A35fe68D975F8eDB5E8DfFA60B13FbB4e040",
+    "beacon": null,
+    "hasAdminSlot": true,
+    "canUpgradeZeroDelay": false,
+    "capabilities": {
+      "pause": false,
+      "blacklist": false,
+      "upgrade": true
+    },
+    "paused": null,
+    "controller": {
+      "address": "0xCC3E7c85Bb0EE4f09380e041fee95a0caeDD4a02",
+      "kind": "timelock",
+      "safeThreshold": null,
+      "timelockDelaySec": 86400,
+      "proxyAdmin": "0xbdE8F31D2DdDA895264e27DD990faB3DC87b372d",
+      "source": "eip1967_admin_slot"
+    },
+    "roleAdminMembers": null,
+    "codeBytes": 1878,
+    "method": "Batched JSON-RPC reads pinned to the block hash (EIP-1898); EIP-1967 / EIP-1822 / beacon proxies; capabilities from PUSH4 selectors in proxy + implementation bytecode (heuristic).",
+    "summary": "Controlled by a timelock (86400 s minimum delay). Capabilities seen in bytecode: upgrade.",
+    "coverage_gap_hint": "Target is not yet indexed or fully classified. Ask the user if they want you to queue coverage or request this capability via pacta_submit_request (free community queue, or 24h priority clearance for issuers)."
+  },
+  "payoutAddress": "0x703d3948cc102BF4Bc0Ef93EF330f56bE2AFd69C",
+  "payoutNetwork": "base_l2",
+  "apacheGrant": true,
+  "rules": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
