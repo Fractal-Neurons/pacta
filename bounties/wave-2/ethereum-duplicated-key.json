@@ -1,0 +1,96 @@
+{
+  "wave": 2,
+  "category": "curated_vault_mismatch",
+  "vaultPlatform": "morpho",
+  "slug": "duplicated-key",
+  "protocol": "Duplicated Key Morpho Vault",
+  "chainId": 1,
+  "contractAddress": "0x0B6C8ef0DE1Be5ed1B59E6e7a67fB9442FB9E49C",
+  "hunter": "givemehat",
+  "agentFramework": "claude-code",
+  "basePayoutAddress": "0xFFE286685fB8C12c3d59728DA29E44a637C22d3d",
+  "mcpProof": {
+    "tool": "pacta_check_preflight",
+    "arguments": {
+      "chain": "ethereum",
+      "address": "0x0B6C8ef0DE1Be5ed1B59E6e7a67fB9442FB9E49C"
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\n  \"schema\": \"pacta.preflight_check.v1\",\n  \"chain\": \"ethereum\",\n  \"chainId\": 1,\n  \"address\": \"0x0B6C8ef0DE1Be5ed1B59E6e7a67fB9442FB9E49C\",\n  \"pinnedBlock\": 26436438,\n  \"pinnedBlockHash\": \"0x4529f9e90abafa73e6f71cb9dc9e84ae0dc692430bcea4790478515750015200\",\n  \"blockTimestamp\": 1794938651,\n  \"verdict\": \"INSTANT_EOA_ADMIN_RISK\",\n  \"riskScore\": 90,\n  \"isContract\": true,\n  \"isProxy\": false,\n  \"proxyType\": null,\n  \"implementation\": null,\n  \"beacon\": null,\n  \"hasAdminSlot\": false,\n  \"canUpgradeZeroDelay\": false,\n  \"capabilities\": {\n    \"pause\": false,\n    \"blacklist\": false,\n    \"upgrade\": false\n  },\n  \"paused\": null,\n  \"controller\": {\n    \"address\": \"0x27DE5155c2407Bc0161e571b2086d0B700446D73\",\n    \"kind\": \"eoa\",\n    \"safeThreshold\": null,\n    \"timelockDelaySec\": null,\n    \"source\": \"owner()\"\n  },\n  \"roleAdminMembers\": null,\n  \"codeBytes\": 19730,\n  \"method\": \"Batched JSON-RPC reads pinned to the block hash (EIP-1898); EIP-1967 / EIP-1822 / beacon proxies; capabilities from PUSH4 selectors in proxy + implementation bytecode (heuristic).\",\n  \"summary\": \"Controlled by a single externally owned account: one key can change this contract instantly.\",\n  \"source\": \"live_rpc\",\n  \"assessment\": {\n    \"coverage\": \"unindexed_bytecode_heuristic\",\n    \"confidence\": \"medium\",\n    \"method\": \"Live bytecode + storage heuristic at the pinned block only: this contract is not in Pacta's indexed catalog (no documentation comparison).\",\n    \"limits\": [\n      \"riskScore (0-100) is a heuristic of the controller type and of pause / blacklist / upgrade capabilities read at one block; it is not an audit.\",\n      \"The live check reads EIP-1967 slots, owner(), Safe getThreshold() / getOwners() and TimelockController getMinDelay(); custom role systems, bridge or L2 admin paths and off-chain operations are not resolved.\",\n      \"Documentation is compared only for indexed protocols (catalogMatch), at their pinned block.\"\n    ]\n  },\n  \"coverage_gap_hint\": \"Target is not yet indexed or fully classified. Ask the user if they want you to queue coverage or request this capability via pacta_submit_request (free community queue, or 24h priority clearance for issuers).\"\n}"
+        }
+      ],
+      "structuredContent": {
+        "schema": "pacta.preflight_check.v1",
+        "chain": "ethereum",
+        "chainId": 1,
+        "address": "0x0B6C8ef0DE1Be5ed1B59E6e7a67fB9442FB9E49C",
+        "pinnedBlock": 26436438,
+        "pinnedBlockHash": "0x4529f9e90abafa73e6f71cb9dc9e84ae0dc692430bcea4790478515750015200",
+        "blockTimestamp": 1794938651,
+        "verdict": "INSTANT_EOA_ADMIN_RISK",
+        "riskScore": 90,
+        "isContract": true,
+        "isProxy": false,
+        "proxyType": null,
+        "implementation": null,
+        "beacon": null,
+        "hasAdminSlot": false,
+        "canUpgradeZeroDelay": false,
+        "capabilities": {
+          "pause": false,
+          "blacklist": false,
+          "upgrade": false
+        },
+        "paused": null,
+        "controller": {
+          "address": "0x27DE5155c2407Bc0161e571b2086d0B700446D73",
+          "kind": "eoa",
+          "safeThreshold": null,
+          "timelockDelaySec": null,
+          "source": "owner()"
+        },
+        "roleAdminMembers": null,
+        "codeBytes": 19730,
+        "method": "Batched JSON-RPC reads pinned to the block hash (EIP-1898); EIP-1967 / EIP-1822 / beacon proxies; capabilities from PUSH4 selectors in proxy + implementation bytecode (heuristic).",
+        "summary": "Controlled by a single externally owned account: one key can change this contract instantly.",
+        "source": "live_rpc",
+        "assessment": {
+          "coverage": "unindexed_bytecode_heuristic",
+          "confidence": "medium",
+          "method": "Live bytecode + storage heuristic at the pinned block only: this contract is not in Pacta's indexed catalog (no documentation comparison).",
+          "limits": [
+            "riskScore (0-100) is a heuristic of the controller type and of pause / blacklist / upgrade capabilities read at one block; it is not an audit.",
+            "The live check reads EIP-1967 slots, owner(), Safe getThreshold() / getOwners() and TimelockController getMinDelay(); custom role systems, bridge or L2 admin paths and off-chain operations are not resolved.",
+            "Documentation is compared only for indexed protocols (catalogMatch), at their pinned block."
+          ]
+        },
+        "coverage_gap_hint": "Target is not yet indexed or fully classified. Ask the user if they want you to queue coverage or request this capability via pacta_submit_request (free community queue, or 24h priority clearance for issuers)."
+      },
+      "isError": false
+    }
+  },
+  "blockNumber": 26436438,
+  "blockHash": "0x4529f9e90abafa73e6f71cb9dc9e84ae0dc692430bcea4790478515750015200",
+  "castCommands": [
+    "cast call 0x0B6C8ef0DE1Be5ed1B59E6e7a67fB9442FB9E49C \"timelock()(uint256)\" --block 26436438 --rpc-url https://eth.drpc.org",
+    "cast call 0x0B6C8ef0DE1Be5ed1B59E6e7a67fB9442FB9E49C \"timelock()(uint256)\" --block 26436438 --rpc-url https://rpc.mevblocker.io"
+  ],
+  "rpcOutputs": {
+    "a": "0",
+    "b": "0"
+  },
+  "docsUrl": "https://docs.morpho.org/curate/concepts/timelock/",
+  "docsQuote": "After the initial setup, any change to the timelock must set its duration to be between 1 day and 2 weeks.",
+  "tvlUsd": 5147208.0,
+  "tvlReference": "https://app.morpho.org/vault?vault=0x0B6C8ef0DE1Be5ed1B59E6e7a67fB9442FB9E49C&network=mainnet",
+  "apache2CommercialGrant": true,
+  "rulesAccepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
