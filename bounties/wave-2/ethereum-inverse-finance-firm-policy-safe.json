@@ -1,0 +1,80 @@
+{
+  "wave": 2,
+  "category": "post_pin_drift",
+  "slug": "inverse-finance-firm-policy-safe",
+  "protocol": "Inverse Finance (FiRM)",
+  "chainId": 1,
+  "contractAddress": "0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7",
+  "pactaSlug": "inverse-finance-firm",
+  "priorPin": "Pacta pinned block 26399876 (surface inverse-finance-firm-policy-safe, blockHash 0x8bf896b892683ff3267b88b367ab015a70cf5caf53542eb405f4f648f6bcde8a)",
+  "hunter": "farmmer938-lgtm",
+  "agentFramework": "openhands",
+  "basePayoutAddress": "0xf3C99a6d6e7C6b2ae00b44dC42cC3eb7691D7702",
+  "mcpProof": {
+    "tool": "pacta_scan_control_plane",
+    "arguments": {
+      "chain": "ethereum",
+      "address": "0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7",
+      "caller_agent": "af-m938-1"
+    },
+    "result": {
+      "chain": "ethereum",
+      "address": "0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7",
+      "block": {
+        "number": 26435858,
+        "hash": "0xd34f760ecc2af1c185a23b1276d63a02f5ab473572a6821ea03f210cc1afca33",
+        "timestamp": 1794931667
+      },
+      "codeBytes": 171,
+      "eip1967": {
+        "implementation": null,
+        "admin": null,
+        "beacon": null
+      },
+      "owner": null,
+      "probedStatus": {
+        "eip1967Slots": "ok",
+        "owner": "reverted_or_absent",
+        "safeGetters": "ok"
+      },
+      "safe": {
+        "threshold": 3,
+        "owners": [
+          "0x52f63971afD2a32524c859C29943f9BEa38CA907",
+          "0x3FcB35a1CbFB6007f9BC638D388958Bc4550cB28",
+          "0x962228a90eaC69238c7D1F216d80037e61eA9255",
+          "0x9F3614afb3Df9f899caDBFfaA05c6C908059F726",
+          "0x6535020cCeB810Bdb3F3cA5e93dE2460FF7989BB",
+          "0x2723723FDd3Db8ba2D6f0e1B333e90A7E60A0411"
+        ],
+        "ownerCount": 6,
+        "guard": null
+      },
+      "upgradeAuthority": null,
+      "ownerPrincipal": null,
+      "riskFlags": [
+        "not_eip1967_upgradeable"
+      ],
+      "summary": "OBSERVED: No EIP-1967, Ownable, or Safe single-key control detected in probed standard slots/selectors (custom AccessControl/RolesAuthority not excluded)"
+    }
+  },
+  "blockNumber": 26435773,
+  "blockHash": "0x1077fc52f79dd72a23ab3bc3eb1c223d6546f1f303bdd0d44e901f79dc307610",
+  "castCommands": [
+    "cast call 0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7 \"getThreshold()(uint256)\" --block 26435773 --rpc-url https://eth.drpc.org",
+    "cast call 0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7 \"getThreshold()(uint256)\" --block 26435773 --rpc-url https://eth-mainnet.public.blastapi.io"
+  ],
+  "rpcOutputs": {
+    "a": "3",
+    "b": "3"
+  },
+  "docsUrl": "https://docs.inverse.finance/inverse-finance/inverse-finance/governance/governance-overview",
+  "docsQuote": "Policy Committee 5 of 9 Governance guardian role (can cancel proposals), manages reward rate policies, operates as BondsManager",
+  "apache2CommercialGrant": true,
+  "rulesAccepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
