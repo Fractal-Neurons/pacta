@@ -8,7 +8,7 @@
   "hunter": "alkeke45-cpu",
   "basePayoutAddress": "0x411fb1627cFcb10074b34844812B26d43aF70c6e",
   "mcpProof": {
-    "tool": "pacta_check_preflight",
+    "tool": "pacta_scan_control_plane",
     "arguments": {
       "chain": "ethereum",
       "address": "0x2A82Ae142b2e62Cb7D10b55E323ACB1Cab663a26",
@@ -20,44 +20,43 @@
       "content": [
         {
           "type": "text",
-          "text": "{\n  \"schema\": \"pacta.preflight_check.v1\",\n  \"chain\": \"ethereum\",\n  \"chainId\": 1,\n  \"address\": \"0x2A82Ae142b2e62Cb7D10b55E323ACB1Cab663a26\",\n  \"pinnedBlock\": 26428927,\n  \"pinnedBlockHash\": \"0x7ee41d2e0bc6433ed0cb87df8860c61b92c72d30e4c3b1067a437adc7ec3c004\",\n  \"blockTimestamp\": 1794848219,\n  \"verdict\": \"IMMUTABLE_NO_ADMIN\",\n  \"riskScore\": 0,\n  \"isContract\": true,\n  \"isProxy\": false,\n  \"proxyType\": null,\n  \"implementation\": null,\n  \"beacon\": null,\n  \"hasAdminSlot\": false,\n  \"canUpgradeZeroDelay\": false,\n  \"capabilities\": {\n    \"pause\": false,\n    \"blacklist\": false,\n    \"upgrade\": false\n  },\n  \"paused\": null,\n  \"controller\": {\n    \"address\": null,\n    \"kind\": \"none\",\n    \"safeThreshold\": null,\n    \"timelockDelaySec\": null,\n    \"source\": null\n  },\n  \"roleAdminMembers\": null,\n  \"codeBytes\": 171,\n  \"method\": \"Batched JSON-RPC reads pinned to the block hash (EIP-1898); EIP-1967 / EIP-1822 / beacon proxies; capabilities from PUSH4 selectors in proxy + implementation bytecode (heuristic).\",\n  \"summary\": \"No proxy (EIP-1967, EIP-1822 or beacon) and no owner(), admin(), authority() or AccessControl admin found: immutable as far as these standard surfaces show.\",\n  \"coverage_gap_hint\": \"Target is not yet indexed or fully classified. Ask the user if they want you to queue coverage or request this capability via pacta_submit_request (free community queue, or 24h priority clearance for issuers).\"\n}"
+          "text": "{\n  \"chain\": \"ethereum\",\n  \"address\": \"0x2A82Ae142b2e62Cb7D10b55E323ACB1Cab663a26\",\n  \"block\": {\n    \"number\": 26431307,\n    \"hash\": \"0x93ea57d892fb0fab2b6540d735c3d980b7255b2367fc8f82ac15e97efb10e263\",\n    \"timestamp\": 1794876827\n  },\n  \"codeBytes\": 171,\n  \"eip1967\": {\n    \"implementation\": null,\n    \"admin\": null,\n    \"beacon\": null\n  },\n  \"owner\": null,\n  \"probedStatus\": {\n    \"eip1967Slots\": \"ok\",\n    \"owner\": \"reverted_or_absent\",\n    \"safeGetters\": \"ok\"\n  },\n  \"safe\": {\n    \"threshold\": 1,\n    \"owners\": [\n      \"0x3F3Cd78Ef9Bd85961C0729E6BbB11E94Ca6f61D2\"\n    ],\n    \"ownerCount\": 1,\n    \"guard\": null\n  },\n  \"upgradeAuthority\": null,\n  \"ownerPrincipal\": null,\n  \"riskFlags\": [\n    \"not_eip1967_upgradeable\"\n  ],\n  \"summary\": \"OBSERVED: No EIP-1967, Ownable, or Safe single-key control detected in probed standard slots/selectors (custom AccessControl/RolesAuthority not excluded)\"\n}"
         }
       ],
       "structuredContent": {
-        "schema": "pacta.preflight_check.v1",
         "chain": "ethereum",
-        "chainId": 1,
         "address": "0x2A82Ae142b2e62Cb7D10b55E323ACB1Cab663a26",
-        "pinnedBlock": 26428927,
-        "pinnedBlockHash": "0x7ee41d2e0bc6433ed0cb87df8860c61b92c72d30e4c3b1067a437adc7ec3c004",
-        "blockTimestamp": 1794848219,
-        "verdict": "IMMUTABLE_NO_ADMIN",
-        "riskScore": 0,
-        "isContract": true,
-        "isProxy": false,
-        "proxyType": null,
-        "implementation": null,
-        "beacon": null,
-        "hasAdminSlot": false,
-        "canUpgradeZeroDelay": false,
-        "capabilities": {
-          "pause": false,
-          "blacklist": false,
-          "upgrade": false
+        "block": {
+          "number": 26431307,
+          "hash": "0x93ea57d892fb0fab2b6540d735c3d980b7255b2367fc8f82ac15e97efb10e263",
+          "timestamp": 1794876827
         },
-        "paused": null,
-        "controller": {
-          "address": null,
-          "kind": "none",
-          "safeThreshold": null,
-          "timelockDelaySec": null,
-          "source": null
-        },
-        "roleAdminMembers": null,
         "codeBytes": 171,
-        "method": "Batched JSON-RPC reads pinned to the block hash (EIP-1898); EIP-1967 / EIP-1822 / beacon proxies; capabilities from PUSH4 selectors in proxy + implementation bytecode (heuristic).",
-        "summary": "No proxy (EIP-1967, EIP-1822 or beacon) and no owner(), admin(), authority() or AccessControl admin found: immutable as far as these standard surfaces show.",
-        "coverage_gap_hint": "Target is not yet indexed or fully classified. Ask the user if they want you to queue coverage or request this capability via pacta_submit_request (free community queue, or 24h priority clearance for issuers)."
+        "eip1967": {
+          "implementation": null,
+          "admin": null,
+          "beacon": null
+        },
+        "owner": null,
+        "probedStatus": {
+          "eip1967Slots": "ok",
+          "owner": "reverted_or_absent",
+          "safeGetters": "ok"
+        },
+        "safe": {
+          "threshold": 1,
+          "owners": [
+            "0x3F3Cd78Ef9Bd85961C0729E6BbB11E94Ca6f61D2"
+          ],
+          "ownerCount": 1,
+          "guard": null
+        },
+        "upgradeAuthority": null,
+        "ownerPrincipal": null,
+        "riskFlags": [
+          "not_eip1967_upgradeable"
+        ],
+        "summary": "OBSERVED: No EIP-1967, Ownable, or Safe single-key control detected in probed standard slots/selectors (custom AccessControl/RolesAuthority not excluded)"
       },
       "isError": false
     }
