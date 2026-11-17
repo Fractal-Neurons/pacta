@@ -1,0 +1,85 @@
+{
+  "wave": 2,
+  "category": "protocol_mismatch",
+  "slug": "dolomite",
+  "protocol": "Dolomite",
+  "chainId": 1,
+  "contractAddress": "0xC2B66E247daE5Ee749Ae1d827190115F3653dE06",
+  "hunter": "VB-Blue",
+  "basePayoutAddress": "0xe0a3AAe6e7d042f42e82830f4eEbF426cc1270a2",
+  "mcpProof": {
+    "tool": "pacta_check_preflight",
+    "arguments": {
+      "chain": "ethereum",
+      "address": "0xC2B66E247daE5Ee749Ae1d827190115F3653dE06"
+    },
+    "result": {
+      "schema": "pacta.preflight_check.v1",
+      "chain": "ethereum",
+      "chainId": 1,
+      "address": "0xC2B66E247daE5Ee749Ae1d827190115F3653dE06",
+      "pinnedBlock": 26434791,
+      "pinnedBlockHash": "0x77541a196e47cba650ede8f49668551785671613917ad21738cde3336ec924bf",
+      "blockTimestamp": 1794918803,
+      "verdict": "UNCLASSIFIED_CONTRACT_CONTROLLER",
+      "riskScore": 60,
+      "isContract": true,
+      "isProxy": false,
+      "proxyType": null,
+      "implementation": null,
+      "beacon": null,
+      "hasAdminSlot": false,
+      "canUpgradeZeroDelay": false,
+      "capabilities": {
+        "pause": false,
+        "blacklist": false,
+        "upgrade": false
+      },
+      "paused": null,
+      "controller": {
+        "address": null,
+        "kind": "access_control",
+        "safeThreshold": null,
+        "timelockDelaySec": null,
+        "source": "bytecode grantRole / setAuthority (PUSH4 heuristic)"
+      },
+      "roleAdminMembers": null,
+      "codeBytes": 13011,
+      "method": "Batched JSON-RPC reads pinned to the block hash (EIP-1898); EIP-1967 / EIP-1822 / beacon proxies; capabilities from PUSH4 selectors in proxy + implementation bytecode (heuristic).",
+      "summary": "No owner(), admin() or authority() and getRoleMemberCount reverted, but the bytecode exposes grantRole / setAuthority (PUSH4 heuristic): role-based admin is likely and was not resolved; inspect it before relying on it.",
+      "source": "live_rpc",
+      "assessment": {
+        "coverage": "unindexed_bytecode_heuristic",
+        "confidence": "low",
+        "method": "Live bytecode + storage heuristic at the pinned block only: this contract is not in Pacta's indexed catalog (no documentation comparison).",
+        "limits": [
+          "riskScore (0-100) is a heuristic of the controller type and of pause / blacklist / upgrade capabilities read at one block; it is not an audit.",
+          "The live check reads EIP-1967 slots, owner(), Safe getThreshold() / getOwners() and TimelockController getMinDelay(); custom role systems, bridge or L2 admin paths and off-chain operations are not resolved.",
+          "Documentation is compared only for indexed protocols (catalogMatch), at their pinned block."
+        ]
+      },
+      "coverage_gap_hint": "Target is not yet indexed or fully classified. Ask the user if they want you to queue coverage or request this capability via pacta_submit_request (free community queue, or 24h priority clearance for issuers)."
+    }
+  },
+  "blockNumber": 26434722,
+  "blockHash": "0xa2392a0f2010656630f5ededfc289bfe849c76b02f4af7489a66a289ff48ddcb",
+  "castCommands": [
+    "cast call 0xC2B66E247daE5Ee749Ae1d827190115F3653dE06 \"secondsTimeLocked()(uint32)\" --block 26434722 --rpc-url https://ethereum-rpc.publicnode.com",
+    "cast call 0xC2B66E247daE5Ee749Ae1d827190115F3653dE06 \"secondsTimeLocked()(uint32)\" --block 26434722 --rpc-url https://eth.drpc.org"
+  ],
+  "rpcOutputs": {
+    "a": "300",
+    "b": "300"
+  },
+  "docsUrl": "https://docs.dolomite.io/admin-privileges",
+  "docsQuote": "At the time of launch, the delay on the delayed multi signature wallet is 1 day (86,400 seconds).",
+  "tvlUsd": 74361159.76,
+  "tvlReference": "https://api.llama.fi/protocol/dolomite",
+  "apache2CommercialGrant": true,
+  "rulesAccepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
