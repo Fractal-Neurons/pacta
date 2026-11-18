@@ -1,0 +1,210 @@
+{
+  "wave": 2,
+  "category": "curated_vault_mismatch",
+  "vaultPlatform": "morpho",
+  "slug": "yearn-og-usdc",
+  "protocol": "Yearn OG USDC",
+  "chainId": 1,
+  "contractAddress": "0xF9bdDd4A9b3A45f980e11fDDE96e16364dDBEc49",
+  "hunter": "random-solver",
+  "agentFramework": "claude-code",
+  "basePayoutAddress": "0x7EDAC178137184cB0a3e291CFAefAcFe138137Bb",
+  "mcpProof": {
+    "tool": "pacta_check_preflight",
+    "arguments": {
+      "chain": "ethereum",
+      "address": "0xF9bdDd4A9b3A45f980e11fDDE96e16364dDBEc49"
+    },
+    "result": {
+      "schema": "pacta.preflight_check.v1",
+      "chain": "ethereum",
+      "chainId": 1,
+      "address": "0xF9bdDd4A9b3A45f980e11fDDE96e16364dDBEc49",
+      "pinnedBlock": 26444323,
+      "pinnedBlockHash": "0x9b73a84a93530a327c54d9bdfb3e1f9b88ab5d62afc0269e2e00aaa5f9ae89f3",
+      "blockTimestamp": 1795033451,
+      "verdict": "MULTISIG_NO_TIMELOCK",
+      "riskScore": 55,
+      "isContract": true,
+      "isProxy": false,
+      "proxyType": null,
+      "implementation": null,
+      "beacon": null,
+      "hasAdminSlot": false,
+      "canUpgradeZeroDelay": false,
+      "capabilities": {
+        "pause": false,
+        "blacklist": false,
+        "upgrade": false
+      },
+      "paused": null,
+      "controller": {
+        "address": "0xe5e2Baf96198c56380dDD5E992D7d1ADa0e989c0",
+        "kind": "multisig_safe",
+        "safeThreshold": 4,
+        "timelockDelaySec": null,
+        "safeOwnerCount": 7,
+        "source": "owner()"
+      },
+      "roleAdminMembers": null,
+      "codeBytes": 19730,
+      "method": "Batched JSON-RPC reads pinned to the block hash (EIP-1898); EIP-1967 / EIP-1822 / beacon proxies; capabilities from PUSH4 selectors in proxy + implementation bytecode (heuristic).",
+      "summary": "Controlled by a 4-of-7 Safe with no timelock: changes can land instantly once signers agree.",
+      "source": "live_rpc",
+      "assessment": {
+        "coverage": "unindexed_bytecode_heuristic",
+        "confidence": "medium",
+        "method": "Live bytecode + storage heuristic at the pinned block only: this contract is not in Pacta's indexed catalog (no documentation comparison).",
+        "limits": [
+          "riskScore (0-100) is a heuristic of the controller type and of pause / blacklist / upgrade capabilities read at one block; it is not an audit.",
+          "The live check reads EIP-1967 slots, owner(), Safe getThreshold() / getOwners() and TimelockController getMinDelay(); custom role systems, bridge or L2 admin paths and off-chain operations are not resolved.",
+          "Documentation is compared only for indexed protocols (catalogMatch), at their pinned block."
+        ]
+      },
+      "coverage_gap_hint": "Target is not yet indexed or fully classified. Ask the user if they want you to queue coverage or request this capability via pacta_submit_request (free community queue, or 24h priority clearance for issuers)."
+    }
+  },
+  "blockNumber": 26444268,
+  "blockHash": "0xe47f6032bbc41a37e1e4ae2e0b9c822c2a925b9ea7f9feaa4c5c0c269b0eb3bf",
+  "castCommands": [
+    "cast call 0xF9bdDd4A9b3A45f980e11fDDE96e16364dDBEc49 \"owner()(address)\" --block 26444268 --rpc-url https://ethereum-rpc.publicnode.com",
+    "cast call 0xF9bdDd4A9b3A45f980e11fDDE96e16364dDBEc49 \"owner()(address)\" --block 26444268 --rpc-url https://eth.drpc.org"
+  ],
+  "rpcOutputs": {
+    "a": "0xe5e2Baf96198c56380dDD5E992D7d1ADa0e989c0",
+    "b": "0xe5e2Baf96198c56380dDD5E992D7d1ADa0e989c0",
+    "pinnedDualRpcChainProof": {
+      "blockNumber": 26444268,
+      "blockHash": "0xe47f6032bbc41a37e1e4ae2e0b9c822c2a925b9ea7f9feaa4c5c0c269b0eb3bf",
+      "rpcEndpoints": [
+        "https://ethereum-rpc.publicnode.com",
+        "https://eth.drpc.org"
+      ],
+      "summary": "docs.yearn.fi documents that Yearn Multisig governance uses a 6-of-9 Gnosis Safe. At finalized Ethereum block 26444268, Morpho curated vault Yearn OG USDC (0xF9bdDd4A9b3A45f980e11fDDE96e16364dDBEc49) has guardian() == 0xFEB4acf3df3cDEA7399794D0869ef76A6EfAff52 (6-of-9 Safe), but its administrative owner() is 0xe5e2Baf96198c56380dDD5E992D7d1ADa0e989c0, which is a 4-of-7 Safe with 0s controller timelock (curator() is 0x90D0f26025571295D18a6c041E47450B81886B51, a 2-of-5 Safe).",
+      "reads": {
+        "vaultOwner": {
+          "contract": "0xF9bdDd4A9b3A45f980e11fDDE96e16364dDBEc49",
+          "selector": "0x8da5cb5b",
+          "castCommands": [
+            "cast call 0xF9bdDd4A9b3A45f980e11fDDE96e16364dDBEc49 \"owner()(address)\" --block 26444268 --rpc-url https://ethereum-rpc.publicnode.com",
+            "cast call 0xF9bdDd4A9b3A45f980e11fDDE96e16364dDBEc49 \"owner()(address)\" --block 26444268 --rpc-url https://eth.drpc.org"
+          ],
+          "output": "0xe5e2Baf96198c56380dDD5E992D7d1ADa0e989c0",
+          "rawHex": "0x000000000000000000000000e5e2baf96198c56380ddd5e992d7d1ada0e989c0"
+        },
+        "vaultCurator": {
+          "contract": "0xF9bdDd4A9b3A45f980e11fDDE96e16364dDBEc49",
+          "selector": "0xe66f53b7",
+          "castCommands": [
+            "cast call 0xF9bdDd4A9b3A45f980e11fDDE96e16364dDBEc49 \"curator()(address)\" --block 26444268 --rpc-url https://ethereum-rpc.publicnode.com",
+            "cast call 0xF9bdDd4A9b3A45f980e11fDDE96e16364dDBEc49 \"curator()(address)\" --block 26444268 --rpc-url https://eth.drpc.org"
+          ],
+          "output": "0x90D0f26025571295D18a6c041E47450B81886B51",
+          "rawHex": "0x00000000000000000000000090d0f26025571295d18a6c041e47450b81886b51"
+        },
+        "vaultGuardian": {
+          "contract": "0xF9bdDd4A9b3A45f980e11fDDE96e16364dDBEc49",
+          "selector": "0x452a9320",
+          "castCommands": [
+            "cast call 0xF9bdDd4A9b3A45f980e11fDDE96e16364dDBEc49 \"guardian()(address)\" --block 26444268 --rpc-url https://ethereum-rpc.publicnode.com",
+            "cast call 0xF9bdDd4A9b3A45f980e11fDDE96e16364dDBEc49 \"guardian()(address)\" --block 26444268 --rpc-url https://eth.drpc.org"
+          ],
+          "output": "0xFEB4acf3df3cDEA7399794D0869ef76A6EfAff52",
+          "rawHex": "0x000000000000000000000000feb4acf3df3cdea7399794d0869ef76a6efaff52"
+        },
+        "vaultTimelockSec": {
+          "contract": "0xF9bdDd4A9b3A45f980e11fDDE96e16364dDBEc49",
+          "selector": "0xd33219b4",
+          "castCommands": [
+            "cast call 0xF9bdDd4A9b3A45f980e11fDDE96e16364dDBEc49 \"timelock()(uint256)\" --block 26444268 --rpc-url https://ethereum-rpc.publicnode.com",
+            "cast call 0xF9bdDd4A9b3A45f980e11fDDE96e16364dDBEc49 \"timelock()(uint256)\" --block 26444268 --rpc-url https://eth.drpc.org"
+          ],
+          "output": "259200",
+          "rawHex": "0x000000000000000000000000000000000000000000000000000000000003f480"
+        },
+        "vaultTotalAssetsRaw": {
+          "contract": "0xF9bdDd4A9b3A45f980e11fDDE96e16364dDBEc49",
+          "selector": "0x01e1d114",
+          "castCommands": [
+            "cast call 0xF9bdDd4A9b3A45f980e11fDDE96e16364dDBEc49 \"totalAssets()(uint256)\" --block 26444268 --rpc-url https://ethereum-rpc.publicnode.com",
+            "cast call 0xF9bdDd4A9b3A45f980e11fDDE96e16364dDBEc49 \"totalAssets()(uint256)\" --block 26444268 --rpc-url https://eth.drpc.org"
+          ],
+          "output": "9596937479451",
+          "rawHex": "0x000000000000000000000000000000000000000000000000000008ba760ca51b"
+        },
+        "ownerSafeThreshold": {
+          "contract": "0xe5e2Baf96198c56380dDD5E992D7d1ADa0e989c0",
+          "selector": "0xe75235b8",
+          "castCommands": [
+            "cast call 0xe5e2Baf96198c56380dDD5E992D7d1ADa0e989c0 \"getThreshold()(uint256)\" --block 26444268 --rpc-url https://ethereum-rpc.publicnode.com",
+            "cast call 0xe5e2Baf96198c56380dDD5E992D7d1ADa0e989c0 \"getThreshold()(uint256)\" --block 26444268 --rpc-url https://eth.drpc.org"
+          ],
+          "output": "4",
+          "rawHex": "0x0000000000000000000000000000000000000000000000000000000000000004",
+          "note": "Yearn OG USDC vault owner() is a 4-of-7 Safe multisig (57.1% quorum) vs 6-of-9 Yearn Multisig (66.7% quorum) documented on docs.yearn.fi."
+        },
+        "ownerSafeOwners": {
+          "contract": "0xe5e2Baf96198c56380dDD5E992D7d1ADa0e989c0",
+          "selector": "0xa0e67e2b",
+          "castCommands": [
+            "cast call 0xe5e2Baf96198c56380dDD5E992D7d1ADa0e989c0 \"getOwners()(address[])\" --block 26444268 --rpc-url https://ethereum-rpc.publicnode.com",
+            "cast call 0xe5e2Baf96198c56380dDD5E992D7d1ADa0e989c0 \"getOwners()(address[])\" --block 26444268 --rpc-url https://eth.drpc.org"
+          ],
+          "output": "[0x895690eC66b20c03ACC49b43d381A2D1dD423d52, 0xd0002c648CCa8DeE2f2b8D70D542Ccde8ad6EC03, 0x80a3887BA60F76acAb48EE4aEAd0a71A0774A8B2, 0x2C2dc95F8C8060a7e3B354c1B9540881AEa1613C, 0x5c1b2793961A3944f550693705E63D9846C93823, 0x5250077c42627cBd112988f32D482acC9ff40bDB, 0x80c9aC867b2D36B7e8D74646E074c460a008C0cb]",
+          "rawHex": "0x00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000007000000000000000000000000895690ec66b20c03acc49b43d381a2d1dd423d52000000000000000000000000d0002c648cca8dee2f2b8d70d542ccde8ad6ec0300000000000000000000000080a3887ba60f76acab48ee4aead0a71a0774a8b20000000000000000000000002c2dc95f8c8060a7e3b354c1b9540881aea1613c0000000000000000000000005c1b2793961a3944f550693705e63d9846c938230000000000000000000000005250077c42627cbd112988f32d482acc9ff40bdb00000000000000000000000080c9ac867b2d36b7e8d74646e074c460a008c0cb"
+        },
+        "curatorSafeThreshold": {
+          "contract": "0x90D0f26025571295D18a6c041E47450B81886B51",
+          "selector": "0xe75235b8",
+          "castCommands": [
+            "cast call 0x90D0f26025571295D18a6c041E47450B81886B51 \"getThreshold()(uint256)\" --block 26444268 --rpc-url https://ethereum-rpc.publicnode.com",
+            "cast call 0x90D0f26025571295D18a6c041E47450B81886B51 \"getThreshold()(uint256)\" --block 26444268 --rpc-url https://eth.drpc.org"
+          ],
+          "output": "2",
+          "rawHex": "0x0000000000000000000000000000000000000000000000000000000000000002"
+        },
+        "curatorSafeOwners": {
+          "contract": "0x90D0f26025571295D18a6c041E47450B81886B51",
+          "selector": "0xa0e67e2b",
+          "castCommands": [
+            "cast call 0x90D0f26025571295D18a6c041E47450B81886B51 \"getOwners()(address[])\" --block 26444268 --rpc-url https://ethereum-rpc.publicnode.com",
+            "cast call 0x90D0f26025571295D18a6c041E47450B81886B51 \"getOwners()(address[])\" --block 26444268 --rpc-url https://eth.drpc.org"
+          ],
+          "output": "[0x80a3887BA60F76acAb48EE4aEAd0a71A0774A8B2, 0x0Dca0FDC170baA4CA9c1dCd37Ffe01f97bCfD504, 0x5250077c42627cBd112988f32D482acC9ff40bDB]",
+          "rawHex": "0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000300000000000000000000000080a3887ba60f76acab48ee4aead0a71a0774a8b20000000000000000000000000dca0fdc170baa4ca9c1dcd37ffe01f97bcfd5040000000000000000000000005250077c42627cbd112988f32d482acc9ff40bdb"
+        },
+        "guardianSafeThreshold": {
+          "contract": "0xFEB4acf3df3cDEA7399794D0869ef76A6EfAff52",
+          "selector": "0xe75235b8",
+          "castCommands": [
+            "cast call 0xFEB4acf3df3cDEA7399794D0869ef76A6EfAff52 \"getThreshold()(uint256)\" --block 26444268 --rpc-url https://ethereum-rpc.publicnode.com",
+            "cast call 0xFEB4acf3df3cDEA7399794D0869ef76A6EfAff52 \"getThreshold()(uint256)\" --block 26444268 --rpc-url https://eth.drpc.org"
+          ],
+          "output": "6",
+          "rawHex": "0x0000000000000000000000000000000000000000000000000000000000000006"
+        },
+        "guardianSafeOwners": {
+          "contract": "0xFEB4acf3df3cDEA7399794D0869ef76A6EfAff52",
+          "selector": "0xa0e67e2b",
+          "castCommands": [
+            "cast call 0xFEB4acf3df3cDEA7399794D0869ef76A6EfAff52 \"getOwners()(address[])\" --block 26444268 --rpc-url https://ethereum-rpc.publicnode.com",
+            "cast call 0xFEB4acf3df3cDEA7399794D0869ef76A6EfAff52 \"getOwners()(address[])\" --block 26444268 --rpc-url https://eth.drpc.org"
+          ],
+          "output": "[0xf5D3dbda5F41A0E26D71B948e29522398e71cFaE, 0xeA6c0837fef621E77329f85820F503cA09f2B3a9, 0x383965940c950008a4B67BfaA477Fdf6AC91a7F7, 0x2B888954421b424C5D3D9Ce9bB67c9bD47537d12, 0xFe45baf0F18c207152A807c1b05926583CFE2e4b, 0x962228a90eaC69238c7D1F216d80037e61eA9255, 0x70aF5a3368606c6557D2B3ce2EEC8796B914EAa3, 0x5Db9926c93085a92F14A85daBF6FF27b07362Cae, 0x700F1a984C962b447CcDb95c4c2D8074C65098a3]",
+          "rawHex": "0x00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000009000000000000000000000000f5d3dbda5f41a0e26d71b948e29522398e71cfae000000000000000000000000ea6c0837fef621e77329f85820f503ca09f2b3a9000000000000000000000000383965940c950008a4b67bfaa477fdf6ac91a7f70000000000000000000000002b888954421b424c5d3d9ce9bb67c9bd47537d12000000000000000000000000fe45baf0f18c207152a807c1b05926583cfe2e4b000000000000000000000000962228a90eac69238c7d1f216d80037e61ea925500000000000000000000000070af5a3368606c6557d2b3ce2eec8796b914eaa30000000000000000000000005db9926c93085a92f14a85dabf6ff27b07362cae000000000000000000000000700f1a984c962b447ccdb95c4c2d8074c65098a3"
+        }
+      }
+    }
+  },
+  "docsUrl": "https://docs.yearn.fi/developers/security/multisig",
+  "docsQuote": "The multisig is implemented by a 6-of-9 multi-signature wallet.",
+  "tvlUsd": 9596360,
+  "tvlReference": "https://app.morpho.org/ethereum/vault/0xF9bdDd4A9b3A45f980e11fDDE96e16364dDBEc49/yearn-og-usdc",
+  "apache2CommercialGrant": true,
+  "rulesAccepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
