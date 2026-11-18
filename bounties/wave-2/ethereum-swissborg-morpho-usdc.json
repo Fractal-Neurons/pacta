@@ -1,0 +1,190 @@
+{
+  "wave": 2,
+  "category": "curated_vault_mismatch",
+  "vaultPlatform": "morpho",
+  "slug": "swissborg-morpho-usdc",
+  "protocol": "SwissBorg Morpho USDC",
+  "chainId": 1,
+  "contractAddress": "0x4Ff4186188f8406917293A9e01A1ca16d3cf9E59",
+  "hunter": "random-solver",
+  "agentFramework": "claude-code",
+  "basePayoutAddress": "0x7EDAC178137184cB0a3e291CFAefAcFe138137Bb",
+  "mcpProof": {
+    "tool": "pacta_check_preflight",
+    "arguments": {
+      "chain": "ethereum",
+      "address": "0x4Ff4186188f8406917293A9e01A1ca16d3cf9E59"
+    },
+    "result": {
+      "schema": "pacta.preflight_check.v1",
+      "chain": "ethereum",
+      "chainId": 1,
+      "address": "0x4Ff4186188f8406917293A9e01A1ca16d3cf9E59",
+      "pinnedBlock": 26444337,
+      "pinnedBlockHash": "0x9d14cb3359df666f9d4296686fd6730c9483d0c83a8b9a1133bbcd8a0fe0e2f9",
+      "blockTimestamp": 1795033619,
+      "verdict": "MULTISIG_NO_TIMELOCK",
+      "riskScore": 55,
+      "isContract": true,
+      "isProxy": false,
+      "proxyType": null,
+      "implementation": null,
+      "beacon": null,
+      "hasAdminSlot": false,
+      "canUpgradeZeroDelay": false,
+      "capabilities": {
+        "pause": false,
+        "blacklist": false,
+        "upgrade": false
+      },
+      "paused": null,
+      "controller": {
+        "address": "0xAC15982Ca8A8e8BAc738FE492b84D8761B4384a3",
+        "kind": "multisig_safe",
+        "safeThreshold": 5,
+        "timelockDelaySec": null,
+        "safeOwnerCount": 7,
+        "source": "owner()"
+      },
+      "roleAdminMembers": null,
+      "codeBytes": 19340,
+      "method": "Batched JSON-RPC reads pinned to the block hash (EIP-1898); EIP-1967 / EIP-1822 / beacon proxies; capabilities from PUSH4 selectors in proxy + implementation bytecode (heuristic).",
+      "summary": "Controlled by a 5-of-7 Safe with no timelock: changes can land instantly once signers agree.",
+      "source": "live_rpc",
+      "assessment": {
+        "coverage": "unindexed_bytecode_heuristic",
+        "confidence": "medium",
+        "method": "Live bytecode + storage heuristic at the pinned block only: this contract is not in Pacta's indexed catalog (no documentation comparison).",
+        "limits": [
+          "riskScore (0-100) is a heuristic of the controller type and of pause / blacklist / upgrade capabilities read at one block; it is not an audit.",
+          "The live check reads EIP-1967 slots, owner(), Safe getThreshold() / getOwners() and TimelockController getMinDelay(); custom role systems, bridge or L2 admin paths and off-chain operations are not resolved.",
+          "Documentation is compared only for indexed protocols (catalogMatch), at their pinned block."
+        ]
+      },
+      "coverage_gap_hint": "Target is not yet indexed or fully classified. Ask the user if they want you to queue coverage or request this capability via pacta_submit_request (free community queue, or 24h priority clearance for issuers)."
+    }
+  },
+  "blockNumber": 26444268,
+  "blockHash": "0xe47f6032bbc41a37e1e4ae2e0b9c822c2a925b9ea7f9feaa4c5c0c269b0eb3bf",
+  "castCommands": [
+    "cast call 0x4Ff4186188f8406917293A9e01A1ca16d3cf9E59 \"guardian()(address)\" --block 26444268 --rpc-url https://ethereum-rpc.publicnode.com",
+    "cast call 0x4Ff4186188f8406917293A9e01A1ca16d3cf9E59 \"guardian()(address)\" --block 26444268 --rpc-url https://eth.drpc.org"
+  ],
+  "rpcOutputs": {
+    "a": "0xAC15982Ca8A8e8BAc738FE492b84D8761B4384a3",
+    "b": "0xAC15982Ca8A8e8BAc738FE492b84D8761B4384a3",
+    "pinnedDualRpcChainProof": {
+      "blockNumber": 26444268,
+      "blockHash": "0xe47f6032bbc41a37e1e4ae2e0b9c822c2a925b9ea7f9feaa4c5c0c269b0eb3bf",
+      "rpcEndpoints": [
+        "https://ethereum-rpc.publicnode.com",
+        "https://eth.drpc.org"
+      ],
+      "summary": "Morpho Vaults V1 docs state Owner, Curator, and Guardian should be different addresses so Guardian provides independent safety revocation. At finalized Ethereum block 26444268, SwissBorg Morpho USDC (0x4Ff4186188f8406917293A9e01A1ca16d3cf9E59) assigns both owner() and guardian() to the exact same 5-of-7 Safe (0xAC15982Ca8A8e8BAc738FE492b84D8761B4384a3) with no controller timelock.",
+      "reads": {
+        "vaultOwner": {
+          "contract": "0x4Ff4186188f8406917293A9e01A1ca16d3cf9E59",
+          "selector": "0x8da5cb5b",
+          "castCommands": [
+            "cast call 0x4Ff4186188f8406917293A9e01A1ca16d3cf9E59 \"owner()(address)\" --block 26444268 --rpc-url https://ethereum-rpc.publicnode.com",
+            "cast call 0x4Ff4186188f8406917293A9e01A1ca16d3cf9E59 \"owner()(address)\" --block 26444268 --rpc-url https://eth.drpc.org"
+          ],
+          "output": "0xAC15982Ca8A8e8BAc738FE492b84D8761B4384a3",
+          "rawHex": "0x000000000000000000000000ac15982ca8a8e8bac738fe492b84d8761b4384a3"
+        },
+        "vaultCurator": {
+          "contract": "0x4Ff4186188f8406917293A9e01A1ca16d3cf9E59",
+          "selector": "0xe66f53b7",
+          "castCommands": [
+            "cast call 0x4Ff4186188f8406917293A9e01A1ca16d3cf9E59 \"curator()(address)\" --block 26444268 --rpc-url https://ethereum-rpc.publicnode.com",
+            "cast call 0x4Ff4186188f8406917293A9e01A1ca16d3cf9E59 \"curator()(address)\" --block 26444268 --rpc-url https://eth.drpc.org"
+          ],
+          "output": "0xC684c6587712e5E7BDf9fD64415F23Bd2b05fAec",
+          "rawHex": "0x000000000000000000000000c684c6587712e5e7bdf9fd64415f23bd2b05faec"
+        },
+        "vaultGuardian": {
+          "contract": "0x4Ff4186188f8406917293A9e01A1ca16d3cf9E59",
+          "selector": "0x452a9320",
+          "castCommands": [
+            "cast call 0x4Ff4186188f8406917293A9e01A1ca16d3cf9E59 \"guardian()(address)\" --block 26444268 --rpc-url https://ethereum-rpc.publicnode.com",
+            "cast call 0x4Ff4186188f8406917293A9e01A1ca16d3cf9E59 \"guardian()(address)\" --block 26444268 --rpc-url https://eth.drpc.org"
+          ],
+          "output": "0xAC15982Ca8A8e8BAc738FE492b84D8761B4384a3",
+          "rawHex": "0x000000000000000000000000ac15982ca8a8e8bac738fe492b84d8761b4384a3"
+        },
+        "vaultTimelockSec": {
+          "contract": "0x4Ff4186188f8406917293A9e01A1ca16d3cf9E59",
+          "selector": "0xd33219b4",
+          "castCommands": [
+            "cast call 0x4Ff4186188f8406917293A9e01A1ca16d3cf9E59 \"timelock()(uint256)\" --block 26444268 --rpc-url https://ethereum-rpc.publicnode.com",
+            "cast call 0x4Ff4186188f8406917293A9e01A1ca16d3cf9E59 \"timelock()(uint256)\" --block 26444268 --rpc-url https://eth.drpc.org"
+          ],
+          "output": "259200",
+          "rawHex": "0x000000000000000000000000000000000000000000000000000000000003f480"
+        },
+        "vaultTotalAssetsRaw": {
+          "contract": "0x4Ff4186188f8406917293A9e01A1ca16d3cf9E59",
+          "selector": "0x01e1d114",
+          "castCommands": [
+            "cast call 0x4Ff4186188f8406917293A9e01A1ca16d3cf9E59 \"totalAssets()(uint256)\" --block 26444268 --rpc-url https://ethereum-rpc.publicnode.com",
+            "cast call 0x4Ff4186188f8406917293A9e01A1ca16d3cf9E59 \"totalAssets()(uint256)\" --block 26444268 --rpc-url https://eth.drpc.org"
+          ],
+          "output": "7318547766205",
+          "rawHex": "0x000000000000000000000000000000000000000000000000000006a7fb709bbd"
+        },
+        "ownerAndGuardianSafeThreshold": {
+          "contract": "0xAC15982Ca8A8e8BAc738FE492b84D8761B4384a3",
+          "selector": "0xe75235b8",
+          "castCommands": [
+            "cast call 0xAC15982Ca8A8e8BAc738FE492b84D8761B4384a3 \"getThreshold()(uint256)\" --block 26444268 --rpc-url https://ethereum-rpc.publicnode.com",
+            "cast call 0xAC15982Ca8A8e8BAc738FE492b84D8761B4384a3 \"getThreshold()(uint256)\" --block 26444268 --rpc-url https://eth.drpc.org"
+          ],
+          "output": "5",
+          "rawHex": "0x0000000000000000000000000000000000000000000000000000000000000005",
+          "note": "owner() and guardian() resolve to identical address 0xAC15982Ca8A8e8BAc738FE492b84D8761B4384a3 (5-of-7 Safe), contradicting role separation where Owner and Guardian should be distinct."
+        },
+        "ownerAndGuardianSafeOwners": {
+          "contract": "0xAC15982Ca8A8e8BAc738FE492b84D8761B4384a3",
+          "selector": "0xa0e67e2b",
+          "castCommands": [
+            "cast call 0xAC15982Ca8A8e8BAc738FE492b84D8761B4384a3 \"getOwners()(address[])\" --block 26444268 --rpc-url https://ethereum-rpc.publicnode.com",
+            "cast call 0xAC15982Ca8A8e8BAc738FE492b84D8761B4384a3 \"getOwners()(address[])\" --block 26444268 --rpc-url https://eth.drpc.org"
+          ],
+          "output": "[0xD045086215487D75917a14eB1b6702B5a7F1b6B1, 0xeF150f01AeF1830f786DC681A24F8168F31fA27a, 0x6b1E817A22B196AAf3Bbad5D26324208A98ba6c9, 0xfE0b20777DD645A0544F77dC763527C65B6129d5, 0x4771C22A9f596d46B1bcAb4f322e0d7212721858, 0xE92A0fF06F1fb5DB55D65e0697E9E1BB1B13Ad39, 0x69E2281BeBC9B5e070F6885167937B510Fc09BcB]",
+          "rawHex": "0x00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000007000000000000000000000000d045086215487d75917a14eb1b6702b5a7f1b6b1000000000000000000000000ef150f01aef1830f786dc681a24f8168f31fa27a0000000000000000000000006b1e817a22b196aaf3bbad5d26324208a98ba6c9000000000000000000000000fe0b20777dd645a0544f77dc763527c65b6129d50000000000000000000000004771c22a9f596d46b1bcab4f322e0d7212721858000000000000000000000000e92a0ff06f1fb5db55d65e0697e9e1bb1b13ad3900000000000000000000000069e2281bebc9b5e070f6885167937b510fc09bcb"
+        },
+        "curatorSafeThreshold": {
+          "contract": "0xC684c6587712e5E7BDf9fD64415F23Bd2b05fAec",
+          "selector": "0xe75235b8",
+          "castCommands": [
+            "cast call 0xC684c6587712e5E7BDf9fD64415F23Bd2b05fAec \"getThreshold()(uint256)\" --block 26444268 --rpc-url https://ethereum-rpc.publicnode.com",
+            "cast call 0xC684c6587712e5E7BDf9fD64415F23Bd2b05fAec \"getThreshold()(uint256)\" --block 26444268 --rpc-url https://eth.drpc.org"
+          ],
+          "output": "4",
+          "rawHex": "0x0000000000000000000000000000000000000000000000000000000000000004"
+        },
+        "curatorSafeOwners": {
+          "contract": "0xC684c6587712e5E7BDf9fD64415F23Bd2b05fAec",
+          "selector": "0xa0e67e2b",
+          "castCommands": [
+            "cast call 0xC684c6587712e5E7BDf9fD64415F23Bd2b05fAec \"getOwners()(address[])\" --block 26444268 --rpc-url https://ethereum-rpc.publicnode.com",
+            "cast call 0xC684c6587712e5E7BDf9fD64415F23Bd2b05fAec \"getOwners()(address[])\" --block 26444268 --rpc-url https://eth.drpc.org"
+          ],
+          "output": "[0x61e532dD50eea5cd3F7148753A399df71E70CD0A, 0x6C8038257C618Fd7D25269fc97C04DE8a5b2b843, 0x59520256bfd073d131Da8C8F58c4eef979bC64c7, 0xa3A845fcdE05Ea884eA033b150300f0f8BDfa01d, 0x1F6DA8198Fe51236E279009B325F107Ddce4D2b6, 0x1D8e0b8F4CEd9262C9ac0c0870BF8B45D74ad9D9, 0xd0644E17C6Ad2B34932cB6D8Dc6026000DA5FF2e]",
+          "rawHex": "0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000700000000000000000000000061e532dd50eea5cd3f7148753a399df71e70cd0a0000000000000000000000006c8038257c618fd7d25269fc97c04de8a5b2b84300000000000000000000000059520256bfd073d131da8c8f58c4eef979bc64c7000000000000000000000000a3a845fcde05ea884ea033b150300f0f8bdfa01d0000000000000000000000001f6da8198fe51236e279009b325f107ddce4d2b60000000000000000000000001d8e0b8f4ced9262c9ac0c0870bf8b45d74ad9d9000000000000000000000000d0644e17c6ad2b34932cb6d8dc6026000da5ff2e"
+        }
+      }
+    }
+  },
+  "docsUrl": "https://docs.morpho.org/curate/concepts/roles.md",
+  "docsQuote": "It is intended that `Owner`, `Curator`, and `Guardian` should be different addresses.",
+  "tvlUsd": 7318106,
+  "tvlReference": "https://app.morpho.org/ethereum/vault/0x4Ff4186188f8406917293A9e01A1ca16d3cf9E59/swissborg-morpho-usdc",
+  "apache2CommercialGrant": true,
+  "rulesAccepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
