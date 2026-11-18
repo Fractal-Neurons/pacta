@@ -1,0 +1,171 @@
+{
+  "wave": 2,
+  "category": "protocol_mismatch",
+  "slug": "fira",
+  "protocol": "Fira",
+  "chainId": 1,
+  "contractAddress": "0x50791a5cA041b9D6Dd03e64E3Fa0e34a376759AC",
+  "hunter": "kinshu7777",
+  "agentFramework": "claude-code",
+  "basePayoutAddress": "0x0A96Fe63357c83640445Fd1Ee9d210B334b94052",
+  "mcpProof": {
+    "tool": "pacta_check_preflight",
+    "arguments": {
+      "chain": "ethereum",
+      "address": "0x50791a5cA041b9D6Dd03e64E3Fa0e34a376759AC"
+    },
+    "result": {
+      "schema": "pacta.preflight_check.v1",
+      "chain": "ethereum",
+      "chainId": 1,
+      "address": "0x50791a5cA041b9D6Dd03e64E3Fa0e34a376759AC",
+      "pinnedBlock": 26442078,
+      "pinnedBlockHash": "0xa281063a14d2889e0f792b48e4d0b749f61bfd0a68ace2e0e44611ed77546318",
+      "blockTimestamp": 1795006511,
+      "verdict": "MULTISIG_NO_TIMELOCK",
+      "riskScore": 55,
+      "isContract": true,
+      "isProxy": false,
+      "proxyType": null,
+      "implementation": null,
+      "beacon": null,
+      "hasAdminSlot": false,
+      "canUpgradeZeroDelay": false,
+      "capabilities": {
+        "pause": false,
+        "blacklist": false,
+        "upgrade": false
+      },
+      "paused": null,
+      "controller": {
+        "address": "0x632261B27dF390671977Ba20eA67D8bF68D32953",
+        "kind": "multisig_safe",
+        "safeThreshold": 9,
+        "timelockDelaySec": null,
+        "safeOwnerCount": 15,
+        "source": "owner()"
+      },
+      "roleAdminMembers": null,
+      "codeBytes": 18776,
+      "method": "Batched JSON-RPC reads pinned to the block hash (EIP-1898); EIP-1967 / EIP-1822 / beacon proxies; capabilities from PUSH4 selectors in proxy + implementation bytecode (heuristic).",
+      "summary": "Controlled by a 9-of-15 Safe with no timelock: changes can land instantly once signers agree.",
+      "source": "live_rpc",
+      "assessment": {
+        "coverage": "unindexed_bytecode_heuristic",
+        "confidence": "medium",
+        "method": "Live bytecode + storage heuristic at the pinned block only: this contract is not in Pacta's indexed catalog (no documentation comparison).",
+        "limits": [
+          "riskScore (0-100) is a heuristic of the controller type and of pause / blacklist / upgrade capabilities read at one block; it is not an audit.",
+          "The live check reads EIP-1967 slots, owner(), Safe getThreshold() / getOwners() and TimelockController getMinDelay(); custom role systems, bridge or L2 admin paths and off-chain operations are not resolved.",
+          "Documentation is compared only for indexed protocols (catalogMatch), at their pinned block."
+        ]
+      },
+      "coverage_gap_hint": "Target is not yet indexed or fully classified. Ask the user if they want you to queue coverage or request this capability via pacta_submit_request (free community queue, or 24h priority clearance for issuers)."
+    }
+  },
+  "blockNumber": 26441996,
+  "blockHash": "0x30d7997effa945f143f0d960c3b82764364787a21e1963f9e17b7bccbbda0878",
+  "castCommands": [
+    "cast call 0x50791a5cA041b9D6Dd03e64E3Fa0e34a376759AC \"guardian()(address)\" --block 26441996 --rpc-url https://gateway.tenderly.co/public/mainnet",
+    "cast call 0x50791a5cA041b9D6Dd03e64E3Fa0e34a376759AC \"guardian()(address)\" --block 26441996 --rpc-url https://ethereum-rpc.publicnode.com"
+  ],
+  "rpcOutputs": {
+    "a": "0x0000000000000000000000000000000000000000",
+    "b": "0x0000000000000000000000000000000000000000",
+    "pinnedDualRpcChainProof": {
+      "blockNumber": 26441996,
+      "blockHash": "0x30d7997effa945f143f0d960c3b82764364787a21e1963f9e17b7bccbbda0878",
+      "rpcEndpoints": [
+        "https://gateway.tenderly.co/public/mainnet",
+        "https://ethereum-rpc.publicnode.com"
+      ],
+      "reads": {
+        "sisuVaultGuardian": {
+          "contract": "0x50791a5cA041b9D6Dd03e64E3Fa0e34a376759AC",
+          "castCommands": [
+            "cast call 0x50791a5cA041b9D6Dd03e64E3Fa0e34a376759AC \"guardian()(address)\" --block 26441996 --rpc-url https://gateway.tenderly.co/public/mainnet",
+            "cast call 0x50791a5cA041b9D6Dd03e64E3Fa0e34a376759AC \"guardian()(address)\" --block 26441996 --rpc-url https://ethereum-rpc.publicnode.com"
+          ],
+          "output": "0x0000000000000000000000000000000000000000",
+          "note": "guardian() is unset (address(0)) on-chain vs documented Guardian role enforcing emergency controls and parameter timelocks on SisuVault"
+        },
+        "sisuVaultTimelock": {
+          "contract": "0x50791a5cA041b9D6Dd03e64E3Fa0e34a376759AC",
+          "castCommands": [
+            "cast call 0x50791a5cA041b9D6Dd03e64E3Fa0e34a376759AC \"timelock()(uint256)\" --block 26441996 --rpc-url https://gateway.tenderly.co/public/mainnet",
+            "cast call 0x50791a5cA041b9D6Dd03e64E3Fa0e34a376759AC \"timelock()(uint256)\" --block 26441996 --rpc-url https://ethereum-rpc.publicnode.com"
+          ],
+          "output": "8640",
+          "note": "8,640 seconds (2.4 hours) internal timelock with no active Guardian veto address"
+        },
+        "sisuVaultOwner": {
+          "contract": "0x50791a5cA041b9D6Dd03e64E3Fa0e34a376759AC",
+          "castCommands": [
+            "cast call 0x50791a5cA041b9D6Dd03e64E3Fa0e34a376759AC \"owner()(address)\" --block 26441996 --rpc-url https://gateway.tenderly.co/public/mainnet",
+            "cast call 0x50791a5cA041b9D6Dd03e64E3Fa0e34a376759AC \"owner()(address)\" --block 26441996 --rpc-url https://ethereum-rpc.publicnode.com"
+          ],
+          "output": "0x632261B27dF390671977Ba20eA67D8bF68D32953"
+        },
+        "sisuVaultOwnerSafeGetThreshold": {
+          "contract": "0x632261B27dF390671977Ba20eA67D8bF68D32953",
+          "castCommands": [
+            "cast call 0x632261B27dF390671977Ba20eA67D8bF68D32953 \"getThreshold()(uint256)\" --block 26441996 --rpc-url https://gateway.tenderly.co/public/mainnet",
+            "cast call 0x632261B27dF390671977Ba20eA67D8bF68D32953 \"getThreshold()(uint256)\" --block 26441996 --rpc-url https://ethereum-rpc.publicnode.com"
+          ],
+          "output": "9"
+        },
+        "sisuVaultOwnerSafeGetOwners": {
+          "contract": "0x632261B27dF390671977Ba20eA67D8bF68D32953",
+          "castCommands": [
+            "cast call 0x632261B27dF390671977Ba20eA67D8bF68D32953 \"getOwners()(address[])\" --block 26441996 --rpc-url https://gateway.tenderly.co/public/mainnet",
+            "cast call 0x632261B27dF390671977Ba20eA67D8bF68D32953 \"getOwners()(address[])\" --block 26441996 --rpc-url https://ethereum-rpc.publicnode.com"
+          ],
+          "output": "[0xBa4255a5816B8931445E0682AE589fEDEA3AEC9e, 0x501595D8f0278C7259a4EEDBF852571c790E6C8D, 0x8d08338c592cF18C586C43d6b567cb938614F6b8, 0x6BC737aD5213ea26a3A1Bb73431598AF2167cDBd, 0xD09C7955C38b9ACDC293e006bD5d0C059a57699a, 0xFe45baf0F18c207152A807c1b05926583CFE2e4b, 0x533C0b7959Eb6F042E19ca40700A7af22F69e2d8, 0x0bB03BDF016c9F99AAe32fb2DA303e79a9e6FEC7, 0x118D6dCF55a0DfBC3d1052FBD41A483f8a6a68b3, 0x3b9eAF01facee23846cea722a92e853bee064d69, 0xDA1a7e2D400f09292F22d02343E9BF8445EAA71C, 0x91c5Da0CEFc781545B6B9Ad0438D1a944B6DdC52, 0x1F7F8786D8699CC4d722AEaEd5797a6d8a6815d5, 0xd0F657D3CEBB51ceEa20DFb3aF6213fa1cecd5A7, 0xEb6927E3599D1Ee873b348efc99e81B36179CDAf]"
+        },
+        "sisuVaultCurator": {
+          "contract": "0x50791a5cA041b9D6Dd03e64E3Fa0e34a376759AC",
+          "castCommands": [
+            "cast call 0x50791a5cA041b9D6Dd03e64E3Fa0e34a376759AC \"curator()(address)\" --block 26441996 --rpc-url https://gateway.tenderly.co/public/mainnet",
+            "cast call 0x50791a5cA041b9D6Dd03e64E3Fa0e34a376759AC \"curator()(address)\" --block 26441996 --rpc-url https://ethereum-rpc.publicnode.com"
+          ],
+          "output": "0xc02B0D1ca7B986E63cf1599F9c32e8A96c2D4Cff"
+        },
+        "sisuVaultCuratorSafeGetThreshold": {
+          "contract": "0xc02B0D1ca7B986E63cf1599F9c32e8A96c2D4Cff",
+          "castCommands": [
+            "cast call 0xc02B0D1ca7B986E63cf1599F9c32e8A96c2D4Cff \"getThreshold()(uint256)\" --block 26441996 --rpc-url https://gateway.tenderly.co/public/mainnet",
+            "cast call 0xc02B0D1ca7B986E63cf1599F9c32e8A96c2D4Cff \"getThreshold()(uint256)\" --block 26441996 --rpc-url https://ethereum-rpc.publicnode.com"
+          ],
+          "output": "3"
+        },
+        "sisuVaultCuratorSafeGetOwners": {
+          "contract": "0xc02B0D1ca7B986E63cf1599F9c32e8A96c2D4Cff",
+          "castCommands": [
+            "cast call 0xc02B0D1ca7B986E63cf1599F9c32e8A96c2D4Cff \"getOwners()(address[])\" --block 26441996 --rpc-url https://gateway.tenderly.co/public/mainnet",
+            "cast call 0xc02B0D1ca7B986E63cf1599F9c32e8A96c2D4Cff \"getOwners()(address[])\" --block 26441996 --rpc-url https://ethereum-rpc.publicnode.com"
+          ],
+          "output": "[0x29642B6F888203079e07B7dce0E1885c9E557132, 0xEcf043f40734E4ABb878e4c06dc9bc40c86FE033, 0x54D8f483C3275C10EdC9D0d47122c74acff320Dd, 0x008594835CE559Dc2BCedf433866C91F964206f7]"
+        },
+        "sisuVaultTotalAssets": {
+          "contract": "0x50791a5cA041b9D6Dd03e64E3Fa0e34a376759AC",
+          "castCommands": [
+            "cast call 0x50791a5cA041b9D6Dd03e64E3Fa0e34a376759AC \"totalAssets()(uint256)\" --block 26441996 --rpc-url https://gateway.tenderly.co/public/mainnet",
+            "cast call 0x50791a5cA041b9D6Dd03e64E3Fa0e34a376759AC \"totalAssets()(uint256)\" --block 26441996 --rpc-url https://ethereum-rpc.publicnode.com"
+          ],
+          "output": "598286720"
+        }
+      }
+    }
+  },
+  "docsUrl": "https://docs.fira.money/security-and-risk/bug-bounty",
+  "docsQuote": "Curation Vault (SisuVault): ERC-4626 vault that allocates pooled capital across variable-rate markets using curator, allocator, and guardian roles with timelocked configuration changes.",
+  "tvlUsd": 20971200.0,
+  "tvlReference": "https://api.llama.fi/protocol/fira",
+  "apache2CommercialGrant": true,
+  "rulesAccepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
