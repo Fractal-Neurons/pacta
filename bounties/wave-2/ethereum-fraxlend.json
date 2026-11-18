@@ -1,0 +1,106 @@
+{
+  "wave": 2,
+  "category": "protocol_mismatch",
+  "slug": "fraxlend",
+  "protocol": "Fraxlend",
+  "chainId": 1,
+  "contractAddress": "0xD6E9D27C75Afd88ad24Cd5EdccdC76fd2fc3A751",
+  "hunter": "kinshu7777",
+  "agentFramework": "claude-code",
+  "basePayoutAddress": "0x0A96Fe63357c83640445Fd1Ee9d210B334b94052",
+  "mcpProof": {
+    "tool": "pacta_check_preflight",
+    "arguments": {
+      "chain": "ethereum",
+      "address": "0xD6E9D27C75Afd88ad24Cd5EdccdC76fd2fc3A751"
+    },
+    "result": {
+      "schema": "pacta.preflight_check.v1",
+      "chain": "ethereum",
+      "chainId": 1,
+      "address": "0xD6E9D27C75Afd88ad24Cd5EdccdC76fd2fc3A751",
+      "pinnedBlock": 26444642,
+      "pinnedBlockHash": "0x6cc82c02f8c8352332b56e114f2ce9d1617a17ce0f529a582e1996832a55925a",
+      "blockTimestamp": 1795037303,
+      "verdict": "MULTISIG_NO_TIMELOCK",
+      "riskScore": 55,
+      "isContract": true,
+      "isProxy": false,
+      "proxyType": null,
+      "implementation": null,
+      "beacon": null,
+      "hasAdminSlot": false,
+      "canUpgradeZeroDelay": false,
+      "capabilities": {
+        "pause": false,
+        "blacklist": false,
+        "upgrade": false
+      },
+      "paused": null,
+      "controller": {
+        "address": "0xB1748C79709f4Ba2Dd82834B8c82D4a505003f27",
+        "kind": "multisig_safe",
+        "safeThreshold": 3,
+        "timelockDelaySec": null,
+        "safeOwnerCount": 5,
+        "source": "owner()"
+      },
+      "roleAdminMembers": null,
+      "codeBytes": 3660,
+      "method": "Batched JSON-RPC reads pinned to the block hash (EIP-1898); EIP-1967 / EIP-1822 / beacon proxies; capabilities from PUSH4 selectors in proxy + implementation bytecode (heuristic).",
+      "summary": "Controlled by a 3-of-5 Safe with no timelock: changes can land instantly once signers agree.",
+      "source": "live_rpc",
+      "assessment": {
+        "coverage": "unindexed_bytecode_heuristic",
+        "confidence": "medium",
+        "method": "Live bytecode + storage heuristic at the pinned block only: this contract is not in Pacta's indexed catalog (no documentation comparison).",
+        "limits": [
+          "riskScore (0-100) is a heuristic of the controller type and of pause / blacklist / upgrade capabilities read at one block; it is not an audit.",
+          "The live check reads EIP-1967 slots, owner(), Safe getThreshold() / getOwners() and TimelockController getMinDelay(); custom role systems, bridge or L2 admin paths and off-chain operations are not resolved.",
+          "Documentation is compared only for indexed protocols (catalogMatch), at their pinned block."
+        ]
+      },
+      "coverage_gap_hint": "Target is not yet indexed or fully classified. Ask the user if they want you to queue coverage or request this capability via pacta_submit_request (free community queue, or 24h priority clearance for issuers)."
+    }
+  },
+  "blockNumber": 26441996,
+  "blockHash": "0x30d7997effa945f143f0d960c3b82764364787a21e1963f9e17b7bccbbda0878",
+  "castCommands": [
+    "cast call 0xD6E9D27C75Afd88ad24Cd5EdccdC76fd2fc3A751 \"owner()(address)\" --block 26441996 --rpc-url https://gateway.tenderly.co/public/mainnet",
+    "cast call 0xD6E9D27C75Afd88ad24Cd5EdccdC76fd2fc3A751 \"owner()(address)\" --block 26441996 --rpc-url https://ethereum-rpc.publicnode.com"
+  ],
+  "rpcOutputs": {
+    "a": "0xB1748C79709f4Ba2Dd82834B8c82D4a505003f27",
+    "b": "0xB1748C79709f4Ba2Dd82834B8c82D4a505003f27",
+    "pinnedDualRpcChainProof": {
+      "blockNumber": 26441996,
+      "blockHash": "0x30d7997effa945f143f0d960c3b82764364787a21e1963f9e17b7bccbbda0878",
+      "rpcEndpoints": [
+        "https://gateway.tenderly.co/public/mainnet",
+        "https://ethereum-rpc.publicnode.com"
+      ],
+      "reads": {
+        "fraxlendWhitelistRegistryOwner": {
+          "contract": "0xD6E9D27C75Afd88ad24Cd5EdccdC76fd2fc3A751",
+          "castCommands": [
+            "cast call 0xD6E9D27C75Afd88ad24Cd5EdccdC76fd2fc3A751 \"owner()(address)\" --block 26441996 --rpc-url https://gateway.tenderly.co/public/mainnet",
+            "cast call 0xD6E9D27C75Afd88ad24Cd5EdccdC76fd2fc3A751 \"owner()(address)\" --block 26441996 --rpc-url https://ethereum-rpc.publicnode.com"
+          ],
+          "output": "0xB1748C79709f4Ba2Dd82834B8c82D4a505003f27",
+          "note": "Owner is Core Frax Comptroller 0xB1748C79709f4Ba2Dd82834B8c82D4a505003f27 (3-of-5 Safe) instead of documented Fraxlend Comptroller 0x168200cF227D4543302686124ac28aE0eaf2cA0B (3-of-6 Safe)"
+        }
+      }
+    }
+  },
+  "docsUrl": "https://docs.frax.finance/fraxlend/fraxlend-multisigs",
+  "docsQuote": "Comptroller 0x168200cF227D4543302686124ac28aE0eaf2cA0B",
+  "tvlUsd": 16468133.0,
+  "tvlReference": "https://api.llama.fi/protocol/fraxlend",
+  "apache2CommercialGrant": true,
+  "rulesAccepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
