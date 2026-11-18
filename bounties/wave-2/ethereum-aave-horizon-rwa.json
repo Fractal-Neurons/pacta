@@ -1,0 +1,66 @@
+{
+  "wave": 2,
+  "category": "protocol_mismatch",
+  "slug": "aave-horizon-rwa",
+  "protocol": "Aave Horizon RWA",
+  "chainId": 1,
+  "contractAddress": "0xEFD5df7b87d2dCe6DD454b4240b3e0A4db562321",
+  "hunter": "ak10082247-max",
+  "agentFramework": "antigravity",
+  "basePayoutAddress": "0x80E0Ae84679b7f11bE171DaADd492FBECf628cd6",
+  "mcpProof": {
+    "tool": "pacta_scan_control_plane",
+    "arguments": {
+      "chain": "ethereum",
+      "address": "0xEFD5df7b87d2dCe6DD454b4240b3e0A4db562321"
+    },
+    "result": {
+      "chain": "ethereum",
+      "address": "0xEFD5df7b87d2dCe6DD454b4240b3e0A4db562321",
+      "block": {
+        "number": 26442559,
+        "hash": "0x75b3db93e3c96ce64baa20fe4cdaf0e5abfe976bbc0bd41ec52d1e1e4d0e9aad",
+        "timestamp": 1795012283
+      },
+      "codeBytes": 3493,
+      "eip1967": {
+        "implementation": null,
+        "admin": null,
+        "beacon": null
+      },
+      "owner": null,
+      "probedStatus": {
+        "eip1967Slots": "ok",
+        "owner": "reverted_or_absent",
+        "safeGetters": "reverted_or_absent"
+      },
+      "upgradeAuthority": null,
+      "ownerPrincipal": null,
+      "riskFlags": [
+        "not_eip1967_upgradeable"
+      ],
+      "summary": "OBSERVED: No EIP-1967, Ownable, or Safe single-key control detected in probed standard slots/selectors (custom AccessControl/RolesAuthority not excluded)"
+    }
+  },
+  "blockNumber": 26442476,
+  "blockHash": "0xedd9f1eed25650da6dba7ab3ce30ccb17af5aae41d814e1985d5507543eb8f24",
+  "castCommands": [
+    "cast call 0xEFD5df7b87d2dCe6DD454b4240b3e0A4db562321 \"isPoolAdmin(address)(bool)\" 0x13B57382c36BAB566E75C72303622AF29E27e1d3 --block 26442476 --rpc-url https://eth.drpc.org",
+    "cast call 0xEFD5df7b87d2dCe6DD454b4240b3e0A4db562321 \"isPoolAdmin(address)(bool)\" 0x13B57382c36BAB566E75C72303622AF29E27e1d3 --block 26442476 --rpc-url https://gateway.tenderly.co/public/mainnet"
+  ],
+  "rpcOutputs": {
+    "a": "true",
+    "b": "true"
+  },
+  "docsUrl": "https://aave.com/docs/aave-v3/horizon",
+  "docsQuote": "An emergency multisig can freeze the reserve, but only reactively, leaving a window where allowlisted liquidators could exploit a faulty price and cause irreparable harm to borrowers.",
+  "tvlUsd": 222681627.04,
+  "tvlReference": "https://api.llama.fi/protocol/aave-horizon-rwa",
+  "apache2CommercialGrant": true,
+  "rulesAccepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
