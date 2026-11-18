@@ -1,0 +1,120 @@
+{
+  "wave": 2,
+  "category": "protocol_mismatch",
+  "slug": "aevo",
+  "protocol": "Aevo (Ethereum L1 Deposit L1ChugSplashProxy)",
+  "chainId": 1,
+  "contractAddress": "0x4082C9647c098a6493fb499EaE63b5ce3259c574",
+  "hunter": "VB-Blue",
+  "agentFramework": "antigravity",
+  "basePayoutAddress": "0xe0a3AAe6e7d042f42e82830f4eEbF426cc1270a2",
+  "mcpProof": {
+    "tool": "pacta_check_preflight",
+    "arguments": {
+      "chain": "ethereum",
+      "address": "0x4082C9647c098a6493fb499EaE63b5ce3259c574",
+      "block": "26443404"
+    },
+    "result": {
+      "schema": "pacta.preflight_check.v1",
+      "chain": "ethereum",
+      "chainId": 1,
+      "address": "0x4082C9647c098a6493fb499EaE63b5ce3259c574",
+      "pinnedBlock": 26443404,
+      "pinnedBlockHash": "0x4a0ea655757790e26c2ec96f4c358535599ea960ff7b1f5688fc1796a7a28ce4",
+      "blockTimestamp": 1795022423,
+      "verdict": "MULTISIG_NO_TIMELOCK",
+      "riskScore": 55,
+      "isContract": true,
+      "isProxy": true,
+      "proxyType": "eip1967",
+      "implementation": "0xB37a11AadF167B2F0b8dD85372De4bC66CD4A891",
+      "beacon": null,
+      "hasAdminSlot": true,
+      "canUpgradeZeroDelay": true,
+      "capabilities": {
+        "pause": false,
+        "blacklist": false,
+        "upgrade": true
+      },
+      "paused": false,
+      "controller": {
+        "address": "0x4a4962275DF8C60a80d3a25faEc5AA7De116A746",
+        "kind": "multisig_safe",
+        "safeThreshold": 4,
+        "timelockDelaySec": null,
+        "safeOwnerCount": 10,
+        "proxyAdmin": "0x27ff92b30Cae00dABCF8045cc68fc9dcB67C5019",
+        "source": "eip1967_admin_slot"
+      },
+      "roleAdminMembers": null,
+      "codeBytes": 2472,
+      "method": "Batched JSON-RPC reads pinned to the block hash (EIP-1898); EIP-1967 / EIP-1822 / beacon proxies; capabilities from PUSH4 selectors in proxy + implementation bytecode (heuristic).",
+      "summary": "Controlled by a 4-of-10 Safe with no timelock: changes can land instantly once signers agree. Capabilities seen in bytecode: upgrade.",
+      "source": "live_rpc",
+      "assessment": {
+        "coverage": "unindexed_bytecode_heuristic",
+        "confidence": "medium",
+        "method": "Live bytecode + storage heuristic at the pinned block only: this contract is not in Pacta's indexed catalog (no documentation comparison).",
+        "limits": [
+          "riskScore (0-100) is a heuristic of the controller type and of pause / blacklist / upgrade capabilities read at one block; it is not an audit.",
+          "The live check reads EIP-1967 slots, owner(), Safe getThreshold() / getOwners() and TimelockController getMinDelay(); custom role systems, bridge or L2 admin paths and off-chain operations are not resolved.",
+          "Documentation is compared only for indexed protocols (catalogMatch), at their pinned block."
+        ]
+      },
+      "coverage_gap_hint": "Target is not yet indexed or fully classified. Ask the user if they want you to queue coverage or request this capability via pacta_submit_request (free community queue, or 24h priority clearance for issuers)."
+    }
+  },
+  "blockNumber": 26443404,
+  "blockHash": "0x4a0ea655757790e26c2ec96f4c358535599ea960ff7b1f5688fc1796a7a28ce4",
+  "castCommands": [
+    "cast storage 0x4082C9647c098a6493fb499EaE63b5ce3259c574 0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103 --block 26443404 --rpc-url https://ethereum-rpc.publicnode.com",
+    "cast storage 0x4082C9647c098a6493fb499EaE63b5ce3259c574 0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103 --block 26443404 --rpc-url https://gateway.tenderly.co/public/mainnet"
+  ],
+  "rpcOutputs": {
+    "a": "0x00000000000000000000000027ff92b30cae00dabcf8045cc68fc9dcb67c5019",
+    "b": "0x00000000000000000000000027ff92b30cae00dabcf8045cc68fc9dcb67c5019",
+    "pinnedDualRpcChainProof": {
+      "note": "Mismatch summary: Aevo official documentation explicitly states that there is no further control by or interaction with the deploying entity and that contracts do not hold custody control. On-chain at finalized Ethereum block, the official Ethereum L1 Deposit contract (0x4082C9647c098a6493fb499EaE63b5ce3259c574, linked in Aevo Deposit Contracts docs) is an upgradeable L1ChugSplashProxy whose EIP-1967 admin slot points to ProxyAdmin/owner 0x27ff92b30cae00dabcf8045cc68fc9dcb67c5019, owned directly by a 4-of-10 Safe (0x4a4962275DF8C60a80d3a25faEc5AA7De116A746) with 0s upgrade timelock delay and arbitrary setCode()/setStorage() proxy upgrade power.",
+      "implSlot": {
+        "castCommands": [
+          "cast storage 0x4082C9647c098a6493fb499EaE63b5ce3259c574 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc --block 26443404 --rpc-url https://ethereum-rpc.publicnode.com",
+          "cast storage 0x4082C9647c098a6493fb499EaE63b5ce3259c574 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc --block 26443404 --rpc-url https://gateway.tenderly.co/public/mainnet"
+        ],
+        "output": "0x000000000000000000000000b37a11aadf167b2f0b8dd85372de4bc66cd4a891"
+      },
+      "adminContractOwner": {
+        "castCommands": [
+          "cast call 0x27ff92b30cae00dabcf8045cc68fc9dcb67c5019 \"owner()(address)\" --block 26443404 --rpc-url https://ethereum-rpc.publicnode.com",
+          "cast call 0x27ff92b30cae00dabcf8045cc68fc9dcb67c5019 \"owner()(address)\" --block 26443404 --rpc-url https://gateway.tenderly.co/public/mainnet"
+        ],
+        "output": "0x4a4962275DF8C60a80d3a25faEc5AA7De116A746"
+      },
+      "safeThreshold": {
+        "castCommands": [
+          "cast call 0x4a4962275DF8C60a80d3a25faEc5AA7De116A746 \"getThreshold()(uint256)\" --block 26443404 --rpc-url https://ethereum-rpc.publicnode.com",
+          "cast call 0x4a4962275DF8C60a80d3a25faEc5AA7De116A746 \"getThreshold()(uint256)\" --block 26443404 --rpc-url https://gateway.tenderly.co/public/mainnet"
+        ],
+        "output": "4"
+      },
+      "safeOwners": {
+        "castCommands": [
+          "cast call 0x4a4962275DF8C60a80d3a25faEc5AA7De116A746 \"getOwners()(address[])\" --block 26443404 --rpc-url https://ethereum-rpc.publicnode.com",
+          "cast call 0x4a4962275DF8C60a80d3a25faEc5AA7De116A746 \"getOwners()(address[])\" --block 26443404 --rpc-url https://gateway.tenderly.co/public/mainnet"
+        ],
+        "output": "[0x9402c42dB162d5a0927c032136f40Cc9C71853F2, 0xcdC931935768c0562AfE989A366a3Dc4d52F4853, 0xA9FCCc53F1c9095DA867Bd648683F8bdCcc78d09, 0x6BB4249858Ee19b6ABC071AD26bEe690baa783A6, 0x2103c69696CB2D3779f5445393808239034E911c, 0x81175155D85377C337d92f1FA52Da166C3A4E7Ac, 0xA0737fea60F0601A192E3d2c98865A883ab0bda2, 0xF3313C48BD8E17b823d5498D62F37019dFEA647D, 0xefCf0c8faFB425997870f845e26fC6cA6EE6dD5C, 0x4D8007a0E9f293e62E2b0F43C6Cf4C4B9e135BAe]"
+      }
+    }
+  },
+  "docsUrl": "https://www.aevo.xyz/docs/aevo-products/aevo-exchange/technical-architecture/exchange-structure/layer-2-architecture",
+  "docsQuote": "There is no further control by or interaction with the original entity which had deployed the smart contract, which entity solely functions as a provider of technical tools for users, and is not offering any sort of securities product or regulated service nor does it hold any user assets on custody.",
+  "tvlUsd": 13401703,
+  "tvlReference": "https://api.llama.fi/protocol/aevo",
+  "apache2CommercialGrant": true,
+  "rulesAccepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
