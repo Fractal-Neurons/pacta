@@ -1,0 +1,103 @@
+{
+  "wave": 2,
+  "category": "protocol_mismatch",
+  "slug": "exactly-protocol",
+  "protocol": "Exactly Protocol",
+  "chainId": 1,
+  "contractAddress": "0x7A65824d74B0C20730B6eE4929ABcc41Cbe843Aa",
+  "hunter": "farmmer938-lgtm",
+  "agentFramework": "openhands",
+  "basePayoutAddress": "0xf3C99a6d6e7C6b2ae00b44dC42cC3eb7691D7702",
+  "mcpProof": {
+    "tool": "pacta_scan_control_plane",
+    "arguments": {
+      "chain": "ethereum",
+      "address": "0x7A65824d74B0C20730B6eE4929ABcc41Cbe843Aa"
+    },
+    "result": {
+      "chain": "ethereum",
+      "address": "0x7A65824d74B0C20730B6eE4929ABcc41Cbe843Aa",
+      "block": {
+        "number": 26441429,
+        "hash": "0x5b9fc1118a5dbfb7d143b3e5a35959ab44257df80bbfb50dffb837062f15d3df",
+        "timestamp": 1794998711
+      },
+      "codeBytes": 171,
+      "eip1967": {
+        "implementation": null,
+        "admin": null,
+        "beacon": null
+      },
+      "owner": null,
+      "probedStatus": {
+        "eip1967Slots": "ok",
+        "owner": "reverted_or_absent",
+        "safeGetters": "ok"
+      },
+      "safe": {
+        "threshold": 3,
+        "owners": [
+          "0xA4F5f3848142116fe061e7255C133003a41ABce8",
+          "0x13FD608F64C9dE7627e28C8906350ad4F0E1C24d",
+          "0x260f7DCA963D9eC79d225d26c4323960673f769f",
+          "0xa2FDE6Cad46ff7E4C77f8bf87B258A00fA863c2E",
+          "0xF99A8edfe60B8112128A904b985D9DAe3aAB8132"
+        ],
+        "ownerCount": 5,
+        "guard": null
+      },
+      "upgradeAuthority": null,
+      "ownerPrincipal": null,
+      "riskFlags": [
+        "not_eip1967_upgradeable"
+      ],
+      "summary": "OBSERVED: No EIP-1967, Ownable, or Safe single-key control detected in probed standard slots/selectors (custom AccessControl/RolesAuthority not excluded)"
+    }
+  },
+  "blockNumber": 26441429,
+  "blockHash": "0x5b9fc1118a5dbfb7d143b3e5a35959ab44257df80bbfb50dffb837062f15d3df",
+  "castCommands": [
+    "cast call 0x7A65824d74B0C20730B6eE4929ABcc41Cbe843Aa \"getOwners()(address[])\" --block 26441429 --rpc-url https://eth.drpc.org",
+    "cast call 0x7A65824d74B0C20730B6eE4929ABcc41Cbe843Aa \"getOwners()(address[])\" --block 26441429 --rpc-url https://ethereum-rpc.publicnode.com"
+  ],
+  "rpcOutputs": {
+    "a": "[0xA4f5F3848142116fe061e7255c133003a41abce8, 0x13Fd608f64C9dE7627e28c8906350AD4f0E1C24D, 0x260F7Dca963D9ec79d225D26C4323960673F769f, 0xa2FdE6caD46ff7e4C77f8Bf87b258a00FA863C2e, 0xf99a8eDfe60B8112128A904b985d9Dae3AaB8132]",
+    "b": "[0xA4f5F3848142116fe061e7255c133003a41abce8, 0x13Fd608f64C9dE7627e28c8906350AD4f0E1C24D, 0x260F7Dca963D9ec79d225D26C4323960673F769f, 0xa2FdE6caD46ff7e4C77f8Bf87b258a00FA863C2e, 0xf99a8eDfe60B8112128A904b985d9Dae3AaB8132]",
+    "pinnedDualRpcChainProof": {
+      "blockNumber": 26441429,
+      "blockHash": "0x5b9fc1118a5dbfb7d143b3e5a35959ab44257df80bbfb50dffb837062f15d3df",
+      "rpcEndpoints": [
+        "https://eth.drpc.org",
+        "https://ethereum-rpc.publicnode.com"
+      ],
+      "reads": {
+        "protocolOwnerGetOwners": {
+          "castCommands": [
+            "cast call 0x7A65824d74B0C20730B6eE4929ABcc41Cbe843Aa \"getOwners()(address[])\" --block 26441429 --rpc-url https://eth.drpc.org",
+            "cast call 0x7A65824d74B0C20730B6eE4929ABcc41Cbe843Aa \"getOwners()(address[])\" --block 26441429 --rpc-url https://ethereum-rpc.publicnode.com"
+          ],
+          "output": "[0xA4f5F3848142116fe061e7255c133003a41abce8, 0x13Fd608f64C9dE7627e28c8906350AD4f0E1C24D, 0x260F7Dca963D9ec79d225D26C4323960673F769f, 0xa2FdE6caD46ff7e4C77f8Bf87b258a00FA863C2e, 0xf99a8eDfe60B8112128A904b985d9Dae3AaB8132]"
+        },
+        "protocolOwnerGetThreshold": {
+          "castCommands": [
+            "cast call 0x7A65824d74B0C20730B6eE4929ABcc41Cbe843Aa \"getThreshold()(uint256)\" --block 26441429 --rpc-url https://eth.drpc.org",
+            "cast call 0x7A65824d74B0C20730B6eE4929ABcc41Cbe843Aa \"getThreshold()(uint256)\" --block 26441429 --rpc-url https://ethereum-rpc.publicnode.com"
+          ],
+          "output": "3",
+          "note": "Protocol Owner (Ethereum) is a 3-of-5 Safe; docs say the executor multisig is 'currently 3 out of 6'"
+        }
+      }
+    }
+  },
+  "docsUrl": "https://docs.exact.ly/security/access-control",
+  "docsQuote": "The number of signatures required for a transaction to be executed is defined in the multisig contract, and it's currently 3 out of 6 (2 signers are team members, and 4 are respected members of the DeFi community and EXA holders), providing a secure and transparent method of controlling execution.",
+  "tvlUsd": 11160601,
+  "tvlReference": "https://api.llama.fi/protocol/exactly",
+  "apache2CommercialGrant": true,
+  "rulesAccepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
