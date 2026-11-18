@@ -1,0 +1,66 @@
+{
+  "wave": 2,
+  "category": "protocol_mismatch",
+  "slug": "zksync-era",
+  "protocol": "ZKsync Era",
+  "chainId": 1,
+  "contractAddress": "0x8f7a9912416e8AdC4D9c21FAe1415D3318A11897",
+  "hunter": "ak10082247-max",
+  "agentFramework": "antigravity",
+  "basePayoutAddress": "0x80E0Ae84679b7f11bE171DaADd492FBECf628cd6",
+  "mcpProof": {
+    "tool": "pacta_scan_control_plane",
+    "arguments": {
+      "chain": "ethereum",
+      "address": "0x8f7a9912416e8AdC4D9c21FAe1415D3318A11897"
+    },
+    "result": {
+      "chain": "ethereum",
+      "address": "0x8f7a9912416e8AdC4D9c21FAe1415D3318A11897",
+      "block": {
+        "number": 26442558,
+        "hash": "0x28eb31ec998bdb2c0809c5a8e80f5a69501212f59e5f55d122c099e7683ea570",
+        "timestamp": 1795012271
+      },
+      "codeBytes": 10094,
+      "eip1967": {
+        "implementation": null,
+        "admin": null,
+        "beacon": null
+      },
+      "owner": null,
+      "probedStatus": {
+        "eip1967Slots": "ok",
+        "owner": "reverted_or_absent",
+        "safeGetters": "reverted_or_absent"
+      },
+      "upgradeAuthority": null,
+      "ownerPrincipal": null,
+      "riskFlags": [
+        "not_eip1967_upgradeable"
+      ],
+      "summary": "OBSERVED: No EIP-1967, Ownable, or Safe single-key control detected in probed standard slots/selectors (custom AccessControl/RolesAuthority not excluded)"
+    }
+  },
+  "blockNumber": 26442476,
+  "blockHash": "0xedd9f1eed25650da6dba7ab3ce30ccb17af5aae41d814e1985d5507543eb8f24",
+  "castCommands": [
+    "cast call 0x8f7a9912416e8AdC4D9c21FAe1415D3318A11897 \"securityCouncil()(address)\" --block 26442476 --rpc-url https://eth.drpc.org",
+    "cast call 0x8f7a9912416e8AdC4D9c21FAe1415D3318A11897 \"securityCouncil()(address)\" --block 26442476 --rpc-url https://gateway.tenderly.co/public/mainnet"
+  ],
+  "rpcOutputs": {
+    "a": "0xBDFfCC71FE84020238F2990a6D2954e87355De0D",
+    "b": "0xBDFfCC71FE84020238F2990a6D2954e87355De0D"
+  },
+  "docsUrl": "https://docs.zknation.io/zksync-governance-procedures/schedule-3-zksync-security-council",
+  "docsQuote": "The address of the Security Multisig, which is deployed on Ethereum, is: 0x66E4431266DC7E04E7d8b7FE9d2181253df7F410.",
+  "tvlUsd": 87836075.64,
+  "tvlReference": "https://api.llama.fi/protocol/zksync-era-txbridge",
+  "apache2CommercialGrant": true,
+  "rulesAccepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
