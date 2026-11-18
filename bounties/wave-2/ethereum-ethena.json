@@ -1,0 +1,82 @@
+{
+  "wave": 2,
+  "category": "protocol_mismatch",
+  "slug": "ethena",
+  "protocol": "Ethena",
+  "chainId": 1,
+  "contractAddress": "0x3B0AAf6e6fCd4a7cEEf8c92C32DFeA9E64dC1862",
+  "hunter": "Zhauxxx23",
+  "basePayoutAddress": "0x589304C62b6ad7f29a9a797182feDAF160a5bD3A",
+  "mcpProof": {
+    "tool": "pacta_scan_control_plane",
+    "arguments": {
+      "chain": "ethereum",
+      "address": "0x3B0AAf6e6fCd4a7cEEf8c92C32DFeA9E64dC1862"
+    },
+    "result": {
+      "chain": "ethereum",
+      "address": "0x3B0AAf6e6fCd4a7cEEf8c92C32DFeA9E64dC1862",
+      "block": {
+        "number": 26443453,
+        "hash": "0xfd54b5f4734d5c4c109cf4f424e2abad1e71d33e9e06bc255888e7e79725f52f",
+        "timestamp": 1795023011
+      },
+      "codeBytes": 171,
+      "eip1967": {
+        "implementation": null,
+        "admin": null,
+        "beacon": null
+      },
+      "owner": null,
+      "probedStatus": {
+        "eip1967Slots": "ok",
+        "owner": "reverted_or_absent",
+        "safeGetters": "ok"
+      },
+      "safe": {
+        "threshold": 5,
+        "owners": [
+          "0x66096e581863EC2682e4E317Da41B80510a274F6",
+          "0x18d32B1AB042b5E9a3430e77fDE8B4783A019234",
+          "0xb93C042c688F1Cf038bab03C4F832F2630Bb7d8F",
+          "0x66892C66711B2640360C3123E6C23C0cFa50550F",
+          "0xE3F95F2e1aDEC092337FB5D93C1fE87558658b11",
+          "0x99682F56F4ccCF61BD7e449924f2f62D395e1E45",
+          "0x980742eDEA6b0df3566C19Ff4945c57E95449a13",
+          "0x54D0D64f7326b128959bf37Ed7B5f2510656a471",
+          "0xE987E14b2E204fdf5827a3cFCa7D476E8Df6a99E",
+          "0xe5cA87dA3A209aD85FdcbB515e1bD92644e9E1A6"
+        ],
+        "ownerCount": 10,
+        "guard": "0x74abe7805541c28f31953b3cDA9711Dc96278D29"
+      },
+      "upgradeAuthority": null,
+      "ownerPrincipal": null,
+      "riskFlags": [
+        "not_eip1967_upgradeable"
+      ],
+      "summary": "OBSERVED: No EIP-1967, Ownable, or Safe single-key control detected in probed standard slots/selectors (custom AccessControl/RolesAuthority not excluded)"
+    }
+  },
+  "blockNumber": 26443300,
+  "blockHash": "0x52e5c7739143375c9ea08c6c99d6ed85e04122407f0718bb0ae2f60009183340",
+  "castCommands": [
+    "cast call 0x3B0AAf6e6fCd4a7cEEf8c92C32DFeA9E64dC1862 \"getThreshold()(uint256)\" --block 26443300 --rpc-url https://eth.drpc.org",
+    "cast call 0x3B0AAf6e6fCd4a7cEEf8c92C32DFeA9E64dC1862 \"getThreshold()(uint256)\" --block 26443300 --rpc-url https://eth-mainnet.public.blastapi.io"
+  ],
+  "rpcOutputs": {
+    "a": "5",
+    "b": "5"
+  },
+  "docsUrl": "https://docs.ethena.fi/technical-design/key-trust-assumptions",
+  "docsQuote": "This multi-sig wallet requires 7 signatures to sign or transact, both from internal and external stakeholders, with keys geographically distributed and controlled by distinct individuals both within and outside of the Ethena Labs team.",
+  "tvlUsd": 4856162197,
+  "tvlReference": "https://defillama.com/protocol/ethena-usde",
+  "apache2CommercialGrant": true,
+  "rulesAccepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
