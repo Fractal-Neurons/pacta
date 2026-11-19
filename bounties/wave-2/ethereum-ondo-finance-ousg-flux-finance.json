@@ -1,0 +1,203 @@
+{
+  "wave": 2,
+  "category": "post_pin_drift",
+  "slug": "ondo-finance-ousg-flux-finance",
+  "protocol": "Ondo Finance (OUSG & Flux Finance)",
+  "chainId": 1,
+  "contractAddress": "0x98Db502215Da1ad9F626D4a0090A8A2f4971003c",
+  "pactaSlug": "ondo-finance-ousg-flux-finance",
+  "priorPin": "Pacta pinned the OUSG RateLimiter globalSubscriptionLimits surface at block 26403121 (surface ondo-ousg-rate-limiter-and-flux-timelock, EAS 0xfdd83c8091ef6e8ffe67e8a55a78892fcfbb1092683b21ff2d85f8cc09750e6c), where the 24h global instant-mint limit read 100,000 OUSG.",
+  "hunter": "farmmer938-lgtm",
+  "agentFramework": "openhands",
+  "basePayoutAddress": "0xf3C99a6d6e7C6b2ae00b44dC42cC3eb7691D7702",
+  "mcpProof": {
+    "tool": "pacta_check_preflight",
+    "arguments": {
+      "chain": "ethereum",
+      "address": "0x98Db502215Da1ad9F626D4a0090A8A2f4971003c"
+    },
+    "result": {
+      "schema": "pacta.preflight_check.v1",
+      "chain": "ethereum",
+      "chainId": 1,
+      "address": "0x98Db502215Da1ad9F626D4a0090A8A2f4971003c",
+      "pinnedBlock": 26449452,
+      "pinnedBlockHash": "0x391f0a90127fef466d3ca36133886da2c5ae806e350d3b47f39b62afdabfeb90",
+      "blockTimestamp": 1795095215,
+      "verdict": "MULTISIG_NO_TIMELOCK",
+      "riskScore": 55,
+      "isContract": true,
+      "isProxy": false,
+      "proxyType": null,
+      "implementation": null,
+      "beacon": null,
+      "hasAdminSlot": false,
+      "canUpgradeZeroDelay": false,
+      "capabilities": {
+        "pause": false,
+        "blacklist": false,
+        "upgrade": false
+      },
+      "paused": null,
+      "controller": {
+        "address": "0x5AE21c99FC5f1584D8Cb09a298CFFd92B5d178eF",
+        "kind": "multisig_safe",
+        "safeThreshold": 3,
+        "timelockDelaySec": null,
+        "safeOwnerCount": 5,
+        "source": "AccessControl.DEFAULT_ADMIN_ROLE"
+      },
+      "roleAdminMembers": 1,
+      "codeBytes": 7022,
+      "method": "Batched JSON-RPC reads pinned to the block hash (EIP-1898); EIP-1967 / EIP-1822 / beacon proxies; capabilities from PUSH4 selectors in proxy + implementation bytecode (heuristic).",
+      "summary": "Controlled by a 3-of-5 Safe with no timelock: changes can land instantly once signers agree.",
+      "activeGovernanceDiscussions": [],
+      "source": "live_rpc",
+      "catalogMatch": {
+        "slug": "ondo-finance-ousg-flux-finance",
+        "name": "Ondo Finance (OUSG & Flux Finance)",
+        "url": "https://pacta.wtf/protocols/ondo-finance-ousg-flux-finance/",
+        "matchedAs": "primary_contract",
+        "classification": "parameter_delta",
+        "evidenceBasis": "eas_attested",
+        "easAttested": true,
+        "baseEasUids": [
+          "0xfdd83c8091ef6e8ffe67e8a55a78892fcfbb1092683b21ff2d85f8cc09750e6c"
+        ],
+        "sprints": [
+          10
+        ],
+        "pinnedBlock": 26403121,
+        "primaryContract": "0x98Db502215Da1ad9F626D4a0090A8A2f4971003c",
+        "controller": {
+          "address": "0x2c5898da4DF1d45EAb2B7B192a361C3b9EB18d9c",
+          "kind": "timelock"
+        },
+        "observedDelaySeconds": 86400,
+        "documentedDelaySeconds": 86400,
+        "surfaces": [
+          {
+            "id": "ondo-ousg-rate-limiter-and-flux-timelock",
+            "surface": "OUSG RateLimiter Global Subscription Limit & Flux 1d Timelock",
+            "classification": "parameter_delta",
+            "targetContract": "0x98Db502215Da1ad9F626D4a0090A8A2f4971003c",
+            "blockNumber": 26403121
+          }
+        ],
+        "whatDiffers": {
+          "changed": [
+            {
+              "classification": "parameter_delta",
+              "documented": "docs.ondo.finance/qualified-access-products/ousg/instant-limits.md states 'Instant minting has a $50M Global Limit' and 'Instant redemptions have a $50M Global Limit';",
+              "observed": "RateLimiter (0x98Db502215Da1ad9F626D4a0090A8A2f4971003c) globalSubscriptionLimits(0x1B19C19393e2d034D8Ff31ff34c81252FcBbee92) word [2] = 100000000000000000000000000 ($100M per 86400s window), globalRedemptionLimits(OUSG…",
+              "parameter": "OUSG RateLimiter Global Subscription Limit & Flux 1d Timelock",
+              "recordId": "ondo-ousg-rate-limiter-and-flux-timelock"
+            }
+          ],
+          "matched": [
+            {
+              "parameter": "Timelock delay",
+              "recordId": "ondo-ousg-rate-limiter-and-flux-timelock",
+              "value": "1 d"
+            }
+          ]
+        },
+        "alsoMatches": []
+      },
+      "assessment": {
+        "coverage": "indexed_verified",
+        "confidence": "high",
+        "method": "Live bytecode + storage heuristic at the pinned block, cross-checked with Pacta's Base-EAS-attested record for Ondo Finance (OUSG & Flux Finance) (block 26403121).",
+        "limits": [
+          "riskScore (0-100) is a heuristic of the controller type and of pause / blacklist / upgrade capabilities read at one block; it is not an audit.",
+          "The live check reads EIP-1967 slots, owner(), Safe getThreshold() / getOwners() and TimelockController getMinDelay(); custom role systems, bridge or L2 admin paths and off-chain operations are not resolved.",
+          "Documentation is compared only for indexed protocols (catalogMatch), at their pinned block."
+        ]
+      },
+      "meter": {
+        "limit": 50,
+        "remaining": 49,
+        "reset": 1795132800
+      },
+      "upgrade_x402": {
+        "note": "Free tier: 50 pre-flight calls per caller per UTC day (REST and MCP), then $0.01 per call over x402 (HTTP 402, never a dead-end 429). Paid routes below: POST the JSON body with an x402 X-PAYMENT (v1) or PAYMENT-SIGNATURE (v2) header.",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "network": "base (eip155:8453)",
+        "payTo": "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14",
+        "discovery": "https://pacta.fractalneurons.com/.well-known/x402",
+        "overflow": {
+          "method": "GET or POST",
+          "url": "https://pacta.fractalneurons.com/v1/check/preflight",
+          "priceUsd": "0.01",
+          "amountAtomic": "10000",
+          "after": "50 free calls per UTC day"
+        },
+        "endpoints": [
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/verdict",
+            "priceUsd": "0.02",
+            "amountAtomic": "20000",
+            "unlocks": "fast contract / token control-plane verdict: riskScore 0-100, grade A-F, upgrade / owner / pause / blacklist / mint flags and a shareable scan URL",
+            "example": {
+              "chain": "ethereum",
+              "address": "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/dossier",
+            "priceUsd": "0.05",
+            "amountAtomic": "50000",
+            "unlocks": "full control-plane dossier: every controller Safe's signers and threshold, signers shared with other indexed protocols, Base EAS proof",
+            "example": {
+              "slug": "stader-labs-ethx"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/calldata-sim",
+            "priceUsd": "0.25",
+            "amountAtomic": "250000",
+            "unlocks": "pre-signing calldata check: timelock / Safe / multicall calls decoded, each rated against live delays and the authority that governs it",
+            "example": {
+              "chain": "ethereum",
+              "target": "0x2225DAbFfC7F862c99477381E971E8B1FDaB467e",
+              "data": "0x64d623530000000000000000000000000000000000000000000000000000000000015180"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/deep-scan",
+            "priceUsd": "9.00",
+            "amountAtomic": "9000000",
+            "unlocks": "deep control-plane scan cross-checked on two independent RPC operators, auditor receipt and a queued Base EAS ticket",
+            "example": {
+              "chain": "base",
+              "address": "0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "blockNumber": 26449370,
+  "blockHash": "0x23a49e901cde6f4323eeba82f2430082c969c0b1789837e2a864e00008836ee5",
+  "castCommands": [
+    "cast call 0x98Db502215Da1ad9F626D4a0090A8A2f4971003c \"globalSubscriptionLimits(address)(uint256,uint256,uint256,uint256)\" 0x1B19C19393e2d034D8Ff31ff34c81252FcBbee92 --block 26449370 --rpc-url https://eth.drpc.org",
+    "cast call 0x98Db502215Da1ad9F626D4a0090A8A2f4971003c \"globalSubscriptionLimits(address)(uint256,uint256,uint256,uint256)\" 0x1B19C19393e2d034D8Ff31ff34c81252FcBbee92 --block 26449370 --rpc-url https://ethereum-rpc.publicnode.com"
+  ],
+  "rpcOutputs": {
+    "a": "0x0000000000000000000000000000000000000000000022d7ad5c0ea8c90ad000000000000000000000000000000000000000000000000000000000006afdb9f700000000000000000000000000000000000000000052b7d2dcc80cd2e40000000000000000000000000000000000000000000000000000000000000000015180",
+    "b": "0x0000000000000000000000000000000000000000000022d7ad5c0ea8c90ad000000000000000000000000000000000000000000000000000000000006afdb9f700000000000000000000000000000000000000000052b7d2dcc80cd2e40000000000000000000000000000000000000000000000000000000000000000015180"
+  },
+  "docsUrl": "https://docs.ondo.finance/qualified-access-products/ousg/instant-limits",
+  "docsQuote": "Instant minting has a $50M Global Limit. This is the total value of OUSG that can be instantly minted by all investors combined within 24 hours. This Global Limit resets every 24 hours.",
+  "apache2CommercialGrant": true,
+  "rulesAccepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
