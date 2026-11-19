@@ -1,0 +1,193 @@
+{
+  "wave": 2,
+  "category": "post_pin_drift",
+  "slug": "lombard-lbtc-impl-post-pin",
+  "protocol": "Lombard (LBTC)",
+  "chainId": 1,
+  "contractAddress": "0x8236a87084f8B84306f72007F36F2618A5634494",
+  "pactaSlug": "lombard-lbtc",
+  "priorPin": "Pacta lombard-lbtc (surface lombard-lbtc-core-proxy-upgrade-timelock at block 26403523; latest protocol pin block 26407707, EAS 0x217d213de3cd9ef094670ff69d258af35adf132406caa547f729f487dc9d7e58); LBTC EIP-1967 implementation slot was 0x000000000000000000000000e15382bc6968a50c5ff5af193d03de6be4d0270f at block 26407707 and upgraded at block 26440758 (tx 0xe0685f69e13610acbf1abed432200f079b56e5505cde7f2bfac1f0c07056e248)",
+  "hunter": "physho158-cell",
+  "basePayoutAddress": "0xd31cdC9c676C49c9fAf7Cf4D7F84da792Df382e4",
+  "mcpProof": {
+    "tool": "pacta_check_preflight",
+    "arguments": {
+      "chain": "ethereum",
+      "address": "0x8236a87084f8B84306f72007F36F2618A5634494"
+    },
+    "result": {
+      "schema": "pacta.preflight_check.v1",
+      "chain": "ethereum",
+      "chainId": 1,
+      "address": "0x8236a87084f8B84306f72007F36F2618A5634494",
+      "pinnedBlock": 26448497,
+      "pinnedBlockHash": "0x3cb5f5824337b984af64ec9b31d8bab1f871437bff6ac2ff89503d23642cf14f",
+      "blockTimestamp": 1795083719,
+      "verdict": "UNCLASSIFIED_CONTRACT_CONTROLLER",
+      "riskScore": 60,
+      "isContract": true,
+      "isProxy": true,
+      "proxyType": "eip1967",
+      "implementation": "0x78C6f7b9192d72Df65f68514E55dF506BB2A3029",
+      "beacon": null,
+      "hasAdminSlot": true,
+      "canUpgradeZeroDelay": null,
+      "capabilities": {
+        "pause": false,
+        "blacklist": false,
+        "upgrade": true
+      },
+      "paused": false,
+      "controller": {
+        "address": null,
+        "kind": "access_control",
+        "safeThreshold": null,
+        "timelockDelaySec": null,
+        "proxyAdmin": "0xbae061C73876952aa2C5e483B74DfA785425f879",
+        "source": "eip1967_admin_slot + bytecode grantRole / setAuthority (PUSH4 heuristic)"
+      },
+      "roleAdminMembers": null,
+      "codeBytes": 1159,
+      "method": "Batched JSON-RPC reads pinned to the block hash (EIP-1898); EIP-1967 / EIP-1822 / beacon proxies; capabilities from PUSH4 selectors in proxy + implementation bytecode (heuristic).",
+      "summary": "Competing admin / role-authority surfaces were detected (timelock 0x055E84e7FE8955E2781010B866f10Ef6E1E77e59 via eip1967_admin_slot; grantRole / setAuthority in the bytecode (PUSH4 heuristic)) and are not resolved to a single delayed controller: inspect every owner, admin and role holder before relying on it. Capabilities seen in bytecode: upgrade.",
+      "source": "live_rpc",
+      "catalogMatch": {
+        "slug": "lombard-lbtc",
+        "name": "Lombard (LBTC)",
+        "url": "https://pacta.wtf/protocols/lombard-lbtc/",
+        "matchedAs": "related_contract",
+        "classification": "aligned_baseline",
+        "evidenceBasis": "eas_attested",
+        "easAttested": true,
+        "baseEasUids": [
+          "0x217d213de3cd9ef094670ff69d258af35adf132406caa547f729f487dc9d7e58",
+          "0x754edd7612258b755ff2e56903243d1f8867bad53c29ce3febb5ed9114005e42"
+        ],
+        "sprints": [
+          11,
+          16
+        ],
+        "pinnedBlock": 26407707,
+        "primaryContract": "0x055E84e7FE8955E2781010B866f10Ef6E1E77e59",
+        "controller": {
+          "address": "0x055E84e7FE8955E2781010B866f10Ef6E1E77e59",
+          "kind": "timelock"
+        },
+        "observedDelaySeconds": 86400,
+        "documentedDelaySeconds": 86400,
+        "surfaces": [
+          {
+            "id": "lombard-lbtc-core-proxy-upgrade-timelock",
+            "surface": "Sampled Core ProxyAdmin Wiring & 24h TimelockController",
+            "classification": "aligned_baseline",
+            "targetContract": "0x055E84e7FE8955E2781010B866f10Ef6E1E77e59",
+            "blockNumber": 26403523
+          },
+          {
+            "id": "lombard-lbtc-gmpbascule-zero-validate-threshold-s16",
+            "surface": "GMPBascule validateThreshold() = 0 \u2014 deposit-ID validation on every inbound mint",
+            "classification": "aligned_baseline",
+            "targetContract": "0xC3ecFE771564e3f28CFB7a9b203F4d10279338eD",
+            "blockNumber": 26407707
+          }
+        ],
+        "whatDiffers": null,
+        "alsoMatches": []
+      },
+      "assessment": {
+        "coverage": "indexed_verified",
+        "confidence": "medium",
+        "method": "Live bytecode + storage heuristic at the pinned block, cross-checked with Pacta's Base-EAS-attested record for Lombard (LBTC) (block 26407707).",
+        "limits": [
+          "riskScore (0-100) is a heuristic of the controller type and of pause / blacklist / upgrade capabilities read at one block; it is not an audit.",
+          "The live check reads EIP-1967 slots, owner(), Safe getThreshold() / getOwners() and TimelockController getMinDelay(); custom role systems, bridge or L2 admin paths and off-chain operations are not resolved.",
+          "Documentation is compared only for indexed protocols (catalogMatch), at their pinned block."
+        ]
+      },
+      "meter": {
+        "limit": 50,
+        "remaining": 49,
+        "reset": 1795132800
+      },
+      "upgrade_x402": {
+        "note": "Free tier: 50 pre-flight calls per caller per UTC day (REST and MCP), then $0.01 per call over x402 (HTTP 402, never a dead-end 429). Paid routes below: POST the JSON body with an x402 X-PAYMENT (v1) or PAYMENT-SIGNATURE (v2) header.",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "network": "base (eip155:8453)",
+        "payTo": "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14",
+        "discovery": "https://pacta.fractalneurons.com/.well-known/x402",
+        "overflow": {
+          "method": "GET or POST",
+          "url": "https://pacta.fractalneurons.com/v1/check/preflight",
+          "priceUsd": "0.01",
+          "amountAtomic": "10000",
+          "after": "50 free calls per UTC day"
+        },
+        "endpoints": [
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/verdict",
+            "priceUsd": "0.02",
+            "amountAtomic": "20000",
+            "unlocks": "fast contract / token control-plane verdict: riskScore 0-100, grade A-F, upgrade / owner / pause / blacklist / mint flags and a shareable scan URL",
+            "example": {
+              "chain": "ethereum",
+              "address": "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/dossier",
+            "priceUsd": "0.05",
+            "amountAtomic": "50000",
+            "unlocks": "full control-plane dossier: every controller Safe's signers and threshold, signers shared with other indexed protocols, Base EAS proof",
+            "example": {
+              "slug": "stader-labs-ethx"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/calldata-sim",
+            "priceUsd": "0.25",
+            "amountAtomic": "250000",
+            "unlocks": "pre-signing calldata check: timelock / Safe / multicall calls decoded, each rated against live delays and the authority that governs it",
+            "example": {
+              "chain": "ethereum",
+              "target": "0x2225DAbFfC7F862c99477381E971E8B1FDaB467e",
+              "data": "0x64d623530000000000000000000000000000000000000000000000000000000000015180"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/deep-scan",
+            "priceUsd": "9.00",
+            "amountAtomic": "9000000",
+            "unlocks": "deep control-plane scan cross-checked on two independent RPC operators, auditor receipt and a queued Base EAS ticket",
+            "example": {
+              "chain": "base",
+              "address": "0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "blockNumber": 26448413,
+  "blockHash": "0x0bb90880a11ed6ea654a2fcab42d1580d22a9feba302b5d0262657c8abfe0616",
+  "castCommands": [
+    "cast storage 0x8236a87084f8B84306f72007F36F2618A5634494 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc --block 26448413 --rpc-url https://mainnet.gateway.tenderly.co",
+    "cast storage 0x8236a87084f8B84306f72007F36F2618A5634494 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc --block 26448413 --rpc-url https://eth-mainnet.public.blastapi.io"
+  ],
+  "rpcOutputs": {
+    "a": "0x00000000000000000000000078c6f7b9192d72df65f68514e55df506bb2a3029",
+    "b": "0x00000000000000000000000078c6f7b9192d72df65f68514e55df506bb2a3029"
+  },
+  "docsUrl": "https://docs.lombard.finance/learn/transparency/smart-contracts",
+  "docsQuote": "Each Proxy Upgrade Timelock enforces a 24-hour minimum delay on contract upgrades.",
+  "apache2CommercialGrant": true,
+  "rulesAccepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
