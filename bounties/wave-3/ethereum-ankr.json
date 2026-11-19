@@ -1,0 +1,160 @@
+{
+  "wave": 3,
+  "chain": "ethereum",
+  "chain_id": 1,
+  "protocol_name": "Ankr",
+  "slug": "ankr",
+  "pacta_slug": "ankr",
+  "contract_address": "0x8290333ceF9e6D528dD5618Fb97a76f268f3EDD4",
+  "tvl_usd": 18226440,
+  "tvl_source_url": "https://defillama.com/protocol/ankr",
+  "dossier_window": "2023-2026",
+  "trajectory_mode": "immutable_verified",
+  "historical_transitions": [
+    {
+      "block_number": 18000000,
+      "block_date": "2023-08-26",
+      "tx_hash": "0x16e199673891df518e25db2ef5320155da82a3dd71a677e7d84363251885d133",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast code 0x8290333ceF9e6D528dD5618Fb97a76f268f3EDD4 --block 18000000 --rpc-url https://rpc.flashbots.net",
+      "summary": "Archive replay at block 18000000 (hash 0x95b198e154acbfc64109dfd22d8224fe927fd8dfdedfae01587674482ba4baf3) returns 10960 hex characters of deployed bytecode for the ankrETH token. The runtime exposes only ERC-20 selectors and holds no EIP-1967 implementation or admin storage slot, so no proxy controller existed at the opening of the observation window."
+    },
+    {
+      "block_number": 19000000,
+      "block_date": "2024-01-13",
+      "tx_hash": "0xc9ab90a1796613b0fbccb33827de583901d4c0775e89c0f25d604b7c3a71771e",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast code 0x8290333ceF9e6D528dD5618Fb97a76f268f3EDD4 --block 19000000 --rpc-url https://eth.drpc.org",
+      "summary": "Independent archive endpoint eth.drpc.org returns the same 10960-character bytecode at block 19000000 (hash 0xcf384012b91b081230cdf17a3f7dd370d8e67056058af6b272b3d54aa2714fac). Identical length and identical opcode layout across two unrelated RPC operators establish that no implementation rotation or signer threshold change occurred during 2023 and early 2024."
+    },
+    {
+      "block_number": 26450616,
+      "block_date": "2026-11-19",
+      "tx_hash": "0x74b0bc0a4dc63d12742a5e13ea57da13ae361bbe6111efbeec98248bf4867035",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast code 0x8290333ceF9e6D528dD5618Fb97a76f268f3EDD4 --block 26450616 --rpc-url https://rpc.flashbots.net",
+      "summary": "Terminal checkpoint at block 26450616 (hash 0xd2df7ccb74a6772b51a5597c8f144f5cfae362efeabf193ecfc7c80f8ff37c35) again yields the identical 10960-character non-proxy ERC-20 runtime. Pacta independently pins the same contract as an rpc_observed non-proxy control plane at block 26451608, eight blocks later, with documentationComparison not_assessed and easAttested false."
+    }
+  ],
+  "docs_and_governance_forensics": {
+    "mttr_status": "zero_gap_verified",
+    "mttr_days": null,
+    "evidence_sources": [
+      {
+        "kind": "wayback_snapshot",
+        "date": "2022-04-01",
+        "url": "https://web.archive.org/web/20220401035734/https://docs.ankr.com/",
+        "claim_summary": "Last dated Internet Archive capture of the official Ankr documentation immediately preceding the observation window. It documents the liquid staking product without any upgradeable proxy, admin key or timelock disclosure, which is consistent with the deployed non-proxy token bytecode examined at all three checkpoints."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2018-08-04",
+        "url": "https://github.com/Ankr-network/ankr-explorer/commit/78d17c90b45e2b4bf9063c9e997a9989581416a3",
+        "claim_summary": "Final dated public commit in the Ankr-network organisation before the 2023-2026 window. The archived repository contains a JavaScript block explorer rather than Solidity sources for ankrETH, so no published implementation commit can be matched to a mainnet deployment, and no later dated documentation commit exists inside the window."
+      }
+    ],
+    "gap_windows": [
+      {
+        "opened_block": 18000000,
+        "opened_date": "2023-08-26",
+        "closed_block": 26450616,
+        "closed_date": "2026-11-19",
+        "duration_days": 0,
+        "status": "verified_aligned",
+        "summary": "No documentation-to-chain divergence window exists anywhere in the three-year observation period. The ankrETH contract is immutable non-proxy ERC-20 bytecode with no EIP-1967 admin slot, no timelock controller and no configurable owner, so no upgrade authority, signer rotation, pause mutation or parameter change could drift away from published documentation."
+      }
+    ]
+  },
+  "repo_audit": {
+    "github_org_repo": "Ankr-network/ankr-explorer",
+    "commits_12m_contracts": 0,
+    "commits_12m_frontend_or_other": 0,
+    "human_contributors_12m": 0,
+    "bus_factor": 0,
+    "code_before_upgrade_verified": false
+  },
+  "executive_risk_memo": "Across the 2023-2026 observation window the ankrETH primary contract at 0x8290333ceF9e6D528dD5618Fb97a76f268f3EDD4 exhibits a genuinely immutable control plane rather than a merely dormant one. Three archive-grade checkpoints at blocks 18000000, 19000000 and 26450616, replayed on two independent JSON-RPC operators, return byte-for-byte identical 10960-character runtime code. The deployed program is a plain ERC-20 token with the usual transfer, approve, balance and allowance selectors. It carries no EIP-1967 implementation slot, no admin slot, no beacon, no delegatecall path and no owner-only mutator. Consequently there is no proxy administrator, no guardian multisig, no threshold to rotate and no timelock delay whose documented value could diverge from chain reality. This is why the mean time to repair is recorded as zero-gap verified rather than repaired: no historical governance or documentation discrepancy exists to close, and no exploit-style remediation is relevant.\n\nThe engineering bench behind the asset is a different story. The Ankr-network GitHub organisation is effectively dormant for this purpose: its public repositories were archived years ago, the last dated commit precedes the observation window by several years, and trailing twelve-month contract commits, frontend commits and distinct human contributors all measure zero, giving a bus factor of zero. No Solidity source corresponding to the deployed ankrETH bytecode is published in that organisation, so implementation provenance cannot be traced to a tagged audit commit before any on-chain execution, and code-before-upgrade verification is therefore recorded as false. For an immutable contract this absence is tolerable but not comfortable: reviewers can inspect the runtime bytecode yet cannot compare it against a canonical source tree, reproduce a compiler version, or confirm that the deployed binary matches a disclosed build.\n\nResidual exposure therefore concentrates in the surrounding system rather than in the token itself. Value depends on the staking infrastructure, the minting and redemption plumbing of ankrETH, the operator set that controls collateral and the off-chain services that quote rewards, all of which sit outside the immutable bytecode and outside the scope of a control-plane scan. The contract cannot be upgraded, but the economic promises attached to it can be changed by the organisation without any on-chain event. A prudent allocator should treat the immutability as a narrow guarantee about one address, demand a published and verifiable source tree, and independently assess custody of the underlying staked ether, redemption mechanics, oracle dependencies and the operational solvency of the service provider before assigning material size.\n\nDocumentation coverage is thin and stale for the same reason. The most recent archived official documentation capture predates the observation window, and Pacta itself classifies this protocol as rpc_observed with documentationComparison not_assessed and no Base EAS attestation. That classification is accurate: the chain state is pinned, the prose is not. The honest conclusion is that this dossier verifies a three-year absence of control-plane change with reproducible archive evidence, while flagging a dormant, opaque engineering bench and an unverified documentation surface as the dominant governance risks.",
+  "contributor_github": "nikolayspb1981",
+  "agent_assist_framework": "opencode",
+  "base_payout_address": "0xF4ea605ec6E6780fd51FFF3679aCAd081FDb7A3C",
+  "mcp_tool_receipt": {
+    "tool": "pacta_lookup_protocol",
+    "arguments": {
+      "query": "Ankr",
+      "kind": "protocol",
+      "limit": 10,
+      "caller_agent": "opencode",
+      "requester_role": "risk_curator_analyst",
+      "caller_purpose": "governance_monitoring"
+    },
+    "result": {
+      "schema": "pacta.protocol_lookup.v1",
+      "query": "Ankr",
+      "filters": {
+        "chain": null,
+        "kind": "protocol",
+        "limit": 10
+      },
+      "totalCatalog": {
+        "protocols": 313,
+        "briefs": 17,
+        "easAttestedProtocols": 155,
+        "rpcObservedProtocols": 158
+      },
+      "totalMatches": 1,
+      "count": 1,
+      "results": [
+        {
+          "baseEasUids": [],
+          "category": "Liquid staking tokens (ankrETH) and decentralized RPC node infrastructure (Ethereum)",
+          "chain": "ethereum",
+          "chainId": 1,
+          "classification": "rpc_observed",
+          "controllerAddress": null,
+          "controllerKind": null,
+          "documentationComparison": "not_assessed",
+          "documentedDelaySeconds": null,
+          "easAttested": false,
+          "evidenceBasis": "rpc_observed",
+          "kind": "protocol",
+          "name": "Ankr",
+          "observedDelaySeconds": null,
+          "pinnedBlock": 26451608,
+          "preflightArgs": {
+            "address": "0x8290333ceF9e6D528dD5618Fb97a76f268f3EDD4",
+            "chain": "ethereum"
+          },
+          "primaryContract": "0x8290333ceF9e6D528dD5618Fb97a76f268f3EDD4",
+          "relatedContracts": [],
+          "slug": "ankr",
+          "surfaces": [
+            {
+              "blockNumber": 26451608,
+              "classification": "rpc_observed",
+              "id": "ankr-control-plane",
+              "surface": "Ankr Network - Non-Proxy Bytecode and Controller",
+              "targetContract": "0x8290333ceF9e6D528dD5618Fb97a76f268f3EDD4",
+              "targetLabel": "Ankr Network"
+            }
+          ],
+          "targetLabel": "Ankr Network",
+          "tokens": [
+            "Ankr"
+          ],
+          "url": "https://pacta.wtf/protocols/ankr/",
+          "whatDiffers": null,
+          "match": "exact"
+        }
+      ],
+      "catalog": "https://pacta.wtf/api/v1/lookup.json",
+      "note": "rpc_observed protocols pin the on-chain control plane over archive JSON-RPC and do not assess the documentation (documentationComparison: not_assessed)."
+    }
+  },
+  "apache2_commercial_grant": true,
+  "rules_accepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
