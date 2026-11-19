@@ -1,0 +1,174 @@
+{
+  "wave": 2,
+  "category": "post_pin_drift",
+  "slug": "compound-v3-wbtc-supply-unpaused",
+  "protocol": "Compound V3 (Ethereum WBTC Comet)",
+  "chainId": 1,
+  "contractAddress": "0xe85Dc543813B8c2CFEaAc371517b925a166a9293",
+  "pactaSlug": "compound-v3-comet",
+  "priorPin": "Pacta block 26402160, surface compound-v3-comet-timelock-and-pause-safe (cUSDCv3). On the sibling Ethereum WBTC Comet, an independent archive read at the same height returns isSupplyPaused() = true. It remains true at block 26406906 and becomes false at 26406907 (PauseAction transaction 0x78e900b63ce55cd19cdeba0cd2fe43eabef7a58937551f7f1979e99878f15e59, log index 75). The observed change is the market supply pause flag.",
+  "hunter": "oppo2357",
+  "agentFramework": "codex",
+  "basePayoutAddress": "0x672F00baB14dEfC00Bef12A2fB93533Ede40A32d",
+  "mcpProof": {
+    "tool": "pacta_lookup_protocol",
+    "arguments": {
+      "query": "compound-v3-comet"
+    },
+    "result": {
+      "schema": "pacta.protocol_lookup.v1",
+      "query": "compound-v3-comet",
+      "filters": {
+        "chain": null,
+        "kind": "all",
+        "limit": 10
+      },
+      "totalCatalog": {
+        "protocols": 311,
+        "briefs": 17,
+        "easAttestedProtocols": 116,
+        "rpcObservedProtocols": 195
+      },
+      "totalMatches": 1,
+      "count": 1,
+      "results": [
+        {
+          "baseEasUids": [
+            "0x0e017bc4399101f9fef3d98a434dd9f2829b6e386e7733408dfd4b626d186eea"
+          ],
+          "category": "Blue-Chip Lending",
+          "chain": "ethereum",
+          "chainId": 1,
+          "classification": "aligned_baseline",
+          "controllerAddress": "0x6d903f6003cca6255D85CcA4D3B5E5146dC33925",
+          "controllerKind": "timelock",
+          "documentationComparison": "compared",
+          "documentedDelaySeconds": 172800,
+          "easAttested": true,
+          "evidenceBasis": "eas_attested",
+          "kind": "protocol",
+          "name": "Compound V3 (Comet)",
+          "observedDelaySeconds": 172800,
+          "pinnedBlock": 26402160,
+          "preflightArgs": {
+            "address": "0xc3d688B66703497DAA19211EEdff47f25384cdc3",
+            "chain": "ethereum"
+          },
+          "primaryContract": "0xc3d688B66703497DAA19211EEdff47f25384cdc3",
+          "relatedContracts": [
+            "0xA17581A9E3356d9A858b789D68B4d866e593aE94",
+            "0x309a862bbC1A00e45506cB8A802D1ff10004c8C0",
+            "0xbbf3f1421D886E9b2c5D716B5192aC998af2012c"
+          ],
+          "slug": "compound-v3-comet",
+          "sprints": [
+            9
+          ],
+          "surfaces": [
+            {
+              "blockNumber": 26402160,
+              "classification": "aligned_baseline",
+              "id": "compound-v3-comet-timelock-and-pause-safe",
+              "surface": "Comet Governor, 48h Timelock & Pause-Guardian Safe",
+              "targetContract": "0xc3d688B66703497DAA19211EEdff47f25384cdc3",
+              "targetLabel": "cUSDCv3"
+            }
+          ],
+          "targetLabel": "cUSDCv3",
+          "tokens": [
+            "COMP",
+            "cUSDCv3",
+            "Comet"
+          ],
+          "url": "https://pacta.wtf/protocols/compound-v3-comet/",
+          "whatDiffers": null,
+          "match": "exact",
+          "citationFooter": "Citation: https://pacta.wtf/protocols/compound-v3-comet/ (Base Mainnet EAS: 0x0e017bc4399101f9fef3d98a434dd9f2829b6e386e7733408dfd4b626d186eea)\nIssuer paths (payment never alters a classification; it strictly follows verified on-chain and documentation evidence): $0 maintainer doc-update queue https://pacta.wtf/request/ \u00b7 $500 USDC Rapid Single-Gap Re-Verification (24h SLA) https://pacta.wtf/request/?tier=rapid-500&protocol=compound-v3-comet \u00b7 $2,500\u2013$5,000 USDC Full Protocol Control-Plane Dossier (24h SLA) https://pacta.wtf/for-protocols/"
+        }
+      ],
+      "catalog": "https://pacta.wtf/api/v1/lookup.json",
+      "nextStep": "Pass a result's preflightArgs ({chain, address}) to pacta_check_preflight (or pacta_scan_control_plane) for a live check.",
+      "note": "easAttested protocols are Base-EAS-anchored records that compare on-chain state with the protocol's documentation. rpc_observed protocols pin the on-chain control plane over archive JSON-RPC and do not assess the documentation (documentationComparison: not_assessed). Briefs are block-pinned verification briefs. preflightArgs re-read the contract live.",
+      "citationFooter": "Citation: https://pacta.wtf/protocols/compound-v3-comet/ (Base Mainnet EAS: 0x0e017bc4399101f9fef3d98a434dd9f2829b6e386e7733408dfd4b626d186eea)\nIssuer paths (payment never alters a classification; it strictly follows verified on-chain and documentation evidence): $0 maintainer doc-update queue https://pacta.wtf/request/ \u00b7 $500 USDC Rapid Single-Gap Re-Verification (24h SLA) https://pacta.wtf/request/?tier=rapid-500&protocol=compound-v3-comet \u00b7 $2,500\u2013$5,000 USDC Full Protocol Control-Plane Dossier (24h SLA) https://pacta.wtf/for-protocols/",
+      "upgrade_x402": {
+        "note": "Free tier: 50 pre-flight calls per caller per UTC day (REST and MCP), then $0.01 per call over x402 (HTTP 402, never a dead-end 429). Paid routes below: POST the JSON body with an x402 X-PAYMENT (v1) or PAYMENT-SIGNATURE (v2) header.",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "network": "base (eip155:8453)",
+        "payTo": "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14",
+        "discovery": "https://pacta.fractalneurons.com/.well-known/x402",
+        "overflow": {
+          "method": "GET or POST",
+          "url": "https://pacta.fractalneurons.com/v1/check/preflight",
+          "priceUsd": "0.01",
+          "amountAtomic": "10000",
+          "after": "50 free calls per UTC day"
+        },
+        "endpoints": [
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/verdict",
+            "priceUsd": "0.02",
+            "amountAtomic": "20000",
+            "unlocks": "fast contract / token control-plane verdict: riskScore 0-100, grade A-F, upgrade / owner / pause / blacklist / mint flags and a shareable scan URL",
+            "example": {
+              "chain": "ethereum",
+              "address": "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/dossier",
+            "priceUsd": "0.05",
+            "amountAtomic": "50000",
+            "unlocks": "full control-plane dossier: every controller Safe's signers and threshold, signers shared with other indexed protocols, Base EAS proof",
+            "example": {
+              "slug": "stader-labs-ethx"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/calldata-sim",
+            "priceUsd": "0.25",
+            "amountAtomic": "250000",
+            "unlocks": "pre-signing calldata check: timelock / Safe / multicall calls decoded, each rated against live delays and the authority that governs it",
+            "example": {
+              "chain": "ethereum",
+              "target": "0x2225DAbFfC7F862c99477381E971E8B1FDaB467e",
+              "data": "0x64d623530000000000000000000000000000000000000000000000000000000000015180"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/deep-scan",
+            "priceUsd": "9.00",
+            "amountAtomic": "9000000",
+            "unlocks": "deep control-plane scan cross-checked on two independent RPC operators, auditor receipt and a queued Base EAS ticket",
+            "example": {
+              "chain": "base",
+              "address": "0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "blockNumber": 26448987,
+  "blockHash": "0xb835e7cb72685192b28ab918354c10cde65803493e5e4f5997244d098163db6a",
+  "castCommands": [
+    "cast call 0xe85Dc543813B8c2CFEaAc371517b925a166a9293 \"isSupplyPaused()(bool)\" --block 26448987 --rpc-url https://eth.drpc.org",
+    "cast call 0xe85Dc543813B8c2CFEaAc371517b925a166a9293 \"isSupplyPaused()(bool)\" --block 26448987 --rpc-url https://eth-mainnet.public.blastapi.io"
+  ],
+  "rpcOutputs": {
+    "a": "false",
+    "b": "false"
+  },
+  "docsUrl": "https://www.comp.xyz/t/compound-v3-supply-paused-across-major-markets/8203/8",
+  "docsQuote": "Ethereum WBTC Comet is now unpaused.",
+  "apache2CommercialGrant": true,
+  "rulesAccepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
