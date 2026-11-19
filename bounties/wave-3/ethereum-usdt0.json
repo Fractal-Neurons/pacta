@@ -1,0 +1,291 @@
+{
+  "wave": 3,
+  "chain": "ethereum",
+  "chain_id": 1,
+  "protocol_name": "USDT0 (Ethereum OAdapterUpgradeable lockbox)",
+  "slug": "usdt0",
+  "pacta_slug": "usdt0",
+  "contract_address": "0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee",
+  "tvl_usd": 3692721581,
+  "tvl_source_url": "https://defillama.com/protocol/usdt0",
+  "dossier_window": "2025-2026",
+  "trajectory_mode": "mutable_transitions",
+  "historical_transitions": [
+    {
+      "block_number": 21543905,
+      "block_date": "2025-01-03",
+      "tx_hash": "0x729954bc297ec579efa5a199a18404dd4790fb2699b38ef688253e7d0fae144e",
+      "event_kind": "deployment_baseline",
+      "rpc_or_cast_proof": "cast receipt 0x729954bc297ec579efa5a199a18404dd4790fb2699b38ef688253e7d0fae144e --rpc-url https://gateway.tenderly.co/public/mainnet",
+      "summary": "Safe v1.4.1 0x4DFF9b5b0143E642a3F63a5bcf2d1C328e600bf8 created through proxy factory 0x4e1DCf7AD4e460CfD30791CCC4F9c8a4f820ec67. SafeSetup log: threshold 1, owners 0x1a6362AD64ccFF5902D46D875B36e8798267d154 (later the USDT0 deployer EOA) and 0x5F0DcA105195Bd58277aa4b4CABC90a791E1b982. Either key could execute alone."
+    },
+    {
+      "block_number": 21573153,
+      "block_date": "2025-01-07",
+      "tx_hash": "0x5974cba9f0deea1b714a0a5a8a98b11c7b06830eecd0324376b4fc99f7659b89",
+      "event_kind": "signer_or_threshold_change",
+      "rpc_or_cast_proof": "cast receipt 0x5974cba9f0deea1b714a0a5a8a98b11c7b06830eecd0324376b4fc99f7659b89 --rpc-url https://gateway.tenderly.co/public/mainnet",
+      "summary": "AddedOwner(0x488A3d37442F583c1c0a356118d1d6181b22434c) and ChangedThreshold(2). The Safe becomes 2-of-3; the deployer EOA 0x1a6362AD...d154 remains one of the three signers."
+    },
+    {
+      "block_number": 21580781,
+      "block_date": "2025-01-08",
+      "tx_hash": "0xb7f37ae41b32bb799abceac828499792d17d75b9e0f06932e64cf93f2178780c",
+      "event_kind": "deployment_baseline",
+      "rpc_or_cast_proof": "cast storage 0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc --block 21580781 --rpc-url https://gateway.tenderly.co/public/mainnet",
+      "summary": "TransparentUpgradeableProxy 0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee deployed via CREATE2 deployer 0x4e59b44847b379578588920cA78FbF26c0B4956C by EOA 0x1a6362AD...d154. Upgraded(0xCD979B10A55FCdAC23ec785CE3066c6ef8a479A4) and AdminChanged(0x0 -> ProxyAdmin 0x4dE7096B2131E84FD6b2042aD8cd9B4E43F728fc) in the same tx. At this block both owner() of the adapter and owner() of the ProxyAdmin return the single deployer EOA."
+    },
+    {
+      "block_number": 21588139,
+      "block_date": "2025-01-09",
+      "tx_hash": "0xc7a4971dbf96ce204e191c92683c25cf37ef09f263d2f817a0f748e9dbe537d3",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast receipt 0xc7a4971dbf96ce204e191c92683c25cf37ef09f263d2f817a0f748e9dbe537d3 --rpc-url https://gateway.tenderly.co/public/mainnet",
+      "summary": "ProxyAdmin 0x4dE7096B2131E84FD6b2042aD8cd9B4E43F728fc emits OwnershipTransferred(0x1a6362AD...d154 -> 0x4DFF9b5b0143E642a3F63a5bcf2d1C328e600bf8). Upgrade authority over the adapter moves from the deployer EOA to the 2-of-3 Safe. No timelock is inserted."
+    },
+    {
+      "block_number": 21588142,
+      "block_date": "2025-01-09",
+      "tx_hash": "0xb362f2f02c10496b31e6b4633216fba3913cdff181504bf6bc894b270fd1bca9",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast receipt 0xb362f2f02c10496b31e6b4633216fba3913cdff181504bf6bc894b270fd1bca9 --rpc-url https://gateway.tenderly.co/public/mainnet",
+      "summary": "OAdapterUpgradeable proxy 0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee emits OwnershipTransferred(0x1a6362AD...d154 -> 0x4DFF9b5b0143E642a3F63a5bcf2d1C328e600bf8). OApp owner powers (peer, delegate and enforced-option configuration) leave the EOA 3 blocks after the ProxyAdmin transfer."
+    },
+    {
+      "block_number": 21622263,
+      "block_date": "2025-01-14",
+      "tx_hash": "0x2a5bf7ae4af73c32433dad63d429126a0eda764846e627b73f294e87b8ae40ac",
+      "event_kind": "signer_or_threshold_change",
+      "rpc_or_cast_proof": "cast receipt 0x2a5bf7ae4af73c32433dad63d429126a0eda764846e627b73f294e87b8ae40ac --rpc-url https://gateway.tenderly.co/public/mainnet",
+      "summary": "Safe execTransaction: RemovedOwner(0x1a6362AD...d154) and AddedOwner(0x00F6D2b4B69Ce697f913Da16A9D73283dc4C78F2). The deployer EOA leaves the signer set; the Safe stays 2-of-3."
+    },
+    {
+      "block_number": 21622292,
+      "block_date": "2025-01-14",
+      "tx_hash": "0x9c20c82e8217d86e5c0d0ddecfdc2742f90c32af96e1a68bf8face1ac5bd6e40",
+      "event_kind": "signer_or_threshold_change",
+      "rpc_or_cast_proof": "cast receipt 0x9c20c82e8217d86e5c0d0ddecfdc2742f90c32af96e1a68bf8face1ac5bd6e40 --rpc-url https://gateway.tenderly.co/public/mainnet",
+      "summary": "Safe batch through MultiSendCallOnly 0x9641d764fc13c8B624c04430C7356C1C7C8102e2: AddedOwner(0x7D8e979dcC6EC933c70FBe28B2B7700907D2aFEA), AddedOwner(0x4192D72c281dB0eF10464dD274EE583C33256ac5), ChangedThreshold(3). Final configuration 3-of-5; this is still the live configuration."
+    },
+    {
+      "block_number": 26451937,
+      "block_date": "2026-11-19",
+      "tx_hash": "0x7d912fa5c97bff24c5a502672edb565fc87204c498476dfdf3a17e7f885baf14",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast storage 0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc --block 26451937 --rpc-url https://gateway.tenderly.co/public/mainnet",
+      "summary": "Checkpoint on a routine OFTSent transaction to the adapter. The EIP-1967 implementation slot still holds 0xCD979B10...79A4, the value set at deployment, and both owner() calls still return 0x4DFF9b5b0143E642a3F63a5bcf2d1C328e600bf8. eth_getLogs over blocks 20971520-latest returns exactly one Upgraded and one AdminChanged log for the proxy (both in the deployment tx), so the logic has not been upgraded in about 22 months."
+    }
+  ],
+  "docs_and_governance_forensics": {
+    "mttr_status": "repaired",
+    "mttr_days": 5.8,
+    "evidence_sources": [
+      {
+        "kind": "wayback_snapshot",
+        "date": "2025-01-17",
+        "url": "https://web.archive.org/web/20250117072630/https://docs.usdt0.to/technical-documentation/technical",
+        "claim_summary": "First archived capture of the USDT0 technical page. Its Ethereum deployments section lists OAdapterUpgradeable 0x6C96dE32...1dee and Multisig Safe 0x4DFF9b5b...0bf8, which matches on-chain ownership after block 21588142. No signer threshold or timelock is stated."
+      },
+      {
+        "kind": "wayback_snapshot",
+        "date": "2025-01-16",
+        "url": "https://web.archive.org/web/20250116224729/https://docs.usdt0.to/technical-documentation/security",
+        "claim_summary": "Archived security page: an Immunefi bug bounty of up to $6,000,000 marked as coming soon, and audits listed as Guardian, ChainSecurity and Paladin. There is no description of upgrade delay or signer policy."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2025-01-15",
+        "url": "https://github.com/Everdawn-Labs/usdt0-audit-reports/commit/42a4587530b3234cd9bc91677cf9444e2173741c",
+        "claim_summary": "First commit of the public audit repo (one day after the 3-of-5 change). It adds the ChainSecurity report, Guardian/2025-01-14_USDT0.pdf and Paladin/20250110_Paladin_Everdawn_Final_Report.pdf. Both of the dated reports post-date the 2025-01-08 deployment."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2026-10-13",
+        "url": "https://github.com/Everdawn-Labs/usdt0-audit-reports/blob/aceedbe89d64bafde05030d6d308907c83ffe077/README.md",
+        "claim_summary": "Deployment-to-report mapping, generated 2026-10-12. The Ethereum OAdapterUpgradeable 0x6C96...1dee is listed at version 18c2b4d (2025-01-04), deployment commit 7841d17 (2025-01-08), audited by CS-01, GA-01 and PA-01. Neither commit is in a public repository."
+      }
+    ],
+    "gap_windows": [
+      {
+        "opened_block": 21580781,
+        "opened_date": "2025-01-08",
+        "closed_block": 21588142,
+        "closed_date": "2025-01-09",
+        "duration_days": 1.03,
+        "status": "repaired",
+        "summary": "Single-EOA control: the deployer EOA 0x1a6362AD...d154 owned both the adapter and its ProxyAdmin, with unilateral upgrade power, from deployment until both OwnershipTransferred events to the Safe."
+      },
+      {
+        "opened_block": 21588142,
+        "opened_date": "2025-01-09",
+        "closed_block": 21622292,
+        "closed_date": "2025-01-14",
+        "duration_days": 4.77,
+        "status": "repaired",
+        "summary": "The Safe owned the control plane at 2-of-3, but the deployer EOA was still a signer until block 21622263. The threshold was raised to 3-of-5 at block 21622292. Whole window from deployment to 3-of-5: 5.80 days."
+      },
+      {
+        "opened_block": 21622292,
+        "opened_date": "2025-01-14",
+        "closed_block": null,
+        "closed_date": null,
+        "duration_days": 674.45,
+        "status": "verified_aligned",
+        "summary": "From 3-of-5 activation to the 2026-11-19 checkpoint, on-chain ownership matches the Safe named in docs. The implementation is unchanged, and Safe signers have not changed since block 21622292. Docs give no timelock claim to contradict."
+      }
+    ]
+  },
+  "repo_audit": {
+    "github_org_repo": "Everdawn-Labs/usdt0-audit-reports",
+    "commits_12m_contracts": 0,
+    "commits_12m_frontend_or_other": 11,
+    "human_contributors_12m": 5,
+    "bus_factor": 1,
+    "code_before_upgrade_verified": false
+  },
+  "executive_risk_memo": "USDT0's Ethereum lockbox, the OAdapterUpgradeable proxy at 0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee, holds the USDT backing every bridged USDT0 balance (about $3.69B on DefiLlama). Its control plane was bootstrapped quickly and has been static since. The proxy was deployed on 2025-01-08 with the deployer EOA as owner of both the adapter and its ProxyAdmin. Ownership moved to Safe 0x4DFF9b5b about 25 hours later, but the deployer key stayed one of three Safe signers at threshold 2 until 2025-01-14, when it was removed and the Safe was raised to 3-of-5. Measured from deployment to the 3-of-5 configuration, the bootstrap window closed in 5.80 days. The first archived docs capture of the technical page (2025-01-17) already listed this Safe, so no stale-docs window is observable after the repair. The implementation has not been upgraded since deployment and owner() has not changed since block 21588142. The residual risk is structural, not historical. Upgrades go through a ProxyAdmin owned by a 3-of-5 Safe whose five signers are all EOAs, with no module, no guard and no timelock. Any three keys can replace the logic of a contract custodying billions of USDT in a single transaction, and users would have no exit window. The adapter's source is not in a public repository. The public Everdawn-Labs/usdt0-audit-reports repo maps the deployed version to commit 18c2b4d (2025-01-04) and to ChainSecurity, Guardian and Paladin reviews. The Paladin final report is dated 2025-01-10 and the Guardian report 2025-01-14, so both were finalised after the 2025-01-08 deployment. Twelve-month public engineering activity is limited to 11 commits on that report repo (0 on contract code) from 5 accounts. Bench strength for the contract code therefore cannot be measured from public data. Monitoring priorities are Upgraded logs on the proxy, OwnershipTransferred on the ProxyAdmin, and Safe signer or threshold changes.",
+  "contributor_github": "pythonyx135793",
+  "agent_assist_framework": "claude-code",
+  "base_payout_address": "0x7072B3dc636091CC7c360039F583bde3f747E71e",
+  "mcp_tool_receipt": {
+    "tool": "pacta_lookup_protocol",
+    "arguments": {
+      "query": "0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee"
+    },
+    "result": {
+      "schema": "pacta.protocol_lookup.v1",
+      "query": "0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee",
+      "filters": {
+        "chain": null,
+        "kind": "all",
+        "limit": 10
+      },
+      "totalCatalog": {
+        "protocols": 312,
+        "briefs": 17,
+        "easAttestedProtocols": 142,
+        "rpcObservedProtocols": 170
+      },
+      "totalMatches": 1,
+      "count": 1,
+      "results": [
+        {
+          "baseEasUids": [],
+          "category": "Omnichain Stablecoin Bridge (Tether OFT adapter) (Ethereum)",
+          "chain": "ethereum",
+          "chainId": 1,
+          "classification": "rpc_observed",
+          "controllerAddress": "0x4de7096B2131E84Fd6b2042AD8cd9B4E43F728Fc",
+          "controllerKind": "contract_controller",
+          "documentationComparison": "not_assessed",
+          "documentedDelaySeconds": null,
+          "easAttested": false,
+          "evidenceBasis": "rpc_observed",
+          "kind": "protocol",
+          "name": "USDT0",
+          "observedDelaySeconds": null,
+          "pinnedBlock": 26450616,
+          "preflightArgs": {
+            "address": "0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee",
+            "chain": "ethereum"
+          },
+          "primaryContract": "0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee",
+          "relatedContracts": [
+            "0xCD979B10A55FCdAC23ec785CE3066c6ef8a479A4",
+            "0x4DFF9b5b0143E642a3F63a5bcf2d1C328e600bf8"
+          ],
+          "slug": "usdt0",
+          "surfaces": [
+            {
+              "blockNumber": 26450616,
+              "classification": "rpc_observed",
+              "id": "usdt0-control-plane",
+              "surface": "OAdapterUpgradeable · EIP-1967 Proxy & Controller Chain",
+              "targetContract": "0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee",
+              "targetLabel": "OAdapterUpgradeable"
+            }
+          ],
+          "targetLabel": "OAdapterUpgradeable",
+          "tokens": [
+            "USDT0"
+          ],
+          "url": "https://pacta.wtf/protocols/usdt0/",
+          "whatDiffers": null,
+          "match": "exact",
+          "citationFooter": "Citation: https://pacta.wtf/protocols/usdt0/ (RPC-observed baseline; Base Mainnet EAS: not_attested)\nIssuer paths (payment never alters a classification; it strictly follows verified on-chain and documentation evidence): $0 maintainer doc-update queue https://pacta.wtf/request/ · $500 USDC Rapid Single-Gap Re-Verification (24h SLA) https://pacta.wtf/request/?tier=rapid-500&protocol=usdt0 · $2,500–$5,000 USDC Full Protocol Control-Plane Dossier (24h SLA) https://pacta.wtf/for-protocols/"
+        }
+      ],
+      "catalog": "https://pacta.wtf/api/v1/lookup.json",
+      "nextStep": "Pass a result's preflightArgs ({chain, address}) to pacta_check_preflight (or pacta_scan_control_plane) for a live check.",
+      "note": "easAttested protocols are Base-EAS-anchored records that compare on-chain state with the protocol's documentation. rpc_observed protocols pin the on-chain control plane over archive JSON-RPC and do not assess the documentation (documentationComparison: not_assessed). Briefs are block-pinned verification briefs. preflightArgs re-read the contract live.",
+      "citationFooter": "Citation: https://pacta.wtf/protocols/usdt0/ (RPC-observed baseline; Base Mainnet EAS: not_attested)\nIssuer paths (payment never alters a classification; it strictly follows verified on-chain and documentation evidence): $0 maintainer doc-update queue https://pacta.wtf/request/ · $500 USDC Rapid Single-Gap Re-Verification (24h SLA) https://pacta.wtf/request/?tier=rapid-500&protocol=usdt0 · $2,500–$5,000 USDC Full Protocol Control-Plane Dossier (24h SLA) https://pacta.wtf/for-protocols/",
+      "upgrade_x402": {
+        "note": "Free tier: 50 pre-flight calls per caller per UTC day (REST and MCP), then $0.01 per call over x402 (HTTP 402, never a dead-end 429). Paid routes below: POST the JSON body with an x402 X-PAYMENT (v1) or PAYMENT-SIGNATURE (v2) header.",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "network": "base (eip155:8453)",
+        "payTo": "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14",
+        "discovery": "https://pacta.fractalneurons.com/.well-known/x402",
+        "overflow": {
+          "method": "GET or POST",
+          "url": "https://pacta.fractalneurons.com/v1/check/preflight",
+          "priceUsd": "0.01",
+          "amountAtomic": "10000",
+          "after": "50 free calls per UTC day"
+        },
+        "endpoints": [
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/verdict",
+            "priceUsd": "0.02",
+            "amountAtomic": "20000",
+            "unlocks": "fast contract / token control-plane verdict: riskScore 0-100, grade A-F, upgrade / owner / pause / blacklist / mint flags and a shareable scan URL",
+            "example": {
+              "chain": "ethereum",
+              "address": "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/dossier",
+            "priceUsd": "0.05",
+            "amountAtomic": "50000",
+            "unlocks": "full control-plane dossier: every controller Safe's signers and threshold, signers shared with other indexed protocols, Base EAS proof",
+            "example": {
+              "slug": "stader-labs-ethx"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/calldata-sim",
+            "priceUsd": "0.25",
+            "amountAtomic": "250000",
+            "unlocks": "pre-signing calldata check: timelock / Safe / multicall calls decoded, each rated against live delays and the authority that governs it",
+            "example": {
+              "chain": "ethereum",
+              "target": "0x2225DAbFfC7F862c99477381E971E8B1FDaB467e",
+              "data": "0x64d623530000000000000000000000000000000000000000000000000000000000015180"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/deep-scan",
+            "priceUsd": "9.00",
+            "amountAtomic": "9000000",
+            "unlocks": "deep control-plane scan cross-checked on two independent RPC operators, auditor receipt and a queued Base EAS ticket",
+            "example": {
+              "chain": "base",
+              "address": "0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "apache2_commercial_grant": true,
+  "rules_accepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
