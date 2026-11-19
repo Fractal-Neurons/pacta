@@ -1,0 +1,259 @@
+{
+  "wave": 3,
+  "chain": "ethereum",
+  "chain_id": 1,
+  "protocol_name": "PancakeSwap AMM V3",
+  "slug": "pancakeswap-amm-v3",
+  "pacta_slug": "pancakeswap-amm-v3",
+  "contract_address": "0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865",
+  "tvl_usd": 631860000,
+  "tvl_source_url": "https://defillama.com/protocol/pancakeswap-amm-v3",
+  "dossier_window": "2023-2026",
+  "trajectory_mode": "mutable_transitions",
+  "historical_transitions": [
+    {
+      "block_number": 16950686,
+      "block_date": "2023-04-01",
+      "tx_hash": "0x157ee31f54d40ab46d6096de3751a86c55e659147322edcec582ec77ff90c03d",
+      "event_kind": "deployment_baseline",
+      "rpc_or_cast_proof": "cast call 0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865 owner()(address) --block 16950686 --rpc-url https://eth-mainnet.public.blastapi.io",
+      "summary": "PancakeV3Factory deployed on Ethereum with deployer EOA 0x40492810a7de793eef0dfb3a58338fdfea511047 set as initial owner()."
+    },
+    {
+      "block_number": 16953677,
+      "block_date": "2023-04-01",
+      "tx_hash": "0x6d9dfbf2535633deae6e91f5cccdfc4ca8e21bd71613cb07da6b51bfd6182c84",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast call 0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865 owner()(address) --block 16953677 --rpc-url https://gateway.tenderly.co/public/mainnet",
+      "summary": "Initial deployer transferred PancakeV3Factory.owner() to 3-of-5 GnosisSafeProxy 0x21835332cBDf1b3530fAE9f6Cd66FEB9477dFC02 with 0s timelock."
+    },
+    {
+      "block_number": 17330451,
+      "block_date": "2023-05-24",
+      "tx_hash": "0x45008049c67ecd4dfdd54b9dc519a1952a2253c20890394d4f2ea4dadbce2512",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast call 0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865 owner()(address) --block 17330451 --rpc-url https://eth-mainnet.public.blastapi.io",
+      "summary": "Safe 0x21835332... rotated Factory.owner() to ERC1967Proxy 0x0c0388E4Bbf121a06ea531d2244e93e044964879 (impl 0xb92973162cfb2a9cf4cd5f94b94ebb3ccfdce832), still owned directly by Safe 0x21835332...."
+    },
+    {
+      "block_number": 17685263,
+      "block_date": "2023-07-13",
+      "tx_hash": "0xc353979969dfd8ff860fe326a8d9704ad28157a70fda5c039fd8730c36736238",
+      "event_kind": "signer_or_threshold_change",
+      "rpc_or_cast_proof": "cast call 0x21835332cBDf1b3530fAE9f6Cd66FEB9477dFC02 getOwners()(address[]) --block 17685263 --rpc-url https://gateway.tenderly.co/public/mainnet",
+      "summary": "Added a 6th signer to controller Safe 0x21835332cBDf1b3530fAE9f6Cd66FEB9477dFC02 via tx 0xc3539799... while keeping signature threshold fixed at 3 (3-of-6)."
+    },
+    {
+      "block_number": 23924364,
+      "block_date": "2025-12-02",
+      "tx_hash": "0x1144b5a72df6da6a314dc1391a0cd063a93f3ec7f1e31e25c9320f518ea9ca56",
+      "event_kind": "signer_or_threshold_change",
+      "rpc_or_cast_proof": "cast call 0x21835332cBDf1b3530fAE9f6Cd66FEB9477dFC02 getOwners()(address[]) --block 23924364 --rpc-url https://eth-mainnet.public.blastapi.io",
+      "summary": "Added a 7th signer to controller Safe 0x21835332cBDf1b3530fAE9f6Cd66FEB9477dFC02 at 3-of-7 quorum (42.9%), with zero guard slot (0x0) and zero modules confirmed through block 26450584."
+    },
+    {
+      "block_number": 26254650,
+      "block_date": "2026-10-23",
+      "tx_hash": "0x8fcb93a94421b1bb6828df820e683a6304430f89211e2c17943a91ddab69734c",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast call 0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865 owner()(address) --block 26254650 --rpc-url https://gateway.tenderly.co/public/mainnet",
+      "summary": "3-of-7 Safe rotated PancakeV3Factory.owner() to V3OpenFeeAdapter 0x0f6f9A6dd9f065DC4455bb2B8e3F0CFFB6F2410c (13,258 bytes, Solidity 0.8.29), itself governed by unguarded 0-delay Safe 0x21835332...."
+    }
+  ],
+  "docs_and_governance_forensics": {
+    "mttr_status": "unrepaired_open",
+    "mttr_days": null,
+    "unrepaired_open_days": 1328.0,
+    "evidence_sources": [
+      {
+        "kind": "github_docs_commit",
+        "date": "2024-03-13",
+        "url": "https://github.com/pancakeswap/pancake-developer/commit/5b3b2edfd14eff1ba329a54359772d0648fbc31b",
+        "claim_summary": "PancakeSwap developer docs document PancakeV3Factory ABI and owner() mutability via setOwner without disclosing Safe 0x21835332 or 0s timelock authority."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2026-05-14",
+        "url": "https://github.com/pancakeswap/pancake-v3-contracts/blob/986847948755cba528324d41be19480731c36c2a/deployments/eth.json",
+        "claim_summary": "Official pancake-v3-contracts Ethereum deployment manifest publishes PancakeV3Factory (0x0BFb...1865) while omitting controller Safe 0x21835332 and intermediary fee proxies."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2026-09-21",
+        "url": "https://github.com/pancakeswap/pancake-developer/commit/aef86c6b0094d94cd28101f1de702a1656922a17",
+        "claim_summary": "Latest docs sync still lists only PancakeV3Factory 0x0BFb...1865 across v3 addresses without disclosing Ethereum governance authority, Safe quorum 3-of-7, or fee adapters."
+      }
+    ],
+    "gap_windows": [
+      {
+        "opened_block": 16953677,
+        "opened_date": "2023-04-01",
+        "closed_block": null,
+        "closed_date": null,
+        "duration_days": 1328.0,
+        "status": "unrepaired_open",
+        "summary": "Public docs and deployments/eth.json never published controller Safe 0x21835332cBDf1b3530fAE9f6Cd66FEB9477dFC02, its 0s delay, or its 3-of-5 to 3-of-7 quorum dilution through 2026-11-19 UTC."
+      },
+      {
+        "opened_block": 26254650,
+        "opened_date": "2026-10-23",
+        "closed_block": null,
+        "closed_date": null,
+        "duration_days": 27.0,
+        "status": "unrepaired_open",
+        "summary": "New PancakeV3Factory.owner() contract V3OpenFeeAdapter (0x0f6f9A6dd9f065DC4455bb2B8e3F0CFFB6F2410c) deployed and activated off-repo without docs or pancake-v3-contracts source publication through 2026-11-19 UTC."
+      }
+    ]
+  },
+  "repo_audit": {
+    "github_org_repo": "pancakeswap/pancake-v3-contracts",
+    "commits_12m_contracts": 1,
+    "commits_12m_frontend_or_other": 1,
+    "human_contributors_12m": 1,
+    "bus_factor": 1,
+    "code_before_upgrade_verified": false
+  },
+  "executive_risk_memo": "Across 2023-2026 on Ethereum Mainnet, PancakeSwap AMM V3's immutable PancakeV3Factory (0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865, $631.86M protocol TVL) never placed factory owner() behind an on-chain TimelockController. Instead, deployer EOA 0x4049...1047 transferred ownership at block 16,953,677 (2023-04-01) directly to GnosisSafeProxy 0x21835332cBDf1b3530fAE9f6Cd66FEB9477dFC02, which later rotated factory ownership through unverified-in-repo ERC1967Proxy 0x0c0388E4...4879 (block 17,330,451) and, most recently, to V3OpenFeeAdapter 0x0f6f9A6dd9f065DC4455bb2B8e3F0CFFB6F2410c at block 26,254,650 (2026-10-23). Over the same window, controller Safe 0x21835332... expanded signers from 3-of-5 to 3-of-6 (block 17,685,263) and 3-of-7 (block 23,924,364) with zero guard contract and zero enabled modules through block 26,450,584, diluting signing threshold from 60% to 42.9% with 0-second execution. Documentation forensics establish an open 1,328-day disclosure gap through 2026-11-19 UTC across pancake-developer and deployments/eth.json, while trailing 12-month engineering telemetry on pancakeswap/pancake-v3-contracts shows near-maintenance activity (2 commits total by a single contributor, ChefSnoopy, bus_factor = 1) and off-repo activation of V3OpenFeeAdapter prior to public repo commits.",
+  "contributor_github": "random-solver",
+  "base_payout_address": "0x7EDAC178137184cB0a3e291CFAefAcFe138137Bb",
+  "mcp_tool_receipt": {
+    "tool": "pacta_lookup_protocol",
+    "arguments": {
+      "query": "pancakeswap-amm-v3"
+    },
+    "result": {
+      "schema": "pacta.protocol_lookup.v1",
+      "query": "pancakeswap-amm-v3",
+      "filters": {
+        "chain": null,
+        "kind": "all",
+        "limit": 10
+      },
+      "totalCatalog": {
+        "protocols": 312,
+        "briefs": 17,
+        "easAttestedProtocols": 142,
+        "rpcObservedProtocols": 170
+      },
+      "totalMatches": 1,
+      "count": 1,
+      "results": [
+        {
+          "baseEasUids": [],
+          "category": "Concentrated-liquidity pool factory of a multichain swap venue first built on BNB Chain (Ethereum)",
+          "chain": "ethereum",
+          "chainId": 1,
+          "classification": "rpc_observed",
+          "controllerAddress": "0x0f6f9A6dd9f065DC4455bb2B8e3F0CFFB6F2410c",
+          "controllerKind": "contract_controller",
+          "documentationComparison": "not_assessed",
+          "documentedDelaySeconds": null,
+          "easAttested": false,
+          "evidenceBasis": "rpc_observed",
+          "kind": "protocol",
+          "name": "PancakeSwap AMM V3",
+          "observedDelaySeconds": null,
+          "pinnedBlock": 26450616,
+          "preflightArgs": {
+            "address": "0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865",
+            "chain": "ethereum"
+          },
+          "primaryContract": "0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865",
+          "relatedContracts": [
+            "0x21835332cBDf1b3530fAE9f6Cd66FEB9477dFC02"
+          ],
+          "slug": "pancakeswap-amm-v3",
+          "surfaces": [
+            {
+              "blockNumber": 26450616,
+              "classification": "rpc_observed",
+              "id": "pancakeswap-amm-v3-control-plane",
+              "surface": "PlunderV3Factory \u00b7 Non-Proxy Bytecode & Controller",
+              "targetContract": "0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865",
+              "targetLabel": "PlunderV3Factory"
+            }
+          ],
+          "targetLabel": "PlunderV3Factory",
+          "tokens": [
+            "PancakeSwap"
+          ],
+          "url": "https://pacta.wtf/protocols/pancakeswap-amm-v3/",
+          "whatDiffers": null,
+          "match": "exact",
+          "citationFooter": "Citation: https://pacta.wtf/protocols/pancakeswap-amm-v3/ (RPC-observed baseline; Base Mainnet EAS: not_attested)\nIssuer paths (payment never alters a classification; it strictly follows verified on-chain and documentation evidence): $0 maintainer doc-update queue https://pacta.wtf/request/ \u00b7 $500 USDC Rapid Single-Gap Re-Verification (24h SLA) https://pacta.wtf/request/?tier=rapid-500&protocol=pancakeswap-amm-v3 \u00b7 $2,500\u2013$5,000 USDC Full Protocol Control-Plane Dossier (24h SLA) https://pacta.wtf/for-protocols/"
+        }
+      ],
+      "catalog": "https://pacta.wtf/api/v1/lookup.json",
+      "nextStep": "Pass a result's preflightArgs ({chain, address}) to pacta_check_preflight (or pacta_scan_control_plane) for a live check.",
+      "note": "easAttested protocols are Base-EAS-anchored records that compare on-chain state with the protocol's documentation. rpc_observed protocols pin the on-chain control plane over archive JSON-RPC and do not assess the documentation (documentationComparison: not_assessed). Briefs are block-pinned verification briefs. preflightArgs re-read the contract live.",
+      "citationFooter": "Citation: https://pacta.wtf/protocols/pancakeswap-amm-v3/ (RPC-observed baseline; Base Mainnet EAS: not_attested)\nIssuer paths (payment never alters a classification; it strictly follows verified on-chain and documentation evidence): $0 maintainer doc-update queue https://pacta.wtf/request/ \u00b7 $500 USDC Rapid Single-Gap Re-Verification (24h SLA) https://pacta.wtf/request/?tier=rapid-500&protocol=pancakeswap-amm-v3 \u00b7 $2,500\u2013$5,000 USDC Full Protocol Control-Plane Dossier (24h SLA) https://pacta.wtf/for-protocols/",
+      "upgrade_x402": {
+        "note": "Free tier: 50 pre-flight calls per caller per UTC day (REST and MCP), then $0.01 per call over x402 (HTTP 402, never a dead-end 429). Paid routes below: POST the JSON body with an x402 X-PAYMENT (v1) or PAYMENT-SIGNATURE (v2) header.",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "network": "base (eip155:8453)",
+        "payTo": "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14",
+        "discovery": "https://pacta.fractalneurons.com/.well-known/x402",
+        "overflow": {
+          "method": "GET or POST",
+          "url": "https://pacta.fractalneurons.com/v1/check/preflight",
+          "priceUsd": "0.01",
+          "amountAtomic": "10000",
+          "after": "50 free calls per UTC day"
+        },
+        "endpoints": [
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/verdict",
+            "priceUsd": "0.02",
+            "amountAtomic": "20000",
+            "unlocks": "fast contract / token control-plane verdict: riskScore 0-100, grade A-F, upgrade / owner / pause / blacklist / mint flags and a shareable scan URL",
+            "example": {
+              "chain": "ethereum",
+              "address": "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/dossier",
+            "priceUsd": "0.05",
+            "amountAtomic": "50000",
+            "unlocks": "full control-plane dossier: every controller Safe's signers and threshold, signers shared with other indexed protocols, Base EAS proof",
+            "example": {
+              "slug": "stader-labs-ethx"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/calldata-sim",
+            "priceUsd": "0.25",
+            "amountAtomic": "250000",
+            "unlocks": "pre-signing calldata check: timelock / Safe / multicall calls decoded, each rated against live delays and the authority that governs it",
+            "example": {
+              "chain": "ethereum",
+              "target": "0x2225DAbFfC7F862c99477381E971E8B1FDaB467e",
+              "data": "0x64d623530000000000000000000000000000000000000000000000000000000000015180"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/deep-scan",
+            "priceUsd": "9.00",
+            "amountAtomic": "9000000",
+            "unlocks": "deep control-plane scan cross-checked on two independent RPC operators, auditor receipt and a queued Base EAS ticket",
+            "example": {
+              "chain": "base",
+              "address": "0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "apache2_commercial_grant": true,
+  "rules_accepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
