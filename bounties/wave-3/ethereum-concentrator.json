@@ -1,0 +1,213 @@
+{
+  "wave": 3,
+  "chain": "ethereum",
+  "chain_id": 1,
+  "protocol_name": "Concentrator",
+  "slug": "concentrator",
+  "pacta_slug": "concentrator",
+  "contract_address": "0xA0FB1b11ccA5871fb0225B64308e249B97804E99",
+  "tvl_usd": 54345141.05,
+  "tvl_source_url": "https://defillama.com/protocol/concentrator",
+  "dossier_window": "2023-2026",
+  "trajectory_mode": "mutable_transitions",
+  "historical_transitions": [
+    {
+      "block_number": 16592805,
+      "block_date": "2023-02-09",
+      "tx_hash": "0x0e4c12477f3fff1e3af9b56be83d95d79540cfb691d31b993e2ba84a3c26ab0b",
+      "event_kind": "signer_or_threshold_change",
+      "rpc_or_cast_proof": "cast receipt 0x0e4c12477f3fff1e3af9b56be83d95d79540cfb691d31b993e2ba84a3c26ab0b --rpc-url https://eth.drpc.org",
+      "summary": "swapOwner executed by the Concentrator Treasury Safe: 0x4C2B418457880d9A2bC04079840e671E70DF7cD1 (Alex Peck) removed and 0x423b5Fa2dC16E06b36666a4BBB00c95Fa5f28FEF (Diligent Deer) added; owner count stays at 9 and the 6-of-9 threshold is unchanged."
+    },
+    {
+      "block_number": 18869458,
+      "block_date": "2023-12-26",
+      "tx_hash": "0xf67763e30d006037aed1c7203f2fcf7148906739967210aa28cdf92eca13456c",
+      "event_kind": "signer_or_threshold_change",
+      "rpc_or_cast_proof": "cast receipt 0xf67763e30d006037aed1c7203f2fcf7148906739967210aa28cdf92eca13456c --rpc-url https://eth.drpc.org",
+      "summary": "Second swapOwner on the same Safe: 0x423b5Fa2dC16E06b36666a4BBB00c95Fa5f28FEF rotated out for 0xcdF067F306E7a511Ef701588AFCdcff292B19282, a key rotation for the same signer identity with no change to threshold or owner count."
+    },
+    {
+      "block_number": 22278042,
+      "block_date": "2025-04-16",
+      "tx_hash": "0xa29edb506b3e2b928b0ad6c96317b71c0bb9490478fd5bdea4b296d7cd9a2edb",
+      "event_kind": "signer_or_threshold_change",
+      "rpc_or_cast_proof": "cast receipt 0xa29edb506b3e2b928b0ad6c96317b71c0bb9490478fd5bdea4b296d7cd9a2edb --rpc-url https://eth.drpc.org",
+      "summary": "swapOwner rotating 0xF483De0f306952FA56ef56c1dbBDd2A70737bDd5 out for 0x85DB62FdFA9Ee6050f8b422F74D75D2069dA102B; the Safe continues to execute directly with no timelock in front of the controller."
+    },
+    {
+      "block_number": 24652974,
+      "block_date": "2026-03-14",
+      "tx_hash": "0xddf56595cb8ae1f6a2d66072cd7cc0fe0a6abf6baeff502abbf688584689d8aa",
+      "event_kind": "signer_or_threshold_change",
+      "rpc_or_cast_proof": "cast receipt 0xddf56595cb8ae1f6a2d66072cd7cc0fe0a6abf6baeff502abbf688584689d8aa --rpc-url https://eth.drpc.org",
+      "summary": "swapOwner replacing 0x7904Ad7c992CDAb500dAa0f3366301b1f5365B62 (0xLlama) with 0xC8Be49a9b1ca1A1cc654491a7cBbD27aBfA06A81 (Paul); threshold 6 and 9-owner cardinality preserved from the previous state."
+    },
+    {
+      "block_number": 25658818,
+      "block_date": "2026-08-01",
+      "tx_hash": "0x3626728923ca6a1327f57f3bfc4426618239bd4c4b943e92effa70005f7dbf0c",
+      "event_kind": "signer_or_threshold_change",
+      "rpc_or_cast_proof": "cast receipt 0x3626728923ca6a1327f57f3bfc4426618239bd4c4b943e92effa70005f7dbf0c --rpc-url https://eth.drpc.org",
+      "summary": "Most recent swapOwner: 0x4088421cBDBa1501d8Fd09fD241717097Afb42Cb (chiaki644) replaced by 0x18411aB626c9b3B3Dd5b7356574D8ff396436744 (Nero), leaving the controller at 6-of-9 with the same Safe singleton."
+    }
+  ],
+  "docs_and_governance_forensics": {
+    "mttr_status": "repaired",
+    "mttr_days": 0.2224,
+    "evidence_sources": [
+      {
+        "kind": "github_docs_commit",
+        "date": "2023-02-09",
+        "url": "https://github.com/AladdinDAO/deployments/commit/6692656a503b7fc85c47d7cb191bf497337e108c",
+        "claim_summary": "Signer table commit 'replace Alex Peck with Diligent Deer' lands at block 16591748, three hours before the on-chain swapOwner at block 16592805."
+      },
+      {
+        "kind": "wayback_snapshot",
+        "date": "2023-01-20",
+        "url": "https://web.archive.org/web/20230120162841/https://github.com/AladdinDAO/deployments/blob/main/deployments.mainnet.md",
+        "claim_summary": "Archived copy of the deployments page still lists Alex Peck 0x4C2B4184 and does not contain Diligent Deer 0x423b5Fa2, confirming the documented state before the February 2023 rotation."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2025-04-16",
+        "url": "https://github.com/AladdinDAO/deployments/commit/7f32c8b631a9ff905b73feb666e7f3a029a2891f",
+        "claim_summary": "Signer update published at block 22279639, 5.34 hours after the on-chain swapOwner at block 22278042; the longest documentation lag in the window."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2026-03-14",
+        "url": "https://github.com/AladdinDAO/deployments/commit/dc7322a7e86f50eee40f546d4485de9f095f861b",
+        "claim_summary": "Commit 'Update signer from 0xLlama to Paul' lands at block 24653110, 27 minutes after the matching on-chain rotation at block 24652974."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2026-08-01",
+        "url": "https://github.com/AladdinDAO/deployments/commit/ceec4a1b7a03a6716655fa88baee55cc70303290",
+        "claim_summary": "Commit 'Replace chiaki644 with Nero in signer list' lands at block 25658833, three minutes after the on-chain rotation at block 25658818."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2023-08-26",
+        "url": "https://github.com/AladdinDAO/aladdin-v3-contracts/blob/main/deployments/mainnet/Multisig.json",
+        "claim_summary": "Repository record names 0xA0FB1b11ccA5871fb0225B64308e249B97804E99 as the Concentrator multisig operated by the AladdinDAO community treasury set."
+      }
+    ],
+    "gap_windows": [
+      {
+        "opened_block": 16591748,
+        "opened_date": "2023-02-09",
+        "closed_block": 16592805,
+        "closed_date": "2023-02-09",
+        "duration_days": 0.0,
+        "status": "verified_aligned",
+        "summary": "Documentation for the Alex Peck to Diligent Deer rotation was published 3.55 hours before the on-chain swapOwner, so no documentation gap opened at any point."
+      },
+      {
+        "opened_block": 18869414,
+        "opened_date": "2023-12-26",
+        "closed_block": 18869458,
+        "closed_date": "2023-12-26",
+        "duration_days": 0.0,
+        "status": "verified_aligned",
+        "summary": "The Diligent Deer key rotation was documented nine minutes before execution at block 18869458; documentation never lagged the on-chain owner set."
+      },
+      {
+        "opened_block": 22278042,
+        "opened_date": "2025-04-16",
+        "closed_block": 22279639,
+        "closed_date": "2025-04-16",
+        "duration_days": 0.2224,
+        "status": "repaired",
+        "summary": "On-chain signer rotation at block 22278042 preceded the public signer table update by 5.34 hours; the window closed inside the same calendar day."
+      },
+      {
+        "opened_block": 24652974,
+        "opened_date": "2026-03-14",
+        "closed_block": 24653110,
+        "closed_date": "2026-03-14",
+        "duration_days": 0.0188,
+        "status": "repaired",
+        "summary": "0xLlama to Paul rotation executed at block 24652974 and documented 27 minutes later at block 24653110, leaving a sub-hour stale window."
+      },
+      {
+        "opened_block": 25658818,
+        "opened_date": "2026-08-01",
+        "closed_block": 25658833,
+        "closed_date": "2026-08-01",
+        "duration_days": 0.0021,
+        "status": "repaired",
+        "summary": "chiaki644 to Nero rotation documented three minutes after execution; the current 9-owner set in deployments.mainnet.md matches getOwners() exactly."
+      }
+    ]
+  },
+  "repo_audit": {
+    "github_org_repo": "AladdinDAO/aladdin-v3-contracts",
+    "commits_12m_contracts": 4,
+    "commits_12m_frontend_or_other": 5,
+    "human_contributors_12m": 3,
+    "bus_factor": 2,
+    "code_before_upgrade_verified": false
+  },
+  "executive_risk_memo": "Concentrator pairs an immutable Vyper governance token with a 6-of-9 Gnosis Safe that has held the Concentrator Treasury since July 2022. Over 2023-2026 that controller rotated signers five times: Alex Peck to Diligent Deer in February 2023, a Diligent Deer key rotation in December 2023, a rotation in April 2025, 0xLlama to Paul in March 2026, and chiaki644 to Nero in August 2026. Every rotation preserved the same nine-owner cardinality and the same six-of-nine threshold, and no module, guard or proxy admin was introduced, so the control plane changed membership without changing its shape. Immutability is reproducible rather than asserted: the Safe singleton masterCopy 0xd9db270c1b5e3bd161e8c8503c55ceabee709552 is byte-identical at block 16592805 and at head, and the CTR runtime bytecode is unchanged across the same interval. Documentation discipline is the strongest signal in the record. The public deployments.mainnet.md signer table moved with the chain on every occasion: three hours ahead of the February 2023 execution, nine minutes ahead of the December 2023 rotation, then 5.3 hours, 27 minutes and 3 minutes behind the 2025-04-16, 2026-03-14 and 2026-08-01 executions, for a worst-case repair time of 0.22 days. The residual risk is governance concentration, not code risk. Nine signers execute directly with no timelock or delay in front of them, so a compromised quorum can move treasury assets in one transaction and no on-chain window exists for depositors to react. Engineering depth is thin as well: the trailing twelve months contain nine commits, only four of them touching contracts, three human contributors and a bus factor of two, which limits surge capacity during an incident. No implementation upgrade occurred in the window, so code-before-upgrade traceability is marked false for absence of an upgrade to trace rather than a failed verification.",
+  "contributor_github": "IVANLI2412",
+  "agent_assist_framework": "opencode",
+  "base_payout_address": "0xC5dD2Ea54FF138bb3f71D3466092eA31eF115868",
+  "mcp_tool_receipt": {
+    "tool": "pacta_scan_control_plane",
+    "arguments": {
+      "address": "0xa0fb1b11cca5871fb0225b64308e249b97804e99",
+      "chain": "ethereum"
+    },
+    "result": {
+      "chain": "ethereum",
+      "address": "0xA0FB1b11ccA5871fb0225B64308e249B97804E99",
+      "block": {
+        "number": 26452137,
+        "hash": "0x0c5ccb85d5c71db81c624a616a87bdcb41e31eacbf854cea8a754c54b2189af0",
+        "timestamp": 1795127483
+      },
+      "codeBytes": 171,
+      "eip1967": {
+        "implementation": null,
+        "admin": null,
+        "beacon": null
+      },
+      "owner": null,
+      "probedStatus": {
+        "eip1967Slots": "ok",
+        "owner": "reverted_or_absent",
+        "safeGetters": "ok"
+      },
+      "safe": {
+        "threshold": 6,
+        "owners": [
+          "0x38a93e70b0D8343657f802C1c3Fdb06aC8F8fe99",
+          "0x8EcAB7B8ed8215cA52500cbf1548B9239173ef82",
+          "0xeF0Ca09fbf9a5f61E657Fb208b46b8685c1d4766",
+          "0xe3522d85d37F55735e9327CD7a5cDe3abaf28E03",
+          "0x85DB62FdFA9Ee6050f8b422F74D75D2069dA102B",
+          "0xcdF067F306E7a511Ef701588AFCdcff292B19282",
+          "0xC8Be49a9b1ca1A1cc654491a7cBbD27aBfA06A81",
+          "0x18411aB626c9b3B3Dd5b7356574D8ff396436744",
+          "0x74390470F4001Ca85D93bD546A4Ab1724359654B"
+        ],
+        "ownerCount": 9,
+        "guard": null
+      },
+      "upgradeAuthority": null,
+      "ownerPrincipal": null,
+      "riskFlags": [
+        "not_eip1967_upgradeable"
+      ],
+      "summary": "OBSERVED: No EIP-1967, Ownable, or Safe single-key control detected in probed standard slots/selectors (custom AccessControl/RolesAuthority not excluded)"
+    }
+  },
+  "apache2_commercial_grant": true,
+  "rules_accepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
