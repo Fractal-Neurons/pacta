@@ -1,0 +1,197 @@
+{
+  "wave": 2,
+  "category": "protocol_mismatch",
+  "slug": "near-bridge",
+  "protocol": "NEAR Omni Bridge (Ethereum ERC1967Proxy)",
+  "chainId": 1,
+  "contractAddress": "0xe00c629aFaCCb0510995A2B95560E446A24c85B9",
+  "hunter": "VB-Blue",
+  "agentFramework": "antigravity",
+  "basePayoutAddress": "0xe0a3AAe6e7d042f42e82830f4eEbF426cc1270a2",
+  "mcpProof": {
+    "tool": "pacta_check_preflight",
+    "arguments": {
+      "chain": "ethereum",
+      "address": "0xe00c629aFaCCb0510995A2B95560E446A24c85B9",
+      "block": "26448541"
+    },
+    "result": {
+      "schema": "pacta.preflight_check.v1",
+      "chain": "ethereum",
+      "chainId": 1,
+      "address": "0xe00c629aFaCCb0510995A2B95560E446A24c85B9",
+      "pinnedBlock": 26448541,
+      "pinnedBlockHash": "0x08e6f1545ec4b2c090bcbf278367979509165b1e51583ac6f67e368203cc0032",
+      "blockTimestamp": 1795084247,
+      "verdict": "UNCLASSIFIED_CONTRACT_CONTROLLER",
+      "riskScore": 60,
+      "isContract": true,
+      "isProxy": true,
+      "proxyType": "eip1967",
+      "implementation": "0x53785920165FbDf33B3F56885DBC8D12854ac414",
+      "beacon": null,
+      "hasAdminSlot": false,
+      "canUpgradeZeroDelay": null,
+      "capabilities": {
+        "pause": false,
+        "blacklist": false,
+        "upgrade": true
+      },
+      "paused": null,
+      "controller": {
+        "address": null,
+        "kind": "access_control",
+        "safeThreshold": null,
+        "timelockDelaySec": null,
+        "source": "bytecode grantRole / setAuthority (PUSH4 heuristic)"
+      },
+      "roleAdminMembers": null,
+      "codeBytes": 170,
+      "method": "Batched JSON-RPC reads pinned to the block hash (EIP-1898); EIP-1967 / EIP-1822 / beacon proxies; capabilities from PUSH4 selectors in proxy + implementation bytecode (heuristic).",
+      "summary": "No owner(), admin() or authority() and getRoleMemberCount reverted, but the bytecode exposes grantRole / setAuthority (PUSH4 heuristic): role-based admin is likely and was not resolved; inspect it before relying on it. Capabilities seen in bytecode: upgrade.",
+      "source": "live_rpc",
+      "assessment": {
+        "coverage": "unindexed_bytecode_heuristic",
+        "confidence": "low",
+        "method": "Live bytecode + storage heuristic at the pinned block only: this contract is not in Pacta's indexed catalog (no documentation comparison).",
+        "limits": [
+          "riskScore (0-100) is a heuristic of the controller type and of pause / blacklist / upgrade capabilities read at one block; it is not an audit.",
+          "The live check reads EIP-1967 slots, owner(), Safe getThreshold() / getOwners() and TimelockController getMinDelay(); custom role systems, bridge or L2 admin paths and off-chain operations are not resolved.",
+          "Documentation is compared only for indexed protocols (catalogMatch), at their pinned block."
+        ]
+      },
+      "coverage_gap_hint": "Target is not yet indexed or fully classified. Ask the user if they want you to queue coverage or request this capability via pacta_submit_request (free community queue, or 24h priority clearance for issuers).",
+      "meter": {
+        "limit": 50,
+        "remaining": 49,
+        "reset": 1795132800
+      },
+      "upgrade_x402": {
+        "note": "Free tier: 50 pre-flight calls per caller per UTC day (REST and MCP), then $0.01 per call over x402 (HTTP 402, never a dead-end 429). Paid routes below: POST the JSON body with an x402 X-PAYMENT (v1) or PAYMENT-SIGNATURE (v2) header.",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "network": "base (eip155:8453)",
+        "payTo": "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14",
+        "discovery": "https://pacta.fractalneurons.com/.well-known/x402",
+        "overflow": {
+          "method": "GET or POST",
+          "url": "https://pacta.fractalneurons.com/v1/check/preflight",
+          "priceUsd": "0.01",
+          "amountAtomic": "10000",
+          "after": "50 free calls per UTC day"
+        },
+        "endpoints": [
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/verdict",
+            "priceUsd": "0.02",
+            "amountAtomic": "20000",
+            "unlocks": "fast contract / token control-plane verdict: riskScore 0-100, grade A-F, upgrade / owner / pause / blacklist / mint flags and a shareable scan URL",
+            "example": {
+              "chain": "ethereum",
+              "address": "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/dossier",
+            "priceUsd": "0.05",
+            "amountAtomic": "50000",
+            "unlocks": "full control-plane dossier: every controller Safe's signers and threshold, signers shared with other indexed protocols, Base EAS proof",
+            "example": {
+              "slug": "stader-labs-ethx"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/calldata-sim",
+            "priceUsd": "0.25",
+            "amountAtomic": "250000",
+            "unlocks": "pre-signing calldata check: timelock / Safe / multicall calls decoded, each rated against live delays and the authority that governs it",
+            "example": {
+              "chain": "ethereum",
+              "target": "0x2225DAbFfC7F862c99477381E971E8B1FDaB467e",
+              "data": "0x64d623530000000000000000000000000000000000000000000000000000000000015180"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/deep-scan",
+            "priceUsd": "9.00",
+            "amountAtomic": "9000000",
+            "unlocks": "deep control-plane scan cross-checked on two independent RPC operators, auditor receipt and a queued Base EAS ticket",
+            "example": {
+              "chain": "base",
+              "address": "0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "blockNumber": 26448541,
+  "blockHash": "0x08e6f1545ec4b2c090bcbf278367979509165b1e51583ac6f67e368203cc0032",
+  "castCommands": [
+    "cast call 0xe00c629aFaCCb0510995A2B95560E446A24c85B9 \"hasRole(bytes32,address)(bool)\" 0x0000000000000000000000000000000000000000000000000000000000000000 0x2468603819Bf09Ed3Fb6f3EFeff24B1955f3CDE1 --block 26448541 --rpc-url https://ethereum-rpc.publicnode.com",
+    "cast call 0xe00c629aFaCCb0510995A2B95560E446A24c85B9 \"hasRole(bytes32,address)(bool)\" 0x0000000000000000000000000000000000000000000000000000000000000000 0x2468603819Bf09Ed3Fb6f3EFeff24B1955f3CDE1 --block 26448541 --rpc-url https://gateway.tenderly.co/public/mainnet"
+  ],
+  "rpcOutputs": {
+    "a": "true",
+    "b": "true",
+    "pinnedDualRpcChainProof": {
+      "blockNumber": 26448541,
+      "blockHash": "0x08e6f1545ec4b2c090bcbf278367979509165b1e51583ac6f67e368203cc0032",
+      "rpcEndpoints": [
+        "https://ethereum-rpc.publicnode.com",
+        "https://gateway.tenderly.co/public/mainnet"
+      ],
+      "officialDeploymentBinding": "https://docs.near.org/chain-abstraction/omnibridge/overview links to https://github.com/Near-One/omni-bridge whose README Contract Addresses table lists Ethereum Mainnet Bridge Contract 0xe00c629aFaCCb0510995A2B95560E446A24c85B9; evm/src/omni-bridge/contracts/OmniBridge.sol enforces onlyRole(DEFAULT_ADMIN_ROLE) on _authorizeUpgrade, pause, upgradeToken, and admin bridge configuration, and onlyRole(PAUSABLE_ADMIN_ROLE) on pauseAll.",
+      "note": "Mismatch summary: NEAR Omni Bridge official documentation (https://docs.near.org/chain-abstraction/omnibridge/overview and https://docs.near.org/chain-abstraction/omnibridge/implementation) claims trustless cross-chain transfers secured by Chain Signatures (2/3+ MPC nodes) and the Ethereum/NEAR light client, with no mention of any upgradeable proxy, multisig admin, or EOA pause key across Omni Bridge docs or SECURITY.md. On-chain at finalized Ethereum block #26448541, the official mainnet OmniBridge UUPS ERC1967Proxy (0xe00c629aFaCCb0510995A2B95560E446A24c85B9, holding $14.5M+ USDC) grants DEFAULT_ADMIN_ROLE (controlling _authorizeUpgrade / upgradeToAndCall and bridge parameters) directly to a 3-of-5 Safe (0x2468603819Bf09Ed3Fb6f3EFeff24B1955f3CDE1) with 0s timelock delay, and grants PAUSABLE_ADMIN_ROLE to a single EOA (0xd9cb077700aa4d32d30bda5e99bb171549b5a382).",
+      "implSlot": {
+        "castCommands": [
+          "cast storage 0xe00c629aFaCCb0510995A2B95560E446A24c85B9 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc --block 26448541 --rpc-url https://ethereum-rpc.publicnode.com",
+          "cast storage 0xe00c629aFaCCb0510995A2B95560E446A24c85B9 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc --block 26448541 --rpc-url https://gateway.tenderly.co/public/mainnet"
+        ],
+        "output": "0x00000000000000000000000053785920165fbdf33b3f56885dbc8d12854ac414"
+      },
+      "pausableAdminEoa": {
+        "castCommands": [
+          "cast call 0xe00c629aFaCCb0510995A2B95560E446A24c85B9 \"hasRole(bytes32,address)(bool)\" 0x1e1db0d9c63b4a23ec134ff71a2f56610c32f638cbff81e96e14734c4daf0b4d 0xd9cb077700aa4d32d30bda5e99bb171549b5a382 --block 26448541 --rpc-url https://ethereum-rpc.publicnode.com",
+          "cast call 0xe00c629aFaCCb0510995A2B95560E446A24c85B9 \"hasRole(bytes32,address)(bool)\" 0x1e1db0d9c63b4a23ec134ff71a2f56610c32f638cbff81e96e14734c4daf0b4d 0xd9cb077700aa4d32d30bda5e99bb171549b5a382 --block 26448541 --rpc-url https://gateway.tenderly.co/public/mainnet"
+        ],
+        "output": "true"
+      },
+      "safeThreshold": {
+        "castCommands": [
+          "cast call 0x2468603819Bf09Ed3Fb6f3EFeff24B1955f3CDE1 \"getThreshold()(uint256)\" --block 26448541 --rpc-url https://ethereum-rpc.publicnode.com",
+          "cast call 0x2468603819Bf09Ed3Fb6f3EFeff24B1955f3CDE1 \"getThreshold()(uint256)\" --block 26448541 --rpc-url https://gateway.tenderly.co/public/mainnet"
+        ],
+        "output": "3"
+      },
+      "safeOwners": {
+        "castCommands": [
+          "cast call 0x2468603819Bf09Ed3Fb6f3EFeff24B1955f3CDE1 \"getOwners()(address[])\" --block 26448541 --rpc-url https://ethereum-rpc.publicnode.com",
+          "cast call 0x2468603819Bf09Ed3Fb6f3EFeff24B1955f3CDE1 \"getOwners()(address[])\" --block 26448541 --rpc-url https://gateway.tenderly.co/public/mainnet"
+        ],
+        "output": "[0xed9cB50304991951Cbee747900484E9a041DA464, 0xF58096A602C960c841Bd83A29DE21c808a9c1ac9, 0xCFB9C137E21E199757Ae3Ce705B199CB26A3b91d, 0x1180c536465413eE05b206b3a99d4C6a9934D2b7, 0x8F3A347Eb3eB62fEa4975d293e052cD96abd36C6]"
+      },
+      "usdcBalance": {
+        "castCommands": [
+          "cast call 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48 \"balanceOf(address)(uint256)\" 0xe00c629aFaCCb0510995A2B95560E446A24c85B9 --block 26448541 --rpc-url https://ethereum-rpc.publicnode.com",
+          "cast call 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48 \"balanceOf(address)(uint256)\" 0xe00c629aFaCCb0510995A2B95560E446A24c85B9 --block 26448541 --rpc-url https://gateway.tenderly.co/public/mainnet"
+        ],
+        "output": "14526709338456 [1.452e13]"
+      }
+    }
+  },
+  "docsUrl": "https://docs.near.org/chain-abstraction/omnibridge/overview",
+  "docsQuote": "It solves key challenges in cross-chain communication by leveraging Chain Signatures and its decentralized Multi-Party Computation (MPC) service to enable trustless cross-chain asset transfers.",
+  "tvlUsd": 50520391,
+  "tvlReference": "https://api.llama.fi/protocol/near-bridge",
+  "apache2CommercialGrant": true,
+  "rulesAccepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
