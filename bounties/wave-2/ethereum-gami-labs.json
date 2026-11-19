@@ -1,0 +1,94 @@
+{
+  "wave": 2,
+  "category": "protocol_mismatch",
+  "slug": "gami-labs",
+  "protocol": "Gami Labs (Gami USDC Vault)",
+  "chainId": 1,
+  "contractAddress": "0xdAe854D0896ad2fEE335689A3F7B4a95fd1a3E46",
+  "hunter": "VB-Blue",
+  "agentFramework": "antigravity",
+  "basePayoutAddress": "0xe0a3AAe6e7d042f42e82830f4eEbF426cc1270a2",
+  "mcpProof": {
+    "tool": "pacta_scan_control_plane",
+    "arguments": {
+      "chain": "ethereum",
+      "address": "0xdAe854D0896ad2fEE335689A3F7B4a95fd1a3E46"
+    },
+    "result": {
+      "chain": "ethereum",
+      "address": "0xdAe854D0896ad2fEE335689A3F7B4a95fd1a3E46",
+      "block": {
+        "number": 26450788,
+        "hash": "0x5be96c85734dcc8bf2da999ac7c663debfb42f032d6a9a792ad0d556496ba3f1",
+        "timestamp": 1795111271
+      },
+      "codeBytes": 1427,
+      "eip1967": {
+        "implementation": "0xE50554ec802375C9c3F9c087a8a7bb8C26d3DEDf",
+        "admin": "0x9F5eD6ab5C7ed88eC5aB9D00092C993Ea7d203c8",
+        "beacon": null
+      },
+      "owner": "0x9A1DfEaF8604911F2B829FF96e038C98dDe5DAdd",
+      "probedStatus": {
+        "eip1967Slots": "ok",
+        "owner": "ok",
+        "safeGetters": "reverted_or_absent"
+      },
+      "proxyAdmin": {
+        "address": "0x9F5eD6ab5C7ed88eC5aB9D00092C993Ea7d203c8",
+        "codeBytes": 1973,
+        "type": "timelock_compound",
+        "delaySeconds": 86400
+      },
+      "upgradeAuthority": {
+        "address": "0x9F5eD6ab5C7ed88eC5aB9D00092C993Ea7d203c8",
+        "codeBytes": 1973,
+        "type": "timelock_compound",
+        "delaySeconds": 86400
+      },
+      "ownerPrincipal": {
+        "address": "0x9A1DfEaF8604911F2B829FF96e038C98dDe5DAdd",
+        "codeBytes": 171,
+        "type": "safe",
+        "threshold": 1,
+        "owners": [
+          "0x12E351C8d432Ef9187ed8C558ACaeF9a46Af04B2",
+          "0xE60BB28a82589cE00Cb5Dd80DEA602cd6BB8c450",
+          "0x79644B3050dAeb86da8e0452b860e8935Cdbe961"
+        ],
+        "ownerCount": 3,
+        "guard": null
+      },
+      "riskFlags": [
+        "upgradeable",
+        "upgrade_timelock_86400s",
+        "owner_controlled_by_1_of_n_safe",
+        "owner_safe_without_guard",
+        "owner_no_timelock"
+      ],
+      "summary": "HIGH: single-key control of owner"
+    }
+  },
+  "blockNumber": 26450712,
+  "blockHash": "0xe5dcd8ab9788424e3e1142c8824411a930ebbbe43797f6b8bd470bc6ea901bdb",
+  "castCommands": [
+    "cast call 0xdAe854D0896ad2fEE335689A3F7B4a95fd1a3E46 \"owner()(address)\" --block 26450712 --rpc-url https://gateway.tenderly.co/public/mainnet",
+    "cast call 0xdAe854D0896ad2fEE335689A3F7B4a95fd1a3E46 \"owner()(address)\" --block 26450712 --rpc-url https://ethereum-rpc.publicnode.com"
+  ],
+  "rpcOutputs": {
+    "a": "0x9A1DfEaF8604911F2B829FF96e038C98dDe5DAdd",
+    "b": "0x9A1DfEaF8604911F2B829FF96e038C98dDe5DAdd",
+    "note": "Dual-RPC reads at finalized block 26450712 identically establish that Gami USDC Vault (0xdAe854D0896ad2fEE335689A3F7B4a95fd1a3E46, totalAssets = 10,228,702.13 USDC) has owner() == 0x9A1DfEaF8604911F2B829FF96e038C98dDe5DAdd, a Gnosis Safe with getThreshold() == 1 (1-of-3 across three EOA owners 0x12E351C8d432Ef9187ed8C558ACaeF9a46Af04B2, 0xE60BB28a82589cE00Cb5Dd80DEA602cd6BB8c450, and 0x79644B3050dAeb86da8e0452b860e8935Cdbe961), zero Safe guard, zero modules, and no timelock on owner actions. Moreover, getRolesStorage() returns safe == 0x9A1DfEaF8604911F2B829FF96e038C98dDe5DAdd and valuationManager == 0x9A1DfEaF8604911F2B829FF96e038C98dDe5DAdd, and EIP-1967 admin DelayProxyAdmin (0x9F5eD6ab5C7ed88eC5aB9D00092C993Ea7d203c8, delay() = 86400s) also has owner() == 0x9A1DfEaF8604911F2B829FF96e038C98dDe5DAdd. Single-key execution (threshold = 1) controls vault ownership, NAV/valuationManager, underlying custody safe, and upgrade initiation, directly contradicting gamilabs.io's claim of 'multi-signature governance'."
+  },
+  "docsUrl": "https://gamilabs.io/",
+  "docsQuote": "Audited vault architecture secured by multi-signature governance and Hardware Security Modules (HSM)",
+  "tvlUsd": 20738793,
+  "tvlReference": "https://api.llama.fi/protocol/gami-labs",
+  "apache2CommercialGrant": true,
+  "rulesAccepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
