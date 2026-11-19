@@ -1,0 +1,215 @@
+{
+  "wave": 3,
+  "chain": "ethereum",
+  "chain_id": 1,
+  "protocol_name": "Fraxtal Bridge",
+  "slug": "fraxtal-bridge",
+  "pacta_slug": null,
+  "contract_address": "0x34C0bD5877A5Ee7099D0f5688D65F4bB9158BDE2",
+  "tvl_usd": 15730626,
+  "tvl_source_url": "https://defillama.com/chain/Fraxtal",
+  "dossier_window": "2024-2026",
+  "trajectory_mode": "mutable_transitions",
+  "historical_transitions": [
+    {
+      "block_number": 19135324,
+      "block_date": "2024-02-01",
+      "tx_hash": "0xd79aae79fd2d69593a40f04776b6491d6debbed6bdf4b487d54bac1e2b0fe61d",
+      "event_kind": "deployment_baseline",
+      "rpc_or_cast_proof": "cast storage 0x34C0bD5877A5Ee7099D0f5688D65F4bB9158BDE2 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc --block 19135324 --rpc-url https://eth-mainnet.public.blastapi.io",
+      "summary": "L1StandardBridgeProxy initialized with v1 L1StandardBridge (0xCC26248B71284B812Ff7825e005560DB01a874C7) under ProxyAdmin 0x13Fe62cB...ABcA and 1-of-1 bootstrap Safe 0xe0d77552...."
+    },
+    {
+      "block_number": 19144326,
+      "block_date": "2024-02-03",
+      "tx_hash": "0x7c34f40e9724e57f7915a60fdc9ac2a9def70412fd3b48d6edb0a5e87d4bd030",
+      "event_kind": "signer_or_threshold_change",
+      "rpc_or_cast_proof": "cast call 0xe0d7755252873c4eF5788f7f45764E0e17610508 getThreshold()(uint256) --block 19144326 --rpc-url https://gateway.tenderly.co/public/mainnet",
+      "summary": "ProxyAdminOwner Safe 0xe0d7755252873c4eF5788f7f45764E0e17610508 hardened threshold from 1-of-1 to 3-of-6 before stabilizing as 3-of-5 prior to May 2024, with 0s upgrade delay."
+    },
+    {
+      "block_number": 19870533,
+      "block_date": "2024-05-14",
+      "tx_hash": "0x25f146ab6043f07c95e3b314e0200d2b5a8a0cb590cbcd9f094f753efef7d669",
+      "event_kind": "proxy_upgrade",
+      "rpc_or_cast_proof": "cast storage 0x34C0bD5877A5Ee7099D0f5688D65F4bB9158BDE2 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc --block 19870533 --rpc-url https://eth-mainnet.public.blastapi.io",
+      "summary": "3-of-5 Safe upgraded L1StandardBridgeProxy in 0s via ProxyAdmin from v1 to v2 L1StandardBridge (0x30cd695249394eed44c576f2caec5304be6455f9, Solidity 0.8.15)."
+    },
+    {
+      "block_number": 19976724,
+      "block_date": "2024-05-29",
+      "tx_hash": "0x680a911d6507e9e0145b676e4243380cc4b77614c85c19be07b90f6dccf6d5a7",
+      "event_kind": "signer_or_threshold_change",
+      "rpc_or_cast_proof": "cast call 0xe0d7755252873c4eF5788f7f45764E0e17610508 getOwners()(address[]) --block 19976724 --rpc-url https://gateway.tenderly.co/public/mainnet",
+      "summary": "Safe 0xe0d7755252873c4eF5788f7f45764E0e17610508 rotated signer 0x892d...60e3 to 0x8da4...c2c0 while keeping 3-of-5 quorum, zero Safe guard (0x0), and empty modules."
+    },
+    {
+      "block_number": 22376688,
+      "block_date": "2025-04-29",
+      "tx_hash": "0xf1f2d8c52f1e2303dad74c3c2ee9c72ac4935bc5efbedc95ab52036e80133d1e",
+      "event_kind": "proxy_upgrade",
+      "rpc_or_cast_proof": "cast storage 0x34C0bD5877A5Ee7099D0f5688D65F4bB9158BDE2 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc --block 22376688 --rpc-url https://eth-mainnet.public.blastapi.io",
+      "summary": "3-of-5 Safe executed a second 0-delay upgrade of L1StandardBridgeProxy to L1StandardBridgeCGT (0x318f7008d7b5541546248d248fd1eb41a57a9e41, Solidity 0.8.15)."
+    },
+    {
+      "block_number": 23169976,
+      "block_date": "2025-08-18",
+      "tx_hash": "0xcef51688ce9d56f2d4d2fe47ac74dcb8e75abb9ee886cc1416c4293f68dbfcb4",
+      "event_kind": "proxy_upgrade",
+      "rpc_or_cast_proof": "cast storage 0x34C0bD5877A5Ee7099D0f5688D65F4bB9158BDE2 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc --block 23169976 --rpc-url https://gateway.tenderly.co/public/mainnet",
+      "summary": "3-of-5 Safe executed a third 0-delay upgrade to L1StandardBridge v4 (0xe89fbfb78920423ac9e7f06acb2163ce55bab89f), remaining active through block 26450584."
+    }
+  ],
+  "docs_and_governance_forensics": {
+    "mttr_status": "partially_repaired",
+    "mttr_days": 476.0,
+    "unrepaired_open_days": 919.0,
+    "evidence_sources": [
+      {
+        "kind": "github_docs_commit",
+        "date": "2024-02-14",
+        "url": "https://github.com/FraxFinance/docs/commit/23c4db020ed12337a08f407cb8652dfa53aaa785",
+        "claim_summary": "Initial FraxFinance/docs release listing L1StandardBridgeProxy, ProxyAdmin, and the initial v1 implementation 0xCC26248B... without disclosing the owner Safe 0xe0d77552...."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2025-05-22",
+        "url": "https://github.com/ethereum-optimism/superchain-registry/commit/e4d87153bf1cb0275341f15db4eff883be6cee1f",
+        "claim_summary": "Upstream Superchain Registry PR #877 first published Fraxtal ProxyAdminOwner Safe 0xe0d7755252873c4eF5788f7f45764E0e17610508 and governed_by_optimism = false, 476 days post-launch."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2025-07-19",
+        "url": "https://github.com/FraxFinance/docs/commit/cef9f77cce1fc9e0d7aa6b347e97a4560504cca1",
+        "claim_summary": "Latest update to FraxFinance/docs misc/constants/mainnet.ts still lists retired Feb 2024 L1StandardBridge 0xCC26248B... despite multiple upgrades and still omits ProxyAdminOwner Safe 0xe0d77552...."
+      }
+    ],
+    "gap_windows": [
+      {
+        "opened_block": 19135324,
+        "opened_date": "2024-02-01",
+        "closed_block": 22539132,
+        "closed_date": "2025-05-22",
+        "duration_days": 476.0,
+        "status": "repaired",
+        "summary": "Public deployment registries omitted ProxyAdminOwner Safe 0xe0d7755252873c4eF5788f7f45764E0e17610508 for 476 days until Superchain Registry PR #877 added fraxtal.toml on 2025-05-22."
+      },
+      {
+        "opened_block": 19870533,
+        "opened_date": "2024-05-14",
+        "closed_block": null,
+        "closed_date": null,
+        "duration_days": 919.0,
+        "status": "unrepaired_open",
+        "summary": "FraxFinance/docs misc/constants/mainnet.ts (rendering pages/fraxtal/addresses/fraxtal-contracts.mdx) has remained stale for 919 days through 2026-11-19 UTC, still citing retired v1 0xCC26248B... across three upgrades."
+      }
+    ]
+  },
+  "repo_audit": {
+    "github_org_repo": "FraxFinance/fraxtal",
+    "commits_12m_contracts": 61,
+    "commits_12m_frontend_or_other": 107,
+    "human_contributors_12m": 33,
+    "bus_factor": 3,
+    "code_before_upgrade_verified": true
+  },
+  "executive_risk_memo": "Across 2024-2026 on Ethereum Mainnet, Fraxtal Bridge's L1StandardBridgeProxy (0x34C0bD5877A5Ee7099D0f5688D65F4bB9158BDE2, backing $15.73M Fraxtal chain TVL on DefiLlama) hardened rapidly from its 1-of-1 launch Safe at block 19,135,324 (2024-02-01) to a 3-of-5 Gnosis Safe (0xe0d7755252873c4eF5788f7f45764E0e17610508) within 48 hours, rotated one signer at block 19,976,724 (2024-05-29), and executed three verified 0-second L1StandardBridge upgrades at blocks 19,870,533, 22,376,688, and 23,169,976 without adding a timelock, Safe guard, or module through block 26,450,584. Documentation forensics establish a partially repaired trajectory: upstream Superchain Registry PR #877 closed signer/controller opacity after 476 days (block 22,539,132 on 2025-05-22), yet FraxFinance/docs misc/constants/mainnet.ts still publishes the retired Feb 2024 implementation (0xCC26248B...) after three subsequent upgrades (919 days open through 2026-11-19 UTC). Engineering telemetry shows healthy maintainer velocity in FraxFinance/fraxtal (61 contracts-bedrock commits, 33 human contributors, bus_factor = 3) and Blockscout-verified 0.8.15 implementations before execution.",
+  "contributor_github": "random-solver",
+  "base_payout_address": "0x7EDAC178137184cB0a3e291CFAefAcFe138137Bb",
+  "mcp_tool_receipt": {
+    "tool": "pacta_lookup_protocol",
+    "arguments": {
+      "query": "0x34C0bD5877A5Ee7099D0f5688D65F4bB9158BDE2"
+    },
+    "result": {
+      "schema": "pacta.protocol_lookup.v1",
+      "query": "0x34C0bD5877A5Ee7099D0f5688D65F4bB9158BDE2",
+      "filters": {
+        "chain": null,
+        "kind": "all",
+        "limit": 10
+      },
+      "totalCatalog": {
+        "protocols": 312,
+        "briefs": 17,
+        "easAttestedProtocols": 142,
+        "rpcObservedProtocols": 170
+      },
+      "totalMatches": 0,
+      "count": 0,
+      "results": [],
+      "catalog": "https://pacta.wtf/api/v1/lookup.json",
+      "nextStep": "Pass a result's preflightArgs ({chain, address}) to pacta_check_preflight (or pacta_scan_control_plane) for a live check.",
+      "note": "easAttested protocols are Base-EAS-anchored records that compare on-chain state with the protocol's documentation. rpc_observed protocols pin the on-chain control plane over archive JSON-RPC and do not assess the documentation (documentationComparison: not_assessed). Briefs are block-pinned verification briefs. preflightArgs re-read the contract live.",
+      "hint": "No match. Call again with an empty query to list what Pacta tracks, or pass a known 0x contract address straight to pacta_check_preflight.",
+      "coverage_gap_hint": "Target is not yet indexed or fully classified. Ask the user if they want you to queue coverage or request this capability via pacta_submit_request (free community queue, or 24h priority clearance for issuers).",
+      "upgrade_x402": {
+        "note": "Free tier: 50 pre-flight calls per caller per UTC day (REST and MCP), then $0.01 per call over x402 (HTTP 402, never a dead-end 429). Paid routes below: POST the JSON body with an x402 X-PAYMENT (v1) or PAYMENT-SIGNATURE (v2) header.",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "network": "base (eip155:8453)",
+        "payTo": "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14",
+        "discovery": "https://pacta.fractalneurons.com/.well-known/x402",
+        "overflow": {
+          "method": "GET or POST",
+          "url": "https://pacta.fractalneurons.com/v1/check/preflight",
+          "priceUsd": "0.01",
+          "amountAtomic": "10000",
+          "after": "50 free calls per UTC day"
+        },
+        "endpoints": [
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/verdict",
+            "priceUsd": "0.02",
+            "amountAtomic": "20000",
+            "unlocks": "fast contract / token control-plane verdict: riskScore 0-100, grade A-F, upgrade / owner / pause / blacklist / mint flags and a shareable scan URL",
+            "example": {
+              "chain": "ethereum",
+              "address": "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/dossier",
+            "priceUsd": "0.05",
+            "amountAtomic": "50000",
+            "unlocks": "full control-plane dossier: every controller Safe's signers and threshold, signers shared with other indexed protocols, Base EAS proof",
+            "example": {
+              "slug": "stader-labs-ethx"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/calldata-sim",
+            "priceUsd": "0.25",
+            "amountAtomic": "250000",
+            "unlocks": "pre-signing calldata check: timelock / Safe / multicall calls decoded, each rated against live delays and the authority that governs it",
+            "example": {
+              "chain": "ethereum",
+              "target": "0x2225DAbFfC7F862c99477381E971E8B1FDaB467e",
+              "data": "0x64d623530000000000000000000000000000000000000000000000000000000000015180"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/deep-scan",
+            "priceUsd": "9.00",
+            "amountAtomic": "9000000",
+            "unlocks": "deep control-plane scan cross-checked on two independent RPC operators, auditor receipt and a queued Base EAS ticket",
+            "example": {
+              "chain": "base",
+              "address": "0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "apache2_commercial_grant": true,
+  "rules_accepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
