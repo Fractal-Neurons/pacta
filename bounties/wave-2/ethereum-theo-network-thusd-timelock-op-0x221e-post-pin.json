@@ -1,0 +1,166 @@
+{
+  "wave": 2,
+  "category": "post_pin_drift",
+  "slug": "theo-network-thusd-timelock-op-0x221e-post-pin",
+  "protocol": "Theo Network thUSD \u2014 TimelockController Operation 0x221e Scheduled",
+  "chainId": 1,
+  "contractAddress": "0x2bB4b7E6E83FA6b77d0143dad631843cB73DCA02",
+  "pactaSlug": "theo-network-thusd",
+  "priorPin": "Pacta theo-network-thusd (theo-network-thusd-control-plane in protocols.json) pinned at block 26449594 (blockHash 0xbe263d5b378dcb7c3c4e18bd8e388f0cb2dab1adacd83de2be58c9408b377287) with controllerAddress 0x2bB4b7E6E83FA6b77d0143dad631843cB73DCA02 (TimelockController, 172800s minDelay); operation 0x221effa6dbd210a9088114cb323d6ed677aa8fff6bdadc6542eec69e52241360 was unscheduled (isOperationPending == false, getTimestamp == 0)",
+  "hunter": "VB-Blue",
+  "agentFramework": "antigravity",
+  "basePayoutAddress": "0xe0a3AAe6e7d042f42e82830f4eEbF426cc1270a2",
+  "mcpProof": {
+    "tool": "pacta_lookup_protocol",
+    "arguments": {
+      "query": "0x2bB4b7E6E83FA6b77d0143dad631843cB73DCA02"
+    },
+    "result": {
+      "schema": "pacta.protocol_lookup.v1",
+      "query": "0x2bB4b7E6E83FA6b77d0143dad631843cB73DCA02",
+      "filters": {
+        "chain": null,
+        "kind": "all",
+        "limit": 10
+      },
+      "totalCatalog": {
+        "protocols": 312,
+        "briefs": 17,
+        "easAttestedProtocols": 132,
+        "rpcObservedProtocols": 180
+      },
+      "totalMatches": 1,
+      "count": 1,
+      "results": [
+        {
+          "baseEasUids": [],
+          "category": "Treasury-Backed Yield Stablecoin (thBILL collateral) (Ethereum)",
+          "chain": "ethereum",
+          "chainId": 1,
+          "classification": "rpc_observed",
+          "controllerAddress": "0x2bB4b7E6E83FA6b77d0143dad631843cB73DCA02",
+          "controllerKind": "timelock",
+          "documentationComparison": "not_assessed",
+          "documentedDelaySeconds": null,
+          "easAttested": false,
+          "evidenceBasis": "rpc_observed",
+          "kind": "protocol",
+          "name": "Theo Network thUSD",
+          "observedDelaySeconds": null,
+          "pinnedBlock": 26449594,
+          "preflightArgs": {
+            "address": "0xa3fE5c7596024E6811E14F029937D5bd8Ae485b3",
+            "chain": "ethereum"
+          },
+          "primaryContract": "0xa3fE5c7596024E6811E14F029937D5bd8Ae485b3",
+          "relatedContracts": [
+            "0xCD04F57464d25F257089A286AAb47DF096d300Ad"
+          ],
+          "slug": "theo-network-thusd",
+          "surfaces": [
+            {
+              "blockNumber": 26449594,
+              "classification": "rpc_observed",
+              "id": "theo-network-thusd-control-plane",
+              "surface": "thUSD \u00b7 EIP-1967 Proxy & Controller Chain",
+              "targetContract": "0xa3fE5c7596024E6811E14F029937D5bd8Ae485b3",
+              "targetLabel": "thUSD"
+            }
+          ],
+          "targetLabel": "thUSD",
+          "tokens": [
+            "thUSD"
+          ],
+          "url": "https://pacta.wtf/protocols/theo-network-thusd/",
+          "whatDiffers": null,
+          "match": "exact",
+          "citationFooter": "Citation: https://pacta.wtf/protocols/theo-network-thusd/ (RPC-observed baseline; Base Mainnet EAS: not_attested)\nIssuer paths (payment never alters a classification; it strictly follows verified on-chain and documentation evidence): $0 maintainer doc-update queue https://pacta.wtf/request/ \u00b7 $500 USDC Rapid Single-Gap Re-Verification (24h SLA) https://pacta.wtf/request/?tier=rapid-500&protocol=theo-network-thusd \u00b7 $2,500\u2013$5,000 USDC Full Protocol Control-Plane Dossier (24h SLA) https://pacta.wtf/for-protocols/"
+        }
+      ],
+      "catalog": "https://pacta.wtf/api/v1/lookup.json",
+      "nextStep": "Pass a result's preflightArgs ({chain, address}) to pacta_check_preflight (or pacta_scan_control_plane) for a live check.",
+      "note": "easAttested protocols are Base-EAS-anchored records that compare on-chain state with the protocol's documentation. rpc_observed protocols pin the on-chain control plane over archive JSON-RPC and do not assess the documentation (documentationComparison: not_assessed). Briefs are block-pinned verification briefs. preflightArgs re-read the contract live.",
+      "citationFooter": "Citation: https://pacta.wtf/protocols/theo-network-thusd/ (RPC-observed baseline; Base Mainnet EAS: not_attested)\nIssuer paths (payment never alters a classification; it strictly follows verified on-chain and documentation evidence): $0 maintainer doc-update queue https://pacta.wtf/request/ \u00b7 $500 USDC Rapid Single-Gap Re-Verification (24h SLA) https://pacta.wtf/request/?tier=rapid-500&protocol=theo-network-thusd \u00b7 $2,500\u2013$5,000 USDC Full Protocol Control-Plane Dossier (24h SLA) https://pacta.wtf/for-protocols/",
+      "upgrade_x402": {
+        "note": "Free tier: 50 pre-flight calls per caller per UTC day (REST and MCP), then $0.01 per call over x402 (HTTP 402, never a dead-end 429). Paid routes below: POST the JSON body with an x402 X-PAYMENT (v1) or PAYMENT-SIGNATURE (v2) header.",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "network": "base (eip155:8453)",
+        "payTo": "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14",
+        "discovery": "https://pacta.fractalneurons.com/.well-known/x402",
+        "overflow": {
+          "method": "GET or POST",
+          "url": "https://pacta.fractalneurons.com/v1/check/preflight",
+          "priceUsd": "0.01",
+          "amountAtomic": "10000",
+          "after": "50 free calls per UTC day"
+        },
+        "endpoints": [
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/verdict",
+            "priceUsd": "0.02",
+            "amountAtomic": "20000",
+            "unlocks": "fast contract / token control-plane verdict: riskScore 0-100, grade A-F, upgrade / owner / pause / blacklist / mint flags and a shareable scan URL",
+            "example": {
+              "chain": "ethereum",
+              "address": "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/dossier",
+            "priceUsd": "0.05",
+            "amountAtomic": "50000",
+            "unlocks": "full control-plane dossier: every controller Safe's signers and threshold, signers shared with other indexed protocols, Base EAS proof",
+            "example": {
+              "slug": "stader-labs-ethx"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/calldata-sim",
+            "priceUsd": "0.25",
+            "amountAtomic": "250000",
+            "unlocks": "pre-signing calldata check: timelock / Safe / multicall calls decoded, each rated against live delays and the authority that governs it",
+            "example": {
+              "chain": "ethereum",
+              "target": "0x2225DAbFfC7F862c99477381E971E8B1FDaB467e",
+              "data": "0x64d623530000000000000000000000000000000000000000000000000000000000015180"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/deep-scan",
+            "priceUsd": "9.00",
+            "amountAtomic": "9000000",
+            "unlocks": "deep control-plane scan cross-checked on two independent RPC operators, auditor receipt and a queued Base EAS ticket",
+            "example": {
+              "chain": "base",
+              "address": "0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "blockNumber": 26450712,
+  "blockHash": "0xe5dcd8ab9788424e3e1142c8824411a930ebbbe43797f6b8bd470bc6ea901bdb",
+  "castCommands": [
+    "cast call 0x2bB4b7E6E83FA6b77d0143dad631843cB73DCA02 \"isOperationPending(bytes32)\" 0x221effa6dbd210a9088114cb323d6ed677aa8fff6bdadc6542eec69e52241360 --block 26450712 --rpc-url https://gateway.tenderly.co/public/mainnet",
+    "cast call 0x2bB4b7E6E83FA6b77d0143dad631843cB73DCA02 \"isOperationPending(bytes32)\" 0x221effa6dbd210a9088114cb323d6ed677aa8fff6bdadc6542eec69e52241360 --block 26450712 --rpc-url https://ethereum-rpc.publicnode.com"
+  ],
+  "rpcOutputs": {
+    "a": "0x0000000000000000000000000000000000000000000000000000000000000001",
+    "b": "0x0000000000000000000000000000000000000000000000000000000000000001",
+    "note": "At Pacta's pinned block 26449594, TimelockController 0x2bB4b7E6E83FA6b77d0143dad631843cB73DCA02 returned isOperationPending(0x221effa6dbd210a9088114cb323d6ed677aa8fff6bdadc6542eec69e52241360) == 0x0000000000000000000000000000000000000000000000000000000000000000 (false) and getTimestamp == 0. At Ethereum block 26450148 (tx 0xced56fb7311b22f3ee7c10ece0710bc3e32c4ebd67d50e522ea0d66481327afb, 554 blocks after the Sprint 30 pin), 4-of-N Safe 0x94877640dd9e6f1e3cb56bf7b5665b7152601295 executed scheduleBatch for operation 0x221effa6dbd210a9088114cb323d6ed677aa8fff6bdadc6542eec69e52241360 with 172800s delay (getTimestamp == 1795276391 at finalized block 26450712, isOperationPending == true, isOperationDone == false). The 9 queued calls: (0-2) call acceptOwnership() on thUSD 3 Month Earn (0xea51da3f3e37e82e1cde6b07a0e9cc69a2b0db8f), thUSD 6 Month Earn (0x3e1e5fc2f41fd6e3edf46e44286278cbd5f46d9a), and thUSD Boosted Earn (0x656b480a1d2eaf7e65eebe1ce6b0ea8d2b5c190f) to move vault ownership to TimelockController 0x2bB4b7...; (3-4) upgradeToAndCall(0xc67000c1c8bd7544a53b251cfb6edb5ef759cdfb, '') on 0x3e1e5f... and 0x656b48...; (5-6) emergencyTransferPosition(0xc0a93a4df306945dbaa8c0ec6930efc9f13c381d, 0xc6903fba7f224bdc72882ea86e33014ddcea645d) on both; and (7-8) upgradeToAndCall to 0xf02614ade8181a1f32c07ed5d63052d31daf19c1 and 0x53711ea98f2dc747a821fb71d8643ad02e898651."
+  },
+  "docsUrl": "https://theo.xyz/articles/thusd-is-live",
+  "docsQuote": "Over 95% of collateral sits offchain in physical gold inventory and CME margin, outside the onchain attack surface.",
+  "apache2CommercialGrant": true,
+  "rulesAccepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
