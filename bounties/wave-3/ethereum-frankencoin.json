@@ -1,0 +1,293 @@
+{
+  "wave": 3,
+  "chain": "ethereum",
+  "chain_id": 1,
+  "protocol_name": "Frankencoin",
+  "slug": "frankencoin",
+  "pacta_slug": "frankencoin",
+  "contract_address": "0xB58E61C3098d85632Df34EecfB899A1Ed80921cB",
+  "tvl_usd": 52943555,
+  "tvl_source_url": "https://defillama.com/protocol/frankencoin",
+  "dossier_window": "2023-2026",
+  "trajectory_mode": "immutable_verified",
+  "historical_transitions": [
+    {
+      "block_number": 18451518,
+      "block_date": "2023-10-28",
+      "tx_hash": "0xdc09f425cfb64bbb93a07bf22ea7e7922e24874971b6d17ce1f91750ad92ef62",
+      "event_kind": "deployment_baseline",
+      "rpc_or_cast_proof": "cast code 0xB58E61C3098d85632Df34EecfB899A1Ed80921cB --block 18451600 --rpc-url https://eth.drpc.org",
+      "summary": "Frankencoin (ZCHF) v1 deployed as a non-proxy contract (no EIP-1967 implementation slot, 15,254-char runtime bytecode). Constructor fixes MIN_APPLICATION_PERIOD = 1,209,600 s (14 days) as an immutable; MIN_FEE = 1,000 ZCHF is a constant; reserve() = FPS Equity 0x1bA26788dfDe592fec8bcB0Eaff472a42BE341B2 whose QUORUM constant is 200 bps (2%). Runtime bytecode returned at blocks 18,451,600, 22,000,000 and latest is byte-identical."
+    },
+    {
+      "block_number": 18451537,
+      "block_date": "2023-10-28",
+      "tx_hash": "0xa5c6d1e24bda7cf402d525d2124d65b3c8531210c6d7ad7354235ae5fa6f9c06",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast receipt 0xa5c6d1e24bda7cf402d525d2124d65b3c8531210c6d7ad7354235ae5fa6f9c06 --rpc-url https://eth.drpc.org",
+      "summary": "Bootstrap minter grant via initialize() while totalSupply was 0: MinterApplied for Minting Hub 0x7546762fDB1a6d9146b33960545C3f6394265219 with applicationPeriod 0 and fee 0 (followed 35 blocks later by the XCHF Bridge in tx 0x611da737). This zero-delay path is self-disabling once supply exists; every later application paid the 14-day / 1,000 ZCHF minimum."
+    },
+    {
+      "block_number": 19070295,
+      "block_date": "2024-01-23",
+      "tx_hash": "0x7d853baf2a82d674c1a254aa329dec582c28f85163893f80f143c7ab6308ebfa",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast receipt 0x7d853baf2a82d674c1a254aa329dec582c28f85163893f80f143c7ab6308ebfa --rpc-url https://eth.drpc.org",
+      "summary": "MinterDenied('nice try') for 'XCHF Manager' 0xAD309aecF82FbBe26Eb126c0389f744243092677, applied at block 19,069,309 (tx 0xa3dc917b) with a 14-day period; vetoed 986 blocks (~3.3 h) later by a qualified FPS holder. minters(0xAD30...) is 0 today, confirming the veto path of the immutable governance worked."
+    },
+    {
+      "block_number": 21281110,
+      "block_date": "2024-11-27",
+      "tx_hash": "0x1903230e1983883ea422619e929dbe51b42eb7db0ac56b508945bbce48251139",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast receipt 0x1903230e1983883ea422619e929dbe51b42eb7db0ac56b508945bbce48251139 --rpc-url https://eth.drpc.org",
+      "summary": "Protocol v2 rollout without any proxy upgrade: Savings (0x3BF301B0e2003E75A3e86AB82bD1EFF6A9dFB2aE, block 21,281,096), Roller (0xAD0107D3Da540Fd54b1931735b65110C909ea6B6, block 21,281,102) and Minting Hub V2 (0xDe12B620A8a714476A97EfD14E6F7180Ca653557, this tx) were each added as new minter modules with 14-day application periods and 1,000 ZCHF fees, leaving the v1 ZCHF bytecode untouched."
+    },
+    {
+      "block_number": 25199310,
+      "block_date": "2026-05-29",
+      "tx_hash": "0xf64bc6b2c5032d3fff8caf8c57f1c5afdafd24cfdf6b79706be1ff03dee7f750",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast receipt 0xf64bc6b2c5032d3fff8caf8c57f1c5afdafd24cfdf6b79706be1ff03dee7f750 --rpc-url https://eth.drpc.org",
+      "summary": "Lookalike minter application vetoed: 0x3e44A18499a298877F989117403c16084E4ff6c1 (an EIP-7702-delegated EOA, code 0xef0100e5f1...) called suggestMinter on itself at block 25,199,256 (tx 0xde1c764b) with the message 'AllUnity CHFAU Stablecoin Bridge*', mimicking the legitimate StablecoinBridge 0x3e445fF4dDDF0Ff8AE7458C9746ED80bD664F6c1 applied on 2026-04-30 (prefix 0x3e44, suffix f6c1). Denied 54 blocks (~11 min) later; minters() for the lookalike is 0, while the genuine bridge has been active since 2026-05-14."
+    },
+    {
+      "block_number": 25796002,
+      "block_date": "2026-08-20",
+      "tx_hash": "0x107c97db8ce584b28208f3a97458c4e5462669eaa0f2bbd8bd30ac99688cd91c",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast call 0xB58E61C3098d85632Df34EecfB899A1Ed80921cB minters(address)(uint256) 0xa1304E5aaF83Cdb7c2B367f50b99bB0647eD8c58 --block 26452000 --rpc-url https://eth.drpc.org",
+      "summary": "UniswapAmplifier 0xa1304E5aaF83Cdb7c2B367f50b99bB0647eD8c58 ('Uniswap Amplifier 2027-04-01 2.5M') applied with a 14-day period; minters() returns validity start 1788434555 (2026-09-03 11:22 UTC) = application + exactly 14 days, matching the immutable MIN_APPLICATION_PERIOD. Amplifier source was public in Frankencoin-ZCHF/Frankencoin from 2026-06-23 (commit b75b127eb2819637b2101c0b8e0f2f3c16a4f6db), before the on-chain application."
+    },
+    {
+      "block_number": 25852506,
+      "block_date": "2026-08-28",
+      "tx_hash": "0x5b7df19db201535b1a10f3e30a9d343cf2f78fcc645d059b6f5f3b84aeee70ec",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast receipt 0x5b7df19db201535b1a10f3e30a9d343cf2f78fcc645d059b6f5f3b84aeee70ec --rpc-url https://eth.drpc.org",
+      "summary": "Governance-layer migration: Frankencoin Shares (FCS) wrapper 0xDb861830D9Ae2d1fCF99fA0cfd3973de382B0B5b deployed (non-proxy). FCS wraps legacy FPS and exercises the underlying FPS1 votes through governance modules (MinterGovernance etc.) that use Governance.sol QUORUM = 100 bps; the legacy FPS1 Equity contract and its 200 bps quorum remain unchanged and still gate direct ZCHF.denyMinter calls."
+    },
+    {
+      "block_number": 26315046,
+      "block_date": "2026-10-31",
+      "tx_hash": "0xafeb41ecca8206449819567503fa5d63f57353102239c4fccd4d30002a97c802",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast receipt 0xafeb41ecca8206449819567503fa5d63f57353102239c4fccd4d30002a97c802 --rpc-url https://eth.drpc.org",
+      "summary": "First observed use of the FCS enforcement path: plain EOA 0x52Ab424b99FfeB870a9CA3BEe1bde9Ad64b5c83E applied itself as a minter ('liquidity provision', block 26,311,571, tx 0x1c96e4d9) directly on ZCHF, bypassing the MinterGovernance announcement. MinterGovernance 0x4655529A4bf8c26a97C2B7F6C044B69a2f98E73c.denyUnannouncedMinter() vetoed it 3,475 blocks (~11.6 h) later with message 'FCS'; minters() for the EOA is 0."
+    }
+  ],
+  "docs_and_governance_forensics": {
+    "mttr_status": "unrepaired_open",
+    "mttr_days": null,
+    "unrepaired_open_days": 52,
+    "evidence_sources": [
+      {
+        "kind": "github_docs_commit",
+        "date": "2024-04-06",
+        "url": "https://github.com/Frankencoin-ZCHF/gitbook/blob/3f65518328393006e94f7d0b4f7ab1b92bf9cac9/governance.md",
+        "claim_summary": "2024 docs: new minting modules stay open at least 14 days, fee at least 1,000 ZCHF, veto needs more than 2% of votes. This matched MIN_APPLICATION_PERIOD = 1,209,600 s, MIN_FEE and FPS1 QUORUM = 200 on-chain (verified_aligned)."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2026-09-28",
+        "url": "https://github.com/Frankencoin-ZCHF/gitbook/commit/a1322816a282debedd8ab3dfae89a7f1364f4590",
+        "claim_summary": "Rewrote governance.md and fps-reference.md: legacy FPS quorum 'is no longer 2%' and direct FPS holders use the shared 1% (100 bps) quorum. The deployed FPS1 Equity (ZCHF.reserve()) is immutable with QUORUM = 200 bps."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2026-09-07",
+        "url": "https://github.com/Frankencoin-ZCHF/Frankencoin/blob/8b4c4ab67bb361b91d58c474b87f4608fc4c0566/contracts/equity/Governance.sol",
+        "claim_summary": "Governance.sol QUORUM = 100 (strict >) applies to the new Equity/FCS code path only. The 2023 FPS1 Equity source verified on Blockscout for 0x1bA26788dfDe592fec8bcB0Eaff472a42BE341B2 still has QUORUM = 200 (inclusive)."
+      },
+      {
+        "kind": "official_docs",
+        "date": "2026-11-19",
+        "url": "https://docs.frankencoin.com/governance",
+        "claim_summary": "The live docs still say both FCS-based and direct legacy FPS actions use the same shared 1% quorum, so the gap is unrepaired as of this dossier."
+      }
+    ],
+    "gap_windows": [
+      {
+        "opened_block": 18451518,
+        "opened_date": "2023-10-28",
+        "closed_block": 26075784,
+        "closed_date": "2026-09-28",
+        "duration_days": 1066,
+        "status": "verified_aligned",
+        "summary": "From launch until the 2026-09-28 rewrite, docs (14-day minimum for minting modules, 1,000 ZCHF fee, 2% veto quorum) matched the immutable on-chain constants and every observed application/veto."
+      },
+      {
+        "opened_block": 26075784,
+        "opened_date": "2026-09-28",
+        "closed_block": null,
+        "closed_date": null,
+        "duration_days": 52,
+        "status": "unrepaired_open",
+        "summary": "Docs state the legacy FPS quorum is a shared 1% while the immutable FPS1 Equity behind ZCHF.reserve() enforces 2%. A holder with 1-2% who calls ZCHF.denyMinter directly reverts with NotQualified. Still open at block 26,452,000."
+      }
+    ]
+  },
+  "repo_audit": {
+    "github_org_repo": "Frankencoin-ZCHF/Frankencoin",
+    "commits_12m_contracts": 91,
+    "commits_12m_frontend_or_other": 61,
+    "human_contributors_12m": 4,
+    "bus_factor": 1,
+    "code_before_upgrade_verified": true
+  },
+  "executive_risk_memo": "Frankencoin's canonical mainnet ZCHF (0xB58E61C3098d85632Df34EecfB899A1Ed80921cB) has carried byte-identical non-proxy runtime code from deployment at block 18,451,518 (2023-10-28) to block 26,452,000, so the 2023-2026 control-plane trajectory is not a story of implementation upgrades but of minter admission. Across 17 MinterApplied events, the two bootstrap minters used the zero-delay initialize() path while supply was zero; every one of the following 15 applications paid the immutable 14-day / 1,000 ZCHF minimum, and five were vetoed: a 2023 test, 'XCHF Manager' (~3.3 h), 'Vault' (~6 min), a lookalike EIP-7702 address impersonating the AllUnity CHFAU bridge (~11 min), and an EOA vetoed through the new FCS MinterGovernance.denyUnannouncedMinter path (~11.6 h). The veto layer has therefore been demonstrably live and fast, but it is the only protection: an unvetoed application becomes an unrestricted minter after 14 days, so safety depends on continuous monitoring by at least one holder above quorum. The open documentation gap concerns exactly that quorum. Since commit a1322816 (2026-09-28) the GitBook states that legacy FPS 'is no longer 2%' and that direct FPS actions use the shared 1% Governance.sol quorum. That is true of the FCS modules and of the v2 source tree, but the immutable FPS1 Equity contract wired as ZCHF.reserve() (0x1bA26788dfDe592fec8bcB0Eaff472a42BE341B2) still enforces QUORUM = 200 bps with an inclusive comparison, so a holder with between 1% and 2% who follows the docs and calls ZCHF.denyMinter directly will revert; such holders must route through FCS. The gap has been open for 52 days with no correction (unrepaired_open). Engineering bench: over the trailing 12 months the main repository shows 152 commits on main, 91 touching contracts/, from four human authors, with roughly three quarters of contract commits by a single maintainer (bus factor 1). New modules such as the UniswapAmplifier were public in the repository weeks before their on-chain applications. Overall risk: low upgrade risk (no admin, no proxy), medium governance-liveness risk, and a documentation inaccuracy that could cost a would-be vetoer time during a 14-day window.",
+  "contributor_github": "koduck17",
+  "agent_assist_framework": "claude-code",
+  "base_payout_address": "0xA9E7CF1e569d096f22601780aC45C264a40377B9",
+  "mcp_tool_receipt": {
+    "tool": "pacta_lookup_protocol",
+    "arguments": {
+      "query": "frankencoin"
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\n  \"schema\": \"pacta.protocol_lookup.v1\",\n  \"query\": \"frankencoin\",\n  \"filters\": {\n    \"chain\": null,\n    \"kind\": \"all\",\n    \"limit\": 10\n  },\n  \"totalCatalog\": {\n    \"protocols\": 312,\n    \"briefs\": 17,\n    \"easAttestedProtocols\": 142,\n    \"rpcObservedProtocols\": 170\n  },\n  \"totalMatches\": 1,\n  \"count\": 1,\n  \"results\": [\n    {\n      \"baseEasUids\": [],\n      \"category\": \"Oracle-Free Swiss Franc Stablecoin CDP (Ethereum)\",\n      \"chain\": \"ethereum\",\n      \"chainId\": 1,\n      \"classification\": \"rpc_observed\",\n      \"controllerAddress\": null,\n      \"controllerKind\": null,\n      \"documentationComparison\": \"not_assessed\",\n      \"documentedDelaySeconds\": null,\n      \"easAttested\": false,\n      \"evidenceBasis\": \"rpc_observed\",\n      \"kind\": \"protocol\",\n      \"name\": \"Frankencoin\",\n      \"observedDelaySeconds\": null,\n      \"pinnedBlock\": 26450616,\n      \"preflightArgs\": {\n        \"address\": \"0xDb861830D9Ae2d1fCF99fA0cfd3973de382B0B5b\",\n        \"chain\": \"ethereum\"\n      },\n      \"primaryContract\": \"0xDb861830D9Ae2d1fCF99fA0cfd3973de382B0B5b\",\n      \"relatedContracts\": [],\n      \"slug\": \"frankencoin\",\n      \"surfaces\": [\n        {\n          \"blockNumber\": 26450616,\n          \"classification\": \"rpc_observed\",\n          \"id\": \"frankencoin-control-plane\",\n          \"surface\": \"Frankencoin Shares (FCS) · Non-Proxy Bytecode & Controller\",\n          \"targetContract\": \"0xDb861830D9Ae2d1fCF99fA0cfd3973de382B0B5b\",\n          \"targetLabel\": \"Frankencoin Shares (FCS)\"\n        }\n      ],\n      \"targetLabel\": \"Frankencoin Shares (FCS)\",\n      \"tokens\": [\n        \"FCS\"\n      ],\n      \"url\": \"https://pacta.wtf/protocols/frankencoin/\",\n      \"whatDiffers\": null,\n      \"match\": \"exact\",\n      \"citationFooter\": \"Citation: https://pacta.wtf/protocols/frankencoin/ (RPC-observed baseline; Base Mainnet EAS: not_attested)\\nIssuer paths (payment never alters a classification; it strictly follows verified on-chain and documentation evidence): $0 maintainer doc-update queue https://pacta.wtf/request/ · $500 USDC Rapid Single-Gap Re-Verification (24h SLA) https://pacta.wtf/request/?tier=rapid-500&protocol=frankencoin · $2,500–$5,000 USDC Full Protocol Control-Plane Dossier (24h SLA) https://pacta.wtf/for-protocols/\"\n    }\n  ],\n  \"catalog\": \"https://pacta.wtf/api/v1/lookup.json\",\n  \"nextStep\": \"Pass a result's preflightArgs ({chain, address}) to pacta_check_preflight (or pacta_scan_control_plane) for a live check.\",\n  \"note\": \"easAttested protocols are Base-EAS-anchored records that compare on-chain state with the protocol's documentation. rpc_observed protocols pin the on-chain control plane over archive JSON-RPC and do not assess the documentation (documentationComparison: not_assessed). Briefs are block-pinned verification briefs. preflightArgs re-read the contract live.\",\n  \"citationFooter\": \"Citation: https://pacta.wtf/protocols/frankencoin/ (RPC-observed baseline; Base Mainnet EAS: not_attested)\\nIssuer paths (payment never alters a classification; it strictly follows verified on-chain and documentation evidence): $0 maintainer doc-update queue https://pacta.wtf/request/ · $500 USDC Rapid Single-Gap Re-Verification (24h SLA) https://pacta.wtf/request/?tier=rapid-500&protocol=frankencoin · $2,500–$5,000 USDC Full Protocol Control-Plane Dossier (24h SLA) https://pacta.wtf/for-protocols/\",\n  \"upgrade_x402\": {\n    \"note\": \"Free tier: 50 pre-flight calls per caller per UTC day (REST and MCP), then $0.01 per call over x402 (HTTP 402, never a dead-end 429). Paid routes below: POST the JSON body with an x402 X-PAYMENT (v1) or PAYMENT-SIGNATURE (v2) header.\",\n    \"asset\": \"0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913\",\n    \"network\": \"base (eip155:8453)\",\n    \"payTo\": \"0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14\",\n    \"discovery\": \"https://pacta.fractalneurons.com/.well-known/x402\",\n    \"overflow\": {\n      \"method\": \"GET or POST\",\n      \"url\": \"https://pacta.fractalneurons.com/v1/check/preflight\",\n      \"priceUsd\": \"0.01\",\n      \"amountAtomic\": \"10000\",\n      \"after\": \"50 free calls per UTC day\"\n    },\n    \"endpoints\": [\n      {\n        \"method\": \"POST\",\n        \"url\": \"https://pacta.fractalneurons.com/v1/x402/verdict\",\n        \"priceUsd\": \"0.02\",\n        \"amountAtomic\": \"20000\",\n        \"unlocks\": \"fast contract / token control-plane verdict: riskScore 0-100, grade A-F, upgrade / owner / pause / blacklist / mint flags and a shareable scan URL\",\n        \"example\": {\n          \"chain\": \"ethereum\",\n          \"address\": \"0xA35b1B31Ce002FBF2058D22F30f95D405200A15b\"\n        }\n      },\n      {\n        \"method\": \"POST\",\n        \"url\": \"https://pacta.fractalneurons.com/v1/x402/dossier\",\n        \"priceUsd\": \"0.05\",\n        \"amountAtomic\": \"50000\",\n        \"unlocks\": \"full control-plane dossier: every controller Safe's signers and threshold, signers shared with other indexed protocols, Base EAS proof\",\n        \"example\": {\n          \"slug\": \"stader-labs-ethx\"\n        }\n      },\n      {\n        \"method\": \"POST\",\n        \"url\": \"https://pacta.fractalneurons.com/v1/x402/calldata-sim\",\n        \"priceUsd\": \"0.25\",\n        \"amountAtomic\": \"250000\",\n        \"unlocks\": \"pre-signing calldata check: timelock / Safe / multicall calls decoded, each rated against live delays and the authority that governs it\",\n        \"example\": {\n          \"chain\": \"ethereum\",\n          \"target\": \"0x2225DAbFfC7F862c99477381E971E8B1FDaB467e\",\n          \"data\": \"0x64d623530000000000000000000000000000000000000000000000000000000000015180\"\n        }\n      },\n      {\n        \"method\": \"POST\",\n        \"url\": \"https://pacta.fractalneurons.com/v1/x402/deep-scan\",\n        \"priceUsd\": \"9.00\",\n        \"amountAtomic\": \"9000000\",\n        \"unlocks\": \"deep control-plane scan cross-checked on two independent RPC operators, auditor receipt and a queued Base EAS ticket\",\n        \"example\": {\n          \"chain\": \"base\",\n          \"address\": \"0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872\"\n        }\n      }\n    ]\n  }\n}"
+        },
+        {
+          "type": "text",
+          "text": "Citation: https://pacta.wtf/protocols/frankencoin/ (RPC-observed baseline; Base Mainnet EAS: not_attested)\nIssuer paths (payment never alters a classification; it strictly follows verified on-chain and documentation evidence): $0 maintainer doc-update queue https://pacta.wtf/request/ · $500 USDC Rapid Single-Gap Re-Verification (24h SLA) https://pacta.wtf/request/?tier=rapid-500&protocol=frankencoin · $2,500–$5,000 USDC Full Protocol Control-Plane Dossier (24h SLA) https://pacta.wtf/for-protocols/"
+        }
+      ],
+      "structuredContent": {
+        "schema": "pacta.protocol_lookup.v1",
+        "query": "frankencoin",
+        "filters": {
+          "chain": null,
+          "kind": "all",
+          "limit": 10
+        },
+        "totalCatalog": {
+          "protocols": 312,
+          "briefs": 17,
+          "easAttestedProtocols": 142,
+          "rpcObservedProtocols": 170
+        },
+        "totalMatches": 1,
+        "count": 1,
+        "results": [
+          {
+            "baseEasUids": [],
+            "category": "Oracle-Free Swiss Franc Stablecoin CDP (Ethereum)",
+            "chain": "ethereum",
+            "chainId": 1,
+            "classification": "rpc_observed",
+            "controllerAddress": null,
+            "controllerKind": null,
+            "documentationComparison": "not_assessed",
+            "documentedDelaySeconds": null,
+            "easAttested": false,
+            "evidenceBasis": "rpc_observed",
+            "kind": "protocol",
+            "name": "Frankencoin",
+            "observedDelaySeconds": null,
+            "pinnedBlock": 26450616,
+            "preflightArgs": {
+              "address": "0xDb861830D9Ae2d1fCF99fA0cfd3973de382B0B5b",
+              "chain": "ethereum"
+            },
+            "primaryContract": "0xDb861830D9Ae2d1fCF99fA0cfd3973de382B0B5b",
+            "relatedContracts": [],
+            "slug": "frankencoin",
+            "surfaces": [
+              {
+                "blockNumber": 26450616,
+                "classification": "rpc_observed",
+                "id": "frankencoin-control-plane",
+                "surface": "Frankencoin Shares (FCS) · Non-Proxy Bytecode & Controller",
+                "targetContract": "0xDb861830D9Ae2d1fCF99fA0cfd3973de382B0B5b",
+                "targetLabel": "Frankencoin Shares (FCS)"
+              }
+            ],
+            "targetLabel": "Frankencoin Shares (FCS)",
+            "tokens": [
+              "FCS"
+            ],
+            "url": "https://pacta.wtf/protocols/frankencoin/",
+            "whatDiffers": null,
+            "match": "exact",
+            "citationFooter": "Citation: https://pacta.wtf/protocols/frankencoin/ (RPC-observed baseline; Base Mainnet EAS: not_attested)\nIssuer paths (payment never alters a classification; it strictly follows verified on-chain and documentation evidence): $0 maintainer doc-update queue https://pacta.wtf/request/ · $500 USDC Rapid Single-Gap Re-Verification (24h SLA) https://pacta.wtf/request/?tier=rapid-500&protocol=frankencoin · $2,500–$5,000 USDC Full Protocol Control-Plane Dossier (24h SLA) https://pacta.wtf/for-protocols/"
+          }
+        ],
+        "catalog": "https://pacta.wtf/api/v1/lookup.json",
+        "nextStep": "Pass a result's preflightArgs ({chain, address}) to pacta_check_preflight (or pacta_scan_control_plane) for a live check.",
+        "note": "easAttested protocols are Base-EAS-anchored records that compare on-chain state with the protocol's documentation. rpc_observed protocols pin the on-chain control plane over archive JSON-RPC and do not assess the documentation (documentationComparison: not_assessed). Briefs are block-pinned verification briefs. preflightArgs re-read the contract live.",
+        "citationFooter": "Citation: https://pacta.wtf/protocols/frankencoin/ (RPC-observed baseline; Base Mainnet EAS: not_attested)\nIssuer paths (payment never alters a classification; it strictly follows verified on-chain and documentation evidence): $0 maintainer doc-update queue https://pacta.wtf/request/ · $500 USDC Rapid Single-Gap Re-Verification (24h SLA) https://pacta.wtf/request/?tier=rapid-500&protocol=frankencoin · $2,500–$5,000 USDC Full Protocol Control-Plane Dossier (24h SLA) https://pacta.wtf/for-protocols/",
+        "upgrade_x402": {
+          "note": "Free tier: 50 pre-flight calls per caller per UTC day (REST and MCP), then $0.01 per call over x402 (HTTP 402, never a dead-end 429). Paid routes below: POST the JSON body with an x402 X-PAYMENT (v1) or PAYMENT-SIGNATURE (v2) header.",
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "network": "base (eip155:8453)",
+          "payTo": "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14",
+          "discovery": "https://pacta.fractalneurons.com/.well-known/x402",
+          "overflow": {
+            "method": "GET or POST",
+            "url": "https://pacta.fractalneurons.com/v1/check/preflight",
+            "priceUsd": "0.01",
+            "amountAtomic": "10000",
+            "after": "50 free calls per UTC day"
+          },
+          "endpoints": [
+            {
+              "method": "POST",
+              "url": "https://pacta.fractalneurons.com/v1/x402/verdict",
+              "priceUsd": "0.02",
+              "amountAtomic": "20000",
+              "unlocks": "fast contract / token control-plane verdict: riskScore 0-100, grade A-F, upgrade / owner / pause / blacklist / mint flags and a shareable scan URL",
+              "example": {
+                "chain": "ethereum",
+                "address": "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b"
+              }
+            },
+            {
+              "method": "POST",
+              "url": "https://pacta.fractalneurons.com/v1/x402/dossier",
+              "priceUsd": "0.05",
+              "amountAtomic": "50000",
+              "unlocks": "full control-plane dossier: every controller Safe's signers and threshold, signers shared with other indexed protocols, Base EAS proof",
+              "example": {
+                "slug": "stader-labs-ethx"
+              }
+            },
+            {
+              "method": "POST",
+              "url": "https://pacta.fractalneurons.com/v1/x402/calldata-sim",
+              "priceUsd": "0.25",
+              "amountAtomic": "250000",
+              "unlocks": "pre-signing calldata check: timelock / Safe / multicall calls decoded, each rated against live delays and the authority that governs it",
+              "example": {
+                "chain": "ethereum",
+                "target": "0x2225DAbFfC7F862c99477381E971E8B1FDaB467e",
+                "data": "0x64d623530000000000000000000000000000000000000000000000000000000000015180"
+              }
+            },
+            {
+              "method": "POST",
+              "url": "https://pacta.fractalneurons.com/v1/x402/deep-scan",
+              "priceUsd": "9.00",
+              "amountAtomic": "9000000",
+              "unlocks": "deep control-plane scan cross-checked on two independent RPC operators, auditor receipt and a queued Base EAS ticket",
+              "example": {
+                "chain": "base",
+                "address": "0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872"
+              }
+            }
+          ]
+        }
+      },
+      "isError": false
+    }
+  },
+  "apache2_commercial_grant": true,
+  "rules_accepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
