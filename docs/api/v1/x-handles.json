@@ -2580,6 +2580,16 @@
       }
     },
     {
+      "slug": "circle-gateway",
+      "protocolName": "Circle Gateway",
+      "xHandle": null,
+      "xUrl": null,
+      "verificationSource": null,
+      "sources": [],
+      "reason": "no relevant first-party handle",
+      "candidates": {}
+    },
+    {
       "slug": "circle-usdc",
       "protocolName": "Circle USDC",
       "xHandle": "@circle",

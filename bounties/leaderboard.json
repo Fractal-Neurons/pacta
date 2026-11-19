@@ -69,6 +69,18 @@
       "payoutTxHash": "0xa60d8c704ac1fe6a7cdb6e89fc701f1e4e61dbe38b9a7639788231fad4f5cb71"
     },
     {
+      "fixture": "ethereum-cap-timelock-op-0x740e-post-pin.json",
+      "payoutTxHash": "0xc7325e3630009d3174b51e0ddf49711a8d88593d8682f104c35949dfa0d528f4"
+    },
+    {
+      "fixture": "ethereum-chainlink-ccip-timelock-op-0x67cd-post-pin.json",
+      "payoutTxHash": "0x8017c84b7ca3f537f5566e46788b3d6de65a58830c4fba5fcb59d73a3daf580e"
+    },
+    {
+      "fixture": "ethereum-circle-gateway.json",
+      "payoutTxHash": "0xf2f74288f4a1912b8ad0a72eaee8821a5a7c06caa2c034b9eb94e1b847f3969a"
+    },
+    {
       "fixture": "ethereum-defi-saver.json",
       "payoutTxHash": "0xb605a9b7273cb52a1ad6886ca5bfb59cd4bba56cf07723bc2509b7c31b68432d"
     },
@@ -91,6 +103,10 @@
     {
       "fixture": "ethereum-kelp-lrtconfig-operator-post-pin.json",
       "payoutTxHash": "0xd4e268e1e9a40e218daa49878b2db1e343752358831c6bbd0c1e1738e95b3b28"
+    },
+    {
+      "fixture": "ethereum-kelp-rseth-oft-adapter-owner-change.json",
+      "payoutTxHash": "0x5ed68ef32129aeebecaf128720ba5f30fb61702c83be2304edfbd2a8abbbb5d6"
     },
     {
       "fixture": "ethereum-lagoon.json",
@@ -137,6 +153,10 @@
       "payoutTxHash": "0x319280f3a01c109dbf2223e1d6750aa3f3ebd46382da6fdf68fb5628a43cbb2d"
     },
     {
+      "fixture": "ethereum-tori-finance-timelock-admin-post-pin.json",
+      "payoutTxHash": "0xe7e54537e1fff7584d7432a1019b0054a1c0eca54ce2d93c236736029a8a9d0c"
+    },
+    {
       "fixture": "ethereum-upshift-axis-origin.json",
       "payoutTxHash": "0x266442cf672bad417cf7303ac5db63fe2250d45ed6537b22f0a3d1e9b0e16d0b"
     },
@@ -158,16 +178,17 @@
     }
   ],
   "easAttestations": {
-    "VB-Blue": 7,
+    "VB-Blue": 8,
     "dankezo": 1,
     "farmmer938-lgtm": 1,
     "givemehat": 1,
     "kinshu7777": 2,
+    "oppo2357": 1,
     "physho158-cell": 2,
-    "random-solver": 3,
+    "random-solver": 5,
     "scavenger-osan": 1,
     "startupcompliancekit": 3,
-    "veriton-dev": 2
+    "veriton-dev": 3
   },
   "wave2Credits": [
     {
@@ -283,6 +304,36 @@
       "pr": 104,
       "pactaSlug": "polygon-bridge",
       "record": "polygon-bridge-rootchainmanager-zero-delay-upgrade-s30"
+    },
+    {
+      "fixture": "ethereum-tori-finance-timelock-admin-post-pin.json",
+      "pr": 106,
+      "pactaSlug": "tori-finance",
+      "record": "tori-trusd-timelock-admin-undocumented-timelock-s32"
+    },
+    {
+      "fixture": "ethereum-circle-gateway.json",
+      "pr": 107,
+      "pactaSlug": "circle-gateway",
+      "record": "circle-gateway-wallet-eoa-owner-and-pauser-s32"
+    },
+    {
+      "fixture": "ethereum-cap-timelock-op-0x740e-post-pin.json",
+      "pr": 110,
+      "pactaSlug": "cap",
+      "record": "cap-timelock-op-0x740e-executed-s32"
+    },
+    {
+      "fixture": "ethereum-chainlink-ccip-timelock-op-0x67cd-post-pin.json",
+      "pr": 111,
+      "pactaSlug": "chainlink-ccip",
+      "record": "chainlink-ccip-rbactimelock-op-0x67cd-executed-s32"
+    },
+    {
+      "fixture": "ethereum-kelp-rseth-oft-adapter-owner-change.json",
+      "pr": 113,
+      "pactaSlug": "kelp-dao-rseth",
+      "record": "kelp-rseth-oft-adapter-owner-safe-s32"
     }
   ]
 }

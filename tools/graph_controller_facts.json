@@ -2114,6 +2114,12 @@
       "code_keccak_hex": "6931bbbe572ba5a2fe8ca97e7cc4020518527448500851367954a0b4fab9a545",
       "pin": "ethereum@sprint-20"
     },
+    "ethereum:77777777dcc4d5a8b6e418fd04d8997ef11000ee": {
+      "code_bytes": 163,
+      "code_keccak_hex": "874a21508289bf01ee9802032607ae53ba0a4f47f28143a8493921b8db102187",
+      "pin": "ethereum@sprint-32",
+      "owner_hex": "2a6a86466f181721ec8ff946967b56f1aa4758c5"
+    },
     "ethereum:77777feddddffc19ff86db637967013e6c6a116c": {
       "code_bytes": 8839,
       "code_keccak_hex": "7bb3883a4af95ea24983177dbcb682a021f389b77835ed266bfa30bda271c77b",
@@ -2308,6 +2314,12 @@
       "code_keccak_hex": "c3da5c69ac710b0d019eb4eda3b4dd9d469dbe163db20b916f855a6110e9d307",
       "pin": "ethereum@sprint-28",
       "owner_hex": "4e4c314e2391a58775be6a15d7a05419ba7d2b6e"
+    },
+    "ethereum:85d456b2dff1fd8245387c0bfb64dfb700e98ef3": {
+      "code_bytes": 10771,
+      "code_keccak_hex": "a4a6dc0aa67976058127e28deba1db78a8a3d48680503afaf21dda623024c567",
+      "pin": "ethereum@sprint-32",
+      "owner_hex": "b3696a817d01c8623e66d156b6798291fa10a46d"
     },
     "ethereum:866a2bf4e572cbcf37d5071a7a58503bfb36be1b": {
       "code_bytes": 15459,
@@ -4286,6 +4298,15 @@
       ],
       "timestamp": 1795109196
     },
+    "base@sprint-32": {
+      "block_hash_hex": "984d5efdee77a9e8ab0d5b8eb5bba2a230cdcadc268f35f6c77f4a629b13a305",
+      "block_number": 59653624,
+      "rpcs": [
+        "https://base-rpc.publicnode.com",
+        "https://mainnet.base.org"
+      ],
+      "timestamp": 1795121100
+    },
     "ethereum": {
       "block_hash_hex": "556fd9a91814fe9924c866574d1490144e844861cf18c59b5031aa443cef25d5",
       "block_number": 26422627,
@@ -4402,6 +4423,15 @@
         "https://rpc.mevblocker.io"
       ],
       "timestamp": 1795109207
+    },
+    "ethereum@sprint-32": {
+      "block_hash_hex": "0266af5bcad519d93b3be78e41b76a62985e22fbe4feef043ac3225f6f217a17",
+      "block_number": 26451608,
+      "rpcs": [
+        "https://ethereum-rpc.publicnode.com",
+        "https://rpc.mevblocker.io"
+      ],
+      "timestamp": 1795121111
     }
   },
   "schema": "pacta.graph_controller_facts.v1"

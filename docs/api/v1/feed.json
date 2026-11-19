@@ -13,220 +13,227 @@
  "language": "en",
  "items": [
   {
+   "id": "https://pacta.wtf/#sprint-32",
+   "title": "Sprint 32 Base EAS attestation: 16 records, 16 protocols",
+   "url": "https://base.easscan.org/attestation/view/0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
+   "date_published": "2026-11-19T20:45:11Z",
+   "content_text": "BendDAO APE Staking, Bio Protocol, Cap, Chainlink CCIP, Circle Gateway, Ekubo, Hashport, InceptionLRT (Isolated Restaking), Kelp DAO (rsETH), Lista Lending, Metric V1, MorpheusAI, Pickle, Superform Core v2 (Base), Tori Finance, dYdX V3. 11 aligned, 0 protective delta, 5 parameter delta. Summary: https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-32/block-26451608-summary.md"
+  },
+  {
    "id": "https://pacta.wtf/#sprint-31",
    "title": "Sprint 31 Base EAS attestation: 10 records, 10 protocols",
    "url": "https://base.easscan.org/attestation/view/0x63d29eafa88f7e52cc6a596668ae3f03c8132704108794092dc25710fa8bde77",
-   "date_published": "2026-11-19T17:26:47Z",
+   "date_published": "2026-11-19T20:45:11Z",
    "content_text": "Alchemix V3, Bancor V3, CIAN Yield Layer, Decentralized Euro, Dolomite, Idle, Noon, Origin Protocol (SuperOETHb Base), Sonic Gateway, Trueo. 8 aligned, 0 protective delta, 2 parameter delta. Summary: https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-31/block-26450616-summary.md"
   },
   {
    "id": "https://pacta.wtf/#sprint-30",
    "title": "Sprint 30 Base EAS attestation: 23 records, 22 protocols",
    "url": "https://base.easscan.org/attestation/view/0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
-   "date_published": "2026-11-19T17:26:47Z",
+   "date_published": "2026-11-19T20:45:11Z",
    "content_text": "Abracadabra Spell, Arrakis Modular, Bedrock (uniBTC), Exactly, Flying Tulip Lend, Goldfinch, Inverse Finance (FiRM), JPY DeFi, KPK, Kelp DAO (rsETH), Makina, Meta Pool ETH, NUVA, Panoptic V2, Polygon Bridge, Resolv (USR / RLP), Shift DeFi, Spectra MetaVaults, Threshold Network (tBTC), VETRO, iAero Protocol, infiniFi. 17 aligned, 0 protective delta, 6 parameter delta. Summary: https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-30/block-26449594-summary.md"
   },
   {
    "id": "https://pacta.wtf/#sprint-29",
    "title": "Sprint 29 Base EAS attestation: 7 records, 6 protocols",
    "url": "https://base.easscan.org/attestation/view/0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
-   "date_published": "2026-11-19T17:26:47Z",
+   "date_published": "2026-11-19T20:45:11Z",
    "content_text": "Base Bridge, Lagoon, Lido (stETH / Dual Governance), Renzo Protocol (ezETH), f(x) Protocol v2, flaunch. 3 aligned, 0 protective delta, 4 parameter delta. Summary: https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-29/block-26448221-summary.md"
   },
   {
    "id": "https://pacta.wtf/#sprint-28",
    "title": "Sprint 28 Base EAS attestation: 17 records, 16 protocols",
    "url": "https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
-   "date_published": "2026-11-19T17:26:47Z",
+   "date_published": "2026-11-19T20:45:11Z",
    "content_text": "40 Acres (Base), APY Finance, Asymmetry Finance, DIEM Relay, DeFi Saver, Inverse Finance (FiRM), KyberSwap Classic, MCDEX, Steakhouse Prime USDC (Base), Strata Markets, Upshift, Vesper V1, Whales Market, Wintermute Confidential WBTC (Ethereum), Yearn V3, Zircuit Staking. 9 aligned, 1 protective delta, 7 parameter delta. Summary: https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-28/block-26441165-summary.md"
   },
   {
    "id": "https://pacta.wtf/#sprint-27",
    "title": "Sprint 27 Base EAS attestation: 9 records, 8 protocols",
    "url": "https://base.easscan.org/attestation/view/0x5c12867816bee7d00c13412cf7ec67c00b7d42f3020643ab2a2ca577a28de424",
-   "date_published": "2026-11-19T17:26:47Z",
+   "date_published": "2026-11-19T20:45:11Z",
    "content_text": "ETH Strategy, Eclipse Bridge, Equilibria, Gravity by Galxe Bridge, KUMA Protocol, Privacy Pools V1, Treehouse (TREE / tETH), Umia. 8 aligned, 0 protective delta, 1 parameter delta. Summary: https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-27/block-26440048-summary.md"
   },
   {
    "id": "https://pacta.wtf/#sprint-26",
    "title": "Sprint 26 Base EAS attestation: 9 records, 8 protocols",
    "url": "https://base.easscan.org/attestation/view/0x6692c36731ecd514fb7a92fe3de0a6770b67f68f55eece26faa669c2c84b3a08",
-   "date_published": "2026-11-19T17:26:47Z",
+   "date_published": "2026-11-19T20:45:11Z",
    "content_text": "3Jane Lending, Beefy Finance (Base), Cooler Loans, Curve DEX (Ethereum), IPOR Fusion, Polygon Bridge, StakeWise V3 (osETH), YieldNest. 8 aligned, 0 protective delta, 1 parameter delta. Summary: https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-26/block-26438867-summary.md"
   },
   {
    "id": "https://pacta.wtf/#sprint-25",
    "title": "Sprint 25 Base EAS attestation: 24 records, 6 protocols",
    "url": "https://base.easscan.org/attestation/view/0x1c379ef9f845a2affa9c42715ba2b1b4b2f750b71b4edf9c50d0e1ae739e11ff",
-   "date_published": "2026-11-19T17:26:47Z",
+   "date_published": "2026-11-19T20:45:11Z",
    "content_text": "Axelar Network, Bedrock (uniETH), LayerZero V2, RAILGUN, Safe Smart Account (v1.4.1 Singleton), Wormhole Core (NTT). 22 aligned, 0 protective delta, 2 parameter delta. Summary: https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-25/block-26434786-summary.md"
   },
   {
    "id": "https://pacta.wtf/#sprint-24",
    "title": "Sprint 24 Base EAS attestation: 23 records, 6 protocols",
    "url": "https://base.easscan.org/attestation/view/0x61c2970c176b85ab604e6b565c5f050a7176b62e725d449e8d27d700365283d6",
-   "date_published": "2026-11-19T17:26:47Z",
+   "date_published": "2026-11-19T20:45:11Z",
    "content_text": "Centrifuge V3 Root (Base), Chainlink CCIP, Obol Network, Steakhouse Financial (Ethereum), Synthetix V3 Core, Uniswap V4. 21 aligned, 0 protective delta, 2 parameter delta. Summary: https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-24/block-26433001-summary.md"
   },
   {
    "id": "https://pacta.wtf/#sprint-23",
    "title": "Sprint 23 Base EAS attestation: 19 records, 6 protocols",
    "url": "https://base.easscan.org/attestation/view/0x435a5212e2490cd6024859f474dbbd897752b24985480413301d7573cb195801",
-   "date_published": "2026-11-19T17:26:47Z",
+   "date_published": "2026-11-19T20:45:11Z",
    "content_text": "Circle USDC, Frax USD (frxUSD), PayPal USD (PYUSD), Reserve Protocol (eUSD RToken), Tether USDT, Uniswap V3 & Governance Timelock. 18 aligned, 0 protective delta, 1 parameter delta. Summary: https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-23/block-26431152-summary.md"
   },
   {
    "id": "https://pacta.wtf/#sprint-22",
    "title": "Sprint 22 Base EAS attestation: 19 records, 6 protocols",
    "url": "https://base.easscan.org/attestation/view/0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5",
-   "date_published": "2026-11-19T17:26:47Z",
+   "date_published": "2026-11-19T20:45:11Z",
    "content_text": "Across Protocol (HubPool), Beefy Finance (Base), Liquity V1 (LUSD), Resupply, Stake DAO, YO Protocol. 13 aligned, 1 protective delta, 5 parameter delta. Summary: https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-22/block-26429396-summary.md"
   },
   {
    "id": "https://pacta.wtf/#sprint-21",
    "title": "Sprint 21 Base EAS attestation: 14 records, 6 protocols",
    "url": "https://base.easscan.org/attestation/view/0xaddd478e0a488405a28720e11fed8d1942853dbb36fc75bb5a0725b83a460ad6",
-   "date_published": "2026-11-19T17:26:47Z",
+   "date_published": "2026-11-19T20:45:11Z",
    "content_text": "Aerodrome Finance (Base), Balancer V2 Vault & TimelockAuthorizer, Coinbase Wrapped Staked ETH, Grove Finance, Re Protocol (reUSD / reUSDe), SSV Network. 12 aligned, 1 protective delta, 1 parameter delta. Summary: https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-21/block-26427612-summary.md"
   },
   {
    "id": "https://pacta.wtf/#sprint-20",
    "title": "Sprint 20 Base EAS attestation: 18 records, 6 protocols",
    "url": "https://base.easscan.org/attestation/view/0xe712dd31d79ab492e2e64eb5847396651dee81daa9f895ead45548e97f1a2eb7",
-   "date_published": "2026-11-19T17:26:47Z",
+   "date_published": "2026-11-19T20:45:11Z",
    "content_text": "Cap, Concrete, Frax Ether (frxETH / sfrxETH), Puffer Finance (pufETH), infiniFi, stake.link. 14 aligned, 1 protective delta, 3 parameter delta. Summary: https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-20/block-26425374-summary.md"
   },
   {
    "id": "https://pacta.wtf/#sprint-19",
    "title": "Sprint 19 Base EAS attestation: 13 records, 6 protocols",
    "url": "https://base.easscan.org/attestation/view/0xa04d9c98873fce6fffb60fe535510092f22284f3afeeb78e36e4a0c25d5ea928",
-   "date_published": "2026-11-19T17:26:47Z",
+   "date_published": "2026-11-19T20:45:11Z",
    "content_text": "Aave V3 (Base), Compound V3 (Base), Ethena USDtb, Liquid Collective (LsETH), Pendle Finance V2, Rocket Pool (rETH). 11 aligned, 1 protective delta, 1 parameter delta. Summary: https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-19/block-26422243-summary.md"
   },
   {
    "id": "https://pacta.wtf/#sprint-18",
    "title": "Sprint 18 Base EAS attestation: 7 records, 6 protocols",
    "url": "https://base.easscan.org/attestation/view/0x105ea2849a5cd9ef601ae565e6b0adf288884771c8ac82c1c3d0a87aa789eb4f",
-   "date_published": "2026-11-19T17:26:47Z",
+   "date_published": "2026-11-19T20:45:11Z",
    "content_text": "Aerodrome Slipstream (Base), Enzyme Finance, Euler V2 (EVK), Moonwell Lending (Base), Nexus Mutual, Stargate V2. 5 aligned, 1 protective delta, 1 parameter delta. Summary: https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-18/block-26421541-summary.md"
   },
   {
    "id": "https://pacta.wtf/#sprint-17",
    "title": "Sprint 17 Base EAS attestation: 6 records, 4 protocols",
    "url": "https://base.easscan.org/attestation/view/0xbeb412dfc350f879f816a5cb001b53257a3ee03c12cf1d8e2c15a070141ed8c7",
-   "date_published": "2026-11-19T17:26:47Z",
+   "date_published": "2026-11-19T20:45:11Z",
    "content_text": "Falcon Finance (USDf / sUSDf), M0 Protocol ($M), Solv Protocol (SolvBTC), Steakhouse USDC MetaMorpho (Base). 5 aligned, 1 protective delta, 0 parameter delta. Summary: https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-17/block-26418060-summary.md"
   },
   {
    "id": "https://pacta.wtf/#sprint-16",
    "title": "Sprint 16 Base EAS attestation: 2 records, 2 protocols",
    "url": "https://base.easscan.org/attestation/view/0x217d213de3cd9ef094670ff69d258af35adf132406caa547f729f487dc9d7e58",
-   "date_published": "2026-11-19T17:26:47Z",
+   "date_published": "2026-11-19T20:45:11Z",
    "content_text": "Lombard (LBTC), Treehouse (TREE / tETH). 2 aligned, 0 protective delta, 0 parameter delta. Summary: https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-16/block-26407707-summary.md"
   },
   {
    "id": "https://pacta.wtf/#sprint-15",
    "title": "Sprint 15 Base EAS attestation: 1 records, 1 protocols",
    "url": "https://base.easscan.org/attestation/view/0x967a4935786194575835d5a46e3e39b1d553225deb6a96c7ff4acf52a34dff22",
-   "date_published": "2026-11-19T17:26:47Z",
+   "date_published": "2026-11-19T20:45:11Z",
    "content_text": "Threshold Network (tBTC). 1 aligned, 0 protective delta, 0 parameter delta. Summary: https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-15/block-26407707-summary.md"
   },
   {
    "id": "https://pacta.wtf/#sprint-14",
    "title": "Sprint 14 Base EAS attestation: 4 records, 4 protocols",
    "url": "https://base.easscan.org/attestation/view/0x8965ae6e51a78132a77eb14c0ac1c6cd1be357d6f261253efff28869478ae5b8",
-   "date_published": "2026-11-19T17:26:47Z",
+   "date_published": "2026-11-19T20:45:11Z",
    "content_text": "Ethena (USDe / sUSDe), Inverse Finance (FiRM), Kelp DAO (rsETH), Treehouse (TREE / tETH). 2 aligned, 1 protective delta, 1 parameter delta. Summary: https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-14/block-26406106-summary.md"
   },
   {
    "id": "https://pacta.wtf/#sprint-13",
    "title": "Sprint 13 Base EAS attestation: 1 records, 1 protocols",
    "url": "https://base.easscan.org/attestation/view/0x6afd266541ea1643b680ce6ec15d218874356598820987c6b3eaf16342cd075c",
-   "date_published": "2026-11-19T17:26:47Z",
+   "date_published": "2026-11-19T20:45:11Z",
    "content_text": "ether.fi Core (eETH / weETH). 0 aligned, 1 protective delta, 0 parameter delta. Summary: https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-13/block-26405302-summary.md"
   },
   {
    "id": "https://pacta.wtf/#sprint-12",
    "title": "Sprint 12 Base EAS attestation: 4 records, 4 protocols",
    "url": "https://base.easscan.org/attestation/view/0x7caae9c22c86ae171392def07dce83fa5da6fbf904b1ba9b5ff66a5021b16de9",
-   "date_published": "2026-11-19T17:26:47Z",
+   "date_published": "2026-11-19T20:45:11Z",
    "content_text": "Stader Labs (ETHx), StakeWise V3 (osETH), Superstate (USTB / USCC), Swell (swETH / rswETH). 3 aligned, 0 protective delta, 1 parameter delta. Summary: https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-12/block-26403676-summary.md"
   },
   {
    "id": "https://pacta.wtf/#sprint-11",
    "title": "Sprint 11 Base EAS attestation: 4 records, 4 protocols",
    "url": "https://base.easscan.org/attestation/view/0x754edd7612258b755ff2e56903243d1f8867bad53c29ce3febb5ed9114005e42",
-   "date_published": "2026-11-19T17:26:47Z",
+   "date_published": "2026-11-19T20:45:11Z",
    "content_text": "Curve Finance (crvUSD), Gearbox V3 / V3.1, Lombard (LBTC), Resolv (USR / RLP). 2 aligned, 0 protective delta, 2 parameter delta. Summary: https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-11/block-26403523-summary.md"
   },
   {
    "id": "https://pacta.wtf/#sprint-10",
    "title": "Sprint 10 Base EAS attestation: 4 records, 4 protocols",
    "url": "https://base.easscan.org/attestation/view/0xfdd83c8091ef6e8ffe67e8a55a78892fcfbb1092683b21ff2d85f8cc09750e6c",
-   "date_published": "2026-11-19T17:26:47Z",
+   "date_published": "2026-11-19T20:45:11Z",
    "content_text": "Lido (stETH / Dual Governance), Mantle Liquid Staking (mETH / cmETH), Ondo Finance (OUSG & Flux Finance), Symbiotic Core. 2 aligned, 1 protective delta, 1 parameter delta. Summary: https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-10/block-26403121-summary.md"
   },
   {
    "id": "https://pacta.wtf/#sprint-9",
    "title": "Sprint 9 Base EAS attestation: 4 records, 4 protocols",
    "url": "https://base.easscan.org/attestation/view/0x0e017bc4399101f9fef3d98a434dd9f2829b6e386e7733408dfd4b626d186eea",
-   "date_published": "2026-11-19T17:26:47Z",
+   "date_published": "2026-11-19T20:45:11Z",
    "content_text": "Aave V3 / GHO, Compound V3 (Comet), EigenLayer Core, Kelp DAO (rsETH). 4 aligned, 0 protective delta, 0 parameter delta. Summary: https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-9/block-26402160-summary.md"
   },
   {
    "id": "https://pacta.wtf/#sprint-8",
    "title": "Sprint 8 Base EAS attestation: 3 records, 3 protocols",
    "url": "https://base.easscan.org/attestation/view/0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2",
-   "date_published": "2026-11-19T17:26:47Z",
+   "date_published": "2026-11-19T20:45:11Z",
    "content_text": "Renzo Protocol (ezETH), Usual Money (USD0 / USD0++), Yearn V3. 0 aligned, 1 protective delta, 2 parameter delta. Summary: https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-8/block-26401725-summary.md"
   },
   {
    "id": "https://pacta.wtf/#sprint-7",
    "title": "Sprint 7 Base EAS attestation: 3 records, 3 protocols",
    "url": "https://base.easscan.org/attestation/view/0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779",
-   "date_published": "2026-11-19T17:26:47Z",
+   "date_published": "2026-11-19T20:45:11Z",
    "content_text": "Ethena (USDe / sUSDe), Spark / Sky, ether.fi Core (eETH / weETH). 2 aligned, 0 protective delta, 1 parameter delta. Summary: https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-7/block-26401638-summary.md"
   },
   {
    "id": "https://pacta.wtf/#sprint-6",
    "title": "Sprint 6 Base EAS attestation: 2 records, 2 protocols",
    "url": "https://base.easscan.org/attestation/view/0x749d96e1a3d214a4ab66c528ca12c84dce085fa138dc370dd0eb817d890f09fa",
-   "date_published": "2026-11-19T17:26:47Z",
+   "date_published": "2026-11-19T20:45:11Z",
    "content_text": "Liquity V2 (BOLD), Maple Finance V2 / Syrup. 1 aligned, 0 protective delta, 1 parameter delta. Summary: https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-6/block-26401540-summary.md"
   },
   {
    "id": "https://pacta.wtf/#sprint-5",
    "title": "Sprint 5 Base EAS attestation: 2 records, 2 protocols",
    "url": "https://base.easscan.org/attestation/view/0x804289d4357b0a8d5a360911ec450c13ca36c4422d1e811c4c7040ef7d2628e5",
-   "date_published": "2026-11-19T17:26:47Z",
+   "date_published": "2026-11-19T20:45:11Z",
    "content_text": "Fluid / Instadapp, MetaMorpho (Re7 WETH vs. Re7 USDT). 0 aligned, 0 protective delta, 2 parameter delta. Summary: https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-5/block-26401405-summary.md"
   },
   {
    "id": "https://pacta.wtf/#sprint-4",
    "title": "Sprint 4 Base EAS attestation: 2 records, 2 protocols",
    "url": "https://base.easscan.org/attestation/view/0xa26f81b0e68248c7f286527286b3d2e6b299502d53f4dfbc4397df7d22262986",
-   "date_published": "2026-11-19T17:26:47Z",
+   "date_published": "2026-11-19T20:45:11Z",
    "content_text": "Convex Finance, Mellow Protocol / Lido Earn. 1 aligned, 0 protective delta, 1 parameter delta. Summary: https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-4/block-26401312-summary.md"
   },
   {
    "id": "https://pacta.wtf/#sprint-3",
    "title": "Sprint 3 Base EAS attestation: 2 records, 2 protocols",
    "url": "https://base.easscan.org/attestation/view/0x291e513f3d697eea41b20bd57bf53acdb085b5566e499dd655ff46d7cd9d95a8",
-   "date_published": "2026-11-19T17:26:47Z",
+   "date_published": "2026-11-19T20:45:11Z",
    "content_text": "Morpho Blue Core, ether.fi Liquid / Veda BoringVault. 2 aligned, 0 protective delta, 0 parameter delta. Summary: https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-3/block-26401070-summary.md"
   },
   {
    "id": "https://pacta.wtf/#sprint-2",
    "title": "Sprint 2 Base EAS attestation: 1 records, 1 protocols",
    "url": "https://base.easscan.org/attestation/view/0xca4b525bf5142d8e88433cbed2a1aa87bb06a97d1353cb77621ec41a51ce8101",
-   "date_published": "2026-11-19T17:26:47Z",
+   "date_published": "2026-11-19T20:45:11Z",
    "content_text": "f(x) Protocol v2. 0 aligned, 0 protective delta, 1 parameter delta. Summary: https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-2/block-26400152-summary.md"
   },
   {
    "id": "https://pacta.wtf/#sprint-1",
    "title": "Sprint 1 Base EAS attestation: 1 records, 1 protocols",
    "url": "https://base.easscan.org/attestation/view/0x34049a2c64fe3355f8e325481234754c8422a48bb4784fed1d028fa40eb93058",
-   "date_published": "2026-11-19T17:26:47Z",
+   "date_published": "2026-11-19T20:45:11Z",
    "content_text": "Inverse Finance (FiRM). 0 aligned, 0 protective delta, 1 parameter delta. Summary: https://github.com/Fractal-Neurons/pacta/blob/main/audits/sprint-1/block-26399876-summary.md"
   },
   {

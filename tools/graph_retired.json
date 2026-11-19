@@ -43,6 +43,26 @@
    "controller_kind": "contract_controller"
   },
   {
+   "slug": "benddao-ape-staking",
+   "chain": "ethereum",
+   "record_id": "benddao-ape-staking-control-plane",
+   "retired_at_sprint": 32,
+   "target_contract": "0x0d02755a5700414B26FF040e1dE35D337DF56218",
+   "target_label": "Bend Token",
+   "controller_address": "0x859f6e05410893fe64BC84d92BdA773fF798cf66",
+   "controller_kind": "contract_controller"
+  },
+  {
+   "slug": "bio-protocol",
+   "chain": "ethereum",
+   "record_id": "bio-protocol-control-plane",
+   "retired_at_sprint": 32,
+   "target_contract": "0xcb1592591996765Ec0eFc1f92599A19767ee5ffA",
+   "target_label": "BIO",
+   "controller_address": "0xE57a09C3fdFb6bD2B8Ebc46E0FF884876fae60Fd",
+   "controller_kind": "multisig_safe"
+  },
+  {
    "slug": "cian-yield-layer",
    "chain": "ethereum",
    "record_id": "cian-yield-layer-control-plane",
@@ -70,6 +90,26 @@
    "target_contract": "0x003Ca23Fd5F0ca87D01F6eC6CD14A8AE60c2b97D",
    "target_label": "DolomiteMargin",
    "controller_address": "0xC2B66E247daE5Ee749Ae1d827190115F3653dE06",
+   "controller_kind": "contract_controller"
+  },
+  {
+   "slug": "dydx-v3",
+   "chain": "ethereum",
+   "record_id": "dydx-v3-control-plane",
+   "retired_at_sprint": 32,
+   "target_contract": "0x92D6C1e31e14520e676a687F0a93788B716BEff5",
+   "target_label": "dYdX",
+   "controller_address": "0x64c7d40c07EFAbec2AafdC243bF59eaF2195c6dc",
+   "controller_kind": "contract_controller"
+  },
+  {
+   "slug": "ekubo",
+   "chain": "ethereum",
+   "record_id": "ekubo-control-plane",
+   "retired_at_sprint": 32,
+   "target_contract": "0xe0e0e08A6A4b9Dc7bD67BCB7aadE5cF48157d444",
+   "target_label": "Core",
+   "controller_address": "0x1E0EF4162e42C9bF820c307218c4E41cCcA6E9CC",
    "controller_kind": "contract_controller"
   },
   {
@@ -113,6 +153,16 @@
    "controller_kind": null
   },
   {
+   "slug": "hashport",
+   "chain": "ethereum",
+   "record_id": "hashport-control-plane",
+   "retired_at_sprint": 32,
+   "target_contract": "0x367e59b559283C8506207d75B0c5D8C66c4Cd4B7",
+   "target_label": "Router",
+   "controller_address": "0x10AB2d9C085c816f43ccB0FB1b27d024224E36f1",
+   "controller_kind": "multisig_safe"
+  },
+  {
    "slug": "iaero-protocol",
    "chain": "base",
    "record_id": "iaero-protocol-control-plane",
@@ -131,6 +181,16 @@
    "target_label": "Idle",
    "controller_address": null,
    "controller_kind": null
+  },
+  {
+   "slug": "inceptionlrt-isolated-restaking",
+   "chain": "ethereum",
+   "record_id": "inceptionlrt-isolated-restaking-control-plane",
+   "retired_at_sprint": 32,
+   "target_contract": "0x814CC6B8fd2555845541FB843f37418b05977d8d",
+   "target_label": "InstEthVault (InVault_E1)",
+   "controller_address": "0xB81e55e7Ee6B286aF6abFEa4eFad83f7BA4D1f1e",
+   "controller_kind": "contract_controller"
   },
   {
    "slug": "jpy-defi",
@@ -153,6 +213,16 @@
    "controller_kind": "contract_controller"
   },
   {
+   "slug": "lista-lending",
+   "chain": "ethereum",
+   "record_id": "lista-lending-control-plane",
+   "retired_at_sprint": 32,
+   "target_contract": "0xf820fB4680712CD7263a0D3D024D5b5aEA82Fd70",
+   "target_label": "Moolah",
+   "controller_address": "0xa18ae79AEDA3e711E0CD64cfe1Cd06402d400D61",
+   "controller_kind": "timelock"
+  },
+  {
    "slug": "makina",
    "chain": "ethereum",
    "record_id": "makina-control-plane",
@@ -171,6 +241,26 @@
    "target_label": "MetaPoolETH",
    "controller_address": "0x806F870ee04A2CC8bf2aD053BAa5ed9999A1f182",
    "controller_kind": "contract_controller"
+  },
+  {
+   "slug": "metric-v1",
+   "chain": "ethereum",
+   "record_id": "metric-v1-control-plane",
+   "retired_at_sprint": 32,
+   "target_contract": "0x2a53833cc95548cf52c7b159110e22D3a9018f32",
+   "target_label": "MetricOmmPoolFactory",
+   "controller_address": "0xa082C768B1C40f5e980b75959D85cF245AFF0FAE",
+   "controller_kind": "multisig_safe"
+  },
+  {
+   "slug": "morpheusai",
+   "chain": "ethereum",
+   "record_id": "morpheusai-control-plane",
+   "retired_at_sprint": 32,
+   "target_contract": "0x47176B2Af9885dC6C4575d4eFd63895f7Aaa4790",
+   "target_label": "DepositPool",
+   "controller_address": "0x1FE04BC15Cf2c5A2d41a0b3a96725596676eBa1E",
+   "controller_kind": "multisig_safe"
   },
   {
    "slug": "noon",
@@ -213,6 +303,16 @@
    "controller_kind": null
   },
   {
+   "slug": "pickle",
+   "chain": "ethereum",
+   "record_id": "pickle-control-plane",
+   "retired_at_sprint": 32,
+   "target_contract": "0x429881672B9AE42b8EbA0E26cD9C73711b891Ca5",
+   "target_label": "PickleToken",
+   "controller_address": "0xbD17B1ce622d73bD438b9E658acA5996dc394b0d",
+   "controller_kind": "contract_controller"
+  },
+  {
    "slug": "shift-defi",
    "chain": "ethereum",
    "record_id": "shift-defi-control-plane",
@@ -251,6 +351,26 @@
    "target_label": "Strata Senior USDe",
    "controller_address": "0x30A17d6bcBDBF1579d6fBBA453aCf776D01fbb50",
    "controller_kind": "contract_controller"
+  },
+  {
+   "slug": "superform-v2-base",
+   "chain": "base",
+   "record_id": "superform-v2-base-control-plane",
+   "retired_at_sprint": 32,
+   "target_contract": "0xB5396ef2bF8CA360cEB4166b77AFb2bed20e74d4",
+   "target_label": "SuperGovernor",
+   "controller_address": "0x10AC0b33e1C4501CF3ec1cB1AE51ebfdbd2d4698",
+   "controller_kind": "contract_controller"
+  },
+  {
+   "slug": "tori-finance",
+   "chain": "ethereum",
+   "record_id": "tori-finance-control-plane",
+   "retired_at_sprint": 32,
+   "target_contract": "0xd0580192E98eA6CEB9c7b6191Ed2E27560911697",
+   "target_label": "trUSD",
+   "controller_address": "0x0C6Bbfd2d5666d44bf28580eDEec0263692C8316",
+   "controller_kind": "multisig_safe"
   },
   {
    "slug": "trueo",
