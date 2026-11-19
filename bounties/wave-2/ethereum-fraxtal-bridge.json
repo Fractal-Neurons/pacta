@@ -1,0 +1,222 @@
+{
+  "wave": 2,
+  "category": "protocol_mismatch",
+  "slug": "fraxtal-bridge",
+  "protocol": "Fraxtal Bridge",
+  "chainId": 1,
+  "contractAddress": "0x34C0bD5877A5Ee7099D0f5688D65F4bB9158BDE2",
+  "hunter": "random-solver",
+  "agentFramework": "antigravity",
+  "basePayoutAddress": "0x7EDAC178137184cB0a3e291CFAefAcFe138137Bb",
+  "mcpProof": {
+    "tool": "pacta_check_preflight",
+    "arguments": {
+      "chain": "ethereum",
+      "address": "0x34C0bD5877A5Ee7099D0f5688D65F4bB9158BDE2"
+    },
+    "result": {
+      "schema": "pacta.preflight_check.v1",
+      "chain": "ethereum",
+      "chainId": 1,
+      "address": "0x34C0bD5877A5Ee7099D0f5688D65F4bB9158BDE2",
+      "pinnedBlock": 26450641,
+      "pinnedBlockHash": "0x6bff733db108d09c1f83774f089bdd72d6dee2ef015908f518df0418f50fded0",
+      "blockTimestamp": 1795109507,
+      "verdict": "MULTISIG_NO_TIMELOCK",
+      "riskScore": 55,
+      "isContract": true,
+      "isProxy": true,
+      "proxyType": "eip1967",
+      "implementation": "0xe89Fbfb78920423AC9e7F06Acb2163ce55baB89f",
+      "beacon": null,
+      "hasAdminSlot": true,
+      "canUpgradeZeroDelay": true,
+      "capabilities": {
+        "pause": false,
+        "blacklist": false,
+        "upgrade": true
+      },
+      "paused": false,
+      "controller": {
+        "address": "0xe0d7755252873c4eF5788f7f45764E0e17610508",
+        "kind": "multisig_safe",
+        "safeThreshold": 3,
+        "timelockDelaySec": null,
+        "safeOwnerCount": 5,
+        "proxyAdmin": "0x13Fe62cB24aEa5afd179F20D362c056c3881ABcA",
+        "source": "eip1967_admin_slot"
+      },
+      "roleAdminMembers": null,
+      "codeBytes": 2513,
+      "method": "Batched JSON-RPC reads pinned to the block hash (EIP-1898); EIP-1967 / EIP-1822 / beacon proxies; capabilities from PUSH4 selectors in proxy + implementation bytecode (heuristic).",
+      "summary": "Controlled by a 3-of-5 Safe with no timelock: changes can land instantly once signers agree. Capabilities seen in bytecode: upgrade.",
+      "source": "live_rpc",
+      "assessment": {
+        "coverage": "unindexed_bytecode_heuristic",
+        "confidence": "medium",
+        "method": "Live bytecode + storage heuristic at the pinned block only: this contract is not in Pacta's indexed catalog (no documentation comparison).",
+        "limits": [
+          "riskScore (0-100) is a heuristic of the controller type and of pause / blacklist / upgrade capabilities read at one block; it is not an audit.",
+          "The live check reads EIP-1967 slots, owner(), Safe getThreshold() / getOwners() and TimelockController getMinDelay(); custom role systems, bridge or L2 admin paths and off-chain operations are not resolved.",
+          "Documentation is compared only for indexed protocols (catalogMatch), at their pinned block."
+        ]
+      },
+      "coverage_gap_hint": "Target is not yet indexed or fully classified. Ask the user if they want you to queue coverage or request this capability via pacta_submit_request (free community queue, or 24h priority clearance for issuers).",
+      "meter": {
+        "limit": 50,
+        "remaining": 31,
+        "reset": 1795132800
+      },
+      "upgrade_x402": {
+        "note": "Free tier: 50 pre-flight calls per caller per UTC day (REST and MCP), then $0.01 per call over x402 (HTTP 402, never a dead-end 429). Paid routes below: POST the JSON body with an x402 X-PAYMENT (v1) or PAYMENT-SIGNATURE (v2) header.",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "network": "base (eip155:8453)",
+        "payTo": "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14",
+        "discovery": "https://pacta.fractalneurons.com/.well-known/x402",
+        "overflow": {
+          "method": "GET or POST",
+          "url": "https://pacta.fractalneurons.com/v1/check/preflight",
+          "priceUsd": "0.01",
+          "amountAtomic": "10000",
+          "after": "50 free calls per UTC day"
+        },
+        "endpoints": [
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/verdict",
+            "priceUsd": "0.02",
+            "amountAtomic": "20000",
+            "unlocks": "fast contract / token control-plane verdict: riskScore 0-100, grade A-F, upgrade / owner / pause / blacklist / mint flags and a shareable scan URL",
+            "example": {
+              "chain": "ethereum",
+              "address": "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/dossier",
+            "priceUsd": "0.05",
+            "amountAtomic": "50000",
+            "unlocks": "full control-plane dossier: every controller Safe's signers and threshold, signers shared with other indexed protocols, Base EAS proof",
+            "example": {
+              "slug": "stader-labs-ethx"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/calldata-sim",
+            "priceUsd": "0.25",
+            "amountAtomic": "250000",
+            "unlocks": "pre-signing calldata check: timelock / Safe / multicall calls decoded, each rated against live delays and the authority that governs it",
+            "example": {
+              "chain": "ethereum",
+              "target": "0x2225DAbFfC7F862c99477381E971E8B1FDaB467e",
+              "data": "0x64d623530000000000000000000000000000000000000000000000000000000000015180"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/deep-scan",
+            "priceUsd": "9.00",
+            "amountAtomic": "9000000",
+            "unlocks": "deep control-plane scan cross-checked on two independent RPC operators, auditor receipt and a queued Base EAS ticket",
+            "example": {
+              "chain": "base",
+              "address": "0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "blockNumber": 26450584,
+  "blockHash": "0x764cdebab20f9f687f5f27995d3121b69e80e2ba07bff064e8891888aa7fcd10",
+  "castCommands": [
+    "cast storage 0x34C0bD5877A5Ee7099D0f5688D65F4bB9158BDE2 0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103 --block 26450584 --rpc-url https://gateway.tenderly.co/public/mainnet",
+    "cast storage 0x34C0bD5877A5Ee7099D0f5688D65F4bB9158BDE2 0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103 --block 26450584 --rpc-url https://eth-mainnet.public.blastapi.io"
+  ],
+  "rpcOutputs": {
+    "a": "0x00000000000000000000000013fe62cb24aea5afd179f20d362c056c3881abca",
+    "b": "0x00000000000000000000000013fe62cb24aea5afd179f20d362c056c3881abca",
+    "pinnedDualRpcChainProof": {
+      "blockNumber": 26450584,
+      "blockHash": "0x764cdebab20f9f687f5f27995d3121b69e80e2ba07bff064e8891888aa7fcd10",
+      "rpcEndpoints": [
+        "https://gateway.tenderly.co/public/mainnet",
+        "https://eth-mainnet.public.blastapi.io"
+      ],
+      "note": "Official Frax documentation (docs.frax.com/fraxtal/frax/veFRAX) states that 'veFRAX has various utility and votes in all governance decisions throughout the Frax ecosystem of protocols', and Frax Governance (github.com/FraxFinance/frax-governance) specifies FraxGuard + FraxGovernorAlpha TimelockController module + FraxGovernorOmega co-signer enforcement on Frax Gnosis Safes. On-chain at finalized Ethereum block 26450584, both L1StandardBridgeProxy (0x34C0bD5877A5Ee7099D0f5688D65F4bB9158BDE2) and OptimismPortalProxy (0x36cb65c1967A0Fb0EEE11569C51C2f2aA1Ca6f6D, ~$161.39M Ethereum TVL) point their EIP-1967 admin slot to ProxyAdmin (0x13Fe62cB24aEa5afd179F20D362c056c3881ABcA), whose owner() is Safe 0xe0d7755252873c4eF5788f7f45764E0e17610508. That Safe is a 3-of-5 pure-EOA multisig (0 of 5 contract signers) with guard slot == 0x0 and getModulesPaginated == [] (no FraxGuard, no TimelockController module, no FraxGovernorOmega signer, and 0s upgrade delay).",
+      "reads": {
+        "l1StandardBridgeEip1967Admin": {
+          "castCommands": [
+            "cast storage 0x34C0bD5877A5Ee7099D0f5688D65F4bB9158BDE2 0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103 --block 26450584 --rpc-url https://gateway.tenderly.co/public/mainnet",
+            "cast storage 0x34C0bD5877A5Ee7099D0f5688D65F4bB9158BDE2 0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103 --block 26450584 --rpc-url https://eth-mainnet.public.blastapi.io"
+          ],
+          "output": "0x00000000000000000000000013fe62cb24aea5afd179f20d362c056c3881abca"
+        },
+        "optimismPortalEip1967Admin": {
+          "castCommands": [
+            "cast storage 0x36cb65c1967A0Fb0EEE11569C51C2f2aA1Ca6f6D 0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103 --block 26450584 --rpc-url https://gateway.tenderly.co/public/mainnet",
+            "cast storage 0x36cb65c1967A0Fb0EEE11569C51C2f2aA1Ca6f6D 0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103 --block 26450584 --rpc-url https://eth-mainnet.public.blastapi.io"
+          ],
+          "output": "0x00000000000000000000000013fe62cb24aea5afd179f20d362c056c3881abca"
+        },
+        "proxyAdminOwner": {
+          "castCommands": [
+            "cast call 0x13Fe62cB24aEa5afd179F20D362c056c3881ABcA \"owner()(address)\" --block 26450584 --rpc-url https://gateway.tenderly.co/public/mainnet",
+            "cast call 0x13Fe62cB24aEa5afd179F20D362c056c3881ABcA \"owner()(address)\" --block 26450584 --rpc-url https://eth-mainnet.public.blastapi.io"
+          ],
+          "output": "0xe0d7755252873c4eF5788f7f45764E0e17610508",
+          "rawHex": "0x000000000000000000000000e0d7755252873c4ef5788f7f45764e0e17610508"
+        },
+        "ownerSafeThreshold": {
+          "castCommands": [
+            "cast call 0xe0d7755252873c4eF5788f7f45764E0e17610508 \"getThreshold()(uint256)\" --block 26450584 --rpc-url https://gateway.tenderly.co/public/mainnet",
+            "cast call 0xe0d7755252873c4eF5788f7f45764E0e17610508 \"getThreshold()(uint256)\" --block 26450584 --rpc-url https://eth-mainnet.public.blastapi.io"
+          ],
+          "output": "3",
+          "rawHex": "0x0000000000000000000000000000000000000000000000000000000000000003"
+        },
+        "ownerSafeOwners": {
+          "castCommands": [
+            "cast call 0xe0d7755252873c4eF5788f7f45764E0e17610508 \"getOwners()(address[])\" --block 26450584 --rpc-url https://gateway.tenderly.co/public/mainnet",
+            "cast call 0xe0d7755252873c4eF5788f7f45764E0e17610508 \"getOwners()(address[])\" --block 26450584 --rpc-url https://eth-mainnet.public.blastapi.io"
+          ],
+          "output": [
+            "0x8da4E997e051605878c9C0B793c496556EACC2C0",
+            "0x6e74053a3798e0fC9a9775F7995316b27f21c4D2",
+            "0x6933BCC3e96f1C4d2cb73Cb391d854b18Ab7A4F2",
+            "0x17e06ce6914E3969f7BD37D8b2a563890cA1c96e",
+            "0xcbc616D595D38483e6AdC45C7E426f44bF230928"
+          ]
+        },
+        "ownerSafeGuardSlot": {
+          "castCommands": [
+            "cast storage 0xe0d7755252873c4eF5788f7f45764E0e17610508 0x4a204f620c8c5ccdca3fd54d003badd85ba500436a431f0cbda4f558c93c34c8 --block 26450584 --rpc-url https://gateway.tenderly.co/public/mainnet",
+            "cast storage 0xe0d7755252873c4eF5788f7f45764E0e17610508 0x4a204f620c8c5ccdca3fd54d003badd85ba500436a431f0cbda4f558c93c34c8 --block 26450584 --rpc-url https://eth-mainnet.public.blastapi.io"
+          ],
+          "output": "0x0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "ownerSafeModules": {
+          "castCommands": [
+            "cast call 0xe0d7755252873c4eF5788f7f45764E0e17610508 \"getModulesPaginated(address,uint256)(address[],address)\" 0x0000000000000000000000000000000000000001 10 --block 26450584 --rpc-url https://gateway.tenderly.co/public/mainnet",
+            "cast call 0xe0d7755252873c4eF5788f7f45764E0e17610508 \"getModulesPaginated(address,uint256)(address[],address)\" 0x0000000000000000000000000000000000000001 10 --block 26450584 --rpc-url https://eth-mainnet.public.blastapi.io"
+          ],
+          "output": "[] (empty modules array)",
+          "rawHex": "0x000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000"
+        }
+      }
+    }
+  },
+  "docsUrl": "https://docs.frax.com/fraxtal/frax/veFRAX",
+  "docsQuote": "veFRAX has various utility and votes in all governance decisions throughout the Frax ecosystem of protocols.",
+  "tvlUsd": 161390378.04,
+  "tvlReference": "https://api.llama.fi/protocol/fraxtal",
+  "apache2CommercialGrant": true,
+  "rulesAccepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
