@@ -1520,7 +1520,7 @@ def main(argv=None):
                and re.search(r'curl -s &quot;' + re.escape(API_) + r'/v1/check/preflight\?chain=', hiwS) is not None
                and all(f'href="{h}"' in audS for h in ("openapi.json", "SKILL.md", "agent.json", "mcp/")))
     pf_ok = (f'class="pf hero-pf" data-api="{API_}"' in heroS and 'id="pf-form"' in heroS and 'id="pf-out"' in heroS and 'name="chain"' in heroS
-             and 'name="address"' in heroS and "Check contract" in heroS and heroS.find('id="pf-form"') < heroS.find("data-proof")
+             and 'name="address"' in heroS and "Check protocol" in heroS and heroS.find('id="pf-form"') < heroS.find("data-proof")
              and 'id="pf-form" novalidate' in heroS and 'data-proof-card' in heroS)
     check("Edge v3 hero: h1 + subhead, 3 receipt pills (live check + pinned receipt), the instant checker in the hero (before the proof bar); remote MCP (Claude Code + Cursor), curl /v1/check/preflight, OpenAPI / SKILL / agent.json / MCP links in the agents column",
           hero_ok and pf_ok, f"hero {hero_ok}; checker {pf_ok}")
@@ -2313,8 +2313,8 @@ def main(argv=None):
             and "svg.ia { width: 0.875em; height: 0.875em; margin-left: 0.25em; vertical-align: -0.125em; }" in css43
             and res.get("v44_runtime_link_arrow_icon") is True,
         "P2-1: the checker help line says the examples run a check too (v4.7: and that a protocol or token name finds its scorecard)":
-            '<p class="checker-cap" id="pf-help">Free, read-only check of one contract address at the latest block, or type a protocol or '
-            'token (Aave, LBTC, ETHx) to find its scorecard. No API key, no wallet. Runs when you press Check or pick an example below.</p>' in home43,
+            '<p class="checker-cap" id="pf-help">Free, read-only check — select or type a protocol or token (Aave, Lido, Pendle, Moonwell, LBTC, ETHx), '
+            'or paste any 0x… contract address. No API key, no wallet. Runs when you press Check or pick an example below.</p>' in home43,
         "P2-2: a Try click scrolls the form (input + result) into view, clear of the sticky top bar (harness)":
             res.get("v44_try_scrolls_form") is True and "scroll-margin-top: 72px;" in css_rule(".checker"),
         "F3a: the Try examples sit between the checker and its result (a result never pushes them off screen) (harness)":
@@ -2575,8 +2575,13 @@ def main(argv=None):
         "W3: a search trigger (Ctrl/Cmd+K, /) in the top bar of every page; Command dialog over lookup.json + scorecards.json (protocol, token, brief, 0x); "
         "the hero checker resolves names with Open scorecard / Run live check (harness)":
             all('data-cmdk-open' in t and 'aria-keyshortcuts="Control+K Meta+K /"' in t for t in topbar_pages47) and len(topbar_pages47) >= 100
-            and 'maxlength="42"' not in home47 and 'placeholder="0x…, protocol or token"' in home47
-            and res.get("v47_w3_cmdk") is True and res.get("v47_w3_hero_names") is True,
+            and 'maxlength="42"' not in home47 and f'placeholder="{html.escape(BS.HERO_PLACEHOLDER)}"' in home47
+            and 'role="combobox"' in home47 and 'aria-controls="pf-listbox"' in home47
+            and res.get("v47_w3_cmdk") is True and res.get("v47_w3_hero_names") is True
+            and res.get("pf_combobox_select_and_autocomplete") is True
+            and all(any(os.path.exists(os.path.join(DOCS, "assets", "protocols", f"{it_['slug']}.{ext_}")) and os.path.getsize(os.path.join(DOCS, "assets", "protocols", f"{it_['slug']}.{ext_}")) >= 60
+                        for ext_ in ("webp", "png", "svg"))
+                    for it_ in json.loads(read("docs/api/v1/lookup.json"))["items"] if it_.get("kind") == "protocol"),
         "W4: build-pinned freshness pill on /, /scorecards/, /protocols/ (index.json pins + EAS batches) and /radar/ (radar pins); /bounties/ leads with "
         "Wave 2, the closed Nov 15 Wave 1 collapsed at the bottom; 0 '53 currently indexed' anywhere in docs/":
             all(pill47 in pages[r_] for r_ in ("index.html", os.path.join("scorecards", "index.html"), os.path.join("protocols", "index.html")))

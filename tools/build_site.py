@@ -203,11 +203,80 @@ SEAL_GUARANTEE = ("The fee pays for the 24-hour mainnet re-verification work, ne
 # real indexed contracts behind the example chips (resolved from api/v1/lookup.json at build time)
 SCAN_SAMPLE_CHIPS = ("getMinDelay()", "PROPOSER_ROLE", "DEFAULT_ADMIN_ROLE", "MINTER_ROLE")
 SCAN_CHIPS = [
-    ("Lagoon cbBTC Vault (0s Safe vs 24h-30d Docs)", "lagoon"),
-    ("Base Bridge (>1M ETH Nested Safe)", "base-bridge"),
-    ("Moonwell Base", "moonwell-lending-base"),
-    ("USDC Base", "circle-usdc"),
+    ("Moonwell", "moonwell-lending-base"),
+    ("Aave V3", "aave-v3-gho"),
+    ("Lido", "lido-steth-dual-governance"),
+    ("Pendle V2", "pendle-finance-v2"),
+    ("Inverse FiRM", "inverse-finance-firm"),
+    ("Circle", "circle-usdc"),
 ]
+CHIP_TICKERS = {
+    "moonwell-lending-base": "WELL",
+    "aave-v3-gho": "AAVE",
+    "lido-steth-dual-governance": "stETH",
+    "pendle-finance-v2": "PENDLE",
+    "inverse-finance-firm": "INV",
+    "circle-usdc": "USDC",
+    "stader-labs-ethx": "SD",
+    "yo-protocol": "YO",
+}
+
+
+def proto_icon_rel(slug):
+    p_dir = os.path.join(ROOT, "tools", "protocol_icons")
+    for ext in ("webp", "png", "svg"):
+        if os.path.exists(os.path.join(p_dir, f"{slug}.{ext}")):
+            return f"assets/protocols/{slug}.{ext}"
+    return f"assets/protocols/{slug}.svg"
+
+
+def proto_monogram_svg(slug, name):
+    words = [w for w in re.split(r"[^A-Za-z0-9]+", re.sub(r"\([^)]*\)", "", name)) if w]
+    letters = ((words[0][0] + words[1][0]) if len(words) >= 2 else (words[0][:2] if words else slug[:2])).upper()
+    pal = (("#0f766e", "#14b8a6"), ("#1d4ed8", "#3b82f6"), ("#4338ca", "#6366f1"), ("#6d28d9", "#8b5cf6"),
+           ("#be123c", "#f43f5e"), ("#b45309", "#f59e0b"), ("#047857", "#10b981"), ("#0369a1", "#0ea5e9"))
+    h = int(hashlib.sha256(slug.encode("utf-8")).hexdigest()[:8], 16)
+    c1, c2 = pal[h % len(pal)]
+    gid = "g" + hashlib.sha256(slug.encode("utf-8")).hexdigest()[:6]
+    return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">'
+            f'<defs><linearGradient id="{gid}" x1="0" y1="0" x2="1" y2="1">'
+            f'<stop offset="0%" stop-color="{c1}"/><stop offset="100%" stop-color="{c2}"/></linearGradient></defs>'
+            f'<circle cx="24" cy="24" r="23" fill="url(#{gid})"/>'
+            f'<circle cx="24" cy="24" r="22" fill="none" stroke="#ffffff" stroke-opacity="0.22" stroke-width="1.5"/>'
+            f'<text x="24" y="29" text-anchor="middle" fill="#ffffff" font-family="Inter,system-ui,sans-serif" '
+            f'font-size="16" font-weight="700" letter-spacing="-0.4">{E(letters)}</text></svg>')
+
+
+def chain_icon_svg(chain):
+    if chain == "base":
+        return ('<svg class="ch-ico ch-base" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">'
+                '<circle cx="8" cy="8" r="8" fill="#0052FF"/>'
+                '<path d="M8.15 12.4A4.4 4.4 0 1 0 3.76 8.5h5.19v-1H3.76A4.4 4.4 0 0 1 8.15 3.6a4.4 4.4 0 0 1 0 8.8Z" fill="#fff"/></svg>')
+    return ('<svg class="ch-ico ch-eth" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">'
+            '<circle cx="8" cy="8" r="8" fill="#627EEA"/>'
+            '<path d="M8 2.5 4.6 8.1 8 6.55l3.4 1.55L8 2.5Z" fill="#fff" fill-opacity="0.9"/>'
+            '<path d="M8 6.55 4.6 8.1 8 10.15l3.4-2.05L8 6.55Z" fill="#fff" fill-opacity="0.65"/>'
+            '<path d="M8 10.9 4.6 8.85 8 13.5l3.4-4.65L8 10.9Z" fill="#fff" fill-opacity="0.9"/></svg>')
+
+
+def chip_status_meta(cls_name):
+    if cls_name in ("parameter_delta", "mixed"):
+        return "GAP", "gap"
+    if cls_name == "protective_delta":
+        return "PROTECTIVE", "protective"
+    if cls_name == "aligned_baseline":
+        return "ALIGNED", "aligned"
+    return "PINNED", "observed"
+
+
+def receipt_inner_html(slug, label, chain, st_text, st_tone, prefix=""):
+    sym = CHIP_TICKERS.get(slug, "")
+    sym_html = f'<span class="rc-sym">{E(sym)}</span>' if sym and sym.lower() not in label.lower() else ""
+    ch_lbl = "Base" if chain == "base" else "Ethereum"
+    return (f'<img class="rc-logo" src="{prefix}{proto_icon_rel(slug)}" alt="" width="18" height="18">'
+            f'<span class="rc-name">{E(label)}</span>{sym_html}'
+            f'<span class="rc-sep" aria-hidden="true">·</span><span class="rc-chain">{ch_lbl}</span>'
+            f'<span class="rc-st" data-tone="{st_tone}">{E(st_text)}</span>')
 WEBHOOK_PICKS = [("Ethena", "ethena-usde-susde"), ("Morpho", "morpho-blue-core"), ("Aave v3", "aave-v3-gho"), ("Treehouse", "treehouse-tree-teth")]
 ALERT_EXAMPLE = "lombard-op-0xd07f"     # the alert preview is built from this decoded radar brief
 SOCIAL_SIZE = (1200, 628)   # X Website cards (1.91:1): og-preview.png and docs/cards/x-card-*-1200x628.png
@@ -1387,23 +1456,39 @@ def field(id_, name, label, ph, optional=False, maxlength=200, help_=""):
 
 
 def chain_target(target_label, optional=False):
+    opt = ' <span class="legend-note">· optional</span>' if optional else ""
+    ph = "Select or type a protocol / token (Aave, Lido, Moonwell…) or paste 0x…"
     return (f'<div class="co-row"><div class="field co-chain-f"><label for="co-chain">Chain</label><select id="co-chain" name="target_chain">'
             f'<option value="ethereum" selected>Ethereum</option><option value="base">Base</option></select></div>'
-            + field("co-target", "target_address", target_label, "0x…", optional, 42) + '</div>')
+            f'<div class="field"><label for="co-target">{target_label}{opt}</label>'
+            f'<div class="pf-combo pf-combo-seal" data-seal-combo>'
+            f'<input id="co-target" name="target_address" type="text" maxlength="80" spellcheck="false" autocapitalize="off" '
+            f'role="combobox" aria-expanded="false" aria-controls="co-target-listbox" aria-autocomplete="list" '
+            f'placeholder="{E(ph)}" aria-describedby="co-target-err">'
+            f'<button type="button" class="pf-toggle-btn" data-seal-toggle aria-label="Browse indexed protocols">'
+            f'<span class="pf-toggle-lbl">Protocols</span>{U.icon("chevron-down")}</button>'
+            f'<div class="pf-dropdown" id="co-target-listbox" role="listbox" aria-label="Indexed protocols" hidden></div></div>'
+            f'<p class="form-message" id="co-target-err" data-slot="form-message" hidden></p></div></div>')
 
 
 def scan_checker(lk):
-    """/scan/: 100% free live preflight checker at the top of the page; 4 real protocol chips run an eye-opening live check in 1 click."""
+    """/scan/: 100% free live preflight checker at the top of the page; 6 real protocol chips with logos run a live check in 1 click."""
     chips = []
     for label, slug in SCAN_CHIPS:
         it = lk[slug]
         ch, addr = LIVE_CHECK_TARGET.get(slug, (it["preflightArgs"]["chain"], it["preflightArgs"]["address"]))
-        chips.append(U.button(E(label), variant="outline", size="sm", cls="receipt",
-                              attrs=f'data-receipt data-pf-chain="{ch}" data-pf-address="{addr}" aria-label="Try {E(label)}: run a free live check of its indexed contract"'))
-    examples = (f'<div class="try"><div class="try-row" role="group" aria-label="Example contracts"><span class="try-l">Try live:</span>{"".join(chips)}</div></div>')
-    cap = ("Free, read-only live check at the latest finalized block — no wallet, no API key, no signup. Paste any Ethereum or Base "
-           "0x… contract address, or click one of the 4 live protocol examples below to inspect its real control plane.")
-    return hero_checker(examples, prefix="../", cap=cap, label="Contract or Safe address", cta_variant="default", cta_label="Check Contract (Free)")
+        st_txt, st_tone = chip_status_meta(it.get("classification", ""))
+        inner = receipt_inner_html(slug, label, ch, st_txt, st_tone, prefix="../")
+        sym = CHIP_TICKERS.get(slug, "")
+        chips.append(U.button(inner, variant="outline", size="sm", cls="receipt",
+                              attrs=(f'data-receipt data-pf-chain="{ch}" data-pf-address="{addr}" '
+                                     f'aria-label="Try {E(label)}: run a free live check of its indexed contract" '
+                                     f'data-pf-slug="{slug}" data-pf-disp="{E(it["name"])}" data-pf-sym="{E(sym)}" '
+                                     f'data-pf-icon="../{proto_icon_rel(slug)}"')))
+    examples = (f'<div class="try"><div class="try-row" role="group" aria-label="Example contracts"><span class="try-l">Popular checks:</span>{"".join(chips)}</div></div>')
+    cap = ("Free, read-only live check at the latest finalized block — no wallet, no API key, no signup. Select or type any of 312+ "
+           "protocols & tokens above, click a protocol pill below, or paste any Ethereum / Base 0x… contract address.")
+    return hero_checker(examples, prefix="../", cap=cap, label="Protocol, token or contract address", cta_variant="default", cta_label="Check Protocol (Free)")
 
 
 def scan_explainer_section():
@@ -1617,8 +1702,8 @@ def product_page(idx, sku):
             f'<section class="sec pd-sec" id="checkout"><div class="wrap">{crumbs}'
             f'<div class="pd-funnel">{hero_scan}'
             f'<div class="pd-free-box" id="free-check" data-free-check>'
-            f'<div class="pd-step-head"><span class="step-k mono">STEP 1 · FREE 3-SECOND CONTRACT CHECK</span>'
-            f'<h2>Paste any Ethereum or Base contract — or click a live example</h2></div>{pre}</div>'
+            f'<div class="pd-step-head"><span class="step-k mono">STEP 1 · FREE 3-SECOND PROTOCOL &amp; CONTRACT CHECK</span>'
+            f'<h2>Select any DeFi protocol or token — or paste a 0x… contract</h2></div>{pre}</div>'
             f'{scan_explainer_section()}{upgrade_scan}</div></div></section>{foot_note}'
         )
     elif sku == "reverify-seal-99":
@@ -2570,22 +2655,35 @@ EAS_SCHEMA_VIEW = "https://base.easscan.org/schema/view/0x7ff485bc1159dff3c70eef
 EDITORIAL_FIREWALL = "Pacta never sells grades."
 
 
-def hero_checker(examples="", prefix="", cap=None, label="Contract address, protocol or token", cta_variant="default", cta_label="Check contract"):
-    """U3/A3: noValidate form (no native bubble), inline 0x + 40-hex validation on blur and submit, aria-invalid + aria-describedby
-    to a visible destructive message, and a disabled button with a spinner while the check runs (app.js)."""
+HERO_PLACEHOLDER = "Select or type a protocol / token (Aave, Lido, Pendle, Moonwell…) or paste 0x…"
+
+
+def hero_checker(examples="", prefix="", cap=None, label="Protocol, token or contract address", cta_variant="default", cta_label="Check protocol"):
+    """U3/A3 + Protocol Select & Autocomplete Combobox: zero-type dropdown of featured gaps & top protocols with official logos,
+    instant <2ms search across 312+ protocols & tickers, 1-click live check, and inline 0x + 40-hex paste support."""
     return (f'<div class="pf hero-pf" data-api="{API}" data-lookup="{prefix}api/v1/lookup.json">'
             f'<form class="checker" id="pf-form" novalidate autocomplete="off">'
             f'<label class="sr-only" for="pf-chain">Chain</label>'
-            f'<select id="pf-chain" name="chain"><option value="ethereum">Ethereum</option><option value="base">Base</option></select>'
+            f'<div class="pf-chain-wrap">'
+            f'<span class="pf-chain-dot" data-pf-chain-ico aria-hidden="true">{chain_icon_svg("ethereum")}</span>'
+            f'<select id="pf-chain" name="chain"><option value="ethereum">Ethereum</option><option value="base">Base</option></select></div>'
             f'<label class="sr-only" for="pf-address">{E(label)}</label>'
-            f'<input id="pf-address" type="text" name="address" placeholder="0x…, protocol or token" maxlength="80" spellcheck="false" '
+            f'<div class="pf-combo" data-pf-combo>'
+            f'<span class="pf-combo-lead" data-pf-lead aria-hidden="true">{U.icon("search")}</span>'
+            f'<input id="pf-address" type="text" name="address" role="combobox" aria-expanded="false" aria-controls="pf-listbox" '
+            f'aria-autocomplete="list" placeholder="{E(HERO_PLACEHOLDER)}" maxlength="80" spellcheck="false" '
             f'autocapitalize="off" aria-describedby="pf-help">'
+            f'<div class="pf-sel-overlay" id="pf-sel-chip" data-pf-sel-chip hidden></div>'
+            f'<button type="button" class="pf-clear-btn" id="pf-combo-clear" data-pf-clear aria-label="Clear selected protocol" hidden>×</button>'
+            f'<button type="button" class="pf-toggle-btn" id="pf-combo-toggle" data-pf-toggle aria-label="Browse 312+ protocols">'
+            f'<span class="pf-toggle-lbl">Protocols</span>{U.icon("chevron-down")}</button>'
+            f'<div class="pf-dropdown" id="pf-listbox" role="listbox" aria-label="Indexed protocols and tokens" hidden></div></div>'
             + U.button(f'<span class="spinner" aria-hidden="true" hidden></span><span data-pf-label>{E(cta_label)}</span>', variant=cta_variant,
                        size="lg", type_="submit", attrs='id="pf-submit"')
             + f'<p class="form-message" id="pf-addr-error" data-slot="form-message" hidden></p></form>'
             + (f'<p class="checker-cap" id="pf-help">{E(cap)}</p>' if cap else
-               f'<p class="checker-cap" id="pf-help">Free, read-only check of one contract address at the latest block, or type a protocol or '
-               f'token (Aave, LBTC, ETHx) to find its scorecard. No API key, no wallet. Runs when you press Check or pick an example below.</p>')   # P2-1 (v4.4): the examples run a check too
+               f'<p class="checker-cap" id="pf-help">Free, read-only check — select or type a protocol or token (Aave, Lido, Pendle, Moonwell, LBTC, ETHx), '
+               f'or paste any 0x… contract address. No API key, no wallet. Runs when you press Check or pick an example below.</p>')
             +
             f'<noscript><p class="note">Without JavaScript, use the free API: <code>{E(CURL)} "{E(API)}/v1/check/preflight?chain=ethereum&amp;address=0x…"</code></p></noscript>'
             f'{examples}<div class="pf-out" id="pf-out" aria-live="polite"></div></div>')
@@ -4100,10 +4198,14 @@ def try_chips(idx, prefix=""):
     for r in receipt_data(idx):
         e, ch = r["e"], r["ch"]
         lch, laddr = LIVE_CHECK_TARGET.get(r["slug"], (ch, e["target_contract"]))
-        chips.append(U.button(E(r["label"]), variant="outline", size="sm", cls="receipt",
+        inner = receipt_inner_html(r["slug"], r["label"], lch, "GAP", "gap", prefix=prefix)
+        sym = CHIP_TICKERS.get(r["slug"], "")
+        chips.append(U.button(inner, variant="outline", size="sm", cls="receipt",
                               attrs=(f'data-receipt data-pf-chain="{lch}" data-pf-address="{laddr}" data-r-name="{E(r["label"])}" '
                                      f'data-r-docs="{E(r["docs"])}" data-r-chain="{E(r["chain"])}" data-r-block="{int(e["block_number"])}" '
                                      f'data-r-net="{CHAINS[ch][0]}" data-r-uid="{E(e.get("base_eas_uid") or "")}" data-r-href="{prefix}protocols/{r["slug"]}/" '
+                                     f'data-pf-slug="{r["slug"]}" data-pf-disp="{E(r["label"])}" data-pf-sym="{E(sym)}" '
+                                     f'data-pf-icon="{prefix}{proto_icon_rel(r["slug"])}" '
                                      f'aria-label="Try {E(r["label"])}: show its receipt and run a live check of {laddr}"')))
     return (f'<div class="try"><div class="try-row" role="group" aria-label="Example contracts"><span class="try-l">Try:</span>'
             f'{"".join(chips)}</div></div>')
@@ -4676,6 +4778,19 @@ def build_all():
             if ad_f.endswith(".png"):
                 with open(os.path.join(ads_src, ad_f), "rb") as f_in, open(os.path.join(ads_dst, ad_f), "wb") as f_out:
                     f_out.write(f_in.read())
+    picons_src = os.path.join(ROOT, "tools", "protocol_icons")
+    picons_dst = os.path.join(DOCS, "assets", "protocols")
+    os.makedirs(picons_dst, exist_ok=True)
+    if os.path.isdir(picons_src):
+        for pf_ in sorted(os.listdir(picons_src)):
+            if pf_.endswith((".webp", ".png", ".svg")):
+                with open(os.path.join(picons_src, pf_), "rb") as f_in, open(os.path.join(picons_dst, pf_), "wb") as f_out:
+                    f_out.write(f_in.read())
+    for p_name, p_v in sp.items():
+        p_slug = p_v["slug"]
+        if not any(os.path.exists(os.path.join(picons_dst, f"{p_slug}.{ext}")) for ext in ("webp", "png", "svg")):
+            with open(os.path.join(picons_dst, f"{p_slug}.svg"), "w", encoding="utf-8") as f_svg:
+                f_svg.write(proto_monogram_svg(p_slug, p_name))
     GM.write(ROOT, DOCS)                          # api/v1/graph-manifest.json: durable protocol graph (from protocols/index/rpc-pinned.json)
     digest = load_forum_digest()                  # data/forum-digest.json (optional; missing = empty digest)
     w("api/v1/forum-digest.json", forum_digest_json(idx, digest, pinned))

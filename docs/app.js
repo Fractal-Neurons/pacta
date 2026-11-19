@@ -384,13 +384,16 @@ $$("[data-sc-f]", root).forEach(function (o) { o.setAttribute("aria-pressed", St
 apply();
 });
 }
+var pfSelectFromChip = null, pfSelectedMeta = null;
 function tryReceipt(b) {
 var form = $("#pf-form"), a = b.getAttribute("data-pf-address") || "";
 if (!form || !ADDR_RE.test(a)) return;
 var ch = $('select[name="chain"]', form), ad = $('input[name="address"]', form), err = $("#pf-addr-error");
-if (ch) ch.value = b.getAttribute("data-pf-chain") === "base" ? "base" : "ethereum";
+var cVal = b.getAttribute("data-pf-chain") === "base" ? "base" : "ethereum";
+if (ch) ch.value = cVal;
 if (ad) { ad.value = a; ad.setAttribute("value", a); ad.removeAttribute("aria-invalid"); }
 if (err) { err.textContent = ""; err.hidden = true; }
+if (typeof pfSelectFromChip === "function") pfSelectFromChip(b, cVal, a);
 form.dispatchEvent(new Event("submit", { cancelable: true }));
 if (form.scrollIntoView) { try { form.scrollIntoView({ behavior: "smooth", block: "start" }); } catch (e) {  } }
 }
@@ -1929,15 +1932,272 @@ return Promise.all([pinned, live]).then(function (x) { return [].concat(x[0], x[
 out.appendChild(card);
 notifyScanCheckComplete(r.chain, r.address);
 }
+var PROTO_SVG_SLUGS = { "drakewell-usddw": 1, "wintermute-confidential-wbtc-ethereum": 1 };
+var PROTO_EXTRA_SYMS = {
+"augur": "REP", "autofinance": "TOKE", "baseline-protocol": "B", "bedrock-unibtc": "BR", "bedrock-unieth": "BR",
+"concrete": "CT", "curve-dex-ethereum": "CRV", "debridge": "DBR", "defi-saver": "DFS", "dexfi-aggregator": "GDEX",
+"dolomite": "DOLO", "dxsale": "DX", "equilibria": "EQB", "ethena-usdtb": "ENA", "ether-fi-liquid-veda-boringvault": "ETHFI",
+"exactly": "EXA", "falcon-finance-usdf-susdf": "FF", "frax-ether-sfrxeth": "FRAX", "frax-usd-frxusd": "FRAX", "glif": "GLF",
+"gravity-by-galxe-bridge": "G", "hyperlane": "HYPER", "infinifi": "INFI", "kelp-dao-rseth": "KERNEL", "lombard-lbtc": "BARD",
+"mantle-liquid-staking-meth-cmeth": "COOK", "meta-pool-eth": "MPDAO", "metamorpho-re7-weth-vs-re7-usdt": "MORPHO",
+"morpheusai": "MOR", "multichain": "MULTI", "pancakeswap-amm-v3": "CAKE", "polygon-bridge": "POL", "quickswap-v4": "QUICK",
+"sierra-protocol": "SIERRA", "sonic-gateway": "S", "superform-v2-base": "UP", "sushiswap-v3": "SUSHI", "synfutures-v3": "F",
+"wormhole-core-ntt": "W"
+};
+var FEATURED_COMBO_SLUGS = [
+"inverse-finance-firm", "moonwell-lending-base", "stader-labs-ethx", "ethena-usde-susde",
+"fluid-instadapp", "curve-finance-crvusd", "sonic-gateway", "yo-protocol",
+"cian-yield-layer", "lagoon", "aave-v3-gho", "lido-steth-dual-governance",
+"pendle-finance-v2", "morpho-blue-core", "spark-sky", "uniswap-v4",
+"circle-usdc", "pancakeswap-amm-v3"
+];
+function protoIconSrc(slug) {
+return BASE + "/assets/protocols/" + slug + (PROTO_SVG_SLUGS[slug] ? ".svg" : ".webp");
+}
+function protoLogoImg(slug, cls, sz, explicitSrc) {
+var src = explicitSrc || protoIconSrc(slug);
+var img = el("img", { "class": cls, src: src, alt: "", width: String(sz), height: String(sz) });
+img.addEventListener("error", function () {
+var cur = img.getAttribute("src") || "";
+if (/\.webp$/.test(cur)) img.setAttribute("src", cur.slice(0, -5) + ".svg");
+});
+return img;
+}
+function chainBadgeSvg(chain, sz) {
+var ns = "http://www.w3.org/2000/svg", s = document.createElementNS(ns, "svg"), c = document.createElementNS(ns, "circle");
+s.setAttribute("viewBox", "0 0 16 16"); s.setAttribute("width", String(sz || 14)); s.setAttribute("height", String(sz || 14));
+s.setAttribute("aria-hidden", "true");
+c.setAttribute("cx", "8"); c.setAttribute("cy", "8"); c.setAttribute("r", "8");
+if (chain === "base") {
+s.setAttribute("class", "ch-ico ch-base"); c.setAttribute("fill", "#0052FF"); s.appendChild(c);
+var pb = document.createElementNS(ns, "path");
+pb.setAttribute("d", "M8.15 12.4A4.4 4.4 0 1 0 3.76 8.5h5.19v-1H3.76A4.4 4.4 0 0 1 8.15 3.6a4.4 4.4 0 0 1 0 8.8Z");
+pb.setAttribute("fill", "#fff"); s.appendChild(pb);
+} else {
+s.setAttribute("class", "ch-ico ch-eth"); c.setAttribute("fill", "#627EEA"); s.appendChild(c);
+[["M8 2.5 4.6 8.1 8 6.55l3.4 1.55L8 2.5Z", "0.9"], ["M8 6.55 4.6 8.1 8 10.15l3.4-2.05L8 6.55Z", "0.65"],
+["M8 10.9 4.6 8.85 8 13.5l3.4-4.65L8 10.9Z", "0.9"]].forEach(function (pair) {
+var pe = document.createElementNS(ns, "path");
+pe.setAttribute("d", pair[0]); pe.setAttribute("fill", "#fff"); pe.setAttribute("fill-opacity", pair[1]);
+s.appendChild(pe);
+});
+}
+return s;
+}
+function protoTickerText(x) {
+var it = x.it || {}, raw = (it.tokens || []).slice(), ex = PROTO_EXTRA_SYMS[x.slug];
+if (ex) raw.unshift(ex);
+var seen = {}, clean = [], nmLow = String(it.name || "").toLowerCase();
+raw.forEach(function (t) {
+var s = String(t || "").trim();
+if (!s || /\s/.test(s) || s.length > 10) return;
+if (s.toLowerCase() === nmLow && s.length > 5) return;
+var k = s.toUpperCase();
+if (!seen[k]) { seen[k] = 1; clean.push(s); }
+});
+return clean.slice(0, 2).join(" \u00b7 ");
+}
+function protoStatusMeta(x) {
+var g = x.card && x.card.grade ? x.card.grade : "", cl = (x.it && x.it.classification) || "";
+if (g === "delta" || cl === "parameter_delta" || cl === "mixed") return { label: "GAP", tone: "gap", rank: 0 };
+if (g === "protective" || cl === "protective_delta") return { label: "PROTECTIVE", tone: "protective", rank: 1 };
+if (g === "aligned" || cl === "aligned_baseline") return { label: "ALIGNED", tone: "aligned", rank: 2 };
+return { label: "PINNED", tone: "observed", rank: 3 };
+}
+function comboSearch(data, q, maxN) {
+var protos = (data || []).filter(function (x) {
+return x.it && x.it.kind === "protocol" && x.it.preflightArgs && ADDR_RE.test(String(x.it.preflightArgs.address || ""));
+});
+q = String(q || "").trim().toLowerCase().slice(0, 80);
+if (!q) {
+var byS = {};
+protos.forEach(function (x) { byS[x.slug] = x; });
+var feat = [];
+FEATURED_COMBO_SLUGS.forEach(function (s) { if (byS[s]) feat.push(byS[s]); });
+return feat.length ? feat : protos.slice(0, maxN || 18);
+}
+var qSlug = q.replace(/\s+/g, "-");
+var scored = [];
+protos.forEach(function (x) {
+var toks = x.comboTokens || x.tokens || [], words = x.name.split(/[^a-z0-9.]+/).filter(Boolean), r = -1;
+var shortToks = toks.filter(function (t) { return !/\s/.test(t); });
+if (/^0x[0-9a-f]{2,}$/.test(q)) {
+if (x.addrs.indexOf(q) >= 0) r = 0;
+else if (x.addrs.some(function (a) { return a.indexOf(q) === 0; })) r = 2;
+} else if (shortToks.indexOf(q) >= 0 || x.name === q || x.slug === q || words[0] === q) {
+r = 0;
+} else if (x.name.indexOf(q) === 0 || shortToks.some(function (t) { return t.indexOf(q) === 0; })) {
+r = 1;
+} else if (words.some(function (w) { return w.indexOf(q) === 0; }) || toks.some(function (t) { return t.indexOf(q) === 0; })) {
+r = 2;
+} else if (x.slug.indexOf(qSlug) >= 0 || x.name.indexOf(q) >= 0
+|| (q.length >= 2 && ((x.catLow && x.catLow.indexOf(q) >= 0) || (x.chainLow && x.chainLow.indexOf(q) === 0)))
+|| (q.length >= 3 && x.search && x.search.indexOf(q) >= 0)) {
+r = 3;
+}
+if (r >= 0) scored.push({ x: x, r: r, feat: FEATURED_COMBO_SLUGS.indexOf(x.slug) >= 0 ? 0 : 1, sr: protoStatusMeta(x).rank });
+});
+scored.sort(function (a, b) {
+return a.r - b.r || a.feat - b.feat || a.sr - b.sr || (a.x.name < b.x.name ? -1 : a.x.name > b.x.name ? 1 : 0);
+});
+return scored.slice(0, maxN || 25).map(function (m) { return m.x; });
+}
+function renderComboOption(x, idPrefix, idx) {
+var it = x.it, pa = it.preflightArgs || {}, ch = pa.chain === "base" ? "base" : "ethereum";
+var sym = protoTickerText(x), st = protoStatusMeta(x);
+var ava = el("span", { "class": "pf-opt-ava" }, [
+protoLogoImg(x.slug, "pf-opt-logo", 28),
+el("span", { "class": "pf-opt-ch" }, [chainBadgeSvg(ch, 12)])
+]);
+var topKids = [el("span", { "class": "pf-opt-name", text: it.name })];
+if (sym) topKids.push(el("span", { "class": "pf-opt-sym", text: sym }));
+var subTxt = (ch === "base" ? "Base" : "Ethereum") + " \u00b7 "
++ (x.card && x.card.summary_short ? String(x.card.summary_short) : String(it.category || it.targetLabel || ""));
+var main = el("span", { "class": "pf-opt-main" }, [
+el("span", { "class": "pf-opt-top" }, topKids),
+el("span", { "class": "pf-opt-sub", text: subTxt })
+]);
+var right = el("span", { "class": "pf-opt-right" }, [
+el("span", { "class": "pf-st-pill", "data-tone": st.tone, text: st.label }),
+el("span", { "class": "pf-opt-addr", text: short(String(pa.address || ""), 6, 4) })
+]);
+return el("div", {
+"class": "pf-opt", role: "option", id: idPrefix + "-" + idx,
+"aria-selected": "false", "data-pf-opt": x.slug
+}, [ava, main, right]);
+}
 function initPreflight() {
 var box = $(".pf"), form = $("#pf-form"), out = $("#pf-out");
 if (!box || !form || !out) return;
 var api = box.getAttribute("data-api") || "", chainSel = $('select[name="chain"]', form), addr = $('input[name="address"]', form);
 if (!chainSel || !addr || !/^https:\/\//.test(api)) return;
 var err = $("#pf-addr-error"), btn = $("#pf-submit"), spin = btn ? $(".spinner", btn) : null, lbl = btn ? $("[data-pf-label]", btn) : null;
-var idleLbl = lbl && lbl.textContent ? lbl.textContent : "Check contract";
+var combo = $("[data-pf-combo]", form), listbox = $("#pf-listbox"), selChip = $("#pf-sel-chip");
+var clearBtn = $("#pf-combo-clear"), toggleBtn = $("#pf-combo-toggle"), toggleLbl = toggleBtn ? $(".pf-toggle-lbl", toggleBtn) : null;
+var chainIco = $("[data-pf-chain-ico]", form);
+var idleLbl = lbl && lbl.textContent ? lbl.textContent : "Check protocol";
 var help = addr.getAttribute("aria-describedby") || "pf-help";
 var seq = 0, ctl = null, timer = null, PF_TIMEOUT_MS = 10000;
+var comboHits = [], comboOpts = [], activeOpt = -1;
+function syncChainIcon() {
+if (!chainIco) return;
+chainIco.textContent = "";
+chainIco.appendChild(chainBadgeSvg(chainSel.value === "base" ? "base" : "ethereum", 14));
+}
+chainSel.addEventListener("change", syncChainIcon);
+syncChainIcon();
+function applySelectedOverlay(meta) {
+pfSelectedMeta = meta || null;
+if (!selChip) return;
+if (!meta) {
+selChip.hidden = true; selChip.textContent = "";
+if (toggleLbl) toggleLbl.textContent = "Protocols";
+var hasV = !!val();
+if (clearBtn) clearBtn.hidden = !hasV;
+if (combo) combo.setAttribute("data-has-clear", hasV ? "1" : "0");
+return;
+}
+selChip.textContent = "";
+var ava = el("span", { "class": "pf-sel-ava" }, [
+protoLogoImg(meta.slug, "pf-sel-logo", 24, meta.icon || ""),
+el("span", { "class": "pf-sel-ch" }, [chainBadgeSvg(meta.chain, 11)])
+]);
+selChip.appendChild(ava);
+selChip.appendChild(el("span", { "class": "pf-sel-name", "data-pf-sel-name": "", text: meta.name }));
+if (meta.sym) selChip.appendChild(el("span", { "class": "pf-sel-sym", text: meta.sym }));
+selChip.appendChild(el("span", { "class": "pf-sel-addr", text: short(meta.address, 6, 4) }));
+selChip.hidden = false;
+if (clearBtn) clearBtn.hidden = false;
+if (combo) combo.setAttribute("data-has-clear", "1");
+if (toggleLbl) toggleLbl.textContent = "Switch";
+}
+pfSelectFromChip = function (b, ch, a) {
+var slug = b.getAttribute("data-pf-slug") || "";
+if (!slug) { applySelectedOverlay(null); syncChainIcon(); return; }
+syncChainIcon();
+closeCombo();
+applySelectedOverlay({
+slug: slug,
+name: b.getAttribute("data-pf-disp") || b.getAttribute("data-r-name") || slug,
+sym: b.getAttribute("data-pf-sym") || "",
+chain: ch,
+address: a,
+icon: b.getAttribute("data-pf-icon") || ""
+});
+};
+function setActiveOpt(i) {
+activeOpt = i;
+comboOpts.forEach(function (o, k) { o.setAttribute("aria-selected", String(k === i)); });
+if (comboOpts[i]) {
+addr.setAttribute("aria-activedescendant", comboOpts[i].id);
+if (comboOpts[i].scrollIntoView) { try { comboOpts[i].scrollIntoView({ block: "nearest" }); } catch (e) {  } }
+} else {
+addr.removeAttribute("aria-activedescendant");
+}
+}
+function closeCombo() {
+if (!listbox || listbox.hidden) return;
+listbox.hidden = true;
+addr.setAttribute("aria-expanded", "false");
+addr.removeAttribute("aria-activedescendant");
+if (combo) combo.removeAttribute("data-open");
+activeOpt = -1;
+}
+function selectComboItem(x) {
+if (!x || !x.it || !x.it.preflightArgs) return;
+var pa = x.it.preflightArgs, a = String(pa.address || ""), ch = pa.chain === "base" ? "base" : "ethereum";
+if (!ADDR_RE.test(a)) return;
+chainSel.value = ch;
+syncChainIcon();
+addr.value = a; addr.setAttribute("value", a);
+invalid("");
+closeCombo();
+applySelectedOverlay({ slug: x.slug, name: x.it.name, sym: protoTickerText(x), chain: ch, address: a });
+syncScanUpgradeTarget(ch, a);
+run();
+}
+function renderCombo(data, queryOverride) {
+if (!listbox) return;
+var q = queryOverride !== undefined ? queryOverride : (pfSelectedMeta ? "" : val());
+listbox.textContent = ""; comboHits = []; comboOpts = []; activeOpt = -1;
+if (!data) {
+listbox.appendChild(el("p", { "class": "pf-dd-empty", text: "Protocol catalog unavailable offline. Paste any 0x\u2026 contract address above." }));
+return;
+}
+var hits = comboSearch(data, q, q ? 25 : 18);
+comboHits = hits;
+var totalProtos = data.filter(function (x) { return x.it && x.it.kind === "protocol"; }).length;
+listbox.appendChild(el("div", { "class": "pf-dd-head" }, [
+el("span", { text: q ? "Matching protocols & tokens (" + hits.length + ")" : "Featured gaps & top protocols" }),
+el("span", { text: totalProtos + " indexed" })
+]));
+if (!hits.length) {
+listbox.appendChild(el("p", { "class": "pf-dd-empty", "data-pf-dd-empty": "", text: "No indexed protocol or ticker matches \u201c" + q.slice(0, 40) + "\u201d. Paste any 0x\u2026 contract address to run a live check." }));
+} else {
+hits.forEach(function (x, k) {
+var row = renderComboOption(x, "pf-opt", k);
+row.addEventListener("mousedown", function (ev) { ev.preventDefault(); selectComboItem(x); });
+row.addEventListener("click", function () { selectComboItem(x); });
+listbox.appendChild(row);
+comboOpts.push(row);
+});
+}
+listbox.appendChild(el("div", { "class": "pf-dd-foot" }, [
+el("span", { text: q ? "\u2191\u2193 navigate \u00b7 Enter to check live \u00b7 Esc close" : "Type to search all " + totalProtos + "+ protocols & token symbols (AAVE, stETH, WELL, USDC\u2026)" }),
+el("span", { text: "or paste 0x\u2026" })
+]));
+setActiveOpt(q && hits.length ? 0 : -1);
+}
+function openCombo(queryOverride) {
+if (!listbox || addr.disabled) return;
+listbox.hidden = false;
+addr.setAttribute("aria-expanded", "true");
+if (combo) combo.setAttribute("data-open", "1");
+if (LK) { renderCombo(LK, queryOverride); return; }
+listbox.textContent = "";
+listbox.appendChild(el("p", { "class": "pf-dd-empty", text: "Loading 312+ indexed protocols\u2026" }));
+lookupData().then(function (d) { if (!listbox.hidden) renderCombo(d, queryOverride); });
+}
 function busy(on) {
 if (!btn) return;
 btn.disabled = on; btn.setAttribute("aria-busy", String(on));
@@ -1954,7 +2214,7 @@ addr.removeAttribute("aria-invalid"); addr.setAttribute("aria-describedby", help
 }
 }
 function problem(a) {
-if (!a) return "Enter a contract address.";
+if (!a) return "Enter a contract address, or select a protocol above.";
 if (!/^0x/i.test(a)) return "A contract address starts with 0x.";
 if (!ADDR_RE.test(a)) return "Enter 0x followed by 40 hexadecimal characters (" + Math.max(0, a.length - 2) + " entered).";
 return "";
@@ -1973,14 +2233,81 @@ p.appendChild(retry);
 }
 }
 function isName(a) { return !!a && !/^0x/i.test(a); }
-addr.addEventListener("blur", function () { var a = val(); invalid(a && !isName(a) ? problem(a) : ""); });
-var typing = null;
+if (selChip) {
+selChip.addEventListener("click", function () {
+applySelectedOverlay(null);
+addr.value = ""; addr.setAttribute("value", "");
+if (combo) combo.setAttribute("data-is-hex", "0");
+syncScanUpgradeTarget();
+addr.focus();
+openCombo("");
+});
+}
+if (clearBtn) {
+clearBtn.addEventListener("click", function () {
+applySelectedOverlay(null);
+addr.value = ""; addr.setAttribute("value", "");
+invalid("");
+if (combo) combo.setAttribute("data-is-hex", "0");
+syncScanUpgradeTarget();
+addr.focus();
+openCombo("");
+});
+}
+if (toggleBtn) {
+toggleBtn.addEventListener("mousedown", function (ev) { ev.preventDefault(); });
+toggleBtn.addEventListener("click", function () {
+if (listbox && !listbox.hidden) { closeCombo(); return; }
+if (pfSelectedMeta) {
+applySelectedOverlay(null);
+addr.value = ""; addr.setAttribute("value", "");
+if (combo) combo.setAttribute("data-is-hex", "0");
+}
+addr.focus();
+openCombo(pfSelectedMeta ? "" : val());
+});
+}
+addr.addEventListener("focus", function () {
+if (!pfSelectedMeta && !ADDR_RE.test(val())) openCombo(val());
+});
+addr.addEventListener("click", function () {
+if (!pfSelectedMeta && listbox && listbox.hidden && !ADDR_RE.test(val())) openCombo(val());
+});
+addr.addEventListener("blur", function () {
+var a = val();
+invalid(a && !isName(a) ? problem(a) : "");
+});
+addr.addEventListener("keydown", function (ev) {
+if (!listbox) return;
+if (ev.key === "ArrowDown") {
+ev.preventDefault();
+if (listbox.hidden) { openCombo(pfSelectedMeta ? "" : val()); return; }
+if (comboOpts.length) setActiveOpt((activeOpt + 1) % comboOpts.length);
+} else if (ev.key === "ArrowUp") {
+ev.preventDefault();
+if (listbox.hidden) { openCombo(pfSelectedMeta ? "" : val()); return; }
+if (comboOpts.length) setActiveOpt((activeOpt - 1 + comboOpts.length) % comboOpts.length);
+} else if (ev.key === "Escape" && !listbox.hidden) {
+ev.preventDefault(); ev.stopPropagation(); closeCombo();
+} else if (ev.key === "Enter" && !listbox.hidden && comboHits.length && (activeOpt >= 0 || isName(val()))) {
+ev.preventDefault();
+selectComboItem(comboHits[activeOpt >= 0 ? activeOpt : 0]);
+}
+});
+document.addEventListener("mousedown", function (ev) {
+if (listbox && !listbox.hidden && combo && !combo.contains(ev.target)) closeCombo();
+});
 addr.addEventListener("input", function () {
 var a = val();
+if (pfSelectedMeta && a.toLowerCase() !== String(pfSelectedMeta.address || "").toLowerCase()) applySelectedOverlay(null);
+if (combo) combo.setAttribute("data-is-hex", /^0x/i.test(a) ? "1" : "0");
+var showClr = !!a || !!pfSelectedMeta;
+if (clearBtn) clearBtn.hidden = !showClr;
+if (combo) combo.setAttribute("data-has-clear", showClr ? "1" : "0");
 if (addr.getAttribute("aria-invalid") === "true") invalid(a && !isName(a) ? problem(a) : "");
-clearTimeout(typing);
-if (isName(a) && a.length >= 2) typing = setTimeout(function () { if (val() === a) lookupNames(a); }, 250);
-else if (!a && out.hasAttribute("data-pf-names")) { out.textContent = ""; out.removeAttribute("data-pf-names"); }
+if (ADDR_RE.test(a)) { closeCombo(); return; }
+if (!a && out.hasAttribute("data-pf-names")) { out.textContent = ""; out.removeAttribute("data-pf-names"); }
+openCombo(a);
 });
 function lookupNames(a) {
 var my = ++seq;
@@ -2002,7 +2329,11 @@ var pa = x.it.preflightArgs || {}, brief = x.it.kind === "brief";
 var run_ = el("button", { type: "button", "data-slot": "button", "data-variant": "outline", "data-size": "sm", "data-pf-run": x.slug, text: "Run live check" });
 run_.addEventListener("click", function () {
 if (!ADDR_RE.test(String(pa.address || ""))) return;
-chainSel.value = pa.chain === "base" ? "base" : "ethereum"; addr.value = pa.address; addr.setAttribute("value", pa.address); run();
+var cVal = pa.chain === "base" ? "base" : "ethereum";
+chainSel.value = cVal; syncChainIcon();
+addr.value = pa.address; addr.setAttribute("value", pa.address);
+applySelectedOverlay({ slug: x.slug, name: x.it.name, sym: protoTickerText(x), chain: cVal, address: pa.address });
+run();
 });
 ul.appendChild(el("li", { "data-pf-match-item": x.slug }, [
 el("span", { "class": "pm-n" }, [x.it.name, el("small", { text: lkSub(x) })]),
@@ -2018,7 +2349,13 @@ var my = ++seq;
 if (ctl) { try { ctl.abort(); } catch (e) {  } ctl = null; }
 if (timer) { clearTimeout(timer); timer = null; }
 var a = val(), ch = chainSel.value === "base" ? "base" : "ethereum", p = problem(a);
-if (isName(a)) { if (a.length >= 2) lookupNames(a); else { invalid("Type at least 2 letters of a protocol or token, or a 0x\u2026 contract address."); addr.focus(); } return; }
+if (isName(a)) {
+if (listbox && !listbox.hidden && comboHits.length) { selectComboItem(comboHits[activeOpt >= 0 ? activeOpt : 0]); return; }
+if (a.length >= 2) lookupNames(a);
+else { invalid("Type a protocol or token name, pick from the dropdown, or paste a 0x\u2026 contract address."); addr.focus(); }
+return;
+}
+closeCombo();
 if (p) { invalid(p); busy(false); out.textContent = ""; addr.focus(); return; }
 out.removeAttribute("data-pf-names");
 invalid("");
@@ -2032,7 +2369,10 @@ var mine = ctl;
 timer = setTimeout(function () { timedOut = true; try { mine.abort(); } catch (e) {  } }, PF_TIMEOUT_MS);
 }
 busy(true);
-msg("Checking " + short(a, 6, 4) + " on " + ch + " at the latest block…", "loading");
+var who = pfSelectedMeta && pfSelectedMeta.address.toLowerCase() === a.toLowerCase()
+? pfSelectedMeta.name + " (" + short(a, 6, 4) + ")"
+: short(a, 6, 4);
+msg("Checking " + who + " on " + (ch === "base" ? "Base" : "Ethereum") + " at the latest block…", "loading");
 fetch(api + "/v1/check/preflight?chain=" + ch + "&address=" + a + "&caller_agent=pacta-wtf-checker&requester_role=individual_user&caller_purpose=general_research", opts)
 .then(function (res) { return res.json().then(function (b) { return { status: res.status, body: b }; }); })
 .then(function (x) {
@@ -2055,6 +2395,64 @@ else msg("Network error: could not reach the API. Retry, or use the cURL quickst
 });
 }
 form.addEventListener("submit", function (ev) { ev.preventDefault(); run(); });
+}
+function initSealCombo() {
+var wrap = $("[data-seal-combo]"), inp = $("#co-target"), chainSel = $("#co-chain"), docsInp = $("#co-docs");
+var listbox = $("#co-target-listbox"), tog = wrap ? $("[data-seal-toggle]", wrap) : null;
+if (!wrap || !inp || !listbox) return;
+var hits = [], opts = [], active = -1;
+function setAct(i) {
+active = i;
+opts.forEach(function (o, k) { o.setAttribute("aria-selected", String(k === i)); });
+}
+function close() {
+if (listbox.hidden) return;
+listbox.hidden = true; inp.setAttribute("aria-expanded", "false"); wrap.removeAttribute("data-open"); active = -1;
+}
+function pick(x) {
+var pa = (x && x.it && x.it.preflightArgs) || {}, a = String(pa.address || "");
+if (!ADDR_RE.test(a)) return;
+if (chainSel) { chainSel.value = pa.chain === "base" ? "base" : "ethereum"; chainSel.dispatchEvent(new Event("change")); }
+inp.value = a; inp.setAttribute("value", a); inp.dispatchEvent(new Event("change"));
+if (docsInp && !String(docsInp.value || "").trim()) { docsInp.value = x.it.name; docsInp.setAttribute("value", x.it.name); }
+close();
+}
+function render(data) {
+var q = String(inp.value || "").trim();
+if (ADDR_RE.test(q)) q = "";
+listbox.textContent = ""; hits = []; opts = []; active = -1;
+if (!data) return;
+hits = comboSearch(data, q, q ? 20 : 14);
+hits.forEach(function (x, k) {
+var row = renderComboOption(x, "co-opt", k);
+row.addEventListener("mousedown", function (ev) { ev.preventDefault(); pick(x); });
+row.addEventListener("click", function () { pick(x); });
+listbox.appendChild(row); opts.push(row);
+});
+setAct(q && hits.length ? 0 : -1);
+}
+function open() {
+if (inp.disabled) return;
+listbox.hidden = false; inp.setAttribute("aria-expanded", "true"); wrap.setAttribute("data-open", "1");
+if (LK) { render(LK); return; }
+lookupData().then(function (d) { if (!listbox.hidden) render(d); });
+}
+if (tog) {
+tog.addEventListener("mousedown", function (ev) { ev.preventDefault(); });
+tog.addEventListener("click", function () { if (!listbox.hidden) close(); else { inp.focus(); open(); } });
+}
+inp.addEventListener("focus", function () { if (!ADDR_RE.test(String(inp.value || "").trim())) open(); });
+inp.addEventListener("input", function () {
+var v = String(inp.value || "").trim();
+if (ADDR_RE.test(v)) close(); else open();
+});
+inp.addEventListener("keydown", function (ev) {
+if (ev.key === "Escape" && !listbox.hidden) { ev.preventDefault(); close(); }
+else if (ev.key === "ArrowDown") { ev.preventDefault(); if (listbox.hidden) open(); else if (opts.length) setAct((active + 1) % opts.length); }
+else if (ev.key === "ArrowUp") { ev.preventDefault(); if (listbox.hidden) open(); else if (opts.length) setAct((active - 1 + opts.length) % opts.length); }
+else if (ev.key === "Enter" && !listbox.hidden && hits.length && active >= 0) { ev.preventDefault(); pick(hits[active]); }
+});
+document.addEventListener("mousedown", function (ev) { if (!listbox.hidden && !wrap.contains(ev.target)) close(); });
 }
 function initProtocolFilter() {
 var root = $("[data-pfilter-root]"), q = $("#proto-q"), count = $("#proto-count");
@@ -2237,7 +2635,10 @@ LK = items.filter(function (it) { return it && typeof it.slug === "string" && ty
 var c = cards[it.slug] || null, addrs = [it.primaryContract, it.controllerAddress].concat(it.aliasAddresses || []).concat(it.relatedContracts || [])
 .map(function (a) { return typeof a === "string" ? a : (a && typeof a.address === "string" ? a.address : ""); })
 .filter(function (a) { return ADDR_RE.test(a); }).map(function (a) { return a.toLowerCase(); });
-return { it: it, card: c, name: it.name.toLowerCase(), slug: it.slug, tokens: (it.tokens || []).map(function (t) { return String(t).toLowerCase(); }),
+var baseToks = (it.tokens || []).map(function (t) { return String(t).toLowerCase(); });
+var cToks = PROTO_EXTRA_SYMS[it.slug] ? [PROTO_EXTRA_SYMS[it.slug].toLowerCase()].concat(baseToks) : baseToks;
+return { it: it, card: c, name: it.name.toLowerCase(), slug: it.slug, tokens: baseToks, comboTokens: cToks,
+catLow: String(it.category || "").toLowerCase(), chainLow: String(it.chain || "").toLowerCase(),
 addrs: addrs, search: c ? String(c.search || "").toLowerCase() : "" };
 });
 return LK;
@@ -2496,9 +2897,10 @@ var pfChain = $("#pf-chain"), pfAddr = $("#pf-address"), pill = $("#co-sync-pill
 var ch = (chOverride || (pfChain && pfChain.value) || "ethereum") === "base" ? "base" : "ethereum";
 var a = String(addrOverride || (pfAddr && pfAddr.value) || "").trim();
 if (pill) {
+var pName = pfSelectedMeta && String(pfSelectedMeta.address || "").toLowerCase() === a.toLowerCase() ? pfSelectedMeta.name + " · " : "";
 pill.textContent = ADDR_RE.test(a)
-? "Target synced: " + (ch === "base" ? "Base" : "Ethereum") + " · " + short(a, 6, 4)
-: "Target: paste or pick a 0x… contract in the free checker above";
+? "Target synced: " + pName + (ch === "base" ? "Base" : "Ethereum") + " · " + short(a, 6, 4)
+: "Target: select a protocol or paste a 0x… contract in the free checker above";
 }
 if (sealLink) {
 sealLink.setAttribute("href", ADDR_RE.test(a) ? "../seal/?chain=" + ch + "&address=" + a : "../seal/");
@@ -2557,7 +2959,7 @@ openCheckout();
 }
 }
 document.addEventListener("DOMContentLoaded", function () {
-[initTheme, initXPixel, initSheet, initTabs, initTabLinks, initDetailsHash, initCmdk, initTooltips, initCopy, initBeaconHooks, tick, initIndex, initRequest, initLauncher, initCheckout, initScanFunnel, initMiniApp, initInspector, initPreflight,
+[initTheme, initXPixel, initSheet, initTabs, initTabLinks, initDetailsHash, initCmdk, initTooltips, initCopy, initBeaconHooks, tick, initIndex, initRequest, initLauncher, initCheckout, initScanFunnel, initSealCombo, initMiniApp, initInspector, initPreflight,
 initLiveTimelocks, initProtocolFilter, initAges, initRefresh, initHeroCheck, initBadgeWidget, initScorecards, initReceipts].forEach(function (f) {
 try { f(); } catch (e) { setTimeout(function () { throw e; }, 0); }
 });

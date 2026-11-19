@@ -1748,8 +1748,60 @@ async function miniAppScenario() {
     && p.window.__pactaTwqEvents.some((e) => e[1] === "tw-rjbqn-rjhif" && e[2].value === 19 && e[2].conversion_id === "ord_ma_19")
     && p.window.__pactaTwqEvents.some((e) => e[1] === "tw-rjbqn-rjhif" && e[2].value === 99 && e[2].conversion_id === "ord_ma_99");
 }
+
+async function pfComboboxScenario() {
+  const pfCalls = [];
+  const mockFetch = (url) => {
+    const u = String(url);
+    if (/api\/v1\/lookup\.json$/.test(u)) return Promise.resolve({ status: 200, json: () => Promise.resolve(input.lookupJson) });
+    if (/api\/v1\/scorecards\.json$/.test(u)) return Promise.resolve({ status: 200, json: () => Promise.resolve(input.scorecardsJson) });
+    if (/\/v1\/check\/preflight/.test(u)) {
+      pfCalls.push(u);
+      const mAddr = /[?&]address=(0x[0-9a-fA-F]{40})/.exec(u);
+      const mCh = /[?&]chain=(base|ethereum)/.exec(u);
+      return Promise.resolve({ status: 200, json: () => Promise.resolve(Object.assign({}, PF_EXAMPLE, {
+        chain: mCh ? mCh[1] : PF_EXAMPLE.chain,
+        address: mAddr ? mAddr[1] : PF_EXAMPLE.address
+      })) });
+    }
+    return Promise.reject(new Error("unexpected fetch: " + u));
+  };
+  const p = run(input.scan, input.app, { path: "/scan/", fetch: mockFetch });
+  const d = p.document, inp = d.getElementById("pf-address"), lb = d.getElementById("pf-listbox");
+  const selChip = d.getElementById("pf-sel-chip"), clr = d.getElementById("pf-combo-clear");
+  inp.dispatchEvent(new Event_("focus"));
+  for (let i = 0; i < 5; i++) await flush();
+  const opts0 = lb.querySelectorAll("[data-pf-opt]");
+  const zeroTypeOk = lb.hidden === false && inp.getAttribute("aria-expanded") === "true" && opts0.length >= 15
+    && opts0.every((o) => !!o.querySelector("img.pf-opt-logo") && !!o.querySelector(".pf-st-pill"));
+  const typeQ = async (q) => {
+    inp.value = q; const ev = new Event_("input"); ev.target = inp; inp.dispatchEvent(ev);
+    for (let i = 0; i < 3; i++) await flush();
+    return lb.querySelectorAll("[data-pf-opt]").map((o) => o.getAttribute("data-pf-opt"));
+  };
+  const stethHits = await typeQ("steth");
+  const cakeHits = await typeQ("cake");
+  const moonHits = await typeQ("moon");
+  const tickerAndNameOk = stethHits[0] === "lido-steth-dual-governance" && cakeHits[0] === "pancakeswap-amm-v3"
+    && moonHits[0] === "moonwell-lending-base";
+  const moonOpt = lb.querySelector('[data-pf-opt="moonwell-lending-base"]');
+  moonOpt.dispatchEvent(new Event_("click"));
+  for (let i = 0; i < 5; i++) await flush();
+  const mw = input.lookupJson.items.find((x) => x.slug === "moonwell-lending-base").preflightArgs;
+  const selectedOk = lb.hidden === true && inp.getAttribute("aria-expanded") === "false"
+    && d.getElementById("pf-chain").value === "base" && inp.value === mw.address
+    && selChip.hidden === false && selChip.textContent.includes("Moonwell") && selChip.textContent.includes("WELL")
+    && pfCalls.length === 1 && pfCalls[0].includes("chain=base&address=" + mw.address)
+    && d.getElementById("scan-upgrade").hidden === false
+    && d.getElementById("co-sync-pill").textContent.includes("Moonwell");
+  clr.dispatchEvent(new Event_("click"));
+  for (let i = 0; i < 3; i++) await flush();
+  const clearedOk = inp.value === "" && selChip.hidden === true && lb.hidden === false;
+  res.pf_combobox_select_and_autocomplete = zeroTypeOk && tickerAndNameOk && selectedOk && clearedOk;
+}
 (async () => {
   try { await v45Scenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
+  try { await pfComboboxScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
   try { await requestBriefScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
   try { await liveCardScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
   try { await tryExampleScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
