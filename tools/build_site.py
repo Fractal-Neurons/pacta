@@ -2824,7 +2824,7 @@ EAS_SCHEMA_VIEW = "https://base.easscan.org/schema/view/0x7ff485bc1159dff3c70eef
 EDITORIAL_FIREWALL = "Pacta never sells grades."
 
 
-HERO_PLACEHOLDER = "Select or type a protocol / token (Aave, Lido, Pendle, Moonwell…) or paste 0x…"
+HERO_PLACEHOLDER = "Protocol, token, or 0x address…"
 
 
 _PROTO_COUNT_CACHE = None
@@ -4585,9 +4585,14 @@ def hero_section(idx, cards, radar):
 <h1><span class="l">Protocol docs drift.</span><br><span class="l">The chain doesn’t.</span></h1>
 <p class="lede">{E(HOME_SUB.format(n=s["protocols"]))}</p>
 {hero_checker(try_chips(idx))}
-<p class="hero-routes"><span><b>3 ways to use Pacta:</b></span><span><a href="scan/">1. Scan any Safe free{ARR}</a></span><span><a href="bounties/#sponsor-pool">2. Fund a verification pool ($50+){ARR}</a></span><span><a href="scan/#watch-pilot">3. Watch positions (30d pilot){ARR}</a></span><span><a href="mcp/">MCP &amp; x402{ARR}</a></span></p>
+<p class="hero-routes"><span>Building an agent? <a href="mcp/">Use the MCP server{ARR}</a></span><span>Run a protocol? <a href="for-protocols/">For protocol teams{ARR}</a></span></p>
 </div>
 {proof_card(idx)}
+</div>
+<div class="home-doors" aria-label="Three ways to use Pacta">
+<a class="home-door" data-slot="card" href="scan/"><span class="hd-k">1 · Free Instant Scan</span><b>Scan any wallet or Safe</b><span class="hd-d">Check held DeFi positions, adverse gaps &amp; signer overlap in 3 seconds.</span><span class="hd-cta">Scan free{ARR}</span></a>
+<a class="home-door" data-slot="card" href="bounties/#sponsor-pool"><span class="hd-k">2 · Community &amp; Curators</span><b>Fund a verification pool ($50+)</b><span class="hd-d">Sponsor a $50 live control-plane check or $150/protocol wholesale sweep.</span><span class="hd-cta">Fund a pool{ARR}</span></a>
+<a class="home-door" data-slot="card" href="scan/#watch-pilot"><span class="hd-k">3 · Free 30-Day Pilot</span><b>Watch my positions</b><span class="hd-d">Get Email, @Telegram, or Webhook alerts before queued timelocks execute.</span><span class="hd-cta">Enable alerts{ARR}</span></a>
 </div>
 {stats_cards(idx, cards)}
 <div class="hero-meta">{fresh_pill(idx)}{radar_strip(radar)}</div>
