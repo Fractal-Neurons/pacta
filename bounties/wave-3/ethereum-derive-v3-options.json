@@ -15,10 +15,10 @@
         "url": "https://forums.derive.xyz/t/dip-drv-token-launch-and-functionality/233"
       },
       {
-        "claim_summary": "Derive's official help-centre DRV article documents the launch tokenomics (1,000,000,000 fixed supply, 1:1 LYRA/stkLYRA migration, stDRV governance, 25% revenue buybacks) that went live with the DRV token generation event on 2025-01-15, when claiming opened.",
+        "claim_summary": "Archived snapshot (11 Nov 2025) of Derive's official help-centre DRV article -- the live page now returns 404 -- documenting the launch tokenomics (1,000,000,000 fixed supply, 1:1 LYRA/stkLYRA migration, stDRV governance, 25% revenue buybacks) that went live with the DRV token generation event on 2025-01-15, when claiming opened. Coinspeaker (13 Jan 2025) independently confirms the token goes live on 15 January 2025 at 12:00 AM UTC.",
         "date": "2025-01-15",
         "kind": "official_docs",
-        "url": "https://help.derive.xyz/en/articles/10381892-drv"
+        "url": "https://web.archive.org/web/20251111173658/https://help.derive.xyz/en/articles/10381892-drv"
       }
     ],
     "gap_windows": [
@@ -36,27 +36,58 @@
     "mttr_status": "repaired"
   },
   "dossier_window": "2024-2026",
-  "executive_risk_memo": "Derive is a decentralised derivatives exchange for options, perpetuals and spot, originally Lyra Finance (2021, Optimism) and rebranded to Derive in August 2024. Its native token DRV lives on Ethereum mainnet as a TransparentUpgradeableProxy at 0xB1D1eae60EEA9525032a6DCb4c1CE336a1dE71BE, with the implementation an ERC-20 LayerZero OFT contract (Derive, 0x4909ad99441ea5311b90a94650c394cea4a881b8) and proxy admin 0xaa7b17c2539437efa236fed262a5815358ae2cc3, which Pacta independently lists as the controller address. This dossier verifies two control-plane facts by direct RPC queries against a public Ethereum endpoint. First, the proxy was deployed at block 21224782 on 2024-11-19 in transaction 0x6ec610a2a8f41db57224414a64e7dc19c210def26293203529f6b1835c9bb0df, receipt status success. Second, the EIP-1967 implementation and admin slots were sampled at eleven blocks from deployment to block 26453278 and re-checked at the chain head (block 26453929) on 2026-11-20: both slots are byte-identical to their deployment values, so the proxy has never been upgraded and its admin has never changed in two years. A successful token transfer through the proxy at block 26452735 on 2026-11-20 anchors the immutability checkpoint. The governance record shows one repaired documentation gap. The September 2024 DIP 'DRV Token Launch and Functionality' scheduled the DRV launch for Q4 2024, targeting the end of October, with a 1:1 LYRA claim and most tokens bridged to Derive L2 for claiming. The token contract was deployed on 2024-11-19, inside Q4, but the documented claim and migration path did not open until the token generation event on 2025-01-15, 57 days later. The gap is closed: Derive's official help-centre DRV article documents the launch tokenomics (1,000,000,000 fixed supply, 1:1 migration, stDRV governance) that went live on that date. Engineering activity in the public repositories is thin. The protocol's core contracts repository, derivexyz/v2-core, recorded only three commits in the trailing twelve months, from two humans, with one contributor (0xdomrom) authoring two of the three; the bus factor is therefore 1, and the governance contracts repository recorded none. The deployed DRV token implementation code could not be traced to a public commit predating its on-chain deployment, so code_before_upgrade_verified is false. Two later governance events frame the forward risk. In late 2025 the DAO passed DIP 303, expanding the DRV supply ceiling by 50 percent from 1,000,000,000 to 1,500,000,000 to fund contributor retention and institutional market-maker agreements, so the fixed-supply promise in the launch documentation no longer holds. In September 2026 DIP 322 proposed Derive V3, moving settlement from Derive Chain (an OP Stack rollup) to a zero-knowledge virtual machine verified on Ethereum mainnet; the V3 migration completed on 2026-10-06 and Derive Chain was wound down. The V3 contracts and their new control plane are outside this dossier's Ethereum DRV-token scope and should be assessed separately. Residual risks: the proxy admin is a contract whose internal governance was not fully characterised here; the DRV token is a LayerZero OFT, so cross-chain peer configuration is an additional control surface; and the thin public commit history means future upgrades, if any, may arrive with little public review. The verified core finding is narrow and strong: the DRV token proxy on Ethereum has been immutable since deployment, its controller is the address Pacta lists, and the one documented launch gap was repaired in 57 days.",
+  "executive_risk_memo": "Derive is a decentralised derivatives exchange for options, perpetuals and spot, originally Lyra Finance (2021, Optimism) and rebranded to Derive in August 2024. Its native token DRV lives on Ethereum mainnet as a TransparentUpgradeableProxy at 0xB1D1eae60EEA9525032a6DCb4c1CE336a1dE71BE, with the implementation an ERC-20 LayerZero OFT contract (Derive, 0x4909ad99441ea5311b90a94650c394cea4a881b8) and proxy admin 0xaa7b17c2539437efa236fed262a5815358ae2cc3, which Pacta independently lists as the controller address. This dossier verifies two control-plane facts by direct RPC queries against a public Ethereum endpoint. First, the proxy was deployed at block 21224782 on 2024-11-19 in transaction 0x6ec610a2a8f41db57224414a64e7dc19c210def26293203529f6b1835c9bb0df, receipt status success. Second, the EIP-1967 implementation and admin slots were sampled at eleven blocks from deployment to block 26453278 and re-checked at the chain head (block 26453929) on 2026-11-20: both slots are byte-identical to their deployment values, so the proxy has never been upgraded and its EIP-1967 admin slot has never changed in two years. The admin slot must not be confused with the owners behind it: the ProxyAdmin contract's owner() was renounced on 2025-01-14 (block 21622528), and the DRV token's owner() moved three times -- on 2025-01-12 to 0x246d38588b16Dd877c558b245e6D5a711C649fCF, on 2025-10-15 to 0x169a99B9958386a5D91E732Ed08B344946A92391, and on 2026-10-31 to 0x62c004a89EDBd7bECBdf54E14779B7e7F5b390F7, the current live owner, via Safe multisig execTransaction calls. The proxy itself was never upgraded; governance of the token owner changed hands. A successful token transfer through the proxy at block 26452735 on 2026-11-20 anchors the immutability checkpoint. The governance record shows one repaired documentation gap. The September 2024 DIP 'DRV Token Launch and Functionality' scheduled the DRV launch for Q4 2024, targeting the end of October, with a 1:1 LYRA claim and most tokens bridged to Derive L2 for claiming. The token contract was deployed on 2024-11-19, inside Q4, but the documented claim and migration path did not open until the token generation event on 2025-01-15, 57 days later. The gap is closed: Derive's official help-centre DRV article (live page now 404; archived snapshot 11 Nov 2025) documents the launch tokenomics (1,000,000,000 fixed supply, 1:1 migration, stDRV governance) that went live on that date, and Coinspeaker (13 Jan 2025) independently confirms the token went live on 15 January 2025 at 12:00 AM UTC. Engineering activity in the public repositories is thin. The protocol's core contracts repository, derivexyz/v2-core, recorded only three commits in the trailing twelve months -- two contract-touching and one docs-only -- from two humans, with one contributor (0xdomrom) authoring two of the three; the bus factor is therefore 1, and the governance contracts repository recorded none. Note that derivexyz/v2-core is the exchange-core contracts repository; the DRV token implementation itself (the LayerZero OFT Derive contract) is not present in any public derivexyz repository, so v2-core activity is exchange-core activity, not DRV-token source provenance. The deployed DRV token implementation code could not be traced to a public commit predating its on-chain deployment, so code_before_upgrade_verified is false. Two later governance events frame the forward risk. In late 2025 the DAO passed DIP 303, expanding the DRV supply ceiling by 50 percent from 1,000,000,000 to 1,500,000,000 to fund contributor retention and institutional market-maker agreements, so the fixed-supply promise in the launch documentation no longer holds. In September 2026 DIP 322 proposed Derive V3, moving settlement from Derive Chain (an OP Stack rollup) to a zero-knowledge virtual machine verified on Ethereum mainnet; the V3 migration completed on 2026-10-06 and Derive Chain was wound down. The V3 contracts and their new control plane are outside this dossier's Ethereum DRV-token scope and should be assessed separately. Residual risks: the ProxyAdmin contract's owner has been renounced since 2025-01-14, so the proxy can no longer be upgraded through it, but the DRV token's current owner is a Safe-controlled address (0x62c004a89EDBd7bECBdf54E14779B7e7F5b390F7) whose signers and threshold were not characterised here; the DRV token is a LayerZero OFT, so cross-chain peer configuration is an additional control surface; and the thin public commit history means future upgrades, if any, may arrive with little public review. The verified core finding is narrow and strong: the DRV token proxy on Ethereum has been immutable since deployment (its EIP-1967 slots never changed), its controller is the address Pacta lists, the token owner moved three times to a Safe-controlled address, and the one documented launch gap was repaired in 57 days.",
   "historical_transitions": [
     {
       "block_date": "2024-11-19",
       "block_number": 21224782,
       "event_kind": "deployment_baseline",
       "rpc_or_cast_proof": "cast receipt 0x6ec610a2a8f41db57224414a64e7dc19c210def26293203529f6b1835c9bb0df --rpc-url https://eth-mainnet.public.blastapi.io",
-      "summary": "DRV token proxy deployed on Ethereum mainnet at block 21224782 (2024-11-19T22:31:11Z) in transaction 0x6ec610a2..., receipt status success, creator 0x81a106490864e03b3aeb651a040643b398682d85. The proxy is a TransparentUpgradeableProxy (compiler v0.8.27) whose implementation is the LayerZero OFT ERC-20 contract 'Derive' at 0x4909ad99441ea5311b90a94650c394cea4a881b8 and whose proxy admin is 0xaa7b17c2539437efa236fed262a5815358ae2cc3, the address Pacta lists as the controller.",
+      "summary": "DRV token proxy deployed on Ethereum mainnet at block 21224782 (2024-11-19T22:31:11Z) in transaction 0x6ec610a2..., receipt status success, creator 0x81a106490864e03b3aeb651a040643b398682d85. The proxy is a TransparentUpgradeableProxy (compiler v0.8.27) whose implementation is the LayerZero OFT ERC-20 contract 'Derive' at 0x4909ad99441ea5311b90a94650c394cea4a881b8 and whose proxy admin is 0xaa7b17c2539437efa236fed262a5815358ae2cc3, the address Pacta lists as the controller. The same creation transaction also deployed that ProxyAdmin with initial owner 0xA82994cc5e9D94FED2916f762e03245FcBE79f23 (constructor argument); the EIP-1967 admin slot has held the same ProxyAdmin address since deployment.",
       "tx_hash": "0x6ec610a2a8f41db57224414a64e7dc19c210def26293203529f6b1835c9bb0df"
+    },
+    {
+      "block_date": "2025-01-12",
+      "block_number": 21607234,
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "Etherscan transaction https://etherscan.io/tx/0x1e6731609c42345ff0427c9de430cb3fa1817e22ef921de060c047c0a0d83112 -- OwnershipTransferred event on the DRV token proxy at block 21607234",
+      "summary": "OwnershipTransferred on the DRV token proxy at block 21607234 (2025-01-12T08:32:11Z): token owner() moved from 0xA82994cc5e9D94FED2916f762e03245FcBE79f23 to 0x246d38588b16Dd877c558b245e6D5a711C649fCF via transferOwnership in transaction 0x1e6731609c42345ff0427c9de430cb3fa1817e22ef921de060c047c0a0d83112. First of three token-owner moves.",
+      "tx_hash": "0x1e6731609c42345ff0427c9de430cb3fa1817e22ef921de060c047c0a0d83112"
+    },
+    {
+      "block_date": "2025-01-14",
+      "block_number": 21622528,
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "Etherscan transaction https://etherscan.io/tx/0xf385dc91fb2d83417b807fc20ad5c6d4f34d7f68d9c9424efbd074bf91f373d4 -- OwnershipTransferred event on the ProxyAdmin at block 21622528",
+      "summary": "OwnershipTransferred on the ProxyAdmin at block 21622528 (2025-01-14T11:48:47Z): ProxyAdmin owner() renounced from 0xA82994cc5e9D94FED2916f762e03245FcBE79f23 to 0x0000000000000000000000000000000000000000 via renounceOwnership in transaction 0xf385dc91fb2d83417b807fc20ad5c6d4f34d7f68d9c9424efbd074bf91f373d4, one day before the 2025-01-15 token generation event. The EIP-1967 admin slot still points at the same ProxyAdmin contract; only its owner() was renounced.",
+      "tx_hash": "0xf385dc91fb2d83417b807fc20ad5c6d4f34d7f68d9c9424efbd074bf91f373d4"
+    },
+    {
+      "block_date": "2025-10-15",
+      "block_number": 23585447,
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "Etherscan transaction https://etherscan.io/tx/0x3516de8a1604f364bc4cfbe3591cf53189959b7cce78a67f4d61644d7a62a88b -- OwnershipTransferred event on the DRV token proxy at block 23585447",
+      "summary": "OwnershipTransferred on the DRV token proxy at block 23585447 (2025-10-15T20:23:11Z): token owner() moved from 0x246d38588b16Dd877c558b245e6D5a711C649fCF to 0x169a99B9958386a5D91E732Ed08B344946A92391 via a Safe multisig execTransaction in transaction 0x3516de8a1604f364bc4cfbe3591cf53189959b7cce78a67f4d61644d7a62a88b. Second of three token-owner moves.",
+      "tx_hash": "0x3516de8a1604f364bc4cfbe3591cf53189959b7cce78a67f4d61644d7a62a88b"
+    },
+    {
+      "block_date": "2026-10-31",
+      "block_number": 26309069,
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "Etherscan transaction https://etherscan.io/tx/0xdb0ad562bb533e93bb20693ae100f5d1e22eb59d5e77fd3aa2eac8b80a2a9dd8 -- OwnershipTransferred event on the DRV token proxy at block 26309069",
+      "summary": "OwnershipTransferred on the DRV token proxy at block 26309069 (2026-10-31T00:09:59Z): token owner() moved from 0x169a99B9958386a5D91E732Ed08B344946A92391 to 0x62c004a89EDBd7bECBdf54E14779B7e7F5b390F7 via a Safe multisig execTransaction in transaction 0xdb0ad562bb533e93bb20693ae100f5d1e22eb59d5e77fd3aa2eac8b80a2a9dd8. Third of three token-owner moves; 0x62c004a89EDBd7bECBdf54E14779B7e7F5b390F7 is the current live token owner, Safe-controlled, not the deployer.",
+      "tx_hash": "0xdb0ad562bb533e93bb20693ae100f5d1e22eb59d5e77fd3aa2eac8b80a2a9dd8"
     },
     {
       "block_date": "2026-11-20",
       "block_number": 26452735,
       "event_kind": "immutability_checkpoint",
       "rpc_or_cast_proof": "cast storage 0xB1D1eae60EEA9525032a6DCb4c1CE336a1dE71BE 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc --rpc-url https://eth-mainnet.public.blastapi.io --block 26452735",
-      "summary": "Immutability checkpoint at block 26452735 (2026-11-20T00:31:35Z). The EIP-1967 implementation slot (0x360894a1...) and admin slot (0xb5312768...) were read via eth_getStorageAt at eleven blocks from deployment (21224782) through 26453278 and re-checked at chain head 26453929 on 2026-11-20: both slots are byte-identical to their deployment values (implementation 0x4909ad99441ea5311b90a94650c394cea4a881b8, admin 0xaa7b17c2539437efa236fed262a5815358ae2cc3). The proxy was never upgraded and its admin never changed in two years. The referenced transaction is a successful token transfer executed through the unchanged proxy at this block.",
+      "summary": "Immutability checkpoint at block 26452735 (2026-11-20T00:31:35Z). The EIP-1967 implementation slot (0x360894a1...) and admin slot (0xb5312768...) were read via eth_getStorageAt at eleven blocks from deployment (21224782) through 26453278 and re-checked at chain head 26453929 on 2026-11-20: both slots are byte-identical to their deployment values (implementation 0x4909ad99441ea5311b90a94650c394cea4a881b8, admin 0xaa7b17c2539437efa236fed262a5815358ae2cc3). The proxy was never upgraded and its EIP-1967 admin slot never changed in two years (the slot still points at the same ProxyAdmin contract; the ProxyAdmin owner and the token owner are recorded as separate transitions). The referenced transaction is a successful token transfer executed through the unchanged proxy at this block.",
       "tx_hash": "0xdbb018632042ae370217d897231b77349615a5045dc2b37477ef4867eb80921e"
     }
   ],
   "mcp_tool_receipt": {
-    "tool": "pacta_lookup_protocol",
     "arguments": {
       "query": "0xB1D1eae60EEA9525032a6DCb4c1CE336a1dE71BE"
     },
@@ -199,15 +230,16 @@
           "payTo": "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14"
         }
       }
-    }
+    },
+    "tool": "pacta_lookup_protocol"
   },
   "pacta_slug": "derive-v3-options",
   "protocol_name": "Derive",
   "repo_audit": {
     "bus_factor": 1,
     "code_before_upgrade_verified": false,
-    "commits_12m_contracts": 1,
-    "commits_12m_frontend_or_other": 2,
+    "commits_12m_contracts": 2,
+    "commits_12m_frontend_or_other": 1,
     "github_org_repo": "derivexyz/v2-core",
     "human_contributors_12m": 2
   },
