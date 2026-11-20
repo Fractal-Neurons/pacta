@@ -1,0 +1,121 @@
+{
+  "wave": 3,
+  "chain": "ethereum",
+  "chain_id": 1,
+  "protocol_name": "Derive V3 Options",
+  "slug": "derive-v3-options",
+  "pacta_slug": "derive-v3-options",
+  "contract_address": "0xB1D1eae60EEA9525032a6DCb4c1CE336a1dE71BE",
+  "tvl_usd": 152000000,
+  "tvl_source_url": "https://defillama.com/protocol/lyra",
+  "dossier_window": "2024-2026",
+  "trajectory_mode": "immutable_verified",
+  "historical_transitions": [
+    {
+      "block_number": 21224782,
+      "block_date": "2024-11-19",
+      "tx_hash": "0x6ec610a2a8f41db57224414a64e7dc19c210def26293203529f6b1835c9bb0df",
+      "event_kind": "deployment_baseline",
+      "rpc_or_cast_proof": "cast storage 0xB1D1eae60EEA9525032a6DCb4c1CE336a1dE71BE 0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103 --block 21224782 --rpc-url https://eth.drpc.org",
+      "summary": "Deployment baseline (Blockscout/RPC-confirmed, tx 0x6ec610a2a8f41db57224414a64e7dc19c210def26293203529f6b1835c9bb0df): TransparentUpgradeableProxy 0xB1D1eae60EEA9525032a6DCb4c1CE336a1dE71BE (Derive V3 Options / Lyra ecosystem) created at block 21224782 (2024-11-19, creator 0x81a106490864E03b3aEB651A040643b398682D85, status 0x1). eth_getStorageAt at deployment block shows EIP-1967 admin 0xaa7b17c2539437efa236fed262a5815358ae2cc3 and implementation 0x4909AD99441Ea5311b90a94650C394cEa4A881B8."
+    },
+    {
+      "block_number": 26453075,
+      "block_date": "2026-11-20",
+      "tx_hash": "0xc19a824186c615cebee3293db01c6de5f6cfe722fb0a8924cea87efbee5c855c",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast storage 0xB1D1eae60EEA9525032a6DCb4c1CE336a1dE71BE 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc --block 26453075 --rpc-url https://eth.drpc.org",
+      "summary": "Immutability checkpoint anchored to on-chain interaction tx 0xc19a824186c615cebee3293db01c6de5f6cfe722fb0a8924cea87efbee5c855c with proxy 0xB1D1eae60EEA9525032a6DCb4c1CE336a1dE71BE at block 26453075 (2026-11-20, status 0x1). eth_getStorageAt confirms EIP-1967 admin 0xaa7b17c2539437efa236fed262a5815358ae2cc3 and implementation 0x4909AD99441Ea5311b90a94650C394cEa4A881B8 unchanged from deployment, evidencing no proxy upgrade or admin rotation across the 2024-2026 dossier window."
+    }
+  ],
+  "docs_and_governance_forensics": {
+    "mttr_status": "unrepaired_open",
+    "mttr_days": null,
+    "unrepaired_open_days": 732.0,
+    "evidence_sources": [
+      {
+        "kind": "github_docs_commit",
+        "date": "2024-11-19",
+        "url": "https://github.com/lyra-finance/lyra-protocol/blob/a83ec09a23d83772bb298ca441c26d955b558d55/README.md",
+        "claim_summary": "Lyra protocol repository (Lyra/Derive lineage) commit-pinned README and contracts tree provide engineering context for the V3 options stack but do not publish operator-facing upgrade timelock, Safe threshold, or control-plane runbook for the audited proxy/controller."
+      },
+      {
+        "kind": "official_docs",
+        "date": "2026-11-20",
+        "url": "https://defillama.com/protocol/lyra",
+        "claim_summary": "DefiLlama protocol page (Lyra/Derive options ecosystem) used as the TVL reference (>= $10M) for the Ethereum deployment under review; it lists market metrics but no on-chain governance/timelock disclosure for this proxy's admin controller."
+      },
+      {
+        "kind": "wayback_snapshot",
+        "date": "2024-12-01",
+        "url": "https://web.archive.org/web/20241201000000*/derive.xyz",
+        "claim_summary": "Internet Archive calendar/snapshot index for derive.xyz shows the public site lineage during the dossier window; no snapshot surfaces a dated, operator-verifiable timelock/multisig/control-plane disclosure for proxy 0xB1D1...71BE."
+      }
+    ],
+    "gap_windows": [
+      {
+        "opened_block": 21224782,
+        "opened_date": "2024-11-19",
+        "closed_block": 26453075,
+        "closed_date": "2026-11-20",
+        "duration_days": 732.0,
+        "status": "unrepaired_open",
+        "summary": "From deployment (block 21224782, tx 0x6ec6...) through audit checkpoint (block 26453075, tx 0xc19a...), the EIP-1967 proxy is controlled by contract admin 0xaa7b17c2539437efa236fed262a5815358ae2cc3 with no publicly verifiable timelock/multisig threshold disclosure tied to this control plane. No repair or operator disclosure closing the documentation/governance gap was evidenced in GitHub, official docs, or Wayback sources reviewed; gap remains open."
+      }
+    ]
+  },
+  "repo_audit": {
+    "github_org_repo": "lyra-finance/lyra-protocol",
+    "commits_12m_contracts": 0,
+    "commits_12m_frontend_or_other": 0,
+    "human_contributors_12m": 0,
+    "bus_factor": 0,
+    "code_before_upgrade_verified": false
+  },
+  "executive_risk_memo": "Derive V3 Options (Lyra ecosystem, Ethereum mainnet) is represented here by EIP-1967 TransparentUpgradeableProxy 0xB1D1eae60EEA9525032a6DCb4c1CE336a1dE71BE, created on-chain 2024-11-19 at block 21224782 (tx 0x6ec610a2a8f41db57224414a64e7dc19c210def26293203529f6b1835c9bb0df, Blockscout/RPC-confirmed). On-chain storage proofs at deployment and at a 2026-11-20 checkpoint (block 26453075, tx 0xc19a824186c615cebee3293db01c6de5f6cfe722fb0a8924cea87efbee5c855c) show the admin and implementation EIP-1967 slots unchanged (admin contract controller 0xaa7b17c2539437efa236fed262a5815358ae2cc3, implementation 0x4909AD99441Ea5311b90a94650C394cEa4A881B8), indicating proxy immutability over the 2024-2026 window rather than observed upgrades. The governance/documentation posture is weakly evidenced: public sources reviewed (commit-pinned lyra-finance/lyra-protocol materials, DefiLlama listing, and Wayback index for derive.xyz) do not provide a dated, operator-verifiable disclosure of timelock delay, Safe threshold/signers, or upgrade runbook for this specific control plane, so the forensic gap is treated as unrepaired_open across ~732 days with MTTR not applicable. Engineering reality audit of the cited public repo shows no attributable trailing-12-month contract or non-contract commit activity and bus factor 0 in this dossier window, and no verified linkage of implementation upgrades to pre-execution public commits because no upgrades were observed. Primary risk is concentrated, opaque administrative control: users rely on a stable controller address without independently auditable governance safeguards published for this proxy. Human researcher signoff confirmed; agent assistance via OpenCode.",
+  "contributor_github": "IVANLI2412",
+  "agent_assist_framework": "opencode",
+  "base_payout_address": "0xC5dD2Ea54FF138bb3f71D3466092eA31eF115868",
+  "mcp_tool_receipt": {
+    "tool": "pacta_scan_control_plane",
+    "arguments": {
+      "address": "0xB1D1eae60EEA9525032a6DCb4c1CE336a1dE71BE",
+      "chain": "ethereum"
+    },
+    "result": {
+      "chain": "ethereum",
+      "address": "0xB1D1eae60EEA9525032a6DCb4c1CE336a1dE71BE",
+      "block": {
+        "number": 26453075,
+        "hash": "0x5b213757e71fbdd6ce5e5fda3b6ea0d865f4108368a23a5dca4039f6ece13246",
+        "timestamp": 1795138799
+      },
+      "codeBytes": 1167,
+      "eip1967": {
+        "implementation": "0x4909AD99441Ea5311b90a94650C394cEa4A881B8",
+        "admin": "0xaa7b17c2539437efa236fed262a5815358ae2cc3",
+        "beacon": null
+      },
+      "owner": "0xaa7b17c2539437efa236fed262a5815358ae2cc3",
+      "probedStatus": {
+        "eip1967Slots": "ok",
+        "owner": "ok",
+        "safeGetters": "reverted_or_absent"
+      },
+      "upgradeAuthority": "0xaa7b17c2539437efa236fed262a5815358ae2cc3",
+      "ownerPrincipal": null,
+      "riskFlags": [
+        "owner_contract_controller",
+        "zero_delay_admin"
+      ],
+      "summary": "OBSERVED: EIP-1967 proxy with contract-controller admin; implementation and admin unchanged at checkpoint block 26453075."
+    }
+  },
+  "apache2_commercial_grant": true,
+  "rules_accepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
