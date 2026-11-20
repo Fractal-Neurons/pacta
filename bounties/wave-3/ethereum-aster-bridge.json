@@ -1,0 +1,179 @@
+{
+  "wave": 3,
+  "chain": "ethereum",
+  "chain_id": 1,
+  "protocol_name": "Aster Bridge",
+  "slug": "aster-bridge",
+  "pacta_slug": "aster-bridge",
+  "contract_address": "0x604DD02d620633Ae427888d41bfd15e38483736E",
+  "tvl_usd": 187734845,
+  "tvl_source_url": "https://defillama.com/protocol/aster-bridge",
+  "dossier_window": "2024-2026",
+  "trajectory_mode": "mutable_transitions",
+  "historical_transitions": [
+    {
+      "block_number": 20067877,
+      "block_date": "2024-06-11",
+      "tx_hash": "0x7aa2c19747380d18c51b26337e9fbd48dd8b2240c3372c378e2e3543d47d7a0c",
+      "event_kind": "deployment_baseline",
+      "rpc_or_cast_proof": "cast receipt 0x7aa2c19747380d18c51b26337e9fbd48dd8b2240c3372c378e2e3543d47d7a0c --rpc-url https://gateway.tenderly.co/public/mainnet",
+      "summary": "Aster Deposit Bridge EIP-1967 proxy deployed at 0x604DD02d; the creation transaction emits Upgraded(0x185353b4dcc5a9270ca201cd3f2104a1991a6fa1) and grants DEFAULT_ADMIN_ROLE to bootstrap EOA 0xf5506183269d8e1274019097b9c1eda86ab606bd, establishing a single-key upgrade controller."
+    },
+    {
+      "block_number": 20067985,
+      "block_date": "2024-06-11",
+      "tx_hash": "0xf86d5a92f9224a8af67397131f60fbf8120e8f0a4ff2a0fb002b61c3cb9b5e9f",
+      "event_kind": "signer_or_threshold_change",
+      "rpc_or_cast_proof": "cast receipt 0xf86d5a92f9224a8af67397131f60fbf8120e8f0a4ff2a0fb002b61c3cb9b5e9f --rpc-url https://gateway.tenderly.co/public/mainnet",
+      "summary": "The bootstrap EOA granted DEFAULT_ADMIN_ROLE to Safe 0x1FE3Fe2Ddd19AB58B0c56054a5AF217Afb27eCEA, a 4-of-7 Gnosis Safe, beginning the handover of upgrade authority from one key to a seven-signer quorum."
+    },
+    {
+      "block_number": 20126623,
+      "block_date": "2024-06-19",
+      "tx_hash": "0x06aecb39f1c98bb9a7fa009e4ca81a81fd8bf249771ea66881b7074db46c5c5d",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast call 0x604DD02d620633Ae427888d41bfd15e38483736E \"getRoleMember(bytes32,uint256)(address)\" 0x0000000000000000000000000000000000000000000000000000000000000000 0 --block 20126623 --rpc-url https://gateway.tenderly.co/public/mainnet",
+      "summary": "The bootstrap EOA renounced DEFAULT_ADMIN_ROLE in transaction 0x06aecb39, leaving the 4-of-7 Safe as the sole controller. No TimelockController, delay, or governance veto was inserted at handover."
+    },
+    {
+      "block_number": 20319975,
+      "block_date": "2024-07-16",
+      "tx_hash": "0x69d8c6d977ee007ae47196ba821c89a04e266700338af2686176af17e11c73fe",
+      "event_kind": "proxy_upgrade",
+      "rpc_or_cast_proof": "cast receipt 0x69d8c6d977ee007ae47196ba821c89a04e266700338af2686176af17e11c73fe --rpc-url https://gateway.tenderly.co/public/mainnet",
+      "summary": "First post-handover upgrade was executed through Safe 0x1FE3Fe2Ddd19AB58B0c56054a5AF217Afb27eCEA with a 4-of-7 threshold and no timelock; the Upgraded event rotates implementation 0x185353b4 to 0xf8ed70c4e199f678308b942ed0dfc7ee684b858f."
+    },
+    {
+      "block_number": 22530697,
+      "block_date": "2025-05-21",
+      "tx_hash": "0xe552c8e6a6bba62726b3f313971ea2c8cecd7b3149a62a97714766ea3dc2bbc0",
+      "event_kind": "proxy_upgrade",
+      "rpc_or_cast_proof": "cast receipt 0xe552c8e6a6bba62726b3f313971ea2c8cecd7b3149a62a97714766ea3dc2bbc0 --rpc-url https://gateway.tenderly.co/public/mainnet",
+      "summary": "Safe-authorized upgrade rotated the implementation to 0xed9c78488bf94ed2cb2d2e434cf2e55f097ac9cf, continuing the pattern of same-threshold, zero-delay upgrades executed directly by the 4-of-7 Safe."
+    },
+    {
+      "block_number": 23724199,
+      "block_date": "2025-11-04",
+      "tx_hash": "0xb8aaecbae7de124dfab2b43d30e87f039c7d221b39afff48f661efddc85d20e1",
+      "event_kind": "proxy_upgrade",
+      "rpc_or_cast_proof": "cast receipt 0xb8aaecbae7de124dfab2b43d30e87f039c7d221b39afff48f661efddc85d20e1 --rpc-url https://gateway.tenderly.co/public/mainnet",
+      "summary": "Another zero-delay Safe-executed upgrade rotated the bridge implementation to 0x31aeb22e148f5b6d0ea5a942c10746caee073378; the controller, threshold, and absence of a timelock remained unchanged."
+    },
+    {
+      "block_number": 25443919,
+      "block_date": "2026-07-02",
+      "tx_hash": "0xb2a33b23d019802642982072234083ddeb26104150c65c64a9a24a278716fde7",
+      "event_kind": "proxy_upgrade",
+      "rpc_or_cast_proof": "cast receipt 0xb2a33b23d019802642982072234083ddeb26104150c65c64a9a24a278716fde7 --rpc-url https://gateway.tenderly.co/public/mainnet",
+      "summary": "Latest observed upgrade moved the implementation to 0x2CC878ac49C3BF8B0f2B053af7845BA6590eEc4f, still via the same 4-of-7 Safe. At block 26456072 Pacta's live preflight confirms MULTISIG_NO_TIMELOCK with canUpgradeZeroDelay true."
+    }
+  ],
+  "docs_and_governance_forensics": {
+    "mttr_status": "unrepaired_open",
+    "mttr_days": null,
+    "unrepaired_open_days": 880,
+    "evidence_sources": [
+      {
+        "kind": "wayback_snapshot",
+        "date": "2026-04-18",
+        "url": "https://web.archive.org/web/20260418072808/https://docs.asterdex.com/overview/smart-contracts",
+        "claim_summary": "The archived Smart Contracts page lists 0x604DD02d as the Ethereum Aster Treasury Contract (now labelled Deposit Bridge) but gives no controller address, signer threshold, upgrade authority, or timelock disclosure."
+      },
+      {
+        "kind": "wayback_snapshot",
+        "date": "2026-11-16",
+        "url": "https://web.archive.org/web/20261116121534/https://docs.asterdex.com/overview/audit-reports",
+        "claim_summary": "Audit Reports page covers AsterVault, AsterEarn, asBNB, USDF and asCAF, but publishes no audit report for the Ethereum bridge/treasury contract at 0x604DD02d."
+      },
+      {
+        "kind": "official_docs",
+        "date": "2026-11-20",
+        "url": "https://docs.asterdex.com/overview/smart-contracts",
+        "claim_summary": "The live Smart Contracts page still lists the bridge address without disclosing the 4-of-7 Safe upgrade authority or the zero-delay upgrade path verified on-chain."
+      }
+    ],
+    "gap_windows": [
+      {
+        "opened_block": 20126623,
+        "opened_date": "2024-06-19",
+        "closed_block": null,
+        "closed_date": null,
+        "duration_days": 880,
+        "status": "unrepaired_open",
+        "summary": "Since the bootstrap EOA renounced DEFAULT_ADMIN_ROLE on 2024-06-19, the 4-of-7 Safe has been sole upgrade controller, yet the docs have never disclosed that seven signers can replace the bridge implementation with zero delay and the audit page still omits the bridge; the disclosure gap remains open as of the 2026-11-16 archive."
+      }
+    ]
+  },
+  "repo_audit": {
+    "github_org_repo": "asterdex/api-docs",
+    "commits_12m_contracts": 0,
+    "commits_12m_frontend_or_other": 260,
+    "human_contributors_12m": 10,
+    "bus_factor": 1,
+    "code_before_upgrade_verified": false
+  },
+  "executive_risk_memo": "Aster Bridge's Ethereum deployment is a high-value bridge (DefiLlama Ethereum TVL $187.7M) whose entire upgrade authority moved in one day from a single bootstrap EOA to a 4-of-7 Gnosis Safe with no timelock. Between June 2024 and July 2026 the Safe executed successive implementation rotations, including the 2026-07-02 upgrade to 0x2CC878ac, and Pacta's block-pinned preflight independently classifies the controller as MULTISIG_NO_TIMELOCK with canUpgradeZeroDelay true. Four signers can therefore change deposit and withdrawal logic instantly, while the official documentation lists the bridge address but never identifies the Safe, its owners, the threshold or the absence of a delay. The audit page documents AsterVault, AsterEarn, asBNB, USDF and asCAF but omits the Ethereum bridge, so users cannot map the bridge's upgrade risk to a published audit. Public engineering evidence is also thin: the most active public repository in the asterdex organisation is the API documentation repo, with 260 commits from ten human contributors over twelve months and zero smart-contract commits; no public core-contract repository was found, so code-before-upgrade provenance cannot be verified. The resulting risk is not a missing multisig but an undisclosed, unaudited, instantaneous upgrade capability over a nine-figure bridge, with a documentation gap open for at least 880 days. Mitigation would require publishing the Safe composition, adding a timelock or delay, commissioning and linking a bridge-specific audit, and publishing the deployed contract sources.",
+  "contributor_github": "shylock-hg-bot",
+  "agent_assist_framework": "pi",
+  "base_payout_address": "0xAB7dB30D433A39f7b930D2Eb001ec3A1e8f89D44",
+  "mcp_tool_receipt": {
+    "tool": "pacta_check_preflight",
+    "arguments": {
+      "chain": "ethereum",
+      "address": "0x604DD02d620633Ae427888d41bfd15e38483736E"
+    },
+    "result": {
+      "schema": "pacta.preflight_check.v1",
+      "chain": "ethereum",
+      "chainId": 1,
+      "address": "0x604DD02d620633Ae427888d41bfd15e38483736E",
+      "pinnedBlock": 26456072,
+      "pinnedBlockHash": "0x6746658006b2f1e6908f7796abcfff7887928fcf92715d25fd4c477746546fee",
+      "blockTimestamp": 1795174859,
+      "verdict": "MULTISIG_NO_TIMELOCK",
+      "riskScore": 60,
+      "isContract": true,
+      "isProxy": true,
+      "proxyType": "eip1967",
+      "implementation": "0x2CC878ac49C3BF8B0f2B053af7845BA6590eEc4f",
+      "hasAdminSlot": false,
+      "canUpgradeZeroDelay": true,
+      "capabilities": {
+        "pause": true,
+        "blacklist": false,
+        "upgrade": true
+      },
+      "controller": {
+        "address": "0x1FE3Fe2Ddd19AB58B0c56054a5AF217Afb27eCEA",
+        "kind": "multisig_safe",
+        "safeThreshold": 4,
+        "timelockDelaySec": null,
+        "safeOwnerCount": 7,
+        "source": "AccessControl.DEFAULT_ADMIN_ROLE"
+      },
+      "summary": "Controlled by a 4-of-7 Safe with no timelock: changes can land instantly once signers agree. Capabilities seen in bytecode: pause, upgrade.",
+      "method": "Batched JSON-RPC reads pinned to the block hash (EIP-1898); EIP-1967 / EIP-1822 / beacon proxies; capabilities from PUSH4 selectors in proxy + implementation bytecode (heuristic).",
+      "source": "live_rpc",
+      "catalogMatch": {
+        "slug": "aster-bridge",
+        "name": "Aster Bridge",
+        "url": "https://pacta.wtf/protocols/aster-bridge/",
+        "matchedAs": "primary_contract",
+        "classification": "rpc_observed",
+        "easAttested": false,
+        "primaryContract": "0x604DD02d620633Ae427888d41bfd15e38483736E",
+        "controller": {
+          "address": "0x1FE3Fe2Ddd19AB58B0c56054a5AF217Afb27eCEA",
+          "kind": "multisig_safe"
+        }
+      }
+    }
+  },
+  "apache2_commercial_grant": true,
+  "rules_accepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
