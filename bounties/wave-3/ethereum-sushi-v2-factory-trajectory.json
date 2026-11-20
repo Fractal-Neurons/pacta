@@ -1,0 +1,195 @@
+{
+  "wave": 3,
+  "chain": "ethereum",
+  "chain_id": 1,
+  "protocol_name": "SushiSwap V2 — Ethereum factory and Operations Safe trajectory",
+  "slug": "sushi-v2-factory-trajectory",
+  "pacta_slug": null,
+  "contract_address": "0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac",
+  "tvl_usd": 16285374.42909,
+  "tvl_source_url": "https://defillama.com/protocol/sushiswap",
+  "dossier_window": "2023-2026",
+  "trajectory_mode": "mutable_transitions",
+  "historical_transitions": [
+    {
+      "block_number": 17507368,
+      "block_date": "2023-06-18",
+      "tx_hash": "0x3e7b6b5d2e34b5c487f80984cfc9708014fe4a193f20e276ef528dcb19e665fc",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast code 0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac --block 17507368 --rpc-url https://mainnet.gateway.tenderly.co",
+      "summary": "A real PairCreated transaction anchors this runtime checkpoint; pair creation is not labeled a governance mutation. Both archive RPCs match the original factory runtime. feeToSetter is the Operations Safe 0x19B3Eb3Af5D93b77a5619b047De0EED7115A19e7, observed at threshold 3 with 6 owners; migrator is zero and feeTo is 0x5ad6211cd3fde39a9cecb5df6f380b8263d1e277."
+    },
+    {
+      "block_number": 23940493,
+      "block_date": "2025-12-04",
+      "tx_hash": "0x0a7f318b3777c7eac930a5eeaca23a715826baafa1401893025cfdbc05ab85aa",
+      "event_kind": "parameter_or_pause_mutation",
+      "rpc_or_cast_proof": "cast receipt 0x0a7f318b3777c7eac930a5eeaca23a715826baafa1401893025cfdbc05ab85aa --rpc-url https://eth-mainnet.public.blastapi.io",
+      "summary": "At 15:13:11 UTC, a successful batch executes through the Operations Safe and contains factory setFeeTo(address) calldata. Both RPCs show feeTo=0x5ad6211cd3fde39a9cecb5df6f380b8263d1e277 at 23940492 and feeTo=0x1d2af2b99e253b68d72c76484dd88ffb0ace158c at 23940493. Receipt includes Safe ExecutionSuccess logs; threshold 3 and 6 owners remain. This is fee-routing configuration, not an implementation upgrade."
+    },
+    {
+      "block_number": 24300286,
+      "block_date": "2026-01-23",
+      "tx_hash": "0xb97727ec58fcceb051622869a348fa0661d1f1c22f509dbd7e67bd0cb8ae9446",
+      "event_kind": "signer_or_threshold_change",
+      "rpc_or_cast_proof": "cast receipt 0xb97727ec58fcceb051622869a348fa0661d1f1c22f509dbd7e67bd0cb8ae9446 --rpc-url https://mainnet.gateway.tenderly.co",
+      "summary": "Operations Safe emits RemovedOwner at 21:51:23 UTC. Both RPCs verify getOwners() shrinks from 6 to 5 across 24300285/24300286 while getThreshold() stays 3. The Safe remains the factory feeToSetter; removing one signer changes the governing population, not the factory runtime or the three-signature execution threshold."
+    },
+    {
+      "block_number": 26420212,
+      "block_date": "2026-11-15",
+      "tx_hash": "0x408f0372173538001e48af3d6bfe763a0d782d89f6017936d060328dde83e0e5",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac \"feeToSetter()(address)\" --block 26420212 --rpc-url https://eth-mainnet.public.blastapi.io",
+      "summary": "A real PairCreated transaction anchors the end checkpoint at 11:49:47 UTC. Both RPCs recover unchanged factory bytecode and the same Operations Safe as feeToSetter, with threshold 3 and 5 owners. feeTo remains 0x1d2af2b99e253b68d72c76484dd88ffb0ace158c and migrator remains zero. These are dated observations, not an assertion that administrative settings were immutable between snapshots."
+    }
+  ],
+  "docs_and_governance_forensics": {
+    "mttr_status": "zero_gap_verified",
+    "mttr_days": null,
+    "evidence_sources": [
+      {
+        "kind": "wayback_snapshot",
+        "date": "2023-05-19",
+        "url": "https://web.archive.org/web/20230519141913/https://docs.sushi.com/pdf/whitepaper.pdf",
+        "claim_summary": "Archived first-party whitepaper identifies the Operations Safe at 0x19B3Eb3Af5D93b77a5619b047De0EED7115A19e7 and states that core-team actions must pass it with at least 3 signatures. It includes a transition warning about address lists. The checked commitment is the minimum signature count, not a promise that its six-member roster never changes."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2023-06-08",
+        "url": "https://github.com/sushiswap/v2-core/commit/72291bdf8a6fe690b61b2f48b738df8819c78b7a",
+        "claim_summary": "Official repository initial commit includes deployments/ethereum/UniswapV2Factory.json binding the primary address and contracts/UniswapV2Factory.sol. The factory implementation section exactly matches the verified flattened deployment source. setFeeTo, setMigrator and setFeeToSetter all require msg.sender==feeToSetter."
+      },
+      {
+        "kind": "wayback_snapshot",
+        "date": "2023-07-21",
+        "url": "https://web.archive.org/web/20230721221240/https://docs.sushi.com/pdf/whitepaper.pdf",
+        "claim_summary": "Second independently dated whitepaper capture retains the at-least-3-signature Operations Safe commitment and the historical six-member roster. The roster is used as historical context, not asserted to be a current membership guarantee. Both archived PDFs were retrieved successfully; the original live PDF URL now returns 404."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2025-10-08",
+        "url": "https://github.com/sushiswap/v2-core/commit/a349882c918c752d0363e4c6e02dedcbc48b734e",
+        "claim_summary": "Default-branch head retains the same Ethereum factory deployment address and implementation. This provides a later public source anchor. The separate mutable Safe roster and factory fee recipient must be re-read on chain; stable factory runtime does not freeze those administrative controls."
+      }
+    ],
+    "gap_windows": [
+      {
+        "opened_block": 17507368,
+        "opened_date": "2023-06-18",
+        "closed_block": 26420212,
+        "closed_date": "2026-11-15",
+        "duration_days": 1246,
+        "status": "verified_aligned",
+        "summary": "Across the 1246-calendar-day observation span, the scoped published factory permission model and archived at-least-3-signature Operations Safe commitment match the checked deployments and thresholds. No repair time is measured, so mttr_days=null. Alignment applies to these sampled commitments only: it does not certify every historical document, uninterrupted publication, exact current roster documentation, or absence of all undiscovered gaps."
+      }
+    ]
+  },
+  "repo_audit": {
+    "github_org_repo": "sushiswap/v2-core",
+    "commits_12m_contracts": 0,
+    "commits_12m_frontend_or_other": 0,
+    "human_contributors_12m": 0,
+    "bus_factor": 0,
+    "code_before_upgrade_verified": false
+  },
+  "executive_risk_memo": "SushiSwap's Ethereum V2 factory has stable deployed bytecode but retains mutable administrative authority through feeToSetter. The two archive providers recover the same verified runtime at the original 2020 deployment and the June 2023 and November 2026 checkpoints. The official source and deployment manifest bind this exact factory and gate fee recipient, migrator and authority reassignment behind feeToSetter. That address is the Operations Safe. Archived first-party whitepapers specify at least three signatures, and all sampled Safe thresholds equal three. The fee recipient changed in a successful December 2025 batch, independently bounded by before/after block reads and supported by matching setter calldata and Safe success logs. A January 2026 RemovedOwner event reduces the Safe from six owners to five while preserving the threshold. The minimum coalition remains three; liveness redundancy falls by one signer. No inference about signer independence is made.\n\nForensics therefore records zero_gap_verified narrowly for the sampled factory permission model and three-signature commitment over a 1,246-calendar-day observation span. This is not a blanket finding that all Sushi documentation is current or that every intermediate configuration was checked. The archived paper's address-transition caveat is preserved, and its historical roster is not treated as a current guarantee. Its original live PDF URL is unavailable on review; no precise removal date or documentary repair interval was established. MTTR is null because no repair of a proven scoped contradiction is measured, rather than being reported as an invented zero-day fix.\n\nThe engineering census covers only sushiswap/v2-core default-branch ancestry at a349882c918c752d0363e4c6e02dedcbc48b734e from 2025-11-20T00:00:00Z through 2026-11-20T00:00:00Z. There are zero commits, contract or otherwise, and no active non-bot contributors in that window; bus_factor=0 denotes repository dormancy, not zero operational risk or inactivity across all Sushi repositories. code_before_upgrade_verified=false conservatively avoids claiming a code-first publication audit of the original 2020 deployment or every Sushi release. The observed changes are configuration and signer changes, not factory implementation upgrades. Consumers should distinguish immutable bytecode from an Operations Safe's continuing ability to redirect fees, assign a migrator, or replace its own governing authority, and should refresh current signer and parameter disclosures separately.",
+  "contributor_github": "startupcompliancekit",
+  "base_payout_address": "0xc9Bc0A5A0f6f02B9294871036d323CFF37cb1BeC",
+  "mcp_tool_receipt": {
+    "tool": "pacta_lookup_protocol",
+    "arguments": {
+      "query": "0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac"
+    },
+    "result": {
+      "schema": "pacta.protocol_lookup.v1",
+      "query": "0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac",
+      "filters": {
+        "chain": null,
+        "kind": "all",
+        "limit": 10
+      },
+      "totalCatalog": {
+        "protocols": 313,
+        "briefs": 17,
+        "easAttestedProtocols": 180,
+        "rpcObservedProtocols": 133
+      },
+      "totalMatches": 0,
+      "count": 0,
+      "results": [],
+      "catalog": "https://pacta.wtf/api/v1/lookup.json",
+      "nextStep": "Pass a result's preflightArgs ({chain, address}) to pacta_check_preflight (or pacta_scan_control_plane) for a live check.",
+      "note": "easAttested protocols are Base-EAS-anchored records that compare on-chain state with the protocol's documentation. rpc_observed protocols pin the on-chain control plane over archive JSON-RPC and do not assess the documentation (documentationComparison: not_assessed). Briefs are block-pinned verification briefs. preflightArgs re-read the contract live.",
+      "hint": "No match. Call again with an empty query to list what Pacta tracks, or pass a known 0x contract address straight to pacta_check_preflight.",
+      "coverage_gap_hint": "Target is not yet indexed or fully classified. Ask the user if they want you to queue coverage or request this capability via pacta_submit_request (free community queue, or 24h priority clearance for issuers).",
+      "upgrade_x402": {
+        "note": "Free tier: 50 pre-flight calls per caller per UTC day (REST and MCP), then $0.01 per call over x402 (HTTP 402, never a dead-end 429). Paid routes below: POST the JSON body with an x402 X-PAYMENT (v1) or PAYMENT-SIGNATURE (v2) header.",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "network": "base (eip155:8453)",
+        "payTo": "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14",
+        "discovery": "https://pacta.fractalneurons.com/.well-known/x402",
+        "overflow": {
+          "method": "GET or POST",
+          "url": "https://pacta.fractalneurons.com/v1/check/preflight",
+          "priceUsd": "0.01",
+          "amountAtomic": "10000",
+          "after": "50 free calls per UTC day"
+        },
+        "endpoints": [
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/verdict",
+            "priceUsd": "0.02",
+            "amountAtomic": "20000",
+            "unlocks": "fast contract / token control-plane verdict: riskScore 0-100, grade A-F, upgrade / owner / pause / blacklist / mint flags and a shareable scan URL",
+            "example": {
+              "chain": "ethereum",
+              "address": "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/dossier",
+            "priceUsd": "0.05",
+            "amountAtomic": "50000",
+            "unlocks": "full control-plane dossier: every controller Safe's signers and threshold, signers shared with other indexed protocols, Base EAS proof",
+            "example": {
+              "slug": "stader-labs-ethx"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/calldata-sim",
+            "priceUsd": "0.25",
+            "amountAtomic": "250000",
+            "unlocks": "pre-signing calldata check: timelock / Safe / multicall calls decoded, each rated against live delays and the authority that governs it",
+            "example": {
+              "chain": "ethereum",
+              "target": "0x2225DAbFfC7F862c99477381E971E8B1FDaB467e",
+              "data": "0x64d623530000000000000000000000000000000000000000000000000000000000015180"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/deep-scan",
+            "priceUsd": "9.00",
+            "amountAtomic": "9000000",
+            "unlocks": "deep control-plane scan cross-checked on two independent RPC operators, auditor receipt and a queued Base EAS ticket",
+            "example": {
+              "chain": "base",
+              "address": "0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "apache2_commercial_grant": true,
+  "rules_accepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
