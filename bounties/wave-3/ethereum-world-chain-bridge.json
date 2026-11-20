@@ -23,7 +23,7 @@
       "block_number": 24921045,
       "block_date": "2026-04-12",
       "tx_hash": "0x78ab219df0e3182ac79124be30daef58129758e57463ef184a4bf732918844ae",
-      "event_kind": "signer_rotation",
+      "event_kind": "signer_or_threshold_change",
       "rpc_or_cast_proof": "cast call 0xA4fB12D15Eb85dc9284a7df0AdBC8B696EdbbF1d \"getOwners()(address[])\" --block 24921045 --rpc-url https://eth.drpc.org",
       "summary": "Safe signer rotation and threshold update: Safe 0xA4fB12D15Eb85dc9284a7df0AdBC8B696EdbbF1d rotated signer membership from 3-of-8 to 3-of-6 (active owners: 0xa3353Ae4458F663f1F888705b044269bd30cd110, 0xFB00073F931A817b244bF211aA2E5DCBfff8B1ca, 0x35A2079110aa30d1De381cf75aCd1836b6dEE1d7, 0x04a25F65200E56EAd142652b7E5eF372E169F2Bd, 0xeD9919D57162D518014C391a687AA8fb9DB55654, 0xB2aa0C2C4fD6BFCBF699d4c787CD6Cc0dC461a9d)."
     },
@@ -63,16 +63,12 @@
         "status": "repaired",
         "summary": "AnchorStateRegistryProxy 0x90BB48fe3310499Db36437dCAE642F721e32d094 was live on mainnet for 277 days while official developer documentation listed the superseded prior mainnet AnchorStateRegistry address (0xD4D7A57DCC563756DeD99e224E144A6Bf0327099) before PR #159 synchronized it to the active deployed contract."
       }
-    ],
-    "code_pushed_before_docs": true,
-    "code_pushed_before_docs_proof": "On-chain contract deployment occurred at block 23847851 (2025-11-21T06:14:11Z), which preceded the documentation repair commit 54b8dd44 (2026-08-25T16:23:19Z) by 277.0 days."
+    ]
   },
   "repo_audit": {
     "github_org_repo": "worldcoin/world-chain",
     "commits_12m_contracts": 60,
     "commits_12m_frontend_or_other": 658,
-    "commits_12m_total": 718,
-    "classification_method": "deterministic .sol/.vy/.yul file extension path filter",
     "human_contributors_12m": 14,
     "bus_factor": 3,
     "code_before_upgrade_verified": true
