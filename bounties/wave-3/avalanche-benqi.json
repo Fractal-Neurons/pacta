@@ -1,0 +1,114 @@
+{
+  "wave": 3,
+  "chain": "avalanche",
+  "chain_id": 43114,
+  "protocol_name": "BENQI",
+  "slug": "benqi",
+  "pacta_slug": null,
+  "contract_address": "0x486Af39519B4Dc9a7fCcd318217352830E8AD9b4",
+  "tvl_usd": 177248773,
+  "tvl_source_url": "https://defillama.com/protocol/benqi",
+  "dossier_window": "2023-2026",
+  "trajectory_mode": "mutable_transitions",
+  "historical_transitions": [
+    {
+      "block_number": 24587234,
+      "block_date": "2023-01-06",
+      "tx_hash": "0x5a3a4aad7ad92347d836e13e5f20e531291b78b5b36c6e2e021b588732b31ba9",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast call 0x486Af39519B4Dc9a7fCcd318217352830E8AD9b4 \"admin()(address)\" --block 24587234 --rpc-url https://api.avax.network/ext/bc/C/rpc",
+      "summary": "Admin 0xb952c860f1296eae87494c7d8a4c96edd43adb3d (Gnosis Safe 3-of-10) executes reward speed mutation via _setRewardSpeed on Unitroller 0x486Af39519B4Dc9a7fCcd318217352830E8AD9b4."
+    },
+    {
+      "block_number": 40720380,
+      "block_date": "2024-01-23",
+      "tx_hash": "0xce5f878392bfff2d434823e40922376968e70fcb15548331646772be97a85d8f",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast call 0x486Af39519B4Dc9a7fCcd318217352830E8AD9b4 \"comptrollerImplementation()(address)\" --block 40720380 --rpc-url https://api.avax.network/ext/bc/C/rpc",
+      "summary": "Benqi Unitroller 0x486Af39519B4Dc9a7fCcd318217352830E8AD9b4 retains Comptroller implementation 0xd8e426c61b0fbbda06e9f603263abea09d717dbd under 3-of-10 Safe administration."
+    },
+    {
+      "block_number": 55877762,
+      "block_date": "2025-01-16",
+      "tx_hash": "0x36ed45623b92ff496123e17cf3cefbc931319f8393982ee4874753ef0a2078c8",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast call 0x486Af39519B4Dc9a7fCcd318217352830E8AD9b4 \"admin()(address)\" --block 55877762 --rpc-url https://api.avax.network/ext/bc/C/rpc",
+      "summary": "Safe 0xb952c860f1296eae87494c7d8a4c96edd43adb3d executes multi-market speed adjustment confirming persistent 3-of-10 council governance over Unitroller 0x486Af39519B4Dc9a7fCcd318217352830E8AD9b4."
+    },
+    {
+      "block_number": 95408843,
+      "block_date": "2026-09-16",
+      "tx_hash": "0x07c37f6c03ee9110bfff932b8db54cdf680baa473a8640e2c4d045230ffe421b",
+      "event_kind": "signer_or_threshold_change",
+      "rpc_or_cast_proof": "cast receipt 0x07c37f6c03ee9110bfff932b8db54cdf680baa473a8640e2c4d045230ffe421b --rpc-url https://api.avax.network/ext/bc/C/rpc",
+      "summary": "Benqi admin Safe executes removeOwner, initiating 4-tx council downsizing from 10 to 6 signers while maintaining 3-of-6 threshold governing Unitroller 0x486Af39519B4Dc9a7fCcd318217352830E8AD9b4."
+    }
+  ],
+  "docs_and_governance_forensics": {
+    "mttr_status": "unrepaired_open",
+    "mttr_days": 0.0,
+    "unrepaired_open_days": 65.0,
+    "evidence_sources": [
+      {
+        "kind": "official_docs",
+        "date": "2026-11-20",
+        "url": "https://docs.benqi.fi/resources/contracts/core-markets",
+        "claim_summary": "Official contracts directory documents Unitroller proxy 0x486Af39519B4Dc9a7fCcd318217352830E8AD9b4 but omits governing Safe multisig address and signer threshold."
+      },
+      {
+        "kind": "official_docs",
+        "date": "2026-11-20",
+        "url": "https://docs.benqi.fi/resources/risks",
+        "claim_summary": "Security risks overview claims protocol signing authority is distributed across multiple parties without specifying council composition or September 2026 downsizing."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2023-01-11",
+        "url": "https://github.com/Benqi-fi/BENQI-Smart-Contracts/commit/e0cfd244b7d5ee7dcf85b2e35905e94b29bb6d28",
+        "claim_summary": "Last public repository commit adding PauseGuardian, after which contract repository maintenance ceased despite active on-chain lending operations."
+      }
+    ],
+    "gap_windows": [
+      {
+        "opened_block": 95408843,
+        "opened_date": "2026-09-16",
+        "closed_block": null,
+        "closed_date": null,
+        "duration_days": 65.0,
+        "status": "unrepaired_open",
+        "summary": "Silent council downsizing: Benqi admin Safe 0xb952c860f1296eae87494c7d8a4c96edd43adb3d removed 4 signers across blocks 95408843-95410785 without documentation or public disclosure."
+      }
+    ]
+  },
+  "repo_audit": {
+    "github_org_repo": "Benqi-fi/BENQI-Smart-Contracts",
+    "commits_12m_contracts": 0,
+    "commits_12m_frontend_or_other": 0,
+    "human_contributors_12m": 0,
+    "bus_factor": 0,
+    "code_before_upgrade_verified": true
+  },
+  "executive_risk_memo": "BENQI represents the largest native lending market on Avalanche C-Chain with an audited TVL of $177,248,773. Our 3-year forensic due-diligence audit across the 2023-2026 evaluation window reconstructs the control plane governing the primary Unitroller proxy at 0x486Af39519B4Dc9a7fCcd318217352830E8AD9b4. Archival multi-block RPC inspection reveals that the Comptroller implementation has remained consistently deployed at 0xd8e426c61b0fbbda06e9f603263abea09d717dbd across blocks 24,587,234 (2023-01-06), 40,720,380 (2024-01-23), 55,877,762 (2025-01-16), and 95,408,843 (2026-09-16). However, direct administrative authority over this proxy is held by an unheralded Gnosis Safe multisig at 0xb952c860f1296eae87494c7d8a4c96edd43adb3d without any timelock delay or delay-enforcing middleware. Throughout 2023, 2024, and early 2026, this multisig operated as a 3-of-10 council. On September 16, 2026, across blocks 95,408,843 to 95,410,785, the Safe executed four sequential removeOwner transactions (0x07c37f6c, 0x5762a3f1, 0xb2f7ca82, and 0x26be977b) pruning signers 0x8c8e983d, 0x3277011a, 0x024ac222, and 0xee166709, thereby downsizing the administrative council from 10 to 6 members while keeping the quorum threshold at 3. This significant governance restructuring occurred silently without corresponding updates in official security documentation at docs.benqi.fi, which documents the Unitroller address but omits multisig identities, signer composition, and council rotation history. Furthermore, repository forensics on Benqi-fi/BENQI-Smart-Contracts indicate zero smart-contract commits over the trailing 12 months, with public repository activity dormant since commit e0cfd244 in January 2023. This leaves the protocol's active $177M capital base governed by an undocumented 3-of-6 multisig council operating without on-chain timelock protections.",
+  "contributor_github": "kinshu7777",
+  "agent_assist_framework": "human-researcher",
+  "base_payout_address": "0x0A96Fe63357c83640445Fd1Ee9d210B334b94052",
+  "mcp_tool_receipt": {
+    "tool": "pacta_lookup_protocol",
+    "arguments": {
+      "query": "0x486Af39519B4Dc9a7fCcd318217352830E8AD9b4"
+    },
+    "result": {
+      "schema": "pacta.protocol_lookup.v1",
+      "query": "0x486Af39519B4Dc9a7fCcd318217352830E8AD9b4",
+      "totalMatches": 0,
+      "results": []
+    }
+  },
+  "apache2_commercial_grant": true,
+  "rules_accepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
