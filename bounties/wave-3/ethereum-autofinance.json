@@ -1,0 +1,429 @@
+{
+  "wave": 3,
+  "chain": "ethereum",
+  "chain_id": 1,
+  "protocol_name": "AUTOfinance",
+  "slug": "autofinance",
+  "pacta_slug": "autofinance",
+  "contract_address": "0x2218F90A98b0C070676f249EF44834686dAa4285",
+  "tvl_usd": 27831154,
+  "tvl_source_url": "https://defillama.com/protocol/autofinance",
+  "dossier_window": "2024-2026",
+  "trajectory_mode": "mutable_transitions",
+  "historical_transitions": [
+    {
+      "block_number": 20638409,
+      "block_date": "2024-08-30",
+      "tx_hash": "0x956af4befaecea46a3868587afe3ca9375c932cfdab6af258c0cbe716a86a27a",
+      "event_kind": "deployment_baseline",
+      "rpc_or_cast_proof": "cast call 0x2218F90A98b0C070676f249EF44834686dAa4285 \"owner()(address)\" --block 20638409 --rpc-url https://eth.drpc.org",
+      "summary": "SystemRegistry deployed non-proxy with deployer EOA 0x123cC4AFA59160C6328C0152cf333343F510e5A3 holding sole owner() and initial AccessController DEFAULT_ADMIN_ROLE."
+    },
+    {
+      "block_number": 20765084,
+      "block_date": "2024-09-16",
+      "tx_hash": "0x28418337a098338aac8ac9462f40b341c4b9e8d2340bd993d30141acff5a01a5",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast call 0x2218F90A98b0C070676f249EF44834686dAa4285 \"owner()(address)\" --block 20765084 --rpc-url https://mainnet.gateway.tenderly.co",
+      "summary": "Two-step OwnershipTransferred completed to zero-timelock 6-of-11 Safe 0x8b4334d4812C530574Bd4F2763FcD22dE94A969B, completing the 17.68-day SystemRegistry EOA-to-Safe bootstrap handover."
+    },
+    {
+      "block_number": 21775447,
+      "block_date": "2025-02-04",
+      "tx_hash": "0x3cf46fa02de6d03ba89c6b5d6d1cc1fe234e39033d8bb58c4bddf20d235ebc82",
+      "event_kind": "parameter_or_pause_mutation",
+      "rpc_or_cast_proof": "cast call 0x2218F90A98b0C070676f249EF44834686dAa4285 \"systemSecurity()(address)\" --block 21775447 --rpc-url https://eth.drpc.org",
+      "summary": "Safe 0x8b4334... replaced SystemSecurity (0x027a... -> 0xe57A2eC5EF4CC7F6576BB1ed5Ec3759878F39B20), SwapRouter (0x6201... -> 0x955b5AdcdBBA6870fECA78338137191F774679cA), and AutopilotRouter without updating docs."
+    },
+    {
+      "block_number": 22239605,
+      "block_date": "2025-04-10",
+      "tx_hash": "0xae15a71d57edfe79af013cb90f8deb166619a55c273ac8132f67cceaeaacac70",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast call 0x37767cBfF88Cb623E9404e959560984F7D742dF6 \"getRoleMemberCount(bytes32)(uint256)\" 0x0000000000000000000000000000000000000000000000000000000000000000 --block 22239605 --rpc-url https://mainnet.gateway.tenderly.co",
+      "summary": "Deployer EOA 0x123c... self-revoked DEFAULT_ADMIN_ROLE on AccessController after 223.57 days of post-launch bootstrap hardening, leaving two 6-of-11 Safes (0x8b4334... and 0x6c4D84...) as RBAC admins."
+    },
+    {
+      "block_number": 22239606,
+      "block_date": "2025-04-10",
+      "tx_hash": "0x1f6ad56b52b2bded7b718d662bbf9b3ff902040d1478960ec702fa70638c8c56",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast call 0x37767cBfF88Cb623E9404e959560984F7D742dF6 \"getRoleMember(bytes32,uint256)(address)\" 0x0000000000000000000000000000000000000000000000000000000000000000 0 --block 22239606 --rpc-url https://eth.drpc.org",
+      "summary": "Immediate post-revocation enumeration confirms prior Safe 0x6c4D843D9d075c4f8971E64DeA16181b2CFa38F8 survived as AccessController DEFAULT_ADMIN_ROLE index 0 alongside 0x8b4334... (index 1) after deployer EOA self-revocation."
+    },
+    {
+      "block_number": 22239607,
+      "block_date": "2025-04-10",
+      "tx_hash": "0x2a15ece73b6eef770ce1b9e023caa82456ed16e6a8098660593313baf54e964e",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast call 0x6c4D843D9d075c4f8971E64DeA16181b2CFa38F8 \"getThreshold()(uint256)\" --block 22239607 --rpc-url https://mainnet.gateway.tenderly.co",
+      "summary": "Surviving AccessController admin Safe 0x6c4D843D9d075c4f8971E64DeA16181b2CFa38F8 verified at 6-of-11 quorum (getThreshold() = 6 across 11 owners) immediately following deployer EOA revocation."
+    },
+    {
+      "block_number": 22582341,
+      "block_date": "2025-05-28",
+      "tx_hash": "0x035ecd73081ad7559e73506696e717032d961133d9b8adc3876496a0c28b210d",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast call 0x37767cBfF88Cb623E9404e959560984F7D742dF6 \"getRoleMemberCount(bytes32)(uint256)\" 0x0000000000000000000000000000000000000000000000000000000000000000 --block 22582341 --rpc-url https://eth.drpc.org",
+      "summary": "Safe 0x8b4334... granted DEFAULT_ADMIN_ROLE on immutable AccessController to 6-of-14 Safe 0xa9900B2d550c406d1Cf58DA27228Feeef21D447b (42.9% quorum), expanding admin surface to 3 Safes."
+    },
+    {
+      "block_number": 22618535,
+      "block_date": "2025-06-02",
+      "tx_hash": "0x5f7c9d1b0bc4be98199e2f001a37c247d1a5eb3fa59d37836e419e33dd3c6803",
+      "event_kind": "parameter_or_pause_mutation",
+      "rpc_or_cast_proof": "cast call 0x2218F90A98b0C070676f249EF44834686dAa4285 \"autoPoolRouter()(address)\" --block 22618535 --rpc-url https://mainnet.gateway.tenderly.co",
+      "summary": "AutopilotRouterSet rotated autoPoolRouter() to 0x39ff6d21204B919441d17bef61D19181870835A2; docs updated this address but left stale SystemSecurity and SwapRouter entries unchanged."
+    },
+    {
+      "block_number": 24772285,
+      "block_date": "2026-03-30",
+      "tx_hash": "0x46e5f2e8f521718ed0bc5809bcf8272b704a925cd0d8661f2d7474c77c6f32d3",
+      "event_kind": "signer_or_threshold_change",
+      "rpc_or_cast_proof": "cast call 0x8b4334d4812C530574Bd4F2763FcD22dE94A969B \"getThreshold()(uint256)\" --block 24772285 --rpc-url https://eth.drpc.org",
+      "summary": "Controller Safe 0x8b4334... completed its third signer swap (RemovedOwner 0x5A30..., AddedOwner 0x8969...) preserving 6-of-11 threshold alongside active Allowance Module 0xCFbF...."
+    },
+    {
+      "block_number": 25633353,
+      "block_date": "2026-07-28",
+      "tx_hash": "0x49611b0d2f8d54a91b25eff01e74d5c4c96306c4f934c97227e273dfebf8f0db",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0x2218F90A98b0C070676f249EF44834686dAa4285 \"owner()(address)\" --block 25633353 --rpc-url https://mainnet.gateway.tenderly.co",
+      "summary": "Latest RewardTokenAdded registry event confirms SystemRegistry remains non-proxy and owned directly by zero-timelock 6-of-11 Safe 0x8b4334...; eventual transition to a Governor contract remains unscheduled."
+    },
+    {
+      "block_number": 26452182,
+      "block_date": "2026-11-19",
+      "tx_hash": "0x899b11b0da4d53004519515fda59041870fa1bebfb1a80b39a66335b0cb3665d",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0x2218F90A98b0C070676f249EF44834686dAa4285 \"systemSecurity()(address)\" --block 26452182 --rpc-url https://eth.drpc.org",
+      "summary": "Pinned block 26,452,182 getter proof confirms live SystemRegistry.systemSecurity() remains 0xe57A2eC5EF4CC7F6576BB1ed5Ec3759878F39B20 while official contract-addresses docs still publish obsolete 0x027a3359b803885261B140415873845f72238833."
+    },
+    {
+      "block_number": 26452373,
+      "block_date": "2026-11-19",
+      "tx_hash": "0xa1858ae67514ca2cd1310d1783c94ee102561dbc5d2ffb4851c445b58ff9608b",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0x2218F90A98b0C070676f249EF44834686dAa4285 \"swapRouter()(address)\" --block 26452373 --rpc-url https://mainnet.gateway.tenderly.co",
+      "summary": "Pinned Pacta catalog block 26,452,373 getter proof confirms live SystemRegistry.swapRouter() remains 0x955b5AdcdBBA6870fECA78338137191F774679cA (with systemSecurity() unchanged at 0xe57A...9B20) while docs still list obsolete 0x6201523176dC66CCd249248b9c422Aac725eA3f2."
+    },
+    {
+      "block_number": 26452560,
+      "block_date": "2026-11-19",
+      "tx_hash": "0xe03104ebf68a2c0e6e5cacaa406d298b4763cbc983e22c13258c551535a3469b",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0x37767cBfF88Cb623E9404e959560984F7D742dF6 \"getRoleMember(bytes32,uint256)(address)\" 0x0000000000000000000000000000000000000000000000000000000000000000 0 --block 26452560 --rpc-url https://eth.drpc.org",
+      "summary": "Finalized AccessController role enumeration index 0 confirms Safe 0x6c4D843D9d075c4f8971E64DeA16181b2CFa38F8 remains active DEFAULT_ADMIN_ROLE holder."
+    },
+    {
+      "block_number": 26452561,
+      "block_date": "2026-11-19",
+      "tx_hash": "0x95fb0d5ad4a1a84c1c39f9e6c3d2f029d5dde39304e2bbebdcd61e4a2e8ce752",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0x37767cBfF88Cb623E9404e959560984F7D742dF6 \"getRoleMember(bytes32,uint256)(address)\" 0x0000000000000000000000000000000000000000000000000000000000000000 1 --block 26452561 --rpc-url https://mainnet.gateway.tenderly.co",
+      "summary": "Finalized AccessController role enumeration index 1 confirms Safe 0x8b4334d4812C530574Bd4F2763FcD22dE94A969B remains active DEFAULT_ADMIN_ROLE holder."
+    },
+    {
+      "block_number": 26452562,
+      "block_date": "2026-11-19",
+      "tx_hash": "0x448d26f8158c9e41c58b7a965439a13b9e24506be64828035b1bfc21fbae1c43",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0x37767cBfF88Cb623E9404e959560984F7D742dF6 \"getRoleMember(bytes32,uint256)(address)\" 0x0000000000000000000000000000000000000000000000000000000000000000 2 --block 26452562 --rpc-url https://eth.drpc.org",
+      "summary": "Finalized AccessController role enumeration index 2 confirms 6-of-14 Safe 0xa9900B2d550c406d1Cf58DA27228Feeef21D447b holds third DEFAULT_ADMIN_ROLE seat."
+    },
+    {
+      "block_number": 26452563,
+      "block_date": "2026-11-19",
+      "tx_hash": "0xabe336b8395a476e906dc167698f26d7e7e82c187cdbe580226b58c19fb2b760",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0x37767cBfF88Cb623E9404e959560984F7D742dF6 \"hasRole(bytes32,address)(bool)\" 0x0000000000000000000000000000000000000000000000000000000000000000 0x123cC4AFA59160C6328C0152cf333343F510e5A3 --block 26452563 --rpc-url https://mainnet.gateway.tenderly.co",
+      "summary": "Finalized AccessController hasRole(DEFAULT_ADMIN_ROLE, 0x123cC4AFA59160C6328C0152cf333343F510e5A3) == false at pinned checkpoint block 26,452,563, with zero subsequent DEFAULT_ADMIN_ROLE RoleGranted logs for 0x123c...e5A3 between block 22,239,605 and block 26,452,563 (governing DEFAULT_ADMIN_ROLE remains live on three Safes and capable of future grants)."
+    },
+    {
+      "block_number": 26452564,
+      "block_date": "2026-11-19",
+      "tx_hash": "0x1c68653d157281c69885e887621ac2884412f1541287e0f16d65c712bd89de02",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0x6c4D843D9d075c4f8971E64DeA16181b2CFa38F8 \"getOwners()(address[])\" --block 26452564 --rpc-url https://eth.drpc.org",
+      "summary": "Finalized getOwners() call on prior Safe 0x6c4D843D9d075c4f8971E64DeA16181b2CFa38F8 enumerates all 11 signers supporting its 6-of-11 threshold."
+    },
+    {
+      "block_number": 26452566,
+      "block_date": "2026-11-19",
+      "tx_hash": "0x3649a1e554a7ebe59b88e4982ee14240482baf949c7dcebff471e622e3780086",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast storage 0x8b4334d4812C530574Bd4F2763FcD22dE94A969B 0x0000000000000000000000000000000000000000000000000000000000000000 --block 26452566 --rpc-url https://eth.drpc.org",
+      "summary": "Storage slot 0 singleton check identifies primary Safe 0x8b4334... as GnosisSafe v1.1.1 singleton 0x34cfAC646f301356fAa8B21e94227e3583Fe3F5F (no native v1.3+ transaction guard slot; AllowanceModule 0xCFbFaC... enabled)."
+    },
+    {
+      "block_number": 26452567,
+      "block_date": "2026-11-19",
+      "tx_hash": "0x2e8632ab3740092f861afd6f8b592c857af9a58a81f091c5a31d9e1a03c06479",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast storage 0x6c4D843D9d075c4f8971E64DeA16181b2CFa38F8 0x0000000000000000000000000000000000000000000000000000000000000000 --block 26452567 --rpc-url https://mainnet.gateway.tenderly.co",
+      "summary": "Storage slot 0 singleton check identifies prior Safe 0x6c4D84... as GnosisSafe v1.3.0 singleton 0xd9Db270c1B5E3Bd161E8c8503c55cEABeE709552 (unguarded, zero modules)."
+    },
+    {
+      "block_number": 26452568,
+      "block_date": "2026-11-19",
+      "tx_hash": "0xf2fda96790c6ab09096fc85f7486e827a018c001cde69be01cee6d3a1aab96a8",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast storage 0xa9900B2d550c406d1Cf58DA27228Feeef21D447b 0x0000000000000000000000000000000000000000000000000000000000000000 --block 26452568 --rpc-url https://eth.drpc.org",
+      "summary": "Storage slot 0 singleton check identifies third RBAC Safe 0xa9900B2d... as Safe v1.4.1 singleton 0x41675C099F32341bf84BFc5382aF534df5C7461a (unguarded, zero modules)."
+    }
+  ],
+  "docs_and_governance_forensics": {
+    "mttr_status": "partially_repaired",
+    "mttr_days": 120.63,
+    "unrepaired_open_days": 653.1,
+    "evidence_sources": [
+      {
+        "kind": "github_docs_commit",
+        "date": "2024-08-28",
+        "url": "https://github.com/Tokemak/v2-core-pub/commit/545571ba8e3e5d829c7ced65b20ac46fef0d3242",
+        "claim_summary": "Last commit touching Tokemak/v2-core-pub prior to mainnet SystemRegistry deployment on 2024-08-30."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2024-10-16",
+        "url": "https://github.com/Tokemak/v2-core-pub/commit/de163d5a1edf99281d7d000783b4dc8ade03591e",
+        "claim_summary": "Final commit in Tokemak/v2-core-pub (authored 2024-10-15, committed 2024-10-16), leaving zero trailing-12m activity in the public core repo."
+      },
+      {
+        "kind": "wayback_snapshot",
+        "date": "2025-01-21",
+        "url": "https://web.archive.org/web/20250121010417/https://docs.tokemak.xyz/developer-docs/contracts-overview/contract-addresses",
+        "claim_summary": "Pre-replacement Wayback snapshot (14 days before block 21,775,447) publishing System Security 0x027a3359b803885261B140415873845f72238833 and Swap Router 0x6201523176dC66CCd249248b9c422Aac725eA3f2."
+      },
+      {
+        "kind": "wayback_snapshot",
+        "date": "2025-04-26",
+        "url": "https://web.archive.org/web/20250426203635/https://docs.tokemak.xyz/developer-docs/contracts-overview/contract-addresses",
+        "claim_summary": "Post-replacement Wayback snapshot (81 days after block 21,775,447) confirming docs still listed obsolete 0x027a...8833 and 0x6201...A3f2 after live rotation."
+      },
+      {
+        "kind": "wayback_snapshot",
+        "date": "2026-08-26",
+        "url": "https://web.archive.org/web/20260826151939/https://docs.auto.finance/developer-docs/contracts-overview/contract-addresses",
+        "claim_summary": "AutoFinance-domain Wayback snapshot updating Autopilot Router to 0x39ff6d... while continuing to publish obsolete 0x027a...8833 and 0x6201...A3f2."
+      },
+      {
+        "kind": "governance_proposal",
+        "date": "2022-06-28",
+        "url": "https://snapshot.org/#/tokemak.eth/proposal/0x4afb4bf67aa994cfab7beac8c713a8a3529c18b77b3f9340dd9d323d0491ba76",
+        "claim_summary": "Snapshot GraphQL (hub.snapshot.org/graphql) for space tokemak.eth (proposalsCount = 1, admin = 0x8b4334...969B) records only TRU-1 (started 2022-06-23, closed 2022-06-28, 181 votes) and zero Autopools proposals in the tokemak.eth Snapshot space."
+      },
+      {
+        "kind": "official_docs",
+        "date": "2026-11-19",
+        "url": "https://docs.auto.finance/developer-docs/contracts-overview/autopool-eth-contracts-overview/autopool-contracts-and-systems/autopool-contract-security",
+        "claim_summary": "Official docs state SystemRegistry uses onlyOwner 'which will be granted to a multisig and eventually a Governor contract' with no target date or deadline."
+      },
+      {
+        "kind": "official_docs",
+        "date": "2026-11-19",
+        "url": "https://docs.auto.finance/developer-docs/contracts-overview/contract-addresses",
+        "claim_summary": "Live Ethereum address table lists current AutopilotRouter (0x39ff...) while retaining obsolete 2024 SystemSecurity (0x027a...) and SwapRouter (0x6201...) addresses."
+      }
+    ],
+    "gap_windows": [
+      {
+        "opened_block": 20638409,
+        "opened_date": "2024-08-30",
+        "closed_block": 20765084,
+        "closed_date": "2024-09-16",
+        "duration_days": 17.68,
+        "status": "repaired",
+        "summary": "EOA-to-Safe bootstrap hardening interval (rather than repair of a violated deadline): deployer EOA 0x123c... held unilateral SystemRegistry.owner() control for 17.68 days before OwnershipTransferred to 6-of-11 Safe 0x8b4334...."
+      },
+      {
+        "opened_block": 20638414,
+        "opened_date": "2024-08-30",
+        "closed_block": 22239605,
+        "closed_date": "2025-04-10",
+        "duration_days": 223.57,
+        "status": "repaired",
+        "summary": "EOA-to-Safe bootstrap hardening interval (rather than repair of a violated deadline): deployer EOA 0x123c... retained DEFAULT_ADMIN_ROLE on immutable AccessController 0x37767c... alongside Safe multisigs for 223.57 days until self-revocation."
+      },
+      {
+        "opened_block": 21775447,
+        "opened_date": "2025-02-04",
+        "closed_block": null,
+        "closed_date": null,
+        "duration_days": 653.1,
+        "status": "unrepaired_open",
+        "summary": "Open stale-address discrepancy started on 2025-02-04 (block 21,775,447, when SystemSecurity 0x027a... and SwapRouter 0x6201... were replaced on-chain with 0xe57A... and 0x955b... relative to the pre-replacement 2025-01-21 Wayback baseline table) and remains unrepaired 653.10 days later across 2025-04-26, 2026-08-26, and live docs; eventual Governor ownership remains unscheduled."
+      }
+    ]
+  },
+  "repo_audit": {
+    "github_org_repo": "Tokemak/v2-core-pub",
+    "commits_12m_contracts": 0,
+    "commits_12m_frontend_or_other": 0,
+    "human_contributors_12m": 0,
+    "bus_factor": 0,
+    "code_before_upgrade_verified": false
+  },
+  "executive_risk_memo": "Between August 2024 and November 2026, AUTOfinance (Tokemak Autopools) completed two EOA-to-Safe bootstrap hardening transitions on Ethereum ($27,831,154 single-chain TVL): SystemRegistry (0x2218F90A98b0C070676f249EF44834686dAa4285) moved from deployer EOA ownership to a zero-timelock 6-of-11 Gnosis Safe v1.1.1 proxy (0x8b4334d4812C530574Bd4F2763FcD22dE94A969B, slot-0 singleton 0x34cfAC646f301356fAa8B21e94227e3583Fe3F5F lacking v1.3+ transaction-guard mechanics and carrying AllowanceModule 0xCFbFaC74C26F8647cBDb8c5caf80BB5b32E43134) after 17.68 days (block 20,765,084), and the deployer EOA self-revoked DEFAULT_ADMIN_ROLE on immutable AccessController (0x37767cBfF88Cb623E9404e959560984F7D742dF6) after 223.57 days (block 22,239,605; hasRole(...) == false with zero subsequent DEFAULT_ADMIN_ROLE RoleGranted logs through pinned block 26,452,563, though governing Safes hold live DEFAULT_ADMIN_ROLE capable of future grants; bootstrap hardening mean = 120.63 days, measuring operational handover rather than remediation of any missed deadline). Role enumeration confirms prior 6-of-11 GnosisSafe v1.3.0 proxy 0x6c4D843D9d075c4f8971E64DeA16181b2CFa38F8 (singleton 0xd9Db270c1B5E3Bd161E8c8503c55cEABeE709552) and 0x8b4334... survived revocation, joined in May 2025 by 6-of-14 Safe v1.4.1 proxy 0xa9900B2d550c406d1Cf58DA27228Feeef21D447b (singleton 0x41675C099F32341bf84BFc5382aF534df5C7461a; 42.9% quorum). Security docs state ownership will 'eventually' move to a Governor without setting a deadline, while hub.snapshot.org/graphql confirms the tokemak.eth Snapshot space records one closed 2022 proposal (TRU-1, closed 2022-06-28, 181 votes, admin 0x8b4334...) and zero Autopools proposals in tokemak.eth. Separately, an open 653.10-day documentation discrepancy started on 2025-02-04 (block 21,775,447, when SystemSecurity and SwapRouter were replaced on-chain relative to the pre-replacement 2025-01-21 Wayback baseline table) and persists across 2025-04-26, 2026-08-26, and live docs: contract-addresses still lists 2024 SystemSecurity (0x027a...) and SwapRouter (0x6201...), whereas dual-RPC getters at pinned blocks 26,452,182 and 26,452,373 prove live systemSecurity() = 0xe57A2eC5EF4CC7F6576BB1ed5Ec3759878F39B20 and swapRouter() = 0x955b5AdcdBBA6870fECA78338137191F774679cA. Trailing-12m activity in Tokemak/v2-core-pub shows 0 commits and bus factor 0 (dormant since 2024-10-16).",
+  "contributor_github": "VB-Blue",
+  "agent_assist_framework": "antigravity",
+  "base_payout_address": "0xe0a3AAe6e7d042f42e82830f4eEbF426cc1270a2",
+  "mcp_tool_receipt": {
+    "tool": "pacta_check_preflight",
+    "arguments": {
+      "chain": "ethereum",
+      "address": "0x2218F90A98b0C070676f249EF44834686dAa4285",
+      "block": "26452182"
+    },
+    "result": {
+      "schema": "pacta.preflight_check.v1",
+      "chain": "ethereum",
+      "chainId": 1,
+      "address": "0x2218F90A98b0C070676f249EF44834686dAa4285",
+      "pinnedBlock": 26452182,
+      "pinnedBlockHash": "0xf1f629265fa20d668b8fb85ca7a1e0b206caccec0082e8f830b30fa49591c787",
+      "blockTimestamp": 1795128023,
+      "verdict": "MULTISIG_NO_TIMELOCK",
+      "riskScore": 55,
+      "isContract": true,
+      "isProxy": false,
+      "proxyType": null,
+      "implementation": null,
+      "beacon": null,
+      "hasAdminSlot": false,
+      "canUpgradeZeroDelay": false,
+      "capabilities": {
+        "pause": false,
+        "blacklist": false,
+        "upgrade": false
+      },
+      "paused": null,
+      "controller": {
+        "address": "0x8b4334d4812C530574Bd4F2763FcD22dE94A969B",
+        "kind": "multisig_safe",
+        "safeThreshold": 6,
+        "timelockDelaySec": null,
+        "safeOwnerCount": 11,
+        "source": "owner()"
+      },
+      "roleAdminMembers": null,
+      "codeBytes": 9299,
+      "method": "Batched JSON-RPC reads pinned to the block hash (EIP-1898); EIP-1967 / EIP-1822 / beacon proxies; capabilities from PUSH4 selectors in proxy + implementation bytecode (heuristic).",
+      "summary": "Controlled by a 6-of-11 Safe with no timelock: changes can land instantly once signers agree.",
+      "activeGovernanceDiscussions": [],
+      "source": "live_rpc",
+      "catalogMatch": {
+        "slug": "autofinance",
+        "name": "AUTOfinance",
+        "url": "https://pacta.wtf/protocols/autofinance/",
+        "matchedAs": "primary_contract",
+        "classification": "rpc_observed",
+        "evidenceBasis": "rpc_observed",
+        "easAttested": false,
+        "baseEasUids": [],
+        "sprints": [],
+        "pinnedBlock": 26451608,
+        "primaryContract": "0x2218F90A98b0C070676f249EF44834686dAa4285",
+        "controller": {
+          "address": "0x8b4334d4812C530574Bd4F2763FcD22dE94A969B",
+          "kind": "multisig_safe"
+        },
+        "observedDelaySeconds": null,
+        "documentedDelaySeconds": null,
+        "surfaces": [
+          {
+            "id": "autofinance-control-plane",
+            "surface": "SystemRegistry · Non-Proxy Bytecode & Controller",
+            "classification": "rpc_observed",
+            "targetContract": "0x2218F90A98b0C070676f249EF44834686dAa4285",
+            "blockNumber": 26451608
+          }
+        ],
+        "whatDiffers": null,
+        "alsoMatches": []
+      },
+      "assessment": {
+        "coverage": "indexed_verified",
+        "confidence": "medium",
+        "method": "Live bytecode + storage heuristic at the pinned block, cross-checked with Pacta's RPC-pinned record for AUTOfinance (block 26451608).",
+        "limits": [
+          "riskScore (0-100) is a heuristic of the controller type and of pause / blacklist / upgrade capabilities read at one block; it is not an audit.",
+          "The live check reads EIP-1967 slots, owner(), Safe getThreshold() / getOwners() and TimelockController getMinDelay(); custom role systems, bridge or L2 admin paths and off-chain operations are not resolved.",
+          "Documentation is compared only for indexed protocols (catalogMatch), at their pinned block."
+        ]
+      },
+      "meter": {
+        "limit": 50,
+        "remaining": 49,
+        "reset": 1795132800
+      },
+      "upgrade_x402": {
+        "note": "Free tier: 50 pre-flight calls per caller per UTC day (REST and MCP), then $0.01 per call over x402 (HTTP 402, never a dead-end 429). Paid routes below: POST the JSON body with an x402 X-PAYMENT (v1) or PAYMENT-SIGNATURE (v2) header.",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "network": "base (eip155:8453)",
+        "payTo": "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14",
+        "discovery": "https://pacta.fractalneurons.com/.well-known/x402",
+        "overflow": {
+          "method": "GET or POST",
+          "url": "https://pacta.fractalneurons.com/v1/check/preflight",
+          "priceUsd": "0.01",
+          "amountAtomic": "10000",
+          "after": "50 free calls per UTC day"
+        },
+        "endpoints": [
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/verdict",
+            "priceUsd": "0.02",
+            "amountAtomic": "20000",
+            "unlocks": "fast contract / token control-plane verdict: riskScore 0-100, grade A-F, upgrade / owner / pause / blacklist / mint flags and a shareable scan URL",
+            "example": {
+              "chain": "ethereum",
+              "address": "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/dossier",
+            "priceUsd": "0.05",
+            "amountAtomic": "50000",
+            "unlocks": "full control-plane dossier: every controller Safe's signers and threshold, signers shared with other indexed protocols, Base EAS proof",
+            "example": {
+              "slug": "stader-labs-ethx"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/calldata-sim",
+            "priceUsd": "0.25",
+            "amountAtomic": "250000",
+            "unlocks": "pre-signing calldata check: timelock / Safe / multicall calls decoded, each rated against live delays and the authority that governs it",
+            "example": {
+              "chain": "ethereum",
+              "target": "0x2225DAbFfC7F862c99477381E971E8B1FDaB467e",
+              "data": "0x64d623530000000000000000000000000000000000000000000000000000000000015180"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/deep-scan",
+            "priceUsd": "9.00",
+            "amountAtomic": "9000000",
+            "unlocks": "deep control-plane scan cross-checked on two independent RPC operators, auditor receipt and a queued Base EAS ticket",
+            "example": {
+              "chain": "base",
+              "address": "0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "apache2_commercial_grant": true,
+  "rules_accepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
