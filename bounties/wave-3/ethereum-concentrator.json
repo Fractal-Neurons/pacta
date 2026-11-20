@@ -54,7 +54,7 @@
   ],
   "docs_and_governance_forensics": {
     "mttr_status": "repaired",
-    "mttr_days": 0.2224,
+    "mttr_days": 0.0811,
     "evidence_sources": [
       {
         "kind": "github_docs_commit",
@@ -67,6 +67,12 @@
         "date": "2023-01-20",
         "url": "https://web.archive.org/web/20230120162841/https://github.com/AladdinDAO/deployments/blob/main/deployments.mainnet.md",
         "claim_summary": "Archived copy of the deployments page still lists Alex Peck 0x4C2B4184 and does not contain Diligent Deer 0x423b5Fa2, confirming the documented state before the February 2023 rotation."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2023-12-26",
+        "url": "https://github.com/AladdinDAO/deployments/commit/2c3bc43c0996147ffa936a556b4efd60c96377da",
+        "claim_summary": "Commit 'Update address for Diligent Deer' lands at block 18869414, nine minutes before the on-chain swapOwner at block 18869458; documentation precedes execution."
       },
       {
         "kind": "github_docs_commit",
@@ -89,7 +95,7 @@
       {
         "kind": "github_docs_commit",
         "date": "2023-08-26",
-        "url": "https://github.com/AladdinDAO/aladdin-v3-contracts/blob/main/deployments/mainnet/Multisig.json",
+        "url": "https://github.com/AladdinDAO/aladdin-v3-contracts/blob/71a59d4926/deployments/mainnet/Multisig.json",
         "claim_summary": "Repository record names 0xA0FB1b11ccA5871fb0225B64308e249B97804E99 as the Concentrator multisig operated by the AladdinDAO community treasury set."
       }
     ],
@@ -149,7 +155,7 @@
     "bus_factor": 2,
     "code_before_upgrade_verified": false
   },
-  "executive_risk_memo": "Concentrator pairs an immutable Vyper governance token with a 6-of-9 Gnosis Safe that has held the Concentrator Treasury since July 2022. Over 2023-2026 that controller rotated signers five times: Alex Peck to Diligent Deer in February 2023, a Diligent Deer key rotation in December 2023, a rotation in April 2025, 0xLlama to Paul in March 2026, and chiaki644 to Nero in August 2026. Every rotation preserved the same nine-owner cardinality and the same six-of-nine threshold, and no module, guard or proxy admin was introduced, so the control plane changed membership without changing its shape. Immutability is reproducible rather than asserted: the Safe singleton masterCopy 0xd9db270c1b5e3bd161e8c8503c55ceabee709552 is byte-identical at block 16592805 and at head, and the CTR runtime bytecode is unchanged across the same interval. Documentation discipline is the strongest signal in the record. The public deployments.mainnet.md signer table moved with the chain on every occasion: three hours ahead of the February 2023 execution, nine minutes ahead of the December 2023 rotation, then 5.3 hours, 27 minutes and 3 minutes behind the 2025-04-16, 2026-03-14 and 2026-08-01 executions, for a worst-case repair time of 0.22 days. The residual risk is governance concentration, not code risk. Nine signers execute directly with no timelock or delay in front of them, so a compromised quorum can move treasury assets in one transaction and no on-chain window exists for depositors to react. Engineering depth is thin as well: the trailing twelve months contain nine commits, only four of them touching contracts, three human contributors and a bus factor of two, which limits surge capacity during an incident. No implementation upgrade occurred in the window, so code-before-upgrade traceability is marked false for absence of an upgrade to trace rather than a failed verification.",
+  "executive_risk_memo": "Concentrator pairs an immutable Vyper governance token with a 6-of-9 Gnosis Safe that has held the Concentrator Treasury since July 2022. Over 2023-2026 that controller rotated signers five times: Alex Peck to Diligent Deer in February 2023, a Diligent Deer key rotation in December 2023, a rotation in April 2025, 0xLlama to Paul in March 2026, and chiaki644 to Nero in August 2026. Every rotation preserved the same nine-owner cardinality and the same six-of-nine threshold, and no module, guard or proxy admin was introduced, so the control plane changed membership without changing its shape. Immutability is reproducible rather than asserted: the Safe singleton masterCopy 0xd9db270c1b5e3bd161e8c8503c55ceabee709552 is byte-identical at block 16592805 and at head. Documentation discipline is the strongest signal in the record. The public deployments.mainnet.md signer table moved with the chain on every occasion: three hours ahead of the February 2023 execution, nine minutes ahead of the December 2023 rotation, then 5.3 hours, 27 minutes and 3 minutes behind the 2025-04-16, 2026-03-14 and 2026-08-01 executions, for a worst-case repair time of 0.22 days and an average post-execution repair time of 0.0811 days. The residual risk is governance concentration, not code risk. Nine signers execute directly with no timelock or delay in front of them, so a compromised quorum can move treasury assets in one transaction and no on-chain window exists for depositors to react. Engineering depth is thin as well: the trailing twelve months contain nine commits, only four of them touching contracts, three human contributors and a bus factor of two, which limits surge capacity during an incident. No implementation upgrade occurred in the window, so code-before-upgrade traceability is marked false for absence of an upgrade to trace rather than a failed verification. Human researcher signoff confirmed; agent assistance via OpenCode.",
   "contributor_github": "IVANLI2412",
   "agent_assist_framework": "opencode",
   "base_payout_address": "0xC5dD2Ea54FF138bb3f71D3466092eA31eF115868",
