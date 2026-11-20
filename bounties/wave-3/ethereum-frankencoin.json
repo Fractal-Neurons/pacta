@@ -1,0 +1,338 @@
+{
+  "wave": 3,
+  "chain": "ethereum",
+  "chain_id": 1,
+  "protocol_name": "Frankencoin",
+  "slug": "frankencoin",
+  "pacta_slug": "frankencoin",
+  "contract_address": "0xB58E61C3098d85632Df34EecfB899A1Ed80921cB",
+  "tvl_usd": 52479412,
+  "tvl_source_url": "https://defillama.com/protocol/frankencoin",
+  "dossier_window": "2023-2026",
+  "trajectory_mode": "mutable_transitions",
+  "historical_transitions": [
+    {
+      "block_number": 18451518,
+      "block_date": "2023-10-28",
+      "tx_hash": "0xdc09f425cfb64bbb93a07bf22ea7e7922e24874971b6d17ce1f91750ad92ef62",
+      "event_kind": "deployment_baseline",
+      "rpc_or_cast_proof": "cast code 0xB58E61C3098d85632Df34EecfB899A1Ed80921cB --block 18451518 --rpc-url https://ethereum.publicnode.com",
+      "summary": "ZCHF token contract created (Etherscan internal-tx record; receipt contractAddress is the dossier contract), compiler v0.8.20, verified source 'Frankencoin'. Deployer 0x58f13e67e465d302a733285488f868e917d99629. The minter registry starts empty; no proxy, no admin key."
+    },
+    {
+      "block_number": 18451537,
+      "block_date": "2023-10-28",
+      "tx_hash": "0xa5c6d1e24bda7cf402d525d2124d65b3c8531210c6d7ad7354235ae5fa6f9c06",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast receipt 0xa5c6d1e24bda7cf402d525d2124d65b3c8531210c6d7ad7354235ae5fa6f9c06 --rpc-url https://ethereum.publicnode.com",
+      "summary": "Genesis initialization: deployer calls initialize() registering MintingHub V1 (0x7546762fdb1a6d9146b33960545c3f6394265219) as the first minter. MinterApplied with period 0 and fee 0; initialize() is only callable while totalSupply is zero."
+    },
+    {
+      "block_number": 18451572,
+      "block_date": "2023-10-28",
+      "tx_hash": "0x611da737fc70aa5241850d33f2fe9a1688f80816cc22812b56dab934a18449fe",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast receipt 0x611da737fc70aa5241850d33f2fe9a1688f80816cc22812b56dab934a18449fe --rpc-url https://ethereum.publicnode.com",
+      "summary": "Genesis initialization: deployer calls initialize() registering the XCHF Bridge (0x7bbe8f18040af0032f4c2435e7a76db6f1e346df) as the second minter, completing the launch-time minter set (MintingHub V1 + XCHF Bridge)."
+    },
+    {
+      "block_number": 18455568,
+      "block_date": "2023-10-29",
+      "tx_hash": "0xaac4f5e8e322a5ef37e370ac3402ad52da3158612814ba7861a0044daf22d6ba",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast receipt 0xaac4f5e8e322a5ef37e370ac3402ad52da3158612814ba7861a0044daf22d6ba --rpc-url https://ethereum.publicnode.com",
+      "summary": "First public minter application: 'Testing alerts and governance' (0x5a57dd9c623e1403af1d810673183d89724a4e0c) via suggestMinter with the 14-day minimum period and 1,000 ZCHF fee. Vetoed 2023-10-30 by the same address (deny tx 0x3e1985b1..., message 'no'); the veto path works within 34 hours."
+    },
+    {
+      "block_number": 19069309,
+      "block_date": "2024-01-23",
+      "tx_hash": "0xa3dc917b1ee168b8a10517f64c35394d31aadd1e4b1dfa8fed13504f14cf5fcb",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast receipt 0xa3dc917b1ee168b8a10517f64c35394d31aadd1e4b1dfa8fed13504f14cf5fcb --rpc-url https://ethereum.publicnode.com",
+      "summary": "XCHF Manager (0xad309aecf82fbbe26eb126c0389f744243092677) applies as a minter with a 14-day period and 1,000 ZCHF fee. Vetoed the same day, 3h18m later (deny tx 0x7d853baf..., message 'nice try'); no minting rights ever activate."
+    },
+    {
+      "block_number": 20820074,
+      "block_date": "2024-09-24",
+      "tx_hash": "0xb42fbadb2dce21aa2b03094655e8eaa450acd11f2b57d91563bc0ecbaaacddea",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast receipt 0xb42fbadb2dce21aa2b03094655e8eaa450acd11f2b57d91563bc0ecbaaacddea --rpc-url https://ethereum.publicnode.com",
+      "summary": "Vault (0x700213f3fdbfa4a701ab985d5eaf7e1dbe5d16ef) applies as its own minter through its own contract, which forwards the 1,000 ZCHF fee to ZCHF (Transfer + Profit logs) and emits MinterApplied on the token. Vetoed 7 minutes later the same day (deny tx 0xe6c414b9..., message 'No')."
+    },
+    {
+      "block_number": 21281096,
+      "block_date": "2024-11-27",
+      "tx_hash": "0x30a69a9e0e93272fa1b3aff5c594eb820d6cd3466758a888f292c7ecb1fde429",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast receipt 0x30a69a9e0e93272fa1b3aff5c594eb820d6cd3466758a888f292c7ecb1fde429 --rpc-url https://ethereum.publicnode.com",
+      "summary": "V2 migration day, first of three: Savings module (0x3bf301b0e2003e75a3e86ab82bd1eff6a9dfb2ae) applies as a minter with a 14-day period and 1,000 ZCHF fee. No veto is filed; the module activates after its application period."
+    },
+    {
+      "block_number": 21281102,
+      "block_date": "2024-11-27",
+      "tx_hash": "0xe160385e1f1776946b448cd3e483ec7b07c25f6a56122330710ca349fe5dc548",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast receipt 0xe160385e1f1776946b448cd3e483ec7b07c25f6a56122330710ca349fe5dc548 --rpc-url https://ethereum.publicnode.com",
+      "summary": "V2 migration day, second of three: Roller (0xad0107d3da540fd54b1931735b65110c909ea6b6), the position-rolling module, applies as a minter with a 14-day period and 1,000 ZCHF fee. No veto is filed."
+    },
+    {
+      "block_number": 21281110,
+      "block_date": "2024-11-27",
+      "tx_hash": "0x1903230e1983883ea422619e929dbe51b42eb7db0ac56b508945bbce48251139",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast receipt 0x1903230e1983883ea422619e929dbe51b42eb7db0ac56b508945bbce48251139 --rpc-url https://ethereum.publicnode.com",
+      "summary": "V2 migration day, third of three: MintingHub V2 (0xde12b620a8a714476a97efd14e6f7180ca653557) applies as a minter with a 14-day period and 1,000 ZCHF fee, replacing V1 as the collateral-minting module. No veto is filed; V2 becomes the live minting path."
+    },
+    {
+      "block_number": 22368413,
+      "block_date": "2025-04-28",
+      "tx_hash": "0x218304628d826ae6395569c6b464771053649d25980ce1140e7d7b0d73e50e5a",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast receipt 0x218304628d826ae6395569c6b464771053649d25980ce1140e7d7b0d73e50e5a --rpc-url https://ethereum.publicnode.com",
+      "summary": "VCHF Bridge 2025 (0x3b71ba73299f925a837836160c3e1fec74340403) applies as a minter with a 14-day period and 1,000 ZCHF fee, extending minting to the VCHF stablecoin-conversion bridge. No veto is filed."
+    },
+    {
+      "block_number": 22538070,
+      "block_date": "2025-05-22",
+      "tx_hash": "0xb904c90b83801c82f062e6ab628a63a998631e294b7607eb8a1364c76c5cb399",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast receipt 0xb904c90b83801c82f062e6ab628a63a998631e294b7607eb8a1364c76c5cb399 --rpc-url https://ethereum.publicnode.com",
+      "summary": "SavingsReferral (0x27d9ad987bde08a0d083ef7e0e4043c857a17b38) applies as a minter with a 14-day period and 1,000 ZCHF fee, adding the savings-referral module to the registry. No veto is filed."
+    },
+    {
+      "block_number": 22767782,
+      "block_date": "2025-06-23",
+      "tx_hash": "0xa5fa9d8ed10a4af582eacf9f7a1eae9b57010a0ff2ac180b39380331122b12e2",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast receipt 0xa5fa9d8ed10a4af582eacf9f7a1eae9b57010a0ff2ac180b39380331122b12e2 --rpc-url https://ethereum.publicnode.com",
+      "summary": "Transfer Utility (0xf98c221661f51578f5e5236b189a493e2a8a1916) applies as a minter with a 14-day period and 1,000 ZCHF fee. No veto is filed."
+    },
+    {
+      "block_number": 22775408,
+      "block_date": "2025-06-24",
+      "tx_hash": "0xcecb867417f3bc34ed8a2f2bfed8fcb876210d5722f92c1c7cb7900b5e98bdac",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast receipt 0xcecb867417f3bc34ed8a2f2bfed8fcb876210d5722f92c1c7cb7900b5e98bdac --rpc-url https://ethereum.publicnode.com",
+      "summary": "Governance-module migration: Multichain Tokenpool (0x9359cd75549dae00cdd8d22297bc9b13fbbe4b79) is proposed through the FCS MinterGovernance module (0x8c11befe062a9cd201cc634bc2f3dcb44b633d42), which forwards to ZCHF.suggestMinter; ZCHF emits Transfer + Profit + MinterApplied. No veto is filed."
+    },
+    {
+      "block_number": 22775409,
+      "block_date": "2025-06-24",
+      "tx_hash": "0x3316b76c7688ebce36dfeeffd2111597ad4921f53b894f78bef4cc47ce75cd58",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast receipt 0x3316b76c7688ebce36dfeeffd2111597ad4921f53b894f78bef4cc47ce75cd58 --rpc-url https://ethereum.publicnode.com",
+      "summary": "Governance-module migration, second entry: Multichain Accounting (0x88fd2ecd0b9250f203e99e80eb78b0c32b8adb16) is proposed through the same FCS MinterGovernance module one block later, same forwarding pattern and MinterApplied on ZCHF. No veto is filed."
+    },
+    {
+      "block_number": 24993997,
+      "block_date": "2026-04-30",
+      "tx_hash": "0xa1b5112f07a7f8b10fd183ad6819c486339874ddd6c5d7ceed92ecf04c64ed39",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast receipt 0xa1b5112f07a7f8b10fd183ad6819c486339874ddd6c5d7ceed92ecf04c64ed39 --rpc-url https://ethereum.publicnode.com",
+      "summary": "AllUnity CHFAU Stablecoin Bridge (0x3e445ff4dddf0ff8ae7458c9746ed80bd664f6c1) applies as a minter with a 14-day period and 1,000 ZCHF fee, bridging ZCHF to AllUnity's CHFAU. No veto is filed."
+    },
+    {
+      "block_number": 25199256,
+      "block_date": "2026-05-29",
+      "tx_hash": "0xde1c764b7261196351c00e23d739b5dd79e6539f8307ce9d4a6ea2cfc7702256",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast receipt 0xde1c764b7261196351c00e23d739b5dd79e6539f8307ce9d4a6ea2cfc7702256 --rpc-url https://ethereum.publicnode.com",
+      "summary": "Duplicate AllUnity application (0x3e44a18499a298877f989117403c16084e4ff6c1, message 'AllUnity CHFAU Stablecoin Bridge*') is vetoed 11 minutes after applying (deny tx 0xf64bc6b2...), the fastest veto in the record; the duplicate never activates."
+    },
+    {
+      "block_number": 25796002,
+      "block_date": "2026-08-20",
+      "tx_hash": "0x107c97db8ce584b28208f3a97458c4e5462669eaa0f2bbd8bd30ac99688cd91c",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast receipt 0x107c97db8ce584b28208f3a97458c4e5462669eaa0f2bbd8bd30ac99688cd91c --rpc-url https://ethereum.publicnode.com",
+      "summary": "Uniswap Amplifier (0xa1304e5aaf83cdb7c2b367f50b99bb0647ed8c58) applies as a minter with a 14-day period and 1,000 ZCHF fee (message 'Uniswap Amplifier 2027-04-01 2.5M'), adding a 2.5M liquidity-provision minter expiring 2027-04-01. No veto is filed."
+    },
+    {
+      "block_number": 26311571,
+      "block_date": "2026-10-31",
+      "tx_hash": "0x1c96e4d945e12fb886a68efc0a69940e86ff829f1e2f71e5574441be36e11449",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast receipt 0x1c96e4d945e12fb886a68efc0a69940e86ff829f1e2f71e5574441be36e11449 --rpc-url https://ethereum.publicnode.com",
+      "summary": "Latest application in the window: 'liquidity provision' (0x52ab424b99ffeb870a9ca3bee1bde9ad64b5c83e) applies as a minter with a 14-day period and 1,000 ZCHF fee. Vetoed the same day, about 11.5 hours later (deny tx 0xafeb41ec..., message 'FCS'); the fifth and final veto of the window."
+    }
+  ],
+  "docs_and_governance_forensics": {
+    "mttr_status": "repaired",
+    "mttr_days": 660.0,
+    "evidence_sources": [
+      {
+        "kind": "github_docs_commit",
+        "date": "2026-09-18",
+        "url": "https://github.com/Frankencoin-ZCHF/gitbook/commit/e03dce40a211a5db52fbeeea704c990f9dcb2ae8",
+        "claim_summary": "Docs commit 'correct collateral challenge and version position sources' fixes the inverted challenge condition in positions/README.md and adds the V1/V2 contract-version section; the stale text had stood since at least 2024-04-06."
+      },
+      {
+        "kind": "audit_report",
+        "date": "2026-07-14",
+        "url": "https://reports.chainsecurity.com/Frankencoin/ChainSecurity_Frankencoin_FPS2_Audit.pdf",
+        "claim_summary": "ChainSecurity FPS2 audit (33 pages, dated July 14 2026) documents the veto-based governance modules, including finding #028 on denyUnannouncedMinter, fixed by code change before the final report."
+      },
+      {
+        "kind": "official_docs",
+        "date": "2026-11-20",
+        "url": "https://docs.frankencoin.com/governance.md",
+        "claim_summary": "Current governance docs describe the FCS veto process, the 1% quorum, the 14-day legacy application period and the 60-day new-module rule, matching the on-chain minter record."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2026-07-10",
+        "url": "https://github.com/Frankencoin-ZCHF/Frankencoin/commit/8b18c1349ab26f194e01de58c64045931c6bda44",
+        "claim_summary": "Fix commit 'clear minter announcement on veto' in contracts/equity/fps2/MinterGovernance.sol remediates audit finding #028."
+      }
+    ],
+    "gap_windows": [
+      {
+        "opened_block": 21281110,
+        "opened_date": "2024-11-27",
+        "closed_block": 26003195,
+        "closed_date": "2026-09-18",
+        "duration_days": 660.0,
+        "status": "repaired",
+        "summary": "From the MintingHub V2 registration (block 21281110) the live system ran V2 minting modules, but the positions guide still stated the inverted challenge condition and a V1-only minting-hub framing (the inverted sentence had stood since at least 2024-04-06); gitbook commit e03dce40a211 corrected both on 2026-09-18. MTTR 660 days."
+      }
+    ]
+  },
+  "repo_audit": {
+    "github_org_repo": "Frankencoin-ZCHF/Frankencoin",
+    "commits_12m_contracts": 91,
+    "commits_12m_frontend_or_other": 61,
+    "human_contributors_12m": 4,
+    "bus_factor": 2,
+    "code_before_upgrade_verified": false
+  },
+  "executive_risk_memo": "Frankencoin (ZCHF) is an oracle-free Swiss-franc stablecoin whose control plane is not an admin key but a public minter registry on the immutable ZCHF token contract (0xB58E61C3098d85632Df34EecfB899A1Ed80921cB, deployed 2023-10-28, block 18451518; Pacta preflight verdict IMMUTABLE_NO_ADMIN, risk score 0, no proxy, no pause, no blacklist, no upgrade). Over 2023-2026 the registry processed 17 minter applications: 12 activated after their full 14-day application period and 1,000 ZCHF fee, and 5 were vetoed by qualified FCS holders, each within 0 to 34 hours (the fastest in 11 minutes), so no contested minter ever gained minting rights. The 2024-11-27 V2 migration (MintingHub V2, Roller, Savings) replaced the V1 minting path in a single day without a veto. The one repaired documentation gap ran 660 days: from the V2 go-live the positions guide still stated the inverted challenge condition and a V1-only minting-hub framing (the inverted sentence had stood since at least 2024-04-06), corrected by gitbook commit e03dce40a211 on 2026-09-18. Engineering reality is concentrated: the Frankencoin-ZCHF/Frankencoin repo shows 152 commits in the trailing 12 months (91 touching contracts/, 61 elsewhere) from 4 human contributors, with bus factor 2 (luziusmeisser and samclassix authored 146 of 152 commits). The honest weakness is code-before-upgrade: the V2 contracts were only added to the public repo on 2025-06-23, backfilled from Etherscan seven months after their 2024-11-27 deployment, so code_before_upgrade_verified is false; the July 14 2026 ChainSecurity FPS2 audit (33 pages) found governance issues including #028, remediated by code change (commit 8b18c13, 'clear minter announcement on veto') before the final report. TVL is $52.48M on Ethereum (DefiLlama, 2026-11-20). Residual risk is governance attention, not admin keys: the veto design only works if holders monitor proposals, rate-limit increases apply immediately per the audit, and the equity backstop depends on FCS holders absorbing losses. Overall the system is credibly decentralized in its minting control, with a thin engineering bench and a documented history of shipping code before publishing it.",
+  "contributor_github": "freeiran112",
+  "agent_assist_framework": "muse",
+  "base_payout_address": "0x68ee2FE2D947D40db783D62cfA4F0781eAb12A5E",
+  "mcp_tool_receipt": {
+    "tool": "pacta_check_preflight",
+    "arguments": {
+      "chain": "ethereum",
+      "address": "0xB58E61C3098d85632Df34EecfB899A1Ed80921cB"
+    },
+    "result": {
+      "schema": "pacta.preflight_check.v1",
+      "chain": "ethereum",
+      "chainId": 1,
+      "address": "0xB58E61C3098d85632Df34EecfB899A1Ed80921cB",
+      "pinnedBlock": 26456660,
+      "pinnedBlockHash": "0xc425a766e836649052838e06cf9fd80c6201f04c5c5d424e18c857b9aec08cb9",
+      "blockTimestamp": 1795181963,
+      "verdict": "IMMUTABLE_NO_ADMIN",
+      "riskScore": 0,
+      "isContract": true,
+      "isProxy": false,
+      "proxyType": null,
+      "implementation": null,
+      "beacon": null,
+      "hasAdminSlot": false,
+      "canUpgradeZeroDelay": false,
+      "capabilities": {
+        "pause": false,
+        "blacklist": false,
+        "upgrade": false
+      },
+      "paused": null,
+      "controller": {
+        "address": null,
+        "kind": "none",
+        "safeThreshold": null,
+        "timelockDelaySec": null,
+        "source": null
+      },
+      "roleAdminMembers": null,
+      "codeBytes": 7626,
+      "method": "Batched JSON-RPC reads pinned to the block hash (EIP-1898); EIP-1967 / EIP-1822 / beacon proxies; capabilities from PUSH4 selectors in proxy + implementation bytecode (heuristic).",
+      "summary": "No proxy (EIP-1967, EIP-1822 or beacon) and no owner(), admin(), authority() or AccessControl admin found: immutable as far as these standard surfaces show.",
+      "source": "live_rpc",
+      "assessment": {
+        "coverage": "unindexed_bytecode_heuristic",
+        "confidence": "medium",
+        "method": "Live bytecode + storage heuristic at the pinned block only: this contract is not in Pacta's indexed catalog (no documentation comparison).",
+        "limits": [
+          "riskScore (0-100) is a heuristic of the controller type and of pause / blacklist / upgrade capabilities read at one block; it is not an audit.",
+          "The live check reads EIP-1967 slots, owner(), Safe getThreshold() / getOwners() and TimelockController getMinDelay(); custom role systems, bridge or L2 admin paths and off-chain operations are not resolved.",
+          "Documentation is compared only for indexed protocols (catalogMatch), at their pinned block."
+        ]
+      },
+      "coverage_gap_hint": "Target is not yet indexed or fully classified. Ask the user if they want you to queue coverage or request this capability via pacta_submit_request (free community queue, or 24h priority clearance for issuers).",
+      "meter": {
+        "limit": 50,
+        "remaining": 49,
+        "reset": 1795219200
+      },
+      "upgrade_x402": {
+        "note": "Free tier: 50 pre-flight calls per caller per UTC day (REST and MCP), then $0.01 per call over x402 (HTTP 402, never a dead-end 429). Paid routes below: POST the JSON body with an x402 X-PAYMENT (v1) or PAYMENT-SIGNATURE (v2) header.",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "network": "base (eip155:8453)",
+        "payTo": "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14",
+        "discovery": "https://pacta.fractalneurons.com/.well-known/x402",
+        "overflow": {
+          "method": "GET or POST",
+          "url": "https://pacta.fractalneurons.com/v1/check/preflight",
+          "priceUsd": "0.01",
+          "amountAtomic": "10000",
+          "after": "50 free calls per UTC day"
+        },
+        "endpoints": [
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/verdict",
+            "priceUsd": "0.02",
+            "amountAtomic": "20000",
+            "unlocks": "fast contract / token control-plane verdict: riskScore 0-100, grade A-F, upgrade / owner / pause / blacklist / mint flags and a shareable scan URL",
+            "example": {
+              "chain": "ethereum",
+              "address": "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/dossier",
+            "priceUsd": "0.05",
+            "amountAtomic": "50000",
+            "unlocks": "full control-plane dossier: every controller Safe's signers and threshold, signers shared with other indexed protocols, Base EAS proof",
+            "example": {
+              "slug": "stader-labs-ethx"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/calldata-sim",
+            "priceUsd": "0.25",
+            "amountAtomic": "250000",
+            "unlocks": "pre-signing calldata check: timelock / Safe / multicall calls decoded, each rated against live delays and the authority that governs it",
+            "example": {
+              "chain": "ethereum",
+              "target": "0x2225DAbFfC7F862c99477381E971E8B1FDaB467e",
+              "data": "0x64d623530000000000000000000000000000000000000000000000000000000000015180"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/deep-scan",
+            "priceUsd": "9.00",
+            "amountAtomic": "9000000",
+            "unlocks": "deep control-plane scan cross-checked on two independent RPC operators, auditor receipt and a queued Base EAS ticket",
+            "example": {
+              "chain": "base",
+              "address": "0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "apache2_commercial_grant": true,
+  "rules_accepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
