@@ -740,6 +740,12 @@ tr.sc-drawer > td { padding: 4px 16px 24px; background: color-mix(in srgb, var(-
 .snap-fallback { color: var(--warning); font-weight: 600; }
 .obs-age { color: var(--muted-foreground); }
 .live-line:empty { display: none; }
+.radar-pin-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 14px; margin: 12px 0; padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--muted); font-size: 0.875rem; font-variant-numeric: tabular-nums; }
+.radar-pin-bar span { color: var(--muted-foreground); font-size: 0.8125rem; }
+.sc-sort { margin-bottom: 4px; }
+.lb-stats { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin: 8px 0 4px; padding: 6px 12px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--muted); font-size: 0.875rem; font-variant-numeric: tabular-nums; }
+.ftr-stamp { margin-top: 6px; font-size: 0.75rem; color: var(--muted-foreground); font-variant-numeric: tabular-nums; }
+.corr-log li { margin: 6px 0; }
 
 /* pricing (M4/M5 parity: the same five tiers on / and /request/). N3: the three protocol-team tiers are a 3-column card grid; Free is a
    full-width row above them and the Enterprise API a full-width row below */

@@ -630,7 +630,7 @@ function rescueScenario() {
 // state badges with textContent + class only; failures and malformed payloads keep the static block-pinned state.
 async function liveTimelockScenario() {
   if (!input.timelockBrief) { res.live_error = "no timelock brief page"; return; }
-  const LIVE = "https://pacta-x402.pacta.workers.dev/v1/briefs/live-timelocks?caller_agent=pacta-wtf-radar&requester_role=individual_user&caller_purpose=governance_monitoring";
+  const LIVE = "https://pacta.fractalneurons.com/v1/briefs/live-timelocks?caller_agent=pacta-wtf-radar&requester_role=individual_user&caller_purpose=governance_monitoring";
   const opsOf = (doc) => (doc.querySelector("#post-eta-status [data-ops]").getAttribute("data-ops") || "").split(/\s+/).filter(Boolean);
   const op = (opId, live, block = 26420000) => ({ protocol: "Ethena", opId, live, block: { number: block, hash: "0x" + "ab".repeat(32), timestamp: 1794700000 } });
   const runWith = async (tree, path, reply) => {
@@ -1070,7 +1070,7 @@ async function v47Scenario() {
   res.v471_tabs_inert = a11y0 && a11y1 && d.querySelector("#how-it-works [data-tabs-stable]") !== null;
   res.v47_w2_tabs = s0 === "true,false,false,true" && s1 === "false,true,true,false" && s2 === s0 && s3 === s1 && s4 === s0 && s5 === s1
     && d.querySelector('#how-it-works [role="tablist"]') !== null && tRisk.textContent === "For risk & diligence teams" && tAg.textContent === "For AI agents & builders"
-    && /claude mcp add --transport http pacta https:\/\/pacta-x402\.pacta\.workers\.dev\/mcp/.test(pAg.textContent) && /cast call /.test(pAg.textContent)
+    && /claude mcp add --transport http pacta https:\/\/(?:pacta\.fractalneurons\.com|pacta-x402\.pacta\.workers\.dev)\/mcp/.test(pAg.textContent) && /cast call /.test(pAg.textContent)
     && pRisk.querySelectorAll('a[data-slot="button"]').map((a) => a.getAttribute("href")).join() === "scorecards/?grade=delta,radar/,request/";
   // W3: Ctrl+K opens the command dialog; a ticker finds the protocol and its brief; arrows move; Enter would open; Escape closes; "/" reopens
   key(d.body, "k", { ctrlKey: true });

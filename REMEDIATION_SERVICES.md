@@ -48,6 +48,6 @@ Delivered within **24 hours** of confirmed scope and settlement. The classificat
 
 Security-sensitive and unrevoked-authority findings (`disclosure_only`) are never published in public repositories or feeds. They go through the protocol's **Immunefi** or **Cantina** bounty programme. Do not submit vulnerabilities in public GitHub issues.
 
-When code changes are needed, Pacta can refer teams to independent smart-contract auditors under a **15% referral partnership**; under the [Independence Policy](https://pacta.wtf/methodology/#independence), referrals never influence docs-vs-chain status.
+Under the [Independence Policy](https://pacta.wtf/methodology/#independence), Pacta never sells grades; classifications follow verified on-chain and documentation evidence only.
 
 Request a clearance or join the community queue via [`pacta.wtf/request/`](https://pacta.wtf/request/) or the intake template [`.github/ISSUE_TEMPLATE/request-scan.yml`](.github/ISSUE_TEMPLATE/request-scan.yml); contact `pacta@dri.network`.

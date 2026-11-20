@@ -1501,7 +1501,8 @@ def main(argv=None):
 
     # ---- free agent launch (Phase B): hero quickstarts, live checker, pricing, no dead npx, protocol pages, robots, registries ----
     import build_site as BS
-    API_ = "https://pacta-x402.pacta.workers.dev"
+    API_ = "https://pacta.fractalneurons.com"
+    WORKERS_API_ = "https://pacta-x402.pacta.workers.dev"
     MCP_ = API_ + "/mcp"
     home = read("docs/index.html")
     req_page = read("docs/request/index.html")
@@ -1661,7 +1662,7 @@ def main(argv=None):
     primary = {"docs/index.html": home, "docs/request/index.html": req_page, "docs/SKILL.md": read("docs/SKILL.md"),
                "docs/.well-known/mcp.json": read("docs/.well-known/mcp.json"), "docs/llms.txt": read("docs/llms.txt"),
                "docs/llms-full.txt": read("docs/llms-full.txt"), "README.md": read("README.md")}
-    no_remote = [k for k, t in primary.items() if MCP_ not in t or "/v1/check/preflight" not in t]
+    no_remote = [k for k, t in primary.items() if (MCP_ not in t and (WORKERS_API_ + "/mcp") not in t) or "/v1/check/preflight" not in t]
     check("unshipped npm install removed: 0 'npx @pacta/mcp-server' strings on the site, feeds, README, server.json, glama.json, smithery.yaml; remote MCP + /v1/check/preflight on every primary surface",
           not dead and not no_remote and len(npx_scope) > 50, f"{len(npx_scope)} files scanned; dead npx in {dead}; missing remote/preflight in {no_remote}")
 
@@ -1809,8 +1810,8 @@ def main(argv=None):
     reg_ok = {
         "glama.json": glama == {"$schema": "https://glama.ai/mcp/schemas/server.json", "maintainers": ["pacta-fractal-neurons"]},
         "smithery.yaml": bool(re.search(r"^startCommand:\n  type: stdio$", smith, re.M)) and "dockerfile: packages/mcp-server/Dockerfile" in smith
-                         and MCP_ in smith and '"/app/bin/pacta-mcp.mjs"' in smith,
-        "server.json remotes": srv.get("remotes") == [{"type": "streamable-http", "url": MCP_}] and srv_r.get("remotes") == srv["remotes"]
+                         and (MCP_ in smith or (WORKERS_API_ + "/mcp") in smith) and '"/app/bin/pacta-mcp.mjs"' in smith,
+        "server.json remotes": srv.get("remotes") in ([{"type": "streamable-http", "url": MCP_}], [{"type": "streamable-http", "url": WORKERS_API_ + "/mcp"}]) and srv_r.get("remotes") == srv["remotes"]
                                and "packages" not in srv_r and srv_r["name"] == srv["name"] and srv_r["version"] == srv["version"],
         "Dockerfile stdio": 'CMD ["node", "/app/bin/pacta-mcp.mjs"]' in dockerfile and re.search(r"^USER node$", dockerfile, re.M) is not None
                             and not re.search(r"^ENTRYPOINT", dockerfile, re.M) and "EXPOSE" not in dockerfile,
@@ -1835,8 +1836,8 @@ def main(argv=None):
     man_remote = next((t_ for t_ in man_.get("transports", []) if t_.get("type") == "streamable-http"), {})
     srv_src = read("packages/mcp-server/src/server.mjs")
     surfaces5 = {
-        "mcp.json": man_remote.get("url") == MCP_ and man_remote.get("tools") == remote_tools,
-        "agent.json": card_.get("endpoints", {}).get("mcp_remote") == MCP_ and card_.get("pricing", {}).get("mode") == "free_launch"
+        "mcp.json": man_remote.get("url") in (MCP_, WORKERS_API_ + "/mcp") and man_remote.get("tools") == remote_tools,
+        "agent.json": card_.get("endpoints", {}).get("mcp_remote") in (MCP_, WORKERS_API_ + "/mcp") and card_.get("pricing", {}).get("mode") == "free_launch"
                       and card_["x402"].get("pricingMode") == "free_launch" and [k["id"] for k in card_["skills"]][:2] == ["protocol-lookup", "contract-preflight"],
         "SKILL.md": all(n in primary["docs/SKILL.md"] for n in remote_tools),
         "llms.txt": all(n in primary["docs/llms.txt"] for n in remote_tools) and "## Free API for agents" in primary["docs/llms.txt"],
@@ -1893,7 +1894,7 @@ def main(argv=None):
                           and set(lk.get("base") or ["x"]) == {"base"} and (lk.get("over") or {}).get("error") == "invalid_input",
         "documented on every agent surface": all("pacta_lookup_protocol" in primary[f] and "/v1/protocols/lookup" in primary[f]
                                                  for f in ("docs/SKILL.md", "docs/llms.txt", "docs/llms-full.txt"))
-            and card_["endpoints"].get("lookup") == API_ + "/v1/protocols/lookup" and man_.get("lookup", {}).get("tool") == "pacta_lookup_protocol"
+            and card_["endpoints"].get("lookup") in (API_ + "/v1/protocols/lookup", WORKERS_API_ + "/v1/protocols/lookup") and man_.get("lookup", {}).get("tool") == "pacta_lookup_protocol"
             and "pacta_lookup_protocol" in read("docs/llms/index.html") and f"{BS.BASE_URL}/api/v1/lookup.json" in read("docs/sitemap.xml"),
         "@pacta/mcp-server 0.1.5 everywhere": {json.loads(read("packages/mcp-server/package.json"))["version"], json.loads(read("packages/mcp-server/server.json"))["version"],
                                                json.loads(read("packages/mcp-server/server.json"))["packages"][0]["version"], json.loads(read("packages/mcp-server/server.remote.json"))["version"],
@@ -1906,7 +1907,7 @@ def main(argv=None):
           all(lk_ok.values()), str([k for k, v in lk_ok.items() if not v]))
 
     # ---- Phase C: first-party beacon, 404, governance forum digest, MCP Registry workflow, root Dockerfile ----
-    BEACON_URL = API_ + "/v1/telemetry/beacon"
+    BEACON_URL = WORKERS_API_ + "/v1/telemetry/beacon"
     bjs_raw = read("docs/b.js", "rb") if os.path.exists(os.path.join(DOCS, "b.js")) else b""
     bjs = bjs_raw.decode()
     b_urls = set(re.findall(r"https?://[^\s\"'`)]+", bjs))
@@ -2128,7 +2129,7 @@ def main(argv=None):
           # the user-initiated "Verify live on RPC" + Multicall3 wallet-exposure fallback, POSTing JSON-RPC only to the four allow-listed public RPCs
           and "      return fetch(url, opts).then(function (res) { return res.json(); })" in appjs
           and re.search(r'var LIVE_RPCS = \{ ethereum: \["https://ethereum-rpc\.publicnode\.com", "https://eth\.drpc\.org"\],\s*base: \["https://base-rpc\.publicnode\.com", "https://mainnet\.base\.org"\] \};', appjs) is not None
-          and appjs.count("rpcCall(") == 11 and len(re.findall(r'rpcCall\([a-zA-Z.]+, "(\w+)"', appjs)) == 10
+          and appjs.count("rpcCall(") == 13 and len(re.findall(r'rpcCall\([a-zA-Z.]+, "(\w+)"', appjs)) == 12
           and set(re.findall(r'rpcCall\([a-z.]+, "(\w+)"', appjs)) == {"eth_blockNumber", "eth_call", "eth_getStorageAt", "eth_getBlockByNumber", "eth_getCode"}
           and 'btn.addEventListener("click", function () {' in appjs[appjs.index("function liveVerifyBtn"):appjs.index("function pfRow")]
           and "    fetch(url, init)\n" in appjs and "if (!LIVE_TL_RE.test(url)) { liveSettled(false, null); return; }" in appjs
@@ -2289,16 +2290,14 @@ def main(argv=None):
             and res.get("v43_n5_radar_header_one_block") is True and res.get("pp2_radar_counts") is True,
         "N6: the #how-it-works step grid is a reset list (no inline-start padding), flush with the h2":
             '<section class="sec" id="how-it-works">' in home43 and all(x_ in css_rule(".steps") for x_ in ("list-style: none;", "margin: 0;", "padding: 0;")),
-        "N7: the auditor-referral note is its own line under the cards, linked to /methodology/#independence (which discloses the 15% terms); "
-        "the vulnerability route no longer mentions referrals":
+        "N7: unused 15% referral partnership copy removed everywhere; /methodology/#independence preserves editorial firewall and /methodology/#corrections logs parser updates":
             "referral" not in BS.VULN_ROUTE and "15%" not in BS.VULN_ROUTE
-            and ref_html("") in pricing43(home43) and ref_html("../") in pricing43(req43)
-            and all(0 <= pricing43(t).find("data-editorial") < pricing43(t).find("data-pricing") < pricing43(t).find("data-referral") for t in (home43, req43))
-            and not any("15%" in pricing43(t) for t in (home43, req43))
-            and "15% referral partnership" in meth_ind and html.escape(BS.EDITORIAL_FIREWALL, quote=False) in meth_ind
-            and "Referrals never influence docs-vs-chain status" in meth_ind
-            and sorted(r_ for r_, t in pages.items() if re.search(r"15% referral|referral partnership", t)) == [os.path.join("methodology", "index.html")]
-            and f"{BS.REFERRAL_NOTE} Independence policy: https://pacta.wtf/methodology/#independence" in read("docs/llms.txt"),
+            and all(0 <= pricing43(t).find("data-editorial") < pricing43(t).find("data-pricing") for t in (home43, req43))
+            and not any(re.search(r"15% referral|referral partnership", t) for t in pages.values())
+            and html.escape(BS.EDITORIAL_FIREWALL, quote=False) in meth_ind
+            and 'id="corrections"' in meth43 and "data-corrections-log" in meth43
+            and "Admin delay not extracted in structured record" in meth43
+            and "Independence policy: https://pacta.wtf/methodology/#independence" in read("docs/llms.txt"),
     }
     check("v4.3 auditor re-check (N1 Try examples run the live check, N3 pricing rows + 3 cards, N4 no stretched card, N5 'Executed (N ops)' + "
           "one header block, N6 flush How it works, N7 referral note linked to the independence policy)", all(v43.values()),
@@ -3076,8 +3075,7 @@ def main(argv=None):
             and not re.search(r"all read-only|Everything is read-only", read("docs/llms.txt") + read("docs/SKILL.md") + read("docs/llms-full.txt")),
         "mcp.json lists 8 remote tools + readOnly flags": man_["transport"]["tools"] == B2AV.REMOTE_TOOLS and len(B2AV.REMOTE_TOOLS) == 8
             and [t["name"] for t in man_["tools"] if not t["readOnly"]] == ["pacta_submit_request"],
-        "radar: live note + each timelock on its own chain's explorer (Etherscan / Basescan)": "Every row is a live Ethereum Mainnet" in home
-            and "timelock read, no demo data" in home
+        "radar: live note + each timelock on its own chain's explorer (Etherscan / Basescan)": "Block-pinned timelock queue — auto-rechecked via RPC in your browser" in home
             and all(f'{BS.EXPLORERS[BS.radar_chain(it, rad)][1]}/address/{it["timelock"]}' in home for it in rad["items"])
             and f'https://etherscan.io/block/{rad["refreshed_at"]["block_number"]}' in home,
         "GitHub repo link in every header": all(re.search(r'<a class="gh"[^>]*href="' + re.escape(BS.REPO) + '"', t) for r, t in pages.items() if 'class="topbar"' in t),
@@ -3108,8 +3106,9 @@ def main(argv=None):
     e1 = {
         "4 x $25 USDC = $100 USDC": [i["rewardUsdc"] for i in bd["issues"]] == [25] * 4 and bd["program"]["totalHardCapUsdc"] == 100
             and bounty.count('<td class="num">$25 USDC</td>') == 4 and "4 × $25 USDC = $100 USDC" in bounty and "Total hard cap: <b>$100 USDC</b>" in bounty,
-        "sprint Nov 15 – Nov 22, 2026 (168 h exactly)": "Nov 15 – Nov 22, 2026" in bounty and bd["program"]["sprintWindow"] == "2026-11-15T00:00:00Z to 2026-11-22T00:00:00Z"
-            and bd["program"]["sprintWindow"] in bounty and BS.bounty_hours(bd["program"]) == 168 and "Nov 15 00:00 UTC – Nov 22 00:00 UTC, 2026" in bounty and ", 168h)" in bounty
+        "sprint Completed Early Nov 17, 2026 (168 h scheduled window)": "Completed Early · Nov 17, 2026" in bounty and "4/4 Genesis Slots Settled" in bounty
+            and bd["program"]["sprintWindow"] == "2026-11-15T00:00:00Z to 2026-11-22T00:00:00Z"
+            and bd["program"]["sprintWindow"] in bounty and BS.bounty_hours(bd["program"]) == 168 and ", 168h)" in bounty
             and hashlib.sha256(read("tools/bounty_issues.json", "rb")).hexdigest() == "874df3fd179ad241e3f2e4a7e837e9aa07f462a8a842b25fb1803049a6b84954",
         "issues #21-#24 via BOUNTY_ISSUE_URLS": BS.BOUNTY_ISSUE_URLS == {n: f"https://github.com/Fractal-Neurons/pacta/issues/{20 + n}" for n in (1, 2, 3, 4)}
             and all(f'href="{u}"' in bounty for u in BS.BOUNTY_ISSUE_URLS.values()),
@@ -3120,7 +3119,7 @@ def main(argv=None):
         "truthful payout (receipt/1827), treasury an EOA, never a Safe": BS.BOUNTY_PAYOUT == (
             "Paid in USDC on Base Mainnet within 48h of maintainer merge from Pacta treasury (0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14) once the winner "
             "comments their public Base 0x... address on the merged PR. Funds are not pre-escrowed in an automated contract; zero automatic on-chain payouts.")
-            and BS.BOUNTY_TITLE == "Pacta Chain-Feed Mismatch Challenge ($100 USDC Hard-Cap · 7-Day Sprint Nov 15 – Nov 22, 2026)"
+            and "Completed Early Nov 17, 2026 · 4/4 Genesis Slots Settled" in BS.BOUNTY_TITLE
             and html.escape(BS.BOUNTY_PAYOUT, quote=False) in bounty
             and "externally owned account (EOA)" in bounty and not re.search(r"0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14.{0,160}\b(?:Safe|multisig)\b", bounty, re.S),
         "quickstart + Apache-2.0 + rules": f"claude mcp add --transport http pacta {BS.MCP_URL}" in bounty and "Apache-2.0" in bounty
@@ -3681,7 +3680,7 @@ def main(argv=None):
         all(read(f"docs/{a_}") == read(f"docs/{b_}") and isinstance(json.loads(read(f"docs/{a_}")), dict)
             for a_, b_ in (("agent.json", ".well-known/agent.json"), ("mcp.json", ".well-known/mcp.json"), ("openapi.json", "api/v1/openapi.json")))
         and oa_.get("openapi") == "3.1.0" and len(oa_.get("paths", {})) >= 10
-        and [s_.get("url") for s_ in oa_.get("servers", [])] == ["https://pacta.fractalneurons.com", API_])   # custom domain first (Worker 5a37bd4)
+        and [s_.get("url") for s_ in oa_.get("servers", [])] == ["https://pacta.fractalneurons.com", WORKERS_API_])   # custom domain first (Worker 5a37bd4)
     rendered_ = "".join(pages.values())
     e3["0 'npx @pacta/mcp-server' / 'npx -y @pacta' install commands and 0 third-party list star counts (97.8k, awesome-mcp-servers) in any rendered page"] = (
         # v4 (M4 trust strip): the merged awesome-mcp-servers listing is linked by its PR (#19455), never as a star count

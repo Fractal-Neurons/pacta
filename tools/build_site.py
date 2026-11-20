@@ -55,7 +55,8 @@ DESC = ("Pacta reads who can upgrade, pause or change DeFi protocols on Ethereum
         "and attests every finding onchain.")
 OG_TITLE = "Protocol docs drift. The chain doesn’t."
 H1 = "Protocol docs drift. The chain doesn’t."
-API = "https://pacta-x402.pacta.workers.dev"          # live Cloudflare Worker (free launch: $0, no key, no wallet)
+API = "https://pacta.fractalneurons.com"              # canonical custom domain on the live Cloudflare Worker
+WORKERS_API = "https://pacta-x402.pacta.workers.dev"  # underlying Workers origin (kept in CSP connect-src for b.js)
 MCP_URL, OPENAPI_URL = API + "/mcp", API + "/openapi.json"
 RATE_LIMIT = "60 requests / minute per caller"
 # T2: plain clients. curl and python-requests reach the API with their default User-Agent; Python's stdlib quickstart reads the
@@ -355,7 +356,7 @@ ROBOTS_META_404 = "noindex, follow, max-snippet:-1, max-image-preview:large"   #
 # S01: one policy for every generated page (meta CSP cannot carry frame-ancestors; send that as a response header at the edge)
 CSP = ("default-src 'self';script-src 'self' https://static.ads-twitter.com;style-src 'self' 'unsafe-inline';"
        "img-src 'self' data: https://analytics.twitter.com https://t.co;font-src 'self';"
-       "connect-src 'self' https://pacta-x402.pacta.workers.dev https://ethereum-rpc.publicnode.com https://base-rpc.publicnode.com "
+       "connect-src 'self' https://pacta.fractalneurons.com https://pacta-x402.pacta.workers.dev https://ethereum-rpc.publicnode.com https://base-rpc.publicnode.com "
        "https://eth.drpc.org https://mainnet.base.org https://analytics.twitter.com https://t.co;object-src 'none';base-uri 'self'")
 # U2: Light / Dark / System on a .dark class; System (the default) follows prefers-color-scheme. Legacy values map: slate -> dark, paper -> light.
 # X Ads strips the "?" from a Website-card URL (/scorecards/utm_source=x... then lands on 404.html): 404.html loads this first
@@ -563,6 +564,25 @@ def topbar(home="", current=None):
             + f'</div></div></header>\n{sheet}')
 
 
+_STAMP_CACHE = None
+
+
+def catalog_stamp(idx=None):
+    """Deterministic catalog freshness stamp from index.json generated_at (never wall clock)."""
+    global _STAMP_CACHE
+    if idx is None and _STAMP_CACHE is not None:
+        return _STAMP_CACHE
+    d = idx if idx is not None else json.load(open(os.path.join(DOCS, "api", "v1", "index.json"), encoding="utf-8"))
+    gen = str(d.get("generated_at") or "").replace("T", " ").replace("Z", "")
+    ts = gen[:16] + " UTC" if len(gen) >= 16 else gen
+    max_sp = max(int(e["sprint"]) for e in d["entries"])
+    n_eas = len({e["protocol"] for e in d["entries"]})
+    res = f"Catalog updated {ts} · Sprint {max_sp} ({n_eas} Base-EAS verified)"
+    if idx is None:
+        _STAMP_CACHE = res
+    return res
+
+
 def footer(count_line, reg, home=""):
     """M9: four grouped columns (Product, For agents, Company, Legal); one count line, the same numbers as the hero (M4)."""
     def col(title, links):
@@ -576,12 +596,14 @@ def footer(count_line, reg, home=""):
     agents = [("MCP server", f"{home}mcp/", 0), ("llms.txt", f"{home}llms.txt", 0), ("llms.txt (HTML)", f"{home}llms/", 0),
               ("SKILL.md", f"{home}SKILL.md", 0), ("OpenAPI 3.1", f"{home}api/v1/openapi.json", 0), ("JSON API", f"{home}api/v1/index.json", 0),
               ("Atom feed", f"{home}feed.xml", 0), ("Builder Q&A", COMMUNITY_QA_URL, 1)]
-    company = [("About", f"{home}about/", 0), ("Methodology", f"{home}methodology/", 0), ("Request a dossier", f"{home}request/", 0),
-               ("GitHub", REPO, 1), (f"X ({X_HANDLE})", X_URL, 1), ("Community", COMMUNITY_URL, 1), ("Base registry", f"https://basescan.org/address/{reg}", 1)]
+    company = [("About", f"{home}about/", 0), ("Verified addresses", f"{home}about/#official-addresses", 0), ("Methodology", f"{home}methodology/", 0),
+               ("Request a dossier", f"{home}request/", 0), ("GitHub", REPO, 1), (f"X ({X_HANDLE})", X_URL, 1), ("Community", COMMUNITY_URL, 1),
+               ("Base registry", f"https://basescan.org/address/{reg}", 1)]
     legal = [("Privacy", f"{home}privacy/", 0), ("Terms", f"{home}terms/", 0), ("security.txt", f"{home}.well-known/security.txt", 0)]
     return (f'<footer class="ftr"><div class="wrap"><div class="ftr-grid">'
             f'<div class="ftr-brand"><a class="brand" href="{home or "./"}"><img class="ftr-logo" src="{home}favicon.svg" alt="" width="24" height="24">PACTA</a>'
-            f'<p>Independent control-plane scorecards for DeFi. Pacta by Fractal Neurons · pacta.base.eth</p></div>'
+            f'<p>Independent control-plane scorecards for DeFi. Pacta by Fractal Neurons · pacta.base.eth</p>'
+            f'<p class="ftr-stamp" data-catalog-stamp>{E(catalog_stamp())}</p></div>'
             + col("Product", product) + col("For agents", agents) + col("Company", company) + col("Legal", legal)
             + f'</div><div class="ftr-bottom"><span data-count-line>{E(count_line)}</span><span>Read-only onchain analysis. Not investment advice. First-party telemetry stores aggregate counts without raw IPs; X Ads conversion measurement (uwt.js) runs on public pages — see <a href="{home}privacy/">Privacy</a>.</span></div>'
             f'</div></footer>\n<div class="toaster" id="toaster" aria-live="polite" aria-atomic="true"></div>')
@@ -709,6 +731,34 @@ def protocol_addresses(slug, es):
     return {a for a in out if LK.ADDR_RE.fullmatch(a)}
 
 
+TVL_SRC = os.path.join(ROOT, "data", "defillama-protocol-tvls.json")
+_TVL_BY_SLUG = None
+
+
+def load_tvl_map():
+    global _TVL_BY_SLUG
+    if _TVL_BY_SLUG is None:
+        raw = json.load(open(TVL_SRC, encoding="utf-8")) if os.path.exists(TVL_SRC) else {"protocols": []}
+        _TVL_BY_SLUG = {
+            p["pacta_slug"]: round(float(p["total_tvl_usd"]))
+            for p in raw.get("protocols", [])
+            if p.get("pacta_slug") and isinstance(p.get("total_tvl_usd"), (int, float)) and p["total_tvl_usd"] > 0
+        }
+    return _TVL_BY_SLUG
+
+
+def fmt_tvl(v):
+    if not isinstance(v, (int, float)) or v <= 0:
+        return ""
+    if v >= 1e9:
+        return f"${v / 1e9:.2f}B TVL" if v < 10e9 else f"${v / 1e9:.1f}B TVL"
+    if v >= 1e6:
+        return f"${v / 1e6:.1f}M TVL" if v < 100e6 else f"${round(v / 1e6):,}M TVL"
+    if v >= 1e3:
+        return f"${round(v / 1e3):,}K TVL"
+    return f"${round(v):,} TVL"
+
+
 def scorecards(idx, pinned=None, sp=None):
     """One scorecard per published protocol (grade, 5-factor rosette with evidence, key finding, chains, baskets), derived only
     from the published records and controller facts (tools/scorecard.py). Ordered by name; consumed by the homepage scorecard,
@@ -717,6 +767,7 @@ def scorecards(idx, pinned=None, sp=None):
     pinned = load_pinned() if pinned is None else pinned
     sp = site_protocols(idx, pinned) if sp is None else sp
     cf = json.load(open(CONTROLLER_FACTS_SRC, encoding="utf-8"))["contracts"]
+    tvls = load_tvl_map()
     out = []
     for name, v in sp.items():
         es, eas = v["entries"], not v["pinned"]
@@ -760,6 +811,7 @@ def scorecards(idx, pinned=None, sp=None):
         assert v["slug"] in SS.SUMMARY and not SS.problems(SS.SUMMARY[v["slug"]]), v["slug"]
         out.append({"slug": v["slug"], "name": name, "grade": g, "gradeLabel": SC.GRADES[g][0], "reconciled": bool(recon),
                     "summary_short": SS.SUMMARY[v["slug"]],
+                    "tvlUsd": tvls.get(v["slug"]),
                     "evidence": {"recordId": ev_e["id"], "surface": ev_e["surface"], "documented": ev_e["documented_reference"],
                                  "observed": ev_e["onchain_observed"]},
                     "reconciledFrom": [e["reconciledFrom"] for e in recon],
@@ -1216,8 +1268,10 @@ def radar_section(radar, prefix="", full=False):
         labels = ('<ul class="oplabels">' + "".join(f'<li><span class="hx" title="{o["op_id"]}">{short(o["op_id"], 6, 4)}</span> {E(o["label"])}</li>'
                                                     for o in it["operations"]) + '</ul>') if labelled else ""
         where = "" if ch == "ethereum" else f"{CHAINS[ch][0]} "
+        tl_kind = it.get("timelock_kind", "oz")
+        op_etas = ",".join(str(o.get("eta") or 0) for o in it["operations"])
         rows.append(
-            f'<tr data-radar-row="{st}"{" class=" + chr(34) + "is-executed" + chr(34) if st == "executed" else ""}>'
+            f'<tr data-radar-row="{st}" data-timelock="{it["timelock"]}" data-chain="{ch}" data-tl-kind="{E(tl_kind)}" data-op-etas="{op_etas}"{" class=" + chr(34) + "is-executed" + chr(34) if st == "executed" else ""}>'
             f'<td><b>{E(it["protocol"])}</b><span class="sub" data-skel>{state_badge(st, it["operations"])}</span></td>'
             f'<td data-label="Queued operation"><span class="op">{E(it["title"])}</span>' + (f'<span class="sub">{E(it["summary"])}</span>' if full else "") +
             f'<span class="meta">{cue}Timelock {tl} · '
@@ -1237,9 +1291,7 @@ def radar_section(radar, prefix="", full=False):
     multi = len(pins) > 1
     blocks = " and ".join(f'{CHAINS[ch][0] + " " if multi else ""}finalized block {xlink(ch, "block", p_["block_number"], "#" + format(p_["block_number"], ","))}'
                           for ch, p_ in pins)
-    live_note = (f'<p class="radar-live" data-radar-live><b>Every row is a live '
-                 + (" or ".join(CHAINS[ch][0] if i else "Ethereum Mainnet" for i, (ch, _) in enumerate(pins)) + " timelock read")
-                 + f', no demo data</b>: read at {blocks}{tls}.</p>')
+    live_note = f'<p class="radar-live" data-radar-live><b>Block-pinned timelock queue — auto-rechecked via RPC in your browser</b>: read at {blocks}{tls}.</p>'
     pill = f'Scanner-pinned ({" + ".join(PIN_WORD[ch] for ch, _ in pins)} finalized)'
     prov_more = "".join(f' {CHAINS[ch][0]} rows: finalized block #{p_["block_number"]:,} ({E(p_["block_time_utc"])}), also cross-checked.'
                         for ch, p_ in pins[1:])
@@ -1265,15 +1317,12 @@ def radar_section(radar, prefix="", full=False):
 
 
 def pricing_section(idx, home=""):
-    """#pricing: the same five tiers on / and /request/ (M4); Continuous Control-Plane Monitoring never implies a paid status (M5). N3: Free and
-    Enterprise are full-width rows around the three protocol-team cards. N7: the auditor-referral note sits apart from the editorial
-    firewall and links to the independence policy."""
+    """#pricing: the same tiers on / and /request/ (M4); Continuous Control-Plane Monitoring never implies a paid status (M5)."""
     return f"""<section class="sec" id="pricing"><div class="wrap">
 <div class="sec-head"><h2>Pricing</h2><p class="aside">Every scorecard, the API and the MCP server are free. Paid work is verification for protocol teams.</p></div>
 {U.alert(EDITORIAL_FIREWALL, E(EDITORIAL_INDEPENDENCE), icon_name="scale", cls="editorial-note", attrs="data-editorial")}
 {pricing_cards(idx, home)}
 <p class="note">{E(VULN_ROUTE)}</p>
-{referral_note(home)}
 </div></section>"""
 
 
@@ -1340,7 +1389,7 @@ def request_builder(idx, home=""):
             f'placeholder="e.g. Example Labs" aria-describedby="req-org-err"><p class="form-message" id="req-org-err" data-slot="form-message" hidden></p></div></div>'
             f'<div class="field"><label for="req-scope">Scope</label><textarea id="req-scope" name="scope" maxlength="400" aria-describedby="req-scope-hint req-scope-err" '
             f'placeholder="Public docs URL, mainnet addresses, or the collateral list you curate"></textarea>'
-            f'<p class="hint" id="req-scope-hint">Public information only. No keys, no exploit details, no contact details here.</p>'
+            f'<p class="hint" id="req-scope-hint">Public contract addresses &amp; scope links only (no private keys or exploit PoCs — put your email or Telegram in the Contact field below).</p>'
             f'<p class="form-message" id="req-scope-err" data-slot="form-message" hidden></p></div>'
             f'<div class="req-grid"><div class="field" id="req-forum-field"><label for="req-forum">Forum proposal URL <span class="legend-note">· optional</span></label>'
             f'<input id="req-forum" name="forum" type="url" maxlength="200" placeholder="https://…" aria-describedby="req-forum-err">'
@@ -1373,7 +1422,9 @@ def request_builder(idx, home=""):
                    + '</div>')
             + U.card(U.card_header("Settlement", "Paid tracks only. No transfer is needed to open a request.") + pay_panel(idx))
             + U.card(U.card_header("Contact", "") + f'<p class="s">{E(CONTACT_NOTE)}</p><div class="addrline">Email <b>{CONTACT}</b>'
-                     f'{copy_btn(CONTACT, "Copy", "Copy the Pacta contact address")}</div><p class="note">{E(VULN_ROUTE)}</p>'))
+                     f'{copy_btn(CONTACT, "Copy", "Copy the Pacta contact address")}</div>'
+                     f'<p class="s"><a href="{home}about/#official-addresses">Official domains &amp; verified on-chain addresses{ARR}</a></p>'
+                     f'<p class="note">{E(VULN_ROUTE)}</p>'))
     return f'<div class="req"><div class="req-main">{form}{done}</div><aside class="req-side" aria-label="Other channels">{side}</aside></div>'
 
 
@@ -1625,7 +1676,7 @@ def webhook_preview():
             f'<li><b>Signer watch</b><span>Scheduled by Safe <span class="addr-pill mono" title="{op["scheduled"]["to"]}">{short_addr(op["scheduled"]["to"])}</span> via execTransaction · owner or threshold changes alert too</span></li></ol>'
             f'<div class="pv-msg"><span class="pv-k">Slack / Telegram</span><p>Lombard timelock queued a {len(calls)}-call batch at Ethereum #{op["scheduled"]["block"]:,}: '
             f'{E(first["function"].split("(")[0])} and {len(calls) - 1} more. Executable from {E(op["eta_utc"])}.</p></div>'
-            f'<div class="term"><div class="term-h"><span>HTTPS webhook (JSON)</span></div><pre>{E(payload)}</pre></div>'
+            f'<div class="term"><div class="term-h"><span>Historical Example Payload (2026-11-19) · HTTPS webhook (JSON)</span></div><pre>{E(payload)}</pre></div>'
             f'<p class="pv-foot">A real radar observation: <a href="../{b["brief"]}">the decoded Lombard brief{ARR}</a></p></div>')
 
 
@@ -1717,8 +1768,8 @@ def product_page(idx, sku):
             f'<div class="scan-trust-strip" aria-label="Verification coverage">'
             f'<p class="pd-lede">{E(c["lede"])} Inspect institutional vault stacks in the <a href="../curators/">Curator Exposure Matrix</a>.</p>'
             f'<ul class="pd-proof">'
-            f'<li><b>{n_proto}+ Protocols Audited</b></li>'
-            f'<li><b>{n_eas}+ Base-EAS Attested Protocols</b></li>'
+            f'<li><b>{n_proto} protocols indexed · {n_eas} Base-EAS verified</b></li>'
+            f'<li><b>{len(idx["entries"])} attested checks</b></li>'
             f'<li><b>2-RPC Multicall3 Proof</b></li>'
             f'<li><b>No Wallet · No Signup</b></li></ul></div>'
         )
@@ -1779,7 +1830,7 @@ def product_page(idx, sku):
             f'<h1 id="co-title">{E(c["h1"])}</h1>'
             f'<p class="pd-lede">{E(c["lede"])}</p>'
             f'<ul class="pd-proof" aria-label="Seal verification guarantees">'
-            f'<li><b>{n_proto}+ Protocols Audited</b></li>'
+            f'<li><b>{n_proto} protocols indexed · {n_eas} Base-EAS verified</b></li>'
             f'<li><b>Permanent Base Mainnet EAS Record</b></li>'
             f'<li><b>Dual-RPC + Independent Verifier</b></li></ul>'
             f'<div class="seal-precheck-bar"><span>Want to run a free 3-second authority check on your contract before booking?</span>'
@@ -2725,11 +2776,23 @@ EDITORIAL_FIREWALL = "Pacta never sells grades."
 HERO_PLACEHOLDER = "Select or type a protocol / token (Aave, Lido, Pendle, Moonwell…) or paste 0x…"
 
 
+_PROTO_COUNT_CACHE = None
+
+
+def _total_protocols():
+    global _PROTO_COUNT_CACHE
+    if _PROTO_COUNT_CACHE is None:
+        idx_d = json.load(open(os.path.join(DOCS, "api", "v1", "index.json"), encoding="utf-8"))
+        _PROTO_COUNT_CACHE = len(site_protocols(idx_d))
+    return _PROTO_COUNT_CACHE
+
+
 def hero_checker(examples="", prefix="", cap=None, label="Protocol, token or contract address", cta_variant="default", cta_label="Check protocol",
                  initial_out="", placeholder=None, extra_attrs=""):
     """U3/A3 + Protocol Select & Autocomplete Combobox: zero-type dropdown of featured gaps & top protocols with official logos,
-    instant <2ms search across 312+ protocols & tickers, 1-click live check, and inline 0x + 40-hex paste support."""
+    instant <2ms search across all indexed protocols & tickers, 1-click live check, and inline 0x + 40-hex paste support."""
     ph = placeholder or HERO_PLACEHOLDER
+    n_p = _total_protocols()
     return (f'<div class="pf hero-pf" data-api="{API}" data-lookup="{prefix}api/v1/lookup.json"{extra_attrs}>'
             f'<form class="checker" id="pf-form" novalidate autocomplete="off">'
             f'<label class="sr-only" for="pf-chain">Chain</label>'
@@ -2744,7 +2807,7 @@ def hero_checker(examples="", prefix="", cap=None, label="Protocol, token or con
             f'autocapitalize="off" aria-describedby="pf-help">'
             f'<div class="pf-sel-overlay" id="pf-sel-chip" data-pf-sel-chip hidden></div>'
             f'<button type="button" class="pf-clear-btn" id="pf-combo-clear" data-pf-clear aria-label="Clear selected protocol" hidden>×</button>'
-            f'<button type="button" class="pf-toggle-btn" id="pf-combo-toggle" data-pf-toggle aria-label="Browse 312+ protocols">'
+            f'<button type="button" class="pf-toggle-btn" id="pf-combo-toggle" data-pf-toggle aria-label="Browse {n_p} protocols">'
             f'<span class="pf-toggle-lbl">Protocols</span>{U.icon("chevron-down")}</button>'
             f'<div class="pf-dropdown" id="pf-listbox" role="listbox" aria-label="Indexed protocols and tokens" hidden></div></div>'
             + U.button(f'<span class="spinner" aria-hidden="true" hidden></span><span data-pf-label>{E(cta_label)}</span>', variant=cta_variant,
@@ -2788,37 +2851,54 @@ def short_search(c):
 MOBILE_FIRST_ROWS = 8   # v4.7 W1: the 8-row preview shows in full below 640 px too (v4.5 kept 6 of 16 back)
 
 
+def sc_tvl_rank_key(c):
+    tvl = c.get("tvlUsd")
+    return (GRADE_RANK[c["grade"]], -(tvl if isinstance(tvl, (int, float)) and tvl > 0 else -1), c["name"].lower())
+
+
 def sc_row(c, prefix="", short=False, mobile_more=False):
     """U4/A2: the whole row (>= 56 px) toggles the drawer; the name button stays the accessible trigger; chevron + hover."""
     import scorecard as SC
     nets = " · ".join(CHAINS[ch][0] for ch in c["chains"])
-    return (f'<tr class="sc-row{" sc-m" if mobile_more else ""}" data-slug="{c["slug"]}" data-grade="{c["grade"]}" data-baskets="{" ".join(c["baskets"])}" data-search="{E(short_search(c) if short else c["search"])}">'
+    tvl = c.get("tvlUsd")
+    tvl_lbl = fmt_tvl(tvl)
+    sub_meta = f"{nets} · {tvl_lbl}" if tvl_lbl else nets
+    tvl_attr = f' data-tvl="{int(tvl)}"' if isinstance(tvl, (int, float)) and tvl > 0 else ' data-tvl="-1"'
+    eas_attr = ' data-eas="1"' if c.get("easAttested") else ' data-eas="0"'
+    return (f'<tr class="sc-row{" sc-m" if mobile_more else ""}" data-slug="{c["slug"]}" data-name="{E(c["name"].lower())}" data-grade="{c["grade"]}"{tvl_attr}{eas_attr} data-baskets="{" ".join(c["baskets"])}" data-search="{E(short_search(c) if short else c["search"])}">'
             f'<td><button class="sc-toggle" type="button" aria-expanded="false" aria-controls="sc-d-{c["slug"]}">{E(c["name"])}</button>'
-            f'<span class="sc-chain">{E(nets)}</span></td><td>{grade_pill(c)}</td><td>{SC.rosette_svg(c["factors"], 32, c["name"])}</td>'
+            f'<span class="sc-chain">{E(sub_meta)}</span></td><td>{grade_pill(c)}</td><td>{SC.rosette_svg(c["factors"], 32, c["name"])}</td>'
             f'<td class="sc-find">{E(c["summary_short"])}</td><td class="sc-chev"><span class="chev" aria-hidden="true">{U.icon("chevron-down")}</span></td></tr>'
             + sc_drawer(c, prefix))
 
 
 def scorecards_section(cards, prefix="", full=False, heading="h2"):
     """M2 (Docs vs chain, neutral Aligned, callout), M4 (counts from the data), M7 (<= 90-char summaries), V5/A1 (legend beside the
-    filters), A5 (caption), R2 (cards below 640 px). The homepage ships the flagship rows; /scorecards/ ships all of them."""
+    filters), A5 (caption), R2 (cards below 640 px). The homepage ships the flagship rows; /scorecards/ ships all of them sorted by
+    Severity (DELTA first) + Highest TVL at Risk."""
     by = {c["slug"]: c for c in cards}
-    shown = sorted(cards, key=lambda c: c["name"].lower()) if full else [by[s] for s in FLAGSHIP]
+    shown = sorted(cards, key=sc_tvl_rank_key) if full else [by[s] for s in FLAGSHIP]
     if not full:   # W1: severity order (deltas, then protective, then aligned references), never an aligned row first
         assert [GRADE_RANK[c["grade"]] for c in shown] == sorted(GRADE_RANK[c["grade"]] for c in shown) and shown[0]["grade"] == "delta"
     rows = "".join(sc_row(c, prefix, short=not full, mobile_more=not full and i >= MOBILE_FIRST_ROWS) for i, c in enumerate(shown))
     n = len(cards)
+    n_eas = sum(1 for c in cards if c.get("easAttested"))
     g = {k: sum(c["grade"] == k for c in cards) for k in GRADE_UI}
     filt = [("all", "All", n), ("delta", "Deltas", g["delta"]), ("protective", "Protective", g["protective"]),
             ("aligned", "Aligned", g["aligned"]), ("observed", "Observed", g["observed"])]
     pills = "".join(f'<button data-slot="toggle-group-item" type="button" data-sc-f="{k}" aria-pressed="{"true" if k == "all" else "false"}">'
                     f'{lbl} <span class="num">({cnt})</span></button>' for k, lbl, cnt in filt)
+    sort_bar = (f'<div data-slot="toggle-group" class="seg sc-sort" role="group" aria-label="Sort and view scorecards" data-sc-sort-group>'
+                f'<button data-slot="toggle-group-item" type="button" data-sc-sort="tvl" aria-pressed="true">Severity &amp; TVL</button>'
+                f'<button data-slot="toggle-group-item" type="button" data-sc-sort="gaps" aria-pressed="false">Adverse Gaps <span class="num">({g["delta"]})</span></button>'
+                f'<button data-slot="toggle-group-item" type="button" data-sc-sort="eas" aria-pressed="false">Base-EAS Verified <span class="num">({n_eas})</span></button>'
+                f'<button data-slot="toggle-group-item" type="button" data-sc-sort="az" aria-pressed="false">A–Z</button></div>'
+                if full else "")
     baskets = "".join(f'<option value="{k}">{E(lbl)}</option>' for k, lbl, _, _ in BASKETS)
     more = (U.button(f"Explore all {n} protocol scorecards{ARR}", href=f"{prefix}scorecards/", variant="default", attrs="data-sc-explore")
             + f'<a href="{prefix}protocols/">Browse all {n} protocol pages{ARR}</a>'
             if not full else f'<a href="{prefix}protocols/">Browse all {n} protocol pages{ARR}</a><a href="{prefix}api/v1/scorecards.json">scorecards.json</a>')
-    head_html = (f'<div class="sec-head"><{heading}>Protocol scorecards</{heading}><p class="aside">Docs vs chain, a five-factor control-plane '
-                 f'rosette and the main difference for each of {n} protocols. Select a row for the evidence.</p></div>' if full else
+    head_html = (f'<div class="sec-head"><{heading}>Protocol scorecards</{heading}><p class="aside">Sorted by control-plane severity and capital exposure (DefiLlama TVL) across {n} protocols ({n_eas} Base-EAS verified). Select a row for the evidence.</p></div>' if full else
                  f'<div class="sec-head"><{heading}>Protocol scorecards</{heading}><p class="aside">{len(shown)} of {n} protocols, highest signal '
                  f'first: adverse deltas, then protective and aligned references. Search or filter to load all {n}.</p></div>')
     intro_line = delta_line({"delta": g["delta"], "protective": g["protective"], "protocols": n}) if full else ""   # v4.5.1 "36 of 90"
@@ -2827,7 +2907,7 @@ def scorecards_section(cards, prefix="", full=False, heading="h2"):
 {U.alert("Aligned means the docs are accurate, not that the protocol is low-risk.", "Docs vs chain compares what a protocol publishes with what its contracts enforce at a finalized block. The rosette shows how strong the controls themselves are.", icon_name="info", cls="aligned-note", attrs="data-aligned-note")}
 <div class="sc-tools">
 <div class="search">{U.icon("search")}<label class="sr-only" for="sc-q">Search protocol scorecards</label><input id="sc-q" type="search" placeholder="Search {n} protocols or 0x addresses" autocomplete="off">{U.button(U.icon("x"), variant="ghost", size="icon-sm", attrs='data-sc-qclear aria-label="Clear search" hidden', cls="clear")}</div>
-<div class="sc-filters"><div data-slot="toggle-group" class="seg sc-filter" role="group" aria-label="Filter by docs vs chain">{pills}</div>
+{sort_bar}<div class="sc-filters"><div data-slot="toggle-group" class="seg sc-filter" role="group" aria-label="Filter by docs vs chain">{pills}</div>
 <label class="sr-only" for="sc-basket">Collateral basket</label><select id="sc-basket" data-sc-basket style="width:auto"><option value="all">All baskets</option>{baskets}</select></div>
 {rosette_legend()}
 </div>
@@ -3140,7 +3220,7 @@ BOUNTY_SRC = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bounty_is
 BOUNTY_TEMPLATE = ".github/PULL_REQUEST_TEMPLATE/bounty_mismatch.md"
 BOUNTY_TEMPLATE_URL = f"{REPO}/blob/main/{BOUNTY_TEMPLATE}"
 BOUNTY_COMPARE_URL = f"{REPO}/compare/main...main?quick_pull=1&template=bounty_mismatch.md"
-BOUNTY_TITLE = "Pacta Chain-Feed Mismatch Challenge ($100 USDC Hard-Cap · 7-Day Sprint Nov 15 – Nov 22, 2026)"
+BOUNTY_TITLE = "Pacta Chain-Feed Mismatch Challenge ($100 USDC · Completed Early Nov 17, 2026 · 4/4 Genesis Slots Settled)"
 BOUNTY_SLOTS = {   # slot -> scope line (receipt/1825)
     1: "Ethereum Mainnet (chainId: 1, >=$25M TVL) unindexed control-plane parameter_delta #1",
     2: "Ethereum Mainnet (chainId: 1, >=$25M TVL) unindexed control-plane parameter_delta #2",
@@ -3301,20 +3381,20 @@ def bounties_page(idx, radar, bounties=None, claims=None, lb=None, claims3=None)
 <div class="qs-snip"><span class="qs-l">Claude Code</span><code class="mono">{E(claude)}</code>{copy_btn(claude)}</div>
 <p>Query <code>pacta_lookup_protocol</code>, <code>pacta_check_preflight</code> and <code>pacta_scan_control_plane</code> (paste the receipt into <code>mcp_tool_receipt</code>), reconstruct the 2023–2026 historical control-plane timeline and repo audit, and validate locally with <code>python3 tools/verify_bounty_submission.py --wave 3 --json bounties/wave-3/&lt;chain&gt;-&lt;slug&gt;.json</code>. Indexed protocols: <a href="../api/v1/protocols.json">/api/v1/protocols.json</a>.</p></section>
 <section class="memo-sec" id="completed-archives"><h2>Completed &amp; Retired Bounty Archives</h2>
-<p class="s">Prior bounty waves are permanently closed to new submissions; their full on-chain Base USDC settlement ledgers remain archived below for public verification.</p></section>
-<details class="archive-details" id="wave-2-archive" data-wave2-archive><summary><span>Archive: Wave 2 ($1.00 Micro-Bounties · Completed &amp; Retired) · {len(claims)} merged · {w2_paid_n} settled on Base ({usdc(w2_paid_n * REWARD_ATOMIC)} USDC)</span></summary>
+<p class="s">Prior bounty waves are permanently closed to new submissions; their full on-chain Base USDC settlement ledgers remain archived below for public verification (<a href="../about/#official-addresses">official domains &amp; verified on-chain addresses</a>).</p></section>
+<details class="archive-details" id="wave-2-archive" data-wave2-archive><summary><span>Archive: Wave 2 ($1.00 Micro-Bounties · {w2_paid_n}/{len(claims)} Slots Settled &amp; Retired) · {usdc(w2_paid_n * REWARD_ATOMIC)} USDC settled on Base</span></summary>
 {wave2_section_html(claims, n_protocols, lb)}
 </details>
-<details class="archive-details" id="wave-1-archive" data-wave1-archive><summary><span>Archive: Wave 1 ($25.00 Genesis · 4/4 Completed, Nov 15 – Nov 22, 2026) · $100.00 USDC settled on Base</span></summary>
+<details class="archive-details" id="wave-1-archive" data-wave1-archive><summary><span>Archive: Wave 1 ($25.00 Genesis · Completed Early · Nov 17, 2026 · 4/4 Genesis Slots Settled) · $100.00 USDC settled on Base</span></summary>
 <section class="memo-sec" id="wave-1"><h2>Wave 1 Genesis Archive · {E(BOUNTY_TITLE)}</h2>
-<p class="s" data-wave1-snapshot><b>Historical Snapshot (Pinned at 53 Protocols on Nov 15)</b>: the Wave 1 terms below are archived verbatim and refer to Pacta&#x27;s index as it stood on Nov 15, 2026; Wave 3 targets the live index (<a href="../api/v1/protocols.json">/api/v1/protocols.json</a>).</p>
-<p>Find a live on-chain control-plane fact that contradicts a protocol's official documentation (<code>parameter_delta</code>). Four slots, <b>4 × $25 USDC = $100 USDC</b> in total, first valid merged PR per slot wins. Organizer: {E(pr["organizer"])}. Window: Nov 15 – Nov 22, 2026 ({bounty_hours(pr)}h).</p>
+<p class="s" data-wave1-snapshot><b>Historical Snapshot (Pinned at 53 Protocols on Nov 15)</b>: Completed Early · Nov 17, 2026 (4/4 Genesis Slots Settled). The Wave 1 terms below are archived verbatim from the 53-protocol launch snapshot at Nov 15, 2026; Wave 3 targets the live index (<a href="../api/v1/protocols.json">/api/v1/protocols.json</a>).</p>
+<p>Find a live on-chain control-plane fact that contradicts a protocol's official documentation (<code>parameter_delta</code>). Four slots, <b>4 × $25 USDC = $100 USDC</b> in total, first valid merged PR per slot won. Organizer: {E(pr["organizer"])}. Completed early on Nov 17, 2026 (original window scheduled {bounty_hours(pr)}h from Nov 15).</p>
 <h3>Wave 1 Genesis Settlement Ledger</h3>
 {wave1_ledger_html(lb)}
 <p class="s">Settled amounts appear only once a Base payout transaction hash is recorded in <code>bounties/leaderboard.json</code> (<code>tools/stamp_wave1_payouts.py</code>); each links to BaseScan.</p></section>
-<section class="memo-sec" id="slots"><h2>Wave 1 slots (4 × $25 USDC)</h2>
+<section class="memo-sec" id="slots"><h2>Wave 1 slots (4 × $25 USDC · 4/4 Settled)</h2>
 <table class="ix" data-bounty-slots><thead><tr><th>Slot</th><th>Reward</th><th>Scope</th><th>Issue</th></tr></thead><tbody>{slot_rows}</tbody></table>
-<p>Total hard cap: <b>$100 USDC</b> across Slots #1–#4. Sprint window: <b>Nov 15 00:00 UTC – Nov 22 00:00 UTC, 2026</b> (<code>{E(pr["sprintWindow"])}</code>, {bounty_hours(pr)}h).</p></section>
+<p>Total hard cap: <b>$100 USDC</b> across Slots #1–#4 (completed early on <b>Nov 17, 2026</b>; original scheduled window <code>{E(pr["sprintWindow"])}</code>, {bounty_hours(pr)}h).</p></section>
 <section class="memo-sec" id="payout"><h2>How the Wave 1 reward is paid</h2>
 <p data-bounty-payout>{E(BOUNTY_PAYOUT)}</p>
 <p class="s">The Pacta treasury <code class="mono">{E(pr["treasuryAddress"])}</code> is an externally owned account (EOA) on {E(pr["settlementChain"])}; settlement happens after deterministic dual-RPC replay verification and maintainer merge.</p></section>
@@ -3693,7 +3773,8 @@ def wave3_master_issue_md(n_protocols, n_obs=None):
 1. **Part 1 — 3-Year On-Chain Control-Plane Timeline (`historical_transitions`):** `>= 2` distinct chronological blocks (`strictly increasing` `block_number` + `block_date` + `tx_hash` + reproducible `cast`/RPC proof) reconstructing proxy implementation upgrades, multi-owner signer/threshold changes, or timelock mutations across `2023–2026` (or multi-block proof of 3-year immutability + controller verification).
 2. **Part 2 — Historical Docs & DAO Governance Forensics (`docs_and_governance_forensics`):** `>= 2` dated archival sources (including at least one dated GitHub docs commit/blob/PR, `web.archive.org` snapshot, or Snapshot/Tally/Discourse governance proposal) proving historical gap windows and exact **`MTTR` repair duration** (`mttr_days` or `unrepaired_open` duration).
 3. **Part 3 — Repository & Engineering Reality Audit + Executive Risk Memo (`repo_audit` + `executive_risk_memo`):** 12-month smart-contract commits (`commits_12m_contracts`), non-contract commits (`commits_12m_frontend_or_other`), distinct human contributors (`human_contributors_12m`), `bus_factor`, `code_before_upgrade_verified` (`true`/`false`), and a substantive **`>= {WAVE3['minMemoChars']}`-character `executive_risk_memo`** (shallow 1-liner or repetitive bot spam is deterministically rejected).
-4. **Attribution, Payout & MCP Receipt:** `contributor_github`, EIP-55 `base_payout_address`, `mcp_tool_receipt` from `{MCP_URL}`, `apache2_commercial_grant: true`, and `rules_accepted: [true, true, true, true]`.
+
+**Submission & Attribution Metadata:** `contributor_github`, EIP-55 `base_payout_address`, `mcp_tool_receipt` from `{MCP_URL}`, `apache2_commercial_grant: true`, and `rules_accepted: [true, true, true, true]`.
 
 ## How to Validate & Submit
 
@@ -3761,6 +3842,7 @@ def wave3_section_html(claims3, n_protocols, lb=None, n_obs=None):
 <article class="w3-part" data-wave3-part="2"><span class="w3-part-k">Part 2 · Archival Forensics</span><h4>Historical Docs, DAO Votes &amp; MTTR</h4><p><code>docs_and_governance_forensics</code> citing dated GitHub docs commits, <code>web.archive.org</code> snapshots, and Snapshot/Tally/Discourse proposals proving historical gap windows and exact <code>MTTR</code> repair duration.</p></article>
 <article class="w3-part" data-wave3-part="3"><span class="w3-part-k">Part 3 · Engineering &amp; Memo</span><h4>12m Repo Audit + ≥ 400-Char Risk Memo</h4><p><code>repo_audit</code> (<code>github_org_repo</code>, 12m contract vs other commits, human contributors, <code>bus_factor</code>, pre-upgrade commit check) plus a clinical <code>executive_risk_memo</code> (≥ 400 chars; shallow bot spam rejected).</p></article>
 </div>
+<p class="s" data-wave3-meta><b>Submission &amp; Attribution Metadata:</b> <code>contributor_github</code>, EIP-55 <code>base_payout_address</code>, <code>mcp_tool_receipt</code> from <code>{E(MCP_URL)}</code>, <code>apache2_commercial_grant: true</code>, and <code>rules_accepted: [true, true, true, true]</code>.</p>
 <h3>Validation, Submission &amp; Settlement</h3>
 <ul><li><b>1-file PR gate:</b> Commit one newly added JSON dossier at <code data-wave3-fixture>{E(WAVE3["fixtureDir"])}/&lt;chain&gt;-&lt;slug&gt;.json</code> (full schema &amp; example: <a href="{E(REPO)}/blob/main/{E(WAVE3["fixtureDir"])}/README.md" target="_blank" rel="noopener">{E(WAVE3["fixtureDir"])}/README.md{EXT}</a>) and run <code>python3 tools/verify_bounty_submission.py --wave 3 --json {E(WAVE3["fixtureDir"])}/&lt;chain&gt;-&lt;slug&gt;.json</code> before opening your PR.</li>
 <li>Up to <b>{WAVE3["maxOpenPrsPerContributor"]} concurrent open CI-passing Wave 3 PRs per researcher</b>.</li>
@@ -3836,7 +3918,7 @@ def wave2_section_html(claims, n_protocols, lb=None):
     issue_label = f"Master issue #{m_issue.group(1)}{EXT}" if m_issue else f"GitHub issues{EXT}"
     master = md_html(wave2_master_issue_md(n_protocols).split("\n", 2)[2])
     settled = sum(1 for c in claims if c["_file"] in paid)
-    return f"""<section class="memo-sec" id="wave-2" data-wave2-retired><h2>Wave 2 Archive · $1.00 Control-Plane Micro-Bounties <span class="archive-pill">Completed &amp; Retired</span></h2>
+    return f"""<section class="memo-sec" id="wave-2" data-wave2-retired><h2>Archive: Wave 2 ($1.00 Micro-Bounties · {settled}/{claimed} Slots Settled &amp; Retired) <span class="archive-pill">Completed &amp; Retired</span></h2>
 <p class="w2-counter" data-wave2-counter="{claimed}" data-wave2-program="{claimed}"><b>{claimed} Wave 2 Micro-Bounty Claims Merged</b> · <b data-wave2-settled="{settled}">{settled} settled on Base ({usdc(settled * REWARD_ATOMIC)} USDC)</b> · <b>Program Completed &amp; Retired</b> (active bounties moved to <a href="#wave-3">Wave 3 — 2 × $20.00 USDC Dossiers</a>)</p>
 <p class="s">Historical archive (<a href="{E(WAVE2_ISSUE_URL)}" target="_blank" rel="noopener" data-wave2-issue>{issue_label}</a>). Wave 2 accepted 3 categories across Ethereum, Base, and Arbitrum ({WAVE2["maxOpenPrsPerContributor"]} concurrent open CI-passing PRs per contributor):</p>
 <ol>{cats}</ol>
@@ -3901,7 +3983,7 @@ def leaderboard_page(idx, lb, claims, claims3=None):
             f'</div>'
             f'<dl class="cred-grid">'
             f'<div><dt>Merged Control-Plane Gaps</dt><dd><b>{len(h["catches"])} verified catch{"es" if len(h["catches"]) != 1 else ""}</b> · Rank #{h["rank"]}</dd></div>'
-            f'<div><dt>Protocols Audited ({len(h["protocols"])})</dt><dd>{E(", ".join(h["proto_names"]))}</dd></div>'
+            f'<div><dt>Protocols Verified ({len(h["protocols"])})</dt><dd>{E(", ".join(h["proto_names"]))}</dd></div>'
             f'<div><dt>Base-EAS Proof</dt><dd>{eas_line}</dd></div>'
             f'<div><dt>Settled Base USDC</dt><dd><b>{usdc(h["settled"])} USDC</b> · {tx_proofs}</dd></div>'
             f'</dl>'
@@ -3914,7 +3996,10 @@ def leaderboard_page(idx, lb, claims, claims3=None):
     frows = "".join(f'<tr data-framework="{E(f["name"])}"><td>{E(f["name"])}</td><td class="num">{f["hunters"]}</td><td class="num">{f["catches"]}</td>'
                     f'<td class="num">{len(f["protocols"])}</td><td>{usdc(f["settled"]) + " USDC" if f["settled"] else "$0.00 (pending settlement)"}</td></tr>'
                     for f in fws)
-    total_settled = sum(h["settled"] for h in rows)
+    n_catches = sum(len(h["catches"]) for h in rows)
+    n_hunters = len(rows)
+    n_attested = site_numbers(idx)["eas_protocols"]
+    reconcile_line = f"{n_catches} verified findings · {n_hunters} independent researchers · {n_attested} Base-EAS verified protocols"
     ld = {"@context": "https://schema.org", "@type": "WebPage", "name": "Pacta hunter leaderboard", "url": f"{BASE_URL}/leaderboard/",
           "isPartOf": {"@type": "WebSite", "name": "Pacta by Fractal Neurons", "url": f"{BASE_URL}/"},
           "about": "Verified on-chain control-plane mismatch catches by bounty hunters and agent frameworks", "publisher": ORG_LD}
@@ -3925,10 +4010,11 @@ def leaderboard_page(idx, lb, claims, claims3=None):
 <div class="crumbs"><a href="../">Pacta</a> / <a href="../bounties/">Bounties</a> / Leaderboard</div>
 <article class="memo">
 <header><span class="tier">Bounties · hunter leaderboard &amp; verified credentials</span><h1>Pacta hunter leaderboard</h1>
+<p class="lb-stats" data-leaderboard-stats><b>{E(reconcile_line)}</b></p>
 <p class="lede">Every verified on-chain control-plane mismatch merged through the <a href="../bounties/">Pacta bounties</a>, credited to its GitHub hunter and agent framework. Ranked by verified catches, then protocols covered, Base EAS attestations and settled Base USDC. Every merged researcher earns a permanent shareable credential at <code>/leaderboard/#&lt;hunter&gt;</code>.</p></header>
 <section class="memo-sec" id="hunters"><h2>Hunters</h2>
 <div class="table-scroll" role="region" aria-label="Hunter leaderboard table" tabindex="0"><table class="ix lb-table" data-leaderboard><thead><tr><th>Rank</th><th>Hunter</th><th>Agent framework</th><th>Verified catches</th><th>Protocols covered</th><th>Base EAS attestations</th><th>Settled Base USDC</th><th>README badge</th></tr></thead><tbody>{"".join(hrows)}</tbody></table></div>
-<p class="s">{len(rows)} hunters · {sum(len(h["catches"]) for h in rows)} verified catches · settled so far: {usdc(total_settled)} USDC. Active pool: <a href="../bounties/#wave-3">Wave 3 Dossiers (/bounties/#wave-3)</a> · Archives: <a href="../bounties/#wave-2">Wave 2</a>, <a href="../bounties/#wave-1">Wave 1</a>.</p></section>
+<p class="s">{E(reconcile_line)}. Active pool: <a href="../bounties/#wave-3">Wave 3 Dossiers (/bounties/#wave-3)</a> · Archives: <a href="../bounties/#wave-2">Wave 2</a>, <a href="../bounties/#wave-1">Wave 1</a>.</p></section>
 <section class="memo-sec" id="credentials" data-researcher-credentials><h2>Verified Researcher Credentials</h2>
 <p class="s">Permanent on-chain proof cards for every merged Pacta bounty researcher (anchor <code>https://pacta.wtf/leaderboard/#&lt;hunter&gt;</code>), backed by Base USDC settlement transactions and Base EAS schema <a href="https://base.easscan.org/schema/view/{EAS_SCHEMA_UID}" target="_blank" rel="noopener"><code>0x7ff4…df83</code>{EXT}</a>.</p>
 <div class="cred-list">{"".join(cred_cards)}</div></section>
@@ -4040,7 +4126,7 @@ def llms(idx, radar):
         "- Scanner seats replay read-only eth_call / eth_getStorageAt at the cited block (two independent archive RPCs); an isolated verifier seat re-checks selectors, EIP-55 checksums, EIP-1967 slots and arithmetic offline.",
         f"- Classifications: {CLASS_DEFINITIONS}.",
         f"- {VULN_ROUTE}",
-        f"- {REFERRAL_NOTE} Independence policy: {BASE_URL}/methodology/#independence", "",
+        f"- {EDITORIAL_FIREWALL} {EDITORIAL_INDEPENDENCE} Independence policy: {BASE_URL}/methodology/#independence", "",
         "## Access",
         "- Free and real-time for everyone, including vault curators, allocators and AI risk agents: every indexed record, the timelock radar, the briefs, /api/v1/*.json and this file. No key, no delay, no paywall; curators never pay.", "",
         "## On-chain anchoring (Base, chain id 8453)",
@@ -4190,8 +4276,7 @@ EDITORIAL_SHORT = ("Payment funds verification work. The published result follow
                    "still be Delta.")
 
 
-CONTACT_NOTE = ("Pacta by Fractal Neurons. Primary intake: pacta.wtf/request/. Contact: pacta@dri.network (the Fractal Neurons DRI desk, "
-                "until pacta.wtf mail is live).")
+CONTACT_NOTE = "Pacta by Fractal Neurons · Official desk: pacta@dri.network"
 
 
 FONT_FILE = "fonts/inter-latin-wght-normal.woff2"
@@ -4592,7 +4677,11 @@ def simple_page(slug, title, desc, h1, lede, sections, idx, current=None, og_tit
 
 def about_page(idx):
     s = site_numbers(idx)
-    reg = idx["onchain_anchoring"]["commitment_registry"]
+    anc = idx["onchain_anchoring"]
+    reg = anc["commitment_registry"]
+    attester = anc["attester_eoa"]
+    treasury = anc["treasury_admin"]
+    eas_uid = anc["eas_schema_uid"]
     sections = [
         ("who", "Who is behind Pacta", f'<p>Pacta is built and operated by <a href="{FN}" target="_blank" rel="noopener">Fractal Neurons</a>. '
          f'The code is open source under the MIT licence at <a href="{REPO}" target="_blank" rel="noopener">github.com/Fractal-Neurons/pacta</a>, and '
@@ -4603,9 +4692,21 @@ def about_page(idx):
          f'(<a href="https://basescan.org/address/{E(reg)}" target="_blank" rel="noopener">{E(short(reg))}</a>).</p>'
          f'<p>Risk curators and diligence teams use it to check collateral before allocating; agents call the same checks over MCP and REST; '
          f'protocol teams use it to keep their documentation and their onchain authority aligned.</p>'),
+        ("official-addresses", "Official Domains & Verified On-Chain Addresses",
+         f'<p>Verify every Pacta endpoint, attestation contract and operational account directly against this canonical manifest before interacting:</p>'
+         f'<dl class="deflist" data-official-addresses>'
+         f'<div><dt>Web Index</dt><dd><a href="{BASE_URL}/">{BASE_URL}</a></dd></div>'
+         f'<div><dt>Edge API &amp; Remote MCP</dt><dd><a href="{API}/openapi.json" target="_blank" rel="noopener">{API}</a> · Streamable HTTP MCP <code>{API}/mcp</code></dd></div>'
+         f'<div><dt>Open-Source Repository</dt><dd><a href="{REPO}" target="_blank" rel="noopener">{REPO}</a></dd></div>'
+         f'<div><dt>Base EAS Attester &amp; Schema UID</dt><dd><code>pacta.base.eth</code> · Registry {hexref(reg)} · <a href="{E(anc["eas_schema_url"])}" target="_blank" rel="noopener">Schema {E(short(eas_uid, 6, 4))}{EXT}</a>{copy_btn(eas_uid, "Copy", "Copy Base EAS Schema UID")}</dd></div>'
+         f'<div><dt>Outbound Researcher Bounty Treasury EOA</dt><dd>{hexref(attester)} · <code>pacta.base.eth</code> (externally owned account on Base Mainnet exclusively disbursing Pacta-funded Wave 1–3 researcher payouts)</dd></div>'
+         f'<div><dt>Commercial Settlement EOA</dt><dd>{hexref(treasury)} (externally owned account on Base and Ethereum exclusively receiving direct commercial invoice and self-serve order settlements)</dd></div>'
+         f'</dl>'
+         f'<p class="s">Every transaction from or to the operational accounts above is permanently verifiable on BaseScan and Etherscan alongside Pacta&#x27;s public JSON ledgers at <a href="../api/v1/index.json">/api/v1/index.json</a> and <a href="../leaderboard/">/leaderboard/</a>; Pacta never solicits transfers over direct messages or unverified addresses.</p>'
+         f'<p class="s">External community-funded Verification Pools on <a href="../bounties/">/bounties/</a> are segregated into a dedicated multi-signer custody account (never mingled with the two operational EOAs above).</p>'),
         ("independence", "Independence and funding", f'<p>{E(EDITORIAL_FIREWALL)} {E(EDITORIAL_INDEPENDENCE)} Paid verification work for protocol teams funds the '
          f'engineering; the data, the API and the MCP server stay free for everyone.</p>'),
-        ("contact", "Contact", f'<p>{E(CONTACT_NOTE)} Security issues: see <a href="../.well-known/security.txt">security.txt</a>; exploit-sensitive '
+        ("contact", "Contact", f'<p>{E(CONTACT_NOTE)}. Security issues: see <a href="../.well-known/security.txt">security.txt</a>; exploit-sensitive '
          f'findings go through the affected protocol\'s bug bounty programme.</p>'),
     ]
     return simple_page("about", "About Pacta · Pacta by Fractal Neurons",
@@ -4680,10 +4781,12 @@ def methodology_page(idx):
          f'<a href="../api/v1/scorecards.json">scorecards.json</a>, <a href="../api/v1/index.json">index.json</a>, '
          f'<a href="../api/v1/rpc-pinned.json">rpc-pinned.json</a>.</p>'),
         ("independence", "Independence policy", f'<p>{E(EDITORIAL_FIREWALL)} {E(EDITORIAL_INDEPENDENCE)}</p>'
-         '<p><b>Auditor referrals.</b> When code changes are needed, Pacta can refer a team to an independent smart-contract auditor, under '
-         'a 15% referral partnership with the audit firm. Referrals never influence docs-vs-chain status: a referred protocol is re-read at a '
-         'finalized block like every other, and its status follows the onchain and documentation evidence only.</p>'
          '<p>Paid verification work for protocol teams funds the engineering; the data, the API and the MCP server stay free for everyone.</p>'),
+        ("corrections", "Corrections Log",
+         '<p>Pacta logs parser, schema and record corrections transparently so institutional allocators and protocol teams can audit every change:</p>'
+         '<ul class="corr-log" data-corrections-log>'
+         '<li><b>2026-11-20 — Scorecard timelock parser (<code>tools/scorecard.py</code>):</b> broadened admin/executor delay extraction to capture prose executor delays (including Aave V3 / GHO&#x27;s 86,400s Executor Lvl1) and clarified hollow-slice copy from &ldquo;No enforced admin delay in the published records&rdquo; to &ldquo;Admin delay not extracted in structured record&rdquo;.</li>'
+         '</ul>'),
         ("glossary", "Glossary", '<dl class="deflist"><div><dt>Control plane</dt><dd>The set of keys, multisigs, timelocks and roles that can change '
          'a protocol.</dd></div><div><dt>Finalized block</dt><dd>A block the chain will not reorganize; reads pinned to it are reproducible.</dd></div>'
          '<div><dt>EAS</dt><dd>Ethereum Attestation Service: Pacta signs each result onchain on Base.</dd></div><div><dt>Timelock</dt><dd>A '
@@ -4778,11 +4881,16 @@ def scorecards_page(idx):
 
 
 def radar_page(idx, radar):
+    r = radar["refreshed_at"]
+    rb = radar.get("refreshed_at_base") or {}
+    pin_bar = (f'<div class="radar-pin-bar" data-radar-pin-bar>'
+               f'<b>Pinned Snapshot: {E(r["block_time_utc"])} (ETH #{r["block_number"]:,} · Base #{rb.get("block_number", 0):,})</b>'
+               f'<span>Block-pinned timelock queue — auto-rechecked via RPC in your browser</span></div>')
     body = f"""<body>
 {topbar("../", "radar/")}
 <main id="main">
 <div class="wrap" style="padding-top:32px"><nav class="crumbs" aria-label="Breadcrumb"><a href="../">Pacta</a><span aria-hidden="true">/</span><span>Radar</span></nav></div>
-{radar_section(radar, "../", full=True).replace('<section class="sec" id="radar"', '<section class="sec" style="padding-top:0" id="radar"', 1).replace("</h1>", "</h1>" + fresh_pill(idx, radar), 1).replace('<div class="radar-head">', webhook_banner("../") + '<div class="radar-head">', 1)}
+{radar_section(radar, "../", full=True).replace('<section class="sec" id="radar"', '<section class="sec" style="padding-top:0" id="radar"', 1).replace("</h1>", "</h1>" + fresh_pill(idx, radar), 1).replace('<div class="radar-head">', pin_bar + webhook_banner("../") + '<div class="radar-head">', 1)}
 </main>
 {footer(coverage_line(idx), idx["onchain_anchoring"]["commitment_registry"], "../")}
 </body></html>

@@ -13,11 +13,12 @@
 1. **Part 1 — 3-Year On-Chain Control-Plane Timeline (`historical_transitions`):** `>= 2` distinct chronological blocks (`strictly increasing` `block_number` + `block_date` + `tx_hash` + reproducible `cast`/RPC proof) reconstructing proxy implementation upgrades, multi-owner signer/threshold changes, or timelock mutations across `2023–2026` (or multi-block proof of 3-year immutability + controller verification).
 2. **Part 2 — Historical Docs & DAO Governance Forensics (`docs_and_governance_forensics`):** `>= 2` dated archival sources (including at least one dated GitHub docs commit/blob/PR, `web.archive.org` snapshot, or Snapshot/Tally/Discourse governance proposal) proving historical gap windows and exact **`MTTR` repair duration** (`mttr_days` or `unrepaired_open` duration).
 3. **Part 3 — Repository & Engineering Reality Audit + Executive Risk Memo (`repo_audit` + `executive_risk_memo`):** 12-month smart-contract commits (`commits_12m_contracts`), non-contract commits (`commits_12m_frontend_or_other`), distinct human contributors (`human_contributors_12m`), `bus_factor`, `code_before_upgrade_verified` (`true`/`false`), and a substantive **`>= 400`-character `executive_risk_memo`** (shallow 1-liner or repetitive bot spam is deterministically rejected).
-4. **Attribution, Payout & MCP Receipt:** `contributor_github`, EIP-55 `base_payout_address`, `mcp_tool_receipt` from `https://pacta-x402.pacta.workers.dev/mcp`, `apache2_commercial_grant: true`, and `rules_accepted: [true, true, true, true]`.
+
+**Submission & Attribution Metadata:** `contributor_github`, EIP-55 `base_payout_address`, `mcp_tool_receipt` from `https://pacta.fractalneurons.com/mcp`, `apache2_commercial_grant: true`, and `rules_accepted: [true, true, true, true]`.
 
 ## How to Validate & Submit
 
-1. Query Pacta's free keyless MCP server (`claude mcp add --transport http pacta https://pacta-x402.pacta.workers.dev/mcp`) and save the tool output in `mcp_tool_receipt`.
+1. Query Pacta's free keyless MCP server (`claude mcp add --transport http pacta https://pacta.fractalneurons.com/mcp`) and save the tool output in `mcp_tool_receipt`.
 2. Commit **one** newly added JSON dossier at `bounties/wave-3/<chain>-<slug>.json` (full schema & valid example: `bounties/wave-3/README.md`).
 3. Validate locally before opening your PR: `python3 tools/verify_bounty_submission.py --wave 3 --json bounties/wave-3/<chain>-<slug>.json`
 4. Open a PR to `Fractal-Neurons/pacta`. CI (`verify-bounty-pr`) validates the single added JSON file with the base-branch validator; maintainers replay every historical block and archival commit before merging.

@@ -143,7 +143,7 @@ n.textContent = eta > now ? "Execution window opens in " + fmt(eta - now) : "Win
 }
 var OP_LABEL = { executed: "EXECUTED", ready: "READY · EXECUTABLE NOW", pending: "PENDING", unknown: "CANCELLED OR UNKNOWN", mixed: "MIXED" };
 var OP_STATES = ["executed", "ready", "pending", "unknown", "mixed"];
-var LIVE_TL_RE = /^https:\/\/pacta-x402\.pacta\.workers\.dev\/v1\/briefs\/live-timelocks(\?[a-z_=&.-]*)?$/;
+var LIVE_TL_RE = /^https:\/\/(?:pacta\.fractalneurons\.com|pacta-x402\.pacta\.workers\.dev)\/v1\/briefs\/live-timelocks(\?[a-z_=&.-]*)?$/;
 function liveOpState(op) {
 var l = op && typeof op.live === "object" && op.live ? op.live : {};
 if (l.isOperationDone === true || l.status === "done") return "executed";
@@ -164,7 +164,7 @@ function blkLine(b) {
 return b.ethereum && b.base ? "blocks Ethereum " + blkFmt(b.ethereum) + " and Base " + blkFmt(b.base)
 : "block " + (b.base ? "Base " + blkFmt(b.base) : blkFmt(b.ethereum));
 }
-function applyLiveTimelocks(j) {
+function applyLiveTimelocks(j, viaSource) {
 if (!j || typeof j !== "object" || !Array.isArray(j.operations)) return null;
 var by = {}, chainOf = {}, blk = {};
 j.operations.forEach(function (op) {
@@ -193,7 +193,7 @@ if (updated) radarCounts();
 var any = !!(blk.ethereum || blk.base);
 if (updated && any) {
 $$("[data-live-line]").forEach(function (n) {
-n.textContent = "Live re-check at the latest " + blkLine(blk) + " via the free /v1/briefs/live-timelocks.";
+n.textContent = "Live re-check at the latest " + blkLine(blk) + " via " + (viaSource || "the free /v1/briefs/live-timelocks") + ".";
 });
 }
 return any ? blk : null;
@@ -217,6 +217,84 @@ by[st] = (by[st] || 0) + 1; ops[st] = (ops[st] || 0) + n;
 });
 out.textContent = RADAR_ORDER.filter(function (s) { return by[s]; }).map(function (s) { return radarPart(s, by[s], ops[s]); }).join(" · ");
 }
+function radarMulticallFallback() {
+var trs = $$("#radar tr[data-timelock]");
+if (!trs.length) return Promise.resolve(null);
+var byChain = {};
+trs.forEach(function (tr) {
+var ch = tr.getAttribute("data-chain") === "base" ? "base" : "ethereum";
+var tl = tr.getAttribute("data-timelock") || "", kind = tr.getAttribute("data-tl-kind") || "oz";
+var etas = (tr.getAttribute("data-op-etas") || "").split(",").map(function (x) { return parseInt(x, 10) || 0; });
+var b = $("[data-ops]", tr);
+if (!ADDR_RE.test(tl) || !b) return;
+var ids = (b.getAttribute("data-ops") || "").toLowerCase().split(/\s+/).filter(function (x) { return /^0x[0-9a-f]{64}$/.test(x); });
+if (!byChain[ch]) byChain[ch] = [];
+ids.forEach(function (opId, idx) {
+byChain[ch].push({ timelock: tl, kind: kind, opId: opId, eta: etas[idx] || 0 });
+});
+});
+var chains = Object.keys(byChain);
+if (!chains.length) return Promise.resolve(null);
+return Promise.all(chains.map(function (ch) {
+var list = byChain[ch];
+return rpcCall(ch, "eth_getBlockByNumber", ["latest", false]).then(function (blkRes) {
+var blkObj = blkRes && blkRes.result;
+if (!blkObj || typeof blkObj.number !== "string") return [];
+var bHex = blkObj.number, bNum = parseInt(bHex, 16), bTs = parseInt(blkObj.timestamp || "0x0", 16);
+if (!(bNum > 0)) return [];
+var calls = [], meta = [];
+list.forEach(function (item) {
+var arg = item.opId.slice(2);
+if (item.kind === "compound") {
+meta.push({ item: item, idx: calls.length, kind: "compound" });
+calls.push({ target: item.timelock, allowFailure: true, callData: "0xf2b06537" + arg });
+} else {
+meta.push({ item: item, idx: calls.length, kind: "oz" });
+calls.push({ target: item.timelock, allowFailure: true, callData: "0x2ab0f529" + arg });
+calls.push({ target: item.timelock, allowFailure: true, callData: "0x584b153e" + arg });
+calls.push({ target: item.timelock, allowFailure: true, callData: "0xd45c4435" + arg });
+}
+});
+return rpcCall(ch, "eth_call", [{ to: MULTICALL3_ADDR, data: encodeAggregate3(calls) }, bHex]).then(function (mcRes) {
+var dec = decodeAggregate3(mcRes && mcRes.result);
+if (!dec || dec.length !== calls.length) return [];
+var out = [];
+meta.forEach(function (m) {
+var live = null;
+if (m.kind === "compound") {
+var rQ = dec[m.idx];
+if (rQ && rQ.success && rQ.returnData.length >= 66) {
+var queued = !/^0+$/.test(rQ.returnData.slice(-64));
+var eta = m.item.eta;
+if (queued) {
+var rdy = eta > 0 && bTs >= eta && bTs <= eta + 1209600;
+live = { status: rdy ? "ready" : "pending", isOperationPending: true, isOperationDone: false };
+} else {
+live = eta > 0 && bTs >= eta ? { status: "done", isOperationDone: true } : { status: "unset", isOperationPending: false, isOperationDone: false };
+}
+}
+} else {
+var rD = dec[m.idx], rP = dec[m.idx + 1], rT = dec[m.idx + 2];
+if (rD && rD.success && rP && rP.success && rD.returnData.length >= 66 && rP.returnData.length >= 66) {
+var isDone = !/^0+$/.test(rD.returnData.slice(-64));
+var isPend = !/^0+$/.test(rP.returnData.slice(-64));
+var ts = rT && rT.success && rT.returnData.length >= 66 ? parseInt(rT.returnData.slice(-64), 16) : 0;
+if (isDone) live = { status: "done", isOperationDone: true };
+else if (isPend) live = { status: ts > 1 && bTs >= ts ? "ready" : "pending", isOperationPending: true, isOperationDone: false };
+else live = { status: "unset", isOperationPending: false, isOperationDone: false };
+}
+}
+if (live) out.push({ opId: m.item.opId, chain: ch, live: live, block: { number: bNum } });
+});
+return out;
+});
+});
+})).then(function (arrs) {
+var allOps = [];
+arrs.forEach(function (a) { a.forEach(function (x) { allOps.push(x); }); });
+return allOps.length ? { operations: allOps } : null;
+}).catch(function () { return null; });
+}
 function initLiveTimelocks() {
 var host = $("[data-live-timelocks]");
 if (!host || typeof fetch !== "function" || !$("[data-ops]")) { liveSettled(false, null); return; }
@@ -232,6 +310,15 @@ if (ctl) { try { ctl.abort(); } catch (e) {  } }
 liveSettled(false, null); freshness();
 }, 9000);
 function settle(ok, blk) { if (done) return; done = true; clearTimeout(guard); liveSettled(ok, blk); freshness(); }
+function tryBrowserMulticall() {
+radarMulticallFallback().then(function (mc) {
+if (done) return;
+if (mc && Array.isArray(mc.operations) && mc.operations.length) {
+var blk = applyLiveTimelocks(mc, "Multicall3 RPC in your browser");
+LIVE_OK_AT = Math.floor(Date.now() / 1000); LIVE_FAILED = false; settle(true, blk);
+} else { LIVE_FAILED = true; settle(false, null); }
+});
+}
 var init = { cache: "no-store", headers: { Accept: "application/json" } };
 if (ctl) init.signal = ctl.signal;
 fetch(url, init)
@@ -240,9 +327,9 @@ fetch(url, init)
 if (done) return;
 if (j && typeof j === "object" && Array.isArray(j.operations)) {
 var blk = applyLiveTimelocks(j); LIVE_OK_AT = Math.floor(Date.now() / 1000); LIVE_FAILED = false; settle(true, blk);
-} else { LIVE_FAILED = true; settle(false, null); }
-}, function () { LIVE_FAILED = true; settle(false, null);  })
-.catch(function () { LIVE_FAILED = true; settle(false, null);  });
+} else { tryBrowserMulticall(); }
+}, function () { tryBrowserMulticall();  })
+.catch(function () { tryBrowserMulticall(); });
 }
 function initBadgeWidget() {
 var w = $("[data-badge-widget]"); if (!w) return;
@@ -325,17 +412,30 @@ return ["Live at block #" + b.n + " (" + b.hex + "): " + (slot ? "slot " + sos :
 });
 }));
 }
+function fmtTvlUsd(v) {
+if (typeof v !== "number" || !isFinite(v) || v <= 0) return "";
+if (v >= 1e9) return "$" + (v < 10e9 ? (v / 1e9).toFixed(2) : (v / 1e9).toFixed(1)) + "B TVL";
+if (v >= 1e6) return "$" + (v < 100e6 ? (v / 1e6).toFixed(1) : Math.round(v / 1e6).toLocaleString("en-US")) + "M TVL";
+if (v >= 1e3) return "$" + Math.round(v / 1e3).toLocaleString("en-US") + "K TVL";
+return "$" + Math.round(v).toLocaleString("en-US") + " TVL";
+}
+var SC_RANK = { delta: 0, protective: 1, aligned: 2, observed: 3 };
 function scRows(card, prefix) {
 var nets = (card.chains || []).map(function (c) { return SC_CHAIN[c] || c; }).join(" · ");
+var tvlVal = typeof card.tvlUsd === "number" && card.tvlUsd > 0 ? Math.round(card.tvlUsd) : -1;
+var tvlTxt = fmtTvlUsd(tvlVal);
+var subMeta = tvlTxt ? nets + " · " + tvlTxt : nets;
 var slug = String(card.slug), did = "sc-d-" + slug, pre = /^(\.\.\/)*$/.test(prefix || "") ? (prefix || "") : "";
 var tog = el("button", { "class": "sc-toggle", type: "button", "aria-expanded": "false", "aria-controls": did, text: String(card.name) });
 var ros = rosette(card.factors || [], 32, card.name, false);
-var row = el("tr", { "class": "sc-row", "data-slug": slug, "data-grade": String(card.grade), "data-baskets": (card.baskets || []).join(" "),
-"data-search": String(card.search || "") }, [
-el("td", {}, [tog, el("span", { "class": "sc-chain", text: nets })]), el("td", {}, [gradePill(card)]),
+var eas = card.easAttested !== false;
+var row = el("tr", { "class": "sc-row", "data-slug": slug, "data-name": String(card.name || "").toLowerCase(),
+"data-grade": String(card.grade), "data-tvl": String(tvlVal), "data-eas": eas ? "1" : "0",
+"data-baskets": (card.baskets || []).join(" "), "data-search": String(card.search || "") }, [
+el("td", {}, [tog, el("span", { "class": "sc-chain", text: subMeta })]), el("td", {}, [gradePill(card)]),
 el("td", {}, ros ? [ros] : [String(SC_GRADE[card.grade] || "")]), el("td", { "class": "sc-find", text: String(card.summary_short || card.finding || "") }),
 el("td", { "class": "sc-chev" }, [el("span", { "class": "chev", "aria-hidden": "true" }, [svgIcon("m6 9 6 6 6-6")])])]);
-var p = card.probe || {}, n = card.records, eas = card.easAttested !== false;
+var p = card.probe || {}, n = card.records;
 var noun = eas ? (n === 1 ? "attested check" : "attested checks") : (n === 1 ? "block-pinned check" : "block-pinned checks");
 var live = el("div", { "class": "sc-live", "data-probe-chain": String(p.chain || ""), "data-probe-target": String(p.target_contract || ""),
 "data-probe-kind": String(p.check_type || ""), "data-probe-sos": String(p.selector_or_slot || ""), "data-probe-data": String(p.repro_calldata || ""),
@@ -356,7 +456,7 @@ var root = $("#scorecards"); if (!root) return;
 var body = $("[data-sc-body]", root), q = $("#sc-q", root), qclr = $("[data-sc-qclear]", root), bsel = $("[data-sc-basket]", root);
 var empty = $("[data-sc-empty]", root), more = $("[data-sc-all]", root);
 if (!body) return;
-var prefix = body.getAttribute("data-prefix") || "", filt = "all", bkt = "all", hydrated = body.hasAttribute("data-full"), loading = null;
+var prefix = body.getAttribute("data-prefix") || "", filt = "all", bkt = "all", easOnly = false, sortMode = "tvl", hydrated = body.hasAttribute("data-full"), loading = null;
 function rows() { return $$("tr.sc-row", body); }
 function drawerOf(r) { return $("#" + "sc-d-" + r.getAttribute("data-slug")); }
 function setOpen(r, open) {
@@ -366,11 +466,31 @@ if (t) t.setAttribute("aria-expanded", String(open));
 if (open) scLive($(".sc-live", d));
 }
 function closeAll() { rows().forEach(function (r) { setOpen(r, false); }); }
+function sortDomRows() {
+var rs = rows().slice();
+rs.sort(function (a, b) {
+var na = a.getAttribute("data-name") || "", nb = b.getAttribute("data-name") || "";
+if (sortMode === "az") return na < nb ? -1 : na > nb ? 1 : 0;
+var ga = SC_RANK[a.getAttribute("data-grade")] !== undefined ? SC_RANK[a.getAttribute("data-grade")] : 9;
+var gb = SC_RANK[b.getAttribute("data-grade")] !== undefined ? SC_RANK[b.getAttribute("data-grade")] : 9;
+if (ga !== gb) return ga - gb;
+var ta = parseInt(a.getAttribute("data-tvl") || "-1", 10), tb = parseInt(b.getAttribute("data-tvl") || "-1", 10);
+if (ta !== tb) return tb - ta;
+return na < nb ? -1 : na > nb ? 1 : 0;
+});
+rs.forEach(function (r) {
+var d = drawerOf(r);
+r.remove();
+body.appendChild(r);
+if (d) { d.remove(); body.appendChild(d); }
+});
+}
 function apply() {
 var t = q ? String(q.value || "").trim().toLowerCase() : "", shown = 0;
 rows().forEach(function (r) {
 var g = r.getAttribute("data-grade"), bs = (r.getAttribute("data-baskets") || "").split(" ");
-var ok = (filt === "all" || g === filt) && (bkt === "all" || bs.indexOf(bkt) >= 0) && (!t || (r.getAttribute("data-search") || "").indexOf(t) >= 0);
+var easOk = !easOnly || r.getAttribute("data-eas") === "1";
+var ok = easOk && (filt === "all" || g === filt) && (bkt === "all" || bs.indexOf(bkt) >= 0) && (!t || (r.getAttribute("data-search") || "").indexOf(t) >= 0);
 r.hidden = !ok; if (ok) shown++;
 if (!ok) setOpen(r, false);
 });
@@ -384,8 +504,16 @@ if (hydrated) return Promise.resolve(true);
 if (loading) return loading;
 if (typeof fetch !== "function") return Promise.resolve(false);
 loading = fetch(body.getAttribute("data-src") || "api/v1/scorecards.json").then(function (res) { return res.json(); }).then(function (d) {
-var cards = d && Array.isArray(d.protocols) ? d.protocols : [];
+var cards = d && Array.isArray(d.protocols) ? d.protocols.slice() : [];
 if (!cards.length) return false;
+cards.sort(function (a, b) {
+var ga = SC_RANK[a.grade] !== undefined ? SC_RANK[a.grade] : 9, gb = SC_RANK[b.grade] !== undefined ? SC_RANK[b.grade] : 9;
+if (ga !== gb) return ga - gb;
+var ta = typeof a.tvlUsd === "number" && a.tvlUsd > 0 ? a.tvlUsd : -1, tb = typeof b.tvlUsd === "number" && b.tvlUsd > 0 ? b.tvlUsd : -1;
+if (ta !== tb) return tb - ta;
+var na = String(a.name || "").toLowerCase(), nb = String(b.name || "").toLowerCase();
+return na < nb ? -1 : na > nb ? 1 : 0;
+});
 body.textContent = "";
 cards.forEach(function (c) { scRows(c, prefix).forEach(function (n) { body.appendChild(n); }); });
 hydrated = true;
@@ -410,7 +538,29 @@ if (bsel) bsel.addEventListener("change", then(function () { bkt = String(bsel.v
 $$("[data-sc-f]", root).forEach(function (b) {
 b.addEventListener("click", then(function () {
 filt = b.getAttribute("data-sc-f") || "all";
+easOnly = false;
 $$("[data-sc-f]", root).forEach(function (o) { o.setAttribute("aria-pressed", String(o === b)); });
+apply();
+}));
+});
+$$("[data-sc-sort]", root).forEach(function (b) {
+b.addEventListener("click", then(function () {
+var sm = b.getAttribute("data-sc-sort") || "tvl";
+$$("[data-sc-sort]", root).forEach(function (o) { o.setAttribute("aria-pressed", String(o === b)); });
+if (sm === "gaps") {
+sortMode = "tvl"; filt = "delta"; easOnly = false;
+$$("[data-sc-f]", root).forEach(function (o) { o.setAttribute("aria-pressed", String(o.getAttribute("data-sc-f") === "delta")); });
+} else if (sm === "eas") {
+sortMode = "tvl"; filt = "all"; easOnly = true;
+$$("[data-sc-f]", root).forEach(function (o) { o.setAttribute("aria-pressed", String(o.getAttribute("data-sc-f") === "all")); });
+} else {
+sortMode = sm === "az" ? "az" : "tvl"; easOnly = false;
+if (filt === "delta" && sm === "tvl") {
+filt = "all";
+$$("[data-sc-f]", root).forEach(function (o) { o.setAttribute("aria-pressed", String(o.getAttribute("data-sc-f") === "all")); });
+}
+}
+sortDomRows();
 apply();
 }));
 });
@@ -432,8 +582,10 @@ apply();
 }
 var clr = empty && $("[data-sc-clear]", empty);
 if (clr) clr.addEventListener("click", function () {
-filt = "all"; bkt = "all"; if (q) q.value = ""; if (bsel) bsel.value = "all";
+filt = "all"; bkt = "all"; easOnly = false; sortMode = "tvl"; if (q) q.value = ""; if (bsel) bsel.value = "all";
 $$("[data-sc-f]", root).forEach(function (o) { o.setAttribute("aria-pressed", String(o.getAttribute("data-sc-f") === "all")); });
+$$("[data-sc-sort]", root).forEach(function (o) { o.setAttribute("aria-pressed", String(o.getAttribute("data-sc-sort") === "tvl")); });
+sortDomRows();
 apply();
 });
 }
@@ -3187,7 +3339,8 @@ var LIVE_OK_AT = 0, LIVE_FAILED = false, STALE_S = 15 * 60;
 function freshness() {
 var now = Math.floor(Date.now() / 1000), stale = LIVE_FAILED || !LIVE_OK_AT || now - LIVE_OK_AT > STALE_S;
 $$("[data-last-recheck]").forEach(function (n) {
-n.textContent = LIVE_OK_AT ? "Last live re-check: " + fmt(Math.max(0, now - LIVE_OK_AT)) + " ago" : (LIVE_FAILED ? "Last live re-check: failed" : "Last live re-check: not yet");
+var utcHm = LIVE_OK_AT ? new Date(LIVE_OK_AT * 1000).toISOString().slice(11, 16) + " UTC" : "";
+n.textContent = LIVE_OK_AT ? "Last live re-check: " + utcHm + " (" + fmt(Math.max(0, now - LIVE_OK_AT)) + " ago)" : (LIVE_FAILED ? "Last live re-check: failed" : "Last live re-check: not yet");
 });
 $$("[data-snapshot-fallback]").forEach(function (n) { n.hidden = !stale; });
 }
@@ -3465,7 +3618,7 @@ request_type: ["doc_or_data_discrepancy", "missing_protocol", "missing_check_sur
 };
 var URGENCY = { community: "community_queue_free", "rapid-500": "active_due_diligence", clearance: "issuer_24h_clearance_5k",
 continuous: "active_due_diligence", api_sla: "api_high_volume_sla" };
-var REQ_API_RE = /^https:\/\/pacta-x402\.pacta\.workers\.dev\/v1\/requests$/;
+var REQ_API_RE = /^https:\/\/(?:pacta\.fractalneurons\.com|pacta-x402\.pacta\.workers\.dev)\/v1\/requests$/;
 var EMAIL_RE = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/, TG_RE = /^@[A-Za-z0-9_]{3,32}$/, GH_RE = /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$/;
 var PII_RE = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}|(^|[\s(])@[A-Za-z0-9_]{2,}|\b\d{1,3}(?:\.\d{1,3}){3}\b|<[^>]*>/;
 var JUNK_CONTACT = /^(none|n\/?a|na|-+|null|user@example\.com|test@test\.com|email@example\.com)$/i;
