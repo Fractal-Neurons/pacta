@@ -1,0 +1,178 @@
+{
+  "wave": 3,
+  "chain": "ethereum",
+  "chain_id": 1,
+  "protocol_name": "Origami Finance",
+  "slug": "origami-finance",
+  "pacta_slug": "origami-finance",
+  "contract_address": "0x07c5500359161b81eb0DfFF83097d5025D3cF5A2",
+  "tvl_usd": 27537582,
+  "tvl_source_url": "https://defillama.com/protocol/origami-finance",
+  "dossier_window": "2025-2026",
+  "trajectory_mode": "mutable_transitions",
+  "historical_transitions": [
+    {
+      "block_number": 22785802,
+      "block_date": "2025-06-26",
+      "tx_hash": "0x9d7f9232aae72f657f481858d08061a20bc69a241529beaf5d6b0b404a5a66f9",
+      "event_kind": "deployment_baseline",
+      "rpc_or_cast_proof": "cast receipt 0x9d7f9232aae72f657f481858d08061a20bc69a241529beaf5d6b0b404a5a66f9 --rpc-url https://eth.drpc.org",
+      "summary": "Deployment baseline at block 22785802 (2025-06-26). The OrigamiDelegated4626Vault that Pacta indexes as the Origami Finance primary contract (token name Origami SKY+ Auto-Compounder) was created by deployer EOA 0xb20AaE0Fe007519b7cE6f090a2aB8353B3Da5d80. At this block owner() returns that EOA and manager() returns the zero address. The contract is not a proxy: the EIP-1967 implementation and admin slots read zero at deployment and at the latest block, so every later control change is an explicit owner or role mutation rather than an implementation upgrade."
+    },
+    {
+      "block_number": 22785816,
+      "block_date": "2025-06-26",
+      "tx_hash": "0x3ab67266185db9d5a2b3978cb3a91bb98365b84241e7da2c263e02994b1ec6d8",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast call 0x07c5500359161b81eb0DfFF83097d5025D3cF5A2 \"manager()(address)\" --block 22785816 --rpc-url https://eth.drpc.org",
+      "summary": "Manager assignment at block 22785816 (2025-06-26), 14 blocks after deployment. manager() flips from the zero address at block 22785815 to the OrigamiSuperSkyManager 0xc522335fBfe21d7A7d1135eb0E016a89DA49dC9e at block 22785816, proved by archive eth_call reads on both sides of the block and by the receipt of this transaction. The same manager address is listed for SKY+ on the live Origami docs contracts page, and the manager contract itself is owned by the Origami Safe."
+    },
+    {
+      "block_number": 22786047,
+      "block_date": "2025-06-26",
+      "tx_hash": "0x96781544a9110998f548c990d461e94f4165c474d709e765182dec7f11c2cf1f",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast call 0x07c5500359161b81eb0DfFF83097d5025D3cF5A2 \"owner()(address)\" --block 22786047 --rpc-url https://eth.drpc.org",
+      "summary": "Ownership transfer at block 22786047 (2025-06-26), about 49 minutes after deployment. owner() returns the deployer EOA 0xb20AaE0Fe007519b7cE6f090a2aB8353B3Da5d80 at block 22786046 and the Origami Gnosis Safe 0x781B4c57100738095222bd92D37B07ed034AB696 at block 22786047, proved by archive eth_call reads on both sides of the block. This is the transfer that brought the vault under the multisig control that the Origami admin-controls documentation describes."
+    },
+    {
+      "block_number": 23554640,
+      "block_date": "2025-10-11",
+      "tx_hash": "0x553ab0b2e8d1de15582cead9de616ae00b3d85e174f23ea6ccd02ff0d8d9cbc1",
+      "event_kind": "signer_or_threshold_change",
+      "rpc_or_cast_proof": "cast call 0x781B4c57100738095222bd92D37B07ed034AB696 \"getOwners()(address[])\" --block 23554640 --rpc-url https://eth.drpc.org",
+      "summary": "Signer rotation on the controlling Safe at block 23554640 (2025-10-11). The Safe transaction emits AddedOwner for 0x51cb4fC2D95a39e4F3bA7ffd9dC6D725207FB6E6 and RemovedOwner for 0x3131c77f79513efab8D703176f831Dc3870d5557; getOwners() flips between blocks 23554639 and 23554640 while getThreshold() stays at 2. A full census of the Safe log history shows this is the only signer change since Safe setup on 2024-04-02, with no ChangedThreshold event and no master-copy change ever. The rotation is not mentioned anywhere in the Origami documentation."
+    }
+  ],
+  "docs_and_governance_forensics": {
+    "mttr_status": "unrepaired_open",
+    "mttr_days": null,
+    "unrepaired_open_days": 405,
+    "evidence_sources": [
+      {
+        "kind": "wayback_snapshot",
+        "date": "2025-01-26",
+        "url": "https://web.archive.org/web/20250126045152/https://docs.origami.finance/technical-reference/admin-controls",
+        "claim_summary": "Archived admin-controls page states that Origami relies on a Gnosis Safe multisig and that the Origami Multisig owns all of the protocol contracts, giving only the Safe address 0x781B4c57100738095222bd92D37B07ed034AB696. It states no threshold, no signer list and no timelock delay. This is the documented control claim against which both gap windows in this dossier are measured."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2025-06-06",
+        "url": "https://github.com/TempleDAO/origami-public/commit/d025f0bdf3f64cb12302f1f705f7e2021f9f2ded",
+        "claim_summary": "Commit in the public contracts repo TempleDAO/origami-public touches apps/protocol/contracts/investments/OrigamiDelegated4626Vault.sol, the source of the dossier vault, 20 days before its on-chain deployment on 2025-06-26. The deployed vault code therefore traces to a public commit that predates deployment, which is the code-before-deployment check reported in the repo audit."
+      },
+      {
+        "kind": "wayback_snapshot",
+        "date": "2025-11-11",
+        "url": "https://web.archive.org/web/20251111223930/https://docs.origami.finance/technical-reference/admin-controls",
+        "claim_summary": "Archived admin-controls page one month after the 2025-10-11 Safe signer rotation. The text is unchanged in substance: the same multisig ownership claim and the same single Safe address, with no threshold, no signer list and no mention of the rotation or of the incoming signer 0x51cb4fC2D95a39e4F3bA7ffd9dC6D725207FB6E6. The disclosure gap measured in this dossier is still open at this snapshot and on the live page read on 2026-11-20."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2026-05-01",
+        "url": "https://github.com/TempleDAO/origami-public/commit/ae442c94a44730ed8740196876f0599b526588a5",
+        "claim_summary": "Merge commit for pull request 31 from TempleDAO/legacy-v2 in TempleDAO/origami-public, the newest commit inside the trailing 12-month repo-audit window. It evidences continued, if sparse, public maintenance of the contracts repo after the events in the dossier window, all of it by a single human contributor."
+      }
+    ],
+    "gap_windows": [
+      {
+        "opened_block": 22785802,
+        "opened_date": "2025-06-26",
+        "closed_block": 22786047,
+        "closed_date": "2025-06-26",
+        "duration_days": 0.0343,
+        "status": "repaired",
+        "summary": "Docs-versus-chain gap on the dossier vault itself. The admin-controls page claims the Origami Multisig owns all protocol contracts, but the SKY+ vault was deployed owned by a single deployer EOA with manager() unset, so a single key controlled the vault at deployment. The gap closed 2964 seconds later (0.0343 days) when owner() became the Safe at block 22786047, after the manager assignment at block 22785816. The repair was fast, but the pattern means every new Origami vault passes through a single-key window that the documentation does not mention."
+      },
+      {
+        "opened_block": 23554640,
+        "opened_date": "2025-10-11",
+        "closed_block": null,
+        "closed_date": null,
+        "duration_days": 405,
+        "status": "unrepaired_open",
+        "summary": "Safe composition disclosure gap, still open at measurement on 2026-11-20. The controlling Safe rotated one of its four signers on 2025-10-11, yet the admin-controls documentation archived on 2025-01-26 and again on 2025-11-11, and the live page read on 2026-11-20, publish only the Safe address: no 2-of-4 threshold, no signer list, no rotation note. The underlying non-disclosure dates to Safe setup on 2024-04-02, 962 days before measurement; measured conservatively from the rotation, the gap has been open 405 days. A reader cannot reconcile the documented control plane with the actual on-chain signer set from the docs alone."
+      }
+    ]
+  },
+  "repo_audit": {
+    "github_org_repo": "TempleDAO/origami-public",
+    "commits_12m_contracts": 4,
+    "commits_12m_frontend_or_other": 2,
+    "human_contributors_12m": 1,
+    "bus_factor": 1,
+    "code_before_upgrade_verified": true
+  },
+  "executive_risk_memo": "Origami Finance routes about 27.5 million USD of Ethereum TVL through vaults whose control plane reduces to one Gnosis Safe, 0x781B4c57100738095222bd92D37B07ed034AB696, configured 2-of-4 since its setup on 2024-04-02. There is no timelock anywhere in the chain of control, no governance proposal layer, and no proxy upgradeability on the dossier vault: the OrigamiDelegated4626Vault at 0x07c5500359161b81eb0DfFF83097d5025D3cF5A2 is immutable, so remediation of any vault bug requires a fresh deployment and a migration. The measured trajectory shows a deployment-day single-key window, when the vault sat under a deployer EOA with no manager set for 49 minutes on 2025-06-26 before the Safe took ownership, then a quiet period and one undocumented signer rotation on 2025-10-11. Documentation is the weakest surface: the admin-controls page claims multisig ownership of all contracts but discloses no threshold, no signer identities and no execution delay, and it was never updated after the rotation, leaving a disclosure gap open for 405 days at measurement. Public engineering depth is thin: the TempleDAO/origami-public mirror records 6 commits in the last 12 months, all from one human, a bus factor of 1, although the vault source was public 20 days before deployment. Residual risk concentrates in 2-of-4 signer custody with zero execution delay, and in documentation that cannot be reconciled with the on-chain signer set.",
+  "contributor_github": "dankezo",
+  "agent_assist_framework": "claude-code",
+  "base_payout_address": "0xf8d0550fa886f09853b0Cb7b1ADCdd15B2af1ab0",
+  "mcp_tool_receipt": {
+    "tool": "pacta_scan_control_plane",
+    "arguments": {
+      "chain": "ethereum",
+      "address": "0x07c5500359161b81eb0DfFF83097d5025D3cF5A2",
+      "caller_agent": "rem-wave3-prep",
+      "requester_role": "security_researcher",
+      "caller_purpose": "wave3_dossier_verification"
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\n  \"chain\": \"ethereum\",\n  \"address\": \"0x07c5500359161b81eb0DfFF83097d5025D3cF5A2\",\n  \"block\": {\n    \"number\": 26453420,\n    \"hash\": \"0xd975bc7c4a9a9d63d1a5428ef10b5e786e4922cbc78ec3ea03c2b28eb12635e2\",\n    \"timestamp\": 1795142963\n  },\n  \"codeBytes\": 15404,\n  \"eip1967\": {\n    \"implementation\": null,\n    \"admin\": null,\n    \"beacon\": null\n  },\n  \"owner\": \"0x781B4c57100738095222bd92D37B07ed034AB696\",\n  \"probedStatus\": {\n    \"eip1967Slots\": \"ok\",\n    \"owner\": \"ok\",\n    \"safeGetters\": \"reverted_or_absent\"\n  },\n  \"upgradeAuthority\": null,\n  \"ownerPrincipal\": {\n    \"address\": \"0x781B4c57100738095222bd92D37B07ed034AB696\",\n    \"codeBytes\": 171,\n    \"type\": \"safe\",\n    \"threshold\": 2,\n    \"owners\": [\n      \"0x6bb4a97bEfC054d424483b3f4D7fDAB2BAAFc1eb\",\n      \"0x31b43508ae97F6cf5309e1A54966EBE15C28768c\",\n      \"0x51cb4fC2D95a39e4F3bA7ffd9dC6D725207FB6E6\",\n      \"0xb20AaE0Fe007519b7cE6f090a2aB8353B3Da5d80\"\n    ],\n    \"ownerCount\": 4,\n    \"guard\": null\n  },\n  \"riskFlags\": [\n    \"not_eip1967_upgradeable\",\n    \"owner_safe_without_guard\",\n    \"owner_no_timelock\"\n  ],\n  \"summary\": \"OBSERVED: No EIP-1967, Ownable, or Safe single-key control detected in probed standard slots/selectors (custom AccessControl/RolesAuthority not excluded)\"\n}"
+        }
+      ],
+      "structuredContent": {
+        "chain": "ethereum",
+        "address": "0x07c5500359161b81eb0DfFF83097d5025D3cF5A2",
+        "block": {
+          "number": 26453420,
+          "hash": "0xd975bc7c4a9a9d63d1a5428ef10b5e786e4922cbc78ec3ea03c2b28eb12635e2",
+          "timestamp": 1795142963
+        },
+        "codeBytes": 15404,
+        "eip1967": {
+          "implementation": null,
+          "admin": null,
+          "beacon": null
+        },
+        "owner": "0x781B4c57100738095222bd92D37B07ed034AB696",
+        "probedStatus": {
+          "eip1967Slots": "ok",
+          "owner": "ok",
+          "safeGetters": "reverted_or_absent"
+        },
+        "upgradeAuthority": null,
+        "ownerPrincipal": {
+          "address": "0x781B4c57100738095222bd92D37B07ed034AB696",
+          "codeBytes": 171,
+          "type": "safe",
+          "threshold": 2,
+          "owners": [
+            "0x6bb4a97bEfC054d424483b3f4D7fDAB2BAAFc1eb",
+            "0x31b43508ae97F6cf5309e1A54966EBE15C28768c",
+            "0x51cb4fC2D95a39e4F3bA7ffd9dC6D725207FB6E6",
+            "0xb20AaE0Fe007519b7cE6f090a2aB8353B3Da5d80"
+          ],
+          "ownerCount": 4,
+          "guard": null
+        },
+        "riskFlags": [
+          "not_eip1967_upgradeable",
+          "owner_safe_without_guard",
+          "owner_no_timelock"
+        ],
+        "summary": "OBSERVED: No EIP-1967, Ownable, or Safe single-key control detected in probed standard slots/selectors (custom AccessControl/RolesAuthority not excluded)"
+      },
+      "isError": false
+    }
+  },
+  "apache2_commercial_grant": true,
+  "rules_accepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
