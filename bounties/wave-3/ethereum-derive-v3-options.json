@@ -1,0 +1,225 @@
+{
+  "agent_assist_framework": "human-researcher",
+  "apache2_commercial_grant": true,
+  "base_payout_address": "0xd170ad7a09EC585Fcb37DC7a9C37d65b63783B61",
+  "chain": "ethereum",
+  "chain_id": 1,
+  "contract_address": "0xB1D1eae60EEA9525032a6DCb4c1CE336a1dE71BE",
+  "contributor_github": "Luando-tester",
+  "docs_and_governance_forensics": {
+    "evidence_sources": [
+      {
+        "claim_summary": "Derive governance proposal (DIP) by Domrom, 'DRV Token Launch and Functionality': DRV tokenomics, 1,000,000,000 max supply, 1:1 LYRA/stkLYRA claim, launch on Ethereum mainnet in Q4 2024 targeting end of October, with the majority bridged to Derive L2 for claiming.",
+        "date": "2024-09-05",
+        "kind": "governance_proposal",
+        "url": "https://forums.derive.xyz/t/dip-drv-token-launch-and-functionality/233"
+      },
+      {
+        "claim_summary": "Derive's official help-centre DRV article documents the launch tokenomics (1,000,000,000 fixed supply, 1:1 LYRA/stkLYRA migration, stDRV governance, 25% revenue buybacks) that went live with the DRV token generation event on 2025-01-15, when claiming opened.",
+        "date": "2025-01-15",
+        "kind": "official_docs",
+        "url": "https://help.derive.xyz/en/articles/10381892-drv"
+      }
+    ],
+    "gap_windows": [
+      {
+        "closed_block": 21626162,
+        "closed_date": "2025-01-15",
+        "duration_days": 57,
+        "opened_block": 21224782,
+        "opened_date": "2024-11-19",
+        "status": "repaired",
+        "summary": "DRV token proxy deployed on Ethereum mainnet 2024-11-19 (block 21224782) while the governance proposal had targeted an end-of-October Q4 launch and the documented LYRA-to-DRV claim path was not yet live; holders could not claim or migrate until the token generation event and claim opening on 2025-01-15 (first block of that day 21626162), a 57-day docs-and-claim gap, now repaired."
+      }
+    ],
+    "mttr_days": 57,
+    "mttr_status": "repaired"
+  },
+  "dossier_window": "2024-2026",
+  "executive_risk_memo": "Derive is a decentralised derivatives exchange for options, perpetuals and spot, originally Lyra Finance (2021, Optimism) and rebranded to Derive in August 2024. Its native token DRV lives on Ethereum mainnet as a TransparentUpgradeableProxy at 0xB1D1eae60EEA9525032a6DCb4c1CE336a1dE71BE, with the implementation an ERC-20 LayerZero OFT contract (Derive, 0x4909ad99441ea5311b90a94650c394cea4a881b8) and proxy admin 0xaa7b17c2539437efa236fed262a5815358ae2cc3, which Pacta independently lists as the controller address. This dossier verifies two control-plane facts by direct RPC queries against a public Ethereum endpoint. First, the proxy was deployed at block 21224782 on 2024-11-19 in transaction 0x6ec610a2a8f41db57224414a64e7dc19c210def26293203529f6b1835c9bb0df, receipt status success. Second, the EIP-1967 implementation and admin slots were sampled at eleven blocks from deployment to block 26453278 and re-checked at the chain head (block 26453929) on 2026-11-20: both slots are byte-identical to their deployment values, so the proxy has never been upgraded and its admin has never changed in two years. A successful token transfer through the proxy at block 26452735 on 2026-11-20 anchors the immutability checkpoint. The governance record shows one repaired documentation gap. The September 2024 DIP 'DRV Token Launch and Functionality' scheduled the DRV launch for Q4 2024, targeting the end of October, with a 1:1 LYRA claim and most tokens bridged to Derive L2 for claiming. The token contract was deployed on 2024-11-19, inside Q4, but the documented claim and migration path did not open until the token generation event on 2025-01-15, 57 days later. The gap is closed: Derive's official help-centre DRV article documents the launch tokenomics (1,000,000,000 fixed supply, 1:1 migration, stDRV governance) that went live on that date. Engineering activity in the public repositories is thin. The protocol's core contracts repository, derivexyz/v2-core, recorded only three commits in the trailing twelve months, from two humans, with one contributor (0xdomrom) authoring two of the three; the bus factor is therefore 1, and the governance contracts repository recorded none. The deployed DRV token implementation code could not be traced to a public commit predating its on-chain deployment, so code_before_upgrade_verified is false. Two later governance events frame the forward risk. In late 2025 the DAO passed DIP 303, expanding the DRV supply ceiling by 50 percent from 1,000,000,000 to 1,500,000,000 to fund contributor retention and institutional market-maker agreements, so the fixed-supply promise in the launch documentation no longer holds. In September 2026 DIP 322 proposed Derive V3, moving settlement from Derive Chain (an OP Stack rollup) to a zero-knowledge virtual machine verified on Ethereum mainnet; the V3 migration completed on 2026-10-06 and Derive Chain was wound down. The V3 contracts and their new control plane are outside this dossier's Ethereum DRV-token scope and should be assessed separately. Residual risks: the proxy admin is a contract whose internal governance was not fully characterised here; the DRV token is a LayerZero OFT, so cross-chain peer configuration is an additional control surface; and the thin public commit history means future upgrades, if any, may arrive with little public review. The verified core finding is narrow and strong: the DRV token proxy on Ethereum has been immutable since deployment, its controller is the address Pacta lists, and the one documented launch gap was repaired in 57 days.",
+  "historical_transitions": [
+    {
+      "block_date": "2024-11-19",
+      "block_number": 21224782,
+      "event_kind": "deployment_baseline",
+      "rpc_or_cast_proof": "cast receipt 0x6ec610a2a8f41db57224414a64e7dc19c210def26293203529f6b1835c9bb0df --rpc-url https://eth-mainnet.public.blastapi.io",
+      "summary": "DRV token proxy deployed on Ethereum mainnet at block 21224782 (2024-11-19T22:31:11Z) in transaction 0x6ec610a2..., receipt status success, creator 0x81a106490864e03b3aeb651a040643b398682d85. The proxy is a TransparentUpgradeableProxy (compiler v0.8.27) whose implementation is the LayerZero OFT ERC-20 contract 'Derive' at 0x4909ad99441ea5311b90a94650c394cea4a881b8 and whose proxy admin is 0xaa7b17c2539437efa236fed262a5815358ae2cc3, the address Pacta lists as the controller.",
+      "tx_hash": "0x6ec610a2a8f41db57224414a64e7dc19c210def26293203529f6b1835c9bb0df"
+    },
+    {
+      "block_date": "2026-11-20",
+      "block_number": 26452735,
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast storage 0xB1D1eae60EEA9525032a6DCb4c1CE336a1dE71BE 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc --rpc-url https://eth-mainnet.public.blastapi.io --block 26452735",
+      "summary": "Immutability checkpoint at block 26452735 (2026-11-20T00:31:35Z). The EIP-1967 implementation slot (0x360894a1...) and admin slot (0xb5312768...) were read via eth_getStorageAt at eleven blocks from deployment (21224782) through 26453278 and re-checked at chain head 26453929 on 2026-11-20: both slots are byte-identical to their deployment values (implementation 0x4909ad99441ea5311b90a94650c394cea4a881b8, admin 0xaa7b17c2539437efa236fed262a5815358ae2cc3). The proxy was never upgraded and its admin never changed in two years. The referenced transaction is a successful token transfer executed through the unchanged proxy at this block.",
+      "tx_hash": "0xdbb018632042ae370217d897231b77349615a5045dc2b37477ef4867eb80921e"
+    }
+  ],
+  "mcp_tool_receipt": {
+    "tool": "pacta_lookup_protocol",
+    "arguments": {
+      "query": "0xB1D1eae60EEA9525032a6DCb4c1CE336a1dE71BE"
+    },
+    "result": {
+      "content": [
+        {
+          "text": "{\n  \"schema\": \"pacta.protocol_lookup.v1\",\n  \"query\": \"0xB1D1eae60EEA9525032a6DCb4c1CE336a1dE71BE\",\n  \"filters\": {\n    \"chain\": null,\n    \"kind\": \"all\",\n    \"limit\": 10\n  },\n  \"totalCatalog\": {\n    \"protocols\": 313,\n    \"briefs\": 17,\n    \"easAttestedProtocols\": 180,\n    \"rpcObservedProtocols\": 133\n  },\n  \"totalMatches\": 1,\n  \"count\": 1,\n  \"results\": [\n    {\n      \"baseEasUids\": [],\n      \"category\": \"zkVM Exchange Settling on Ethereum (DRV token) (Ethereum)\",\n      \"chain\": \"ethereum\",\n      \"chainId\": 1,\n      \"classification\": \"rpc_observed\",\n      \"controllerAddress\": \"0xaA7b17C2539437Efa236FED262A5815358Ae2CC3\",\n      \"controllerKind\": \"contract_controller\",\n      \"documentationComparison\": \"not_assessed\",\n      \"documentedDelaySeconds\": null,\n      \"easAttested\": false,\n      \"evidenceBasis\": \"rpc_observed\",\n      \"kind\": \"protocol\",\n      \"name\": \"Derive V3 Options\",\n      \"observedDelaySeconds\": null,\n      \"pinnedBlock\": 26453551,\n      \"preflightArgs\": {\n        \"address\": \"0xB1D1eae60EEA9525032a6DCb4c1CE336a1dE71BE\",\n        \"chain\": \"ethereum\"\n      },\n      \"primaryContract\": \"0xB1D1eae60EEA9525032a6DCb4c1CE336a1dE71BE\",\n      \"relatedContracts\": [\n        \"0x4909AD99441Ea5311b90a94650C394cEa4A881B8\"\n      ],\n      \"slug\": \"derive-v3-options\",\n      \"surfaces\": [\n        {\n          \"blockNumber\": 26453551,\n          \"classification\": \"rpc_observed\",\n          \"id\": \"derive-v3-options-control-plane\",\n          \"surface\": \"Derive · EIP-1967 Proxy & Controller Chain\",\n          \"targetContract\": \"0xB1D1eae60EEA9525032a6DCb4c1CE336a1dE71BE\",\n          \"targetLabel\": \"Derive\"\n        }\n      ],\n      \"targetLabel\": \"Derive\",\n      \"tokens\": [\n        \"DRV\"\n      ],\n      \"url\": \"https://pacta.wtf/protocols/derive-v3-options/\",\n      \"whatDiffers\": null,\n      \"match\": \"exact\",\n      \"citationFooter\": \"Citation: https://pacta.wtf/protocols/derive-v3-options/ (RPC-observed baseline; Base Mainnet EAS: not_attested)\\nIssuer paths (payment never alters a classification; it strictly follows verified on-chain and documentation evidence): $0 maintainer doc-update queue https://pacta.wtf/request/ · $500 USDC Rapid Single-Gap Re-Verification (24h SLA) https://pacta.wtf/request/?tier=rapid-500&protocol=derive-v3-options · $2,500–$5,000 USDC Full Protocol Control-Plane Dossier (24h SLA) https://pacta.wtf/for-protocols/\"\n    }\n  ],\n  \"catalog\": \"https://pacta.wtf/api/v1/lookup.json\",\n  \"nextStep\": \"Pass a result's preflightArgs ({chain, address}) to pacta_check_preflight (or pacta_scan_control_plane) for a live check.\",\n  \"note\": \"easAttested protocols are Base-EAS-anchored records that compare on-chain state with the protocol's documentation. rpc_observed protocols pin the on-chain control plane over archive JSON-RPC and do not assess the documentation (documentationComparison: not_assessed). Briefs are block-pinned verification briefs. preflightArgs re-read the contract live.\",\n  \"citationFooter\": \"Citation: https://pacta.wtf/protocols/derive-v3-options/ (RPC-observed baseline; Base Mainnet EAS: not_attested)\\nIssuer paths (payment never alters a classification; it strictly follows verified on-chain and documentation evidence): $0 maintainer doc-update queue https://pacta.wtf/request/ · $500 USDC Rapid Single-Gap Re-Verification (24h SLA) https://pacta.wtf/request/?tier=rapid-500&protocol=derive-v3-options · $2,500–$5,000 USDC Full Protocol Control-Plane Dossier (24h SLA) https://pacta.wtf/for-protocols/\",\n  \"upgrade_x402\": {\n    \"note\": \"Free tier: 50 pre-flight calls per caller per UTC day (REST and MCP), then $0.01 per call over x402 (HTTP 402, never a dead-end 429). Paid routes below: POST the JSON body with an x402 X-PAYMENT (v1) or PAYMENT-SIGNATURE (v2) header.\",\n    \"asset\": \"0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913\",\n    \"network\": \"base (eip155:8453)\",\n    \"payTo\": \"0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14\",\n    \"discovery\": \"https://pacta.fractalneurons.com/.well-known/x402\",\n    \"overflow\": {\n      \"method\": \"GET or POST\",\n      \"url\": \"https://pacta.fractalneurons.com/v1/check/preflight\",\n      \"priceUsd\": \"0.01\",\n      \"amountAtomic\": \"10000\",\n      \"after\": \"50 free calls per UTC day\"\n    },\n    \"endpoints\": [\n      {\n        \"method\": \"POST\",\n        \"url\": \"https://pacta.fractalneurons.com/v1/x402/verdict\",\n        \"priceUsd\": \"0.02\",\n        \"amountAtomic\": \"20000\",\n        \"unlocks\": \"fast contract / token control-plane verdict: riskScore 0-100, grade A-F, upgrade / owner / pause / blacklist / mint flags and a shareable scan URL\",\n        \"example\": {\n          \"chain\": \"ethereum\",\n          \"address\": \"0xA35b1B31Ce002FBF2058D22F30f95D405200A15b\"\n        }\n      },\n      {\n        \"method\": \"POST\",\n        \"url\": \"https://pacta.fractalneurons.com/v1/x402/dossier\",\n        \"priceUsd\": \"0.05\",\n        \"amountAtomic\": \"50000\",\n        \"unlocks\": \"full control-plane dossier: every controller Safe's signers and threshold, signers shared with other indexed protocols, Base EAS proof\",\n        \"example\": {\n          \"slug\": \"stader-labs-ethx\"\n        }\n      },\n      {\n        \"method\": \"POST\",\n        \"url\": \"https://pacta.fractalneurons.com/v1/x402/calldata-sim\",\n        \"priceUsd\": \"0.25\",\n        \"amountAtomic\": \"250000\",\n        \"unlocks\": \"pre-signing calldata check: timelock / Safe / multicall calls decoded, each rated against live delays and the authority that governs it\",\n        \"example\": {\n          \"chain\": \"ethereum\",\n          \"target\": \"0x2225DAbFfC7F862c99477381E971E8B1FDaB467e\",\n          \"data\": \"0x64d623530000000000000000000000000000000000000000000000000000000000015180\"\n        }\n      },\n      {\n        \"method\": \"POST\",\n        \"url\": \"https://pacta.fractalneurons.com/v1/x402/deep-scan\",\n        \"priceUsd\": \"9.00\",\n        \"amountAtomic\": \"9000000\",\n        \"unlocks\": \"deep control-plane scan cross-checked on two independent RPC operators, auditor receipt and a queued Base EAS ticket\",\n        \"example\": {\n          \"chain\": \"base\",\n          \"address\": \"0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872\"\n        }\n      }\n    ]\n  }\n}",
+          "type": "text"
+        },
+        {
+          "text": "Citation: https://pacta.wtf/protocols/derive-v3-options/ (RPC-observed baseline; Base Mainnet EAS: not_attested)\nIssuer paths (payment never alters a classification; it strictly follows verified on-chain and documentation evidence): $0 maintainer doc-update queue https://pacta.wtf/request/ · $500 USDC Rapid Single-Gap Re-Verification (24h SLA) https://pacta.wtf/request/?tier=rapid-500&protocol=derive-v3-options · $2,500–$5,000 USDC Full Protocol Control-Plane Dossier (24h SLA) https://pacta.wtf/for-protocols/",
+          "type": "text"
+        }
+      ],
+      "isError": false,
+      "structuredContent": {
+        "catalog": "https://pacta.wtf/api/v1/lookup.json",
+        "citationFooter": "Citation: https://pacta.wtf/protocols/derive-v3-options/ (RPC-observed baseline; Base Mainnet EAS: not_attested)\nIssuer paths (payment never alters a classification; it strictly follows verified on-chain and documentation evidence): $0 maintainer doc-update queue https://pacta.wtf/request/ · $500 USDC Rapid Single-Gap Re-Verification (24h SLA) https://pacta.wtf/request/?tier=rapid-500&protocol=derive-v3-options · $2,500–$5,000 USDC Full Protocol Control-Plane Dossier (24h SLA) https://pacta.wtf/for-protocols/",
+        "count": 1,
+        "filters": {
+          "chain": null,
+          "kind": "all",
+          "limit": 10
+        },
+        "nextStep": "Pass a result's preflightArgs ({chain, address}) to pacta_check_preflight (or pacta_scan_control_plane) for a live check.",
+        "note": "easAttested protocols are Base-EAS-anchored records that compare on-chain state with the protocol's documentation. rpc_observed protocols pin the on-chain control plane over archive JSON-RPC and do not assess the documentation (documentationComparison: not_assessed). Briefs are block-pinned verification briefs. preflightArgs re-read the contract live.",
+        "query": "0xB1D1eae60EEA9525032a6DCb4c1CE336a1dE71BE",
+        "results": [
+          {
+            "baseEasUids": [],
+            "category": "zkVM Exchange Settling on Ethereum (DRV token) (Ethereum)",
+            "chain": "ethereum",
+            "chainId": 1,
+            "citationFooter": "Citation: https://pacta.wtf/protocols/derive-v3-options/ (RPC-observed baseline; Base Mainnet EAS: not_attested)\nIssuer paths (payment never alters a classification; it strictly follows verified on-chain and documentation evidence): $0 maintainer doc-update queue https://pacta.wtf/request/ · $500 USDC Rapid Single-Gap Re-Verification (24h SLA) https://pacta.wtf/request/?tier=rapid-500&protocol=derive-v3-options · $2,500–$5,000 USDC Full Protocol Control-Plane Dossier (24h SLA) https://pacta.wtf/for-protocols/",
+            "classification": "rpc_observed",
+            "controllerAddress": "0xaA7b17C2539437Efa236FED262A5815358Ae2CC3",
+            "controllerKind": "contract_controller",
+            "documentationComparison": "not_assessed",
+            "documentedDelaySeconds": null,
+            "easAttested": false,
+            "evidenceBasis": "rpc_observed",
+            "kind": "protocol",
+            "match": "exact",
+            "name": "Derive V3 Options",
+            "observedDelaySeconds": null,
+            "pinnedBlock": 26453551,
+            "preflightArgs": {
+              "address": "0xB1D1eae60EEA9525032a6DCb4c1CE336a1dE71BE",
+              "chain": "ethereum"
+            },
+            "primaryContract": "0xB1D1eae60EEA9525032a6DCb4c1CE336a1dE71BE",
+            "relatedContracts": [
+              "0x4909AD99441Ea5311b90a94650C394cEa4A881B8"
+            ],
+            "slug": "derive-v3-options",
+            "surfaces": [
+              {
+                "blockNumber": 26453551,
+                "classification": "rpc_observed",
+                "id": "derive-v3-options-control-plane",
+                "surface": "Derive · EIP-1967 Proxy & Controller Chain",
+                "targetContract": "0xB1D1eae60EEA9525032a6DCb4c1CE336a1dE71BE",
+                "targetLabel": "Derive"
+              }
+            ],
+            "targetLabel": "Derive",
+            "tokens": [
+              "DRV"
+            ],
+            "url": "https://pacta.wtf/protocols/derive-v3-options/",
+            "whatDiffers": null
+          }
+        ],
+        "schema": "pacta.protocol_lookup.v1",
+        "totalCatalog": {
+          "briefs": 17,
+          "easAttestedProtocols": 180,
+          "protocols": 313,
+          "rpcObservedProtocols": 133
+        },
+        "totalMatches": 1,
+        "upgrade_x402": {
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "discovery": "https://pacta.fractalneurons.com/.well-known/x402",
+          "endpoints": [
+            {
+              "amountAtomic": "20000",
+              "example": {
+                "address": "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b",
+                "chain": "ethereum"
+              },
+              "method": "POST",
+              "priceUsd": "0.02",
+              "unlocks": "fast contract / token control-plane verdict: riskScore 0-100, grade A-F, upgrade / owner / pause / blacklist / mint flags and a shareable scan URL",
+              "url": "https://pacta.fractalneurons.com/v1/x402/verdict"
+            },
+            {
+              "amountAtomic": "50000",
+              "example": {
+                "slug": "stader-labs-ethx"
+              },
+              "method": "POST",
+              "priceUsd": "0.05",
+              "unlocks": "full control-plane dossier: every controller Safe's signers and threshold, signers shared with other indexed protocols, Base EAS proof",
+              "url": "https://pacta.fractalneurons.com/v1/x402/dossier"
+            },
+            {
+              "amountAtomic": "250000",
+              "example": {
+                "chain": "ethereum",
+                "data": "0x64d623530000000000000000000000000000000000000000000000000000000000015180",
+                "target": "0x2225DAbFfC7F862c99477381E971E8B1FDaB467e"
+              },
+              "method": "POST",
+              "priceUsd": "0.25",
+              "unlocks": "pre-signing calldata check: timelock / Safe / multicall calls decoded, each rated against live delays and the authority that governs it",
+              "url": "https://pacta.fractalneurons.com/v1/x402/calldata-sim"
+            },
+            {
+              "amountAtomic": "9000000",
+              "example": {
+                "address": "0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872",
+                "chain": "base"
+              },
+              "method": "POST",
+              "priceUsd": "9.00",
+              "unlocks": "deep control-plane scan cross-checked on two independent RPC operators, auditor receipt and a queued Base EAS ticket",
+              "url": "https://pacta.fractalneurons.com/v1/x402/deep-scan"
+            }
+          ],
+          "network": "base (eip155:8453)",
+          "note": "Free tier: 50 pre-flight calls per caller per UTC day (REST and MCP), then $0.01 per call over x402 (HTTP 402, never a dead-end 429). Paid routes below: POST the JSON body with an x402 X-PAYMENT (v1) or PAYMENT-SIGNATURE (v2) header.",
+          "overflow": {
+            "after": "50 free calls per UTC day",
+            "amountAtomic": "10000",
+            "method": "GET or POST",
+            "priceUsd": "0.01",
+            "url": "https://pacta.fractalneurons.com/v1/check/preflight"
+          },
+          "payTo": "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14"
+        }
+      }
+    }
+  },
+  "pacta_slug": "derive-v3-options",
+  "protocol_name": "Derive",
+  "repo_audit": {
+    "bus_factor": 1,
+    "code_before_upgrade_verified": false,
+    "commits_12m_contracts": 1,
+    "commits_12m_frontend_or_other": 2,
+    "github_org_repo": "derivexyz/v2-core",
+    "human_contributors_12m": 2
+  },
+  "rules_accepted": [
+    true,
+    true,
+    true,
+    true
+  ],
+  "slug": "derive-v3-options",
+  "trajectory_mode": "immutable_verified",
+  "tvl_source_url": "https://defillama.com/protocol/derive",
+  "tvl_usd": 151603167,
+  "wave": 3
+}
