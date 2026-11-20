@@ -1,0 +1,165 @@
+{
+  "wave": 3,
+  "chain": "ethereum",
+  "chain_id": 1,
+  "protocol_name": "Theo Network thUSD",
+  "slug": "theo-network-thusd",
+  "pacta_slug": "theo-network-thusd",
+  "contract_address": "0xa3fE5c7596024E6811E14F029937D5bd8Ae485b3",
+  "tvl_usd": 138598417,
+  "tvl_source_url": "https://defillama.com/protocol/theo-network-thusd",
+  "dossier_window": "2024-2026",
+  "trajectory_mode": "mutable_transitions",
+  "historical_transitions": [
+    {
+      "block_number": 24837116,
+      "block_date": "2026-04-08",
+      "tx_hash": "0xf8d47e9c91d7d1714bfc99bb29d886ccad4039fc7ef929c3e843fd3a495efc17",
+      "event_kind": "deployment_baseline",
+      "rpc_or_cast_proof": "cast storage 0xa3fE5c7596024E6811E14F029937D5bd8Ae485b3 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc --block 24837116 --rpc-url https://eth.drpc.org",
+      "summary": "Deployment baseline at block 24837116 (2026-04-08, 19:35:11 UTC). The thUSD ERC1967 proxy 0xa3fE5c7596024E6811E14F029937D5bd8Ae485b3 was created by deployer EOA 0x3d5c293E04A584a5D3F9ad5698784F1D77A76f33; the creation receipt carries OwnershipTransferred from the zero address to that EOA, and owner() at block 24837116 returns the EOA (the address has no code at block 24837115). The EIP-1967 implementation slot 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc reads 0xCD04F57464d25F257089A286AAb47DF096d300Ad at this block, and the admin slot 0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103 reads zero at this block and at the latest block, so upgrade authority sits with owner() rather than with a separate proxy admin. Token name and symbol both read thUSD at the latest block."
+    },
+    {
+      "block_number": 24837268,
+      "block_date": "2026-04-08",
+      "tx_hash": "0x7c4beddcfb24ffffb8c74285d36f44e1f2263fd3b9aaa4959ccb91008e3dcb82",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast call 0xa3fE5c7596024E6811E14F029937D5bd8Ae485b3 \"owner()(address)\" --block 24837268 --rpc-url https://eth.drpc.org",
+      "summary": "Ownership transfer at block 24837268 (2026-04-08, 20:05:35 UTC), 152 blocks and 1,824 seconds after deployment. owner() returns the deployer EOA 0x3d5c293E04A584a5D3F9ad5698784F1D77A76f33 at block 24837267 and the interim TimelockController 0x46A9cA32D5c7C866336E75765B099b669feF8bC2 at block 24837268, proved by archive eth_call reads on both sides of the block and by the OwnershipTransferred log pair in this transaction's receipt, which also carries CallExecuted logs emitted by the interim timelock itself. At this block the interim timelock's getMinDelay() reads only 60 seconds, so the EOA bootstrap ended into a near-instant execution delay. The implementation slot still reads 0xCD04F57464d25F257089A286AAb47DF096d300Ad at this block."
+    },
+    {
+      "block_number": 25051612,
+      "block_date": "2026-05-08",
+      "tx_hash": "0xedf6dc513b8bc97ce635bb5e2062b0d38ab7de149c5e49da2c065b0f3452c7a6",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast receipt 0xedf6dc513b8bc97ce635bb5e2062b0d38ab7de149c5e49da2c065b0f3452c7a6 --rpc-url https://eth.drpc.org",
+      "summary": "Interim timelock delay raise at block 25051612 (2026-05-08, 16:42:47 UTC). This transaction's receipt carries a MinDelayChange log on the interim TimelockController 0x46A9cA32D5c7C866336E75765B099b669feF8bC2 with data 60 -> 64,800 seconds, and getMinDelay() reads 60 at block 25051611 and 64,800 at block 25051612 on archive eth_call. The receipt also carries the timelock's CallExecuted log for the scheduled self-call and an ExecutionSuccess log from the Safe 0x94877640dd9e6f1e3cb56bf7b5665b7152601295, whose proposer role on the interim timelock reads true at block 24837268 and whose executor role reads true at block 25094185. The raise landed 30 days into the interim window."
+    },
+    {
+      "block_number": 25094186,
+      "block_date": "2026-05-14",
+      "tx_hash": "0xe39d22a007ddd68a6d1e7f351652e83e14edab8169f89f5f1bff0730322dc1de",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast call 0xa3fE5c7596024E6811E14F029937D5bd8Ae485b3 \"owner()(address)\" --block 25094186 --rpc-url https://eth.drpc.org",
+      "summary": "Governance migration at block 25094186 (2026-05-14, 15:10:59 UTC). owner() returns the interim timelock 0x46A9cA32D5c7C866336E75765B099b669feF8bC2 at block 25094185 and the final TimelockController 0x2bB4b7E6E83FA6b77d0143dad631843cB73DCA02 at block 25094186, proved by archive eth_call reads on both sides of the block and by the OwnershipTransferred log pair in the receipt. The final timelock was created at block 25046194 (2026-05-07); its creation receipt grants the admin, proposer, executor and canceller roles to the Safe 0x94877640dd9e6f1e3cb56bf7b5665b7152601295, and getMinDelay() reads 172,800 seconds (2 days) at blocks 25094185, 25094186 and the latest block. The same transaction rotated ownership of at least seven other Theo contracts from the interim timelock to the final timelock, per the receipt logs. The implementation slot still reads 0xCD04F57464d25F257089A286AAb47DF096d300Ad at this block."
+    }
+  ],
+  "docs_and_governance_forensics": {
+    "mttr_status": "repaired",
+    "mttr_days": 36,
+    "evidence_sources": [
+      {
+        "kind": "wayback_snapshot",
+        "date": "2024-08-07",
+        "url": "https://web.archive.org/web/20240807152725/https://docs.theo.xyz/",
+        "claim_summary": "Archived capture of docs.theo.xyz (HTTP 200) dated 2024-08-07. It proves the Theo documentation site was public 609 days before the thUSD proxy deployment on 2026-04-08. It is cited as provenance for the documentation timeline only; it predates the product and states nothing about thUSD control."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2025-03-07",
+        "url": "https://github.com/theo-network/theo-audits/commit/6e1371636984",
+        "claim_summary": "Sole commit of theo-network/theo-audits (author and committer timestamps both 2025-03-07T03:34:15Z), uploading audit.md and audit_2.md. It proves third-party audit material for Theo smart contracts was public 397 days before the thUSD deployment. The repo holds audit documents, not contract source code."
+      },
+      {
+        "kind": "wayback_snapshot",
+        "date": "2026-04-19",
+        "url": "https://web.archive.org/web/20260419072236/https://docs.theo.xyz/",
+        "claim_summary": "Archived capture of docs.theo.xyz dated 2026-04-19, inside the interim control window (2026-04-08 to 2026-05-14). The captured page contains no occurrence of the words timelock, multisig or governance and neither the interim timelock address 0x46A9cA32D5c7C866336E75765B099b669feF8bC2 nor the final timelock address. The claim is bounded to this captured page."
+      },
+      {
+        "kind": "official_docs",
+        "date": "2026-11-21",
+        "url": "https://pacta.wtf/protocols/theo-network-thusd/",
+        "claim_summary": "Pacta catalog page for this protocol, read 2026-11-21. It lists the primary contract 0xa3fE5c7596024E6811E14F029937D5bd8Ae485b3, records the controller 0x2bB4b7E6E83FA6b77d0143dad631843cB73DCA02 as a timelock, and marks documentationComparison as not_assessed. It independently pins the same controller this dossier verifies on chain."
+      }
+    ],
+    "gap_windows": [
+      {
+        "opened_block": 24837268,
+        "opened_date": "2026-04-08",
+        "closed_block": 25094186,
+        "closed_date": "2026-05-14",
+        "duration_days": 36,
+        "status": "repaired",
+        "summary": "Undisclosed interim control window. From block 24837268 (2026-04-08) the thUSD proxy was owned by an interim TimelockController 0x46A9cA32D5c7C866336E75765B099b669feF8bC2 that no dated public document found in this pass discloses: the docs page archived on 2026-04-19, inside the window, contains no occurrence of the words timelock, multisig or governance and neither timelock address. For the first 30 days of the window the interim delay was only 60 seconds; it was raised to 64,800 seconds at block 25051612 (2026-05-08). The window closed at block 25094186 (2026-05-14) when ownership moved to the 172,800-second TimelockController 0x2bB4b7E6E83FA6b77d0143dad631843cB73DCA02. Duration measured between the two on-chain endpoints: 36 days."
+      }
+    ]
+  },
+  "repo_audit": {
+    "github_org_repo": "theo-network/theo-audits",
+    "commits_12m_contracts": 0,
+    "commits_12m_frontend_or_other": 0,
+    "human_contributors_12m": 0,
+    "bus_factor": 0,
+    "code_before_upgrade_verified": false
+  },
+  "executive_risk_memo": "The scoped authority is the thUSD ERC1967 proxy 0xa3fE5c7596024E6811E14F029937D5bd8Ae485b3, the exact primary contract the Pacta catalog lists for theo-network-thusd, verified by archive eth_call and storage reads on https://eth.drpc.org with latest-state cross-checks on ethereum-rpc.publicnode.com (both agree at block 26458249). Theo Network reports about 138.6 million USD of Ethereum TVL per DefiLlama (measured 2026-11-21). That figure is the protocol-wide TVL of the theo-network-thusd DefiLlama entry, whose currentChainTvls carries a single Ethereum key; it is not verified custody of the single audited proxy.\n\nThe measured trajectory is a staged hardening over 36 days. The proxy was deployed on 2026-04-08 by a single EOA and stayed under it for 152 blocks (1,824 seconds). Ownership then moved to an interim TimelockController (0x46A9cA32D5c7C866336E75765B099b669feF8bC2) whose getMinDelay() read only 60 seconds for the first 30 days of its tenure, was raised to 64,800 seconds (18 hours) at block 25051612 on 2026-05-08, and on 2026-05-14 ownership migrated to the current TimelockController (0x2bB4b7E6E83FA6b77d0143dad631843cB73DCA02) with getMinDelay() = 172,800 seconds (2 days), in a transaction that rotated at least seven other Theo contracts to the same timelock. The EIP-1967 implementation slot reads 0xCD04F57464d25F257089A286AAb47DF096d300Ad at creation, at both ownership flips, and at the latest block, and the admin slot reads zero throughout, so the upgrade authority granted to the timelock has never been exercised at any sampled block; that is a sampled-block statement, not a full-range Upgraded event scan.\n\nControl behind both timelocks traces to one Safe, 0x94877640dd9e6f1e3cb56bf7b5665b7152601295: getThreshold() reads 4 and getOwners() reads 6 addresses at the latest block, and slot 0 reads the Safe singleton 0x41675C099F32341bf84BFc5382aF534df5C7461a. hasRole reads at block 26458249 return proposer, executor and canceller true for that Safe on both timelocks; on the final timelock the admin role (0x00) reads true only for the timelock itself at that block, although the creation receipt at block 25046194 also granted it to the Safe, so that grant was later removed by a transaction this pass did not trace. The 2-day delay proves that actions executed through the final timelock, including a proxy upgrade by owner(), cannot take effect less than 172,800 seconds after scheduling; it does not by itself prove the Safe's signer custody is sound, and this dossier does not assess the six signers beyond the on-chain reads cited.\n\nDocumentation is the weakest surface. The docs site was public from 2024-08-07 (609 days before deployment) and audit reports were public from 2025-03-07 (397 days before deployment), yet no dated public document found in this pass discloses the interim timelock arrangement: the docs page archived on 2026-04-19, inside the window, contains no occurrence of the words timelock, multisig or governance and neither timelock address. No document found states a migration deadline, so the 36 days is a disclosure gap inside a hardening trajectory, not a broken published commitment; MTTR is measured exactly between the two on-chain endpoints (blocks 24837268 and 25094186).\n\nPublic engineering depth is minimal. The repo census covers theo-network/theo-audits, default branch main, window 2025-11-21 to 2026-11-21, via the GitHub API commits list: 0 commits, 0 human contributors, bus factor 0; all time the repo holds 1 commit by 1 human (the 2025-03-07 audit upload) and holds audit documents, not contract code. The deployed thUSD implementation source is not in any public repository of the theo-network org, so code_before_upgrade_verified is false: no implementation upgrade exists to trace, and the deployment itself does not trace to a public commit. The audited contract's own on-chain history spans only 227 days (2026-04-08 to 2026-11-21), the shortest trajectory in this program's field; the dossier window reaches back to 2024 only through the protocol's public documentation record. Residual risk concentrates in the signer custody of the single 4-of-6 Safe behind both timelocks and in the live, unexercised upgrade authority behind the 2-day delay.",
+  "contributor_github": "dankezo",
+  "agent_assist_framework": "claude-code",
+  "base_payout_address": "0xf8d0550fa886f09853b0Cb7b1ADCdd15B2af1ab0",
+  "mcp_tool_receipt": {
+    "tool": "pacta_scan_control_plane",
+    "arguments": {
+      "chain": "ethereum",
+      "address": "0xa3fE5c7596024E6811E14F029937D5bd8Ae485b3",
+      "caller_agent": "rem-wave3-prep",
+      "requester_role": "security_researcher",
+      "caller_purpose": "wave3_dossier_verification"
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\n  \"chain\": \"ethereum\",\n  \"address\": \"0xa3fE5c7596024E6811E14F029937D5bd8Ae485b3\",\n  \"block\": {\n    \"number\": 26458278,\n    \"hash\": \"0x181c59e6a5774e36950887c38396895f2e60b322d7e36762dc9d8de1a778b15f\",\n    \"timestamp\": 1795201475\n  },\n  \"codeBytes\": 130,\n  \"eip1967\": {\n    \"implementation\": \"0xCD04F57464d25F257089A286AAb47DF096d300Ad\",\n    \"admin\": null,\n    \"beacon\": null\n  },\n  \"owner\": \"0x2bB4b7E6E83FA6b77d0143dad631843cB73DCA02\",\n  \"probedStatus\": {\n    \"eip1967Slots\": \"ok\",\n    \"owner\": \"ok\",\n    \"safeGetters\": \"reverted_or_absent\"\n  },\n  \"upgradeAuthority\": {\n    \"address\": \"0x2bB4b7E6E83FA6b77d0143dad631843cB73DCA02\",\n    \"codeBytes\": 5450,\n    \"type\": \"timelock_oz\",\n    \"minDelaySeconds\": 172800\n  },\n  \"ownerPrincipal\": {\n    \"address\": \"0x2bB4b7E6E83FA6b77d0143dad631843cB73DCA02\",\n    \"codeBytes\": 5450,\n    \"type\": \"timelock_oz\",\n    \"minDelaySeconds\": 172800\n  },\n  \"riskFlags\": [\n    \"upgradeable\",\n    \"upgrade_timelock_172800s\",\n    \"owner_timelock_172800s\"\n  ],\n  \"summary\": \"OBSERVED: No EIP-1967, Ownable, or Safe single-key control detected in probed standard slots/selectors (custom AccessControl/RolesAuthority not excluded)\"\n}"
+        }
+      ],
+      "structuredContent": {
+        "chain": "ethereum",
+        "address": "0xa3fE5c7596024E6811E14F029937D5bd8Ae485b3",
+        "block": {
+          "number": 26458278,
+          "hash": "0x181c59e6a5774e36950887c38396895f2e60b322d7e36762dc9d8de1a778b15f",
+          "timestamp": 1795201475
+        },
+        "codeBytes": 130,
+        "eip1967": {
+          "implementation": "0xCD04F57464d25F257089A286AAb47DF096d300Ad",
+          "admin": null,
+          "beacon": null
+        },
+        "owner": "0x2bB4b7E6E83FA6b77d0143dad631843cB73DCA02",
+        "probedStatus": {
+          "eip1967Slots": "ok",
+          "owner": "ok",
+          "safeGetters": "reverted_or_absent"
+        },
+        "upgradeAuthority": {
+          "address": "0x2bB4b7E6E83FA6b77d0143dad631843cB73DCA02",
+          "codeBytes": 5450,
+          "type": "timelock_oz",
+          "minDelaySeconds": 172800
+        },
+        "ownerPrincipal": {
+          "address": "0x2bB4b7E6E83FA6b77d0143dad631843cB73DCA02",
+          "codeBytes": 5450,
+          "type": "timelock_oz",
+          "minDelaySeconds": 172800
+        },
+        "riskFlags": [
+          "upgradeable",
+          "upgrade_timelock_172800s",
+          "owner_timelock_172800s"
+        ],
+        "summary": "OBSERVED: No EIP-1967, Ownable, or Safe single-key control detected in probed standard slots/selectors (custom AccessControl/RolesAuthority not excluded)"
+      },
+      "isError": false
+    }
+  },
+  "apache2_commercial_grant": true,
+  "rules_accepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
