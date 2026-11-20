@@ -1,0 +1,145 @@
+{
+  "wave": 3,
+  "chain": "ethereum",
+  "chain_id": 1,
+  "protocol_name": "NodeDAO Liquid Staking",
+  "slug": "nodedao",
+  "pacta_slug": "nodedao",
+  "contract_address": "0xd7C049CD4ba216679ecC04Eb2767cC5E39812121",
+  "tvl_usd": 25237436,
+  "tvl_source_url": "https://defillama.com/protocol/nodedao",
+  "dossier_window": "2024-2026",
+  "trajectory_mode": "immutable_verified",
+  "historical_transitions": [
+    {
+      "block_number": 19517007,
+      "block_date": "2024-03-26",
+      "tx_hash": "0x044ee24af4228dad3da2628f918495db9f104d4b9a9018195db067a4187c127a",
+      "event_kind": "deployment_baseline",
+      "rpc_or_cast_proof": "cast receipt 0x044ee24af4228dad3da2628f918495db9f104d4b9a9018195db067a4187c127a --rpc-url https://ethereum-rpc.publicnode.com",
+      "summary": "Deployment baseline at block 19517007 (2024-03-26 07:03 UTC). Receipt status 0x1 with three logs on the proxy: Upgraded to implementation 0x857BF02B1f5fD85E064e6726658eA1864a14d948, OwnershipTransferred from 0x0000000000000000000000000000000000000000 to the TimelockController 0x16F692525f3b8c8a96F8c945D365Da958Fb5735B, and Initialized. The EIP-1967 admin storage slot is zero at this and every later checkpoint. An archive eth_getCode read at block 19600000 returns the same 708-byte runtime."
+    },
+    {
+      "block_number": 19518439,
+      "block_date": "2024-03-26",
+      "tx_hash": "0x2bbae609e4f7a88edeeb0b5a691d707f012a9c2e6cab82fd4be5e4a3421603e2",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast receipt 0x2bbae609e4f7a88edeeb0b5a691d707f012a9c2e6cab82fd4be5e4a3421603e2 --rpc-url https://ethereum-rpc.publicnode.com",
+      "summary": "Controller configuration at block 19518439 (2024-03-26 11:52 UTC), 1432 blocks after deployment. Receipt status 0x1 emits TimelockController role and delay configuration events at 0x16F692525f... plus a related contract. Pacta's scan of that controller reports an OpenZeppelin TimelockController with minDelaySeconds 3600 and flags upgrade_timelock_3600s and upgrade_timelock_under_24h. No later governance, role, admin or implementation event occurs anywhere in the observation window."
+    }
+  ],
+  "docs_and_governance_forensics": {
+    "mttr_status": "unrepaired_open",
+    "mttr_days": null,
+    "unrepaired_open_days": 969,
+    "evidence_sources": [
+      {
+        "kind": "github_docs_commit",
+        "date": "2025-11-19",
+        "url": "https://github.com/NodeDAO/nodedao-tool/commit/115ef93e7e9d1b6bde81dfff7ed6918089e61954",
+        "claim_summary": "Real dated commit 'fix' in the NodeDAO organisation's Go tooling repository, one of the few commits inside the trailing twelve months. It evidences active off-chain maintenance but publishes no Solidity source for the deployed proxy implementation and no upgrade provenance."
+      },
+      {
+        "kind": "wayback_snapshot",
+        "date": "2023-12-05",
+        "url": "https://web.archive.org/web/20231205124905/https://www.nodedao.com/",
+        "claim_summary": "Dated Internet Archive capture of the official NodeDAO site immediately before the 2024 deployment. It describes the liquid staking product and validator services without disclosing an EIP-1967 proxy, an owner address, a TimelockController or an upgrade policy."
+      },
+      {
+        "kind": "official_docs",
+        "date": "2026-11-20",
+        "url": "https://www.nodedao.com/",
+        "claim_summary": "Current official site, answering HTTP 200. It documents the liquid staking protocol and staking products but does not publish the proxy implementation 0x857BF02B1f5fD85E064e6726658eA1864a14d948, the owner 0x16F692525f3b8c8a96F8c945D365Da958Fb5735B or the 3600-second minimum delay verified on-chain."
+      }
+    ],
+    "gap_windows": [
+      {
+        "opened_block": 19517007,
+        "opened_date": "2024-03-26",
+        "closed_block": null,
+        "closed_date": null,
+        "duration_days": 969,
+        "status": "unrepaired_open",
+        "summary": "Documentation-to-chain disclosure gap opened at deployment and never closed. The on-chain control plane is fully reproducible via archive eth_getCode, eth_getStorageAt and the two verified receipts, yet no dated public commit or archived documentation page publishes the implementation address, the TimelockController owner or the 3600-second delay. No repair commit exists in the reviewed public record, so the window remains open with no closed block."
+      }
+    ]
+  },
+  "repo_audit": {
+    "github_org_repo": "NodeDAO/NodeDAO-Protocol",
+    "commits_12m_contracts": 0,
+    "commits_12m_frontend_or_other": 0,
+    "human_contributors_12m": 0,
+    "bus_factor": 0,
+    "code_before_upgrade_verified": false
+  },
+  "executive_risk_memo": "This dossier assesses NodeDAO, an rpc_observed protocol whose catalog slug, chain and primaryContract are taken directly from Pacta's own docs/api/v1/protocols.json. Unlike the rejected PR #129, there is no target-contract ambiguity here: pacta_slug is 'nodedao' and contract_address 0xd7C049CD4ba216679ecC04Eb2767cC5E39812121 is exactly the catalog's primaryContract, classified rpc_observed with easAttested false. DefiLlama reports 25,237,436 USD of TVL on Ethereum itself, an eligible Wave 3 chain, so the >= $10M eligible-chain floor that disqualified PR #128 is satisfied without aggregating TVL from non-EVM networks.\n\nThe control plane is an OpenZeppelin-style EIP-1967 proxy of 708 runtime bytes. It was deployed on 2024-03-26 at block 19,517,007 in transaction 0x044ee24af4228dad3da2628f918495db9f104d4b9a9018195db067a4187c127a, which succeeded with status 0x1 and emitted three logs on the proxy: Upgraded to implementation 0x857BF02B1f5fD85E064e6726658eA1864a14d948, OwnershipTransferred from the zero address to 0x16F692525f3b8c8a96F8c945D365Da958Fb5735B, and Initialized. Four hours later at block 19,518,439 transaction 0x2bbae609e4f7a88edeeb0b5a691d707f012a9c2e6cab82fd4be5e4a3421603e2 emitted the TimelockController configuration events (role and delay setup). Pacta's own scan identifies 0x16F692525F... as an OpenZeppelin TimelockController with a 3600-second minimum delay, and flags upgrade_timelock_under_24h and owner_no_timelock-grade exposure.\n\nAcross the whole 2024-2026 observation window the control plane did not evolve. Archive eth_getCode reads return the identical 708-byte runtime at blocks 20,000,000 through 26,450,616, and eth_getStorageAt on the EIP-1967 implementation slot returns 0x857BF02B1f5fD85E064e6726658eA1864a14d948 at every checkpoint. The admin slot is zero and owner() returns the same TimelockController. No Upgraded, AdminChanged or OwnershipTransferred event appears after the deployment block. Two independent pacta_scan_control_plane calls pinned at block 19,600,000 and at the terminal block 26,450,616 report the same implementation, owner, codeBytes and risk flags. This is therefore a genuine multi-block immutability-plus-controller-verification record rather than a dormant guess.\n\nEngineering bench strength is thin. The organisation's Solidity repository NodeDAO/NodeDAO-Protocol was last pushed in February 2024 and has zero commits, zero distinct human contributors and a bus factor of zero in the trailing twelve months; the sibling Go tooling repository NodeDAO/nodedao-tool stayed active with dated commits in April and November 2025, but publishes no Solidity corresponding to the deployed implementation. Because no public contract commit can be matched to the deployed bytecode, code_before_upgrade_verified is recorded false. Neither the archived official site nor the current documentation publishes the proxy implementation address, the owner or the 3600-second timelock, so the documentation-to-chain disclosure gap is recorded as unrepaired_open for 969 days.\n\nResidual exposure is concentrated in upgrade latency: a 3,600-second delay is materially shorter than the 24-hour or 48-hour norms used by lending control planes, and no guard contract is attached. Any implementation rotation requires only that short window plus signer coordination. Reviewers should treat NodeDAO as a low-activity but fully upgradeable control plane, re-pin the implementation slot before integration, and note that the absence of upgrades to date is an observation about the past, not a guarantee about the future.",
+  "contributor_github": "nikolayspb1981",
+  "agent_assist_framework": "opencode",
+  "base_payout_address": "0xF4ea605ec6E6780fd51FFF3679aCAd081FDb7A3C",
+  "mcp_tool_receipt": {
+    "tool": "pacta_scan_control_plane",
+    "arguments": {
+      "chain": "ethereum",
+      "address": "0xd7C049CD4ba216679ecC04Eb2767cC5E39812121",
+      "block": "26450616"
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\n  \"chain\": \"ethereum\",\n  \"address\": \"0xd7C049CD4ba216679ecC04Eb2767cC5E39812121\",\n  \"block\": {\n    \"number\": 26450616,\n    \"hash\": \"0xd2df7ccb74a6772b51a5597c8f144f5cfae362efeabf193ecfc7c80f8ff37c35\",\n    \"timestamp\": 1795109207\n  },\n  \"codeBytes\": 708,\n  \"eip1967\": {\n    \"implementation\": \"0x857BF02B1f5fD85E064e6726658eA1864a14d948\",\n    \"admin\": null,\n    \"beacon\": null\n  },\n  \"owner\": \"0x16F692525f3b8c8a96F8c945D365Da958Fb5735B\",\n  \"probedStatus\": {\n    \"eip1967Slots\": \"ok\",\n    \"owner\": \"ok\",\n    \"safeGetters\": \"reverted_or_absent\"\n  },\n  \"proxyAdmin\": null,\n  \"upgradeAuthority\": {\n    \"address\": \"0x16F692525f3b8c8a96F8c945D365Da958Fb5735B\",\n    \"codeBytes\": 7753,\n    \"type\": \"timelock_oz\",\n    \"minDelaySeconds\": 3600\n  },\n  \"ownerPrincipal\": {\n    \"address\": \"0x16F692525f3b8c8a96F8c945D365Da958Fb5735B\",\n    \"codeBytes\": 7753,\n    \"type\": \"timelock_oz\",\n    \"minDelaySeconds\": 3600\n  },\n  \"riskFlags\": [\n    \"upgradeable\",\n    \"upgrade_timelock_3600s\",\n    \"upgrade_timelock_under_24h\",\n    \"owner_timelock_3600s\",\n    \"owner_timelock_under_24h\"\n  ],\n  \"summary\": \"OBSERVED: No EIP-1967, Ownable, or Safe single-key control detected in probed standard slots/selectors (custom AccessControl/RolesAuthority not excluded)\"\n}"
+        }
+      ],
+      "structuredContent": {
+        "chain": "ethereum",
+        "address": "0xd7C049CD4ba216679ecC04Eb2767cC5E39812121",
+        "block": {
+          "number": 26450616,
+          "hash": "0xd2df7ccb74a6772b51a5597c8f144f5cfae362efeabf193ecfc7c80f8ff37c35",
+          "timestamp": 1795109207
+        },
+        "codeBytes": 708,
+        "eip1967": {
+          "implementation": "0x857BF02B1f5fD85E064e6726658eA1864a14d948",
+          "admin": null,
+          "beacon": null
+        },
+        "owner": "0x16F692525f3b8c8a96F8c945D365Da958Fb5735B",
+        "probedStatus": {
+          "eip1967Slots": "ok",
+          "owner": "ok",
+          "safeGetters": "reverted_or_absent"
+        },
+        "proxyAdmin": null,
+        "upgradeAuthority": {
+          "address": "0x16F692525f3b8c8a96F8c945D365Da958Fb5735B",
+          "codeBytes": 7753,
+          "type": "timelock_oz",
+          "minDelaySeconds": 3600
+        },
+        "ownerPrincipal": {
+          "address": "0x16F692525f3b8c8a96F8c945D365Da958Fb5735B",
+          "codeBytes": 7753,
+          "type": "timelock_oz",
+          "minDelaySeconds": 3600
+        },
+        "riskFlags": [
+          "upgradeable",
+          "upgrade_timelock_3600s",
+          "upgrade_timelock_under_24h",
+          "owner_timelock_3600s",
+          "owner_timelock_under_24h"
+        ],
+        "summary": "OBSERVED: No EIP-1967, Ownable, or Safe single-key control detected in probed standard slots/selectors (custom AccessControl/RolesAuthority not excluded)"
+      },
+      "isError": false
+    }
+  },
+  "apache2_commercial_grant": true,
+  "rules_accepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
