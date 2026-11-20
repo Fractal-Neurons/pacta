@@ -1,0 +1,254 @@
+{
+  "wave": 3,
+  "chain": "ethereum",
+  "chain_id": 1,
+  "protocol_name": "Harvest Finance",
+  "slug": "harvest-finance",
+  "pacta_slug": "harvest-finance",
+  "contract_address": "0xf0358e8c3CD5Fa238a29301d0bEa3D63A17bEdBE",
+  "tvl_usd": 13523518.08,
+  "tvl_source_url": "https://defillama.com/protocol/harvest-finance",
+  "dossier_window": "2023-2026",
+  "trajectory_mode": "mutable_transitions",
+  "historical_transitions": [
+    {
+      "block_number": 16832654,
+      "block_date": "2023-03-15",
+      "tx_hash": "0xdd4a063296fc65e57eb200fc0fdffa33b2fbb37fc7bb5eb17995515ea9de1fd6",
+      "event_kind": "proxy_upgrade",
+      "rpc_or_cast_proof": "curl -s -X POST https://rpc.mevblocker.io -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"eth_getTransactionReceipt\",\"params\":[\"0xdd4a063296fc65e57eb200fc0fdffa33b2fbb37fc7bb5eb17995515ea9de1fd6\"]}'",
+      "summary": "fUSDC vault proxy upgraded its implementation from V1 0x9B3bE0cc5dD26fd0254088d03D8206792715588B to 0x7bD04D55cBba9996E6799fD7b0380CC43E7C493f, executed by EOA 0xf00dD244228F51547f0563e60bCa65a30FBF5f7f calling the proxy upgrade function directly; sibling vaults fWETH and fDAI were not upgraded the same day, so upgrades were per-vault and independent at this stage."
+    },
+    {
+      "block_number": 19574589,
+      "block_date": "2024-04-03",
+      "tx_hash": "0x202e93fb489b9a9b8c3c99514cfa682a37090ff048431e19bccdc715557d58d3",
+      "event_kind": "proxy_upgrade",
+      "rpc_or_cast_proof": "curl -s -X POST https://rpc.mevblocker.io -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"eth_getTransactionReceipt\",\"params\":[\"0x202e93fb489b9a9b8c3c99514cfa682a37090ff048431e19bccdc715557d58d3\"]}'",
+      "summary": "Governance Safe owner 0x6a74649aCFD7822ae8Fb78463a9f2192752E5Aa2 batch-upgraded 11 vault proxies, including fUSDC, fWETH and fDAI, to transitional implementation 0xBd555A5965599f9AeF877F2F60e47b8cEE96C425 through one Gnosis Safe MultiSend transaction; that implementation survived only 6,784 blocks, about 22.6 hours, before being replaced."
+    },
+    {
+      "block_number": 19581373,
+      "block_date": "2024-04-04",
+      "tx_hash": "0xa6d781891ab8b795b32f778b9d82f83e14dbb4a670e1e22b3fd0f1e50415768f",
+      "event_kind": "proxy_upgrade",
+      "rpc_or_cast_proof": "curl -s -X POST https://rpc.mevblocker.io -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"eth_getTransactionReceipt\",\"params\":[\"0xa6d781891ab8b795b32f778b9d82f83e14dbb4a670e1e22b3fd0f1e50415768f\"]}'",
+      "summary": "Governance Safe executed a formal execTransaction batch upgrade moving the same 11 vault proxies, including fUSDC, from 0xBd555A59 to VaultV2 implementation 0x0de5F3a958F8e927c5B27D202d12B607e213D08c, which has remained the live implementation ever since; the VaultV2 code was public in the harvest-strategy repository (commit 0e46e236, 2024-03-29) six days before this execution."
+    },
+    {
+      "block_number": 22488705,
+      "block_date": "2025-05-15",
+      "tx_hash": "0x1491255b44d43085767fb57309d475d23832185ae52b6736419375bd5ba66160",
+      "event_kind": "deployment_baseline",
+      "rpc_or_cast_proof": "curl -s -X POST https://rpc.mevblocker.io -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"eth_getTransactionReceipt\",\"params\":[\"0x1491255b44d43085767fb57309d475d23832185ae52b6736419375bd5ba66160\"]}'",
+      "summary": "V3 TimelockController 0xC4C3065Bf62A11edF8A6B5252f550adEC82Dd38F deployed by Safe owner 0x6a74649aCFD7822ae8Fb78463a9f2192752E5Aa2; on-chain reads confirm a 3-day minimum delay (259200 seconds) with proposer, executor, canceller and admin roles all held by the 2-of-3 governance Safe, adding a timelocked execution layer the public documentation never describes."
+    }
+  ],
+  "docs_and_governance_forensics": {
+    "mttr_status": "unrepaired_open",
+    "mttr_days": null,
+    "unrepaired_open_days": 1204.0,
+    "evidence_sources": [
+      {
+        "kind": "governance_proposal",
+        "date": "2023-08-04",
+        "url": "https://snapshot.org/#/harvestfi.eth/proposal/0xdd443dc8bf1490dbb67ab455e30584c7ec1fced34a0c1c9633f5a044d9fdcab3",
+        "claim_summary": "Last proposal ever created in the harvestfi.eth Snapshot space ('Is $FARM the best?'), created 2023-08-04 04:27:11 UTC; a GraphQL query over the space returns zero proposals after that date, while on-chain governance kept executing."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2023-05-01",
+        "url": "https://github.com/harvestfi/gitbook_wiki/commit/a42e0ad58114c779b2f67ae99f20aec60670e021",
+        "claim_summary": "Most recent commit to the Harvest docs wiki repository (GITBOOK-224); the governance page it contains describes Snapshot voting only and never mentions the multisig, the TimelockController, or the 3-day execution delay."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2023-05-01",
+        "url": "https://github.com/harvestfi/gitbook_wiki/blob/master/general-info/governance.md",
+        "claim_summary": "Governance documentation page (HTTP 200): instructs FARM holders to vote on Snapshot and discuss on Discord, with no reference to the 2-of-3 Safe, the TimelockController, or any execution delay."
+      }
+    ],
+    "gap_windows": [
+      {
+        "opened_block": 17839236,
+        "opened_date": "2023-08-04",
+        "closed_block": null,
+        "closed_date": null,
+        "duration_days": 1204.0,
+        "status": "unrepaired_open",
+        "summary": "Documented Snapshot governance stopped being used after the last proposal on 2023-08-04 (first block at or after its creation: 17839236), while the 2-of-3 Safe kept executing vault upgrades on-chain in April 2024 with no Snapshot vote; the documentation was never corrected."
+      },
+      {
+        "opened_block": 22488705,
+        "opened_date": "2025-05-15",
+        "closed_block": null,
+        "closed_date": null,
+        "duration_days": 554.0,
+        "status": "unrepaired_open",
+        "summary": "V3 TimelockController (3-day minimum delay, all roles held by the Safe) deployed on 2025-05-15 added a new execution layer that the frozen governance documentation, last updated 2023-05-01, still does not describe."
+      }
+    ]
+  },
+  "repo_audit": {
+    "github_org_repo": "harvestfi/harvest-strategy",
+    "commits_12m_contracts": 36,
+    "commits_12m_frontend_or_other": 3,
+    "human_contributors_12m": 2,
+    "bus_factor": 2,
+    "code_before_upgrade_verified": true
+  },
+  "executive_risk_memo": "Across the 2023-2026 window Harvest Finance's Ethereum control plane moved from ad-hoc EOA-driven vault upgrades to disciplined multisig execution and then into a long freeze. The fUSDC vault proxy was upgraded solo by an unnamed EOA in March 2023, then batch-upgraded with ten sibling vaults by the 2-of-3 governance Safe in April 2024, first to a transitional implementation that survived only 6,784 blocks (about 22.6 hours) and then to the VaultV2 implementation that has remained untouched for roughly 960 days. In May 2025 the Safe deployed a V3 TimelockController with a 3-day minimum delay, adding a timelocked execution layer that the public governance documentation has never described. That documentation, frozen since 2023-05-01, still claims FARM holders govern through Snapshot, yet the harvestfi.eth space has hosted zero proposals since 2023-08-04: a 1,204-day unrepaired governance gap, with a second 554-day gap for the Timelock itself. Engineering reality is thin but real: the live contracts repository harvestfi/harvest-strategy recorded 36 contract commits and 3 other commits in the trailing 12 months from just 2 human contributors (bus factor 2, one author writing 72 percent of contract commits), and the VaultV2 upgrade traces to a public commit dated 2024-03-29, six days before execution. TVL of $13.5M is protocol-wide per DefiLlama and must be read with its chain split: only $3.65M sits on Ethereum, with $9.40M on Base, so the dossier's Ethereum framing rests on the protocol-level figure. Residual risk concentrates in the 2-of-3 Safe: two keys can move every vault, the Timelock's roles are all held by that same Safe, and no token-holder vote has constrained it since 2023.",
+  "contributor_github": "xiaogui917",
+  "base_payout_address": "0xfb6375c9b6fc6F94d9B33607dd91D1E594C0243B",
+  "mcp_tool_receipt": {
+    "tool": "pacta_lookup_protocol",
+    "arguments": {
+      "query": "harvest-finance"
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\n  \"schema\": \"pacta.protocol_lookup.v1\",\n  \"query\": \"harvest-finance\",\n  \"filters\": {\n    \"chain\": null,\n    \"kind\": \"all\",\n    \"limit\": 10\n  },\n  \"totalCatalog\": {\n    \"protocols\": 313,\n    \"briefs\": 17,\n    \"easAttestedProtocols\": 180,\n    \"rpcObservedProtocols\": 133\n  },\n  \"totalMatches\": 1,\n  \"count\": 1,\n  \"results\": [\n    {\n      \"baseEasUids\": [],\n      \"category\": \"Automated farming strategies with auto-compounding vaults (Ethereum)\",\n      \"chain\": \"ethereum\",\n      \"chainId\": 1,\n      \"classification\": \"rpc_observed\",\n      \"controllerAddress\": null,\n      \"controllerKind\": null,\n      \"documentationComparison\": \"not_assessed\",\n      \"documentedDelaySeconds\": null,\n      \"easAttested\": false,\n      \"evidenceBasis\": \"rpc_observed\",\n      \"kind\": \"protocol\",\n      \"name\": \"Harvest Finance\",\n      \"observedDelaySeconds\": null,\n      \"pinnedBlock\": 26453551,\n      \"preflightArgs\": {\n        \"address\": \"0xa0246c9032bC3A600820415aE600c6388619A14D\",\n        \"chain\": \"ethereum\"\n      },\n      \"primaryContract\": \"0xa0246c9032bC3A600820415aE600c6388619A14D\",\n      \"relatedContracts\": [],\n      \"slug\": \"harvest-finance\",\n      \"surfaces\": [\n        {\n          \"blockNumber\": 26453551,\n          \"classification\": \"rpc_observed\",\n          \"id\": \"harvest-finance-control-plane\",\n          \"surface\": \"FARM Reward Token · Non-Proxy Bytecode & Controller\",\n          \"targetContract\": \"0xa0246c9032bC3A600820415aE600c6388619A14D\",\n          \"targetLabel\": \"FARM Reward Token\"\n        }\n      ],\n      \"targetLabel\": \"FARM Reward Token\",\n      \"tokens\": [\n        \"FARM\"\n      ],\n      \"url\": \"https://pacta.wtf/protocols/harvest-finance/\",\n      \"whatDiffers\": null,\n      \"match\": \"exact\",\n      \"citationFooter\": \"Citation: https://pacta.wtf/protocols/harvest-finance/ (RPC-observed baseline; Base Mainnet EAS: not_attested)\\nIssuer paths (payment never alters a classification; it strictly follows verified on-chain and documentation evidence): $0 maintainer doc-update queue https://pacta.wtf/request/ · $500 USDC Rapid Single-Gap Re-Verification (24h SLA) https://pacta.wtf/request/?tier=rapid-500&protocol=harvest-finance · $2,500–$5,000 USDC Full Protocol Control-Plane Dossier (24h SLA) https://pacta.wtf/for-protocols/\"\n    }\n  ],\n  \"catalog\": \"https://pacta.wtf/api/v1/lookup.json\",\n  \"nextStep\": \"Pass a result's preflightArgs ({chain, address}) to pacta_check_preflight (or pacta_scan_control_plane) for a live check.\",\n  \"note\": \"easAttested protocols are Base-EAS-anchored records that compare on-chain state with the protocol's documentation. rpc_observed protocols pin the on-chain control plane over archive JSON-RPC and do not assess the documentation (documentationComparison: not_assessed). Briefs are block-pinned verification briefs. preflightArgs re-read the contract live.\",\n  \"citationFooter\": \"Citation: https://pacta.wtf/protocols/harvest-finance/ (RPC-observed baseline; Base Mainnet EAS: not_attested)\\nIssuer paths (payment never alters a classification; it strictly follows verified on-chain and documentation evidence): $0 maintainer doc-update queue https://pacta.wtf/request/ · $500 USDC Rapid Single-Gap Re-Verification (24h SLA) https://pacta.wtf/request/?tier=rapid-500&protocol=harvest-finance · $2,500–$5,000 USDC Full Protocol Control-Plane Dossier (24h SLA) https://pacta.wtf/for-protocols/\",\n  \"upgrade_x402\": {\n    \"note\": \"Free tier: 50 pre-flight calls per caller per UTC day (REST and MCP), then $0.01 per call over x402 (HTTP 402, never a dead-end 429). Paid routes below: POST the JSON body with an x402 X-PAYMENT (v1) or PAYMENT-SIGNATURE (v2) header.\",\n    \"asset\": \"0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913\",\n    \"network\": \"base (eip155:8453)\",\n    \"payTo\": \"0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14\",\n    \"discovery\": \"https://pacta.fractalneurons.com/.well-known/x402\",\n    \"overflow\": {\n      \"method\": \"GET or POST\",\n      \"url\": \"https://pacta.fractalneurons.com/v1/check/preflight\",\n      \"priceUsd\": \"0.01\",\n      \"amountAtomic\": \"10000\",\n      \"after\": \"50 free calls per UTC day\"\n    },\n    \"endpoints\": [\n      {\n        \"method\": \"POST\",\n        \"url\": \"https://pacta.fractalneurons.com/v1/x402/verdict\",\n        \"priceUsd\": \"0.02\",\n        \"amountAtomic\": \"20000\",\n        \"unlocks\": \"fast contract / token control-plane verdict: riskScore 0-100, grade A-F, upgrade / owner / pause / blacklist / mint flags and a shareable scan URL\",\n        \"example\": {\n          \"chain\": \"ethereum\",\n          \"address\": \"0xA35b1B31Ce002FBF2058D22F30f95D405200A15b\"\n        }\n      },\n      {\n        \"method\": \"POST\",\n        \"url\": \"https://pacta.fractalneurons.com/v1/x402/dossier\",\n        \"priceUsd\": \"0.05\",\n        \"amountAtomic\": \"50000\",\n        \"unlocks\": \"full control-plane dossier: every controller Safe's signers and threshold, signers shared with other indexed protocols, Base EAS proof\",\n        \"example\": {\n          \"slug\": \"stader-labs-ethx\"\n        }\n      },\n      {\n        \"method\": \"POST\",\n        \"url\": \"https://pacta.fractalneurons.com/v1/x402/calldata-sim\",\n        \"priceUsd\": \"0.25\",\n        \"amountAtomic\": \"250000\",\n        \"unlocks\": \"pre-signing calldata check: timelock / Safe / multicall calls decoded, each rated against live delays and the authority that governs it\",\n        \"example\": {\n          \"chain\": \"ethereum\",\n          \"target\": \"0x2225DAbFfC7F862c99477381E971E8B1FDaB467e\",\n          \"data\": \"0x64d623530000000000000000000000000000000000000000000000000000000000015180\"\n        }\n      },\n      {\n        \"method\": \"POST\",\n        \"url\": \"https://pacta.fractalneurons.com/v1/x402/deep-scan\",\n        \"priceUsd\": \"9.00\",\n        \"amountAtomic\": \"9000000\",\n        \"unlocks\": \"deep control-plane scan cross-checked on two independent RPC operators, auditor receipt and a queued Base EAS ticket\",\n        \"example\": {\n          \"chain\": \"base\",\n          \"address\": \"0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872\"\n        }\n      }\n    ]\n  }\n}"
+        },
+        {
+          "type": "text",
+          "text": "Citation: https://pacta.wtf/protocols/harvest-finance/ (RPC-observed baseline; Base Mainnet EAS: not_attested)\nIssuer paths (payment never alters a classification; it strictly follows verified on-chain and documentation evidence): $0 maintainer doc-update queue https://pacta.wtf/request/ · $500 USDC Rapid Single-Gap Re-Verification (24h SLA) https://pacta.wtf/request/?tier=rapid-500&protocol=harvest-finance · $2,500–$5,000 USDC Full Protocol Control-Plane Dossier (24h SLA) https://pacta.wtf/for-protocols/"
+        }
+      ],
+      "structuredContent": {
+        "schema": "pacta.protocol_lookup.v1",
+        "query": "harvest-finance",
+        "filters": {
+          "chain": null,
+          "kind": "all",
+          "limit": 10
+        },
+        "totalCatalog": {
+          "protocols": 313,
+          "briefs": 17,
+          "easAttestedProtocols": 180,
+          "rpcObservedProtocols": 133
+        },
+        "totalMatches": 1,
+        "count": 1,
+        "results": [
+          {
+            "baseEasUids": [],
+            "category": "Automated farming strategies with auto-compounding vaults (Ethereum)",
+            "chain": "ethereum",
+            "chainId": 1,
+            "classification": "rpc_observed",
+            "controllerAddress": null,
+            "controllerKind": null,
+            "documentationComparison": "not_assessed",
+            "documentedDelaySeconds": null,
+            "easAttested": false,
+            "evidenceBasis": "rpc_observed",
+            "kind": "protocol",
+            "name": "Harvest Finance",
+            "observedDelaySeconds": null,
+            "pinnedBlock": 26453551,
+            "preflightArgs": {
+              "address": "0xa0246c9032bC3A600820415aE600c6388619A14D",
+              "chain": "ethereum"
+            },
+            "primaryContract": "0xa0246c9032bC3A600820415aE600c6388619A14D",
+            "relatedContracts": [],
+            "slug": "harvest-finance",
+            "surfaces": [
+              {
+                "blockNumber": 26453551,
+                "classification": "rpc_observed",
+                "id": "harvest-finance-control-plane",
+                "surface": "FARM Reward Token · Non-Proxy Bytecode & Controller",
+                "targetContract": "0xa0246c9032bC3A600820415aE600c6388619A14D",
+                "targetLabel": "FARM Reward Token"
+              }
+            ],
+            "targetLabel": "FARM Reward Token",
+            "tokens": [
+              "FARM"
+            ],
+            "url": "https://pacta.wtf/protocols/harvest-finance/",
+            "whatDiffers": null,
+            "match": "exact",
+            "citationFooter": "Citation: https://pacta.wtf/protocols/harvest-finance/ (RPC-observed baseline; Base Mainnet EAS: not_attested)\nIssuer paths (payment never alters a classification; it strictly follows verified on-chain and documentation evidence): $0 maintainer doc-update queue https://pacta.wtf/request/ · $500 USDC Rapid Single-Gap Re-Verification (24h SLA) https://pacta.wtf/request/?tier=rapid-500&protocol=harvest-finance · $2,500–$5,000 USDC Full Protocol Control-Plane Dossier (24h SLA) https://pacta.wtf/for-protocols/"
+          }
+        ],
+        "catalog": "https://pacta.wtf/api/v1/lookup.json",
+        "nextStep": "Pass a result's preflightArgs ({chain, address}) to pacta_check_preflight (or pacta_scan_control_plane) for a live check.",
+        "note": "easAttested protocols are Base-EAS-anchored records that compare on-chain state with the protocol's documentation. rpc_observed protocols pin the on-chain control plane over archive JSON-RPC and do not assess the documentation (documentationComparison: not_assessed). Briefs are block-pinned verification briefs. preflightArgs re-read the contract live.",
+        "citationFooter": "Citation: https://pacta.wtf/protocols/harvest-finance/ (RPC-observed baseline; Base Mainnet EAS: not_attested)\nIssuer paths (payment never alters a classification; it strictly follows verified on-chain and documentation evidence): $0 maintainer doc-update queue https://pacta.wtf/request/ · $500 USDC Rapid Single-Gap Re-Verification (24h SLA) https://pacta.wtf/request/?tier=rapid-500&protocol=harvest-finance · $2,500–$5,000 USDC Full Protocol Control-Plane Dossier (24h SLA) https://pacta.wtf/for-protocols/",
+        "upgrade_x402": {
+          "note": "Free tier: 50 pre-flight calls per caller per UTC day (REST and MCP), then $0.01 per call over x402 (HTTP 402, never a dead-end 429). Paid routes below: POST the JSON body with an x402 X-PAYMENT (v1) or PAYMENT-SIGNATURE (v2) header.",
+          "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+          "network": "base (eip155:8453)",
+          "payTo": "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14",
+          "discovery": "https://pacta.fractalneurons.com/.well-known/x402",
+          "overflow": {
+            "method": "GET or POST",
+            "url": "https://pacta.fractalneurons.com/v1/check/preflight",
+            "priceUsd": "0.01",
+            "amountAtomic": "10000",
+            "after": "50 free calls per UTC day"
+          },
+          "endpoints": [
+            {
+              "method": "POST",
+              "url": "https://pacta.fractalneurons.com/v1/x402/verdict",
+              "priceUsd": "0.02",
+              "amountAtomic": "20000",
+              "unlocks": "fast contract / token control-plane verdict: riskScore 0-100, grade A-F, upgrade / owner / pause / blacklist / mint flags and a shareable scan URL",
+              "example": {
+                "chain": "ethereum",
+                "address": "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b"
+              }
+            },
+            {
+              "method": "POST",
+              "url": "https://pacta.fractalneurons.com/v1/x402/dossier",
+              "priceUsd": "0.05",
+              "amountAtomic": "50000",
+              "unlocks": "full control-plane dossier: every controller Safe's signers and threshold, signers shared with other indexed protocols, Base EAS proof",
+              "example": {
+                "slug": "stader-labs-ethx"
+              }
+            },
+            {
+              "method": "POST",
+              "url": "https://pacta.fractalneurons.com/v1/x402/calldata-sim",
+              "priceUsd": "0.25",
+              "amountAtomic": "250000",
+              "unlocks": "pre-signing calldata check: timelock / Safe / multicall calls decoded, each rated against live delays and the authority that governs it",
+              "example": {
+                "chain": "ethereum",
+                "target": "0x2225DAbFfC7F862c99477381E971E8B1FDaB467e",
+                "data": "0x64d623530000000000000000000000000000000000000000000000000000000000015180"
+              }
+            },
+            {
+              "method": "POST",
+              "url": "https://pacta.fractalneurons.com/v1/x402/deep-scan",
+              "priceUsd": "9.00",
+              "amountAtomic": "9000000",
+              "unlocks": "deep control-plane scan cross-checked on two independent RPC operators, auditor receipt and a queued Base EAS ticket",
+              "example": {
+                "chain": "base",
+                "address": "0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872"
+              }
+            }
+          ]
+        }
+      },
+      "isError": false
+    }
+  },
+  "apache2_commercial_grant": true,
+  "rules_accepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
