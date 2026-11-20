@@ -6,7 +6,7 @@
   "slug": "harvest-finance",
   "pacta_slug": "harvest-finance",
   "contract_address": "0xf0358e8c3CD5Fa238a29301d0bEa3D63A17bEdBE",
-  "tvl_usd": 13523518.08,
+  "tvl_usd": 13520314.63,
   "tvl_source_url": "https://defillama.com/protocol/harvest-finance",
   "dossier_window": "2023-2026",
   "trajectory_mode": "mutable_transitions",
@@ -17,7 +17,15 @@
       "tx_hash": "0xdd4a063296fc65e57eb200fc0fdffa33b2fbb37fc7bb5eb17995515ea9de1fd6",
       "event_kind": "proxy_upgrade",
       "rpc_or_cast_proof": "curl -s -X POST https://rpc.mevblocker.io -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"eth_getTransactionReceipt\",\"params\":[\"0xdd4a063296fc65e57eb200fc0fdffa33b2fbb37fc7bb5eb17995515ea9de1fd6\"]}'",
-      "summary": "fUSDC vault proxy upgraded its implementation from V1 0x9B3bE0cc5dD26fd0254088d03D8206792715588B to 0x7bD04D55cBba9996E6799fD7b0380CC43E7C493f, executed by EOA 0xf00dD244228F51547f0563e60bCa65a30FBF5f7f calling the proxy upgrade function directly; sibling vaults fWETH and fDAI were not upgraded the same day, so upgrades were per-vault and independent at this stage."
+      "summary": "At block 16832654, the fUSDC vault proxy upgraded its implementation from V1 0x9B3bE0cc5dD26fd0254088d03D8206792715588B to 0x7bD04D55cBba9996E6799fD7b0380CC43E7C493f. The pinned governance() read at this block returned EOA 0xf00dD244228F51547f0563e60bCa65a30FBF5f7f, the same account that executed the transaction. Its input, 0xd55ec697, is VaultProxy.upgrade(), a no-argument function that requires a prior governance-scheduled upgrade. Sibling vaults fWETH and fDAI were not upgraded the same day, so upgrades were per-vault and independent at this stage."
+    },
+    {
+      "block_number": 17026285,
+      "block_date": "2023-04-11",
+      "tx_hash": "0x78845bcf8f0bf95d01bd1d38a9ec6dbd76012a22f67551cb82cfd767f78b1d53",
+      "event_kind": "signer_or_threshold_change",
+      "rpc_or_cast_proof": "curl -s -X POST https://rpc.mevblocker.io -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"eth_getTransactionReceipt\",\"params\":[\"0x78845bcf8f0bf95d01bd1d38a9ec6dbd76012a22f67551cb82cfd767f78b1d53\"]}'",
+      "summary": "At block 17026285, EOA 0xf00dD244228F51547f0563e60bCa65a30FBF5f7f called Storage.setGovernance(address) on Storage 0xc95CbE4ca30055c787CB784BE99D6a8494d0d197, transferring governance to the 2-of-3 Safe 0xF066789028fE31D4f53B69B81b328B8218Cc0641. Pinned governance() reads returned the EOA at block 17026284 and the Safe at block 17026285, marking the start of Safe control over fUSDC. The Safe itself had been created at block 16834362 on 2023-03-15."
     },
     {
       "block_number": 19574589,
@@ -33,7 +41,7 @@
       "tx_hash": "0xa6d781891ab8b795b32f778b9d82f83e14dbb4a670e1e22b3fd0f1e50415768f",
       "event_kind": "proxy_upgrade",
       "rpc_or_cast_proof": "curl -s -X POST https://rpc.mevblocker.io -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"eth_getTransactionReceipt\",\"params\":[\"0xa6d781891ab8b795b32f778b9d82f83e14dbb4a670e1e22b3fd0f1e50415768f\"]}'",
-      "summary": "Governance Safe executed a formal execTransaction batch upgrade moving the same 11 vault proxies, including fUSDC, from 0xBd555A59 to VaultV2 implementation 0x0de5F3a958F8e927c5B27D202d12B607e213D08c, which has remained the live implementation ever since; the VaultV2 code was public in the harvest-strategy repository (commit 0e46e236, 2024-03-29) six days before this execution."
+      "summary": "At block 19581373, the governance Safe executed a formal execTransaction batch upgrade moving the same 11 vault proxies, including fUSDC, from 0xBd555A59 to VaultV2 implementation 0x0de5F3a958F8e927c5B27D202d12B607e213D08c, which remains the live implementation; pinned governance() returned the Safe at this block. Blockscout-verified VaultV2 source is byte-for-byte identical to contracts/base/VaultV2.sol at commit 0e46e23672ddbec56bacb7f5b358efb87cb3c9d6 (2024-03-29 18:16:42 UTC), blob bd41cdb28ad3c69f145b7d4416889b51eadf82fd. The implementation was deployed on 2024-04-03 at block 19576293 in tx 0x6780a1c34693c99daada754d7d26e43c844c040bc032270170c8f350ca0286a5 by Safe owner 0x6a74649acfd7822ae8fb78463a9f2192752e5aa2."
     },
     {
       "block_number": 22488705,
@@ -41,7 +49,7 @@
       "tx_hash": "0x1491255b44d43085767fb57309d475d23832185ae52b6736419375bd5ba66160",
       "event_kind": "deployment_baseline",
       "rpc_or_cast_proof": "curl -s -X POST https://rpc.mevblocker.io -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"eth_getTransactionReceipt\",\"params\":[\"0x1491255b44d43085767fb57309d475d23832185ae52b6736419375bd5ba66160\"]}'",
-      "summary": "V3 TimelockController 0xC4C3065Bf62A11edF8A6B5252f550adEC82Dd38F deployed by Safe owner 0x6a74649aCFD7822ae8Fb78463a9f2192752E5Aa2; on-chain reads confirm a 3-day minimum delay (259200 seconds) with proposer, executor, canceller and admin roles all held by the 2-of-3 governance Safe, adding a timelocked execution layer the public documentation never describes."
+      "summary": "At block 22488705, Safe owner 0x6a74649aCFD7822ae8Fb78463a9f2192752E5Aa2 deployed V3 TimelockController 0xC4C3065Bf62A11edF8A6B5252f550adEC82Dd38F. A pinned read at block 26455100 returned getMinDelay() = 259200 seconds (3 days), and role checks showed proposer, executor, canceller and TIMELOCK_ADMIN roles held by the 2-of-3 Safe. The Timelock is not in the fUSDC upgrade path: fUSDC governance() resolves directly to the Safe rather than the Timelock, and none of the four pinned governance() reads returned the Timelock. This deployment therefore does not add a timelocked execution layer to fUSDC."
     }
   ],
   "docs_and_governance_forensics": {
@@ -53,7 +61,7 @@
         "kind": "governance_proposal",
         "date": "2023-08-04",
         "url": "https://snapshot.org/#/harvestfi.eth/proposal/0xdd443dc8bf1490dbb67ab455e30584c7ec1fced34a0c1c9633f5a044d9fdcab3",
-        "claim_summary": "Last proposal ever created in the harvestfi.eth Snapshot space ('Is $FARM the best?'), created 2023-08-04 04:27:11 UTC; a GraphQL query over the space returns zero proposals after that date, while on-chain governance kept executing."
+        "claim_summary": "The last proposal created in the harvestfi.eth Snapshot space was \"Is $FARM the best?\" at 2023-08-04 04:27:11 UTC; a GraphQL query returns zero proposals after that date. The 2-of-3 Safe executed vault upgrades in April 2024 without any Snapshot proposal. These observations show divergence from the documented Snapshot process but do not establish violation of a documented mandatory voting rule."
       },
       {
         "kind": "github_docs_commit",
@@ -66,6 +74,12 @@
         "date": "2023-05-01",
         "url": "https://github.com/harvestfi/gitbook_wiki/blob/master/general-info/governance.md",
         "claim_summary": "Governance documentation page (HTTP 200): instructs FARM holders to vote on Snapshot and discuss on Discord, with no reference to the 2-of-3 Safe, the TimelockController, or any execution delay."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2024-03-29",
+        "url": "https://github.com/harvestfi/harvest-strategy/commit/0e46e23672ddbec56bacb7f5b358efb87cb3c9d6",
+        "claim_summary": "contracts/base/VaultV2.sol at this commit is byte-for-byte identical to the Blockscout-verified source for implementation 0x0de5F3a958F8e927c5B27D202d12B607e213D08c; the file blob is bd41cdb28ad3c69f145b7d4416889b51eadf82fd. The implementation was deployed on 2024-04-03 at block 19576293."
       }
     ],
     "gap_windows": [
@@ -76,7 +90,7 @@
         "closed_date": null,
         "duration_days": 1204.0,
         "status": "unrepaired_open",
-        "summary": "Documented Snapshot governance stopped being used after the last proposal on 2023-08-04 (first block at or after its creation: 17839236), while the 2-of-3 Safe kept executing vault upgrades on-chain in April 2024 with no Snapshot vote; the documentation was never corrected."
+        "summary": "The governance documentation describes FARM holders voting on Snapshot, but the harvestfi.eth space has had zero proposals since the last proposal on 2023-08-04 (first block at or after its creation: 17839236). During the same period, the 2-of-3 Safe executed vault upgrades on-chain in April 2024 with no Snapshot proposal. This is an unrepaired divergence between the documented process and observed on-chain practice; no violation of a mandatory voting rule is asserted."
       },
       {
         "opened_block": 22488705,
@@ -85,7 +99,7 @@
         "closed_date": null,
         "duration_days": 554.0,
         "status": "unrepaired_open",
-        "summary": "V3 TimelockController (3-day minimum delay, all roles held by the Safe) deployed on 2025-05-15 added a new execution layer that the frozen governance documentation, last updated 2023-05-01, still does not describe."
+        "summary": "The V3 TimelockController, with a 3-day minimum delay and proposer, executor, canceller and admin roles held by the Safe, was deployed on 2025-05-15. The governance documentation, last updated 2023-05-01, still does not describe this separate deployment; the gap remains unrepaired_open. The Timelock is not in the fUSDC upgrade path."
       }
     ]
   },
@@ -97,7 +111,7 @@
     "bus_factor": 2,
     "code_before_upgrade_verified": true
   },
-  "executive_risk_memo": "Across the 2023-2026 window Harvest Finance's Ethereum control plane moved from ad-hoc EOA-driven vault upgrades to disciplined multisig execution and then into a long freeze. The fUSDC vault proxy was upgraded solo by an unnamed EOA in March 2023, then batch-upgraded with ten sibling vaults by the 2-of-3 governance Safe in April 2024, first to a transitional implementation that survived only 6,784 blocks (about 22.6 hours) and then to the VaultV2 implementation that has remained untouched for roughly 960 days. In May 2025 the Safe deployed a V3 TimelockController with a 3-day minimum delay, adding a timelocked execution layer that the public governance documentation has never described. That documentation, frozen since 2023-05-01, still claims FARM holders govern through Snapshot, yet the harvestfi.eth space has hosted zero proposals since 2023-08-04: a 1,204-day unrepaired governance gap, with a second 554-day gap for the Timelock itself. Engineering reality is thin but real: the live contracts repository harvestfi/harvest-strategy recorded 36 contract commits and 3 other commits in the trailing 12 months from just 2 human contributors (bus factor 2, one author writing 72 percent of contract commits), and the VaultV2 upgrade traces to a public commit dated 2024-03-29, six days before execution. TVL of $13.5M is protocol-wide per DefiLlama and must be read with its chain split: only $3.65M sits on Ethereum, with $9.40M on Base, so the dossier's Ethereum framing rests on the protocol-level figure. Residual risk concentrates in the 2-of-3 Safe: two keys can move every vault, the Timelock's roles are all held by that same Safe, and no token-holder vote has constrained it since 2023.",
+  "executive_risk_memo": "Pinned reads at blocks 16832654, 17026285, 19581373 and 26455100 establish the fUSDC governance chain. The vault proxy's governance() and controller() values resolve through Storage 0xc95CbE4ca30055c787CB784BE99D6a8494d0d197. The verified VaultV2 ABI contains no store() getter, and store() reverted with code 3 at all four blocks. The Storage address was instead read with eth_getStorageAt from the internal slot keccak(\"eip1967.governableInit.storage\")-1 and was unchanged across those reads. Storage.governance() and Storage.controller() reproduce the vault-level values. At block 26455100, Controllers 0xfb4d5649879724fcd28fdbef82ff9832ec40028c and 0x7583D7f36635E5642713ACCBdEd717ca59fdad07 each returned this Storage from store() and the Safe from governance().\n\nGovernance was EOA 0xf00dD244228F51547f0563e60bCa65a30FBF5f7f at block 16832654. Bisected reads show that governance() remained the EOA at block 17026284 and returned Safe 0xF066789028fE31D4f53B69B81b328B8218Cc0641 at block 17026285. In that latter block, the EOA called Storage.setGovernance(address), completing the 2023-04-11 handoff and marking the start of Safe control over fUSDC. The Safe had been created at block 16834362 on 2023-03-15. At blocks 19581373 and 26455100, its threshold was 2 and its owners were identical: 0x9869ccb286a4cfef263050f768da1b673f2398ee, 0xa4a9398eab36983842fcd7f2421d90cc9dc6b08 and 0x6a74649acfd7822ae8fb78463a9f2192752e5aa2. The EIP-1967 admin slot was zero at all four pinned blocks, so this is not a TransparentUpgradeableProxy and has no separate proxy admin. In the examined source, VaultProxy.upgrade() calls shouldUpgrade() before _upgradeTo, while VaultV1.scheduleUpgrade() and finalizeUpgrade() are onlyGovernance through Storage.isGovernance(msg.sender). Upgrade authority therefore rests with governance(), which returned the Safe at every pinned read from block 17026285 onward.\n\nThe pinned controller() reads returned 0x3cc47874dc50d98425ec79e647d83495637c55e3 at blocks 16832654 and 17026285, 0xfb4d5649879724fcd28fdbef82ff9832ec40028c at block 19581373, and 0x7583D7f36635E5642713ACCBdEd717ca59fdad07 at block 26455100. The last controller change occurred between blocks 19581373 and 26455100; its exact block is unverified. Separately, Safe owner 0x6a74649acfd7822ae8fb78463a9f2192752e5aa2 deployed V3 TimelockController 0xC4C3065Bf62A11edF8A6B5252f550adEC82Dd38F at block 22488705 on 2025-05-15. Its minimum delay is 259200 seconds (3 days) at block 26455100, and the Safe holds the proposer, executor, canceller and TIMELOCK_ADMIN roles. The Timelock is not in the fUSDC upgrade path: fUSDC governance() resolves directly to the Safe rather than the Timelock, and none of the four pinned governance() reads returned the Timelock. It is a separate deployment, not a timelocked execution layer for fUSDC.\n\nVaultV2 provenance is precise at the source level. The Blockscout-verified source for implementation 0x0de5F3a958F8e927c5B27D202d12B607e213D08c is byte-for-byte identical to contracts/base/VaultV2.sol at harvestfi/harvest-strategy commit 0e46e23672ddbec56bacb7f5b358efb87cb3c9d6 (2024-03-29 18:16:42 UTC), blob bd41cdb28ad3c69f145b7d4416889b51eadf82fd. That commit was the only change to VaultV2.sol from 2024-03-01 through 2024-04-05. Safe owner 0x6a74649acfd7822ae8fb78463a9f2192752e5aa2 deployed the implementation at block 19576293 on 2024-04-03 in transaction 0x6780a1c34693c99daada754d7d26e43c844c040bc032270170c8f350ca0286a5, five days after the commit and one day before the 2024-04-04 execution. At block 19581373, the Safe moved 11 vault proxies from transitional implementation 0xBd555A59 to VaultV2; pinned reads show VaultV2 remains live at block 26455100. The verified source uses compiler 0.6.12+commit.27d51765 with optimization enabled. No independent solc recompilation or deployed-bytecode comparison was performed, so this evidence establishes a source match rather than an independent bytecode reproduction.\n\nThe governance documentation supports only a process-divergence finding. It instructs FARM holders to vote on Snapshot, describes informal Discord polls and discussion, and records two historical votes. It contains no statement that vault upgrades require a Snapshot vote and does not mention the multisig, TimelockController or 3-day delay. The last harvestfi.eth proposal was \"Is $FARM the best?\" at 2023-08-04 04:27:11 UTC, and a GraphQL query returned zero later proposals. During the same period, the Safe directly executed the April 2024 upgrades without a Snapshot proposal. This is an unrepaired divergence between the documented process and observed on-chain practice, not evidence that a documented mandatory voting rule was violated. Gap A remains unrepaired_open at 1,204.0 days from opened block 17839236, and Gap B remains unrepaired_open at 554.0 days from Timelock deployment block 22488705.\n\nDeFiLlama measured protocol-wide, all-chain TVL at $13,520,314.63 on 2026-11-20. The chain split was Ethereum $3,655,421.85, Base $9,397,587.47, Arbitrum $392,308.56, Polygon $73,981.24 and zkSync Era $1,015.50; staking of $314,645.44 is displayed within the Ethereum figure and is not added again. The headline is approximately $13.52M across all chains, comprising approximately $3.66M on Ethereum, $9.40M on Base and $0.47M elsewhere. It is not an Ethereum-only or fUSDC-specific measure. The dossier's Ethereum framing therefore relies on a protocol-level aggregate, with the chain split required for interpretation.\n\nResidual risk remains concentrated in the 2-of-3 Safe because two of three keys can authorize upgrades across the vaults it governs, without a Timelock in the fUSDC path. The exact controller-transition block is unverified, and no independent solc recompilation or deployed-bytecode comparison was performed. Engineering capacity is also thin: the harvestfi/harvest-strategy activity snapshot records 36 contract commits and 3 other commits in the trailing 12 months from two human contributors, with bus factor 2 and one author writing 72 percent of contract commits.",
   "contributor_github": "xiaogui917",
   "base_payout_address": "0xfb6375c9b6fc6F94d9B33607dd91D1E594C0243B",
   "mcp_tool_receipt": {
