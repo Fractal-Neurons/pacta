@@ -1,0 +1,341 @@
+{
+  "wave": 3,
+  "chain": "ethereum",
+  "chain_id": 1,
+  "protocol_name": "3F",
+  "slug": "3f",
+  "pacta_slug": "3f",
+  "contract_address": "0x54F862fa0612A8709F6Dec4A7B39AF015CD4E82E",
+  "tvl_usd": 38370897,
+  "tvl_source_url": "https://defillama.com/protocol/3f",
+  "dossier_window": "2026-2026",
+  "trajectory_mode": "mutable_transitions",
+  "historical_transitions": [
+    {
+      "block_number": 24841246,
+      "block_date": "2026-04-09",
+      "tx_hash": "0xfef415d86a5367db2a5bf156402fe7b6271c928578f334f46b582309d0b7dd17",
+      "event_kind": "deployment_baseline",
+      "rpc_or_cast_proof": "cast call 0x54F862fa0612A8709F6Dec4A7B39AF015CD4E82E \"adminOf(address)(address)\" 0x86b495e4Cb00AB18Ad94BFD7920479cC79E8eBFE --block 24841246 --rpc-url https://eth.drpc.org",
+      "summary": "Solady ERC1967Factory (0x54F862...) deployed at block 24841246 and issued initial proxy wJAAA (0x86b4...) with 0s admin 0xAbff377A... (EIP-7702 EOA), while Pacta preflight reports 0x54F862... as IMMUTABLE_NO_ADMIN."
+    },
+    {
+      "block_number": 24844408,
+      "block_date": "2026-04-09",
+      "tx_hash": "0xb59f622fe1ddefd391ba5db908dbdec1ae760fc04422584121d1082372df7281",
+      "event_kind": "signer_or_threshold_change",
+      "rpc_or_cast_proof": "cast call 0x54F862fa0612A8709F6Dec4A7B39AF015CD4E82E \"adminOf(address)(address)\" 0x4e013ca8fF612a58F53C822904cDD0eC538a4A4F --block 24844408 --rpc-url https://eth.drpc.org",
+      "summary": "AdminChanged transferred Facility proxy (0x4e01...) admin on 0x54F862... from EOA 0xAbff377A... to Safe 0xA9F5262c..., then an unguarded 1-of-1 Safe owned solely by 3F_OWNER (0xC820...) with 0s upgrade delay."
+    },
+    {
+      "block_number": 25094947,
+      "block_date": "2026-05-14",
+      "tx_hash": "0xbdd003cc1b15b660e1a131614e158e5f61ed377f7a3d0e9a3c3cbdb18b9f4984",
+      "event_kind": "proxy_upgrade",
+      "rpc_or_cast_proof": "cast storage 0xF458Ad24B1dE7c653e8471efB0b87710b316b7D9 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc --block 25094947 --rpc-url https://eth.drpc.org",
+      "summary": "wUSCC proxy (0xF458...) upgraded directly with 0s delay via 0x54F862... under 1-of-1 Safe 0xA9F5262c... to SuperstateRestrictedWrappedAsset (0x9Cbf...5e10)."
+    },
+    {
+      "block_number": 25251864,
+      "block_date": "2026-06-05",
+      "tx_hash": "0x78db7edc7f5013fa541f4f59e46c32affb1e5bb9c2b6b179fb2815050bd91783",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast call 0xC1abf27242829D4c8a4dE2704Fa1bC3D29836fA5 \"minDelay()(uint256)\" --block 25251864 --rpc-url https://eth.drpc.org",
+      "summary": "Solady Timelock (0xC1abf2...) deployed with minDelay = 86400s (24h), granting ADMIN/PROPOSER/EXECUTOR/CANCELLER roles to 1-of-1 Safe 0xA9F5262c... and EXECUTOR_ROLE to 3F_OWNER (0xC820...); verified on Blockscout 16 days later."
+    },
+    {
+      "block_number": 25279807,
+      "block_date": "2026-06-09",
+      "tx_hash": "0x49df0618efff337de6c2a81cd5281b4cd44ac937848a40090d3dca84b2a92819",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast call 0x54F862fa0612A8709F6Dec4A7B39AF015CD4E82E \"adminOf(address)(address)\" 0x4e013ca8fF612a58F53C822904cDD0eC538a4A4F --block 25279807 --rpc-url https://eth.drpc.org",
+      "summary": "AdminChanged batch migrated Facility, wJAAA, wUSCC, and wFalconX admins on 0x54F862... to 24h Timelock (0xC1abf2...), closing the 61.12-day zero-delay upgrade window on core TUP proxies."
+    },
+    {
+      "block_number": 25329795,
+      "block_date": "2026-06-16",
+      "tx_hash": "0x792d2a6ac755c404b8fff0df86dfaf8290cb465c86c01383983f77ad9d67cab7",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast call 0x54F862fa0612A8709F6Dec4A7B39AF015CD4E82E \"adminOf(address)(address)\" 0x9BDcb584a2304e394705932c8b67114E3908241f --block 25329795 --rpc-url https://eth.drpc.org",
+      "summary": "MorphoAllocator (0x9BDcb584..., granted FACILITATOR_ROLE on Facility and Vault V2 allocator permissions) and CommitDeposit (0x1918...) deployed via 0x54F862... with direct 0s admin 0xA9F5262c..., bypassing the 24h Timelock."
+    },
+    {
+      "block_number": 25538734,
+      "block_date": "2026-07-15",
+      "tx_hash": "0x1e87f51415ecdc01cb45281ee2223cb07d9b97e13e174755f67d1d5a45c050f4",
+      "event_kind": "proxy_upgrade",
+      "rpc_or_cast_proof": "cast receipt 0x1e87f51415ecdc01cb45281ee2223cb07d9b97e13e174755f67d1d5a45c050f4 --rpc-url https://eth.drpc.org",
+      "summary": "1-of-1 3F_OWNER executed 0s MorphoAllocator upgrade via 0xA9F5262c... to unverified stray proxy 0xb8947d27..., requiring a 0s hotfix re-upgrade 21.2h later (block 25545086) to 0x437254... (Blockscout-verified 12 days later)."
+    },
+    {
+      "block_number": 25826158,
+      "block_date": "2026-08-24",
+      "tx_hash": "0x621d369b77cb513e8b12d1e6cfb32db5dffac7b27ce39ad3df78ef3b3de11783",
+      "event_kind": "proxy_upgrade",
+      "rpc_or_cast_proof": "cast receipt 0x621d369b77cb513e8b12d1e6cfb32db5dffac7b27ce39ad3df78ef3b3de11783 --rpc-url https://eth.drpc.org",
+      "summary": "Timelock (0xC1abf2...) executed 24h-delayed v1.3.0 upgrades of BorrowPositionBeacon (to 0xC933...) and PositionManagerBeacon (to 0x9dA9...) queued at block 25803870, while 0xA9F5262c... remained 1-of-1 3F_OWNER."
+    },
+    {
+      "block_number": 25833451,
+      "block_date": "2026-08-25",
+      "tx_hash": "0x6809d74ba07f57d7fe819c123bbc17c93ccf7a099c5f18800c2f2b4d0103e40b",
+      "event_kind": "signer_or_threshold_change",
+      "rpc_or_cast_proof": "cast call 0xA9F5262c1aa97C6E519D6f8837658C8f9979bA24 \"getThreshold()(uint256)\" --block 25833451 --rpc-url https://eth.drpc.org",
+      "summary": "3F_ADMIN_PROTECTED (0xA9F5262c...) added ChainSecurity (0xe9DB...) and Aragon (0xe8B5...) and raised threshold 1 -> 2 (unguarded 2-of-3, 0 modules), ending 137.86 days of 1-of-1 3F_OWNER upgrade authority (25 days post-Verification Council launch)."
+    },
+    {
+      "block_number": 26282983,
+      "block_date": "2026-10-27",
+      "tx_hash": "0xd9dc826aa642f51f79e38076fdedcb2003e38b69da8ec68eb91e30cc517477b3",
+      "event_kind": "proxy_upgrade",
+      "rpc_or_cast_proof": "cast storage 0x9BDcb584a2304e394705932c8b67114E3908241f 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc --block 26282983 --rpc-url https://eth.drpc.org",
+      "summary": "Active FACILITATOR_ROLE proxy MorphoAllocator (0x9BDc...) upgraded again with 0s timelock bypass via 0x54F862... by 2-of-3 0xA9F5262c... to 0x18ddAC7D..., confirming facilitator helpers remain outside the 24h Timelock."
+    }
+  ],
+  "docs_and_governance_forensics": {
+    "mttr_status": "partially_repaired",
+    "mttr_days": 99.49,
+    "unrepaired_open_days": 156.52,
+    "evidence_sources": [
+      {
+        "kind": "github_docs_commit",
+        "date": "2026-04-08",
+        "url": "https://github.com/3FLabs/grunt/commit/01065770ffdac14c0d5cc1dc80935a3bb8e09515",
+        "claim_summary": "3FLabs/grunt Audit 02-2026 Fixes commit immediately prior to April 9 mainnet ERC1967Factory launch introducing owner-configurable repayTimelock without an on-chain upgrade timelock contract."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2026-06-16",
+        "url": "https://github.com/3FLabs/facilitators/commit/28ad403e7f12d5247caf7fbd411b990d436d1894",
+        "claim_summary": "3FLabs/facilitators DeployAllocators.s.sol hardcoding ERC1967Factory 0x54F862... and 3F_ADMIN_PROTECTED 0xA9F5262c... (0s direct admin, then 1-of-1 3F_OWNER) for CommitDeposit and MorphoAllocator instead of 24h Timelock 0xC1abf2...."
+      },
+      {
+        "kind": "wayback_snapshot",
+        "date": "2026-07-18",
+        "url": "https://web.archive.org/web/20260718184152/https://docs.3f.xyz/",
+        "claim_summary": "July 18, 2026 Wayback snapshot of 3F Docs portal confirming live protocol documentation during the period when 3F_ADMIN_PROTECTED remained a 1-of-1 Safe owned solely by 3F_OWNER and 0x9BDc... underwent 0s upgrades."
+      },
+      {
+        "kind": "official_docs",
+        "date": "2026-07-31",
+        "url": "https://docs.3f.xyz/protocol/verification-council/",
+        "claim_summary": "Verification Council documentation (announced July 31, 2026) claiming 3F_ADMIN_PROTECTED is a 2-of-3 across 3F, ChainSecurity, and Aragon, that every privileged action requires 2 independent orgs, and that no deployed implementation changes without a public 24h timelock delay."
+      },
+      {
+        "kind": "official_docs",
+        "date": "2026-09-28",
+        "url": "https://docs.3f.xyz/protocol/ownership/",
+        "claim_summary": "Ownership reference (block 26,076,588 snapshot) carving out direct 0s 3F_ADMIN_PROTECTED admin on CommitDeposit/MorphoAllocator and disclosing Zodiac Roles Modifiers (0x0fDE... on FAC_FUND and 0xEb4F... on 3F_OWNER)."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2026-11-18",
+        "url": "https://github.com/3FLabs/facilitators/commit/9d83ed7f71bb2631c933f63a80c06ac24f410a3e",
+        "claim_summary": "3FLabs/facilitators commit recording live MorphoAllocator proxy 0x9BDc..., 0s ERC1967Factory upgrade control via 0x54F862... + 0xA9F5262c..., stray duplicate proxy 0xb8947d27..., and Oct 27 impl 0x18ddAC7D...."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2026-11-18",
+        "url": "https://github.com/3FLabs/grunt/commit/fea207db7da22ec7cdd41f8c80cddde00854af76",
+        "claim_summary": "Latest 3FLabs/grunt Solidity release commit confirming active trailing-12-month contract maintenance across 54 commits (48 Solidity, 6 non-contract) by 3 engineers (bus factor = 2)."
+      }
+    ],
+    "gap_windows": [
+      {
+        "opened_block": 24841246,
+        "opened_date": "2026-04-09",
+        "closed_block": 25279807,
+        "closed_date": "2026-06-09",
+        "duration_days": 61.12,
+        "status": "repaired",
+        "summary": "Core TUP proxies (Facility, wJAAA, wUSCC, wFalconX) on ERC1967Factory (0x54F862...) had 0s upgrade admins (EOA 0xAbff377A... and 1-of-1 Safe 0xA9F5262c...) with direct 0s upgrades at blocks 25094947 and 25179894 until migrated to 24h Timelock 0xC1abf2... at block 25279807."
+      },
+      {
+        "opened_block": 24844408,
+        "opened_date": "2026-04-09",
+        "closed_block": 25833451,
+        "closed_date": "2026-08-25",
+        "duration_days": 137.86,
+        "status": "repaired",
+        "summary": "3F_ADMIN_PROTECTED (0xA9F5262c...) operated as an unguarded 1-of-1 Safe owned solely by 3F_OWNER (0xC820...) for 137.86 days—including 25 days after the July 31, 2026 Verification Council launch claiming 2-of-3 external signers—until ChainSecurity and Aragon were added at block 25833451."
+      },
+      {
+        "opened_block": 25329795,
+        "opened_date": "2026-06-16",
+        "closed_block": null,
+        "closed_date": null,
+        "duration_days": 156.52,
+        "status": "unrepaired_open",
+        "summary": "FACILITATOR_ROLE proxies MorphoAllocator (0x9BDc...) and CommitDeposit (0x1918...) still retain 0s direct admin 0xA9F5262c... (0s upgrades on 2026-07-15, 2026-07-16, and 2026-10-27), contradicting Verification Council claims of 24h timelock gating on all upgrades, while Pacta indexes 0x54F862... unassessed as IMMUTABLE_NO_ADMIN."
+      }
+    ]
+  },
+  "repo_audit": {
+    "github_org_repo": "3FLabs/grunt",
+    "commits_12m_contracts": 48,
+    "commits_12m_frontend_or_other": 6,
+    "human_contributors_12m": 3,
+    "bus_factor": 2,
+    "code_before_upgrade_verified": false
+  },
+  "executive_risk_memo": "Across the 2026 observation window (April 9 to finalized block 26,452,563 on November 19, 2026 UTC; Ethereum single-chain TVL = $38,370,897), Pacta's catalog indexes 3F's Solady ERC1967Factory (0x54F862fa0612A8709F6Dec4A7B39AF015CD4E82E) with controllerAddress = null and preflight verdict IMMUTABLE_NO_ADMIN (riskScore = 0), missing nine upgradeable ERC-1967 proxies registered under per-proxy adminOf(proxy) storage. Dual-RPC archive reconstruction (eth.drpc.org and mainnet.gateway.tenderly.co) reveals two repaired control-plane lags (mean MTTR = 99.49 days) alongside one open 156.52-day governance and documentation discrepancy. First, core proxies (Facility 0x4e01..., wJAAA 0x86b4..., wUSCC 0xF458..., and wFalconX 0x4614...) launched under EIP-7702 EOA admin 0xAbff377A... and single-entity Safe 0xA9F5262c... (0s direct upgrades at blocks 25,094,947 and 25,179,894) for 61.12 days until batch migration at block 25,279,807 to 24h Timelock 0xC1abf272... (minDelay = 86,400s). Second, Safe 0xA9F5262c... (3F_ADMIN_PROTECTED; unguarded, 0 modules via getModulesPaginated and GUARD_STORAGE_SLOT = 0x0) operated as a 1-of-1 Safe owned solely by 3F_OWNER (0xC820...) for 137.86 days—including 25 days after the July 31, 2026 Verification Council announcement claiming 2-of-3 co-signatures—until block 25,833,451 added ChainSecurity and Aragon. Third, active FACILITATOR_ROLE proxies MorphoAllocator (0x9BDcb584..., Vault V2 isAllocator = true) and CommitDeposit (0x19189B5c...) still retain 0s direct admin 0xA9F5262c... (upgraded with 0s delay at blocks 25,538,734, 25,545,086, and 26,282,983) contrary to Verification Council docs asserting 24h delay on all deployed code; meanwhile FAC_FUND (0xf1C6...) and 3F_OWNER (0xC820...) delegate scoped calls via Zodiac Roles Modifiers (0x0fDE... and 0xEb4F...). 3FLabs/grunt (54 trailing-12m commits: 48 Solidity, 6 other; 3 engineers, bus factor = 2) demonstrates active engineering, though explorer verification lagged on Timelock and 0x437254... and remains unverified on 0xb8947d... and Timelock-upgraded MorphoFlashLoanRequest 0xC147a1ef....",
+  "contributor_github": "VB-Blue",
+  "agent_assist_framework": "antigravity",
+  "base_payout_address": "0xe0a3AAe6e7d042f42e82830f4eEbF426cc1270a2",
+  "mcp_tool_receipt": {
+    "tool": "pacta_check_preflight",
+    "arguments": {
+      "chain": "ethereum",
+      "address": "0x54F862fa0612A8709F6Dec4A7B39AF015CD4E82E"
+    },
+    "result": {
+      "schema": "pacta.preflight_check.v1",
+      "chain": "ethereum",
+      "chainId": 1,
+      "address": "0x54F862fa0612A8709F6Dec4A7B39AF015CD4E82E",
+      "pinnedBlock": 26452713,
+      "pinnedBlockHash": "0xa023febdbcc9d301671599abbfbe3d07397366ce28477de6bdc7384591181a6d",
+      "blockTimestamp": 1795134431,
+      "verdict": "IMMUTABLE_NO_ADMIN",
+      "riskScore": 0,
+      "isContract": true,
+      "isProxy": false,
+      "proxyType": null,
+      "implementation": null,
+      "beacon": null,
+      "hasAdminSlot": false,
+      "canUpgradeZeroDelay": false,
+      "capabilities": {
+        "pause": false,
+        "blacklist": false,
+        "upgrade": false
+      },
+      "paused": null,
+      "controller": {
+        "address": null,
+        "kind": "none",
+        "safeThreshold": null,
+        "timelockDelaySec": null,
+        "source": null
+      },
+      "roleAdminMembers": null,
+      "codeBytes": 1887,
+      "method": "Batched JSON-RPC reads pinned to the block hash (EIP-1898); EIP-1967 / EIP-1822 / beacon proxies; capabilities from PUSH4 selectors in proxy + implementation bytecode (heuristic).",
+      "summary": "No proxy (EIP-1967, EIP-1822 or beacon) and no owner(), admin(), authority() or AccessControl admin found: immutable as far as these standard surfaces show.",
+      "activeGovernanceDiscussions": [],
+      "source": "live_rpc",
+      "catalogMatch": {
+        "slug": "3f",
+        "name": "3F",
+        "url": "https://pacta.wtf/protocols/3f/",
+        "matchedAs": "primary_contract",
+        "classification": "rpc_observed",
+        "evidenceBasis": "rpc_observed",
+        "easAttested": false,
+        "baseEasUids": [],
+        "sprints": [],
+        "pinnedBlock": 26451608,
+        "primaryContract": "0x54F862fa0612A8709F6Dec4A7B39AF015CD4E82E",
+        "controller": {
+          "address": null,
+          "kind": null
+        },
+        "observedDelaySeconds": null,
+        "documentedDelaySeconds": null,
+        "surfaces": [
+          {
+            "id": "3f-control-plane",
+            "surface": "ERC1967Factory · Non-Proxy Bytecode & Controller",
+            "classification": "rpc_observed",
+            "targetContract": "0x54F862fa0612A8709F6Dec4A7B39AF015CD4E82E",
+            "blockNumber": 26451608
+          }
+        ],
+        "whatDiffers": null,
+        "alsoMatches": []
+      },
+      "assessment": {
+        "coverage": "indexed_verified",
+        "confidence": "medium",
+        "method": "Live bytecode + storage heuristic at the pinned block, cross-checked with Pacta's RPC-pinned record for 3F (block 26451608).",
+        "limits": [
+          "riskScore (0-100) is a heuristic of the controller type and of pause / blacklist / upgrade capabilities read at one block; it is not an audit.",
+          "The live check reads EIP-1967 slots, owner(), Safe getThreshold() / getOwners() and TimelockController getMinDelay(); custom role systems, bridge or L2 admin paths and off-chain operations are not resolved.",
+          "Documentation is compared only for indexed protocols (catalogMatch), at their pinned block."
+        ]
+      },
+      "meter": {
+        "limit": 50,
+        "remaining": 49,
+        "reset": 1795219200
+      },
+      "upgrade_x402": {
+        "note": "Free tier: 50 pre-flight calls per caller per UTC day (REST and MCP), then $0.01 per call over x402 (HTTP 402, never a dead-end 429). Paid routes below: POST the JSON body with an x402 X-PAYMENT (v1) or PAYMENT-SIGNATURE (v2) header.",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "network": "base (eip155:8453)",
+        "payTo": "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14",
+        "discovery": "https://pacta.fractalneurons.com/.well-known/x402",
+        "overflow": {
+          "method": "GET or POST",
+          "url": "https://pacta.fractalneurons.com/v1/check/preflight",
+          "priceUsd": "0.01",
+          "amountAtomic": "10000",
+          "after": "50 free calls per UTC day"
+        },
+        "endpoints": [
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/verdict",
+            "priceUsd": "0.02",
+            "amountAtomic": "20000",
+            "unlocks": "fast contract / token control-plane verdict: riskScore 0-100, grade A-F, upgrade / owner / pause / blacklist / mint flags and a shareable scan URL",
+            "example": {
+              "chain": "ethereum",
+              "address": "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/dossier",
+            "priceUsd": "0.05",
+            "amountAtomic": "50000",
+            "unlocks": "full control-plane dossier: every controller Safe's signers and threshold, signers shared with other indexed protocols, Base EAS proof",
+            "example": {
+              "slug": "stader-labs-ethx"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/calldata-sim",
+            "priceUsd": "0.25",
+            "amountAtomic": "250000",
+            "unlocks": "pre-signing calldata check: timelock / Safe / multicall calls decoded, each rated against live delays and the authority that governs it",
+            "example": {
+              "chain": "ethereum",
+              "target": "0x2225DAbFfC7F862c99477381E971E8B1FDaB467e",
+              "data": "0x64d623530000000000000000000000000000000000000000000000000000000000015180"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/deep-scan",
+            "priceUsd": "9.00",
+            "amountAtomic": "9000000",
+            "unlocks": "deep control-plane scan cross-checked on two independent RPC operators, auditor receipt and a queued Base EAS ticket",
+            "example": {
+              "chain": "base",
+              "address": "0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "apache2_commercial_grant": true,
+  "rules_accepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
