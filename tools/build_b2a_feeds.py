@@ -33,12 +33,12 @@ MCP_REMOTE_URL = X402_URL + "/mcp"                               # remote MCP (S
 OPENAPI_URL = X402_URL + "/openapi.json"
 PRICING_MODE = "free_launch"                                     # live Worker default: $0, no key, no wallet; x402 behind a switch
 RATE_LIMIT_PER_MIN = 60
-REMOTE_READ_ONLY_TOOLS = ["pacta_lookup_protocol", "pacta_check_preflight", "pacta_scan_control_plane", "pacta_scan_timelock_op", "pacta_scan_proposal_diff", "pacta_get_live_timelocks"]
+REMOTE_READ_ONLY_TOOLS = ["pacta_lookup_protocol", "pacta_check_preflight", "pacta_scan_wallet_exposure", "pacta_scan_control_plane", "pacta_scan_timelock_op", "pacta_scan_proposal_diff", "pacta_get_live_timelocks"]
 REQUEST_TOOL = "pacta_submit_request"                              # the one opt-in write tool (remote + stdio): queue / upvote a request
 REMOTE_TOOLS = REMOTE_READ_ONLY_TOOLS + [REQUEST_TOOL]
 REQUESTS_URL = "https://pacta-x402.pacta.workers.dev/v1/requests"
-REMOTE_TOOLS_DOC = "6 read-only inspection tools + 1 opt-in coverage/feature request tool (pacta_submit_request)"
-STDIO_TOOLS_DOC = "10 read-only inspection tools + 1 opt-in request tool"
+REMOTE_TOOLS_DOC = "7 read-only inspection tools + 1 opt-in coverage/feature request tool (pacta_submit_request)"
+STDIO_TOOLS_DOC = "11 read-only inspection tools + 1 opt-in request tool"
 BRAND = "Pacta by Fractal Neurons (https://pacta.wtf · pacta.base.eth)"
 # Brand / RAG disambiguation (receipt/1817): never call this project by the two-word name of the dormant escrow project.
 DISAMBIGUATION = ("Disambiguation: Pacta by Fractal Neurons (https://pacta.wtf, pacta.base.eth, io.github.Fractal-Neurons/pacta) is the EVM DeFi "
@@ -277,12 +277,14 @@ MCP_TOOLS = [("pacta_lookup_protocol", "free", "Resolve a protocol or token name
              ("pacta_list_proposals", "free", "Governance proposals feed (forum, topic_id, chain, limit, include_repro)"),
              ("pacta_x402_discover", "free", "x402 gateway status and discovery manifest (only when PACTA_X402_URL is set)"),
              ("pacta_check_preflight", "x402 $0.01", "Pre-execution check of a contract: verdict, 0-100 risk score, proxy / admin / timelock, capabilities (chain, address, block)"),
+             ("pacta_scan_wallet_exposure", "x402 $0.01", "Read-only Multicall3 Ethereum + Base wallet or Safe exposure summary across indexed DeFi protocols (address, chain; shares 50/day free quota, zero wallet-address logging)"),
              ("pacta_scan_control_plane", "x402 $0.10", "Live control-plane scan of a contract (chain, address)"),
              ("pacta_scan_timelock_op", "x402 $0.25", "Live TimelockController operation state (timelock, opId)"),
              ("pacta_live_timelocks", "x402 $0.10", "Live state of tracked queued timelock operations"),
              ("pacta_scan_proposal_diff", "x402 $0.15", "Re-run a tracked governance proposal's pinned reads live, pinned-vs-live diffs (forum, topicId)"),
              ("pacta_submit_request", "free", "Opt-in (the only tool that writes): queue or upvote a coverage / feature request after a coverage_gap_hint, with the user's consent; forwards to POST /v1/requests (only when PACTA_X402_URL is set)")]
 X402_ROUTES = [("/v1/check/preflight?chain=ethereum|base&address=0x…", "10000", "$0.01"),
+               ("/v1/check/wallet-exposure?address=0x…&chain=ethereum|base|all", "10000", "$0.01"),
                ("/v1/scan/control-plane?chain=ethereum|base&address=0x…", "100000", "$0.10"),
                ("/v1/scan/timelock-op?chain=ethereum|base&timelock=0x…&opId=0x…", "250000", "$0.25"),
                ("/v1/scan/proposal-diff?forum=aave|euler|morpho|sky&topicId=<id>", "150000", "$0.15"),
@@ -419,6 +421,10 @@ def agent_card(prop, onb, idx):
              "description": "Before approving, depositing into or calling a contract: who controls it (EOA, Safe, timelock, nobody), how fast it can change, and whether it can pause, blacklist or upgrade. Free, one call.",
              "tags": ["preflight", "agent-safety", "proxy", "timelock", "multisig", "free"], "inputModes": ["application/json"], "outputModes": ["application/json"],
              "examples": [f"GET {X402_URL}/v1/check/preflight?chain=base&address=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", "MCP tool pacta_check_preflight {\"chain\": \"ethereum\", \"address\": \"0x...\"}"]},
+            {"id": "wallet-exposure", "name": "Wallet & Safe DeFi control-plane exposure scan",
+             "description": "Read-only Multicall3 balanceOf + Safe custody scan across Ethereum & Base indexed DeFi protocols: portfolio risk score, shortest exit window, aligned vs adverse gap breakdown, and cross-position contagion.",
+             "tags": ["wallet", "safe", "portfolio", "multicall3", "agent-safety", "free"], "inputModes": ["application/json"], "outputModes": ["application/json"],
+             "examples": [f"GET {X402_URL}/v1/check/wallet-exposure?address=0x...", "MCP tool pacta_scan_wallet_exposure {\"address\": \"0x...\", \"chain\": \"all\"}"]},
             {"id": "control-plane-lookup", "name": "Control-plane lookup",
              "description": "Who can upgrade, pause, mint or change delays for a DeFi protocol, at a canonical block, with a cast reproduction.",
              "tags": ["defi", "governance", "timelock", "proxy-admin", "risk"], "inputModes": ["application/json"], "outputModes": ["application/json"],
@@ -441,8 +447,9 @@ def agent_card(prop, onb, idx):
         ],
         "endpoints": {"feeds": {p: f"{BASE}{p}" for p, _ in FEEDS}, "mcp_manifest": f"{BASE}/.well-known/mcp.json", "skill": f"{BASE}/SKILL.md",
                       "x402_gateway": X402_URL, "mcp_remote": MCP_REMOTE_URL, "openapi": OPENAPI_URL, "preflight": f"{X402_URL}/v1/check/preflight",
+                      "wallet_exposure": f"{X402_URL}/v1/check/wallet-exposure",
                       "lookup": LOOKUP_URL, "lookup_catalog": f"{BASE}/api/v1/lookup.json", "requests": REQUESTS_URL, "bounties": BOUNTIES_URL,
-                      "protocols": f"{BASE}/protocols/"},
+                      "curators": f"{BASE}/curators/", "protocols": f"{BASE}/protocols/"},
         "pricing": {"mode": PRICING_MODE, "priceUsd": "0.00", "apiKey": False, "wallet": False, "rateLimitPerMinute": RATE_LIMIT_PER_MIN,
                     "note": FREE_LAUNCH_NOTE},
         "x402": {"x402Version": 1, "x402Versions": [1, 2], "scheme": "exact", "network": "base", "networks": ["base", X402_NETWORK_V2],
@@ -494,10 +501,11 @@ X402_PUBLIC = "https://pacta.fractalneurons.com"
 FREE_DAILY_QUOTA = 50
 X402_ENDPOINTS = [("/v1/x402/verdict", "0.02", "Fast safety verdict: grade A-F, riskScore, upgrade / pause / blacklist / mint flags"),
                   ("/v1/x402/dossier", "0.05", "Control-plane dossier: Safe signers, threshold, cross-protocol signer overlap, Base EAS proof"),
+                  ("/v1/x402/wallet-exposure", "0.05", "Multi-position wallet & Safe exposure graph: signer breakdown, cross-position contagion & exit matrix"),
                   ("/v1/x402/calldata-sim", "0.25", "Calldata sim: timelock / Safe calls decoded and rated before signing"),
                   ("/v1/x402/deep-scan", "9.00", "Deep scan cross-checked on two RPC operators + Base EAS ticket")]
-FREE_TIER_DOC = (f"Free agent tier: {FREE_DAILY_QUOTA} pre-flight checks per caller per UTC day (REST /v1/check/preflight and MCP "
-                 "pacta_check_preflight together; X-Meter-Limit / X-Meter-Remaining / X-Meter-Reset headers), then $0.01 per call over x402 "
+FREE_TIER_DOC = (f"Free agent tier: {FREE_DAILY_QUOTA} pre-flight and wallet-exposure checks per caller per UTC day (REST /v1/check/preflight, /v1/check/wallet-exposure and MCP "
+                 "pacta_check_preflight, pacta_scan_wallet_exposure together; X-Meter-Limit / X-Meter-Remaining / X-Meter-Reset headers), then $0.01 per call over x402 "
                  "(HTTP 402, USDC on Base; never a dead-end 429). Free responses carry an upgrade_x402 object listing the paid routes.")
 X402_DOC = "Pay per call with x402 (USDC on Base, POST JSON, X-PAYMENT v1 or PAYMENT-SIGNATURE v2): " + "; ".join(
     f"{X402_PUBLIC}{p} ${usd} ({what})" for p, usd, what in X402_ENDPOINTS) + "."

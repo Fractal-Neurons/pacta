@@ -2,7 +2,7 @@
 #
 # Two ways to connect:
 #   1. Remote (zero install, preferred): Streamable HTTP at https://pacta-x402.pacta.workers.dev/mcp
-#      (6 read-only inspection tools led by pacta_lookup_protocol + 1 opt-in request tool pacta_submit_request; free during the launch: no API key, no wallet). Register it as an external
+#      (7 read-only inspection tools led by pacta_lookup_protocol + 1 opt-in request tool pacta_submit_request; free during the launch: no API key, no wallet). Register it as an external
 #      remote server with that URL; nothing below is needed for it.
 #   2. stdio (this file): the zero-dependency Node server in packages/mcp-server, built from its Dockerfile.
 #      The npm package @pacta/mcp-server is not published yet, so there is no npx form.

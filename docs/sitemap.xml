@@ -6,6 +6,7 @@
   <url><loc>https://pacta.wtf/webhook/</loc><lastmod>2026-11-20</lastmod></url>
   <url><loc>https://pacta.wtf/seal/</loc><lastmod>2026-11-20</lastmod></url>
   <url><loc>https://pacta.wtf/miniapp/</loc><lastmod>2026-11-20</lastmod></url>
+  <url><loc>https://pacta.wtf/curators/</loc><lastmod>2026-11-20</lastmod></url>
   <url><loc>https://pacta.wtf/.well-known/farcaster.json</loc><lastmod>2026-11-20</lastmod></url>
   <url><loc>https://pacta.wtf/llms.txt</loc><lastmod>2026-11-20</lastmod></url>
   <url><loc>https://pacta.wtf/api/v1/index.json</loc><lastmod>2026-11-20</lastmod></url>
@@ -33,6 +34,8 @@
   <url><loc>https://pacta.wtf/api/v1/lookup.json</loc><lastmod>2026-11-20</lastmod></url>
   <url><loc>https://pacta.wtf/api/v1/protocols.json</loc><lastmod>2026-11-20</lastmod></url>
   <url><loc>https://pacta.wtf/api/v1/graph-manifest.json</loc><lastmod>2026-11-20</lastmod></url>
+  <url><loc>https://pacta.wtf/api/v1/wallet-tokens.json</loc><lastmod>2026-11-20</lastmod></url>
+  <url><loc>https://pacta.wtf/api/v1/curator-exposure-matrix.json</loc><lastmod>2026-11-20</lastmod></url>
   <url><loc>https://pacta.wtf/integrations/vault-factories/</loc><lastmod>2026-11-20</lastmod></url>
   <url><loc>https://pacta.wtf/for-protocols/</loc><lastmod>2026-11-20</lastmod></url>
   <url><loc>https://pacta.wtf/llms/</loc><lastmod>2026-11-20</lastmod></url>

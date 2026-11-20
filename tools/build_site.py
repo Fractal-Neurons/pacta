@@ -99,8 +99,8 @@ BRIEFS = {
     "lista-lending-op-0x21df": "Pre-execution brief: one 16-call Lista timelock batch upgrades four liquidators to add an emergency pause and grants "
                                "PAUSER to a 1-of-15 Safe and the EmergencySwitchHub (1-day delay; ETA 2026-11-20 07:20 UTC).",
 }
-NAV = [("scorecards/", "Scorecards"), ("radar/", "Radar"), ("scan/", "Instant Scan"), ("#pricing", "Pricing"), ("bounties/", "Bounties"),
-       ("mcp/", "MCP")]   # v2: the self-serve scan and #pricing in the bar; Protocols and For protocols stay in the footer
+NAV = [("scorecards/", "Scorecards"), ("radar/", "Radar"), ("curators/", "Curators"), ("scan/", "Instant Scan"), ("#pricing", "Pricing"), ("bounties/", "Bounties"),
+       ("mcp/", "MCP")]   # v2: the self-serve scan, curators matrix and #pricing in the bar; Protocols and For protocols stay in the footer
 # Brand / RAG disambiguation (receipt/1817): the exact line in llms.txt, llms-full.txt, /llms/ and the Organization JSON-LD.
 DISAMBIGUATION = B2A.DISAMBIGUATION
 BRAND = B2A.BRAND
@@ -168,16 +168,16 @@ ORDERS_VERIFY_API = f"{API}/v1/orders/verify"
 CHECKOUT_CHAIN_ID = 8453
 CHECKOUT_TREASURY = "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14"
 CHECKOUT = {   # sku -> product page; "tier" is the /request/?tier= alias that forwards to the page
-    "instant-scan-19": {
-        "tier": "instant-19", "route": "scan", "amount": "19.00", "atomic": 19_000_000, "price": "$19 USDC", "unit": "one-time · Base mainnet",
-        "badge": "Free Ethereum & Base Control-Plane Check",
-        "h1": "Check who actually controls any DeFi protocol — free in 3 seconds.",
-        "label": "Instant Contract & Safe Deep-Scan",
-        "lede": "Protocol docs often promise a 48-hour timelock while the live smart contract can be upgraded in 0 seconds by a small multisig or single EOA. "
-                "Pacta reads live Ethereum & Base bytecode and authority slots across two independent RPCs to show you who really holds the keys.",
-        "cta": "Pay $19 USDC on Base & Unlock Full Report",
-        "title": "Free Ethereum & Base Contract Control-Plane Check · Pacta", "card": "x-card-scan19-1200x628.png",
-        "desc": "See who actually controls any Ethereum or Base smart contract in 3 seconds — free, no wallet or signup. Verify upgrade proxies, Safe quorums, timelocks and pause keys."},
+    "wallet-report-9": {
+        "tier": "wallet-9", "route": "scan", "amount": "9.00", "atomic": 9_000_000, "price": "$9 USDC", "unit": "one-time · Base mainnet",
+        "badge": "Free Ethereum & Base Wallet, Safe & Protocol Scanner",
+        "h1": "Paste any wallet, Safe, or protocol to scan live DeFi control-plane exposure.",
+        "label": "Full Wallet & Safe Exposure Report",
+        "lede": "Instant read-only Multicall3 balanceOf + Safe custody scan across 313 Ethereum & Base protocols (182 Base-EAS attested · 55 verified adverse control-plane gaps). "
+                "Zero wallet connection, zero signature, zero upfront price tags.",
+        "cta": "Pay $9 USDC on Base & Unlock Full Report",
+        "title": "Free Wallet, Safe & Protocol Control-Plane Exposure Scanner · Pacta", "card": "x-card-scan19-1200x628.png",
+        "desc": "Paste any Ethereum or Base wallet, Gnosis Safe, or protocol to scan live DeFi control-plane exposure in 3 seconds — free, read-only, no wallet or signup."},
     "radar-webhook-49": {
         "tier": "webhook-49", "route": "webhook", "amount": "49.00", "atomic": 49_000_000, "price": "$49 USDC", "unit": "per month · Base mainnet",
         "badge": "Live alerts · Slack, Telegram, Discord, HTTPS", "h1": "Live Timelock & Signer Alerts", "label": "Live Timelock & Signer Webhook",
@@ -360,7 +360,7 @@ CSP = ("default-src 'self';script-src 'self' https://static.ads-twitter.com;styl
 # U2: Light / Dark / System on a .dark class; System (the default) follows prefers-color-scheme. Legacy values map: slate -> dark, paper -> light.
 # X Ads strips the "?" from a Website-card URL (/scorecards/utm_source=x... then lands on 404.html): 404.html loads this first
 # (render-blocking, same origin) and sends a stripped query on a known route back to /<route>/?<query> with location.replace.
-RESCUE_JS = ('(function(w,L){var m=/^\\/((?:website-test|public\\/web\\/option-b-v2)\\/)?(scorecards|request|scan|seal|webhook|miniapp|radar|bounties|leaderboard|methodology|'
+RESCUE_JS = ('(function(w,L){var m=/^\\/((?:website-test|public\\/web\\/option-b-v2)\\/)?(scorecards|curators|request|scan|seal|webhook|miniapp|radar|bounties|leaderboard|methodology|'
              'protocols(?:\\/[a-z0-9-]+)?)\\/((?:utm_[a-z]+|tier|ref)=.+)$/.exec(L.pathname);'
              'if(m){w.pactaRescued=1;L.replace("/"+(m[1]||"")+m[2]+"/?"+m[3]+(L.search?"&"+L.search.slice(1):"")+L.hash)}})(window,location);\n')
 THEME_JS = ('(function(){var d=document.documentElement,t="system",m=false;d.classList.add("js");'
@@ -569,7 +569,7 @@ def footer(count_line, reg, home=""):
         lis = "".join(f'<li><a href="{E(h)}"{" target=" + chr(34) + "_blank" + chr(34) + " rel=" + chr(34) + "noopener" + chr(34) if ext else ""}>{E(l)}</a></li>'
                       for l, h, ext in links)
         return f'<div><h2>{title}</h2><ul>{lis}</ul></div>'
-    product = [("Scorecards", f"{home}scorecards/", 0), ("Protocols", f"{home}protocols/", 0), ("Timelock radar", f"{home}radar/", 0),
+    product = [("Scorecards", f"{home}scorecards/", 0), ("Curator matrix", f"{home}curators/", 0), ("Protocols", f"{home}protocols/", 0), ("Timelock radar", f"{home}radar/", 0),
                ("Pricing", nav_href(home, "#pricing"), 0), ("Instant scan", f"{home}scan/", 0), ("Timelock webhooks", f"{home}webhook/", 0),
                ("24h mainnet seal", f"{home}seal/", 0), ("Base Mini-App", f"{home}miniapp/", 0), ("For protocols", f"{home}for-protocols/", 0),
                ("Bounties", f"{home}bounties/", 0), ("Leaderboard", f"{home}leaderboard/", 0)]
@@ -1378,10 +1378,10 @@ def request_builder(idx, home=""):
 
 
 def launcher_links(home):
-    """/request/: the three self-serve products above the dossier builder (?tier=instant-19 | webhook-49 | seal-99 forwards there)."""
-    sub = {"instant-scan-19": "under 60 s", "radar-webhook-49": "Slack, Telegram, HTTPS", "reverify-seal-99": "first 5 teams"}
-    price = {"instant-scan-19": "$19", "radar-webhook-49": "$49 / mo", "reverify-seal-99": "$99"}
-    name = {"instant-scan-19": "Instant scan", "radar-webhook-49": "Live webhook", "reverify-seal-99": "24h mainnet seal"}
+    """/request/: the three self-serve products above the dossier builder (?tier=wallet-9 | webhook-49 | seal-99 forwards there)."""
+    sub = {"wallet-report-9": "multi-position", "radar-webhook-49": "Slack, Telegram, HTTPS", "reverify-seal-99": "first 5 teams"}
+    price = {"wallet-report-9": "$9", "radar-webhook-49": "$49 / mo", "reverify-seal-99": "$99"}
+    name = {"wallet-report-9": "Instant scan", "radar-webhook-49": "Live webhook", "reverify-seal-99": "24h mainnet seal"}
     return "".join(f'<a class="launch" href="{home}{v["route"]}/" data-sku="{k}" data-cta="launch_{v["route"]}"><span class="l-n">{name[k]}{ARR}</span>'
                    f'<span class="l-p"><b>{price[k]}</b><small>{sub[k]}</small></span></a>' for k, v in CHECKOUT.items())
 
@@ -1491,8 +1491,22 @@ def scan_sample_finding(idx, lk):
     )
 
 
+SCAN_OMNIBOX_PLACEHOLDER = "Paste wallet / Safe (0x…) or search 313 protocols & tickers (steakUSDC, Moonwell, ETHx)…"
+WALLET_DEMO_CHIPS = (
+    ("demo_safe_eth_base", "0x5afE00003f5D8B29c4107E3A92d1b64E8C410305", "Demo Treasury Safe (4 positions · 2 Gaps)", "3-of-5 SAFE", "2 GAPS"),
+    ("demo_base_yield", "0xba5E00007C41D92e8A305F6b11c8E92D40A20845", "Demo Base Yield Wallet (3 positions · 2 Gaps)", "BASE EOA", "2 GAPS"),
+)
+
+
 def scan_checker(lk, idx=None):
-    """/scan/: 100% free live preflight checker at the top of the page; 6 real protocol chips with logos run a live check in 1 click."""
+    """/scan/: unified above-the-fold Wallet, Safe & Protocol omnibox; 2 zero-shift instant wallet/Safe demo chips + 6 real protocol chips."""
+    demos = []
+    for mode, d_addr, d_lbl, d_kind, d_st in WALLET_DEMO_CHIPS:
+        d_inner = (f'{U.icon("shield")}<span class="rc-name">{E(d_lbl)}</span>'
+                   f'<span class="rc-sym">{E(d_kind)}</span><span class="rc-st" data-tone="gap">{E(d_st)}</span>')
+        demos.append(U.button(d_inner, variant="outline", size="sm", cls="receipt wl-demo-chip",
+                              attrs=(f'data-wallet-demo="{mode}" data-demo-addr="{d_addr}" '
+                                     f'aria-label="Run instant read-only {E(d_lbl)} scan"')))
     chips = []
     for label, slug in SCAN_CHIPS:
         it = lk[slug]
@@ -1505,11 +1519,17 @@ def scan_checker(lk, idx=None):
                                      f'aria-label="Try {E(label)}: run a free live check of its indexed contract" '
                                      f'data-pf-slug="{slug}" data-pf-disp="{E(it["name"])}" data-pf-sym="{E(sym)}" '
                                      f'data-pf-icon="../{proto_icon_rel(slug)}"')))
-    examples = (f'<div class="try"><div class="try-row" role="group" aria-label="Example contracts"><span class="try-l">Popular checks:</span>{"".join(chips)}</div></div>')
-    cap = "Free, read-only live check across 2 archive RPCs — no wallet, no API key, no signup."
+    examples = (f'<div class="try try-omnibox">'
+                f'<div class="try-row try-demos" role="group" aria-label="Instant wallet and Safe demos">'
+                f'<span class="try-l">Instant wallet demos:</span>{"".join(demos)}</div>'
+                f'<div class="try-row" role="group" aria-label="Example contracts">'
+                f'<span class="try-l">Popular protocols:</span>{"".join(chips)}</div></div>')
+    cap = "Read-only eth_call via Multicall3 on Ethereum & Base — zero wallet connect, zero signature, zero upfront price tags."
     init_out = scan_sample_finding(idx, lk) if idx is not None else ""
-    return hero_checker(examples, prefix="../", cap=cap, label="Protocol, token or contract address",
-                        cta_variant="default", cta_label="Check Protocol (Free)", initial_out=init_out)
+    return hero_checker(examples, prefix="../", cap=cap, label="Wallet, Safe, protocol or contract address",
+                        cta_variant="default", cta_label="Scan Exposure (Free)", initial_out=init_out,
+                        placeholder=SCAN_OMNIBOX_PLACEHOLDER,
+                        extra_attrs=' data-wallet-scanner="1" data-wallet-tokens="../api/v1/wallet-tokens.json"')
 
 
 def scan_explainer_section():
@@ -1639,14 +1659,16 @@ def product_page(idx, sku):
     c, lk = CHECKOUT[sku], lookup_items()
     count_line = coverage_line(idx)
     n_proto = len(site_protocols(idx))
-    n_sprints = counts(idx)["sprints"]
+    n_eas = sum(1 for v in lk.values() if v.get("kind") == "protocol" and v.get("easAttested"))
     reg = idx["onchain_anchoring"]["commitment_registry"]
-    crumbs = (f'<nav class="crumbs" aria-label="Breadcrumb"><a href="../">Pacta</a><span aria-hidden="true">/</span>'
+    crumbs = ('<nav class="crumbs" aria-label="Breadcrumb"><a href="../">Pacta</a><span aria-hidden="true">/</span><span>Instant Scan</span></nav>'
+              if sku == "wallet-report-9" else
+              f'<nav class="crumbs" aria-label="Breadcrumb"><a href="../">Pacta</a><span aria-hidden="true">/</span>'
               f'<a href="../#pricing">Pricing</a><span aria-hidden="true">/</span><span>{E(c["label"])}</span></nav>')
-    if sku == "instant-scan-19":
+    if sku == "wallet-report-9":
         pre, fields = scan_checker(lk, idx), (f'<p class="form-message co-target-msg" id="co-target-err" data-slot="form-message" hidden></p>'
                                          + '<div class="co-row2">'
-                                         + field("co-docs", "protocol_or_docs", "Docs URL", "https://docs.example.fi", True)
+                                         + field("co-docs", "protocol_or_docs", "Portfolio label or docs URL", "e.g. DAO Treasury Safe or https://docs.example.fi", True)
                                          + field("co-contact", "webhook_or_contact", "Delivery email or @telegram", "you@team.xyz or @handle", True)
                                          + '</div>')
         preview = scan_preview(idx, lk)
@@ -1676,7 +1698,7 @@ def product_page(idx, sku):
                           help_="Kept private for delivery, never published."))
         preview = seal_preview(idx, lk)
     guarantee = (f'<p class="co-guarantee" data-co-guarantee>{U.icon("scale")}<span>{E(SEAL_GUARANTEE)}</span></p>' if sku == "reverify-seal-99" else "")
-    deeplinks = mobile_wallet_deeplinks(c) if sku in ("instant-scan-19", "reverify-seal-99") else ""
+    deeplinks = mobile_wallet_deeplinks(c) if sku in ("wallet-report-9", "reverify-seal-99") else ""
     form = (f'<form class="co" id="co-form" novalidate autocomplete="off" data-api="{E(ORDERS_VERIFY_API)}" data-sku="{sku}" data-chain-id="{CHECKOUT_CHAIN_ID}">'
             f'{fields}<div class="co-cta">'
             + U.button(f'<span>{E(c["cta"])}</span>', variant="default", size="lg", attrs='id="co-wallet" data-co-pay')
@@ -1686,37 +1708,59 @@ def product_page(idx, sku):
             f'<noscript><p class="note">Paying needs JavaScript. Without it, open the manual transfer above and send the transaction hash '
             f'through the <a href="../request/">request form</a> or to {CONTACT}.</p></noscript></form>')
 
-    if sku == "instant-scan-19":
+    if sku == "wallet-report-9":
         hero_scan = (
             f'<div class="pd-head pd-hero-explain pd-head-scan"><span data-slot="badge" data-variant="info">{E(c["badge"])}</span>'
             f'<h1 id="co-title">{E(c["h1"])}</h1></div>'
         )
         trust_scan = (
             f'<div class="scan-trust-strip" aria-label="Verification coverage">'
-            f'<p class="pd-lede">{E(c["lede"])}</p>'
+            f'<p class="pd-lede">{E(c["lede"])} Inspect institutional vault stacks in the <a href="../curators/">Curator Exposure Matrix</a>.</p>'
             f'<ul class="pd-proof">'
             f'<li><b>{n_proto}+ Protocols Audited</b></li>'
-            f'<li><b>{n_sprints} Base Mainnet EAS Attestations</b></li>'
-            f'<li><b>2-RPC Archive Proof</b></li>'
+            f'<li><b>{n_eas}+ Base-EAS Attested Protocols</b></li>'
+            f'<li><b>2-RPC Multicall3 Proof</b></li>'
             f'<li><b>No Wallet · No Signup</b></li></ul></div>'
         )
+        x402_snip = f'curl -s -X POST {API}/v1/x402/wallet-exposure -H "Content-Type: application/json" -d \'{{"address":"0x…","chain":"all"}}\''
         upgrade_scan = (
             f'<section class="scan-upgrade" id="scan-upgrade" data-scan-upgrade hidden>'
-            f'<div class="scan-up-head"><span class="step-k mono">OPTIONAL DEEP DILIGENCE &amp; ON-CHAIN ATTESTATION</span>'
-            f'<h2>What&#x27;s added beyond the free check</h2>'
-            f'<p class="pd-lede">Full owner-by-owner multisig addresses, nested role graph, EOA pause/mint/fee role scan, downloadable JSON+Markdown receipt &amp; <code>cast</code> reproduction proofs — <b>$19 Base USDC</b>, or 24h Maintainer + Verifier Base-EAS Seal — <b>$99 Base USDC</b>.</p></div>'
-            f'<aside class="pd-preview" aria-label="What the payment unlocks">{preview}</aside>'
-            f'<div class="scan-up-actions">'
-            + U.button("Unlock Full Dossier for This Contract ($19 Base USDC) ↓", variant="default", size="lg",
+            f'<div class="scan-up-head"><span class="step-k mono">PROGRESSIVE PORTFOLIO &amp; AGENT UNLOCK</span>'
+            f'<h2>Unlock multi-position contagion, exit-window guards &amp; committee receipts</h2>'
+            f'<p class="pd-lede">Every individual protocol scorecard stays 100% free. Upgrade only when you want full cross-position signer overlap, Safe signing latency vs. timelock exit math, signed committee receipts, or continuous exit-window alerts.</p></div>'
+            f'<div class="wl-ladder" data-wallet-ladder>'
+            f'<article class="wl-tier wl-tier-primary" data-wl-tier="wallet-9">'
+            f'<div class="wl-tier-top"><span class="wl-tier-k mono">ONE-TIME · BASE USDC</span><b class="wl-tier-p">$9 USDC</b></div>'
+            f'<h3>Full Wallet &amp; Safe Exposure Report</h3>'
+            f'<p>Remaining held DELTA &amp; OBSERVED breakdowns, Cross-Position Signer Contagion Matrix, Safe latency vs. timelock exit check &amp; signed SHA-256 Committee Receipt.</p>'
+            + U.button("Unlock Full Report ($9 USDC) ↓", variant="default", size="lg",
                        attrs='id="scan-open-co" data-open-co-card aria-expanded="false"')
-            + U.button(f"24h Maintainer + Verifier Base-EAS Seal ($99 Base USDC){ARR}", href="../seal/", variant="outline", size="lg",
-                       attrs='id="scan-to-seal" data-scan-to-seal')
+            + '</article>'
+            f'<article class="wl-tier" data-wl-tier="wallet-guard-49">'
+            f'<div class="wl-tier-top"><span class="wl-tier-k mono">CONTINUOUS MONITORING</span><b class="wl-tier-p">$49 / mo</b></div>'
+            f'<h3>Live Wallet &amp; Safe Exit-Window Guard</h3>'
+            f'<p>30-minute Telegram, Slack, Discord &amp; HTTPS webhook alerts whenever held protocols queue a timelock op or rotate Safe signers, plus Safe Emergency Exit JSON.</p>'
+            + U.button(f"Activate Guard{ARR}", href="../webhook/", variant="outline", size="lg",
+                       attrs='id="scan-to-guard" data-scan-to-guard data-cta="scan_guard_49"')
+            + '</article>'
+            f'<article class="wl-tier wl-tier-agent" data-wl-tier="agent-x402">'
+            f'<div class="wl-tier-top"><span class="wl-tier-k mono">AI AGENTS · HTTP 402 &amp; MCP</span><b class="wl-tier-p">$0.05 USDC / call</b></div>'
+            f'<h3>Agent x402 Endpoint &amp; MCP Tool</h3>'
+            f'<p>50/day free summary quota via <code>pacta_scan_wallet_exposure</code>, or full multi-position contagion graph via <code>POST /v1/x402/wallet-exposure</code>.</p>'
+            f'<div class="wl-code-box"><code id="scan-x402-cmd" data-x402-cmd>{E(x402_snip)}</code>'
+            f'<button class="copy" data-slot="button" data-variant="ghost" data-size="sm" type="button" data-copy-from="scan-x402-cmd" aria-label="Copy x402 wallet-exposure curl snippet">{U.icon("copy")}<span>Copy</span></button></div>'
+            f'</article></div>'
+            f'<div class="wl-b2b-bar" data-b2b-bar>'
+            f'<span>Manage one of these protocols or vaults? Request a 24h Re-Verification Seal or view the <a href="../curators/">Curator Exposure Matrix</a>.</span>'
+            + U.button(f"Request Seal{ARR}", href="../seal/", variant="outline", size="sm",
+                       attrs='id="scan-to-seal" data-scan-to-seal data-cta="scan_seal_99"')
             + '</div>'
+            f'<aside class="pd-preview" aria-label="What the payment unlocks">{preview}</aside>'
             f'<div class="co-card" id="co-card" data-co-card hidden>'
             f'<div class="co-card-head"><span class="step-k mono">INSTANT ON-CHAIN UNLOCK</span>'
-            f'<h3>Unlock Full Control-Plane Dossier</h3>'
-            f'<p class="pd-price"><b>{E(c["price"])}</b><span>{E(c["unit"])} · target synced from your check above</span></p>'
-            f'<p class="co-sync-pill mono" id="co-sync-pill" data-co-sync-pill>Target: paste or pick a 0x… contract in the free checker above</p></div>'
+            f'<h3>Unlock Full Wallet &amp; Safe Exposure Report</h3>'
+            f'<p class="pd-price"><b>{E(c["price"])}</b><span>{E(c["unit"])} · target synced from your scan above</span></p>'
+            f'<p class="co-sync-pill mono" id="co-sync-pill" data-co-sync-pill>Target: paste any 0x… wallet, Safe or contract in the scanner above</p></div>'
             f'{form}</div></section>'
         )
         foot_note = (f'<section class="sec pd-how" id="how"><div class="wrap">'
@@ -1726,8 +1770,8 @@ def product_page(idx, sku):
             f'<section class="sec pd-sec pd-sec-scan" id="checkout"><div class="wrap">{crumbs}'
             f'<div class="pd-funnel">{hero_scan}'
             f'<div class="pd-free-box" id="free-check" data-free-check>'
-            f'<div class="pd-step-head"><span class="step-k mono">SELECT ANY DEFI PROTOCOL, SYMBOL OR PASTE 0x…</span></div>{pre}</div>'
-            f'{trust_scan}{scan_explainer_section()}{upgrade_scan}</div></div></section>{foot_note}'
+            f'<div class="pd-step-head"><span class="step-k mono">PASTE ANY WALLET, SAFE (0x…) OR SEARCH 313 PROTOCOLS &amp; TICKERS</span></div>{pre}</div>'
+            f'{upgrade_scan}{trust_scan}{scan_explainer_section()}</div></div></section>{foot_note}'
         )
     elif sku == "reverify-seal-99":
         hero_seal = (
@@ -1780,7 +1824,7 @@ def product_page(idx, sku):
 </body></html>
 """
     img = f"{BASE_URL}/cards/{c['card']}" if c["card"] else f"{BASE_URL}/og-preview.png"
-    extra_meta = fc_miniapp_meta() if sku == "instant-scan-19" else ""
+    extra_meta = fc_miniapp_meta() if sku == "wallet-report-9" else ""
     return head(c["title"], c["desc"], f"{BASE_URL}/{c['route']}/", prefix="../", og_title=c["title"].rsplit(" · Pacta", 1)[0], image=img,
                 image_size=SOCIAL_SIZE, extra=extra_meta) + "\n" + body
 
@@ -2681,10 +2725,12 @@ EDITORIAL_FIREWALL = "Pacta never sells grades."
 HERO_PLACEHOLDER = "Select or type a protocol / token (Aave, Lido, Pendle, Moonwell…) or paste 0x…"
 
 
-def hero_checker(examples="", prefix="", cap=None, label="Protocol, token or contract address", cta_variant="default", cta_label="Check protocol", initial_out=""):
+def hero_checker(examples="", prefix="", cap=None, label="Protocol, token or contract address", cta_variant="default", cta_label="Check protocol",
+                 initial_out="", placeholder=None, extra_attrs=""):
     """U3/A3 + Protocol Select & Autocomplete Combobox: zero-type dropdown of featured gaps & top protocols with official logos,
     instant <2ms search across 312+ protocols & tickers, 1-click live check, and inline 0x + 40-hex paste support."""
-    return (f'<div class="pf hero-pf" data-api="{API}" data-lookup="{prefix}api/v1/lookup.json">'
+    ph = placeholder or HERO_PLACEHOLDER
+    return (f'<div class="pf hero-pf" data-api="{API}" data-lookup="{prefix}api/v1/lookup.json"{extra_attrs}>'
             f'<form class="checker" id="pf-form" novalidate autocomplete="off">'
             f'<label class="sr-only" for="pf-chain">Chain</label>'
             f'<div class="pf-chain-wrap">'
@@ -2694,7 +2740,7 @@ def hero_checker(examples="", prefix="", cap=None, label="Protocol, token or con
             f'<div class="pf-combo" data-pf-combo>'
             f'<span class="pf-combo-lead" data-pf-lead aria-hidden="true">{U.icon("search")}</span>'
             f'<input id="pf-address" type="text" name="address" role="combobox" aria-expanded="false" aria-controls="pf-listbox" '
-            f'aria-autocomplete="list" placeholder="{E(HERO_PLACEHOLDER)}" maxlength="80" spellcheck="false" '
+            f'aria-autocomplete="list" placeholder="{E(ph)}" maxlength="80" spellcheck="false" '
             f'autocapitalize="off" aria-describedby="pf-help">'
             f'<div class="pf-sel-overlay" id="pf-sel-chip" data-pf-sel-chip hidden></div>'
             f'<button type="button" class="pf-clear-btn" id="pf-combo-clear" data-pf-clear aria-label="Clear selected protocol" hidden>×</button>'
@@ -2987,7 +3033,7 @@ def for_protocols_page(idx):
 <span class="eyebrow">For protocol &amp; security teams</span>
 <h1>Turn control-plane transparency into allocator trust.</h1>
 <p class="lede">Risk curators, DAO delegates and AI risk agents check Pacta before they allocate. Verify your live multisig quorums and timelocks, reconcile outdated docs, and publish a block-pinned Base EAS badge.</p>
-<p class="ctas">{U.button("Request a dossier", href="#request", variant="default", size="lg")}{U.button("Embed your badge", href="#embed", variant="outline", size="lg")}{U.button("Browse scorecards", href="../scorecards/", variant="ghost", size="lg")}</p>
+<p class="ctas">{U.button("Request a dossier", href="#request", variant="default", size="lg")}{U.button("Curator matrix", href="../curators/", variant="outline", size="lg")}{U.button("Embed your badge", href="#embed", variant="outline", size="lg")}{U.button("Browse scorecards", href="../scorecards/", variant="ghost", size="lg")}</p>
 </div></section>
 <section class="sec" id="cases"><div class="wrap">
 <div class="sec-head"><h2>Verified findings from the public index</h2><p class="aside">Four real records, each pinned to a finalized block and attested on Base. The numbers are the record's own.</p></div>
@@ -4413,12 +4459,12 @@ RADAR_STATE_WORD = {"ready": "ready", "pending": "pending", "mixed": "mixed", "u
 SELF_SERVE_PLANS = [   # key, title, price, note, bullets, (cta, href, kind), badge
     ("free", "Free scorecards, API & MCP", "$0", "No key, no wallet", [
         "All {n} scorecards and Base EAS proofs, free, with live re-check on demand",
-        "50 free preflight / MCP checks a day, then $0.01 a call over x402",
+        "50 free preflight / wallet-exposure checks a day, then $0.01 a call over x402",
         "Free doc-update queue, typically 6–8 weeks"], ("Browse scorecards", "scorecards/", "pricing_free"), None),
-    ("instant-scan-19", "Instant Contract & Safe Deep-Scan", "$19", "USDC · one-time", [
-        "Live multi-RPC read of any contract or Safe in under 60 s",
-        "Proxy chain, Safe signers and threshold, timelock and roles",
-        "Printable report and a queued Base EAS receipt"], ("Start a scan", "scan/", "pricing_scan_19"), "Most popular"),
+    ("wallet-report-9", "Full Wallet & Safe Exposure Report", "$9", "USDC · one-time", [
+        "Read-only Multicall3 scan across Ethereum & Base holdings",
+        "Cross-position signer overlap, Safe exit-window check & all held gaps",
+        "Signed SHA-256 Committee Receipt + printable report"], ("Start a scan", "scan/", "pricing_scan_9"), "Most popular"),
     ("radar-webhook-49", "Live Timelock & Signer Webhook", "$49", "USDC / month", [
         "Timelocks and Safes polled every 30 minutes on Ethereum and Base",
         "Alerts before queued upgrades or signer rotations execute",
@@ -4428,7 +4474,7 @@ SELF_SERVE_PLANS = [   # key, title, price, note, bullets, (cta, href, kind), ba
         "Safe Transaction Builder JSON and an upstream docs PR",
         "Base EAS attestation of the observed result"], ("Book a seal", "seal/", "pricing_seal_99"), "Intro: first 5 teams"),
 ]
-X402_STRIP = [(p, u, t) for (p, u, _), t in zip(B2A.X402_ENDPOINTS, ("Fast safety verdict", "Control-plane dossier", "Calldata sim", "Deep scan + Base EAS"))]
+X402_STRIP = [(p, u, t) for (p, u, _), t in zip(B2A.X402_ENDPOINTS, ("Fast safety verdict", "Control-plane dossier", "Wallet exposure graph", "Calldata sim", "Deep scan + Base EAS"))]
 ENTERPRISE_STRIP = [("clearance", "Multi-contract dossiers", "$2,500–$5,000"), ("continuous", "Continuous Control-Plane Monitoring", "$1,500 / month"),
                     ("community", "Community queue", "$0"), ("api_sla", "API SLA", "custom")]
 
@@ -4441,8 +4487,8 @@ def pricing_cards(idx, home=""):
         extra = (f'<a class="plan-alt" href="{home}mcp/" data-cta="pricing_mcp">MCP docs{ARR}</a>' if key == "free" else "")
         out.append(U.card((U.badge(E(badge), "info") if badge else "") + f'<h3 data-slot="card-title">{E(title)}</h3>'
                           f'<p class="price">{E(price)}<small>{E(note)}</small></p><ul>{lis}</ul><div class="plan-cta">'
-                          + U.button(E(cta), href=f"{home}{href}", variant="default" if key == "instant-scan-19" else "outline", attrs=f'data-cta="{kind}"')
-                          + extra + '</div>', cls="plan" + (" feat" if key == "instant-scan-19" else ""), attrs=f'data-plan="{key}"'))
+                          + U.button(E(cta), href=f"{home}{href}", variant="default" if key == "wallet-report-9" else "outline", attrs=f'data-cta="{kind}"')
+                          + extra + '</div>', cls="plan" + (" feat" if key == "wallet-report-9" else ""), attrs=f'data-plan="{key}"'))
     strip = "".join(f'<a href="{home}request/?tier={k}" data-tier="{k}" data-cta="pricing_{k.replace("-", "_")}"><b>{E(t)}</b><span>{E(p)}</span></a>'
                     for k, t, p in ENTERPRISE_STRIP)
     x402 = "".join(f'<a href="{home}mcp/#x402" data-x402-route="{E(p)}" data-cta="pricing_x402_{p.rsplit("/", 1)[1].replace("-", "_")}"><b>{E(t)}</b><span>${E(u)} / call</span></a>'
@@ -4766,6 +4812,289 @@ def pricing_redirect_page():
             '<body><p><a href="../#pricing">Pacta pricing</a></p></body></html>\n')
 
 
+def _effective_wallet_status(it, card):
+    g = (card or {}).get("grade", "").lower()
+    cl = (it or {}).get("classification", "")
+    changed = ((it or {}).get("whatDiffers") or {}).get("changed") or []
+    if g == "delta" or cl == "parameter_delta" or any(c.get("classification") == "parameter_delta" for c in changed):
+        return "DELTA", "parameter_delta"
+    if g == "protective" or cl == "protective_delta" or any(c.get("classification") == "protective_delta" for c in changed):
+        return "PROTECTIVE", "protective_delta"
+    if g == "aligned" or cl == "aligned_baseline" or (it or {}).get("easAttested"):
+        return "ALIGNED", "aligned_baseline"
+    return "OBSERVED", "rpc_observed"
+
+
+def wallet_tokens_json(cards, lk):
+    """Compact deterministic client catalog (/api/v1/wallet-tokens.json) for browser-direct Multicall3.aggregate3 fallback & instant demos."""
+    cat = json.load(open(os.path.join(ROOT, "data", "wallet-multicall-catalog.json"), encoding="utf-8"))
+    rec = json.load(open(os.path.join(ROOT, "data", "wallet-receipt-tokens.json"), encoding="utf-8"))
+    cards_by_slug = {c["slug"]: c for c in cards}
+    chains_out = {"ethereum": [], "base": []}
+    referenced_slugs = set()
+    for ch in ("ethereum", "base"):
+        seen = set()
+        for row in rec.get(ch, []):
+            addr, slug, sym = row["address"], row["slug"], row.get("symbol", "")
+            k = addr.lower()
+            if k not in seen and slug in lk:
+                seen.add(k)
+                chains_out[ch].append([addr, slug, sym])
+                referenced_slugs.add(slug)
+        for row in cat.get(ch, []):
+            addr, slug, sym = row["address"], row["slug"], row.get("symbol_hint", "")
+            k = addr.lower()
+            if k not in seen and slug in lk:
+                seen.add(k)
+                chains_out[ch].append([addr, slug, sym])
+                referenced_slugs.add(slug)
+    demos = {
+        "demo_safe_eth_base": {
+            "wallet": "0x5afE00003f5D8B29c4107E3A92d1b64E8C410305",
+            "label": "Demo Multi-Vault Treasury Safe",
+            "custody": {"isSafe": True, "chains": ["ethereum", "base"], "threshold": 3, "ownerCount": 5},
+            "blocks": {"ethereum": {"number": 26451608}, "base": {"number": 59847352}},
+            "holdings": [
+                {"chain": "base", "address": "0xbeeF010f9cb27031ad51e3333f9aF9C6B1228183", "symbol": "steakUSDC", "slug": "steakhouse-usdc-metamorpho-base", "formattedBalance": "425,000"},
+                {"chain": "ethereum", "address": "0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0", "symbol": "wstETH", "slug": "lido-steth-dual-governance", "formattedBalance": "140.5"},
+                {"chain": "base", "address": "0x0000000f2eB9f69274678c76222B35eEc7588a65", "symbol": "yoUSD", "slug": "yo-protocol", "formattedBalance": "85,000"},
+                {"chain": "ethereum", "address": "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b", "symbol": "ETHx", "slug": "stader-labs-ethx", "formattedBalance": "62.0"},
+            ],
+        },
+        "demo_base_yield": {
+            "wallet": "0xba5E00007C41D92e8A305F6b11c8E92D40A20845",
+            "label": "Demo Base Yield Wallet",
+            "custody": {"isSafe": False, "chains": [], "threshold": None, "ownerCount": None},
+            "blocks": {"ethereum": None, "base": {"number": 59847352}},
+            "holdings": [
+                {"chain": "base", "address": "0x4e65fE4DbA92790696d040ac24Aa414708F5c0AB", "symbol": "aBasUSDC", "slug": "aave-v3-base", "formattedBalance": "64,200"},
+                {"chain": "base", "address": "0xEdc817A28E8B93B03976FBd4a3dDBc9f7D176c22", "symbol": "mUSDC", "slug": "moonwell-lending-base", "formattedBalance": "28,500"},
+                {"chain": "base", "address": "0x1BCae9292b28b922C9ad2902C07bc25C4F9347E1", "symbol": "SEAM", "slug": "seamless-protocol-base", "formattedBalance": "19,400"},
+            ],
+        },
+    }
+    for d in demos.values():
+        for h in d["holdings"]:
+            referenced_slugs.add(h["slug"])
+    protos = {}
+    for slug in sorted(referenced_slugs):
+        it = lk.get(slug)
+        if not it:
+            continue
+        card = cards_by_slug.get(slug)
+        st, cl = _effective_wallet_status(it, card)
+        entry = {
+            "name": it["name"],
+            "status": st,
+            "classification": cl,
+            "easAttested": bool(it.get("easAttested")),
+            "pinnedBlock": it.get("pinnedBlock"),
+            "documentedDelaySeconds": it.get("documentedDelaySeconds"),
+            "observedDelaySeconds": it.get("observedDelaySeconds"),
+            "baseEasUids": list(it.get("baseEasUids") or []),
+            "controllerAddress": it.get("controllerAddress"),
+            "controllerKind": it.get("controllerKind"),
+            "summary_short": (card or {}).get("summary_short") or "",
+        }
+        if st in ("DELTA", "PROTECTIVE") and it.get("whatDiffers"):
+            entry["whatDiffers"] = it["whatDiffers"]
+        protos[slug] = entry
+    out = {
+        "schema": "pacta.wallet_tokens.v1",
+        "multicall3": cat["multicall3"],
+        "counts": {"ethereum": len(chains_out["ethereum"]), "base": len(chains_out["base"]), "protocols": len(protos)},
+        "ethereum": chains_out["ethereum"],
+        "base": chains_out["base"],
+        "protocols": protos,
+        "demos": demos,
+    }
+    return json.dumps(out, sort_keys=True, separators=(",", ":"), ensure_ascii=False) + "\n"
+
+
+def _curator_item_row(it, tone="aligned"):
+    slug = it["slug"]
+    ch = (it.get("chains") or ["ethereum"])[0]
+    ch_lbl = "Base" if ch == "base" else "Ethereum"
+    blk = it.get("pinnedBlock")
+    uid = (it.get("baseEasUids") or [""])[0]
+    addr = it.get("primaryContract") or ""
+    pill_lbl = "ADVERSE GAP" if tone == "gap" else ("PROTECTIVE" if it.get("grade") == "PROTECTIVE" else ("OBSERVED" if it.get("grade") == "OBSERVED" else "ALIGNED"))
+    pill_tone = "gap" if tone == "gap" else ("protective" if it.get("grade") == "PROTECTIVE" else ("observed" if it.get("grade") == "OBSERVED" else "aligned"))
+    eas_html = (f'<a class="cur-eas mono" href="https://base.easscan.org/attestation/view/{uid}" target="_blank" rel="noopener">'
+                f'EAS {short(uid, 6, 4)}{EXT}</a>') if uid else '<span class="cur-eas mono muted">RPC-pinned</span>'
+    scan_href = f'../scan/?chain={ch}&amp;address={addr}' if HEX40.fullmatch(addr) else '../scan/'
+    blk_html = f'<span class="mono">{ch_lbl} #{int(blk):,}</span>' if isinstance(blk, int) else f'<span class="mono">{ch_lbl}</span>'
+    return (
+        f'<li class="cur-item" data-cur-grade="{E(it.get("grade", ""))}">'
+        f'<div class="cur-item-top">'
+        f'<span class="cur-item-id"><img class="rc-logo" src="../{proto_icon_rel(slug)}" alt="" width="18" height="18">'
+        f'<a class="cur-proto-a" href="../protocols/{slug}/">{E(it["name"])}</a>'
+        f'<span class="pf-st-pill" data-tone="{pill_tone}">{pill_lbl}</span></span>'
+        f'<span class="cur-item-links">{blk_html}{eas_html}'
+        f'<a class="cur-scan-a" href="{scan_href}" title="Scan {E(it["name"])} or a wallet holding it">Scan{ARR}</a></span>'
+        f'</div>'
+        f'<p class="cur-item-sum">{E(it.get("summary_short") or "")}</p>'
+        f'</li>'
+    )
+
+
+def curators_page(idx):
+    """/curators/: clinical, zero-FUD Institutional Vault Curator & Collateral Exposure Matrix from data/curator-exposure-matrix.json."""
+    mat = json.load(open(os.path.join(ROOT, "data", "curator-exposure-matrix.json"), encoding="utf-8"))
+    totals = mat["dataset_totals"]
+    curators = mat["curators_and_institutional_allocators"]
+    count_line = coverage_line(idx)
+    reg = idx["onchain_anchoring"]["commitment_registry"]
+    crumbs = ('<nav class="crumbs" aria-label="Breadcrumb"><a href="../">Pacta</a><span aria-hidden="true">/</span>'
+              '<span>Curator Exposure Matrix</span></nav>')
+
+    tbl_rows = []
+    cards_html = []
+    for c in curators:
+        cid = c["curator_id"]
+        wc = c["wrapper_counts"]
+        uc = c["underlying_182_eas_counts"]
+        wrappers = c.get("direct_wrappers") or []
+        u_gaps = c.get("underlying_adverse_gaps") or []
+        u_al = c.get("underlying_aligned_protective") or []
+        first_target = wrappers[0] if wrappers else (u_gaps[0] if u_gaps else None)
+        first_ch = ((first_target.get("chains") or ["ethereum"])[0]) if first_target else "ethereum"
+        first_addr = (first_target.get("primaryContract") or "") if first_target else ""
+        scan_vault_href = f'../scan/?chain={first_ch}&address={first_addr}' if HEX40.fullmatch(first_addr) else '../scan/'
+        seal_href = f'../seal/?protocol={first_target["slug"]}' if first_target else '../seal/'
+
+        if wc["total"] > 0:
+            w_badges = f'<span class="pf-st-pill" data-tone="aligned">{wc["aligned_or_protective"]} ALIGNED</span>'
+            if wc.get("delta", 0) > 0:
+                w_badges += f' <span class="pf-st-pill" data-tone="gap">{wc["delta"]} GAP</span>'
+            if wc.get("observed", 0) > 0:
+                w_badges += f' <span class="pf-st-pill" data-tone="observed">{wc["observed"]} PINNED</span>'
+        else:
+            w_badges = '<span class="pf-st-pill" data-tone="observed">DIRECT MARKET CURATION</span>'
+
+        u_badges = (f'<span class="pf-st-pill" data-tone="aligned">{uc["aligned_or_protective"]} ALIGNED</span> '
+                    f'<span class="pf-st-pill" data-tone="gap">{uc["adverse_gaps_delta"]} ADVERSE GAPS</span>')
+
+        short_insight = clean_excerpt(c["curator_exposure_insight"], 145)
+        tbl_rows.append(
+            f'<tr data-curator-row="{E(cid)}">'
+            f'<td data-label="Curator / Allocator"><a class="cur-row-name" href="#{E(cid)}"><b>{E(c["curator_name"])}</b></a>'
+            f'<span class="cur-row-role">{E(c["role_archetype"])}</span></td>'
+            f'<td data-label="Direct Wrapper Vaults"><div class="cur-pill-pair">{w_badges}</div></td>'
+            f'<td data-label="Underlying Collateral Exposure"><div class="cur-pill-pair">{u_badges}</div></td>'
+            f'<td class="hide-m" data-label="Verified Control-Plane Takeaway"><span class="cur-row-note">{E(short_insight)}</span></td>'
+            f'<td class="r" data-label="Inspect"><div class="cur-row-acts">'
+            f'<a class="cur-act-link" href="#{E(cid)}">Matrix ↓</a>'
+            f'<a class="cur-act-link" href="{E(scan_vault_href)}">Scan Vault{ARR}</a></div></td>'
+            f'</tr>'
+        )
+
+        if wrappers:
+            w_list = '<ul class="cur-list">' + "".join(_curator_item_row(w, "gap" if w.get("grade") == "DELTA" else "aligned") for w in wrappers) + '</ul>'
+        else:
+            w_list = ('<p class="cur-empty">Curates isolated lending markets and collateral parameters directly on host protocols '
+                      '(see underlying market &amp; collateral exposure alongside).</p>')
+
+        gap_items = "".join(_curator_item_row(g, "gap") for g in u_gaps)
+        al_chips = "".join(
+            f'<a class="cur-al-chip" href="../protocols/{a["slug"]}/">'
+            f'<img class="rc-logo" src="../{proto_icon_rel(a["slug"])}" alt="" width="14" height="14">'
+            f'<span>{E(a["name"])}</span><span class="pf-st-pill" data-tone="aligned">{E(a["grade"])}</span></a>'
+            for a in u_al
+        )
+        al_block = (f'<div class="cur-al-wrap"><span class="cur-sub-k mono">ALIGNED / PROTECTIVE UNDERLYING BASELINES ({len(u_al)})</span>'
+                    f'<div class="cur-al-chips">{al_chips}</div></div>') if u_al else ""
+        u_list = (('<ul class="cur-list">' + gap_items + '</ul>') if gap_items else '') + al_block
+
+        edges = c.get("verified_contagion_edges") or []
+        edge_html = (f'<p class="cur-edges mono"><b>Verified graph edges:</b> {E(" · ".join(edges))}</p>') if edges else ""
+        xh = c.get("x_handle") or ""
+        xh_html = f'<span class="cur-x mono">{E(xh)}</span>' if xh else ""
+
+        cards_html.append(
+            f'<article class="cur-card" id="{E(cid)}" data-curator-card="{E(cid)}">'
+            f'<div class="cur-card-head">'
+            f'<div class="cur-card-id"><div class="cur-title-row"><h3>{E(c["curator_name"])}</h3>{xh_html}</div>'
+            f'<p class="cur-role">{E(c["role_archetype"])}</p></div>'
+            f'<div class="cur-card-ctas">'
+            + U.button("Scan Vault", href=scan_vault_href, variant="outline", size="sm", attrs=f'data-cta="cur_scan_{cid.replace("-", "_")[:14]}"')
+            + U.button("Book 24h Seal", href=seal_href, variant="default", size="sm", attrs=f'data-cta="cur_seal_{cid.replace("-", "_")[:14]}"')
+            + '</div></div>'
+            f'<div class="cur-insight"><p>{E(c["curator_exposure_insight"])}</p>{edge_html}</div>'
+            f'<div class="cur-cols">'
+            f'<div class="cur-col cur-col-wrap">'
+            f'<div class="cur-col-head"><span class="step-k mono">LAYER 1 · DIRECT WRAPPER VAULTS</span>{w_badges}</div>'
+            f'{w_list}</div>'
+            f'<div class="cur-col cur-col-under">'
+            f'<div class="cur-col-head"><span class="step-k mono">LAYER 2 · UNDERLYING MARKET &amp; COLLATERAL EXPOSURE</span>{u_badges}</div>'
+            f'{u_list}</div>'
+            f'</div></article>'
+        )
+
+    hero = (
+        f'<section class="sec cur-hero" id="curators-top"><div class="wrap">{crumbs}'
+        f'<div class="cur-hero-grid">'
+        f'<div class="cur-hero-main">'
+        f'<span data-slot="badge" data-variant="info">Institutional Vault Curator &amp; Collateral Matrix</span>'
+        f'<h1>Wrapper vaults are often Aligned. Collateral risk sits one layer deeper.</h1>'
+        f'<p class="lede">Pacta reconciles published security documentation against block-pinned Ethereum &amp; Base storage across '
+        f'{totals["indexed_protocols"]} protocols ({totals["base_eas_attested_protocols"]} Base-EAS attested · '
+        f'{totals["grades_breakdown"]["DELTA_adverse_gaps"]} verified adverse control-plane gaps). Inspect how direct MetaMorpho, '
+        f'BoringVault, ERC-4626, and treasury wrappers compare against their downstream RWA, LST, and lending collateral markets.</p>'
+        f'<div class="cur-hero-ctas">'
+        + U.button("Scan Any Safe", href="../scan/", variant="default", size="lg", attrs='data-cta="curators_scan"')
+        + U.button("Book 24h Seal", href="../seal/", variant="outline", size="lg", attrs='data-cta="curators_seal"')
+        + '</div></div>'
+        f'<div class="cur-stats" aria-label="Curator matrix totals">'
+        f'<div class="cur-stat"><b>{len(curators)}</b><span>Curator &amp; Allocator Stacks</span></div>'
+        f'<div class="cur-stat"><b>{totals["base_eas_attested_protocols"]}</b><span>Base-EAS Attested Protocols</span></div>'
+        f'<div class="cur-stat"><b class="cur-amber">{totals["grades_breakdown"]["DELTA_adverse_gaps"]}</b><span>Verified Adverse Gaps</span></div>'
+        f'<div class="cur-stat"><b>0</b><span>Paid Grades · Pure Evidence</span></div>'
+        f'</div></div>'
+        f'<div class="tbl-wrap cur-tbl-wrap" id="curator-matrix"><table class="tbl cur-tbl">'
+        f'<thead><tr><th scope="col">Curator / Allocator Stack</th><th scope="col">Direct Wrapper Vaults</th>'
+        f'<th scope="col">Underlying Collateral Exposure</th><th scope="col" class="hide-m">Verified Control-Plane Takeaway</th>'
+        f'<th scope="col" class="r">Action</th></tr></thead>'
+        f'<tbody>{"".join(tbl_rows)}</tbody></table></div>'
+        f'</div></section>'
+    )
+
+    detail_sec = (
+        f'<section class="sec" id="curator-stacks"><div class="wrap">'
+        f'<div class="sec-head"><h2>Curator-by-curator wrapper vs. collateral breakdown</h2>'
+        f'<p class="aside">Neutral/emerald pills denote Aligned or Protective records; amber pills strictly denote documented-vs-observed parameter deltas.</p></div>'
+        f'<div class="cur-stack-list">{"".join(cards_html)}</div>'
+        f'</div></section>'
+    )
+
+    seal_banner = (
+        f'<section class="sec" id="curator-seal"><div class="wrap">'
+        f'<div class="cur-seal-box">'
+        f'<div><span class="step-k mono">FOR VAULT CURATORS, RISK ADVISORS &amp; PROTOCOL TEAMS</span>'
+        f'<h2>24h Curator &amp; Protocol Re-Verification Seal</h2>'
+        f'<p class="s">{E(EDITORIAL_FIREWALL)} {E(SEAL_GUARANTEE)} Remediate a flagged collateral or wrapper gap, receive Safe Transaction Builder JSON + an upstream docs PR, and anchor a fresh Base Mainnet EAS attestation within 24h.</p></div>'
+        f'<div class="cur-seal-actions">'
+        + U.button("Book 24h Seal", href="../seal/", variant="default", size="lg", attrs='data-cta="curators_btm_seal"')
+        + U.button("Request Dossier", href="../request/?tier=clearance", variant="outline", size="lg", attrs='data-cta="curators_dossier"')
+        + '</div></div></div></section>'
+    )
+
+    body = f"""<body>
+{topbar("../", "curators/")}
+<main id="main">
+{hero}
+{detail_sec}
+{seal_banner}
+</main>
+{footer(count_line, reg, "../")}
+</body></html>
+"""
+    title = "DeFi Vault Curator & Collateral Exposure Matrix · Pacta"
+    desc = ("Clinical control-plane comparison of Steakhouse, Gauntlet, Re7, MEV Capital, Veda, Upshift & institutional DeFi vault wrappers vs. underlying collateral markets.")
+    return head(title, desc, f"{BASE_URL}/curators/", prefix="../",
+                og_title="Wrapper vaults vs. underlying collateral control-plane exposure") + "\n" + body
+
+
 def build_all():
     idx, radar = load()
     today = site_date(idx, radar, load_pinned(), load_onboarding())     # deterministic (Codex F3): no wall-clock date
@@ -4784,6 +5113,10 @@ def build_all():
         w(f"briefs/{b['slug']}/index.html", onboarding_page(b, idx))
     pinned = load_pinned()                        # docs/api/v1/rpc-pinned.json (RPC-pinned, not EAS-attested)
     B2A.write_all(DOCS, idx, radar, onb, pinned)  # proposals.json, llms-full.txt, .well-known/{agent,mcp}.json, SKILL.md
+    mcp_skill_p = os.path.join(ROOT, "packages", "mcp-server", "SKILL.md")
+    if os.path.isdir(os.path.dirname(mcp_skill_p)):
+        with open(mcp_skill_p, "w", encoding="utf-8") as fh_sk:
+            fh_sk.write(open(os.path.join(DOCS, "SKILL.md"), encoding="utf-8").read())
     llms_text = llms(idx, radar)
     w("llms.txt", llms_text)
     w("llms/index.html", llms_html(idx, llms_text))
@@ -4833,6 +5166,7 @@ def build_all():
     write_wave3_master_issue(idx)
     w("404.html", not_found_page(idx, sp))       # GitHub Pages serves it for any missing path
     w("scorecards/index.html", scorecards_page(idx))
+    w("curators/index.html", curators_page(idx))
     w("radar/index.html", radar_page(idx, radar))
     w("about/index.html", about_page(idx))
     w("methodology/index.html", methodology_page(idx))
@@ -4843,15 +5177,18 @@ def build_all():
     w("404-rescue.js", RESCUE_JS)                 # 404.html: stripped-"?" rescue (same origin, before b.js)
     w("theme.js", THEME_JS)                       # theme bootstrap (render-blocking, same origin): no inline JS anywhere
     w("app.js", minify_js(open(APP_SRC, encoding="utf-8").read()))   # readable source: tools/app.src.js
-    w("api/v1/scorecards.json", scorecards_json(scorecards(idx, pinned, sp)))
+    sc_cards = scorecards(idx, pinned, sp)
+    w("api/v1/scorecards.json", scorecards_json(sc_cards))
+    w("api/v1/wallet-tokens.json", wallet_tokens_json(sc_cards, lookup_items()))
+    w("api/v1/curator-exposure-matrix.json", open(os.path.join(ROOT, "data", "curator-exposure-matrix.json"), encoding="utf-8").read())
     # root discovery copies (byte-identical): agents that probe /agent.json, /mcp.json or /openapi.json get the canonical files
     for root_name, src_rel in (("agent.json", ".well-known/agent.json"), ("mcp.json", ".well-known/mcp.json"), ("openapi.json", "api/v1/openapi.json")):
         w(root_name, open(os.path.join(DOCS, src_rel), encoding="utf-8").read())
     w("feed.xml", atom_feed(idx, radar))
     w("api/v1/feed.json", json_feed(idx, radar))
-    urls = ["/", "/request/", "/scan/", "/webhook/", "/seal/", "/miniapp/", "/.well-known/farcaster.json", "/llms.txt", "/api/v1/index.json", "/api/v1/radar.json"] + [f"/briefs/{k}/" for k in BRIEFS] + \
+    urls = ["/", "/request/", "/scan/", "/webhook/", "/seal/", "/miniapp/", "/curators/", "/.well-known/farcaster.json", "/llms.txt", "/api/v1/index.json", "/api/v1/radar.json"] + [f"/briefs/{k}/" for k in BRIEFS] + \
         [f"/briefs/{b['slug']}/" for b in load_onboarding()["briefs"]] + (["/api/v1/onboarding.json"] if load_onboarding()["briefs"] else []) + \
-        ["/api/v1/proposals.json", "/api/v1/rpc-pinned.json", "/api/v1/lookup.json", "/api/v1/protocols.json", "/api/v1/graph-manifest.json", "/integrations/vault-factories/", "/for-protocols/", "/llms/", "/llms-full.txt", "/SKILL.md", "/.well-known/agent.json", "/.well-known/mcp.json",
+        ["/api/v1/proposals.json", "/api/v1/rpc-pinned.json", "/api/v1/lookup.json", "/api/v1/protocols.json", "/api/v1/graph-manifest.json", "/api/v1/wallet-tokens.json", "/api/v1/curator-exposure-matrix.json", "/integrations/vault-factories/", "/for-protocols/", "/llms/", "/llms-full.txt", "/SKILL.md", "/.well-known/agent.json", "/.well-known/mcp.json",
          "/demos/swapio-x402/", "/bounties/", "/leaderboard/", "/mcp/", "/protocols/", "/feed.xml", "/api/v1/feed.json",
          "/scorecards/", "/radar/", "/about/", "/methodology/", "/privacy/", "/terms/"] + [f"/protocols/{v['slug']}/" for v in sp.values()]
     w("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'

@@ -1,0 +1,302 @@
+{
+  "schema": "pacta.wallet_receipt_tokens.v1",
+  "multicall3": "0xcA11bde05977b3631167028862bE2a173976CA11",
+  "ethereum": [
+    {
+      "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "symbol": "USDC",
+      "slug": "circle-usdc",
+      "source": "canonical_erc20"
+    },
+    {
+      "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+      "symbol": "USDT",
+      "slug": "tether-usdt",
+      "source": "canonical_erc20"
+    },
+    {
+      "address": "0x6c3ea9036406852006290770BEdFcAbA0e23A0e8",
+      "symbol": "PYUSD",
+      "slug": "paypal-usd-pyusd",
+      "source": "canonical_erc20"
+    },
+    {
+      "address": "0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84",
+      "symbol": "stETH",
+      "slug": "lido-steth-dual-governance",
+      "source": "canonical_lst"
+    },
+    {
+      "address": "0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0",
+      "symbol": "wstETH",
+      "slug": "lido-steth-dual-governance",
+      "source": "canonical_lst"
+    },
+    {
+      "address": "0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee",
+      "symbol": "weETH",
+      "slug": "ether-fi-core-eeth-weeth",
+      "source": "canonical_lrt"
+    },
+    {
+      "address": "0x35fA164735182de50811E8e2E824cFb9B6118ac2",
+      "symbol": "eETH",
+      "slug": "ether-fi-core-eeth-weeth",
+      "source": "canonical_lrt"
+    },
+    {
+      "address": "0xBe9895146f7AF43049ca1c1AE358B0541Ea49704",
+      "symbol": "cbETH",
+      "slug": "coinbase-wrapped-staked-eth",
+      "source": "canonical_lst"
+    },
+    {
+      "address": "0xae78736Cd615f374D3085123A210448E74Fc6393",
+      "symbol": "rETH",
+      "slug": "rocket-pool-reth",
+      "source": "canonical_lst"
+    },
+    {
+      "address": "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b",
+      "symbol": "ETHx",
+      "slug": "stader-labs-ethx",
+      "source": "canonical_lst"
+    },
+    {
+      "address": "0xbf5495Efe5DB9ce00f80364C8B423567e58d2110",
+      "symbol": "ezETH",
+      "slug": "renzo-protocol-ezeth",
+      "source": "canonical_lrt"
+    },
+    {
+      "address": "0xD9A442856C234a39a81a089C06451EBAa4306a72",
+      "symbol": "pufETH",
+      "slug": "puffer-finance-pufeth",
+      "source": "canonical_lrt"
+    },
+    {
+      "address": "0xA1290d69c65A6Fe4DF752f95823fae25cB99e5A7",
+      "symbol": "rsETH",
+      "slug": "kelp-dao-rseth",
+      "source": "canonical_lrt"
+    },
+    {
+      "address": "0xD11c452fc99cF405034ee446803b6F6c1F6d5ED8",
+      "symbol": "tETH",
+      "slug": "treehouse-tree-teth",
+      "source": "canonical_lst"
+    },
+    {
+      "address": "0x004E9C3EF86bc1ca1f0bB5C7662861Ee93350568",
+      "symbol": "uniBTC",
+      "slug": "bedrock-unibtc",
+      "source": "canonical_lrt"
+    },
+    {
+      "address": "0x8236a87084f8B84306f72007F36F2618A5634494",
+      "symbol": "LBTC",
+      "slug": "lombard-lbtc",
+      "source": "canonical_btcfi"
+    },
+    {
+      "address": "0x4c9EDD5852cd905f086C759E8383e09bff1E68B3",
+      "symbol": "USDe",
+      "slug": "ethena-usde-susde",
+      "source": "canonical_synthetic"
+    },
+    {
+      "address": "0x9D39A5DE30e57443BfF2A8307A4256c8797A3497",
+      "symbol": "sUSDe",
+      "slug": "ethena-usde-susde",
+      "source": "canonical_synthetic_vault"
+    },
+    {
+      "address": "0xC139190F447e929f090Edeb554D95AbB8b18aC1C",
+      "symbol": "USDtb",
+      "slug": "ethena-usdtb",
+      "source": "canonical_rwa"
+    },
+    {
+      "address": "0x73A15FeD60Bf67631dC6cd7Bc5B6e8da8190aCF5",
+      "symbol": "USD0",
+      "slug": "usual-money-usd0-usd0",
+      "source": "canonical_rwa"
+    },
+    {
+      "address": "0x35D8949372D46B7a3D5A56006AE77B215fc69bC0",
+      "symbol": "USD0++",
+      "slug": "usual-money-usd0-usd0",
+      "source": "canonical_rwa_vault"
+    },
+    {
+      "address": "0x80ac24aA929eaF5013f6436cdA2a7ba190f5Cc0b",
+      "symbol": "syrupUSDC",
+      "slug": "maple-finance-v2-syrup",
+      "source": "canonical_rwa_vault"
+    },
+    {
+      "address": "0x1B19C19393e2d034D8Ff31ff34c81252FcBbee92",
+      "symbol": "OUSG",
+      "slug": "ondo-finance-ousg-flux-finance",
+      "source": "canonical_rwa"
+    },
+    {
+      "address": "0xdC035D45d973E3EC169d2276DDab16f1e407384F",
+      "symbol": "USDS",
+      "slug": "spark-sky",
+      "source": "canonical_stable"
+    },
+    {
+      "address": "0xa3931d71877C0E7a3148CB7Eb4463524FEc27fbD",
+      "symbol": "sUSDS",
+      "slug": "spark-sky",
+      "source": "canonical_vault"
+    },
+    {
+      "address": "0x40D16FC0246aD3160Ccc09B8D0D3A2cD28aE6C2f",
+      "symbol": "GHO",
+      "slug": "aave-v3-gho",
+      "source": "canonical_stable"
+    },
+    {
+      "address": "0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E",
+      "symbol": "crvUSD",
+      "slug": "curve-finance-crvusd",
+      "source": "canonical_stable"
+    },
+    {
+      "address": "0x865377367054516e17014CcdED1e7d814EDC9ce4",
+      "symbol": "DOLA",
+      "slug": "inverse-finance-firm",
+      "source": "canonical_stable"
+    },
+    {
+      "address": "0xb45ad160634c528Cc3D2926d9807104FA3157305",
+      "symbol": "sDOLA",
+      "slug": "inverse-finance-firm",
+      "source": "canonical_vault"
+    },
+    {
+      "address": "0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB",
+      "symbol": "steakUSDC",
+      "slug": "steakhouse-financial-ethereum",
+      "source": "canonical_metamorpho"
+    },
+    {
+      "address": "0x78Fc2c2eD1A4cDb5402365934aE5648aDAd094d0",
+      "symbol": "Re7WETH",
+      "slug": "metamorpho-re7-weth-vs-re7-usdt",
+      "source": "canonical_metamorpho"
+    },
+    {
+      "address": "0x95EeF579155cd2C5510F312c8fA39208c3be01a8",
+      "symbol": "Re7USDT",
+      "slug": "metamorpho-re7-weth-vs-re7-usdt",
+      "source": "canonical_metamorpho"
+    },
+    {
+      "address": "0xf0bb20865277aBd641a307eCe5Ee04E79073416C",
+      "symbol": "liquidETH",
+      "slug": "ether-fi-liquid-veda-boringvault",
+      "source": "canonical_boringvault"
+    },
+    {
+      "address": "0x98C23E9d8f34FEFb1B7BD6a91B7FF122F4e16F5c",
+      "symbol": "aEthUSDC",
+      "slug": "aave-v3-gho",
+      "source": "canonical_atoken"
+    },
+    {
+      "address": "0x4d5F47FA6A74757f35C14fD3a6Ef8E3C9BC514E8",
+      "symbol": "aEthWETH",
+      "slug": "aave-v3-gho",
+      "source": "canonical_atoken"
+    }
+  ],
+  "base": [
+    {
+      "address": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "symbol": "USDC",
+      "slug": "circle-usdc",
+      "source": "canonical_erc20"
+    },
+    {
+      "address": "0x940181a94A35A4569E4529A3CDfB74e38FD98631",
+      "symbol": "AERO",
+      "slug": "aerodrome-finance-base",
+      "source": "canonical_erc20"
+    },
+    {
+      "address": "0xA88594D404727625A9437C3f886C7643872296AE",
+      "symbol": "WELL",
+      "slug": "moonwell-lending-base",
+      "source": "canonical_erc20"
+    },
+    {
+      "address": "0xEdc817A28E8B93B03976FBd4a3dDBc9f7D176c22",
+      "symbol": "mUSDC",
+      "slug": "moonwell-lending-base",
+      "source": "canonical_mtoken"
+    },
+    {
+      "address": "0x628ff693426583D9a7FB391E54366292F509D457",
+      "symbol": "mWETH",
+      "slug": "moonwell-lending-base",
+      "source": "canonical_mtoken"
+    },
+    {
+      "address": "0x1BCae9292b28b922C9ad2902C07bc25C4F9347E1",
+      "symbol": "SEAM",
+      "slug": "seamless-protocol-base",
+      "source": "canonical_erc20"
+    },
+    {
+      "address": "0xbeeF010f9cb27031ad51e3333f9aF9C6B1228183",
+      "symbol": "steakUSDC",
+      "slug": "steakhouse-usdc-metamorpho-base",
+      "source": "canonical_metamorpho"
+    },
+    {
+      "address": "0xBEEFE94c8aD530842bfE7d8B397938fFc1cb83b2",
+      "symbol": "steakUSDC-Prime",
+      "slug": "steakhouse-prime-usdc-base",
+      "source": "canonical_metamorpho"
+    },
+    {
+      "address": "0x3A43AEC53490CB9Fa922847385D82fe25d0E9De7",
+      "symbol": "yoETH",
+      "slug": "yo-protocol",
+      "source": "canonical_erc4626"
+    },
+    {
+      "address": "0x0000000f2eB9f69274678c76222B35eEc7588a65",
+      "symbol": "yoUSD",
+      "slug": "yo-protocol",
+      "source": "canonical_erc4626"
+    },
+    {
+      "address": "0x87f18b377e625b62c708D5f6EA96EC193558EFD0",
+      "symbol": "40AcresVault",
+      "slug": "40-acres-base",
+      "source": "canonical_vault"
+    },
+    {
+      "address": "0x4e74D4Db6c0726ccded4656d0BCE448876BB4C7A",
+      "symbol": "superOETHb",
+      "slug": "origin-superoeth-base",
+      "source": "canonical_lst"
+    },
+    {
+      "address": "0x4e65fE4DbA92790696d040ac24Aa414708F5c0AB",
+      "symbol": "aBasUSDC",
+      "slug": "aave-v3-base",
+      "source": "canonical_atoken"
+    },
+    {
+      "address": "0xD4a0e0b9149BCee3C920d2E00b5dE09138fd8bb7",
+      "symbol": "aBasWETH",
+      "slug": "aave-v3-base",
+      "source": "canonical_atoken"
+    }
+  ]
+}

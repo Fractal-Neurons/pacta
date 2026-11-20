@@ -1177,13 +1177,14 @@ update();
 }
 var CO_TREASURY = "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14", CO_USDC = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", CO_CHAIN = "0x2105";
 var CO_SKU = {
+"wallet-report-9": { atomic: 9000000, amount: "9.00", route: "scan", label: "Full Wallet & Safe Exposure Report", needTarget: true, needContact: false },
 "instant-scan-19": { atomic: 19000000, amount: "19.00", route: "scan", label: "Instant Contract & Safe Deep-Scan", needTarget: true, needContact: false },
 "radar-webhook-49": { atomic: 49000000, amount: "49.00", route: "webhook", label: "Live Timelock & Signer Webhook", needTarget: false, needContact: true,
 contactMissing: "Enter where the alerts should go." },
 "reverify-seal-99": { atomic: 99000000, amount: "99.00", route: "seal", label: "24h Mainnet Control-Plane Seal", needTarget: true, needContact: true,
 contactMissing: "Enter a team contact so the verifiers can reach you." }
 };
-var CO_TIER = { "instant-19": "instant-scan-19", "webhook-49": "radar-webhook-49", "seal-99": "reverify-seal-99" };
+var CO_TIER = { "wallet-9": "wallet-report-9", "wallet-guard-49": "radar-webhook-49", "instant-19": "instant-scan-19", "webhook-49": "radar-webhook-49", "seal-99": "reverify-seal-99" };
 var CO_ERR = {
 tx_already_used: "This transaction hash already unlocked another order.",
 insufficient_amount: "The transfer is below the price. Send the exact amount shown, to the treasury shown.",
@@ -1416,6 +1417,7 @@ var uq = new URLSearchParams(location.search || ""), uch = uq.get("chain"), uad 
 var ch0 = fld("target_chain"), ad0 = fld("target_address");
 if (ch0 && (uch === "ethereum" || uch === "base")) ch0.value = uch;
 if (ad0 && !ad0.value && CO_ADDR.test(String(uad || ""))) { ad0.value = String(uad); ad0.setAttribute("value", String(uad)); }
+if (watch && !watch.value && CO_ADDR.test(String(uad || ""))) { watch.value = String(uad); watch.setAttribute("value", String(uad)); }
 } catch (e) {  }
 var dlBox = $("[data-co-deeplinks]", form), dlMm = $("[data-co-metamask]", form), dlCb = $("[data-co-coinbase]", form);
 function syncDeepLinks() {
@@ -1903,6 +1905,7 @@ el("p", { "class": "pf-verdict-title pf-verdict", text: "Live RPC unavailable: s
 pfAssess(card, b);
 card.appendChild(el("p", { text: String(b.summary || "") }));
 pfMatch(card, b.catalogMatch);
+appendWalletDepositPrompt(card);
 out.appendChild(card);
 notifyScanCheckComplete(b.chain || (b.catalogMatch && b.catalogMatch.chain), b.address);
 }
@@ -1982,8 +1985,475 @@ return [head, what + ": " + String(y.result), "Decoded: " + decodeWord(y.result)
 }, fail("Live block read"));
 return Promise.all([pinned, live]).then(function (x) { return [].concat(x[0], x[1]); });
 }));
+appendWalletDepositPrompt(card);
 out.appendChild(card);
 notifyScanCheckComplete(r.chain, r.address);
+}
+var MULTICALL3_ADDR = "0xcA11bde05977b3631167028862bE2a173976CA11";
+var WL_TOKENS = null, WL_LOADING = null, pfFocusForWallet = null;
+function walletTokensData() {
+if (WL_TOKENS) return Promise.resolve(WL_TOKENS);
+if (WL_LOADING) return WL_LOADING;
+if (typeof fetch !== "function") return Promise.resolve(null);
+var box = $(".pf[data-wallet-tokens]");
+var url = (box && box.getAttribute("data-wallet-tokens")) || (BASE + "/api/v1/wallet-tokens.json");
+WL_LOADING = fetch(url, { headers: { Accept: "application/json" } }).then(function (r) {
+if (!r.ok) throw new Error("wallet catalog HTTP " + r.status);
+return r.json();
+}).then(function (d) {
+WL_TOKENS = d && typeof d === "object" ? d : null;
+return WL_TOKENS;
+}).catch(function () { WL_LOADING = null; return null; });
+return WL_LOADING;
+}
+function u256Word(n) {
+var s = Number(n).toString(16);
+return ("0000000000000000000000000000000000000000000000000000000000000000" + s).slice(-64);
+}
+function encodeAggregate3(calls) {
+var heads = "", tails = "", off = calls.length * 32;
+for (var i = 0; i < calls.length; i++) {
+var c = calls[i], d = String(c.callData || "0x").slice(2).toLowerCase();
+var byteLen = d.length / 2, rem = d.length % 64;
+var padded = rem === 0 ? d : d + new Array(65 - rem).join("0");
+heads += u256Word(off);
+var tPad = ("000000000000000000000000" + String(c.target || "").slice(2).toLowerCase()).slice(-64);
+var elem = tPad + u256Word(c.allowFailure ? 1 : 0) + u256Word(96) + u256Word(byteLen) + padded;
+tails += elem;
+off += elem.length / 2;
+}
+return "0x82ad56cb" + u256Word(32) + u256Word(calls.length) + heads + tails;
+}
+function decodeAggregate3(rawHex) {
+if (typeof rawHex !== "string" || rawHex.indexOf("0x") !== 0 || rawHex.length < 130) return null;
+var h = rawHex.slice(2).toLowerCase();
+var arrOff = parseInt(h.slice(0, 64), 16);
+var arrStart = arrOff * 2;
+if (!(arrStart >= 0) || arrStart + 64 > h.length) return null;
+var len = parseInt(h.slice(arrStart, arrStart + 64), 16);
+var base = arrStart + 64;
+if (!(len >= 0 && len <= 1000) || base + len * 64 > h.length) return null;
+var out = [];
+for (var i = 0; i < len; i++) {
+var rel = parseInt(h.slice(base + i * 64, base + (i + 1) * 64), 16);
+var t = base + rel * 2;
+if (!(t >= 0) || t + 128 > h.length) return null;
+var success = !/^0+$/.test(h.slice(t, t + 64));
+var dOff = parseInt(h.slice(t + 64, t + 128), 16);
+var dStart = t + dOff * 2;
+if (!(dStart >= 0) || dStart + 64 > h.length) return null;
+var dLen = parseInt(h.slice(dStart, dStart + 64), 16);
+if (!(dLen >= 0) || dStart + 64 + dLen * 2 > h.length) return null;
+out.push({ success: success, returnData: "0x" + h.slice(dStart + 64, dStart + 64 + dLen * 2) });
+}
+return out;
+}
+function decodeOwnersArray(rawHex) {
+if (typeof rawHex !== "string" || rawHex.indexOf("0x") !== 0 || rawHex.length < 130) return null;
+var h = rawHex.slice(2).toLowerCase();
+var off = parseInt(h.slice(0, 64), 16) * 2;
+if (!(off >= 0) || off + 64 > h.length) return null;
+var len = parseInt(h.slice(off, off + 64), 16);
+if (!(len >= 1 && len <= 100) || off + 64 + len * 64 > h.length) return null;
+var owners = [];
+for (var i = 0; i < len; i++) {
+var w = h.slice(off + 64 + i * 64, off + 64 + (i + 1) * 64);
+if (!/^0{24}[0-9a-f]{40}$/.test(w)) return null;
+owners.push("0x" + w.slice(24));
+}
+return owners;
+}
+function decodeErc20Symbol(rawHex) {
+if (typeof rawHex !== "string" || rawHex.indexOf("0x") !== 0 || rawHex.length < 66) return null;
+var h = rawHex.slice(2), hexBytes = "";
+if (h.length === 64) {
+hexBytes = h.replace(/(?:00)+$/, "");
+} else if (h.length >= 128) {
+var off = parseInt(h.slice(0, 64), 16) * 2;
+if (!(off >= 0) || off + 64 > h.length) return null;
+var byteLen = parseInt(h.slice(off, off + 64), 16);
+if (!(byteLen >= 1 && byteLen <= 32) || off + 64 + byteLen * 2 > h.length) return null;
+hexBytes = h.slice(off + 64, off + 64 + byteLen * 2);
+} else return null;
+if (!hexBytes || hexBytes.length % 2 !== 0 || hexBytes.length > 64) return null;
+var out = "";
+for (var i = 0; i < hexBytes.length; i += 2) {
+var code = parseInt(hexBytes.slice(i, i + 2), 16);
+if (code === 0) break;
+if (code < 32 || code > 126) return null;
+out += String.fromCharCode(code);
+}
+var s = out.trim();
+return s.length >= 1 && s.length <= 28 ? s : null;
+}
+function formatTokenUnits(rawBig, decimals) {
+if (typeof BigInt !== "function") return String(rawBig);
+var b = BigInt(rawBig);
+if (decimals === 0) return b.toString();
+var p = "1" + new Array(decimals + 1).join("0");
+var base = BigInt(p), whole = b / base, rem = (b % base).toString();
+var frac = new Array(Math.max(0, decimals - rem.length) + 1).join("0") + rem;
+var keep = whole >= BigInt(1000) ? 2 : whole >= BigInt(1) ? 4 : 6;
+var trimmed = frac.slice(0, Math.min(decimals, keep)).replace(/0+$/, "");
+var wholeFmt = whole.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+return trimmed ? wholeFmt + "." + trimmed : wholeFmt;
+}
+function verdictGradeFromScore(sc) {
+return sc <= 20 ? "A" : sc <= 40 ? "B" : sc <= 60 ? "C" : sc <= 80 ? "D" : "F";
+}
+function buildWalletExposureResult(wallet, custody, blocks, positions, protosMap, extra) {
+var rank = { DELTA: 0, OBSERVED: 1, PROTECTIVE: 2, ALIGNED: 3 };
+var allPos = positions.slice().sort(function (a, b) {
+var ra = rank[a.status] !== undefined ? rank[a.status] : 9, rb = rank[b.status] !== undefined ? rank[b.status] : 9;
+var da = typeof a.observedDelaySeconds === "number" ? a.observedDelaySeconds : 1e12;
+var db = typeof b.observedDelaySeconds === "number" ? b.observedDelaySeconds : 1e12;
+return (ra - rb) || (da - db) || String(a.slug).localeCompare(String(b.slug));
+});
+var alignedCount = 0, protectiveCount = 0, adverseGapCount = 0, observedCount = 0, delays = [], risks = [];
+allPos.forEach(function (p) {
+if (p.status === "ALIGNED") { alignedCount++; risks.push(p.observedDelaySeconds !== null && p.observedDelaySeconds >= 86400 ? 10 : 20); }
+else if (p.status === "PROTECTIVE") { protectiveCount++; risks.push(15); }
+else if (p.status === "DELTA") {
+adverseGapCount++;
+risks.push(p.observedDelaySeconds === 0 ? 85 : (p.observedDelaySeconds !== null && p.observedDelaySeconds < 86400 ? 75 : 65));
+} else { observedCount++; risks.push(45); }
+if (typeof p.observedDelaySeconds === "number") delays.push(p.observedDelaySeconds);
+});
+var total = allPos.length;
+var shortestSec = delays.length ? Math.min.apply(null, delays) : null;
+var maxR = risks.length ? Math.max.apply(null, risks) : 0;
+var avgR = risks.length ? risks.reduce(function (s, x) { return s + x; }, 0) / risks.length : 0;
+var riskScore = total === 0 ? 0 : Math.min(100, Math.round(maxR * 0.65 + avgR * 0.35 + (adverseGapCount >= 2 ? 8 : 0)));
+var grade = total === 0 ? "A" : verdictGradeFromScore(riskScore);
+var head = total === 0
+? "No indexed DeFi positions detected in " + short(wallet, 6, 4) + " across Ethereum + Base Multicall3 scan"
+: "Found " + total + " active DeFi position" + (total === 1 ? "" : "s") + " in " + short(wallet, 6, 4)
++ " \u2014 " + (alignedCount + protectiveCount) + " ALIGNED, " + adverseGapCount + " ADVERSE GAP" + (adverseGapCount === 1 ? "" : "S")
++ (observedCount > 0 ? ", " + observedCount + " OBSERVED" : "");
+var deltas = allPos.filter(function (p) { return p.status === "DELTA"; });
+var topGap = null;
+if (deltas.length > 0) {
+var top = deltas[0], pr = (protosMap && protosMap[top.slug]) || {};
+var uid0 = (top.baseEasUids && top.baseEasUids[0]) || null;
+topGap = {
+slug: top.slug,
+protocolName: top.protocolName,
+chain: top.chain,
+tokenAddress: top.tokenAddress,
+symbol: top.symbol,
+formattedBalance: top.formattedBalance,
+pinnedBlock: top.pinnedBlock,
+documentedDelaySeconds: top.documentedDelaySeconds,
+observedDelaySeconds: top.observedDelaySeconds,
+controllerAddress: pr.controllerAddress || null,
+controllerKind: pr.controllerKind || null,
+baseEasUids: top.baseEasUids || [],
+easScanUrl: uid0 ? "https://base.easscan.org/attestation/view/" + uid0 : null,
+scorecardUrl: top.scorecardUrl,
+summaryShort: pr.summary_short || "",
+whatDiffers: pr.whatDiffers || { changed: [], matched: [] }
+};
+}
+var out = {
+schema: "pacta.wallet_exposure.v1",
+tier: "free_summary",
+wallet: wallet,
+address: wallet,
+custody: custody || { isSafe: false, chains: [], threshold: null, ownerCount: null },
+blocks: blocks || { ethereum: null, base: null },
+summary: {
+totalPositions: total,
+alignedCount: alignedCount,
+protectiveCount: protectiveCount,
+adverseGapCount: adverseGapCount,
+observedCount: observedCount,
+portfolioRiskScore: riskScore,
+grade: grade,
+shortestExitWindowSec: shortestSec,
+headline: head
+},
+positions: allPos,
+topAdverseGapPreview: topGap,
+lockedFlaggedPositionsCount: Math.max(0, adverseGapCount + observedCount - (topGap ? 1 : 0))
+};
+if (extra) { Object.keys(extra).forEach(function (k) { out[k] = extra[k]; }); }
+return out;
+}
+function multicallBatchedChain(chain, mcAddr, blkHex, calls) {
+if (!calls.length) return Promise.resolve([]);
+var CHUNK = 450, chunks = [];
+for (var i = 0; i < calls.length; i += CHUNK) chunks.push(calls.slice(i, i + CHUNK));
+return Promise.all(chunks.map(function (ch) {
+return rpcCall(chain, "eth_call", [{ to: mcAddr, data: encodeAggregate3(ch) }, blkHex]).then(function (r) {
+var dec = decodeAggregate3(String(r.result || ""));
+if (!dec || dec.length !== ch.length) return ch.map(function () { return { success: false, returnData: "0x" }; });
+return dec;
+}).catch(function () {
+return ch.map(function () { return { success: false, returnData: "0x" }; });
+});
+})).then(function (parts) {
+var flat = [];
+parts.forEach(function (p) { p.forEach(function (x) { flat.push(x); }); });
+return flat;
+});
+}
+function scanChainDirect(chain, wallet, wt) {
+var mcAddr = (wt && wt.multicall3) || MULTICALL3_ADDR;
+var candidates = (wt && wt[chain]) || [];
+var protos = (wt && wt.protocols) || {};
+var padW = ("000000000000000000000000" + wallet.slice(2).toLowerCase()).slice(-64);
+var balData = "0x70a08231" + padW;
+return liveBlock(chain).then(function (blk) {
+var p1Calls = [
+{ target: wallet, allowFailure: true, callData: "0xe75235b8" },
+{ target: wallet, allowFailure: true, callData: "0xa0e67e2b" }
+];
+candidates.forEach(function (c) { p1Calls.push({ target: c[0], allowFailure: true, callData: balData }); });
+return multicallBatchedChain(chain, mcAddr, blk.hex, p1Calls).then(function (p1) {
+var thR = p1[0], owR = p1[1];
+var th = thR && thR.success && /^0x[0-9a-fA-F]{64}$/.test(thR.returnData) ? parseInt(thR.returnData.slice(2), 16) : null;
+var owners = owR && owR.success ? decodeOwnersArray(owR.returnData) : null;
+var isSafe = !!(th !== null && th >= 1 && th <= 50 && owners && owners.length >= th);
+var hits = [];
+for (var i = 0; i < candidates.length; i++) {
+var r = p1[2 + i];
+if (r && r.success && r.returnData.length === 66 && /^0x[0-9a-fA-F]{64}$/.test(r.returnData)) {
+var nonZero = !/^0x0+$/.test(r.returnData);
+if (nonZero) hits.push({ addr: candidates[i][0], slug: candidates[i][1], symHint: candidates[i][2] || "", rawHex: r.returnData });
+}
+}
+if (!hits.length) {
+return { chain: chain, block: { number: blk.n, hash: null }, safe: isSafe ? { threshold: th, ownerCount: owners.length } : null, positions: [] };
+}
+var p2Calls = [];
+hits.forEach(function (h) {
+p2Calls.push({ target: h.addr, allowFailure: true, callData: "0x95d89b41" });
+p2Calls.push({ target: h.addr, allowFailure: true, callData: "0x313ce567" });
+});
+return multicallBatchedChain(chain, mcAddr, blk.hex, p2Calls).then(function (p2) {
+var pos = [];
+for (var j = 0; j < hits.length; j++) {
+var h = hits[j], symR = p2[2 * j], decR = p2[2 * j + 1];
+if (!decR || !decR.success || !/^0x[0-9a-fA-F]{64}$/.test(decR.returnData)) continue;
+var dec = parseInt(decR.returnData.slice(2), 16);
+if (!(dec >= 0 && dec <= 36)) continue;
+var onSym = symR && symR.success ? decodeErc20Symbol(symR.returnData) : null;
+if (!onSym) continue;
+var pr = protos[h.slug];
+if (!pr) continue;
+var rawVal = typeof BigInt === "function" ? BigInt(h.rawHex) : h.rawHex;
+pos.push({
+chain: chain,
+chainId: chain === "base" ? 8453 : 1,
+tokenAddress: h.addr,
+symbol: h.symHint || onSym,
+onchainSymbol: onSym,
+decimals: dec,
+rawBalance: String(rawVal),
+formattedBalance: formatTokenUnits(rawVal, dec),
+slug: h.slug,
+protocolName: pr.name,
+status: pr.status,
+classification: pr.classification,
+easAttested: !!pr.easAttested,
+pinnedBlock: pr.pinnedBlock || null,
+observedDelaySeconds: typeof pr.observedDelaySeconds === "number" ? pr.observedDelaySeconds : null,
+documentedDelaySeconds: typeof pr.documentedDelaySeconds === "number" ? pr.documentedDelaySeconds : null,
+baseEasUids: pr.baseEasUids || [],
+scorecardUrl: "https://pacta.wtf/protocols/" + h.slug + "/"
+});
+}
+return { chain: chain, block: { number: blk.n, hash: null }, safe: isSafe ? { threshold: th, ownerCount: owners.length } : null, positions: pos };
+});
+});
+});
+}
+function browserDirectWalletScan(wallet) {
+return walletTokensData().then(function (wt) {
+if (!wt) throw new Error("wallet catalog unavailable");
+return Promise.all([scanChainDirect("ethereum", wallet, wt), scanChainDirect("base", wallet, wt)]).then(function (crs) {
+var blocks = { ethereum: null, base: null }, safeChains = [], primarySafe = null, allPos = [];
+crs.forEach(function (cr) {
+blocks[cr.chain] = cr.block;
+if (cr.safe) {
+safeChains.push(cr.chain);
+if (!primarySafe || cr.safe.threshold > primarySafe.threshold) primarySafe = cr.safe;
+}
+cr.positions.forEach(function (p) { allPos.push(p); });
+});
+var custody = {
+isSafe: safeChains.length > 0,
+chains: safeChains,
+threshold: primarySafe ? primarySafe.threshold : null,
+ownerCount: primarySafe ? primarySafe.ownerCount : null
+};
+return buildWalletExposureResult(wallet, custody, blocks, allPos, wt.protocols, { source: "browser_multicall3" });
+});
+});
+}
+function demoWalletExposure(mode, wt) {
+var d = wt && wt.demos && wt.demos[mode];
+if (!d) return null;
+var protos = wt.protocols || {};
+var pos = (d.holdings || []).map(function (h) {
+var pr = protos[h.slug] || {};
+return {
+chain: h.chain,
+chainId: h.chain === "base" ? 8453 : 1,
+tokenAddress: h.address,
+symbol: h.symbol,
+onchainSymbol: h.symbol,
+decimals: 18,
+rawBalance: "1",
+formattedBalance: h.formattedBalance,
+slug: h.slug,
+protocolName: pr.name || h.slug,
+status: pr.status || "OBSERVED",
+classification: pr.classification || "rpc_observed",
+easAttested: !!pr.easAttested,
+pinnedBlock: pr.pinnedBlock || null,
+observedDelaySeconds: typeof pr.observedDelaySeconds === "number" ? pr.observedDelaySeconds : null,
+documentedDelaySeconds: typeof pr.documentedDelaySeconds === "number" ? pr.documentedDelaySeconds : null,
+baseEasUids: pr.baseEasUids || [],
+scorecardUrl: "https://pacta.wtf/protocols/" + h.slug + "/"
+};
+});
+return buildWalletExposureResult(d.wallet, d.custody, d.blocks, pos, protos, { isDemo: true, demoMode: mode, demoLabel: d.label });
+}
+function appendWalletDepositPrompt(card) {
+if (!$(".pf[data-wallet-scanner]")) return;
+var bar = el("div", { "class": "wl-proto-prompt", "data-wallet-proto-prompt": "" }, [
+el("span", { text: "Hold deposits here? Paste your wallet or Safe 0x\u2026 to scan all held positions." })
+]);
+var btn = el("button", { type: "button", "data-slot": "button", "data-variant": "outline", "data-size": "sm", "data-focus-wallet-scan": "", text: "Scan Wallet / Safe \u2191" });
+btn.addEventListener("click", function () {
+if (typeof pfFocusForWallet === "function") pfFocusForWallet();
+});
+bar.appendChild(btn);
+card.appendChild(bar);
+}
+function wlToneOf(st) {
+if (st === "DELTA") return { lbl: "ADVERSE GAP", tone: "gap" };
+if (st === "PROTECTIVE") return { lbl: "PROTECTIVE", tone: "protective" };
+if (st === "ALIGNED") return { lbl: "ALIGNED", tone: "aligned" };
+return { lbl: "PINNED", tone: "observed" };
+}
+function walletExposureRender(out, r) {
+out.textContent = "";
+var sum = r.summary || {}, cust = r.custody || {}, blks = r.blocks || {}, pos = r.positions || [];
+var card = el("div", { "data-slot": "card", "class": "pf-card wl-res-card", "data-wallet-result": r.demoMode || "live" });
+var topRow = el("div", { "class": "wl-res-top" });
+var badges = el("div", { "class": "wl-badges" });
+if (cust.isSafe) {
+badges.appendChild(el("span", {
+"class": "pf-st-pill wl-safe-pill", "data-tone": "protective", "data-wallet-safe-badge": "",
+text: "Gnosis Safe " + cust.threshold + "-of-" + cust.ownerCount + " detected"
+}));
+} else {
+badges.appendChild(el("span", { "class": "pf-st-pill", "data-tone": "aligned", text: "Multicall3 Read-Only Scan" }));
+}
+var pinParts = [];
+if (blks.ethereum && blks.ethereum.number) pinParts.push("ETH #" + num(blks.ethereum.number));
+if (blks.base && blks.base.number) pinParts.push("Base #" + num(blks.base.number));
+if (pinParts.length) badges.appendChild(el("span", { "class": "wl-pin-meta mono", text: pinParts.join(" \u00b7 ") }));
+topRow.appendChild(badges);
+if (r.isDemo) {
+topRow.appendChild(el("span", { "class": "wl-demo-tag mono", text: "INSTANT DEMO \u00b7 PASTE YOUR 0x\u2026 ABOVE FOR LIVE SCAN" }));
+}
+card.appendChild(topRow);
+card.appendChild(el("h3", { "class": "wl-headline", "data-wallet-headline": "", text: String(sum.headline || "") }));
+var exitSec = sum.shortestExitWindowSec;
+var exitTxt = exitSec === null || exitSec === undefined ? "No timelock gap seen"
+: exitSec === 0 ? "0s (instant admin path)" : secs(exitSec);
+var metrics = el("dl", { "class": "pf-metrics wl-metrics" }, [
+el("div", {}, [el("dt", { text: "Portfolio Risk Score" }), el("dd", { "data-wallet-risk": "", text: String(sum.portfolioRiskScore || 0) + "/100 \u00b7 Grade " + String(sum.grade || "A") })]),
+el("div", {}, [el("dt", { text: "Shortest Exit Window" }), el("dd", { "class": exitSec === 0 ? "wl-warn-txt" : "", "data-wallet-exit": "", text: exitTxt })]),
+el("div", {}, [el("dt", { text: "Held Breakdown" }), el("dd", { text: (Number(sum.alignedCount || 0) + Number(sum.protectiveCount || 0)) + " Aligned \u00b7 " + Number(sum.adverseGapCount || 0) + " Adverse Gaps" })])
+]);
+card.appendChild(metrics);
+if (pos.length > 0) {
+var ul = el("ul", { "class": "wl-pos-list", "data-wallet-positions": "", "aria-label": "Detected DeFi positions" });
+pos.forEach(function (p) {
+var meta = wlToneOf(p.status), chLbl = p.chain === "base" ? "Base" : "Ethereum";
+var li = el("li", { "class": "wl-pos-pill", "data-pos-slug": p.slug, "data-pos-status": p.status }, [
+protoLogoImg(p.slug, "rc-logo", 18),
+el("a", { "class": "wl-pos-name", href: siteUrl(p.scorecardUrl || ("https://pacta.wtf/protocols/" + p.slug + "/")), text: p.protocolName }),
+el("span", { "class": "rc-sym", text: p.symbol + (p.formattedBalance ? " \u00b7 " + p.formattedBalance : "") }),
+el("span", { "class": "rc-chain", text: chLbl }),
+el("span", { "class": "pf-st-pill", "data-tone": meta.tone, text: meta.lbl })
+]);
+ul.appendChild(li);
+});
+card.appendChild(ul);
+} else {
+var emptyRow = el("div", { "class": "wl-empty-row" }, [
+el("span", { text: "No balances detected across 883 indexed Ethereum & Base receipt tokens/vaults on this address." })
+]);
+var tryDemo = el("button", { type: "button", "data-slot": "button", "data-variant": "outline", "data-size": "sm", text: "Preview Demo Treasury Safe" });
+tryDemo.addEventListener("click", function () {
+var dChip = $('[data-wallet-demo="demo_safe_eth_base"]');
+if (dChip) dChip.click();
+});
+emptyRow.appendChild(tryDemo);
+card.appendChild(emptyRow);
+}
+var tg = r.topAdverseGapPreview;
+if (tg) {
+var gapBox = el("div", { "class": "wl-top-gap", "data-wallet-top-gap": tg.slug });
+var gapHead = el("div", { "class": "wl-gap-head" }, [
+el("span", { "class": "wl-gap-k mono", text: "#1 HIGHEST-URGENCY HELD GAP \u00b7 FREE FULL BREAKDOWN" }),
+el("span", { "class": "wl-gap-links" }, [
+tg.pinnedBlock ? el("span", { "class": "mono", text: (tg.chain === "base" ? "Base" : "Ethereum") + " #" + num(tg.pinnedBlock) }) : "",
+tg.easScanUrl ? arrowLink({ href: tg.easScanUrl, target: "_blank", rel: "noopener" }, "Base EAS", "up-right") : "",
+arrowLink({ href: siteUrl(tg.scorecardUrl || ("https://pacta.wtf/protocols/" + tg.slug + "/")) }, "Scorecard")
+])
+]);
+gapBox.appendChild(gapHead);
+gapBox.appendChild(el("p", { "class": "wl-gap-title" }, [
+el("b", { text: tg.protocolName + " (" + tg.symbol + (tg.formattedBalance ? " \u00b7 " + tg.formattedBalance : "") + ")" }),
+tg.summaryShort ? " \u2014 " + tg.summaryShort : ""
+]));
+var wd = tg.whatDiffers || {};
+if (Array.isArray(wd.changed) && wd.changed.length) {
+wd.changed.slice(0, 2).forEach(function (c) {
+gapBox.appendChild(el("p", { "class": "wl-gap-line wl-gap-changed", "data-pf-changed": "", text: wdLine("Changed", c, wd) }));
+});
+} else if (typeof tg.documentedDelaySeconds === "number" || typeof tg.observedDelaySeconds === "number") {
+gapBox.appendChild(el("p", { "class": "wl-gap-line wl-gap-changed", text: "Changed: Timelock delay " + (tg.observedDelaySeconds !== null ? secs(tg.observedDelaySeconds) : "unverified") + " observed vs " + (tg.documentedDelaySeconds !== null ? secs(tg.documentedDelaySeconds) : "documented") + " documented" }));
+}
+if (Array.isArray(wd.matched) && wd.matched.length) {
+gapBox.appendChild(el("p", { "class": "wl-gap-line wl-gap-matched", text: wdLine("Matched", wd.matched[0], wd) }));
+}
+card.appendChild(gapBox);
+}
+var lockedN = Number(r.lockedFlaggedPositionsCount || 0);
+if (lockedN > 0 || pos.length >= 2) {
+var lockTxt = lockedN > 0
+? "+ " + lockedN + " additional held position gap" + (lockedN === 1 ? "" : "s") + ", Cross-Position Signer Contagion Matrix & Signed SHA-256 Committee Receipt"
+: "Cross-Position Signer Contagion Matrix, Safe Signing Latency vs. Timelock Exit Check & Signed SHA-256 Committee Receipt";
+var lockRow = el("div", { "class": "wl-locked-row", "data-wallet-locked": "" }, [
+el("span", { "class": "wl-lock-copy", text: lockTxt })
+]);
+var unlockBtn = el("button", { type: "button", "data-slot": "button", "data-variant": "default", "data-size": "sm", "data-wl-unlock-jump": "", text: "Unlock Full Report ($9 USDC) \u2193" });
+unlockBtn.addEventListener("click", function () {
+var openCo = $("#scan-open-co");
+if (openCo) openCo.click();
+});
+lockRow.appendChild(unlockBtn);
+card.appendChild(lockRow);
+}
+if (Number(sum.adverseGapCount || 0) > 0) {
+var b2b = el("div", { "class": "wl-inline-b2b", "data-wallet-b2b": "" }, [
+el("span", { text: "Manage one of these protocols or vaults? " }),
+arrowLink({ href: siteUrl("https://pacta.wtf/seal/") }, "Request a 24h Re-Verification Seal"),
+el("span", { text: " \u00b7 " }),
+arrowLink({ href: siteUrl("https://pacta.wtf/curators/") }, "Curator Exposure Matrix")
+]);
+card.appendChild(b2b);
+}
+out.appendChild(card);
+var prefChain = (cust.chains && cust.chains.indexOf("base") >= 0) ? "base" : (pos[0] && pos[0].chain === "base" ? "base" : "ethereum");
+notifyScanCheckComplete(prefChain, r.wallet);
 }
 var PROTO_SVG_SLUGS = { "drakewell-usddw": 1, "wintermute-confidential-wbtc-ethereum": 1 };
 var PROTO_EXTRA_SYMS = {
@@ -2414,24 +2884,7 @@ out.appendChild(el("p", { "class": "pf-msg", role: "status", text: hits.length +
 out.appendChild(ul);
 });
 }
-function run() {
-var my = ++seq;
-if (ctl) { try { ctl.abort(); } catch (e) {  } ctl = null; }
-if (timer) { clearTimeout(timer); timer = null; }
-var a = val(), ch = chainSel.value === "base" ? "base" : "ethereum", p = problem(a);
-if (isName(a)) {
-if (listbox && !listbox.hidden && comboHits.length) { selectComboItem(comboHits[activeOpt >= 0 ? activeOpt : 0]); return; }
-if (a.length >= 2) lookupNames(a);
-else { invalid("Type a protocol or token name, pick from the dropdown, or paste a 0x\u2026 contract address."); addr.focus(); }
-return;
-}
-closeCombo();
-if (p) { invalid(p); busy(false); out.textContent = ""; addr.focus(); return; }
-out.removeAttribute("data-pf-names");
-invalid("");
-if (typeof fetch !== "function") { msg("This browser cannot call the API; use the cURL quickstart.", "http"); return; }
-if (typeof window.pactaBeacon === "function") { try { window.pactaBeacon("live_checker_submit", ch + ":" + a.toLowerCase()); } catch (e) {  } }
-xTrackLead();
+function runSinglePreflight(ch, a, my) {
 var opts = { headers: { Accept: "application/json" } }, timedOut = false;
 if (typeof AbortController === "function") {
 ctl = new AbortController(); opts.signal = ctl.signal;
@@ -2462,6 +2915,141 @@ if (timer) { clearTimeout(timer); timer = null; }
 busy(false);
 if (timedOut) msg("The check timed out after " + (PF_TIMEOUT_MS / 1000) + " s. The address is kept; retry, or use the cURL quickstart.", "timeout");
 else msg("Network error: could not reach the API. Retry, or use the cURL quickstart.", "network");
+});
+}
+function runWalletScan(a, my) {
+var opts = { headers: { Accept: "application/json" } }, timedOut = false;
+if (typeof AbortController === "function") {
+ctl = new AbortController(); opts.signal = ctl.signal;
+var mine = ctl;
+timer = setTimeout(function () { timedOut = true; try { mine.abort(); } catch (e) {  } }, PF_TIMEOUT_MS);
+}
+busy(true);
+msg("Scanning " + short(a, 6, 4) + " across Ethereum & Base via Multicall3…", "loading");
+function fallbackMulticall() {
+return browserDirectWalletScan(a).then(function (res) {
+if (my !== seq) return;
+if (timer) { clearTimeout(timer); timer = null; }
+busy(false);
+walletExposureRender(out, res);
+});
+}
+fetch(api + "/v1/check/wallet-exposure?address=" + a + "&chain=all&caller_agent=" + checkerCallerAgent() + "&requester_role=individual_user&caller_purpose=general_research", opts)
+.then(function (res) {
+if (res.status === 404 || res.status === 501 || res.status === 502 || res.status === 503) {
+return { fallback: true };
+}
+return res.json().then(function (b) { return { status: res.status, body: b }; }).catch(function () { return { fallback: true }; });
+})
+.then(function (x) {
+if (my !== seq) return;
+if (x && x.fallback) return fallbackMulticall();
+if (timer) { clearTimeout(timer); timer = null; }
+busy(false);
+var b = (x && x.body) || {};
+if (x.status === 200 && b.schema === "pacta.wallet_exposure.v1") walletExposureRender(out, b);
+else if (x.status === 429) msg("Rate limited: HTTP 429" + (b.error ? " (" + String(b.error) + ")" : "") + ". Wait a minute, then retry.", "ratelimit");
+else if (x.status === 400) { out.textContent = ""; invalid("The API rejected this address" + (b.detail ? ": " + String(b.detail) : ".")); }
+else return fallbackMulticall();
+})
+.catch(function () {
+if (my !== seq) return;
+fallbackMulticall().catch(function () {
+if (my !== seq) return;
+if (timer) { clearTimeout(timer); timer = null; }
+busy(false);
+if (timedOut) msg("The wallet scan timed out after " + (PF_TIMEOUT_MS / 1000) + " s. Retry, or try an instant demo chip above.", "timeout");
+else msg("Network error: could not reach RPC or API endpoints. Retry, or try an instant demo chip above.", "network");
+});
+});
+}
+var walletScanner = box.getAttribute("data-wallet-scanner") === "1";
+pfFocusForWallet = function () {
+applySelectedOverlay(null);
+addr.value = ""; addr.setAttribute("value", "");
+invalid("");
+if (combo) combo.setAttribute("data-is-hex", "0");
+closeCombo();
+syncScanUpgradeTarget();
+addr.focus();
+if (box.scrollIntoView) { try { box.scrollIntoView({ behavior: "smooth", block: "start" }); } catch (e) {  } }
+};
+$$("[data-wallet-demo]", box).forEach(function (dBtn) {
+dBtn.addEventListener("click", function () {
+var mode = dBtn.getAttribute("data-wallet-demo") || "", dAddr = dBtn.getAttribute("data-demo-addr") || "";
+if (!mode) return;
+var my = ++seq;
+if (ctl) { try { ctl.abort(); } catch (e) {  } ctl = null; }
+if (timer) { clearTimeout(timer); timer = null; }
+applySelectedOverlay(null);
+closeCombo();
+invalid("");
+out.removeAttribute("data-pf-names");
+if (ADDR_RE.test(dAddr)) {
+addr.value = dAddr; addr.setAttribute("value", dAddr);
+if (combo) combo.setAttribute("data-is-hex", "1");
+if (clearBtn) clearBtn.hidden = false;
+if (combo) combo.setAttribute("data-has-clear", "1");
+}
+$$("[data-wallet-demo]", box).forEach(function (o) { o.setAttribute("aria-pressed", String(o === dBtn)); });
+$$("[data-receipt]", box).forEach(function (o) { o.setAttribute("aria-pressed", "false"); });
+if (typeof window.pactaBeacon === "function") { try { window.pactaBeacon("live_checker_submit", "demo:" + mode); } catch (e) {  } }
+xTrackLead();
+busy(true);
+walletTokensData().then(function (wt) {
+if (my !== seq) return;
+busy(false);
+var res = demoWalletExposure(mode, wt);
+if (!res) { msg("Demo portfolio data unavailable.", "http"); return; }
+walletExposureRender(out, res);
+}).catch(function () {
+if (my !== seq) return;
+busy(false);
+msg("Demo portfolio data could not be loaded.", "network");
+});
+});
+});
+function run() {
+var my = ++seq;
+if (ctl) { try { ctl.abort(); } catch (e) {  } ctl = null; }
+if (timer) { clearTimeout(timer); timer = null; }
+var a = val(), ch = chainSel.value === "base" ? "base" : "ethereum", p = problem(a);
+if (isName(a)) {
+if (listbox && !listbox.hidden && comboHits.length) { selectComboItem(comboHits[activeOpt >= 0 ? activeOpt : 0]); return; }
+if (a.length >= 2) lookupNames(a);
+else { invalid("Type a protocol or token name, pick from the dropdown, or paste a 0x\u2026 contract address."); addr.focus(); }
+return;
+}
+closeCombo();
+if (p) { invalid(p); busy(false); out.textContent = ""; addr.focus(); return; }
+out.removeAttribute("data-pf-names");
+invalid("");
+$$("[data-wallet-demo]", box).forEach(function (o) { o.setAttribute("aria-pressed", "false"); });
+if (typeof fetch !== "function") { msg("This browser cannot call the API; use the cURL quickstart.", "http"); return; }
+if (typeof window.pactaBeacon === "function") { try { window.pactaBeacon("live_checker_submit", ch + ":" + a.toLowerCase()); } catch (e) {  } }
+xTrackLead();
+var selectedIsThis = !!(pfSelectedMeta && pfSelectedMeta.address.toLowerCase() === a.toLowerCase());
+if (!walletScanner || selectedIsThis) {
+runSinglePreflight(ch, a, my);
+return;
+}
+busy(true);
+msg("Resolving " + short(a, 6, 4) + "…", "loading");
+lookupData().catch(function () { return null; }).then(function (d) {
+if (my !== seq) return;
+var low = a.toLowerCase();
+var hitProto = (d || []).filter(function (x) {
+return x.it && x.it.kind === "protocol" && x.addrs && x.addrs.indexOf(low) >= 0;
+})[0];
+if (hitProto) {
+var pa = hitProto.it.preflightArgs || {};
+var pCh = pa.chain === "base" || hitProto.it.chain === "base" ? "base" : "ethereum";
+chainSel.value = pCh; syncChainIcon();
+applySelectedOverlay({ slug: hitProto.slug, name: hitProto.it.name, sym: protoTickerText(hitProto), chain: pCh, address: a });
+runSinglePreflight(pCh, a, my);
+} else {
+runWalletScan(a, my);
+}
 });
 }
 form.addEventListener("submit", function (ev) { ev.preventDefault(); run(); });
@@ -2964,16 +3552,25 @@ return !!it;
 }
 function syncScanUpgradeTarget(chOverride, addrOverride) {
 var pfChain = $("#pf-chain"), pfAddr = $("#pf-address"), pill = $("#co-sync-pill"), sealLink = $("#scan-to-seal");
+var guardLink = $("#scan-to-guard"), x402Cmd = $("#scan-x402-cmd");
 var ch = (chOverride || (pfChain && pfChain.value) || "ethereum") === "base" ? "base" : "ethereum";
 var a = String(addrOverride || (pfAddr && pfAddr.value) || "").trim();
 if (pill) {
 var pName = pfSelectedMeta && String(pfSelectedMeta.address || "").toLowerCase() === a.toLowerCase() ? pfSelectedMeta.name + " · " : "";
 pill.textContent = ADDR_RE.test(a)
 ? "Target synced: " + pName + (ch === "base" ? "Base" : "Ethereum") + " · " + short(a, 6, 4)
-: "Target: select a protocol or paste a 0x… contract in the free checker above";
+: "Target: paste any 0x… wallet, Safe or contract in the scanner above";
 }
 if (sealLink) {
 sealLink.setAttribute("href", ADDR_RE.test(a) ? "../seal/?chain=" + ch + "&address=" + a : "../seal/");
+}
+if (guardLink) {
+guardLink.setAttribute("href", ADDR_RE.test(a) ? "../webhook/?chain=" + ch + "&address=" + a : "../webhook/");
+}
+if (x402Cmd) {
+var box = $(".pf"), apiBase = (box && box.getAttribute("data-api")) || "https://pacta-x402.pacta.workers.dev";
+var targetStr = ADDR_RE.test(a) ? a : "0x\u2026";
+x402Cmd.textContent = 'curl -s -X POST ' + apiBase + '/v1/x402/wallet-exposure -H "Content-Type: application/json" -d \'{"address":"' + targetStr + '","chain":"all"}\'';
 }
 }
 function notifyScanCheckComplete(chain, address) {
@@ -3024,7 +3621,7 @@ openCheckout();
 if (coCard && coCard.scrollIntoView) { try { coCard.scrollIntoView({ behavior: "smooth", block: "nearest" }); } catch (e) {  } }
 });
 }
-if (q.unlock === "1" || q.unlock === "true") {
+if (q.unlock === "1" || q.unlock === "true" || q.tier === "wallet-9") {
 openCheckout();
 }
 }

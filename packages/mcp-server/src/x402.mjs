@@ -77,6 +77,12 @@ export const PAID_ROUTES = Object.freeze({
     maxAmountRequired: "10000",
     description: "One-call pre-execution safety check: verdict, 0-100 risk score, proxy / controller breakdown, pause / blacklist / upgrade capabilities, pinned block.",
   }),
+  scanWalletExposure: Object.freeze({
+    path: "/v1/check/wallet-exposure",
+    priceUsdc: "0.01",
+    maxAmountRequired: "10000",
+    description: "Read-only Multicall3 wallet & Gnosis Safe DeFi control-plane exposure scan across Ethereum and Base across 313 indexed protocols.",
+  }),
   scanControlPlane: Object.freeze({
     path: "/v1/scan/control-plane",
     priceUsdc: "0.10",

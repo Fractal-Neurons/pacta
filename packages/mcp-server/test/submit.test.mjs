@@ -19,9 +19,9 @@ const rec = (reply) => {
 const json = (status, obj) => new Response(JSON.stringify(obj), { status, headers: { "Content-Type": "application/json" } });
 const call = (srv, args, name = "pacta_submit_request") => srv.handleMessage({ jsonrpc: "2.0", id: 1, method: "tools/call", params: { name, arguments: args } });
 
-test("0.1.5 tools/list: 10 read-only tools (annotations readOnlyHint/destructiveHint/openWorldHint + _meta) + 1 opt-in pacta_submit_request", async () => {
+test("0.1.5 tools/list: 11 read-only tools (annotations readOnlyHint/destructiveHint/openWorldHint + _meta) + 1 opt-in pacta_submit_request", async () => {
   assert.equal(SERVER_INFO.version, "0.1.5");
-  assert.equal(READ_ONLY_TOOLS.length, 10);
+  assert.equal(READ_ONLY_TOOLS.length, 11);
   assert.deepEqual(TOOL_DEFINITIONS.map((t) => t.name).slice(-1), ["pacta_submit_request"]);
   for (const t of READ_ONLY_TOOLS) {
     assert.deepEqual([t.annotations.readOnlyHint, t.annotations.destructiveHint, t.annotations.openWorldHint], [true, false, false], t.name);
@@ -40,7 +40,7 @@ test("0.1.5 tools/list: 10 read-only tools (annotations readOnlyHint/destructive
   const local = new PactaMcpServer({ fetchImpl: rec(() => { throw new Error("no network"); }) });
   const gw = new PactaMcpServer({ x402Url: GW, fetchImpl: rec(() => { throw new Error("no network"); }) });
   const names = async (srv) => (await srv.handleMessage({ jsonrpc: "2.0", id: 1, method: "tools/list" })).result.tools.map((t) => t.name);
-  assert.equal((await names(gw)).length, 11);
+  assert.equal((await names(gw)).length, 12);
   assert.ok(!(await names(local)).includes("pacta_submit_request"), "listed only with PACTA_X402_URL (zero network otherwise)");
 });
 

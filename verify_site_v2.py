@@ -81,7 +81,7 @@ X = EXPECT
 # sha256 of docs/api/v1/graph-manifest.json: changes only through a deliberate re-pin (a Sprint stage / stamp rewrites it after the
 # rebuild); a merged Wave 2 claim or any site-only change must leave it as is
 GRAPH_MANIFEST_SHA256 = "e2fa6012de84eb7504eba9c205b417487a3d429cef961988098011d4b0bbe47e"
-NON_PROTOCOL_PAGES = 39                                                  # docs/**/*.html pages that are not /protocols/<slug>/ (39: + /scan/ /webhook/ /seal/ /miniapp/, + the Cap, Compound V3 and Lista Lending briefs)
+NON_PROTOCOL_PAGES = 40                                                  # docs/**/*.html pages that are not /protocols/<slug>/ (40: + /curators/ /scan/ /webhook/ /seal/ /miniapp/, + the Cap, Compound V3 and Lista Lending briefs)
 
 
 def check(name, ok, detail=""):
@@ -274,6 +274,7 @@ def app_behaviour(appjs, request_html, index_html, row_id, beacon="", protocol_h
                           "protocolsIndex": dom_tree(protocols_index_html) if protocols_index_html else None,
                           "indexJson": json.loads(read("docs/api/v1/index.json")), "scorecardsJson": json.loads(read("docs/api/v1/scorecards.json")), "whatDiffers": inspector_what_differs(),
                           "lookupJson": json.loads(read("docs/api/v1/lookup.json")),   # v4.7 W3: the command dialog + hero name lookup
+                          "walletTokensJson": json.loads(read("docs/api/v1/wallet-tokens.json")),
                           # every published protocol slug (+ wave-2 shapes) must survive the beacon's client-side path redaction
                           "expectProtocols": X["protocols"],
                           "protocolSlugs": sorted(d for d in os.listdir(os.path.join(DOCS, "protocols")) if os.path.isdir(os.path.join(DOCS, "protocols", d))),
@@ -990,7 +991,7 @@ def main(argv=None):
     bad_s = sorted({f"{f}: {m.group(0)}" for f in copy_files for m in subs.finditer(read(f))})
     check("no curator / SaaS subscription tracks (one paid offer only)", not bad_s, str(bad_s[:4]))
     # M4 / M5 (v4): one tier family, byte-identical pricing cards on / and /request/ (only the relative link prefix differs)
-    offer = ("Free scorecards, API &amp; MCP", "$0", "Instant Contract &amp; Safe Deep-Scan", "$19", "Live Timelock &amp; Signer Webhook", "$49",
+    offer = ("Free scorecards, API &amp; MCP", "$0", "Full Wallet &amp; Safe Exposure Report", "$9", "Live Timelock &amp; Signer Webhook", "$49",
              "24h Mainnet Control-Plane Seal", "$99", "Multi-contract dossiers", "$2,500–$5,000", "Continuous Control-Plane Monitoring", "$1,500 / month",
              "Community queue", "API SLA", "data-enterprise-strip")
     def plans_of(t):
@@ -1469,7 +1470,7 @@ def main(argv=None):
     check("canonical live x402 gateway https://pacta-x402.pacta.workers.dev in agent.json, mcp.json, llms.txt, llms-full.txt, SKILL.md; no stale 'pending' wording",
           B2A.X402_URL == X402 and all(surfaces.values()) and not stale,
           f"missing {[k for k, v in surfaces.items() if not v]}; stale {stale}")
-    paid_paths = ["/v1/check/preflight", "/v1/scan/control-plane", "/v1/scan/timelock-op", "/v1/scan/proposal-diff", "/v1/briefs/live-timelocks"]
+    paid_paths = ["/v1/check/preflight", "/v1/check/wallet-exposure", "/v1/scan/control-plane", "/v1/scan/timelock-op", "/v1/scan/proposal-diff", "/v1/briefs/live-timelocks"]
     v2_tokens = ["eip155:8453", "PAYMENT-REQUIRED", "PAYMENT-SIGNATURE"]
     v2_surfaces = {"SKILL.md": skill, "agent.json": read("docs/.well-known/agent.json"), "mcp.json": read("docs/.well-known/mcp.json"),
                    "llms.txt": llms_now, "llms-full.txt": full}
@@ -1482,7 +1483,7 @@ def main(argv=None):
                and card["x402"].get("maxTimeoutSeconds") == 60 and card["x402"]["wire"]["v2"]["paymentHeader"] == "PAYMENT-SIGNATURE"
                and card["x402"]["wire"]["v2"]["receiptHeader"] == "PAYMENT-RESPONSE" and card["x402"]["wire"]["v1"]["paymentHeader"] == "X-PAYMENT"
                and card["x402"]["settlement"]["onchainReceiptVerified"] is False and sorted(card_routes) == sorted(paid_paths)
-               and {p_: card_routes[p_]["amount"] for p_ in paid_paths} == {"/v1/check/preflight": "10000", "/v1/scan/control-plane": "100000", "/v1/scan/timelock-op": "250000",
+               and {p_: card_routes[p_]["amount"] for p_ in paid_paths} == {"/v1/check/preflight": "10000", "/v1/check/wallet-exposure": "10000", "/v1/scan/control-plane": "100000", "/v1/scan/timelock-op": "250000",
                                                                           "/v1/scan/proposal-diff": "150000", "/v1/briefs/live-timelocks": "100000"}
                and man["x402"].get("x402Versions") == [1, 2] and man["x402"].get("onchainReceiptVerified") is False
                and "pacta_scan_proposal_diff" in {t["name"] for t in man["tools"]})
@@ -1528,9 +1529,9 @@ def main(argv=None):
     check("Edge v3 hero: h1 + subhead, 3 receipt pills (live check + pinned receipt), the instant checker in the hero (before the proof bar); remote MCP (Claude Code + Cursor), curl /v1/check/preflight, OpenAPI / SKILL / agent.json / MCP links in the agents column",
           hero_ok and pf_ok, f"hero {hero_ok}; checker {pf_ok}")
     pr = re.search(r'<section class="sec" id="pricing">.*?</section>', home, re.S)
-    pricing_ok = bool(pr) and all(x in pr.group(0) for x in ("$0", "$19", "$49", "$99", "$2,500–$5,000", "$1,500", "Free scorecards, API &amp; MCP",
-                                                              "Instant Contract &amp; Safe Deep-Scan", "Live Timelock &amp; Signer Webhook", "24h Mainnet Control-Plane Seal",
-                                                              "Continuous Control-Plane Monitoring", "API SLA", "50 free preflight / MCP checks a day, then $0.01 a call over x402",
+    pricing_ok = bool(pr) and all(x in pr.group(0) for x in ("$0", "$9", "$49", "$99", "$2,500–$5,000", "$1,500", "Free scorecards, API &amp; MCP",
+                                                              "Full Wallet &amp; Safe Exposure Report", "Live Timelock &amp; Signer Webhook", "24h Mainnet Control-Plane Seal",
+                                                              "Continuous Control-Plane Monitoring", "API SLA", "50 free preflight / wallet-exposure checks a day, then $0.01 a call over x402",
                                                               "data-x402-strip", "$0.02 / call", "$0.05 / call", "$0.25 / call", "$9.00 / call",
                                                               html.escape(BS.EDITORIAL_FIREWALL, quote=False)))
     req_ok = "Every scorecard, the API and the MCP server stay free" in req_page and 'id="pricing"' in req_page
@@ -1545,7 +1546,7 @@ def main(argv=None):
         sec = sec.group(0) if sec else ""
         pre_ = "" if rel == "index.html" else "../"
         req_ = pre_ + "request/"
-        tier_ok[rel] = (re.findall(r'data-plan="([\w-]+)"', sec) == ["free", "instant-scan-19", "radar-webhook-49", "reverify-seal-99"]
+        tier_ok[rel] = (re.findall(r'data-plan="([\w-]+)"', sec) == ["free", "wallet-report-9", "radar-webhook-49", "reverify-seal-99"]
                         and all(f'href="{pre_}{h_}" data-cta="{k_}"' in sec for _, _, _, _, _, (_, h_, k_), _ in BS.SELF_SERVE_PLANS)
                         and all(f'href="{req_}?tier={k}" data-tier="{k}"' in sec for k, _, _ in BS.ENTERPRISE_STRIP)
                         and "can still read Delta" in sec and "free, with live re-check on demand" in sec
@@ -1825,7 +1826,7 @@ def main(argv=None):
           and card_f1["settlementGuard"]["replay"].endswith("not globally atomic without Durable Objects")
           and all("not globally atomic without Durable Objects" in read(f) for f in ("docs/.well-known/agent.json", "docs/.well-known/mcp.json", "docs/llms.txt", "docs/llms-full.txt")),
           str(f1_bad))
-    remote_tools = ["pacta_lookup_protocol", "pacta_check_preflight", "pacta_scan_control_plane", "pacta_scan_timelock_op", "pacta_scan_proposal_diff",
+    remote_tools = ["pacta_lookup_protocol", "pacta_check_preflight", "pacta_scan_wallet_exposure", "pacta_scan_control_plane", "pacta_scan_timelock_op", "pacta_scan_proposal_diff",
                     "pacta_get_live_timelocks", "pacta_submit_request"]
     man_ = json.loads(read("docs/.well-known/mcp.json"))
     card_ = json.loads(read("docs/.well-known/agent.json"))
@@ -1930,7 +1931,7 @@ def main(argv=None):
     # ---- Option B v2: three single-SKU product pages, the site-wide entry points, the /request/ launcher and the checkout engine ----
     lk_v2 = {i_["slug"]: i_ for i_ in json.loads(read("docs/api/v1/lookup.json"))["items"]}
     sm_v2 = read("docs/sitemap.xml")
-    CTA_V2 = {"instant-scan-19": "Pay $19 USDC on Base &amp; Unlock Full Report", "radar-webhook-49": "Pay $49 USDC on Base &amp; Activate Webhook",
+    CTA_V2 = {"wallet-report-9": "Pay $9 USDC on Base &amp; Unlock Full Report", "radar-webhook-49": "Pay $49 USDC on Base &amp; Activate Webhook",
               "reverify-seal-99": "Pay $99 USDC on Base &amp; Book 24h Re-Verification"}
     pd_bad = {}
     for k_, v_ in BS.CHECKOUT.items():
@@ -1982,17 +1983,27 @@ def main(argv=None):
             seal_.count('class="pv-d"') == 3 and "<svg" in seal_.split('data-preview="seal"')[-1] and f'src="../badges/{BS.BADGE_DEMO}.svg"' in seal_
             and html.escape(BS.SEAL_GUARANTEE, quote=False) in seal_,
     }
-    scan_cold_part = scan_.split('id="scan-upgrade"')[0] if 'id="scan-upgrade"' in scan_ else scan_
-    check("Cold-traffic explainer & progressive funnel (/scan/ & /seal/): zero upfront $19/$99 box on initial /scan/ load, 4 live preset chips, "
-          "Docs-vs-Bytecode + 5-check explainer, progressive #scan-upgrade & #co-card reveal after free check or ?unlock=1, and /seal/ explainer + sample before #co-form (harness)",
+    scan_cold_part = re.sub(r'<section class="scan-upgrade" id="scan-upgrade"[^>]*hidden>.*?</section>', "", scan_, flags=re.S)
+    cur_pg = pages.get(os.path.join("curators", "index.html"), "")
+    cur_mat = json.loads(read("data/curator-exposure-matrix.json"))
+    cur_ids = [c_["curator_id"] for c_ in cur_mat["curators_and_institutional_allocators"]]
+    cur_ok = (len(cur_ids) >= 13 and all(f'data-curator-card="{cid_}"' in cur_pg and f'data-curator-row="{cid_}"' in cur_pg for cid_ in cur_ids)
+              and all(nm_ in cur_pg for nm_ in ("Steakhouse Financial", "Gauntlet", "Re7 Labs", "MEV Capital"))
+              and 'data-tone="aligned"' in cur_pg and 'data-tone="gap"' in cur_pg
+              and "https://base.easscan.org/attestation/view/" in cur_pg and "../scan/?chain=" in cur_pg and "../seal/" in cur_pg
+              and f"<loc>{BS.BASE_URL}/curators/</loc>" in sm_v2)
+    check("Cold-traffic explainer, Unified Wallet/Safe Omnibox & Curator Matrix (/scan/, /curators/ & /seal/): zero upfront $9/$19/$49/$99/$0.05 on initial /scan/ load, "
+          "2 instant Wallet/Safe demo chips + 6 live protocol chips, Multicall3 fallback, progressive $9/$49/mo/$0.05 unlock, and /curators/ institutional matrix (harness)",
           'id="scan-upgrade" data-scan-upgrade hidden' in scan_ and 'id="co-card" data-co-card hidden' in scan_
-          and "$19" not in scan_cold_part and "$99" not in scan_cold_part
-          and scan_.count('class="ex-item"') == 5 and "PUBLISHED DOCS PROMISE" in scan_ and "LIVE ON-CHAIN REALITY" in scan_
+          and all(p_ not in scan_cold_part for p_ in ("$9", "$19", "$49", "$99", "$0.05"))
+          and scan_.count("data-wallet-demo=") == 2 and scan_.count('class="ex-item"') == 5
+          and "PUBLISHED DOCS PROMISE" in scan_ and "LIVE ON-CHAIN REALITY" in scan_
           and 0 < seal_.find("data-seal-explainer") < seal_.find('data-preview="seal"') < seal_.find('id="co-form"')
-          and 'data-seal-free-first' in seal_ and res.get("co_progressive_scan_funnel") is True,
-          f"funnel={res.get('co_progressive_scan_funnel')}; cold_$19={'$19' in scan_cold_part}")
+          and 'data-seal-free-first' in seal_ and res.get("co_progressive_scan_funnel") is True
+          and res.get("wl_demo_and_multicall_fallback") is True and cur_ok,
+          f"funnel={res.get('co_progressive_scan_funnel')}; wl={res.get('wl_demo_and_multicall_fallback')}; cur_ok={cur_ok}; cold_prices={[p_ for p_ in ('$9','$19','$49','$99','$0.05') if p_ in scan_cold_part]}")
     nav_bad = [r_ for r_, t_ in pages.items() if 'class="topbar"' in t_ and not all(x_ in (re.search(r'<nav data-slot="navigation-menu" class="nav" aria-label="Primary">.*?</nav>', t_, re.S) or re.search("$^", "")).group(0).replace(' aria-current="page"', "")
-                                                                                 for x_ in ('scan/">Instant Scan</a>', '#pricing">Pricing</a>', 'bounties/">Bounties</a>',
+                                                                                 for x_ in ('curators/">Curators</a>', 'scan/">Instant Scan</a>', '#pricing">Pricing</a>', 'bounties/">Bounties</a>',
                                                                                             'radar/">Radar</a>', 'scorecards/">Scorecards</a>', 'mcp/">MCP</a>'))]
     radar_v2 = pages.get(os.path.join("radar", "index.html"), "")
     seal_cta_bad = []
@@ -2059,13 +2070,13 @@ def main(argv=None):
     check("404.html stripped-? rescue: docs/404-rescue.js (same origin, right after the CSP meta, before b.js) sends /<route>/<utm_*|tier|ref>=... on the "
           "known routes to /<route>/?... with location.replace (also under /website-test/), leaves every other path alone; the beacon stays silent (harness)",
           rescue_ == BS.RESCUE_JS and 0 <= csp_at < r_at < b_at and sum(t_.count("404-rescue.js") for t_ in pages.values()) == 1
-          and r'^\/((?:website-test|public\/web\/option-b-v2)\/)?(scorecards|request|scan|seal|webhook|miniapp|radar|bounties|leaderboard|methodology|protocols(?:\/[a-z0-9-]+)?)\/((?:utm_[a-z]+|tier|ref)=.+)$' in rescue_
+          and r'^\/((?:website-test|public\/web\/option-b-v2)\/)?(scorecards|curators|request|scan|seal|webhook|miniapp|radar|bounties|leaderboard|methodology|protocols(?:\/[a-z0-9-]+)?)\/((?:utm_[a-z]+|tier|ref)=.+)$' in rescue_
           and "L.replace(" in rescue_ and "w.pactaRescued=1" in rescue_ and "&&!w.pactaRescued" in bjs and all(res.get(k_) is True for k_ in r_keys),
           f"csp {csp_at} rescue {r_at} b.js {b_at}; failed {[k_ for k_ in r_keys if res.get(k_) is not True]}")
     b5_keys = ["b_v5_routes", "b_v5_campaign_fields", "b_v5_host"]
-    check("b.js v5.1: all live site routes (/pricing/ /about/ /for-protocols/ /integrations/ /mcp/ /demos/ /privacy/ /terms/ + core v5 set); production-host-only gate "
+    check("b.js v5.1: all live site routes (/curators/ /pricing/ /about/ /for-protocols/ /integrations/ /mcp/ /demos/ /privacy/ /terms/ + core v5 set); production-host-only gate "
           "(pacta.wtf | pacta.fractalneurons.com | pacta-fractalneurons.pages.dev; staging sends 0 beacons); allowlisted m, c, and h (harness)",
-          r"/^\/(protocols|scorecards|radar|bounties|leaderboard|methodology|request|scan|seal|webhook|miniapp|briefs|llms|pricing|about|for-protocols|integrations(\/vault-factories)?|mcp|demos(\/swapio-x402)?|privacy|terms)$/" in bjs
+          r"/^\/(protocols|scorecards|radar|curators|bounties|leaderboard|methodology|request|scan|seal|webhook|miniapp|briefs|llms|pricing|about|for-protocols|integrations(\/vault-factories)?|mcp|demos(\/swapio-x402)?|privacy|terms)$/" in bjs
           and r"/^(pacta\.wtf|pacta\.fractalneurons\.com|pacta-fractalneurons\.pages\.dev)$/.test(L.hostname)" in bjs
           and r'/^(paid|paid_search|cpc|organic)$/.test(u=G("medium"))&&(b.m=u)' in bjs
           and r'/^[a-z\d_-]{1,32}$/.test(u=G("campaign"))&&!D.test(u)&&!/[\da-f]{12}/.test(u)&&(b.c=u)' in bjs
@@ -2110,12 +2121,12 @@ def main(argv=None):
     app_fetch = len(re.findall(r"\bfetch\(", appjs))
     check("page script boundaries: b.js/theme.js touch zero cookies/storage/third-party scripts; app.js uses localStorage only for pacta-theme + pacta-x-purchased dedup + opt-in pacta_internal QA tag, injects only host-gated uwt.js, and fetch() calls only this site's JSON, data-api, data-live-timelocks, and the four allow-listed public RPCs",
           not js_bad and script_el_ok and ls_vars == {"THEME_KEY", "X_PURCHASE_KEY", "INTERNAL_QA_KEY"} and ls_keys == {"pacta-theme", "pacta-x-purchased", "pacta_internal"} and appjs.count("localStorage") == 8 and data_api <= {API_, API_ + "/v1/requests", API_ + "/v1/orders/verify"}
-          and app_fetch == 10 and appjs[appjs.find("function initCheckout()"):appjs.find("function initLauncher")].count("fetch(api, opts)") == 1 and "fetch(pfUrl," in appjs[appjs.find("function initMiniApp()"):] and "fetch(verifyApi," in appjs[appjs.find("function initMiniApp()"):] and 'j(root + "api/v1/lookup.json")' in appjs and 'j(root + "api/v1/scorecards.json")' in appjs and 'fetch(api, init)' in appjs[appjs.find("function initRequest()"):] and "REQ_API_RE.test(api)" in appjs and 'fetch(document.documentElement.getAttribute("data-api") || "api/v1/index.json")' in appjs
+          and app_fetch == 12 and appjs[appjs.find("function initCheckout()"):appjs.find("function initLauncher")].count("fetch(api, opts)") == 1 and "fetch(pfUrl," in appjs[appjs.find("function initMiniApp()"):] and "fetch(verifyApi," in appjs[appjs.find("function initMiniApp()"):] and 'j(root + "api/v1/lookup.json")' in appjs and 'j(root + "api/v1/scorecards.json")' in appjs and 'fetch(api, init)' in appjs[appjs.find("function initRequest()"):] and "REQ_API_RE.test(api)" in appjs and 'fetch(document.documentElement.getAttribute("data-api") || "api/v1/index.json")' in appjs
           and 'fetch(body.getAttribute("data-src") || "api/v1/scorecards.json")' in appjs
-          # the 4th fetch: the user-initiated "Verify live on RPC" button, POSTing JSON-RPC only to the four allow-listed public RPCs
+          # the user-initiated "Verify live on RPC" + Multicall3 wallet-exposure fallback, POSTing JSON-RPC only to the four allow-listed public RPCs
           and "      return fetch(url, opts).then(function (res) { return res.json(); })" in appjs
           and re.search(r'var LIVE_RPCS = \{ ethereum: \["https://ethereum-rpc\.publicnode\.com", "https://eth\.drpc\.org"\],\s*base: \["https://base-rpc\.publicnode\.com", "https://mainnet\.base\.org"\] \};', appjs) is not None
-          and appjs.count("rpcCall(") == 10 and len(re.findall(r'rpcCall\([a-z.]+, "(\w+)"', appjs)) == 9
+          and appjs.count("rpcCall(") == 11 and len(re.findall(r'rpcCall\([a-zA-Z.]+, "(\w+)"', appjs)) == 10
           and set(re.findall(r'rpcCall\([a-z.]+, "(\w+)"', appjs)) == {"eth_blockNumber", "eth_call", "eth_getStorageAt", "eth_getBlockByNumber", "eth_getCode"}
           and 'btn.addEventListener("click", function () {' in appjs[appjs.index("function liveVerifyBtn"):appjs.index("function pfRow")]
           and "    fetch(url, init)\n" in appjs and "if (!LIVE_TL_RE.test(url)) { liveSettled(false, null); return; }" in appjs
@@ -2263,7 +2274,7 @@ def main(argv=None):
         "N1 robustness: every init starts on its own (a simulated early failure leaves the examples working and is still reported); 0 init errors (harness)":
             all(res.get(k) is True for k in ("v43_init_isolation", "v43_no_init_errors")),
         "N3 (v2): one 4-column self-serve grid ($19 scan featured; 2 x 2 tablet, 1 column phone), equal-height cards with every CTA on one baseline (the free card's MCP link row reserved in each card), badges as opaque tabs (/ and /request/)":
-            all(plans43(t) == [("plan", "free"), ("plan feat", "instant-scan-19"), ("plan", "radar-webhook-49"), ("plan", "reverify-seal-99")] for t in (home43, req43))
+            all(plans43(t) == [("plan", "free"), ("plan feat", "wallet-report-9"), ("plan", "radar-webhook-49"), ("plan", "reverify-seal-99")] for t in (home43, req43))
             and "grid-template-columns: repeat(4, minmax(0, 1fr))" in css_rule(".plans") and "align-items: stretch;" in css_rule(".plans")
             and "display: flex; flex-direction: column;" in css_rule(".plan") and "margin-top: auto; display: grid; grid-template-rows: auto 24px;" in css_rule(".plan-cta")
             and "position: absolute;" in css_rule('.plan > [data-slot="badge"]') and "background: var(--card);" in css_rule('.plan > [data-slot="badge"]'),
@@ -2846,11 +2857,11 @@ def main(argv=None):
             re.search(r'^USER node$\n(?:.*\n)*?^CMD \["node", "/app/bin/pacta-mcp\.mjs"\]$', read(f), re.M) is not None and not re.search(r"^ENTRYPOINT", read(f), re.M)
             for f in ("Dockerfile", "packages/mcp-server/Dockerfile")),
         "glama maintainers": json.loads(read("glama.json"))["maintainers"] == ["pacta-fractal-neurons"],
-        "6 + 1 remote / 10 + 1 stdio tools": "6 read-only inspection tools + 1 opt-in coverage/feature request tool (`pacta_submit_request`), led by `pacta_lookup_protocol`" in read("README.md")
-            and "10 read-only inspection tools + 1 opt-in request tool" in read("README.md")
-            and "`pacta_live_timelocks`" in read("README.md") and "6 read-only inspection tools led by pacta_lookup_protocol + 1 opt-in request tool" in read("smithery.yaml")
-            and "Remote MCP (6 read-only inspection tools + 1 opt-in coverage/feature request tool (pacta_submit_request))" in home
-            and "Remote MCP (6 read-only inspection tools + 1 opt-in coverage/feature request tool (pacta_submit_request))" in req_page,
+        "7 + 1 remote / 11 + 1 stdio tools": "7 read-only inspection tools + 1 opt-in coverage/feature request tool (`pacta_submit_request`), led by `pacta_lookup_protocol`" in read("README.md")
+            and "11 read-only inspection tools + 1 opt-in request tool" in read("README.md")
+            and "`pacta_live_timelocks`" in read("README.md") and "7 read-only inspection tools led by pacta_lookup_protocol + 1 opt-in request tool" in read("smithery.yaml")
+            and "Remote MCP (7 read-only inspection tools + 1 opt-in coverage/feature request tool (pacta_submit_request))" in home
+            and "Remote MCP (7 read-only inspection tools + 1 opt-in coverage/feature request tool (pacta_submit_request))" in req_page,
         "no stale 5-tool strings": not stale5,
     }
     check("C1: root + package Dockerfile run as USER node with CMD [node, /app/bin/pacta-mcp.mjs] (Glama mcp-proxy), glama.json maintainers [pacta-fractal-neurons], 6 + 1 remote / 10 + 1 stdio tools everywhere, 0 stale '5 read-only tools' strings",
@@ -3061,7 +3072,7 @@ def main(argv=None):
         "6 + 1 remote / 10 + 1 stdio wording": all(B2AV.REMOTE_TOOLS_DOC in read(f) for f in ("docs/llms.txt", "docs/llms-full.txt", "docs/SKILL.md"))
             and all(B2AV.STDIO_TOOLS_DOC in read(f) for f in ("docs/llms.txt", "docs/llms-full.txt"))
             and not re.search(r"all read-only|Everything is read-only", read("docs/llms.txt") + read("docs/SKILL.md") + read("docs/llms-full.txt")),
-        "mcp.json lists 7 remote tools + readOnly flags": man_["transport"]["tools"] == B2AV.REMOTE_TOOLS and len(B2AV.REMOTE_TOOLS) == 7
+        "mcp.json lists 8 remote tools + readOnly flags": man_["transport"]["tools"] == B2AV.REMOTE_TOOLS and len(B2AV.REMOTE_TOOLS) == 8
             and [t["name"] for t in man_["tools"] if not t["readOnly"]] == ["pacta_submit_request"],
         "radar: live note + each timelock on its own chain's explorer (Etherscan / Basescan)": "Every row is a live Ethereum Mainnet" in home
             and "timelock read, no demo data" in home

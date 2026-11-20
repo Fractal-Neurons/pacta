@@ -34,6 +34,7 @@
  "documentationUrl": "https://pacta.wtf/llms-full.txt",
  "endpoints": {
   "bounties": "https://pacta.wtf/bounties/",
+  "curators": "https://pacta.wtf/curators/",
   "feeds": {
    "/.well-known/agent.json": "https://pacta.wtf/.well-known/agent.json",
    "/.well-known/mcp.json": "https://pacta.wtf/.well-known/mcp.json",
@@ -56,6 +57,7 @@
   "protocols": "https://pacta.wtf/protocols/",
   "requests": "https://pacta-x402.pacta.workers.dev/v1/requests",
   "skill": "https://pacta.wtf/SKILL.md",
+  "wallet_exposure": "https://pacta-x402.pacta.workers.dev/v1/check/wallet-exposure",
   "x402_gateway": "https://pacta-x402.pacta.workers.dev"
  },
  "iconUrl": "https://pacta.wtf/favicon.png",
@@ -115,6 +117,29 @@
     "proxy",
     "timelock",
     "multisig",
+    "free"
+   ]
+  },
+  {
+   "description": "Read-only Multicall3 balanceOf + Safe custody scan across Ethereum & Base indexed DeFi protocols: portfolio risk score, shortest exit window, aligned vs adverse gap breakdown, and cross-position contagion.",
+   "examples": [
+    "GET https://pacta-x402.pacta.workers.dev/v1/check/wallet-exposure?address=0x...",
+    "MCP tool pacta_scan_wallet_exposure {\"address\": \"0x...\", \"chain\": \"all\"}"
+   ],
+   "id": "wallet-exposure",
+   "inputModes": [
+    "application/json"
+   ],
+   "name": "Wallet & Safe DeFi control-plane exposure scan",
+   "outputModes": [
+    "application/json"
+   ],
+   "tags": [
+    "wallet",
+    "safe",
+    "portfolio",
+    "multicall3",
+    "agent-safety",
     "free"
    ]
   },
@@ -257,6 +282,19 @@
     "priceUsd": "$0.01",
     "query": "chain=ethereum|base&address=0x…",
     "url": "https://pacta-x402.pacta.workers.dev/v1/check/preflight"
+   },
+   {
+    "amount": "10000",
+    "effectivePriceUsd": "0.00",
+    "maxAmountRequired": "10000",
+    "methods": [
+     "GET",
+     "POST"
+    ],
+    "path": "/v1/check/wallet-exposure",
+    "priceUsd": "$0.01",
+    "query": "address=0x…&chain=ethereum|base|all",
+    "url": "https://pacta-x402.pacta.workers.dev/v1/check/wallet-exposure"
    },
    {
     "amount": "100000",

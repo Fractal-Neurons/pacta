@@ -219,6 +219,7 @@ export const TOOL_META = Object.freeze({
   pacta_get_anchoring: Object.freeze({ resultType: "anchoring_metadata", ttlMs: 86400000, cacheScope: "public" }),
   pacta_x402_discover: Object.freeze({ resultType: "x402_configuration", ttlMs: 300000, cacheScope: "public" }),
   pacta_check_preflight: Object.freeze({ resultType: "preflight_check", ttlMs: 300000, cacheScope: "public" }),
+  pacta_scan_wallet_exposure: Object.freeze({ resultType: "wallet_exposure_scan", ttlMs: 60000, cacheScope: "public" }),
   pacta_scan_control_plane: Object.freeze({ resultType: "control_plane_scan", ttlMs: 300000, cacheScope: "public" }),
   pacta_live_timelocks: Object.freeze({ resultType: "live_timelock_operations", ttlMs: 60000, cacheScope: "public" }),
   pacta_scan_timelock_op: Object.freeze({ resultType: "timelock_operation_state", ttlMs: 60000, cacheScope: "public" }),
@@ -228,7 +229,8 @@ export const TOOL_META = Object.freeze({
 const TOOL_TITLES = Object.freeze({
   pacta_list_commitments: "List Pacta Control-Plane Records", pacta_list_proposals: "List Tracked Governance Proposals",
   pacta_get_anchoring: "Get Base EAS Anchoring Metadata", pacta_x402_discover: "Discover x402 Gateway Configuration",
-  pacta_check_preflight: "Pre-execution Safety Check", pacta_scan_control_plane: "Control-plane Scan", pacta_live_timelocks: "Live Tracked Timelock Operations",
+  pacta_check_preflight: "Pre-execution Safety Check", pacta_scan_wallet_exposure: "Wallet & Safe DeFi Control-Plane Exposure Scan",
+  pacta_scan_control_plane: "Control-plane Scan", pacta_live_timelocks: "Live Tracked Timelock Operations",
   pacta_scan_timelock_op: "Timelock Operation State", pacta_scan_proposal_diff: "Governance Proposal Pinned-vs-Live Diff",
 });
 const readOnlyTool = (t) => Object.freeze({ ...t, title: TOOL_TITLES[t.name], annotations: readOnlyAnnotations(TOOL_TITLES[t.name]), _meta: TOOL_META[t.name] });
@@ -289,6 +291,20 @@ export const PAID_TOOLS = Object.freeze([
         ...PAID_AUTH_PROPS,
       },
       ["chain", "address"]
+    ),
+  },
+  {
+    name: "pacta_scan_wallet_exposure",
+    description:
+      "Gateway tool (requires PACTA_X402_URL; x402 $0.01 Base USDC when metered). Read-only Multicall3 wallet & Gnosis Safe DeFi control-plane exposure scan across Ethereum and Base: Safe custody detection, ERC-20 / ERC-4626 / MetaMorpho balanceOf + symbol/decimals verification across 313 indexed protocols, 0-100 risk score, shortest exit window, position roster, and #1 adverse gap preview. " +
+      FREE_LAUNCH_HINT,
+    inputSchema: gatewaySchema(
+      {
+        address: { type: "string" },
+        chain: { type: "string", enum: ["ethereum", "base", "all"] },
+        ...PAID_AUTH_PROPS,
+      },
+      ["address"]
     ),
   },
   {
@@ -770,6 +786,14 @@ export class PactaMcpServer {
           throw new X402Error("invalid_argument", 'block must be "latest", a decimal block number or 0x-hex.');
         }
         return this._paid(PAID_ROUTES.checkPreflight, { chain: args.chain, address: args.address, block: args.block ?? undefined }, args);
+      }
+
+      case "pacta_scan_wallet_exposure": {
+        if (!this.x402Url) return this._paid(PAID_ROUTES.scanWalletExposure, {}, args);
+        if (!isValidAddress(args.address)) throw new X402Error("invalid_argument", "Invalid wallet or Safe address (EIP-55 checksum enforced when mixed-case).");
+        const ch = args.chain ?? "all";
+        if (ch !== "ethereum" && ch !== "base" && ch !== "all") throw new X402Error("invalid_argument", "chain must be ethereum, base, or all.");
+        return this._paid(PAID_ROUTES.scanWalletExposure, { address: args.address, ...(args.chain ? { chain: args.chain } : {}) }, args);
       }
 
       case "pacta_scan_control_plane":

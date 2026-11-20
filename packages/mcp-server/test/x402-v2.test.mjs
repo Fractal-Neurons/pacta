@@ -78,14 +78,14 @@ const v2Payment = (route, { shape = "accepted", top = {}, accepted = {}, authO =
 };
 const receipt = (o = {}) => b64({ success: true, transaction: TX, network: BASE_NETWORK_V2, payer: FROM, ...o });
 
-test("X402_DEFAULTS and PAID_ROUTES advertise v1 + v2 and all 5 live Worker routes", () => {
+test("X402_DEFAULTS and PAID_ROUTES advertise v1 + v2 and all 6 live Worker routes", () => {
   assert.deepEqual(X402_DEFAULTS.x402Versions, [1, 2]);
   assert.deepEqual(X402_DEFAULTS.networks, ["base", "eip155:8453"]);
   assert.deepEqual(X402_DEFAULTS.paymentHeaders, { 1: "X-PAYMENT", 2: "PAYMENT-SIGNATURE" });
   assert.equal(BASE_NETWORK_V2, "eip155:8453");
   assert.deepEqual(
     Object.values(PAID_ROUTES).map((r) => [r.path, r.maxAmountRequired]).sort(),
-    [["/v1/briefs/live-timelocks", "100000"], ["/v1/check/preflight", "10000"], ["/v1/scan/control-plane", "100000"], ["/v1/scan/proposal-diff", "150000"], ["/v1/scan/timelock-op", "250000"]]
+    [["/v1/briefs/live-timelocks", "100000"], ["/v1/check/preflight", "10000"], ["/v1/check/wallet-exposure", "10000"], ["/v1/scan/control-plane", "100000"], ["/v1/scan/proposal-diff", "150000"], ["/v1/scan/timelock-op", "250000"]]
   );
 });
 
@@ -337,4 +337,18 @@ test("free-tier caller attribution (stdio): gateway tools document caller_agent 
   const off = new PactaMcpServer({ fetchImpl: recordingFetch(() => mockRes(500, {})), nowSeconds: NOW });
   const r0 = await off.handleMessage({ jsonrpc: "2.0", id: 9, method: "tools/call", params: { name: "pacta_check_preflight", arguments: { chain: "base", address: FROM } } });
   assert.notEqual(r0.error?.code, -32602);
+});
+
+test("pacta_scan_wallet_exposure: Worker contract GET /v1/check/wallet-exposure?address=[&chain=], free-launch 200 and invalid argument guard", async () => {
+  const f = recordingFetch(() => mockRes(200, { schema: "pacta.wallet_exposure.v1", tier: "free_summary", wallet: FROM, summary: { totalPositions: 2 } }));
+  const srv = new PactaMcpServer({ x402Url: BASE_URL, fetchImpl: f, nowSeconds: NOW });
+  assert.ok(srv.getTools().some((t) => t.name === "pacta_scan_wallet_exposure"));
+  const r = await srv.callTool("pacta_scan_wallet_exposure", { ...CALLER, address: FROM });
+  assert.equal(r.paid, false);
+  assert.equal(r.data.schema, "pacta.wallet_exposure.v1");
+  assert.equal(f.calls[0].url, `${BASE_URL}/v1/check/wallet-exposure?address=${FROM}&caller_agent=pacta-test-agent&requester_role=defi_developer&caller_purpose=integration_testing`);
+  await srv.callTool("pacta_scan_wallet_exposure", { address: FROM, chain: "base" });
+  assert.equal(f.calls[1].url, `${BASE_URL}/v1/check/wallet-exposure?address=${FROM}&chain=base`);
+  await assert.rejects(srv.callTool("pacta_scan_wallet_exposure", { address: "0x1234" }), (e) => e.code === "invalid_argument");
+  await assert.rejects(srv.callTool("pacta_scan_wallet_exposure", { address: FROM, chain: "solana" }), (e) => e.code === "invalid_argument");
 });

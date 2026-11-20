@@ -68,10 +68,10 @@
  "status": "publication_pending: @pacta/mcp-server is not yet published to npm or the MCP registry. Use the remote MCP server now (no install): https://pacta-x402.pacta.workers.dev/mcp. The stdio server runs from a clone of the repository: node packages/mcp-server/bin/pacta-mcp.mjs.",
  "title": "Pacta by Fractal Neurons",
  "toolSummary": {
-  "remote": "6 read-only inspection tools + 1 opt-in coverage/feature request tool (pacta_submit_request)",
+  "remote": "7 read-only inspection tools + 1 opt-in coverage/feature request tool (pacta_submit_request)",
   "requestTool": "pacta_submit_request",
   "requestsEndpoint": "https://pacta-x402.pacta.workers.dev/v1/requests",
-  "stdio": "10 read-only inspection tools + 1 opt-in request tool"
+  "stdio": "11 read-only inspection tools + 1 opt-in request tool"
  },
  "tools": [
   {
@@ -124,6 +124,14 @@
   },
   {
    "access": "free_launch",
+   "description": "Read-only Multicall3 Ethereum + Base wallet or Safe exposure summary across indexed DeFi protocols (address, chain; shares 50/day free quota, zero wallet-address logging)",
+   "effectivePriceUsd": "0.00",
+   "name": "pacta_scan_wallet_exposure",
+   "price": "$0.01",
+   "readOnly": true
+  },
+  {
+   "access": "free_launch",
    "description": "Live control-plane scan of a contract (chain, address)",
    "effectivePriceUsd": "0.00",
    "name": "pacta_scan_control_plane",
@@ -169,6 +177,7 @@
   "tools": [
    "pacta_lookup_protocol",
    "pacta_check_preflight",
+   "pacta_scan_wallet_exposure",
    "pacta_scan_control_plane",
    "pacta_scan_timelock_op",
    "pacta_scan_proposal_diff",
@@ -184,6 +193,7 @@
    "tools": [
     "pacta_lookup_protocol",
     "pacta_check_preflight",
+    "pacta_scan_wallet_exposure",
     "pacta_scan_control_plane",
     "pacta_scan_timelock_op",
     "pacta_scan_proposal_diff",
@@ -228,6 +238,11 @@
    {
     "amount": "10000",
     "path": "/v1/check/preflight",
+    "priceUsd": "$0.01"
+   },
+   {
+    "amount": "10000",
+    "path": "/v1/check/wallet-exposure",
     "priceUsd": "$0.01"
    },
    {

@@ -515,10 +515,10 @@ async function beaconScenario() {
       res.b_cta_clearance_brief = same(br.kinds, ["free_notify", "clearance", "clearance_invoice"]) && same(br.events, ["cta_click", "cta_click", "cta_click"]);
     }
     const hp = ctaClicks(input.index, "/");
-    res.b_cta_pricing = same(hp.kinds, ["pricing_free", "pricing_mcp", "pricing_scan_19", "pricing_webhook_49", "pricing_seal_99",
-                                        "pricing_x402_verdict", "pricing_x402_dossier", "pricing_x402_calldata_sim", "pricing_x402_deep_scan",
+    res.b_cta_pricing = same(hp.kinds, ["pricing_free", "pricing_mcp", "pricing_scan_9", "pricing_webhook_49", "pricing_seal_99",
+                                        "pricing_x402_verdict", "pricing_x402_dossier", "pricing_x402_wallet_exposure", "pricing_x402_calldata_sim", "pricing_x402_deep_scan",
                                         "pricing_clearance", "pricing_continuous", "pricing_community", "pricing_api_sla"])
-      && hp.events.length === 13 && hp.events.every((e) => e === "cta_click");
+      && hp.events.length === 14 && hp.events.every((e) => e === "cta_click");
   }
   // 404: not_found_404 instead of page_load; paths are redacted to a closed canonical set BEFORE transmission
   // (Phase C.1): only /protocols/<safe-slug>/ keeps its slug (and t); anything else is "/404"; IP / local referrers are dropped
@@ -584,7 +584,7 @@ async function beaconScenario() {
   res.b_no_cookie_access = !touched && t0.events().length >= 1;
   // v5.0+: first-class routes (all live site HTML routes), allowlisted campaign tags (m, c), production-only serving host gate (h), and nothing once 404 rescued or on staging
   const ev0 = (o) => run(input.index, null, Object.assign({ path: "/", beacon: B }, o)).events()[0];
-  res.b_v5_routes = [["/scorecards/", "/scorecards/"], ["/radar", "/radar/"], ["/bounties/", "/bounties/"], ["/leaderboard/", "/leaderboard/"],
+  res.b_v5_routes = [["/scorecards/", "/scorecards/"], ["/curators/", "/curators/"], ["/radar", "/radar/"], ["/bounties/", "/bounties/"], ["/leaderboard/", "/leaderboard/"],
     ["/methodology/", "/methodology/"], ["/scan/", "/scan/"], ["/seal/index.html", "/seal/"], ["/webhook/", "/webhook/"], ["/miniapp/", "/miniapp/"],
     ["/pricing/", "/pricing/"], ["/about/", "/about/"], ["/for-protocols/", "/for-protocols/"], ["/integrations/", "/integrations/"],
     ["/integrations/vault-factories/", "/integrations/vault-factories/"], ["/mcp/", "/mcp/"], ["/demos/", "/demos/"],
@@ -617,7 +617,7 @@ function rescueScenario() {
     ["/website-test/request/tier=seal-99", "", "", "/website-test/request/?tier=seal-99"],
     ["/public/web/option-b-v2/seal/tier=seal-99", "", "", "/public/web/option-b-v2/seal/?tier=seal-99"], ["/protocols/aave-v3-gho/ref=x", "", "", "/protocols/aave-v3-gho/?ref=x"],
     ["/scan/utm_campaign=launch", "?b=1", "#checkout", "/scan/?utm_campaign=launch&b=1#checkout"], ["/seal/tier=seal-99", "", "", "/seal/?tier=seal-99"],
-    ["/webhook/utm_source=x", "", "", "/webhook/?utm_source=x"], ["/methodology/ref=hn", "", "", "/methodology/?ref=hn"],
+    ["/webhook/utm_source=x", "", "", "/webhook/?utm_source=x"], ["/curators/utm_source=x", "", "", "/curators/?utm_source=x"], ["/methodology/ref=hn", "", "", "/methodology/?ref=hn"],
     ["/leaderboard/utm_source=x", "", "", "/leaderboard/?utm_source=x"], ["/protocols/utm_source=x", "", "", "/protocols/?utm_source=x"]];
   res.r_rescues_known_routes = ok.every(([p_, s_, h_, want]) => { const [to, flag] = go(p_, s_, h_); return to === want && flag; });
   const no = ["/scorecards/foo=1", "/evil/utm_source=x", "/scorecards/utm_source=", "//evil.example/scorecards/utm_source=x", "/scorecards/",
@@ -1340,7 +1340,7 @@ async function checkoutScenario() {
       && d.querySelector("[data-co-eip681]").getAttribute("href") === eip(C.skus[sku])
       && d.getElementById("co-wallet").hidden === false && !m.hasAttribute("open") && d.getElementById("co-result").hidden === true;
   };
-  res.co_single_sku_pages = shape(page(input.scan, "/scan/").document, "instant-scan-19") && shape(page(input.webhook, "/webhook/").document, "radar-webhook-49")
+  res.co_single_sku_pages = shape(page(input.scan, "/scan/").document, "wallet-report-9") && shape(page(input.webhook, "/webhook/").document, "radar-webhook-49")
     && shape(page(input.seal, "/seal/").document, "reverify-seal-99");
   // no browser wallet: the primary action checks the order first, then opens the manual transfer drawer (never a dead button)
   calls = [];
@@ -1359,7 +1359,7 @@ async function checkoutScenario() {
   setv(d, "co-tx", TXH); submit(d); await flush(); await flush();
   const post = calls.find((c) => c[0] === C.api);
   res.co_scan_chip_previews_and_orders = d.getElementById("pf-address").value === chipAddr && !!pfCall && String(pfCall[0]).includes(chipAddr)
-    && !!post && JSON.parse(post[1].body).target_address === chipAddr && JSON.parse(post[1].body).sku === "instant-scan-19";
+    && !!post && JSON.parse(post[1].body).target_address === chipAddr && JSON.parse(post[1].body).sku === "wallet-report-9";
   // the exact contract body; the result is text only
   calls = [];
   const okBody = { order_id: "ord_harness_1", status: "verified <img src=x onerror=alert(1)>", report: { proxy_admin: "0x" + "ef".repeat(20) } };
@@ -1368,7 +1368,7 @@ async function checkoutScenario() {
   submit(d); await flush(); await flush();
   const b0 = calls[0] ? JSON.parse(calls[0][1].body) : null;
   res.co_verify_posts_exact_body = calls.length === 1 && calls[0][0] === C.api && calls[0][1].method === "POST"
-    && same(b0, { sku: "instant-scan-19", tx_hash: TXH, chain: "base", target_chain: "base", target_address: ADDR, protocol_or_docs: "https://docs.example.invalid", webhook_or_contact: "@harness" });
+    && same(b0, { sku: "wallet-report-9", tx_hash: TXH, chain: "base", target_chain: "base", target_address: ADDR, protocol_or_docs: "https://docs.example.invalid", webhook_or_contact: "@harness" });
   const out = d.getElementById("co-result"), payA = out.querySelector("[data-co-r-pay] a");
   res.co_result_text_only = out.hidden === false && d.querySelector("[data-co-r-order]").textContent === "ord_harness_1"
     && d.querySelector("[data-co-r-status]").textContent.includes("<img src=x") && out.querySelectorAll("img").length === 0
@@ -1448,7 +1448,7 @@ async function checkoutScenario() {
     && wc3.filter((m) => m === "eth_sendTransaction").length === 1 && posts3.length === 1
     && ids3.every((id) => d.getElementById(id).disabled === false) && d.getElementById("co-result").hidden === false;
   res.co_snapshot_and_inputs_locked = locked3 && posts3.length === 1
-    && same(b3, { sku: "instant-scan-19", tx_hash: TXH, chain: "base", target_chain: "ethereum", target_address: ADDR, protocol_or_docs: "https://docs.example.invalid/a", webhook_or_contact: "@harness" });
+    && same(b3, { sku: "wallet-report-9", tx_hash: TXH, chain: "base", target_chain: "ethereum", target_address: ADDR, protocol_or_docs: "https://docs.example.invalid/a", webhook_or_contact: "@harness" });
   // /webhook/: quick picks fill the timelock / Safe and the protocol; the destination is required and must be https; empty fields stay out
   calls = [];
   p = page(input.webhook, "/webhook/", { fetch: okFetch(200, { order_id: "ord_w49" }) }); d = p.document;
@@ -1646,7 +1646,7 @@ async function xPixelScenario() {
   sealPg.document.getElementById("co-form").dispatchEvent(new Event_("submit"));
   await flush(); await flush();
 
-  res.x_pixel_purchase_rules = same(evReal19, [["config", "rjbqn"], ["event", "tw-rjbqn-rjhif", { value: 19, currency: "USD", conversion_id: "ord_real_19" }]])
+  res.x_pixel_purchase_rules = same(evReal19, [["config", "rjbqn"], ["event", "tw-rjbqn-rjhif", { value: 9, currency: "USD", conversion_id: "ord_real_19" }]])
     && same(evReloadSameOrder, [["config", "rjbqn"]])
     && same(evCanary, [["config", "rjbqn"]])
     && same(evReplay, [["config", "rjbqn"]])
@@ -1829,7 +1829,7 @@ async function internalQaScenario() {
   const pfUrls = [];
   const pfFetch = (url) => {
     const u = String(url);
-    if (/\/v1\/check\/preflight/.test(u)) {
+    if (/\/v1\/check\/(?:preflight|wallet-exposure)/.test(u)) {
       pfUrls.push(u);
       return Promise.resolve({ status: 200, ok: true, json: () => Promise.resolve(PF_EXAMPLE) });
     }
@@ -1841,12 +1841,12 @@ async function internalQaScenario() {
   const ext = run(input.scan, input.app, { path: "/scan/", hostname: "pacta.wtf", beacon: input.beacon, storage: extStore.storage, fetch: pfFetch });
   ext.document.getElementById("pf-address").value = ADDR;
   ext.document.getElementById("pf-form").dispatchEvent(new Event_("submit"));
-  await flush();
+  for (let i = 0; i < 4; i++) await flush();
   const extEv = ext.events();
   res.qa_external_untouched = extStore.writes.length === 0
     && ext.window.__pactaInternal === 0
     && extEv.length === 2 && !("i" in extEv[0]) && !("i" in extEv[1])
-    && pfUrls[0].includes("caller_agent=pacta-wtf-checker")
+    && !!pfUrls[0] && pfUrls[0].includes("caller_agent=pacta-wtf-checker")
     && !ext.document.querySelector("[data-internal-qa-badge]");
 
   // 2. ?internal=1&utm_source=x: sets pacta_internal="1", strips internal=1 keeping ?utm_source=x, tags beacons i:1, sends caller_agent=pacta-founder-qa, renders footer badge + skips uwt.js & xTrackLead
@@ -1854,7 +1854,7 @@ async function internalQaScenario() {
   const qa = run(input.scan, input.app, { path: "/scan/", search: "?internal=1&utm_source=x", hash: "#top", hostname: "pacta.wtf", beacon: input.beacon, storage: qaStore.storage, fetch: pfFetch });
   qa.document.getElementById("pf-address").value = ADDR;
   qa.document.getElementById("pf-form").dispatchEvent(new Event_("submit"));
-  await flush();
+  for (let i = 0; i < 4; i++) await flush();
   const qaEv = qa.events();
   const qaBadge = qa.document.querySelector("[data-internal-qa-badge]");
   res.qa_opt_in_persists_and_tags = qaStore.map.pacta_internal === "1"
@@ -1889,10 +1889,119 @@ async function internalQaScenario() {
     && !("i" in cleared.events()[0])
     && !cleared.document.querySelector("[data-internal-qa-badge]");
 }
+
+async function walletExposureScenario() {
+  if (!input.scan || !input.walletTokensJson || !input.lookupJson) { res.wl_error = "missing walletTokensJson"; return; }
+  const wt = input.walletTokensJson;
+  const encodeRes3 = (items) => {
+    const u = (n) => Number(n).toString(16).padStart(64, "0");
+    let heads = "", tails = "", off = items.length * 32;
+    for (const it of items) {
+      const d = (it.data || "0x").slice(2).toLowerCase();
+      const bLen = d.length / 2, rem = d.length % 64;
+      const padD = rem === 0 ? d : d + "0".repeat(64 - rem);
+      heads += u(off);
+      const el = u(it.ok ? 1 : 0) + u(64) + u(bLen) + padD;
+      tails += el;
+      off += el.length / 2;
+    }
+    return "0x" + u(32) + u(items.length) + heads + tails;
+  };
+  const encodeStr = (s) => {
+    const hex = Buffer.from(s, "utf8").toString("hex");
+    return "0x" + (32).toString(16).padStart(64, "0") + s.length.toString(16).padStart(64, "0") + hex.padEnd(64, "0");
+  };
+
+  let rpcCalls = [], pfCalls = [], weCalls = [];
+  const mockFetch = (url, opts) => {
+    const u = String(url);
+    if (/api\/v1\/wallet-tokens\.json$/.test(u)) return Promise.resolve({ status: 200, ok: true, json: () => Promise.resolve(wt) });
+    if (/api\/v1\/lookup\.json$/.test(u)) return Promise.resolve({ status: 200, ok: true, json: () => Promise.resolve(input.lookupJson) });
+    if (/api\/v1\/scorecards\.json$/.test(u)) return Promise.resolve({ status: 200, ok: true, json: () => Promise.resolve(input.scorecardsJson) });
+    if (u.includes("/v1/check/preflight")) {
+      pfCalls.push(u);
+      const mAddr = /[?&]address=(0x[0-9a-fA-F]{40})/.exec(u);
+      return Promise.resolve({ status: 200, ok: true, json: () => Promise.resolve(Object.assign({}, PF_EXAMPLE, { address: mAddr ? mAddr[1] : PF_EXAMPLE.address })) });
+    }
+    if (u.includes("/v1/check/wallet-exposure")) {
+      weCalls.push(u);
+      return Promise.resolve({ status: 404, ok: false, json: () => Promise.resolve({ error: "not_found" }) });
+    }
+    if (/publicnode\.com|drpc\.org|mainnet\.base\.org/.test(u)) {
+      const body = JSON.parse(opts.body);
+      rpcCalls.push([u, body.method, body.params]);
+      if (body.method === "eth_blockNumber") {
+        return Promise.resolve({ status: 200, ok: true, json: () => Promise.resolve({ jsonrpc: "2.0", id: 1, result: u.includes("base") ? "0x3912abc" : "0x1939def" }) });
+      }
+      if (body.method === "eth_call") {
+        const callObj = body.params[0] || {};
+        const data = String(callObj.data || "");
+        const len = parseInt(data.slice(74, 138), 16);
+        const isBase = u.includes("base");
+        // Pass 2 has len === 2 (1 hit * [symbol, decimals]); Pass 1 has len > 10
+        if (len <= 6) {
+          return Promise.resolve({ status: 200, ok: true, json: () => Promise.resolve({ jsonrpc: "2.0", id: 1, result: encodeRes3([
+            { ok: true, data: encodeStr(isBase ? "mUSDC" : "ETHx") },
+            { ok: true, data: "0x" + (isBase ? 6 : 18).toString(16).padStart(64, "0") }
+          ]) }) });
+        }
+        const items = [];
+        for (let i = 0; i < len; i++) {
+          if (i === 0) items.push({ ok: true, data: "0x" + (2).toString(16).padStart(64, "0") });
+          else if (i === 1) items.push({ ok: true, data: "0x" + (32).toString(16).padStart(64, "0") + (2).toString(16).padStart(64, "0") + "11".repeat(20).padStart(64, "0") + "22".repeat(20).padStart(64, "0") });
+          else if (i === 5) items.push({ ok: true, data: "0x" + (isBase ? 25000000000n : 5000000000000000000n).toString(16).padStart(64, "0") });
+          else items.push({ ok: true, data: "0x" + "0".repeat(64) });
+        }
+        return Promise.resolve({ status: 200, ok: true, json: () => Promise.resolve({ jsonrpc: "2.0", id: 1, result: encodeRes3(items) }) });
+      }
+    }
+    return Promise.reject(new Error("unexpected url: " + u));
+  };
+
+  // 1. Demo Treasury Safe chip: zero-shift instant render + progressive $9 / $49/mo / $0.05 x402 unlock
+  const p = run(input.scan, input.app, { path: "/scan/", fetch: mockFetch });
+  const d = p.document;
+  const coldOk = d.getElementById("scan-upgrade").hidden === true && d.getElementById("co-card").hidden === true;
+  const demoSafeBtn = d.querySelector('[data-wallet-demo="demo_safe_eth_base"]');
+  click(demoSafeBtn);
+  for (let i = 0; i < 6; i++) await flush();
+  const hl = d.querySelector("[data-wallet-headline]");
+  const safeBadge = d.querySelector("[data-wallet-safe-badge]");
+  const topGap = d.querySelector("[data-wallet-top-gap]");
+  const b2bBar = d.querySelector("[data-wallet-b2b]");
+  const demoOk = coldOk && !!hl && hl.textContent.includes("Found 4 active DeFi positions") && hl.textContent.includes("2 ALIGNED, 2 ADVERSE GAPS")
+    && !!safeBadge && safeBadge.textContent.includes("Gnosis Safe 3-of-5")
+    && !!topGap && topGap.getAttribute("data-wallet-top-gap") === "yo-protocol"
+    && !!b2bBar && d.getElementById("scan-upgrade").hidden === false
+    && d.getElementById("scan-to-guard").getAttribute("href").includes("../webhook/?")
+    && d.getElementById("scan-x402-cmd").textContent.includes(demoSafeBtn.getAttribute("data-demo-addr"));
+
+  // 2. Dispatch Rule 2: known protocol 0x contract -> single-protocol preflight + 1-click wallet deposit prompt
+  const staderAddr = "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b";
+  d.getElementById("pf-address").value = staderAddr;
+  d.getElementById("pf-form").dispatchEvent(new Event_("submit"));
+  for (let i = 0; i < 6; i++) await flush();
+  const protoDispatchOk = pfCalls.length === 1 && pfCalls[0].includes(staderAddr)
+    && !!d.querySelector("[data-wallet-proto-prompt]");
+
+  // 3. Dispatch Rule 3: unknown wallet/Safe 0x -> /v1/check/wallet-exposure (404) -> browser-direct Multicall3.aggregate3 fallback
+  click(d.querySelector("[data-focus-wallet-scan]"));
+  const userWallet = "0x9999999999999999999999999999999999999999";
+  d.getElementById("pf-address").value = userWallet;
+  d.getElementById("pf-form").dispatchEvent(new Event_("submit"));
+  for (let i = 0; i < 12; i++) await flush();
+  const mcCalls = rpcCalls.filter((c) => c[1] === "eth_call" && String(c[2][0].to).toLowerCase() === "0xca11bde05977b3631167028862be2a173976ca11");
+  const hlLive = d.querySelector("[data-wallet-headline]");
+  const fallbackOk = weCalls.length === 1 && weCalls[0].includes(userWallet)
+    && mcCalls.length >= 2 && !!hlLive && hlLive.textContent.includes("active DeFi position");
+
+  res.wl_demo_and_multicall_fallback = demoOk && protoDispatchOk && fallbackOk;
+}
 (async () => {
   try { await v45Scenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
   try { await pfComboboxScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
   try { await internalQaScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
+  try { await walletExposureScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
   try { await requestBriefScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
   try { await liveCardScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
   try { await tryExampleScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
