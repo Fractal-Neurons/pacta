@@ -1,0 +1,186 @@
+{
+  "wave": 3,
+  "chain": "arbitrum",
+  "chain_id": 42161,
+  "protocol_name": "GMX — Arbitrum ProtocolGovernor trajectory and approval integrity",
+  "slug": "gmx-governor-trajectory",
+  "pacta_slug": null,
+  "contract_address": "0x03e8f708e9C85EDCEaa6AD7Cd06824CeB82A7E68",
+  "tvl_usd": 167899424.20438,
+  "tvl_source_url": "https://defillama.com/protocol/gmx-evm",
+  "dossier_window": "2024-2026",
+  "trajectory_mode": "immutable_verified",
+  "historical_transitions": [
+    {
+      "block_number": 204249812,
+      "block_date": "2024-04-24",
+      "tx_hash": "0xb542697756b3522df8cfcc5b5b701deecc015dfc666d0b166729bf8d0ffdb1f2",
+      "event_kind": "deployment_baseline",
+      "rpc_or_cast_proof": "cast receipt 0xb542697756b3522df8cfcc5b5b701deecc015dfc666d0b166729bf8d0ffdb1f2 --rpc-url https://arbitrum.gateway.tenderly.co",
+      "summary": "Successful creation receipt binds this governor to block 204249812 (06:22:42 UTC). Constructor logs set voting delay 86400 seconds, voting period 432000 seconds, quorum numerator 3, and timelock 0x4bd1cdAab4254fC43ef6424653cA2375b4C94C0E. Tenderly and Nodies agree on receipt core fields and deployment runtime. This is a direct deployment, not an upgradeable proxy."
+    },
+    {
+      "block_number": 523994479,
+      "block_date": "2026-11-13",
+      "tx_hash": "0x5b1a83ab45a380dc0fc4a5c993749cf92a3f29d318d1d39cf674184a245cbc90",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast code 0x03e8f708e9C85EDCEaa6AD7Cd06824CeB82A7E68 --block 523994479 --rpc-url https://arb-pokt.nodies.app",
+      "summary": "Checkpoint anchored to a real successful ProposalExecuted transaction directed to this governor at 23:01:17 UTC. Both archive RPCs return the identical runtime seen at deployment and in the 2024 archive-date checkpoint. Reads still show 86400/432000-second delay/period, 30000-token proposal threshold and 3/100 quorum. The event is proposal execution, not a code upgrade or claimed parameter mutation."
+    }
+  ],
+  "docs_and_governance_forensics": {
+    "mttr_status": "unrepaired_open",
+    "mttr_days": null,
+    "unrepaired_open_days": 776,
+    "evidence_sources": [
+      {
+        "kind": "github_docs_commit",
+        "date": "2023-12-13",
+        "url": "https://github.com/gmx-io/gmx-synthetics/commit/d33819b5dd1c9594d8b19ce75e301380eef18dc7",
+        "claim_summary": "Pre-deployment public ProtocolGovernor source exactly matches the custom governor source in the verified deployment. It inherits GovernorCompatibilityBravo without overriding _voteSucceeded. The verified dependency returns details.forVotes > details.againstVotes; this is separate from the 3% quorum."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2024-04-24",
+        "url": "https://github.com/gmx-io/gmx-synthetics/commit/b9a1b3ade0e5acca600c02ce7243ffee397c5025",
+        "claim_summary": "Official deployment artifact records governor 0x03e8f708e9C85EDCEaa6AD7Cd06824CeB82A7E68 and creation transaction 0xb542697756b3522df8cfcc5b5b701deecc015dfc666d0b166729bf8d0ffdb1f2. Its 06:33:52 UTC commit postdates the 06:22:42 UTC deployment; it is deployment provenance, not evidence of pre-execution publication."
+      },
+      {
+        "kind": "wayback_snapshot",
+        "date": "2024-10-04",
+        "url": "https://web.archive.org/web/20241004031823/https://docs.gmx.io/docs/governance/proposal-process/",
+        "claim_summary": "HTTP 200 archive at 03:18:23 UTC specifies qualified majority 65% + 1 smallest token unit for Tally voting. At contemporaneous Arbitrum block 260162451, both archive RPCs return the same verified simple-majority governor runtime. This is the first confirmed documentation-gap date, not an asserted date of introduction."
+      },
+      {
+        "kind": "wayback_snapshot",
+        "date": "2026-11-16",
+        "url": "https://web.archive.org/web/20261116001154/https://docs.gmx.io/docs/governance/proposal-process/",
+        "claim_summary": "HTTP 200 archival capture still places qualified majority 65% + 1 under Phase 3 Tally voting. There is no observed documentation repair between the two dated captures; continuous publication between captures is not assumed."
+      },
+      {
+        "kind": "official_docs",
+        "date": "2026-11-20",
+        "url": "https://docs.gmx.io/docs/governance/proposal-process/",
+        "claim_summary": "Current official Phase 3 documentation still specifies 65% + 1. Finalized block 525684867 on 2026-11-19T17:44:24Z retains the exact verified governor runtime and Bravo mode. COUNTING_MODE alone does not establish the approval percentage; the deployed-source predicate supplies that evidence."
+      }
+    ],
+    "gap_windows": [
+      {
+        "opened_block": 260162451,
+        "opened_date": "2024-10-04",
+        "closed_block": null,
+        "closed_date": null,
+        "duration_days": 776,
+        "status": "unrepaired_open",
+        "summary": "Confirmed open documentation/on-chain approval mismatch from the first recovered 2024-10-04 archive through finalized 2026-11-19 observation: 776 calendar days. Closed fields stay null because neither a repair nor an exact introduction date is established. This is a lower bound from discrete matching source/runtime/docs observations; MTTR is undefined while unrepaired. No assertion that any actual proposal passed below 65%."
+      }
+    ]
+  },
+  "repo_audit": {
+    "commits_12m_contracts": 2,
+    "commits_12m_frontend_or_other": 29,
+    "human_contributors_12m": 6,
+    "bus_factor": 1,
+    "github_org_repo": "gmx-io/gmx-synthetics",
+    "code_before_upgrade_verified": false
+  },
+  "executive_risk_memo": "The scoped authority is GMX's directly deployed Arbitrum ProtocolGovernor, whose public source predates its April 2024 creation. The dossier window begins at this authority's inception. Both independent RPCs recover the same full runtime at deployment, the October 2024 documentation capture, November 2026 proposal execution, and the finalized November 19 snapshot. Verified Bravo source requires for-votes to exceed against-votes, with a separate 3% quorum; Phase 3 documentation instead advertises 65% + 1. The oldest recovered contradictory archive establishes a 776-calendar-day lower bound through 2026-11-19. Neither the first onset date nor uninterrupted publication is established. MTTR remains null because no repair is evidenced. This discrepancy can change a voter's expectation of approval strength, but it does not establish that any historical proposal actually passed below 65%.\n\nRepository figures cover default-main ancestry at a85ea3491c19c93bb4b5a002d9b358fb769b7849 from 2025-11-20T00:00:00Z through 2026-11-20T00:00:00Z, using non-merge commits and committer dates. Two commits touch production Solidity files under contracts/; 29 touch only other files. Six normalized non-bot public author identities contributed, and one author accounts for both contract-touch commits, giving a 50% maintenance-concentration bus-factor proxy of 1. This measures observable authorship, without certifying staffing or key-person risk; development branches are outside this census. code_before_upgrade_verified is false conservatively because an exhaustive audit of deployed implementation upgrades across all GMX contracts was not performed. For this non-proxy governor, the custom source already existed in December 2023 and no code upgrade is inferred. Runtime stability does not prove every mutable control parameter or all GMX administrative authorities were immutable. Approval ratio, quorum, timelock and multisig disclosures should be reconciled individually against deployed code before relying on the documentation.",
+  "contributor_github": "startupcompliancekit",
+  "base_payout_address": "0xc9Bc0A5A0f6f02B9294871036d323CFF37cb1BeC",
+  "mcp_tool_receipt": {
+    "tool": "pacta_lookup_protocol",
+    "arguments": {
+      "query": "0x03e8f708e9C85EDCEaa6AD7Cd06824CeB82A7E68"
+    },
+    "result": {
+      "schema": "pacta.protocol_lookup.v1",
+      "query": "0x03e8f708e9C85EDCEaa6AD7Cd06824CeB82A7E68",
+      "filters": {
+        "chain": null,
+        "kind": "all",
+        "limit": 10
+      },
+      "totalCatalog": {
+        "protocols": 313,
+        "briefs": 17,
+        "easAttestedProtocols": 180,
+        "rpcObservedProtocols": 133
+      },
+      "totalMatches": 0,
+      "count": 0,
+      "results": [],
+      "catalog": "https://pacta.wtf/api/v1/lookup.json",
+      "nextStep": "Pass a result's preflightArgs ({chain, address}) to pacta_check_preflight (or pacta_scan_control_plane) for a live check.",
+      "note": "easAttested protocols are Base-EAS-anchored records that compare on-chain state with the protocol's documentation. rpc_observed protocols pin the on-chain control plane over archive JSON-RPC and do not assess the documentation (documentationComparison: not_assessed). Briefs are block-pinned verification briefs. preflightArgs re-read the contract live.",
+      "hint": "No match. Call again with an empty query to list what Pacta tracks, or pass a known 0x contract address straight to pacta_check_preflight.",
+      "coverage_gap_hint": "Target is not yet indexed or fully classified. Ask the user if they want you to queue coverage or request this capability via pacta_submit_request (free community queue, or 24h priority clearance for issuers).",
+      "upgrade_x402": {
+        "note": "Free tier: 50 pre-flight calls per caller per UTC day (REST and MCP), then $0.01 per call over x402 (HTTP 402, never a dead-end 429). Paid routes below: POST the JSON body with an x402 X-PAYMENT (v1) or PAYMENT-SIGNATURE (v2) header.",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "network": "base (eip155:8453)",
+        "payTo": "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14",
+        "discovery": "https://pacta.fractalneurons.com/.well-known/x402",
+        "overflow": {
+          "method": "GET or POST",
+          "url": "https://pacta.fractalneurons.com/v1/check/preflight",
+          "priceUsd": "0.01",
+          "amountAtomic": "10000",
+          "after": "50 free calls per UTC day"
+        },
+        "endpoints": [
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/verdict",
+            "priceUsd": "0.02",
+            "amountAtomic": "20000",
+            "unlocks": "fast contract / token control-plane verdict: riskScore 0-100, grade A-F, upgrade / owner / pause / blacklist / mint flags and a shareable scan URL",
+            "example": {
+              "chain": "ethereum",
+              "address": "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/dossier",
+            "priceUsd": "0.05",
+            "amountAtomic": "50000",
+            "unlocks": "full control-plane dossier: every controller Safe's signers and threshold, signers shared with other indexed protocols, Base EAS proof",
+            "example": {
+              "slug": "stader-labs-ethx"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/calldata-sim",
+            "priceUsd": "0.25",
+            "amountAtomic": "250000",
+            "unlocks": "pre-signing calldata check: timelock / Safe / multicall calls decoded, each rated against live delays and the authority that governs it",
+            "example": {
+              "chain": "ethereum",
+              "target": "0x2225DAbFfC7F862c99477381E971E8B1FDaB467e",
+              "data": "0x64d623530000000000000000000000000000000000000000000000000000000000015180"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/deep-scan",
+            "priceUsd": "9.00",
+            "amountAtomic": "9000000",
+            "unlocks": "deep control-plane scan cross-checked on two independent RPC operators, auditor receipt and a queued Base EAS ticket",
+            "example": {
+              "chain": "base",
+              "address": "0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "apache2_commercial_grant": true,
+  "rules_accepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
