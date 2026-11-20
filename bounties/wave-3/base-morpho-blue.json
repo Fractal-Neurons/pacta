@@ -1,0 +1,284 @@
+{
+  "wave": 3,
+  "chain": "base",
+  "chain_id": 8453,
+  "protocol_name": "Morpho Blue (Base deployment)",
+  "slug": "morpho-blue",
+  "pacta_slug": null,
+  "contract_address": "0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb",
+  "tvl_usd": 3418218181.68,
+  "tvl_source_url": "https://api.llama.fi/protocol/morpho-blue",
+  "dossier_window": "2024-2026",
+  "trajectory_mode": "mutable_transitions",
+  "historical_transitions": [
+    {
+      "block_number": 13977148,
+      "block_date": "2024-05-03",
+      "tx_hash": "0xeb52e92833fd45c9118f0f9d2580c54abccc8f3f6f646ca5ee5ffddef3689728",
+      "event_kind": "deployment_baseline",
+      "rpc_or_cast_proof": "cast call 0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb \"owner()(address)\" --block 13977148 --rpc-url https://base.drpc.org",
+      "summary": "Singleton Morpho Blue deployed to Base via the deterministic CREATE2 deployer 0x4e59b44847b379578588920ca78fbf26c0b4956c at transaction index 47; owner() at the deploy block is the EOA 0x937ce2d6c488b361825d2db5e8a70e26d48afed5 and the runtime code is 31,248 bytes with no proxy indirection."
+    },
+    {
+      "block_number": 14787306,
+      "block_date": "2024-05-22",
+      "tx_hash": "0xea2d565fa9ca9777655597026c8c967d2ea84702c10c508186030b36c44f717e",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast receipt 0xea2d565fa9ca9777655597026c8c967d2ea84702c10c508186030b36c44f717e --rpc-url https://base.drpc.org",
+      "summary": "transferOwnership executed 19 days after deployment, moving control from the deployer EOA to the interim Morpho DAO multisig 0xeC5e4a3cE93c284441dC6a2Dd5F0D46a202F00a3 immediately after the MIP59 vote closed; the OwnershipTransferred log confirms owner() flips inside the same block."
+    },
+    {
+      "block_number": 22139017,
+      "block_date": "2024-11-08",
+      "tx_hash": "0xa43dcfed5f4d0afaf3c81e99956ee3c8a06704296f7c3df2da569e0f9dd437ad",
+      "event_kind": "signer_or_threshold_change",
+      "rpc_or_cast_proof": "cast call 0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb \"owner()(address)\" --block 22139017 --rpc-url https://base.drpc.org",
+      "summary": "Safe execTransaction 0x6a761202 on the interim multisig re-pointed Base ownership to the new 5-of-9 Safe 0xcBa28b38103307Ec8dA98377ffF9816C164f9AFa; the signer set rotated two seats (7 of 9 owners retained), during the same window the MORPHO token deployment script hard-coded the new Safe address."
+    },
+    {
+      "block_number": 60000008,
+      "block_date": "2026-11-20",
+      "tx_hash": "0x60d7d77f2f4f93405bbb13452f26f67c76636fe5ab30ec58a42f4d19282fccc7",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast code 0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb --block 60000008 --rpc-url https://base.drpc.org",
+      "summary": "Thirty-month checkpoint: a later transaction routed to the same singleton address succeeds at block 60000008, owner() still resolves to the 5-of-9 Safe 0xcBa28b38103307Ec8dA98377ffF9816C164f9AFa, and the 31,248-byte runtime keccak aa76348c0b91e5dfcece228ef6847b0c5081656d2def05c5617bcab659f0b819 is identical to blocks 13977148 and 22139017, confirming zero proxy upgrades across 46,022,860 blocks."
+    }
+  ],
+  "docs_and_governance_forensics": {
+    "mttr_status": "repaired",
+    "mttr_days": 171.0,
+    "evidence_sources": [
+      {
+        "kind": "governance_proposal",
+        "date": "2024-05-22",
+        "url": "https://forum.morpho.org/t/mip59-morpho-dao-as-owner-of-morpho-blue-on-base/599",
+        "claim_summary": "MIP59 thread: association post 2024-05-14, vote live 2024-05-17, and post 9 on 2024-05-22 naming the Base multisig 0xeC5e4a3cE93c284441dC6a2Dd5F0D46a202F00a3 as the incoming owner 'which differs from Ethereum's one', with post 10 linking the executed transfer."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2024-11-09",
+        "url": "https://github.com/morpho-org/morpho-token/commit/5a2605490836651d695122068c0511f9e508766f",
+        "claim_summary": "The Morpho token Base deployment script already carried address public constant MORPHO_DAO = 0xcBa28b38103307Ec8dA98377ffF9816C164f9AFa one day after the on-chain rotation, showing official tooling tracked the new Safe without lag."
+      },
+      {
+        "kind": "wayback_snapshot",
+        "date": "2025-04-28",
+        "url": "https://web.archive.org/web/20250428175731/https://docs.morpho.org/overview/governance/organization/",
+        "claim_summary": "Earliest archived governance page that distinguishes a Base row: 'Morpho DAO (Base) morpho.eth (5/9 multisig): 0xcBa28b38103307Ec8dA98377ffF9816C164f9AFa', matching the on-chain owner twelve months after the rotation; the interim 0xeC5e4a3c Safe never appears in any snapshot."
+      },
+      {
+        "kind": "wayback_snapshot",
+        "date": "2025-08-14",
+        "url": "https://web.archive.org/web/20250814235554/https://docs.morpho.org/learn/governance/organization/",
+        "claim_summary": "Later snapshot of the reorganized page repeating the same Base row together with the Ethereum row, the 3/9 Morpho Operator and the 3/5 rewards multisigs, confirming the 5/9 owner has been stable since 2024-11-08."
+      },
+      {
+        "kind": "official_docs",
+        "date": "2026-11-20",
+        "url": "https://docs.morpho.org/learn/governance/organization",
+        "claim_summary": "Current governance page states 'Morpho DAO (Base) morpho.eth (5/9 multisig): 0xcBa28b38103307Ec8dA98377ffF9816C164f9AFa' and limits governance to the fee switch, LLTV/IRM whitelisting and token ownership over immutable core code."
+      }
+    ],
+    "gap_windows": [
+      {
+        "opened_block": 13977148,
+        "opened_date": "2024-05-03",
+        "closed_block": 14787306,
+        "closed_date": "2024-05-22",
+        "duration_days": 19.0,
+        "status": "repaired",
+        "summary": "For 19 days the Base deployment was owned by an undisclosed deployer EOA with unilateral fee-recipient and parameter authority; MIP59 was published on 2024-05-14 and execution on 2024-05-22 closed the window before any fee switch was enabled."
+      },
+      {
+        "opened_block": 22139017,
+        "opened_date": "2024-11-08",
+        "closed_block": 29536852,
+        "closed_date": "2025-04-28",
+        "duration_days": 171.0,
+        "status": "repaired",
+        "summary": "After ownership moved to the new 5-of-9 Safe, no archived copy of the public addresses page carried a distinct Base governance row until the 2025-04-28 Wayback capture, while repo tooling referenced the new Safe within one day; the lag is documentation availability, not operational drift."
+      }
+    ]
+  },
+  "repo_audit": {
+    "github_org_repo": "morpho-org/morpho-blue",
+    "commits_12m_contracts": 13,
+    "commits_12m_frontend_or_other": 123,
+    "human_contributors_12m": 5,
+    "bus_factor": 2,
+    "code_before_upgrade_verified": true
+  },
+  "executive_risk_memo": "Morpho Blue on Base is the strongest case of an immutable singleton paired with a deliberately narrow governance surface, and the three-year record is short because the deployment itself is only thirty months old. The contract at 0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb was created on 2024-05-03 through the deterministic CREATE2 factory, never wrapped in a proxy, and its 31,248-byte runtime hashes identically at every checkpoint sampled from block 13977148 to block 60000008, so no upgrade authority exists to abuse: risk concentrates entirely in the owner() address and in the singleton's permissionless market creation. Control passed twice. The deployer EOA 0x937ce2d6c488b361825d2db5e8a70e26d48afed5 held unilateral rights for nineteen days, then handed ownership to the interim Morpho DAO Safe 0xeC5e4a3cE93c284441dC6a2Dd5F0D46a202F00a3 on 2024-05-22 within hours of the MIP59 vote closing. On 2024-11-08 a Safe transaction re-pointed ownership to 0xcBa28b38103307Ec8dA98377ffF9816C164f9AFa, a 5-of-9 Safe that shares seven signers with its predecessor and remains the owner today; the rotation happened inside the same period in which the token deployment script hard-coded the new address, which is the pattern of a coordinated treasury migration rather than an incident response. There is no timelock on that Safe, so five signatures can move the fee switch, whitelist an LLTV or IRM, and redirect the fee recipient with zero delay; the mitigation is social and structural, because the core ledger code cannot be altered at all and every market is segregated, so a hostile owner action can change economics but cannot seize supplied collateral. Documented reality lags in one direction only: the interim Safe address was announced on the governance forum and never reached the public addresses page, and no archived page carries a distinct Base governance row before the 2025-04-28 capture, giving a 171-day documentation-availability gap that closed without any on-chain correction. Repository forensics over the trailing twelve months show 13 of 136 commits touching src/, with the remainder tooling, tests and CI, and five human contributors where two account for the majority of contract-touching work, a bus factor of two. Bytecode provenance is clean: Sourcify records a full match on 2025-04-11 for both creation and runtime against src/Morpho.sol compiled with solc 0.8.19, viaIR, optimizer runs 999999 and evm_version paris, and the paris restriction is still present in the repository foundry profile for that file. Net assessment: low technical upgrade risk, medium governance-concentration risk from an untimelocked 5-of-9, and low obscurity risk because ownership, signer sets and bytecode are all independently reproducible from public RPC.",
+  "contributor_github": "veriton-dev",
+  "agent_assist_framework": "commandcode-deepseek",
+  "base_payout_address": "0xa75Cc8545B169F0BeF2f29c9CCF86bc686D039E8",
+  "mcp_tool_receipt": {
+    "tool": "pacta_check_preflight",
+    "arguments": {
+      "address": "0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb",
+      "chain": "base"
+    },
+    "result": {
+      "schema": "pacta.preflight_check.v1",
+      "chain": "base",
+      "chainId": 8453,
+      "address": "0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb",
+      "pinnedBlock": 60043712,
+      "pinnedBlockHash": "0x99e98224a22c87bf91b11bf55d3aff18030b36c07639c031a3ffc522d1d82ba8",
+      "blockTimestamp": 1795199118,
+      "verdict": "MULTISIG_NO_TIMELOCK",
+      "riskScore": 55,
+      "isContract": true,
+      "isProxy": false,
+      "proxyType": null,
+      "implementation": null,
+      "beacon": null,
+      "hasAdminSlot": false,
+      "canUpgradeZeroDelay": false,
+      "capabilities": {
+        "pause": false,
+        "blacklist": false,
+        "upgrade": false
+      },
+      "paused": null,
+      "controller": {
+        "address": "0xcBa28b38103307Ec8dA98377ffF9816C164f9AFa",
+        "kind": "multisig_safe",
+        "safeThreshold": 5,
+        "timelockDelaySec": null,
+        "safeOwnerCount": 9,
+        "source": "owner()"
+      },
+      "roleAdminMembers": null,
+      "codeBytes": 15623,
+      "summary": "Controlled by a 5-of-9 Safe with no timelock: changes can land instantly once signers agree.",
+      "source": "live_rpc",
+      "catalogMatch": {
+        "slug": "steakhouse-usdc-metamorpho-base",
+        "name": "Steakhouse USDC MetaMorpho (Base)",
+        "url": "https://pacta.wtf/protocols/steakhouse-usdc-metamorpho-base/",
+        "matchedAs": "related_contract",
+        "classification": "aligned_baseline",
+        "evidenceBasis": "eas_attested",
+        "easAttested": true,
+        "baseEasUids": [
+          "0xbeb412dfc350f879f816a5cb001b53257a3ee03c12cf1d8e2c15a070141ed8c7"
+        ],
+        "sprints": [
+          17
+        ],
+        "pinnedBlock": 57635450,
+        "primaryContract": "0xbeeF010f9cb27031ad51e3333f9aF9C6B1228183",
+        "controller": {
+          "address": "0xbeeF010f9cb27031ad51e3333f9aF9C6B1228183",
+          "kind": "timelock"
+        },
+        "observedDelaySeconds": 604800,
+        "documentedDelaySeconds": 604800,
+        "surfaces": [
+          {
+            "id": "steakhouse-usdc-base-timelock-7d-s17",
+            "surface": "MetaMorpho timelock() = 7d (604800s)",
+            "classification": "aligned_baseline",
+            "targetContract": "0xbeeF010f9cb27031ad51e3333f9aF9C6B1228183",
+            "blockNumber": 57635450
+          }
+        ],
+        "whatDiffers": null,
+        "alsoMatches": []
+      },
+      "assessment": {
+        "coverage": "indexed_verified",
+        "confidence": "medium",
+        "method": "Live bytecode + storage heuristic at the pinned block, cross-checked with Pacta's Base-EAS-attested record for Steakhouse USDC MetaMorpho (Base) (block 57635450).",
+        "limits": [
+          "riskScore (0-100) is a heuristic of the controller type and of pause / blacklist / upgrade capabilities read at one block; it is not an audit.",
+          "The live check reads EIP-1967 slots, owner(), Safe getThreshold() / getOwners() and TimelockController getMinDelay(); custom role systems, bridge or L2 admin paths and off-chain operations are not resolved.",
+          "Documentation is compared only for indexed protocols (catalogMatch), at their pinned block."
+        ]
+      },
+      "meter": {
+        "limit": 50,
+        "remaining": 48,
+        "reset": 1795219200
+      },
+      "upgrade_x402": {
+        "note": "Free tier: 50 pre-flight calls per caller per UTC day (REST and MCP), then $0.01 per call over x402 (HTTP 402, never a dead-end 429). Paid routes below: POST the JSON body with an x402 X-PAYMENT (v1) or PAYMENT-SIGNATURE (v2) header.",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "network": "base (eip155:8453)",
+        "payTo": "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14",
+        "discovery": "https://pacta.fractalneurons.com/.well-known/x402",
+        "overflow": {
+          "method": "GET or POST",
+          "url": "https://pacta.fractalneurons.com/v1/check/preflight",
+          "priceUsd": "0.01",
+          "amountAtomic": "10000",
+          "after": "50 free calls per UTC day"
+        },
+        "endpoints": [
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/verdict",
+            "priceUsd": "0.02",
+            "amountAtomic": "20000",
+            "unlocks": "fast contract / token control-plane verdict: riskScore 0-100, grade A-F, upgrade / owner / pause / blacklist / mint flags and a shareable scan URL",
+            "example": {
+              "chain": "ethereum",
+              "address": "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/dossier",
+            "priceUsd": "0.05",
+            "amountAtomic": "50000",
+            "unlocks": "full control-plane dossier: every controller Safe's signers and threshold, signers shared with other indexed protocols, Base EAS proof",
+            "example": {
+              "slug": "stader-labs-ethx"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/calldata-sim",
+            "priceUsd": "0.25",
+            "amountAtomic": "250000",
+            "unlocks": "pre-signing calldata check: timelock / Safe / multicall calls decoded, each rated against live delays and the authority that governs it",
+            "example": {
+              "chain": "ethereum",
+              "target": "0x2225DAbFfC7F862c99477381E971E8B1FDaB467e",
+              "data": "0x64d623530000000000000000000000000000000000000000000000000000000000015180"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/deep-scan",
+            "priceUsd": "9.00",
+            "amountAtomic": "9000000",
+            "unlocks": "deep control-plane scan cross-checked on two independent RPC operators, auditor receipt and a queued Base EAS ticket",
+            "example": {
+              "chain": "base",
+              "address": "0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/wallet-exposure",
+            "priceUsd": "0.05",
+            "amountAtomic": "50000",
+            "unlocks": "full multi-position wallet & Safe DeFi control-plane exposure graph: documented-vs-observed dossiers across all held DELTA and OBSERVED positions, controller overlap contagion matrix, and Safe-latency vs timelock exit-window warnings",
+            "example": {
+              "address": "0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "apache2_commercial_grant": true,
+  "rules_accepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
