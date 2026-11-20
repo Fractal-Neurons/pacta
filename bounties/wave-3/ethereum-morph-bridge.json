@@ -1,0 +1,142 @@
+{
+  "wave": 3,
+  "chain": "ethereum",
+  "chain_id": 1,
+  "protocol_name": "Morph Bridge (L1CrossDomainMessenger, Ethereum)",
+  "slug": "morph-bridge",
+  "pacta_slug": "morph-bridge",
+  "contract_address": "0xDc71366EFFA760804DCFC3EDF87fa2A6f1623304",
+  "tvl_usd": 10928073.13,
+  "tvl_source_url": "https://api.llama.fi/protocol/morph-bridge",
+  "dossier_window": "2024-2026",
+  "trajectory_mode": "mutable_transitions",
+  "historical_transitions": [
+    {
+      "block_number": 20996813,
+      "block_date": "2024-10-19",
+      "tx_hash": "0xf29bb9908992a7c79573ffb28d3783584653f43095b1b2278fc8951f567bebe7",
+      "event_kind": "deployment_baseline",
+      "rpc_or_cast_proof": "cast logs --address 0xDc71366EFFA760804DCFC3EDF87fa2A6f1623304 0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b --from-block 0 --to-block latest --rpc-url https://gateway.tenderly.co/public/mainnet",
+      "summary": "First observed control-plane state for the Morph L1CrossDomainMessenger proxy: Upgraded and AdminChanged both fire in this block, pinning implementation 0x98df320641c2e65ab4bbef1e6f6c66d9b50ede5f and EIP-1967 admin 0x2818a3af785975a32611155a6ee36c21cec068ca, an account with zero deployed bytecode at this height and nonce 0x146, i.e. a plain externally owned key rather than a contract or multisig."
+    },
+    {
+      "block_number": 20999832,
+      "block_date": "2024-10-19",
+      "tx_hash": "0x6dde53ebefd2c5b9c93a3a27847e85efcff1f249435e24dc838a00101d03e5f8",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast storage 0xDc71366EFFA760804DCFC3EDF87fa2A6f1623304 0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103 --block 20999832 --rpc-url https://gateway.tenderly.co/public/mainnet",
+      "summary": "AdminChanged transfers the EIP-1967 admin slot from the single externally owned key 0x2818a3af785975a32611155a6ee36c21cec068ca to the contract 0x31110622D6CA24c9FF307d6ae1715F16E47F16A0 (2,059 bytes of runtime code), moving unilateral upgrade authority from one hot key to an on-chain proxy-admin contract only 1,019 blocks after the baseline."
+    },
+    {
+      "block_number": 21614282,
+      "block_date": "2025-01-13",
+      "tx_hash": "0x908d9fce8cd9a787900543daabf45936a8873b543f593030f3edceeca35543f8",
+      "event_kind": "proxy_upgrade",
+      "rpc_or_cast_proof": "cast storage 0xDc71366EFFA760804DCFC3EDF87fa2A6f1623304 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc --block 21614282 --rpc-url https://gateway.tenderly.co/public/mainnet",
+      "summary": "Third and final upgrade rotates the implementation slot from 0xb8f0871bc0832cb756f07ffc4bddc8b6bf8577b5 to 0x0cc37d5239f9027a1269f53d83c73084d538f3a9, sourced from relay 0x05e1d4694041af987af6f8402d902686018e2136 through 0xb822319ab7848b7cc4537c8409e50f85bfb04377. No further Upgraded log is emitted on this proxy through the 2026-11 observation head."
+    },
+    {
+      "block_number": 26457116,
+      "block_date": "2026-11-20",
+      "tx_hash": "0xd74f51050b607430e893160bf5ffa387cf4bba7a70388c2d4dcfebc2dac927f6",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0x542675E90E269F20ecbb9e0095d4751ac155B530 \"minDelay()(uint256)\" --rpc-url https://gateway.tenderly.co/public/mainnet",
+      "summary": "Twenty-two month checkpoint at the observation head: the proxy still serves implementation 0x0cc37d5239f9027a1269f53d83c73084d538f3a9 with admin 0x31110622D6CA24c9FF307d6ae1715F16E47F16A0 unchanged since 2025-01-13, while live traffic continues. Resolving the admin chain at this height shows admin.owner() = 0x542675E90E269F20ecbb9e0095d4751ac155B530, an EIP-1967 proxy whose implementation 0x5f0caaf0d3b8dd8ea9f80cdbb0021930d3c17353 answers minDelay() with 0, and whose own admin 0x8654061457582c867b77a3a9f4ca714dfc84ec17 points at a 4-of-6 Gnosis Safe (VERSION 1.4.1)."
+    }
+  ],
+  "docs_and_governance_forensics": {
+    "mttr_status": "partially_repaired",
+    "mttr_days": 86.0,
+    "evidence_sources": [
+      {
+        "kind": "github_docs_commit",
+        "date": "2024-12-18",
+        "url": "https://github.com/morph-l2/morph/commit/ee637157d7eb520aae22e8ba247de19000e43563",
+        "claim_summary": "Last commit touching contracts/contracts/l1/L1CrossDomainMessenger.sol before the January 2025 implementation rotation; the shipped upgrade therefore traces to a public commit dated 26 days prior to on-chain execution."
+      },
+      {
+        "kind": "wayback_snapshot",
+        "date": "2024-11-12",
+        "url": "https://web.archive.org/web/20241112100753/https://docs.morphl2.io/",
+        "claim_summary": "Archived Morph documentation captured 24 days after the admin rotation still presents the bridge as a canonical rollup bridge without disclosing the proxy-admin address, its owner chain, or any enforced upgrade delay."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2026-01-22",
+        "url": "https://github.com/morph-l2/morph-doc/commit/d7b0f2fa510cb2fa3d41c90cbd899862f1151b95",
+        "claim_summary": "Documentation commit referencing safe timing and finalisation behaviour, confirming that Safe-based operational detail entered the public docs only in 2026 rather than alongside the 2024 control-plane changes."
+      },
+      {
+        "kind": "official_docs",
+        "date": "2026-11-20",
+        "url": "https://pacta.wtf/protocols/morph-bridge/",
+        "claim_summary": "Pacta's RPC-observed baseline pins the same primary contract and controller with documentationComparison not_assessed, recording that no published delay figure exists to compare against observed on-chain authority."
+      }
+    ],
+    "gap_windows": [
+      {
+        "opened_block": 20999832,
+        "opened_date": "2024-10-19",
+        "closed_block": 21614282,
+        "closed_date": "2025-01-13",
+        "duration_days": 86.0,
+        "status": "repaired",
+        "summary": "Eighty-six days in which the freshly installed proxy-admin contract held upgrade rights while the published bridge documentation documented neither the admin address nor an enforced delay, leaving integrators unable to verify who could replace bridge logic."
+      },
+      {
+        "opened_block": 21614282,
+        "opened_date": "2025-01-13",
+        "closed_block": 21614282,
+        "closed_date": "2025-01-13",
+        "duration_days": 0.0,
+        "status": "verified_aligned",
+        "summary": "The January 2025 rotation is the only upgrade whose implementation provably descends from a public repository commit, and no subsequent Upgraded event appears through the 2026-11 head, so this transition carries no documentation drift window."
+      }
+    ]
+  },
+  "repo_audit": {
+    "github_org_repo": "morph-l2/morph",
+    "commits_12m_contracts": 18,
+    "commits_12m_frontend_or_other": 188,
+    "human_contributors_12m": 17,
+    "bus_factor": 2,
+    "code_before_upgrade_verified": true
+  },
+  "executive_risk_memo": "Morph's Ethereum L1CrossDomainMessenger proxy demonstrates a compact but incomplete hardening trajectory across the observation window. The October 2024 baseline is the weakest documented state: the EIP-1967 admin slot resolved to a bare externally owned key with no deployed bytecode, meaning a single private key could replace the messenger implementation unilaterally and without any on-chain delay. That exposure was closed within the same day, roughly seventeen hours later, when AdminChanged repointed the slot at a proxy-admin contract, and the subsequent January 2025 implementation rotation is fully traceable: the deployed logic descends from repository commit ee637157 authored on 2024-12-18, twenty-six days before execution, so the change was reviewable in public code and was not an unannounced bytecode injection. Since that rotation no further Upgraded event has been emitted on the proxy through the November 2026 head, a twenty-two month stability period that materially reduces upgrade risk for bridge depositors. The residual weakness is structural rather than historical. Resolving the current authority chain terminates in a proxy whose implementation exposes minDelay() equal to zero, a timelock configured to permit same-block execution, itself administered by a four-of-six Safe. Distribution of signature authority is a real improvement over a single hot key, but a zero minimum delay means that once four signers act, the upgrade can land immediately with no challenge window for bridgers, monitoring teams, or L2 users to exit. Documentation lag is the second measured deficiency and is why this dossier records a partially repaired status with an eighty-six day mean time to repair: archived snapshots captured shortly after the admin rotation disclose neither the admin address nor any delay commitment, and Safe operational detail only reaches the documentation repository in January 2026. Engineering bench strength is genuine but concentrated. The trailing twelve months show eighteen smart-contract commits against one hundred eighty-eight non-contract commits across seventeen human contributors, and analysis of contract authorship indicates that core contract maintenance rests on two engineers, a low bus factor for a bridge securing nine figures of value. The mitigating factor is that the contract layer is comparatively mature and quiet while activity centres on tooling and node software. Overall assessment: the messenger has moved from single-key upgradeability to multisig-gated upgradeability with verifiable public code provenance, which is a substantive improvement, but absent a non-zero timelock the protocol still lacks the exit window that institutional bridge counterparties expect, and the governance surface remains undocumented at the point of use.",
+  "contributor_github": "veriton-dev",
+  "agent_assist_framework": "human-researcher",
+  "base_payout_address": "0xa75Cc8545B169F0BeF2f29c9CCF86bc686D039E8",
+  "mcp_tool_receipt": {
+    "tool": "pacta_lookup_protocol",
+    "arguments": {
+      "query": "0xDc71366EFFA760804DCFC3EDF87fa2A6f1623304"
+    },
+    "result": {
+      "schema": "pacta.protocol_lookup.v1",
+      "query": "0xDc71366EFFA760804DCFC3EDF87fa2A6f1623304",
+      "totalMatches": 1,
+      "results": [
+        {
+          "slug": "morph-bridge",
+          "name": "Morph Bridge",
+          "chain": "ethereum",
+          "chainId": 1,
+          "classification": "rpc_observed",
+          "easAttested": false,
+          "controllerAddress": "0x31110622D6CA24c9FF307d6ae1715F16E47F16A0",
+          "controllerKind": "contract_controller",
+          "primaryContract": "0xDc71366EFFA760804DCFC3EDF87fa2A6f1623304",
+          "documentationComparison": "not_assessed",
+          "pinnedBlock": 26455787
+        }
+      ]
+    }
+  },
+  "apache2_commercial_grant": true,
+  "rules_accepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
