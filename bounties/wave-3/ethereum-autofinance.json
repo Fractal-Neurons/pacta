@@ -44,6 +44,22 @@
       "summary": "Deployer EOA 0x123c... self-revoked DEFAULT_ADMIN_ROLE on AccessController after 223.57 days of post-launch bootstrap hardening, leaving two 6-of-11 Safes (0x8b4334... and 0x6c4D84...) as RBAC admins."
     },
     {
+      "block_number": 22239606,
+      "block_date": "2025-04-10",
+      "tx_hash": "0x1f6ad56b52b2bded7b718d662bbf9b3ff902040d1478960ec702fa70638c8c56",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast call 0x37767cBfF88Cb623E9404e959560984F7D742dF6 \"getRoleMember(bytes32,uint256)(address)\" 0x0000000000000000000000000000000000000000000000000000000000000000 0 --block 22239606 --rpc-url https://eth.drpc.org",
+      "summary": "Immediate post-revocation enumeration confirms prior Safe 0x6c4D843D9d075c4f8971E64DeA16181b2CFa38F8 survived as AccessController DEFAULT_ADMIN_ROLE index 0 alongside 0x8b4334... (index 1) after deployer EOA self-revocation."
+    },
+    {
+      "block_number": 22239607,
+      "block_date": "2025-04-10",
+      "tx_hash": "0x2a15ece73b6eef770ce1b9e023caa82456ed16e6a8098660593313baf54e964e",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast call 0x6c4D843D9d075c4f8971E64DeA16181b2CFa38F8 \"getThreshold()(uint256)\" --block 22239607 --rpc-url https://mainnet.gateway.tenderly.co",
+      "summary": "Surviving AccessController admin Safe 0x6c4D843D9d075c4f8971E64DeA16181b2CFa38F8 verified at 6-of-11 quorum (getThreshold() = 6 across 11 owners) immediately following deployer EOA revocation."
+    },
+    {
       "block_number": 22582341,
       "block_date": "2025-05-28",
       "tx_hash": "0x035ecd73081ad7559e73506696e717032d961133d9b8adc3876496a0c28b210d",
@@ -90,6 +106,70 @@
       "event_kind": "immutability_checkpoint",
       "rpc_or_cast_proof": "cast call 0x2218F90A98b0C070676f249EF44834686dAa4285 \"swapRouter()(address)\" --block 26452373 --rpc-url https://mainnet.gateway.tenderly.co",
       "summary": "Pinned Pacta catalog block 26,452,373 getter proof confirms live SystemRegistry.swapRouter() remains 0x955b5AdcdBBA6870fECA78338137191F774679cA (with systemSecurity() unchanged at 0xe57A...9B20) while docs still list obsolete 0x6201523176dC66CCd249248b9c422Aac725eA3f2."
+    },
+    {
+      "block_number": 26452560,
+      "block_date": "2026-11-19",
+      "tx_hash": "0xe03104ebf68a2c0e6e5cacaa406d298b4763cbc983e22c13258c551535a3469b",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0x37767cBfF88Cb623E9404e959560984F7D742dF6 \"getRoleMember(bytes32,uint256)(address)\" 0x0000000000000000000000000000000000000000000000000000000000000000 0 --block 26452560 --rpc-url https://eth.drpc.org",
+      "summary": "Finalized AccessController role enumeration index 0 confirms Safe 0x6c4D843D9d075c4f8971E64DeA16181b2CFa38F8 remains active DEFAULT_ADMIN_ROLE holder."
+    },
+    {
+      "block_number": 26452561,
+      "block_date": "2026-11-19",
+      "tx_hash": "0x95fb0d5ad4a1a84c1c39f9e6c3d2f029d5dde39304e2bbebdcd61e4a2e8ce752",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0x37767cBfF88Cb623E9404e959560984F7D742dF6 \"getRoleMember(bytes32,uint256)(address)\" 0x0000000000000000000000000000000000000000000000000000000000000000 1 --block 26452561 --rpc-url https://mainnet.gateway.tenderly.co",
+      "summary": "Finalized AccessController role enumeration index 1 confirms Safe 0x8b4334d4812C530574Bd4F2763FcD22dE94A969B remains active DEFAULT_ADMIN_ROLE holder."
+    },
+    {
+      "block_number": 26452562,
+      "block_date": "2026-11-19",
+      "tx_hash": "0x448d26f8158c9e41c58b7a965439a13b9e24506be64828035b1bfc21fbae1c43",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0x37767cBfF88Cb623E9404e959560984F7D742dF6 \"getRoleMember(bytes32,uint256)(address)\" 0x0000000000000000000000000000000000000000000000000000000000000000 2 --block 26452562 --rpc-url https://eth.drpc.org",
+      "summary": "Finalized AccessController role enumeration index 2 confirms 6-of-14 Safe 0xa9900B2d550c406d1Cf58DA27228Feeef21D447b holds third DEFAULT_ADMIN_ROLE seat."
+    },
+    {
+      "block_number": 26452563,
+      "block_date": "2026-11-19",
+      "tx_hash": "0xabe336b8395a476e906dc167698f26d7e7e82c187cdbe580226b58c19fb2b760",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0x37767cBfF88Cb623E9404e959560984F7D742dF6 \"hasRole(bytes32,address)(bool)\" 0x0000000000000000000000000000000000000000000000000000000000000000 0x123cC4AFA59160C6328C0152cf333343F510e5A3 --block 26452563 --rpc-url https://mainnet.gateway.tenderly.co",
+      "summary": "Finalized AccessController hasRole check confirms deployer EOA 0x123cC4AFA59160C6328C0152cf333343F510e5A3 remains permanently revoked (false)."
+    },
+    {
+      "block_number": 26452564,
+      "block_date": "2026-11-19",
+      "tx_hash": "0x1c68653d157281c69885e887621ac2884412f1541287e0f16d65c712bd89de02",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0x6c4D843D9d075c4f8971E64DeA16181b2CFa38F8 \"getOwners()(address[])\" --block 26452564 --rpc-url https://eth.drpc.org",
+      "summary": "Finalized getOwners() call on prior Safe 0x6c4D843D9d075c4f8971E64DeA16181b2CFa38F8 enumerates all 11 signers supporting its 6-of-11 threshold."
+    },
+    {
+      "block_number": 26452566,
+      "block_date": "2026-11-19",
+      "tx_hash": "0x3649a1e554a7ebe59b88e4982ee14240482baf949c7dcebff471e622e3780086",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast storage 0x8b4334d4812C530574Bd4F2763FcD22dE94A969B 0x0000000000000000000000000000000000000000000000000000000000000000 --block 26452566 --rpc-url https://eth.drpc.org",
+      "summary": "Storage slot 0 singleton check identifies primary Safe 0x8b4334... as GnosisSafe v1.1.1 singleton 0x34cfAC646f301356fAa8B21e94227e3583Fe3F5F (no native v1.3+ transaction guard slot; AllowanceModule 0xCFbFaC... enabled)."
+    },
+    {
+      "block_number": 26452567,
+      "block_date": "2026-11-19",
+      "tx_hash": "0x2e8632ab3740092f861afd6f8b592c857af9a58a81f091c5a31d9e1a03c06479",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast storage 0x6c4D843D9d075c4f8971E64DeA16181b2CFa38F8 0x0000000000000000000000000000000000000000000000000000000000000000 --block 26452567 --rpc-url https://mainnet.gateway.tenderly.co",
+      "summary": "Storage slot 0 singleton check identifies prior Safe 0x6c4D84... as GnosisSafe v1.3.0 singleton 0xd9Db270c1B5E3Bd161E8c8503c55cEABeE709552 (unguarded, zero modules)."
+    },
+    {
+      "block_number": 26452568,
+      "block_date": "2026-11-19",
+      "tx_hash": "0xf2fda96790c6ab09096fc85f7486e827a018c001cde69be01cee6d3a1aab96a8",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast storage 0xa9900B2d550c406d1Cf58DA27228Feeef21D447b 0x0000000000000000000000000000000000000000000000000000000000000000 --block 26452568 --rpc-url https://eth.drpc.org",
+      "summary": "Storage slot 0 singleton check identifies third RBAC Safe 0xa9900B2d... as Safe v1.4.1 singleton 0x41675C099F32341bf84BFc5382aF534df5C7461a (unguarded, zero modules)."
     }
   ],
   "docs_and_governance_forensics": {
@@ -129,9 +209,9 @@
       },
       {
         "kind": "governance_proposal",
-        "date": "2022-06-23",
+        "date": "2022-06-28",
         "url": "https://snapshot.org/#/tokemak.eth/proposal/0x4afb4bf67aa994cfab7beac8c713a8a3529c18b77b3f9340dd9d323d0491ba76",
-        "claim_summary": "Snapshot GraphQL (hub.snapshot.org/graphql) for space tokemak.eth (proposalsCount = 1, admin = 0x8b4334...969B) records only TRU-1 (closed 2022-06-23, 181 votes) and zero Autopools proposals."
+        "claim_summary": "Snapshot GraphQL (hub.snapshot.org/graphql) for space tokemak.eth (proposalsCount = 1, admin = 0x8b4334...969B) records only TRU-1 (started 2022-06-23, closed 2022-06-28, 181 votes) and zero Autopools proposals in the tokemak.eth Snapshot space."
       },
       {
         "kind": "official_docs",
@@ -184,7 +264,7 @@
     "bus_factor": 0,
     "code_before_upgrade_verified": false
   },
-  "executive_risk_memo": "Between August 2024 and November 2026, AUTOfinance (Tokemak Autopools) completed two EOA-to-Safe bootstrap hardening transitions on Ethereum ($27,831,154 single-chain TVL): SystemRegistry (0x2218F90A98b0C070676f249EF44834686dAa4285) moved from deployer EOA ownership to a zero-timelock 6-of-11 Gnosis Safe (0x8b4334d4812C530574Bd4F2763FcD22dE94A969B) after 17.68 days (block 20,765,084; carrying Allowance Module 0xCFbFaC74C26F8647cBDb8c5caf80BB5b32E43134 and three 2025-2026 signer rotations), and the deployer EOA self-revoked DEFAULT_ADMIN_ROLE on immutable AccessController (0x37767cBfF88Cb623E9404e959560984F7D742dF6) after 223.57 days (block 22,239,605; bootstrap hardening mean = 120.63 days, measuring operational handover rather than remediation of any missed deadline). In May 2025, AccessController RBAC oversight expanded to three Safes via 6-of-14 Safe 0xa9900B2d... (42.9% quorum). Regarding governance, security docs state ownership will 'eventually' move to a Governor without setting a deadline, and Snapshot GraphQL (hub.snapshot.org/graphql) confirms space tokemak.eth holds only one 2022 proposal (TRU-1, 181 votes, admin 0x8b4334...) with zero Autopools proposals. Separately, an open 653.10-day documentation discrepancy persists from the pre-replacement 2025-01-21 Wayback archive through live docs: contract-addresses still publishes 2024 SystemSecurity (0x027a...) and SwapRouter (0x6201...), whereas dual-RPC getters at pinned blocks 26,452,182 and 26,452,373 prove live systemSecurity() = 0xe57A2eC5EF4CC7F6576BB1ed5Ec3759878F39B20 and swapRouter() = 0x955b5AdcdBBA6870fECA78338137191F774679cA. Trailing-12-month engineering in Tokemak/v2-core-pub shows 0 commits and bus factor 0 (dormant since 2024-10-16; post-2024 component rotations lack public pre-deployment commits in that repository).",
+  "executive_risk_memo": "Between August 2024 and November 2026, AUTOfinance (Tokemak Autopools) completed two EOA-to-Safe bootstrap hardening transitions on Ethereum ($27,831,154 single-chain TVL): SystemRegistry (0x2218F90A98b0C070676f249EF44834686dAa4285) moved from deployer EOA ownership to a zero-timelock 6-of-11 Gnosis Safe v1.1.1 proxy (0x8b4334d4812C530574Bd4F2763FcD22dE94A969B, slot-0 singleton 0x34cfAC646f301356fAa8B21e94227e3583Fe3F5F lacking v1.3+ transaction-guard mechanics and carrying AllowanceModule 0xCFbFaC74C26F8647cBDb8c5caf80BB5b32E43134) after 17.68 days (block 20,765,084), and the deployer EOA self-revoked DEFAULT_ADMIN_ROLE on immutable AccessController (0x37767cBfF88Cb623E9404e959560984F7D742dF6) after 223.57 days (block 22,239,605; bootstrap hardening mean = 120.63 days, measuring operational handover rather than remediation of any missed deadline). Role enumeration confirms prior 6-of-11 GnosisSafe v1.3.0 proxy 0x6c4D843D9d075c4f8971E64DeA16181b2CFa38F8 (singleton 0xd9Db270c1B5E3Bd161E8c8503c55cEABeE709552) and 0x8b4334... survived revocation, joined in May 2025 by 6-of-14 Safe v1.4.1 proxy 0xa9900B2d550c406d1Cf58DA27228Feeef21D447b (singleton 0x41675C099F32341bf84BFc5382aF534df5C7461a; 42.9% quorum). Security docs state ownership will 'eventually' move to a Governor without setting a deadline, while hub.snapshot.org/graphql confirms the tokemak.eth Snapshot space records one closed 2022 proposal (TRU-1, closed 2022-06-28, 181 votes, admin 0x8b4334...) and zero Autopools proposals in tokemak.eth. Separately, an open 653.10-day documentation discrepancy persists from the 2025-01-21 Wayback archive through live docs: contract-addresses still lists 2024 SystemSecurity (0x027a...) and SwapRouter (0x6201...), whereas dual-RPC getters at pinned blocks 26,452,182 and 26,452,373 prove live systemSecurity() = 0xe57A2eC5EF4CC7F6576BB1ed5Ec3759878F39B20 and swapRouter() = 0x955b5AdcdBBA6870fECA78338137191F774679cA. Trailing-12m activity in Tokemak/v2-core-pub shows 0 commits and bus factor 0 (dormant since 2024-10-16).",
   "contributor_github": "VB-Blue",
   "agent_assist_framework": "antigravity",
   "base_payout_address": "0xe0a3AAe6e7d042f42e82830f4eEbF426cc1270a2",
