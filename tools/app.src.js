@@ -453,19 +453,23 @@
     return "$" + Math.round(v).toLocaleString("en-US") + " TVL";
   }
   var SC_RANK = { delta: 0, protective: 1, aligned: 2, observed: 3 };
-  function scRows(card, prefix) {
+  function scRows(card, prefix, ident) {
     var nets = (card.chains || []).map(function (c) { return SC_CHAIN[c] || c; }).join(" · ");
     var tvlVal = typeof card.tvlUsd === "number" && card.tvlUsd > 0 ? Math.round(card.tvlUsd) : -1;
     var tvlTxt = fmtTvlUsd(tvlVal);
     var subMeta = tvlTxt ? nets + " · " + tvlTxt : nets;
     var slug = String(card.slug), did = "sc-d-" + slug, pre = /^(\.\.\/)*$/.test(prefix || "") ? (prefix || "") : "";
     var tog = el("button", { "class": "sc-toggle", type: "button", "aria-expanded": "false", "aria-controls": did, text: String(card.name) });
+    var idn = ident && own(ident, slug) ? ident[slug] : null;   // B8: the server's identity (icon, ticker) for the same cell
+    var pidKids = [el("img", { "class": "pid-logo", src: idn ? pre + String(idn[0]) : protoIconSrc(slug), alt: "", width: "22", height: "22",
+      loading: "lazy", decoding: "async" }), tog];
+    if (idn && idn[1]) pidKids.push(el("span", { "class": "pid-tk mono", text: String(idn[1]) }));
     var ros = rosette(card.factors || [], 32, card.name, false);
     var eas = card.easAttested !== false;
     var row = el("tr", { "class": "sc-row", "data-slug": slug, "data-name": String(card.name || "").toLowerCase(),
       "data-grade": String(card.grade), "data-tvl": String(tvlVal), "data-eas": eas ? "1" : "0",
       "data-baskets": (card.baskets || []).join(" "), "data-search": String(card.search || "") }, [
-      el("td", {}, [tog, el("span", { "class": "sc-chain", text: subMeta })]), el("td", {}, [gradePill(card)]),
+      el("td", {}, [el("span", { "class": "pid" }, pidKids), el("span", { "class": "sc-chain", text: subMeta })]), el("td", {}, [gradePill(card)]),
       el("td", {}, ros ? [ros] : [String(SC_GRADE[card.grade] || "")]), el("td", { "class": "sc-find", text: String(card.summary_short || card.finding || "") }),
       el("td", { "class": "sc-chev" }, [el("span", { "class": "chev", "aria-hidden": "true" }, [svgIcon("m6 9 6 6 6-6")])])]);
     var p = card.probe || {}, n = card.records;
@@ -548,7 +552,9 @@
           return na < nb ? -1 : na > nb ? 1 : 0;
         });
         body.textContent = "";
-        cards.forEach(function (c) { scRows(c, prefix).forEach(function (n) { body.appendChild(n); }); });
+        var ident = {};
+        try { ident = JSON.parse(body.getAttribute("data-ident") || "{}") || {}; } catch (e) { ident = {}; }
+        cards.forEach(function (c) { scRows(c, prefix, ident).forEach(function (n) { body.appendChild(n); }); });
         hydrated = true;
         if (more) more.hidden = true;
         return true;
@@ -1196,7 +1202,7 @@
   }
 
   // ---- request builder: brief + GitHub intake + Gmail compose + copy ---------------------------------
-  // Tracks: 24h dossier (default), $500 re-verification, Continuous Control-Plane Monitoring, high-throughput API SLA, free community queue. The
+  // Tracks: 24h dossier (default), free 7-day fix re-verification, wholesale sweep, Continuous Control-Plane Monitoring, high-throughput API SLA. The
   // public data itself is free for everyone, so nothing here gates access. GitHub dropdown strings must match
   // .github/ISSUE_TEMPLATE/request-scan.yml. Paid tracks settle by Option A (commercial invoice, default) or Option B
   // (direct on-chain USDC to the Pacta treasury, an EOA).
@@ -1423,7 +1429,8 @@
     "reverify-seal-99": { atomic: 99000000, amount: "99.00", route: "seal", label: "24h Mainnet Control-Plane Seal", needTarget: true, needContact: true,
                           contactMissing: "Enter a team contact so the verifiers can reach you." }
   };
-  var CO_TIER = { "wallet-9": "wallet-report-9", "wallet-guard-49": "radar-webhook-49", "instant-19": "instant-scan-19", "webhook-49": "radar-webhook-49", "seal-99": "reverify-seal-99" };
+  // webhook-49 / wallet-guard-49 forward to the free watch pilot door (no paid webhook is sold)
+  var CO_TIER = { "wallet-9": "wallet-report-9", "wallet-guard-49": "watch-pilot", "instant-19": "instant-scan-19", "webhook-49": "watch-pilot", "seal-99": "reverify-seal-99" };
   // the Worker's order codes (POST /v1/orders/verify, OpenAPI): CO_RETRY are polled with the same frozen order; the rest are final
   var CO_ERR = {
     tx_already_used: "This transaction hash already unlocked another order.",
@@ -3985,7 +3992,7 @@
     function setBusy(on) {
       if (btn) { btn.disabled = on; btn.setAttribute("aria-busy", String(on)); }
       if (spin) spin.hidden = !on;
-      if (lbl) lbl.textContent = on ? "Enabling\u2026" : "Enable Free Drift Alerts";
+      if (lbl) lbl.textContent = on ? "Enabling\u2026" : "Enable free alerts";
     }
     form.addEventListener("submit", function (ev) {
       ev.preventDefault();
@@ -4020,7 +4027,7 @@
         var j = res.j || {};
         if (res.status === 200 && (j.ok || j.request_id)) {
           var wid = j.watch_id || j.request_id || "WCH-2026";
-          if (doneMsg) doneMsg.textContent = "30-day free drift alert pilot active (" + wid + ") for " + tVal + " via " + ch + ". Watch setup replies come from pacta@dri.network.";
+          if (doneMsg) doneMsg.textContent = "30-day free alert pilot active (" + wid + ") for " + tVal + " via " + ch + ". Watch setup replies come from pacta@dri.network.";
           form.hidden = true;
           if (doneEl) { doneEl.hidden = false; if (doneEl.focus) { try { doneEl.focus(); } catch (e) { /* ignore */ } } }
           return;
@@ -4053,18 +4060,18 @@
     var tInput = el("input", { type: "hidden", name: "target", value: String(targetAddr || ""), "data-wp-target": "" });
     var dInput = el("input", {
       type: "text", name: "destination", maxlength: "240", spellcheck: "false", autocapitalize: "off",
-      placeholder: "Email, @Telegram, or https:// webhook URL", "aria-label": "Email, @Telegram, or HTTPS Webhook", "data-wp-dest": ""
+      placeholder: "Email, Telegram or webhook", "aria-label": "Email, Telegram or HTTPS webhook", "data-wp-dest": ""
     });
     var subBtn = el("button", {
       type: "submit", "data-slot": "button", "data-variant": "default", "data-size": "default", "data-wp-submit": ""
     }, [
       el("span", { "class": "spinner", "aria-hidden": "true", hidden: "" }),
-      el("span", { "data-wp-btn-lbl": "", text: "Enable Free Drift Alerts" })
+      el("span", { "data-wp-btn-lbl": "", text: "Enable free alerts" })
     ]);
     f.appendChild(tInput);
     f.appendChild(el("div", { "class": "wp-inline-row" }, [dInput, subBtn]));
     var priv = el("p", { "class": "wp-privacy", "data-wp-privacy": "" }, [
-      "Used strictly to deliver your requested control-plane alerts and opted-in setup replies from the Pacta Strategy desk (",
+      "Used only to deliver the alerts you ask for and opted-in setup replies from Pacta (",
       el("code", { text: "pacta@dri.network" }),
       "); never sold or used for cold marketing \u2014 see ",
       el("a", { href: siteUrl("https://pacta.wtf/privacy/#watch-pilot"), text: "Privacy" }),
@@ -4076,7 +4083,7 @@
     sec.appendChild(f);
     sec.appendChild(el("div", { "class": "wp-done", "data-wp-done": "", hidden: "", tabindex: "-1" }, [
       el("span", { "data-slot": "badge", "data-variant": "success", text: "30-Day Free Pilot Active" }),
-      el("p", { "data-wp-done-msg": "", text: "Drift alert pilot enabled." })
+      el("p", { "data-wp-done-msg": "", text: "Alert pilot enabled." })
     ]));
     bindWatchPilotRoot(sec);
     return sec;
@@ -4148,7 +4155,8 @@
         var j = res.j || {};
         if (res.status === 200 && (j.ok || j.request_id)) {
           var pid = j.pool_id || j.request_id || "POOL-2026";
-          if (doneMsg) doneMsg.textContent = "Verification Pool reserved (" + pid + ") for " + tVal + " (" + tierVal + "). Zero transfer is requested while 2-of-3 Base Safe verification completes ($500 USDC max held cap); pacta@dri.network will reply with verified instructions.";
+          var tierLbl = tierVal === "wholesale-150" ? "sweep, $150 per protocol for 20 or more" : "$50 minimum pool, $25 fixed verification fee";
+          if (doneMsg) doneMsg.textContent = "Verification pool reserved (" + pid + ") for " + tVal + " (" + tierLbl + "). No payment now: we reply from Pacta (pacta@dri.network), and deposit instructions come only after the Sponsor Safe is deployed and verified.";
           form.hidden = true;
           if (doneEl) { doneEl.hidden = false; if (doneEl.focus) { try { doneEl.focus(); } catch (e) { /* ignore */ } } }
           return;

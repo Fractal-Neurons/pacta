@@ -1262,7 +1262,9 @@ def main(argv=None):
     r = radar["refreshed_at"]
     check("radar ETAs on the page match radar.json", etas == shown, f"{sorted(etas)} vs {sorted(shown)}")
     check("radar freshness badge states block and time (pinned snapshot, UTC observation + relative age slot)", f"#{r['block_number']:,}" in page and r["block_time_utc"] in page
-          and "Pinned snapshot · observed" in page and f'data-age="{r["block_timestamp"]}"' in page and "Checking live chain state" in page)
+          and "Pinned snapshot · observed" in page and f'data-age="{r["block_timestamp"]}"' in page
+          and '<span class="spinner" aria-hidden="true" hidden></span><span data-live-status-text>Pinned snapshot</span>' in page
+          and "Checking live chain state" in read("tools/app.src.js"))
 
     # html structure
     for f in ["docs/index.html"] + [os.path.relpath(p, ROOT) for p in glob.glob(os.path.join(DOCS, "briefs", "*", "index.html"))]:
@@ -1354,7 +1356,8 @@ def main(argv=None):
                                "seal": dom_tree(pages[os.path.join("seal", "index.html")]) if os.path.join("seal", "index.html") in pages else None,
                                "bounties": dom_tree(pages[os.path.join("bounties", "index.html")]) if os.path.join("bounties", "index.html") in pages else None,
                                **{v_["route"]: dom_tree(pages[os.path.join(v_["route"], "index.html")]) for v_ in BS.CHECKOUT.values()
-                                  if os.path.join(v_["route"], "index.html") in pages},
+                                  if v_.get("live", True) and os.path.join(v_["route"], "index.html") in pages},
+                               "webhook": dom_tree(BS.product_page(json.load(open(os.path.join(DOCS, "api", "v1", "index.json"))), "radar-webhook-49")),
                                "checkout": {"api": BS.ORDERS_VERIFY_API, "treasury": BS.CHECKOUT_TREASURY, "usdc": BS.USDC["Base"],
                                             "skus": {k_: v_["atomic"] for k_, v_ in BS.CHECKOUT.items()},
                                             "amounts": {k_: v_["amount"] for k_, v_ in BS.CHECKOUT.items()}}})
@@ -1941,6 +1944,8 @@ def main(argv=None):
     CTA_V2 = {"radar-webhook-49": "Pay $49 USDC on Base &amp; Activate Webhook"}
     pd_bad = {}
     for k_, v_ in BS.CHECKOUT.items():
+        if not v_.get("live", True):
+            continue
         t_ = pages.get(os.path.join(v_["route"], "index.html"), "")
         fm_ = re.search(r'<form class="co" id="co-form".*?</form>', t_, re.S)
         f_ = fm_.group(0) if fm_ else ""
@@ -1977,13 +1982,12 @@ def main(argv=None):
         "scan: 100% free full Wallet, Safe & Protocol scanner (6 real protocol chips + 2 demo wallets) + Free Watch Pilot with privacy disclosure":
             'class="pf hero-pf"' in scan_ and 'data-lookup="../api/v1/lookup.json"' in scan_ and chips_v2 == want_chips
             and 'id="watch-pilot"' in scan_ and 'data-watch-pilot-form' in scan_
-            and "Pacta Strategy desk (<code>pacta@dri.network</code>)" in scan_
+            and "from Pacta (<code>pacta@dri.network</code>)" in scan_ and "Strategy desk" not in scan_
             and 'href="../privacy/#watch-pilot"' in scan_ and 'id="co-form"' not in scan_
             and 'id="pf-submit"' in scan_ and re.search(r'data-variant="default" data-size="lg" type="submit" id="pf-submit"', scan_) is not None,
-        "webhook: quick picks + an alert card built from the decoded radar brief (block, decoded call, live ETA countdown)":
-            web_.count("data-co-pick") == len(BS.WEBHOOK_PICKS) and f'Ethereum #{alert_["scheduled"]["block"]:,}' in web_
-            and f'data-eta="{alert_["eta"]}"' in web_ and alert_["calls"][0]["function"] in web_
-            and 'id="watch-pilot"' in web_,
+        "webhook: the free 30-day pilot and the RSS / Atom feed; nothing for sale (no checkout form, no pay button, no price)":
+            'id="watch-pilot"' in web_ and 'data-watch-pilot-form' in web_ and 'href="../feed.xml"' in web_
+            and 'id="co-form"' not in web_ and "data-co-pay" not in web_ and "orders/verify" not in web_ and "$49" not in web_,
         "seal: reframed 3-path Base-EAS attestation (Free 7-day fix re-check, Verification Pool, Suite Dossier), 3 deliverables & editorial guarantee":
             seal_.count('class="pv-d"') == 3 and "<svg" in seal_.split('data-preview="seal"')[-1] and f'src="../badges/{BS.BADGE_DEMO}.svg"' in seal_
             and html.escape(BS.SEAL_GUARANTEE, quote=False) in seal_ and 'id="co-form"' not in seal_
@@ -1994,13 +1998,16 @@ def main(argv=None):
     VERBATIM_SP = ("Sponsor funds sit in a 2-of-3 Safe on Base. One key is held by the founder. "
                    "Two are held by separate automated systems run by the Pacta project, each on a different machine. "
                    "The founder approves every payout and refund in writing. We hold at most $500 at a time.")
-    sp_ok = (BS.SPONSOR_POOL_ADDRESS == "" and 'id="sponsor-pool" data-sponsor-pool data-sponsor-address=""' in bnt_sp
+    sp_ok = (BS.SPONSOR_POOL_ADDRESS == "" and not BS.sponsor_pool_live()
+             and 'id="sponsor-pool" data-sponsor-pool data-sponsor-address="" data-sponsor-state="pending"' in bnt_sp
              and all(f'data-custody-rule="{r_}"' in bnt_sp for r_ in ("a", "b", "c", "d"))
-             and bnt_sp.count(VERBATIM_SP) >= 2 and "$2,000" not in bnt_sp
-             and "$500 USDC" in bnt_sp and "100% on-chain refund after 30 days" in bnt_sp
-             and 'data-sponsor-self-check' in bnt_sp and "Pending verification" in bnt_sp
-             and "Modules" in bnt_sp and "0 (None)" in bnt_sp and "0x0 (None)" in bnt_sp
-             and 'id="sponsor-ledger"' in bnt_sp and "Dec 4 milestone" in bnt_sp
+             and VERBATIM_SP not in bnt_sp and html.escape(BS.SPONSOR_CUSTODY_DEPLOYED, quote=False) not in bnt_sp and "$2,000" not in bnt_sp
+             and "$500 USDC" in bnt_sp and bnt_sp.count(html.escape(BS.SPONSOR_OPENING, quote=False)) >= 3
+             and "on-chain refund" not in bnt_sp and "refund guarantee" not in bnt_sp and "not an automatic on-chain guarantee" in bnt_sp
+             and 'data-sponsor-self-check' in bnt_sp and bnt_sp.count('<dd class="mono">Not verified</dd>') == 4
+             and "0 (None)" not in bnt_sp and "0x0 (None)" not in bnt_sp and "Dec 4" not in bnt_sp
+             and 'id="sponsor-ledger"' in bnt_sp and "0 sponsor pools recorded" in bnt_sp
+             and '<option value="pool-150"' not in bnt_sp and "Trajectory" not in bnt_sp[bnt_sp.find('id="sponsor-pool"'):bnt_sp.find('id="wave-3"')]
              and 0 < bnt_sp.find('id="sponsor-pool"') < bnt_sp.find('id="sponsor-ledger"') < bnt_sp.find('id="wave-3"')
              and 'id="watch-pilot"' in priv_pg and "pacta@dri.network" in priv_pg)
     cur_pg = pages.get(os.path.join("curators", "index.html"), "")
@@ -2015,7 +2022,7 @@ def main(argv=None):
     check("3-Door Free Wallet/Safe Omnibox, Watch Pilot, Sponsor Pools & Curator Matrix (/scan/, /bounties/#sponsor-pool, /curators/ & /seal/): zero $9/$19/$99 gate on /scan/ & /seal/, "
           "2 instant Wallet/Safe demo chips + 6 live protocol chips, Multicall3 fallback, Free Watch Pilot w/ privacy disclosure, isolated Sponsor Pool custody rules 1-4 + #sponsor-ledger (harness)",
           all(p_ not in scan_ for p_ in ("$9", "$19", "$49", "$99"))
-          and all(p_ not in seal_ for p_ in ("$9", "$19", "$99", "$500 /")) and "$500 max held cap" in seal_
+          and all(p_ not in seal_ for p_ in ("$9", "$19", "$99", "$500 /")) and "$50 minimum pool" in seal_ and "Opening soon" in seal_ and "Trajectory" not in seal_
           and scan_.count("data-wallet-demo=") == 2 and scan_.count('class="ex-item"') == 5
           and "PUBLISHED DOCS PROMISE" in scan_ and "LIVE ON-CHAIN REALITY" in scan_
           and 0 < seal_.find("data-seal-paths") < seal_.find("data-seal-explainer") < seal_.find('data-preview="seal"')
@@ -2034,14 +2041,14 @@ def main(argv=None):
             seal_cta_bad.append(v["slug"])
     req_v2 = read("docs/request/index.html")
     launch_ok = ('<nav class="launcher" aria-label="Instant self-serve checks" data-launcher>' in req_v2 and "<h1>Request a dossier</h1>" in req_v2
-                 and all(f'data-sku="{s_}"' in req_v2 for s_ in ("scan-free", "sponsor-pool", "radar-webhook-49"))
+                 and all(f'data-sku="{s_}"' in req_v2 for s_ in ("scan-free", "sponsor-pool", "watch-pilot")) and "$49" not in req_v2
                  and req_v2.find("data-launcher") < req_v2.find('id="req-form"'))
     co_src = read("tools/app.src.js")
     co_js = co_src[co_src.find("var CO_TREASURY"):co_src.find("function initLauncher")]
     co_js_ok = (f'var CO_TREASURY = "{BS.CHECKOUT_TREASURY}", CO_USDC = "{BS.USDC["Base"]}", CO_CHAIN = "0x2105";' in co_js
                 and hex(BS.CHECKOUT_CHAIN_ID) == "0x2105"
                 and all(f'"{k_}": {{ atomic: {v_["atomic"]}, amount: "{v_["amount"]}", route: "{v_["route"]}"' in co_js for k_, v_ in BS.CHECKOUT.items())
-                and all(f'"{v_["tier"]}": "{k_}"' in co_js for k_, v_ in BS.CHECKOUT.items())
+                and all(f'"{v_["tier"]}": "{k_}"' in co_js for k_, v_ in BS.CHECKOUT.items() if v_.get("live", True))
                 and '"0xa9059cbb" + coPad(CO_TREASURY.slice(2).toLowerCase()) + coPad(Number(atomic).toString(16))' in co_js
                 and co_js.count('method: "eth_sendTransaction"') == 1 and "0x095ea7b3" not in co_src and "increaseAllowance" not in co_src
                 and not re.search(r'method:\s*"(?:eth_sign|personal_sign|eth_signTypedData\w*)"', co_src)
@@ -2066,9 +2073,10 @@ def main(argv=None):
                and (wd_ is None or (('href="#seal-cta" data-cta="seal_wd"' in wd_.group(0)) == (wd_.group(1) is None))))
         if not ok_:
             maint_bad.append(v["slug"])
-    ftr_v2 = [r_ for r_, t_ in pages.items() if 'class="ftr"' in t_ and not all(f'{x_}</a></li>' in t_ for x_ in ('scan/">Instant scan', 'webhook/">Timelock webhooks', 'seal/">Base-EAS attestation'))]
-    web_one = ('id="co-watch" type="text"' in web_ and '<input type="hidden" id="co-target" name="target_address">' in web_
-               and '<input type="hidden" id="co-docs" name="protocol_or_docs">' in web_ and 'for="co-target"' not in web_ and 'for="co-docs"' not in web_)
+    ftr_v2 = [r_ for r_, t_ in pages.items() if 'class="ftr"' in t_ and not all(f'{x_}</a></li>' in t_ for x_ in ('scan/">Instant scan', 'webhook/">Timelock watchlist', 'seal/">Base-EAS attestation'))]
+    # no page offers the retired $49 / month webhook (automated paid delivery is not active); /webhook/ is the free pilot
+    no49 = [r_ for r_, t_ in pages.items() if re.search(r"\$49|49 USDC|49 / mo|every 30 minutes", t_)]
+    web_one = not no49 and 'id="co-form"' not in web_
     co_keys = ["co_single_sku_pages", "co_no_wallet_opens_drawer", "co_scan_chip_previews_and_orders", "co_verify_posts_exact_body", "co_result_text_only",
                "co_contract_codes", "co_errors_reported", "co_wallet_transfer_only", "co_wallet_cancel_sends_nothing", "co_wallet_single_flight",
                "co_snapshot_and_inputs_locked", "co_webhook_picks_and_rules", "co_webhook_single_target", "co_seal_protocol_prefill", "co_request_launcher_forward",
@@ -2078,7 +2086,7 @@ def main(argv=None):
           f"0x4348…Ed14 pill, no raw 42-char hex or EOA copy, exact EIP-681 + amount, real-data previews, 1200x628 cards); nav, /radar/, every flagged protocol "
           f"page and the /request/ launcher link them; app.js payee / token / chain / amounts = the build's, transfer only, frozen order, single flight; "
           f"behaviour {len(co_keys) - len(co_failed)}/{len(co_keys)} (harness)",
-          not pd_bad and all(previews_ok.values()) and not nav_bad and 'href="../webhook/" data-cta="radar_webhook_49"' in radar_v2 and not seal_cta_bad
+          not pd_bad and all(previews_ok.values()) and not nav_bad and "data-webhook-cta" not in radar_v2 and "$49" not in radar_v2 and 'id="watch-pilot"' in radar_v2 and not seal_cta_bad
           and launch_ok and co_js_ok and css_ok and not co_failed and not maint_bad and not ftr_v2 and web_one,
           f"pages {pd_bad}; previews {[k_[:30] for k_, v_ in previews_ok.items() if not v_]}; nav {nav_bad[:3]}; seal cta {seal_cta_bad[:3]}; launcher {launch_ok}; "
           f"js {co_js_ok}; css {css_ok}; failed {co_failed[:4]}; maintainer card {maint_bad[:3]}; footer {ftr_v2[:3]}; webhook one field {web_one}")
@@ -2620,7 +2628,9 @@ def main(argv=None):
         "W4: build-pinned freshness pill on /, /scorecards/, /protocols/ (index.json pins + EAS batches) and /radar/ (radar pins); /bounties/ leads with "
         "Wave 2, the closed Nov 15 Wave 1 collapsed at the bottom; 0 '53 currently indexed' anywhere in docs/":
             all(pill47 in pages[r_] for r_ in ("index.html", os.path.join("scorecards", "index.html"), os.path.join("protocols", "index.html")))
-            and rpill47 in pages[os.path.join("radar", "index.html")]
+            and all(b_ in (re.search(r'<p class="fresh radar-snap" data-fresh data-radar-snapshot>.*?</p>', pages[os.path.join("radar", "index.html")], re.S)
+                               or re.search("$^", "")).group(0)
+                    for b_ in ("#" + format(rad47["refreshed_at"]["block_number"], ","), "#" + format(rad47["refreshed_at_base"]["block_number"], ","), "data-age="))
             and not [f_ for f_ in glob.glob(os.path.join(DOCS, "**", "*"), recursive=True) if os.path.isfile(f_) and not f_.endswith(".png")
                      and "53 currently indexed" in open(f_, encoding="utf-8", errors="ignore").read()]
             and re.search(r'<details class="archive-details" id="wave-1-archive" data-wave1-archive><summary>', bnt47) is not None
@@ -3197,10 +3207,11 @@ def main(argv=None):
             and set(w3cfg["chains"].values()) == {"ethereum", "base", "arbitrum", "optimism", "polygon", "bnb", "avalanche"}
             and w3cfg["minTvlUsd"] == 10_000_000 and w3cfg["minMemoChars"] == 400
             and w3cfg["settlement"]["chainId"] == 8453 and w3cfg["settlement"]["treasuryKind"] == "EOA" and VBS.checksummed(treas)
-            and VBS.W3 == w3cfg and "Wave 3 (OPEN)" in read("docs/llms.txt")
+            and VBS.W3 == w3cfg and w3cfg["status"] == "closed_in_settlement" and "Wave 3 (CLOSED, in settlement since" in read("docs/llms.txt")
+            and "Wave 3 (OPEN)" not in read("docs/llms.txt") and "Slots Open" not in bounty and not re.search(r"\$10(?![0-9,M])", bounty)
             and 0 < bounty.find('id="wave-3"') < bounty.find('id="wave-2-archive"') < bounty.find('id="wave-1-archive"')
             and all(f'data-wave3-part="{p_}"' in bounty for p_ in ("1", "2", "3"))
-            and f"including all {n_rpc_obs_} un-assessed <code>rpc_observed</code>" in bounty and no_safe(bounty),
+            and f"including the {n_rpc_obs_} unassessed on-chain records" in bounty and no_safe(bounty),
         "Wave 3 master issue & README: exact title, byte-identical regeneration, valid Optimism dossier example, all FIELDS_WAVE3 & repo_audit keys documented":
             master3.split("\n", 1)[0] == f"# {w3cfg['title']}"
             and master3 == BS.wave3_master_issue_md(n_prot, n_rpc_obs_) and BS.md_html(master3.split("\n", 2)[2]) in bounty
@@ -3470,7 +3481,7 @@ def main(argv=None):
         "funded capacity = confirmed unencumbered USDC only (Wave 3: 2 slots / $40.00 USDC unencumbered in Base EOA; Wave 2 retired; Wave 1 4/4 settled)":
             (w3cfg["settledSlots"], w3cfg["fundedUnencumberedSlots"], w3cfg["fundedUnencumberedUsdc"], w3cfg["ringFencedReserveUsdc"]) == (0, 2, "40.00", "0.05")
             and 25 <= len(lb_["wave2Settlements"]) <= 30 and all(BS.tx_ok(p_["payoutTxHash"]) for p_ in lb_["wave2Settlements"])
-            and "data-wave3-capacity" in bounty and "Confirmed unencumbered on-chain now: <b>$40.00 USDC (2 slots)</b>" in bounty
+            and "data-wave3-capacity" in bounty and f'Held for these payouts: <b>${BS.W3_CLOSE["heldUsdc"]} USDC</b>' in bounty
             and "**$40.00 USDC (2 slots)**" in master3
             and "Confirmed unencumbered Wave 2 micro-bounty capacity: **$0.00 USDC (0 slots)**" in master
             and "funded this epoch" not in bounty + master + master3 + read("docs/llms.txt")
@@ -3479,7 +3490,7 @@ def main(argv=None):
         "README: settled shield, @pacta/mcp-server 0.1.5, Wave 3 + Master Issue #41, live protocol count, Ethereum and Base block heights": (
             sum(25 for s_ in lb_["wave1Settlements"] if s_["payoutTxHash"]) == 100 and 25 <= len(lb_["wave2Settlements"]) <= 30
             and re.search(r'\[!\[Bounties & Leaderboard\]\(https://img\.shields\.io/badge/Bounties_%26_Leaderboard-%24\d+_USDC_Settled-10b981\?style=for-the-badge&labelColor=000000\)\]\(https://pacta\.wtf/leaderboard/\)', read("README.md")) is not None
-            and "Wave 3 OPEN (`2 × $20.00 USDC = $40.00 USDC` on Base)" in read("README.md")
+            and "Wave 3 CLOSED, in settlement since 20 Nov 2026" in read("README.md") and "Wave 3 OPEN" not in read("README.md")
             and "`@pacta/mcp-server` 0.1.5" in read("README.md") and "0.1.4" not in read("README.md")
             and json.loads(read("packages/mcp-server/package.json"))["version"] == "0.1.5"
             and "[Master Issue #41](https://github.com/Fractal-Neurons/pacta/issues/41)" in read("README.md")
@@ -3609,7 +3620,7 @@ def main(argv=None):
         "Runs when you press Check or pick an example below." in home_p and res.get("pf_no_fetch_on_load") is True
         and "First-party telemetry stores aggregate counts without raw IPs; X Ads conversion measurement (uwt.js) runs on public pages" in home_p
         and "no cookies" not in home_p
-        and f'data-bounty-pill>Wave 3 Open · ${BS.WAVE3_REWARD_USDC} USDC / Protocol · {BS.WAVE3_FUNDED_SLOTS} Slots Open · ${BS.WAVE3_FUNDED_USDC} USDC On-Chain</span>' in read("docs/bounties/index.html")
+        and f'data-bounty-pill>Wave 3 closed · in settlement · {len(BS.W3_CLOSE["awards"])} × ${BS.W3_CLOSE["awards"][0]["usdc"]} USDC awarded</span>' in read("docs/bounties/index.html")
         and "Wave 1 Genesis (4/4 = $100 USDC) 100% settled on Base" in read("docs/bounties/index.html"))
     def lum_(h):
         c = [int(h[i:i + 2], 16) / 255 for i in (1, 3, 5)]

@@ -520,7 +520,7 @@ async function beaconScenario() {
     }
     const hp = ctaClicks(input.index, "/");
     res.b_cta_pricing = same(hp.kinds, ["pricing_scan_free", "pricing_mcp", "pricing_sponsor_pool", "pricing_wholesale", "pricing_watch_pilot",
-                                        "pricing_webhook_49", "pricing_clearance", "pricing_wholesale_150", "pricing_continuous", "pricing_community", "pricing_api_sla"])
+                                        "pricing_radar", "pricing_clearance", "pricing_wholesale_150", "pricing_continuous", "pricing_community", "pricing_api_sla"])
       && hp.events.length === 11 && hp.events.every((e) => e === "cta_click");
   }
   // 404: not_found_404 instead of page_load; paths are redacted to a closed canonical set BEFORE transmission
@@ -1559,7 +1559,7 @@ async function checkoutScenario() {
   const coldScan = page(input.scan, "/scan/", { search: "?internal=1&utm_source=x", fetch: pilotFetch }), cd = coldScan.document;
   const wpBox = cd.getElementById("watch-pilot"), wpTarget = cd.getElementById("watch-pilot-target"), wpDest = cd.getElementById("watch-pilot-dest");
   const privTxt = (cd.querySelector("[data-wp-privacy]") || {}).textContent || "";
-  const coldClean = !cd.getElementById("co-form") && !!wpBox && privTxt.includes("Pacta Strategy desk") && privTxt.includes("pacta@dri.network");
+  const coldClean = !cd.getElementById("co-form") && !!wpBox && privTxt.includes("from Pacta (") && !privTxt.includes("Strategy desk") && privTxt.includes("pacta@dri.network");
   const usdcChip = cd.querySelectorAll("[data-receipt]").find((b) => b.getAttribute("data-pf-address") === C.usdc) || cd.querySelectorAll("[data-receipt]")[0];
   const chipA = usdcChip.getAttribute("data-pf-address"), chipCh = usdcChip.getAttribute("data-pf-chain");
   const wantTarget = usdcChip.getAttribute("data-pf-slug") || (chipCh + ":" + chipA);

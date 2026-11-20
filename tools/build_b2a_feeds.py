@@ -55,12 +55,12 @@ LEADERBOARD_URL = "https://pacta.wtf/leaderboard/"
 COMMUNITY_URL, COMMUNITY_QA_URL = _W3["communityUrl"], _W3["communityQaUrl"]
 COMMUNITY_DOC = (f"Community hub (GitHub Discussions): announcements and builder / bounty Q&A at {COMMUNITY_URL}; questions about targets, "
                  f"dossiers or the MCP tools go to the Q&A thread {COMMUNITY_QA_URL}. Historical Wave 2 issue: {_W2['wave2IssueUrl']}")
-WAVE3_DOC = (f"Bounties Wave 3 (OPEN): {_W3['program']} ({_W3['openSlots']} × ${_W3['rewardUsdc']} USDC = ${_W3['poolCapUsdc']} USDC open; "
-             f"${_W3['fundedUnencumberedUsdc']} USDC ({_W3['fundedUnencumberedSlots']} slots) confirmed unencumbered on-chain now in {_W3['settlement']['treasuryAddress']}); "
-             f"protocols >= ${_W3['minTvlUsd'] // 1_000_000}M TVL across 7 EVM chains ({', '.join(_W3['chains'].values())}), INCLUDING all pre-indexed rpc_observed "
-             f"(easAttested: false) protocols in /api/v1/protocols.json; mandatory 3-part human-researcher dossier (historical_transitions 2023-2026, "
-             f"docs_and_governance_forensics with MTTR, repo_audit + >= {_W3['minMemoChars']}-char executive_risk_memo) submitted at "
-             f"{_W3['fixtureDir']}/<chain>-<slug>.json: {BOUNTIES_URL}#wave-3")
+_W3C = _W3["closeout"]
+WAVE3_DOC = (f"Bounties Wave 3 (CLOSED, in settlement since {_W3C['closedOn']}): {_W3['program']}; "
+             f"{len(_W3C['awards'])} × ${_W3C['awards'][0]['usdc']} USDC awarded (" + ", ".join(f"#{a['pr']} {a['protocol']}" for a in _W3C["awards"]) + "), "
+             f"{len(_W3C['honoraria'])} × ${_W3C['honoraria'][0]['usdc']} USDC honoraria (" + ", ".join(f"#{h['pr']} {h['protocol']}" for h in _W3C["honoraria"]) + "), "
+             f"up to {len(_W3C['signoff']['prs'])} × ${_W3C['signoff']['usdc']} USDC on a human sign-off within {_W3C['signoff']['windowHours']} hours; "
+             f"payments count as paid only with a public Base transaction; no new submissions: {BOUNTIES_URL}#wave-3")
 WAVE2_DOC = (f"Bounties Wave 2 (Completed & Retired Archive): {_W2['program']}, retired after Epoch {_W2['currentEpoch']} ({_W2['activeEpochSlots']} × ${_W2['rewardUsdc']} USDC "
              f"= ${_W2['activeEpochCapUsdc']} USDC settled on Base; active human-researcher bounties moved to Wave 3): {BOUNTIES_URL}#wave-2")
 LEADERBOARD_DOC = ("Hunter leaderboard & verified researcher credentials: verified catches, protocols covered, Base EAS attestations, settled Base USDC "

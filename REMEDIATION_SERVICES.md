@@ -21,10 +21,10 @@ For **protocol teams and collateral issuers** onboarding a new asset to Morpho, 
 | Tier | Price | Scope |
 | --- | --- | --- |
 | Free Post-Fix Re-Verification | `$0` (within 7 days) | Free factual re-verification within 7 days whenever a protocol merges a public docs or on-chain fix. |
-| Sponsor Verification Pool | `$50` or `$150 USDC` | Independent single-protocol Live Control-Plane Pool (`$50`, min `$25` top-up) or 3-Year Trajectory Dossier Pool (`$150`), held in isolated custody with a 30-day refund if unfulfilled (`pacta.wtf/bounties/#sponsor-pool`). |
-| Wholesale Ecosystem & Curator Vault Sweep | `$150 per protocol` | Multi-protocol control-plane sweeps for L2 ecosystems, grant councils and vault curators; undelivered targets never charged. |
+| Sponsor Verification Pool | `$50` minimum | One independent protocol check: a `$50` minimum pool with a `$25` fixed verification fee, the rest to the researcher. Opening soon: reservation or invoice only, no sponsor funds collected until the Sponsor Safe is deployed and verified; refunds within 30 days are a signed policy (`pacta.wtf/bounties/#sponsor-pool`). |
+| Wholesale Ecosystem & Curator Vault Sweep | `$150 per protocol` (20 or more) | Sweeps of 20 or more protocols for L2 ecosystems, grant councils and vault curators; undelivered targets never charged. |
 | Full Protocol Control-Plane Dossier | `$2,500–$5,000 USDC` (24h SLA) | Pre-launch or multi-contract suite diligence: `$2,500` single chain (up to 8 contracts) · `$5,000` multi-chain with a 90-day drift watch; the four deliverables below. |
-| Continuous Control-Plane Monitoring | `$500–$2,500 USDC / month` | Institutional allocator & multi-vault control-plane watch SLA (`$49 / month` Safe Guard after a free 30-day pilot). The result can still be Delta. |
+| Continuous Control-Plane Monitoring | `$500–$2,500 USDC / month` | Institutional allocator & multi-vault control-plane watch SLA (a free 30-day alert pilot comes first). The result can still be Delta. |
 
 The Full Protocol Control-Plane Dossier delivers:
 
