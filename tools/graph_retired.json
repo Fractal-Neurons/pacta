@@ -63,6 +63,16 @@
    "controller_kind": "multisig_safe"
   },
   {
+   "slug": "cbridge",
+   "chain": "ethereum",
+   "record_id": "cbridge-control-plane",
+   "retired_at_sprint": 33,
+   "target_contract": "0x4F9254C83EB525f9FCf346490bbb3ed28a81C667",
+   "target_label": "CelerToken",
+   "controller_address": "0xb22DC759f194F5d00F1981Bf47AB5C3572562C96",
+   "controller_kind": "eoa"
+  },
+  {
    "slug": "cian-yield-layer",
    "chain": "ethereum",
    "record_id": "cian-yield-layer-control-plane",
@@ -70,6 +80,26 @@
    "target_contract": "0xB13aa2d0345b0439b064f26B82D8dCf3f508775d",
    "target_label": "CIAN yield layer stETH (VaultYieldETH)",
    "controller_address": "0xf24955E9D0a05222373d4555f8831f7A05e83F62",
+   "controller_kind": "contract_controller"
+  },
+  {
+   "slug": "cvault-finance",
+   "chain": "ethereum",
+   "record_id": "cvault-finance-control-plane",
+   "retired_at_sprint": 33,
+   "target_contract": "0x62359Ed7505Efc61FF1D56fEF82158CcaffA23D7",
+   "target_label": "cVault.finance (CORE)",
+   "controller_address": "0x5A16552f59ea34E44ec81E58b3817833E9fD5436",
+   "controller_kind": "eoa"
+  },
+  {
+   "slug": "debridge",
+   "chain": "ethereum",
+   "record_id": "debridge-control-plane",
+   "retired_at_sprint": 33,
+   "target_contract": "0x43dE2d77BF8027e25dBD179B491e8d64f38398aA",
+   "target_label": "DeBridgeGate",
+   "controller_address": "0xE4427af3555CD9303D728C491364FAdFDD7494Fe",
    "controller_kind": "contract_controller"
   },
   {
@@ -193,6 +223,16 @@
    "controller_kind": "contract_controller"
   },
   {
+   "slug": "index-coop",
+   "chain": "ethereum",
+   "record_id": "index-coop-control-plane",
+   "retired_at_sprint": 33,
+   "target_contract": "0x0954906da0Bf32d5479e25f46056d22f08464cab",
+   "target_label": "Index",
+   "controller_address": null,
+   "controller_kind": null
+  },
+  {
    "slug": "jpy-defi",
    "chain": "ethereum",
    "record_id": "jpy-defi-control-plane",
@@ -283,6 +323,16 @@
    "controller_kind": "timelock"
   },
   {
+   "slug": "orderly-bridge",
+   "chain": "ethereum",
+   "record_id": "orderly-bridge-control-plane",
+   "retired_at_sprint": 33,
+   "target_contract": "0xABD4C63d2616A5201454168269031355f4764337",
+   "target_label": "Orderly Network (OrderToken)",
+   "controller_address": null,
+   "controller_kind": null
+  },
+  {
    "slug": "origin-superoeth-base",
    "chain": "base",
    "record_id": "origin-superoeth-base-control-plane",
@@ -303,6 +353,26 @@
    "controller_kind": null
   },
   {
+   "slug": "parallel-protocol-v3",
+   "chain": "ethereum",
+   "record_id": "parallel-protocol-v3-control-plane",
+   "retired_at_sprint": 33,
+   "target_contract": "0x6c0aeceeDc55c9d55d8B99216a670D85330941c3",
+   "target_label": "Parallel Governance Token (PRL)",
+   "controller_address": null,
+   "controller_kind": null
+  },
+  {
+   "slug": "peapods-finance",
+   "chain": "ethereum",
+   "record_id": "peapods-finance-control-plane",
+   "retired_at_sprint": 33,
+   "target_contract": "0x02f92800F57BCD74066F5709F1Daa1A4302Df875",
+   "target_label": "Peapods (PEAS)",
+   "controller_address": null,
+   "controller_kind": null
+  },
+  {
    "slug": "pickle",
    "chain": "ethereum",
    "record_id": "pickle-control-plane",
@@ -311,6 +381,16 @@
    "target_label": "PickleToken",
    "controller_address": "0xbD17B1ce622d73bD438b9E658acA5996dc394b0d",
    "controller_kind": "contract_controller"
+  },
+  {
+   "slug": "pooltogether-v3",
+   "chain": "ethereum",
+   "record_id": "pooltogether-v3-control-plane",
+   "retired_at_sprint": 33,
+   "target_contract": "0x0cEC1A9154Ff802e7934Fc916Ed7Ca50bDE6844e",
+   "target_label": "PoolTogether (Pool)",
+   "controller_address": null,
+   "controller_kind": null
   },
   {
    "slug": "shift-defi",
@@ -331,6 +411,16 @@
    "target_label": "TokenDeposit",
    "controller_address": "0x9Fe65a5418850015a9D8ad3Ca50d6a0B9769FbE0",
    "controller_kind": "multisig_safe"
+  },
+  {
+   "slug": "sosovalue-basis",
+   "chain": "base",
+   "record_id": "sosovalue-basis-control-plane",
+   "retired_at_sprint": 33,
+   "target_contract": "0x624e2e7fDc8903165F64891672267AB0FCB98831",
+   "target_label": "SoSoValue (OptimismMintableERC20)",
+   "controller_address": null,
+   "controller_kind": null
   },
   {
    "slug": "spectra-metavaults",
@@ -361,6 +451,26 @@
    "target_label": "SuperGovernor",
    "controller_address": "0x10AC0b33e1C4501CF3ec1cB1AE51ebfdbd2d4698",
    "controller_kind": "contract_controller"
+  },
+  {
+   "slug": "synfutures-v3",
+   "chain": "ethereum",
+   "record_id": "synfutures-v3-control-plane",
+   "retired_at_sprint": 33,
+   "target_contract": "0x6e15A54B5EcAc17e58daDedDbe8506a7560252F9",
+   "target_label": "SynFutures",
+   "controller_address": null,
+   "controller_kind": null
+  },
+  {
+   "slug": "the-idols",
+   "chain": "ethereum",
+   "record_id": "the-idols-control-plane",
+   "retired_at_sprint": 33,
+   "target_contract": "0x9416bA76e88D873050A06e5956A3EBF10386b863",
+   "target_label": "Virtue",
+   "controller_address": null,
+   "controller_kind": null
   },
   {
    "slug": "tori-finance",
@@ -401,6 +511,26 @@
    "target_label": "Treasury",
    "controller_address": "0x6649Ddb5c7e52348b73c8bBdD2A1cbA630b7AaEA",
    "controller_kind": "multisig_safe"
+  },
+  {
+   "slug": "yield-basis",
+   "chain": "ethereum",
+   "record_id": "yield-basis-control-plane",
+   "retired_at_sprint": 33,
+   "target_contract": "0x01791F726B4103694969820be083196cC7c045fF",
+   "target_label": "Yield Basis (YB)",
+   "controller_address": null,
+   "controller_kind": null
+  },
+  {
+   "slug": "zama",
+   "chain": "ethereum",
+   "record_id": "zama-control-plane",
+   "retired_at_sprint": 33,
+   "target_contract": "0xA12CC123ba206d4031D1c7f6223D1C2Ec249f4f3",
+   "target_label": "Zama (ZamaERC20)",
+   "controller_address": null,
+   "controller_kind": null
   },
   {
    "slug": "zircuit-staking",

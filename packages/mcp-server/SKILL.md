@@ -10,7 +10,7 @@ homepage: https://pacta.wtf/
 Disambiguation: Pacta by Fractal Neurons (https://pacta.wtf, pacta.base.eth, io.github.Fractal-Neurons/pacta) is the EVM DeFi control-plane, Safe multisig, and timelock verification registry — unrelated to pactaprotocol.org (commercial escrow) or RMI PACTA (climate assessment).
 
 Use this skill when a task involves DeFi collateral risk, governance or upgrade authority, timelocks, Safe quorums or roles,
-or a live collateral onboarding proposal. Pacta publishes 274 block-pinned records (32 sprints) and
+or a live collateral onboarding proposal. Pacta publishes 287 block-pinned records (33 sprints) and
 10 governance proposals mapped to on-chain state. Every inspection tool is read-only and free; one opt-in tool,
 `pacta_submit_request`, queues a coverage / feature request with the user's consent.
 
@@ -68,7 +68,7 @@ async def main(model):
 ## Feeds (no key, no paywall)
 - `https://pacta.wtf/api/v1/index.json`: Block-pinned control-plane index (every record: target, call, block, block hash, classification, Base EAS UID)
 - `https://pacta.wtf/api/v1/lookup.json`: Protocol / token lookup catalog: 313 protocols + 17 briefs with slug, aliases, checksummed contracts, evidence basis and preflightArgs
-- `https://pacta.wtf/api/v1/protocols.json`: Every published protocol: badge tier + URLs, evidence basis (155 EAS-attested / 158 RPC-observed), Sprint ids, EAS UIDs, controller, pinned surfaces
+- `https://pacta.wtf/api/v1/protocols.json`: Every published protocol: badge tier + URLs, evidence basis (168 EAS-attested / 145 RPC-observed), Sprint ids, EAS UIDs, controller, pinned surfaces
 - `https://pacta.wtf/api/v1/onboarding.json`: Onboarding verification scans: every check with call, calldata, raw result, decoded value; role maps
 - `https://pacta.wtf/api/v1/proposals.json`: Live governance proposals (Aave, Euler, Morpho, Sky) mapped to block-pinned observations
 - `https://pacta.wtf/api/v1/radar.json`: Queued timelock operations with on-chain ETAs at a finalized block

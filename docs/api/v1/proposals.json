@@ -8,7 +8,7 @@
   },
   "total": 10
  },
- "generated_at": "2026-11-19T20:45:11Z",
+ "generated_at": "2026-11-19T23:18:47Z",
  "generated_by": "tools/build_b2a_feeds.py",
  "generated_from": [
   "/api/v1/onboarding.json",
