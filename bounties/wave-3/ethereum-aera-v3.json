@@ -16,80 +16,80 @@
       "block_date": "2025-05-28",
       "tx_hash": "0xb9a1c52f50484b6bead5f5ac43db7ec60a6f139be7014eeb50b036bf7a7c65df",
       "event_kind": "deployment_baseline",
-      "rpc_or_cast_proof": "cast receipt 0xb9a1c52f50484b6bead5f5ac43db7ec60a6f139be7014eeb50b036bf7a7c65df --rpc-url https://eth.drpc.org --block 22583677",
-      "summary": "OpenZeppelin TimelockController deployed at 0xce75E223E6DbB0503D2B6f55bC5907d1A0372E2B via CREATE2 from factory 0x4e59b44847b379578588920ca78fbf26c0b4956c by deployer 0x34a078d499d0dedcddfa32a094b356edd7422fa8. minDelay=86400s (1 day) verified via storage slot 2 = 0x15180. This timelock becomes sole owner of the Aera V3 factory and authority contracts."
+      "rpc_or_cast_proof": "cast receipt 0xb9a1c52f50484b6bead5f5ac43db7ec60a6f139be7014eeb50b036bf7a7c65df --rpc-url https://eth.merkle.io",
+      "summary": "Verified (eth_getTransactionReceipt, block 22583677, idx 30, 2025-05-28, 0x1): deployer 0x34a078d499d0dedcddfa32a094b356edd7422fa8 via CREATE2 0x4e59b44847b379578588920ca78fbf26c0b4956c deployed TimelockController 0x54b7adacc04b17a26167b395b3d65bb6d6424797. RoleGranted on 0x54b7…: DEFAULT_ADMIN to 0x54b7…; PROPOSER 0xb09aa5ae…, EXECUTOR 0xfd643c72…, CANCELLER 0xd8aa0f31… to 0x2ad638efce7d2725ef63574f852ceb6a641d220f; MinDelayChange 0x11c24f4e…. Current factory 0x29722cC9a1cACff4a15914F9bC274B46F3b90B4F owner is Timelock 0xce75E223E6DbB0503D2B6f55bC5907d1A0372E2B (minDelay 86400s, eth_call in T#2); 0xce75 RoleGranted set not fully retrievable via public RPC logs in this pass (not inferred)."
     },
     {
       "block_number": 22583788,
       "block_date": "2025-05-28",
-      "tx_hash": "0x11f4a664be1a589531b987c1a7a0f65eefae672c493a7faac7faade67b923fe3",
+      "tx_hash": "0x06d5eed2b04d24bc2d1ffa5b9ba98c384cec52ed2d87f4a259e5cb30b6fd5565",
       "event_kind": "deployment_baseline",
-      "rpc_or_cast_proof": "cast receipt 0x11f4a664be1a589531b987c1a7a0f65eefae672c493a7faac7faade67b923fe3 --rpc-url https://eth.drpc.org --block 22583788",
-      "summary": "Aera V3 BaseVaultFactory deployed at 0x29722cC9a1cACff4a15914F9bC274B46F3b90B4F and Auth contract deployed at 0xA83C037DF3b27bF7224AB0a40a2c4531FF1B2f40 in a single transaction from deployer 0x34a078d499d0dedcddfa32a094b356edd7422fa8 via factory 0x4e59b44847b379578588920ca78fbf26c0b4956c. Factory owner set to Timelock (topic2=0xce75E223E6DbB0503D2B6f55bC5907d1A0372E2B). Authority owner set to Timelock (topic2=0xA83C037DF3b27bF7224AB0a40a2c4531FF1B2f40). Factory is immutable (no EIP-1967 upgradeability). Factory storage slot 0 = timelock, slot 1 = authority."
+      "rpc_or_cast_proof": "cast receipt 0x06d5eed2b04d24bc2d1ffa5b9ba98c384cec52ed2d87f4a259e5cb30b6fd5565 --rpc-url https://1rpc.io/eth",
+      "summary": "Verified (eth_getTransactionReceipt, block 22583788, idx 134, 2025-05-28, 0x1): deployer 0x34a078d499d0dedcddfa32a094b356edd7422fa8 via CREATE2 0x4e59b44847b379578588920ca78fbf26c0b4956c deployed/configured BaseVaultFactory 0x29722cC9a1cACff4a15914F9bC274B46F3b90B4F. Logs on 0x29722c…: OwnershipTransferred 0x8be0079c… to timelock 0xce75E223E6DbB0503D2B6f55bC5907d1A0372E2B and AuthorityUpdated 0xa3396fd7… to 0xA83C037DF3b27bF7224AB0a40a2c4531FF1B2f40. eth_call (latest): factory owner 0xce75…, authority 0xA83C…, timelock getMinDelay 86400s, RolesAuthority owner 0xce75…. Batch tx 0x432cc855859da8d6d94868d99a21e6b1f8338f0c0ba206d809130e7e2a4ad4ac (block 22583788 idx 124, to 0xA83C…, 0x1) emitted event 0x4c9bdd0c… on 0xA83C (topics incl. 0x…2ad638ef… and 0x…01), evidencing capability/role config on RolesAuthority."
     }
   ],
   "docs_and_governance_forensics": {
     "mttr_status": "unrepaired_open",
-    "mttr_days": 0,
+    "mttr_days": null,
     "evidence_sources": [
       {
         "kind": "official_docs",
         "date": "2025-05-28",
-        "url": "https://github.com/DefiLlama/DefiLlama-Adapters/blob/main/projects/aera-v3/index.js",
-        "claim_summary": "DefiLlama adapter for Aera V3 lists factory address 0x29722cC9a1cACff4a15914F9bC274B46F3b90B4F and start date 2025-05-28, confirming on-chain deployment date."
+        "url": "https://github.com/DefiLlama/DefiLlama-Adapters/blob/e45caf8e970bf207ccbfdf95cb3f455223efb084/projects/aera-v3/index.js",
+        "claim_summary": "DefiLlama adapter (commit-pinned) lists Aera V3 factory 0x29722cC9a1cACff4a15914F9bC274B46F3b90B4F and start 2025-05-28, consistent with the on-chain deployment baseline."
       },
       {
         "kind": "github_docs_commit",
         "date": "2025-08-18",
-        "url": "https://github.com/aera-finance/aera-contracts-public/commit/f915517414",
-        "claim_summary": "First v3 commit (feat: v3) in aera-contracts-public repo, 81 days after on-chain deployment. No governance docs, timelock config, or upgrade docs in repository."
+        "url": "https://github.com/aera-finance/aera-contracts-public/commit/f9155174142064f748589b5a2dc348bbce637b9b",
+        "claim_summary": "First v3 commit (feat: v3) in aera-contracts-public (2025-08-21), 82 days after 2025-05-28 on-chain deployment; in sampled repo contents no governance/timelock parameter or upgrade documentation was found."
       },
       {
         "kind": "github_docs_commit",
         "date": "2026-07-15",
-        "url": "https://github.com/aera-finance/aera-contracts-public/commit/f861aaa018",
-        "claim_summary": "Second v3 commit updating contracts, still no governance documentation or timelock parameter disclosure."
+        "url": "https://github.com/aera-finance/aera-contracts-public/commit/f861aaa018d8d2592cd83775f4fa3792151c0cd3",
+        "claim_summary": "Commit adding latest audit report (2026-07-15); in sampled repo contents no governance documentation or timelock parameter disclosure was found."
       },
       {
         "kind": "github_docs_commit",
         "date": "2026-07-16",
-        "url": "https://github.com/aera-finance/aera-contracts-public/commit/7ab7f8a79c",
-        "claim_summary": "Third v3 commit, governance documentation remains absent from the public repository."
+        "url": "https://github.com/aera-finance/aera-contracts-public/commit/7ab7f8a79c7bf6fea2380be4f06579502948d129",
+        "claim_summary": "feat: upgrade to provisioner v2 (2026-07-16), contract-touching commit modifying v3/src .sol contracts; in sampled repo contents governance documentation remained absent."
       },
       {
         "kind": "github_docs_commit",
         "date": "2026-09-11",
-        "url": "https://github.com/aera-finance/aera-contracts-public/commit/50efdd6352",
-        "claim_summary": "Fourth v3 commit, 472 days post-deployment. No Snapshot space, Tally proposals, or governance charter published on aera.finance or docs.aera.finance."
+        "url": "https://github.com/aera-finance/aera-contracts-public/commit/50efdd6352eae096076c922dedd934d8fb8f7c15",
+        "claim_summary": "docs: add cantina competition report (2026-09-11); in sampled repo contents no Snapshot/Tally governance charter or timelock disclosure was found."
       },
       {
         "kind": "wayback_snapshot",
         "date": "2022-10-12",
         "url": "https://web.archive.org/web/20221012144719/https://www.aera.finance/",
-        "claim_summary": "Earliest Wayback snapshot of aera.finance website. No governance documentation, timelock parameters, or control-plane docs found in any snapshot through 2026."
+        "claim_summary": "Earliest sampled Wayback snapshot of aera.finance (2022-10-12). No governance documentation, timelock parameters, or control-plane docs were identified in this sampled snapshot; absence is not inferred beyond sampled pages/spaces."
       }
     ],
     "gap_windows": [
       {
         "opened_block": 22583677,
         "opened_date": "2025-05-28",
-        "closed_block": 26452432,
-        "closed_date": "2026-11-19",
-        "duration_days": 542.0,
+        "closed_block": null,
+        "closed_date": null,
+        "duration_days": 540.0,
         "status": "unrepaired_open",
-        "summary": "Timelock deployment (minDelay=1 day) and factory authority structure never documented on aera.finance, docs.aera.finance, or aera-contracts-public repo. No Snapshot space or Tally proposals found for Aera governance. Gap remains open 542 days post-deployment."
+        "summary": "Timelock deployment and factory authority wiring (TimelockController 0xce75E223E6DbB0503D2B6f55bC5907d1A0372E2B, minDelay=86400s; BaseVaultFactory 0x29722cC9a1cACff4a15914F9bC274B46F3b90B4F; RolesAuthority 0xA83C037DF3b27bF7224AB0a40a2c4531FF1B2f40) were not found documented in the sampled public artifacts (aera-contracts-public GitHub repo commits/pages sampled, aera.finance Wayback snapshot sampled 2022-10-12, and no Snapshot/Tally governance space found in sampled searches). Gap remains open 540 days after 2025-05-28 deployment baseline as of the 2026-11-19 sampled checkpoint."
       }
     ]
   },
   "repo_audit": {
     "github_org_repo": "aera-finance/aera-contracts-public",
-    "commits_12m_contracts": 1,
-    "commits_12m_frontend_or_other": 5,
+    "commits_12m_contracts": 2,
+    "commits_12m_frontend_or_other": 4,
     "human_contributors_12m": 2,
     "bus_factor": 1,
     "code_before_upgrade_verified": false
   },
-  "executive_risk_memo": "Aera V3 is an autonomous onchain treasury management protocol built by Gauntlet. Its control plane consists of a single BaseVaultFactory (0x29722cC9a1cACff4a15914F9bC274B46F3b90B4F) on Ethereum, owned by an OpenZeppelin TimelockController (0xce75E223E6DbB0503D2B6f55bC5907d1A0372E2B) with a 1-day minDelay. The factory uses a Solmate Auth contract (0xA83C037DF3b27bF7224AB0a40a2c4531FF1B2f40) as its authority, also owned by the same timelock. The timelock executed exactly one transaction (nonce=1): deploying the factory and authority in a single atomic operation. The factory has since created 45 vaults (nonce=45) across Ethereum, Base, Morph, Arbitrum, and Optimism. No EIP-1967 upgradeability, no multisig, no threshold governance - the entire control plane reduces to a single timelock with 1-day delay. The timelock admin is unknown (storage slot 0 empty), suggesting it may be a single EOA or the deployer. No public governance documentation exists on aera.finance, docs.aera.finance, or the aera-contracts-public GitHub repo. No Snapshot space or Tally proposals found. Engineering depth is minimal: 6 commits in 12 months (1 in v3/src), 2 contributors, bus factor 1. The main risk is concentration: a single timelock with unknown admin controls $151M TVL across 5 chains. No implementation upgrades have occurred since deployment (factory is immutable). Human researcher signoff confirmed; agent assistance via OpenCode.",
+  "executive_risk_memo": "Aera V3 control plane (Ethereum, sampled 2023-2026 window; deployment 2025-05-28) centers on BaseVaultFactory 0x29722cC9a1cACff4a15914F9bC274B46F3b90B4F, owned by TimelockController 0xce75E223E6DbB0503D2B6f55bC5907d1A0372E2B (minDelay=86400s, verified via eth_call getMinDelay 0xf27a0c92) with authority RolesAuthority 0xA83C037DF3b27bF7224AB0a40a2c4531FF1B2f40 (owner() 0xce75…, verified via eth_call). Verified deployment/config receipt tx 0x06d5eed2b04d24bc2d1ffa5b9ba98c384cec52ed2d87f4a259e5cb30b6fd5565 (block 22583788, 2025-05-28, idx 134, 0x1) shows OwnershipTransferred on 0x29722c to 0xce75 and AuthorityUpdated to 0xA83C. In the same deployment batch, tx 0xb9a1c52f50484b6bead5f5ac43db7ec60a6f139be7014eeb50b036bf7a7c65df (block 22583677, idx 30, 0x1) deployed TimelockController 0x54b7adacc04b17a26167b395b3d65bb6d6424797 with RoleGranted events (DEFAULT_ADMIN_ROLE to 0x54b7…, PROPOSER_ROLE 0xb09aa5ae…, EXECUTOR_ROLE 0xfd643c72…, CANCELLER_ROLE 0xd8aa0f31… to 0x2ad638efce7d2725ef63574f852ceb6a641d220f) and MinDelayChange 0x11c24f4e…. A verified config tx 0x432cc855859da8d6d94868d99a21e6b1f8338f0c0ba206d809130e7e2a4ad4ac (block 22583788, idx 124, to 0xA83C…, 0x1) emitted capability/role-related event 0x4c9bdd0c… on RolesAuthority; full enumeration of 0xce75’s PROPOSER/EXECUTOR/CANCELLER RoleGranted set and complete RolesAuthority capability mapping (getRolesWithCapability/doesRoleHaveCapability/AuthorityUpdated beyond sampled receipts) could not be exhaustively retrieved from available public RPC log queries in this pass, so no such roles/capabilities are inferred from storage slot 0, AuthorityUpdated vs owner(), or account nonces. Docs/governance forensics (sampled): DefiLlama adapter commit e45caf8e970bf207ccbfdf95cb3f455223efb084 confirms factory/start; aera-contracts-public commits f9155174142064f748589b5a2dc348bbce637b9b (2025-08-21, +82d), 7ab7f8a79c7bf6fea2380be4f06579502948d129 (2026-07-16), f861aaa018d8d2592cd83775f4fa3792151c0cd3 (2026-07-15), 50efdd6352eae096076c922dedd934d8fb8f7c15 (2026-09-11) show code/docs activity but no governance/timelock disclosure identified in sampled contents; Wayback aera.finance 2022-10-12 sampled only. Gap status unrepaired_open (mttr_days null) over 540 days from 2025-05-28 to 2026-11-19 (sampled checkpoint). Repo trailing 12m (6 commits, 2 human contributors: reichiang, Pet3ris): 2 contract-touching / 4 other (both 2026-07-16 .sol commits 7ab7f8a79c and merge f0ebc15985b2f19d1e599b604370fdbaeb314180 touch contracts). Human researcher signoff confirmed; agent assistance via OpenCode.",
   "contributor_github": "IVANLI2412",
   "agent_assist_framework": "opencode",
   "base_payout_address": "0xC5dD2Ea54FF138bb3f71D3466092eA31eF115868",
