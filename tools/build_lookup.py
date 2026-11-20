@@ -28,9 +28,10 @@ ADDR_RE = re.compile(r"\b0x[0-9a-fA-F]{40}\b")
 RELATED_MAX = 16
 
 
-def _related(es, known):
+def _related(es, known, slug=None):
     """Other contracts the records name (ProxyAdmins, Safes, timelocks, tokens), EIP-55, in first-seen order, capped; so a
-    pre-flight check of e.g. a token or its ProxyAdmin can cross-link the indexed protocol record."""
+    pre-flight check of e.g. a token or its ProxyAdmin can cross-link the indexed protocol record. The protocol's verified
+    ADDRESS_ALIASES (same-chain user-facing contracts) follow, outside the cap, so a lookup of any of them cross-links too."""
     out = []
     for e in es:
         for t in ("target_contract", "paired_contract", "controller_address", "onchain_observed", "upstream_controller"):
@@ -39,7 +40,12 @@ def _related(es, known):
                 c = eip55(a.lower())
                 if c.lower() not in known and c not in out:
                     out.append(c)
-    return out[:RELATED_MAX]
+    out = out[:RELATED_MAX]
+    for a in ADDRESS_ALIASES.get(slug, []) if slug else []:
+        c = eip55(a.lower())
+        if c.lower() not in known and c not in out:
+            out.append(c)
+    return out
 
 BASE = "https://pacta.wtf"
 CATALOG_SCHEMA = "pacta.protocol_lookup_catalog.v1"
@@ -191,9 +197,30 @@ CONVERTED_CONTINUITY = {
     "safe-singleton-core": {"primaryContract": "0x41675C099F32341bf84BFc5382aF534df5C7461a", "targetLabel": "SafeSingleton_v1_4_1",
                             "controllerAddress": None, "controllerKind": "immutable_or_role_governed"},
 }
-# Extra contract addresses a protocol answers to in pacta_lookup_protocol (an exact 0x query), each verified on-chain:
-# aave-v3-base: the Aave V3 Base Pool (PoolAddressesProvider 0xe20f..d64D getPool() and Pool.ADDRESSES_PROVIDER(), Sprint 24 evidence).
-ADDRESS_ALIASES = {"aave-v3-base": ["0xA238Dd80C259a72e81d7e4664a9801593F98d1c5"]}
+# Extra contract addresses a protocol answers to in pacta_lookup_protocol (an exact 0x query), each a same-chain user-facing contract
+# verified on-chain: aave-v3-base: the Aave V3 Base Pool (PoolAddressesProvider 0xe20f..d64D getPool() and Pool.ADDRESSES_PROVIDER(),
+# Sprint 24 evidence). The Sprint 36 additions were each read at the Sprint 36 pins (Ethereum #26,455,787; Base #59,903,224) on two
+# providers: eth_getCode non-empty and a binding getter (symbol(), ADDRESSES_PROVIDER() / getPool(), sUSDe asset() = USDe,
+# vePENDLE pendle() = PENDLE); evidence in the Sprint 36 alias-verification.json and its raw transcript.
+ADDRESS_ALIASES = {
+    "aave-v3-base": ["0xA238Dd80C259a72e81d7e4664a9801593F98d1c5"],
+    "stader-labs-ethx": ["0xA35b1B31Ce002FBF2058D22F30f95D405200A15b"],                     # ETHx
+    "circle-gateway": ["0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"],                       # USDC (Ethereum)
+    "aave-v3-gho": ["0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2", "0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9",
+                    "0x40D16FC0246aD3160Ccc09B8D0D3A2cD28aE6C2f", "0x2f39d218133AFaB8F2B819B1066c7E434Ad94E9e"],  # Pool, AAVE, GHO, Provider
+    "lido-steth-dual-governance": ["0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84", "0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0",
+                                   "0x5A98FcBEA516Cf06857215779Fd812CA3beF1B32"],                # stETH, wstETH, LDO
+    "ethena-usde-susde": ["0x4c9EDD5852cd905f086C759E8383e09bff1E68B3", "0x9D39A5DE30e57443BfF2A8307A4256c8797A3497",
+                          "0x57e114B691Db790C35207b2e685D4A43181e6061"],                         # USDe, sUSDe, ENA
+    "pendle-finance-v2": ["0x888888888889758F76e7103c6CbF23ABbF58F946", "0x808507121B80c02388fAd14726482e061B8da827",
+                          "0x4f30A9D41B80ecC5B94306AB4364951AE3170210"],                         # PendleRouterV4, PENDLE, vePENDLE
+    "spark-sky": ["0xdC035D45d973E3EC169d2276DDab16f1e407384F", "0xa3931d71877C0E7a3148CB7Eb4463524FEc27fbD",
+                  "0x6B175474E89094C44Da98b954EedeAC495271d0F", "0x56072C95FAA701256059aa122697B133aDEd9279",
+                  "0xC13e21B648A5Ee794902342038FF3aDAB66BE987"],                                 # USDS, sUSDS, DAI, SKY, SparkLend Pool
+    "ether-fi-core-eeth-weeth": ["0x35fA164735182de50811E8e2E824cFb9B6118ac2", "0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee",
+                                 "0xFe0c30065B384F05761f15d0CC899D4F9F9Cc0eB"],                  # eETH, weETH, ETHFI
+    "morpho-blue-core": ["0x58D97B57BB95320F9a05dC918Aef65434969c2B2"],                     # MORPHO
+}
 
 
 def _protocol_item(name, v):
@@ -226,9 +253,11 @@ def _protocol_item(name, v):
             "observedDelaySeconds": first.get("observed_delay_seconds"), "documentedDelaySeconds": first.get("documented_delay_seconds"),
             **basis,
             "surfaces": [{"id": e["id"], "surface": e["surface"], "classification": e["classification"],
-                          "targetContract": _addr(e["target_contract"]), "targetLabel": e["target_label"], "blockNumber": int(e["block_number"])} for e in es],
+                          "targetContract": _addr(e["target_contract"]), "targetLabel": e["target_label"], "chain": e.get("chain", "ethereum"),
+                          "blockNumber": int(e["block_number"])} for e in es],
             "pinnedBlock": max(int(e["block_number"]) for e in es),
-            "relatedContracts": _related(es, {a.lower() for a in [primary, ctrl] + [e["target_contract"] for e in es] if isinstance(a, str)}),
+            "relatedContracts": _related(es, {a.lower() for a in [primary, ctrl] + [e["target_contract"] for e in es] if isinstance(a, str)},
+                                         v["slug"]),
             "whatDiffers": CD.what_differs(es),
             "url": f"{BASE}/protocols/{v['slug']}/", "preflightArgs": {"chain": chain, "address": primary},
             **({"aliasAddresses": [_addr(a) for a in ADDRESS_ALIASES[v["slug"]]]} if v["slug"] in ADDRESS_ALIASES else {})}
@@ -402,7 +431,8 @@ def protocols_json(sp, items):
                     "sprints": x.get("sprints", []), "baseEasUids": x["baseEasUids"],
                     "badge": {"tier": tier, "label": BADGE_TIERS[tier][0], "svg": f"{BASE}/badges/{x['slug']}.svg", "live": f"{API}/v1/badges/{x['slug']}.svg"},
                     "primaryContract": x["primaryContract"], "targetLabel": x["targetLabel"], "controllerAddress": x["controllerAddress"],
-                    "controllerKind": x["controllerKind"], "preflightArgs": x["preflightArgs"], "tokens": x["tokens"], "surfaces": surf})
+                    "controllerKind": x["controllerKind"], "preflightArgs": x["preflightArgs"], "tokens": x["tokens"], "surfaces": surf,
+                    "relatedContracts": x["relatedContracts"], **({"aliasAddresses": x["aliasAddresses"]} if "aliasAddresses" in x else {})})
     out.sort(key=lambda r: r["slug"])
     tiers = {}
     for r in out:
