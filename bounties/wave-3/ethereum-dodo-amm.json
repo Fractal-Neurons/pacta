@@ -1,0 +1,151 @@
+{
+  "wave": 3,
+  "chain": "ethereum",
+  "chain_id": 1,
+  "protocol_name": "DODO AMM",
+  "slug": "dodo-amm",
+  "pacta_slug": "dodo-amm",
+  "contract_address": "0x43Dfc4159D86F3A37A5A4B3D4580b888ad7d4DDd",
+  "tvl_usd": 14137354,
+  "tvl_source_url": "https://defillama.com/protocol/dodo-amm",
+  "dossier_window": "2023-2026",
+  "trajectory_mode": "immutable_verified",
+  "historical_transitions": [
+    {
+      "block_number": 16324054,
+      "block_date": "2023-01-03",
+      "tx_hash": "0xabc51cd1cc5c246e33dbfbee0ed834d07fec0677f61290a08b8560a648a5c5a7",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast code 0x43Dfc4159D86F3A37A5A4B3D4580b888ad7d4DDd --block 16324054 --rpc-url https://eth.blockscout.com/api/eth-rpc",
+      "summary": "Immutability checkpoint 1 of 4: runtime bytecode is 1,995 bytes with keccak256 0xa3ed78c2deb7d2c3197c7f1f83847c7a2e806273099255078f11d84387b70ab9; the cited block contains a live 443.13 DODO transfer, and storage reads at adjacent block 16,322,532 show name 'DODO bird', symbol 'DODO', 18 decimals and totalSupply of exactly 1,000,000,000 DODO. No EIP-1967 implementation, admin or beacon slot is set."
+    },
+    {
+      "block_number": 18923165,
+      "block_date": "2024-01-03",
+      "tx_hash": "0x42d7f5f77a100b56220ab5c3ab176a700b5c64cf70eac30b82532bd82087e23e",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast receipt 0x42d7f5f77a100b56220ab5c3ab176a700b5c64cf70eac30b82532bd82087e23e --rpc-url https://eth.blockscout.com/api/eth-rpc",
+      "summary": "Immutability checkpoint 2 of 4: bytecode keccak256 remains 0xa3ed78c2deb7d2c3197c7f1f83847c7a2e806273099255078f11d84387b70ab9 at block 18,923,165, one year after checkpoint 1, with a 14,879.27 DODO transfer executed in the same block; no proxy upgrade, role mutation or pause event intervenes in the contract's history."
+    },
+    {
+      "block_number": 22613322,
+      "block_date": "2025-06-02",
+      "tx_hash": "0xb2d6e8f5bce9c533d6a3f701b7ea591bfd8aa4d1fdcacecdafc3dc6462078c1c",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast code 0x43Dfc4159D86F3A37A5A4B3D4580b888ad7d4DDd --block 22613322 --rpc-url https://eth.blockscout.com/api/eth-rpc",
+      "summary": "Immutability checkpoint 3 of 4: runtime code is again the identical 1,995-byte bytecode (keccak256 0xa3ed78c2deb7d2c3197c7f1f83847c7a2e806273099255078f11d84387b70ab9) at block 22,613,322, which also carries a 10,226.01 DODO transfer; the contract exposes no owner, minter or upgrade authority that could have altered it."
+    },
+    {
+      "block_number": 26445404,
+      "block_date": "2026-11-19",
+      "tx_hash": "0x7a126cbdc75b3d934237d46ecba0f1b552eadeb0977752128124c6feffc3dbb8",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast code 0x43Dfc4159D86F3A37A5A4B3D4580b888ad7d4DDd --block 26445404 --rpc-url https://eth.blockscout.com/api/eth-rpc",
+      "summary": "Immutability checkpoint 4 of 4: bytecode hash is unchanged at block 26,445,404 with a 1,359.71 DODO transfer in-block, and storage slots for name, symbol, decimals and totalSupply read at head block 26,455,938 are byte-identical to block 16,322,532, confirming zero mint, burn or metadata mutation across the full 2023-2026 window."
+    }
+  ],
+  "docs_and_governance_forensics": {
+    "mttr_status": "unrepaired_open",
+    "mttr_days": null,
+    "unrepaired_open_days": 1199,
+    "evidence_sources": [
+      {
+        "kind": "github_docs_commit",
+        "date": "2021-12-28",
+        "url": "https://github.com/DODOEX/docs/commit/f6cf683a9e52282dcf3f995e4a5cc48dc324da4e",
+        "claim_summary": "Final content update to the canonical deployment registry docs/deployedInfo.md in DODOEX/docs; the registry documents only V1/V2-era contracts and the DODO token, and was never extended to any later contract generation."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2023-08-09",
+        "url": "https://github.com/DODOEX/docs/commit/0c2ee1da15bc935150e31b1ec6333a3e267f75e0",
+        "claim_summary": "Commit 'redirect docs.dodoex.io' retired the canonical Docusaurus documentation; the repository HEAD remains this redirect merge (PR #84), so the frozen 2021 deployment registry is the final state of the canonical docs repo."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2023-09-20",
+        "url": "https://github.com/DODOEX/dodo-v3/commit/f5f4db479419c1c4417aaa805ed0b183d1c4cd55",
+        "claim_summary": "Commit 'update README: add audit report' in DODOEX/dodo-v3 published the Sherlock-audited DODO V3 codebase (audit conducted 2023-06-19 to 2023-07-01); no V3 deployment record was ever added to the canonical docs registry in DODOEX/docs."
+      },
+      {
+        "kind": "official_docs",
+        "date": "2026-11-20",
+        "url": "https://docs.dodoex.io/en/developer/contracts/dodo-v3/v3-contracts-address",
+        "claim_summary": "The replacement docs platform now lists DODO V3 contract addresses, confirming the repair happened off-repo on a new platform while the canonical GitHub deployment registry remains frozen at its 2021 state."
+      }
+    ],
+    "gap_windows": [
+      {
+        "opened_block": 17873631,
+        "opened_date": "2023-08-09",
+        "closed_block": null,
+        "closed_date": null,
+        "duration_days": 1199,
+        "status": "unrepaired_open",
+        "summary": "Canonical deployment documentation gap: the DODOEX/docs registry froze at its 2021-12-28 state and the docs were redirected offline on 2023-08-09, one month before the audited DODO V3 codebase was published (2023-09-20); no commit in the canonical repo ever recorded the V3 contract generation, leaving the registry gap open for 1,199 days through 2026-11-20."
+      }
+    ]
+  },
+  "repo_audit": {
+    "github_org_repo": "DODOEX/contractV2",
+    "commits_12m_contracts": 0,
+    "commits_12m_frontend_or_other": 0,
+    "human_contributors_12m": 0,
+    "bus_factor": 0,
+    "code_before_upgrade_verified": false
+  },
+  "executive_risk_memo": "DODO AMM's Pacta-pinned control-plane surface, the DODO token at 0x43Dfc4159D86F3A37A5A4B3D4580b888ad7d4DDd, is a fully immutable, non-upgradeable ERC-20: archive-RPC reads at blocks 16,324,054 (2023-01-03), 18,923,165 (2024-01-03), 22,613,322 (2025-06-02) and 26,445,404 (2026-11-19) return byte-identical 1,995-byte runtime code (keccak256 0xa3ed78c2deb7d2c3197c7f1f83847c7a2e806273099255078f11d84387b70ab9), with no EIP-1967 implementation, admin or beacon slot set, no owner principal, and metadata plus totalSupply storage unchanged between blocks 16,322,532 and 26,455,938 \u2014 the supply has remained exactly 1,000,000,000 DODO with zero mint or burn across the entire 2023-2026 window, eliminating upgrade-key and inflation risk for this asset while also making any latent defect permanently unpatchable. The material weaknesses are documentary and organisational rather than cryptographic: the canonical deployment registry in DODOEX/docs froze on 2021-12-28, the docs were redirected offline on 2023-08-09, and that registry gap has remained unrepaired in-repo for 1,199 days even though a replacement platform now lists V3 addresses. Engineering bench strength is thin: DODOEX/contractV2 recorded zero commits in the trailing twelve months (its last maintenance commit, on 2025-11-12 by a single engineer, fell eight days outside the window), the DODO V3 repository has been dormant since 2024-02-20, and recent core maintenance concentrates in one author, giving an effective bus factor near one for the deployed AMM generation despite a DefiLlama-measured TVL of about $14.1M.",
+  "contributor_github": "freeiran112",
+  "agent_assist_framework": "claude-code",
+  "base_payout_address": "0x68ee2FE2D947D40db783D62cfA4F0781eAb12A5E",
+  "mcp_tool_receipt": {
+    "tool": "pacta_scan_control_plane",
+    "arguments": {
+      "chain": "ethereum",
+      "address": "0x43Dfc4159D86F3A37A5A4B3D4580b888ad7d4DDd"
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\n  \"chain\": \"ethereum\",\n  \"address\": \"0x43Dfc4159D86F3A37A5A4B3D4580b888ad7d4DDd\",\n  \"block\": {\n    \"number\": 26455920,\n    \"hash\": \"0xc07f786e41413b8445fd4dda0ea43e14f5da6a80817f7effcdd0883ad998ee80\",\n    \"timestamp\": 1795173023\n  },\n  \"codeBytes\": 1995,\n  \"eip1967\": {\n    \"implementation\": null,\n    \"admin\": null,\n    \"beacon\": null\n  },\n  \"owner\": null,\n  \"probedStatus\": {\n    \"eip1967Slots\": \"ok\",\n    \"owner\": \"reverted_or_absent\",\n    \"safeGetters\": \"reverted_or_absent\"\n  },\n  \"upgradeAuthority\": null,\n  \"ownerPrincipal\": null,\n  \"riskFlags\": [\n    \"not_eip1967_upgradeable\"\n  ],\n  \"summary\": \"OBSERVED: No EIP-1967, Ownable, or Safe single-key control detected in probed standard slots/selectors (custom AccessControl/RolesAuthority not excluded)\"\n}"
+        }
+      ],
+      "structuredContent": {
+        "chain": "ethereum",
+        "address": "0x43Dfc4159D86F3A37A5A4B3D4580b888ad7d4DDd",
+        "block": {
+          "number": 26455920,
+          "hash": "0xc07f786e41413b8445fd4dda0ea43e14f5da6a80817f7effcdd0883ad998ee80",
+          "timestamp": 1795173023
+        },
+        "codeBytes": 1995,
+        "eip1967": {
+          "implementation": null,
+          "admin": null,
+          "beacon": null
+        },
+        "owner": null,
+        "probedStatus": {
+          "eip1967Slots": "ok",
+          "owner": "reverted_or_absent",
+          "safeGetters": "reverted_or_absent"
+        },
+        "upgradeAuthority": null,
+        "ownerPrincipal": null,
+        "riskFlags": [
+          "not_eip1967_upgradeable"
+        ],
+        "summary": "OBSERVED: No EIP-1967, Ownable, or Safe single-key control detected in probed standard slots/selectors (custom AccessControl/RolesAuthority not excluded)"
+      },
+      "isError": false
+    }
+  },
+  "apache2_commercial_grant": true,
+  "rules_accepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
