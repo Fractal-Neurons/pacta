@@ -1,0 +1,157 @@
+{
+  "wave": 3,
+  "chain": "ethereum",
+  "chain_id": 1,
+  "protocol_name": "Ankr Liquid Staking (ankrETH)",
+  "slug": "ankr-eth-staking",
+  "pacta_slug": null,
+  "contract_address": "0xE95A203B1a91a908F9B9CE46459d101078c2c3cb",
+  "tvl_usd": 14563474,
+  "tvl_source_url": "https://defillama.com/protocol/ankr",
+  "dossier_window": "2023-2026",
+  "trajectory_mode": "mutable_transitions",
+  "historical_transitions": [
+    {
+      "block_number": 18194082,
+      "block_date": "2023-09-22",
+      "tx_hash": "0xbfd3fc6743b2b90d1914e153b6ce1e10710c0c2569bfe517057a9ad060686129",
+      "event_kind": "proxy_upgrade",
+      "rpc_or_cast_proof": "cast storage 0xE95A203B1a91a908F9B9CE46459d101078c2c3cb 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc --block 18194082 --rpc-url https://eth.drpc.org",
+      "summary": "At block 18194082 the EIP-1967 implementation slot of the ankrETH TransparentUpgradeableProxy rotates from 0x3ed1dfbccf893b7d2d730ead3e5edbf1f8f95a48 to 0xe672e0e0101a7f58d728751e2a5e6da5ff1fda64. eth_getStorageAt at block 18194081 still returns the old implementation, while the same slot at 18194082 returns the new one. Transaction 0xbfd3fc6743b2b90d1914e153b6ce1e10710c0c2569bfe517057a9ad060686129 was sent to the 3-of-5 Safe 0xA3464e1b86EE6941A600f9F69C61A47322af918F, succeeded with status 0x1, and its receipt carries the Upgraded log for the new implementation. The EIP-1967 admin slot stays unchanged at 0xCc4E08A5BFA887621Ad68826a0d5913d7a2cb392 across the rotation."
+    },
+    {
+      "block_number": 26429786,
+      "block_date": "2026-11-16",
+      "tx_hash": "0x65248026dc0153f86ca29c4f4d2af64485d7ef1b332b9007d07580af79886d76",
+      "event_kind": "proxy_upgrade",
+      "rpc_or_cast_proof": "cast receipt 0x65248026dc0153f86ca29c4f4d2af64485d7ef1b332b9007d07580af79886d76 --rpc-url https://ethereum-rpc.publicnode.com",
+      "summary": "At block 26429786 the implementation slot rotates again from 0xe672e0e0101a7f58d728751e2a5e6da5ff1fda64 to 0x5403cf3da1920e46b6ec07724407ab6f5c041402. The preceding block 26429785 still reports the earlier implementation. Transaction 0x65248026dc0153f86ca29c4f4d2af64485d7ef1b332b9007d07580af79886d76 was again sent to the same 3-of-5 Safe upgrade authority, succeeded with status 0x1, and emitted the matching Upgraded log. The admin slot remains 0xCc4E08A5BFA887621Ad68826a0d5913d7a2cb392, so no signer, threshold or ownership mutation accompanied either of the two implementation rotations in the three-year window."
+    }
+  ],
+  "docs_and_governance_forensics": {
+    "mttr_status": "unrepaired_open",
+    "mttr_days": null,
+    "unrepaired_open_days": 1181,
+    "evidence_sources": [
+      {
+        "kind": "github_docs_commit",
+        "date": "2026-09-10",
+        "url": "https://github.com/Ankr-network/ankr-docs/commit/0af3485c25398404e27cef67f58956f01cc9bb79",
+        "claim_summary": "Real dated commit 'Update README.md (#1956)' in the archived official Ankr documentation repository, the most recent of 60 commits in the trailing twelve months. The repository contains MDX docs and no Solidity sources, and neither this commit nor its neighbours publish the ankrETH EIP-1967 admin, the 3-of-5 Safe upgrade authority or the two implementation rotation transactions."
+      },
+      {
+        "kind": "wayback_snapshot",
+        "date": "2022-12-22",
+        "url": "https://web.archive.org/web/20221222015212/https://www.ankr.com/docs/",
+        "claim_summary": "Dated Internet Archive capture of the official Ankr documentation immediately before the observation window. It describes the liquid-staking product and user flows, but contains no disclosure of the ankrETH proxy admin address, the implementation slot values or any upgrade governance procedure."
+      },
+      {
+        "kind": "official_docs",
+        "date": "2026-11-19",
+        "url": "https://www.ankr.com/docs/",
+        "claim_summary": "Current official documentation index, answering HTTP 200. It documents staking, RPC and developer products but does not enumerate the EIP-1967 implementation addresses, the ProxyAdmin contract or the 3-of-5 Safe that executed both on-chain upgrades identified by archive replay."
+      }
+    ],
+    "gap_windows": [
+      {
+        "opened_block": 18000000,
+        "opened_date": "2023-08-26",
+        "closed_block": null,
+        "closed_date": null,
+        "duration_days": 1181,
+        "status": "unrepaired_open",
+        "summary": "Documentation-to-chain disclosure gap. Across the whole observation window the on-chain control plane is fully reproducible through archive storage reads and two verified upgrade receipts, yet no dated public commit or archived documentation page publishes the proxy admin 0xCc4E08A5BFA887621Ad68826a0d5913d7a2cb392, the upgrade authority 0xA3464e1b86EE6941A600f9F69C61A47322af918F, or the rotations at blocks 18194082 and 26429786. No repair commit could be identified, so the window remains open with no closed block."
+      }
+    ]
+  },
+  "repo_audit": {
+    "github_org_repo": "Ankr-network/ankr-docs",
+    "commits_12m_contracts": 0,
+    "commits_12m_frontend_or_other": 60,
+    "human_contributors_12m": 4,
+    "bus_factor": 1,
+    "code_before_upgrade_verified": false
+  },
+  "executive_risk_memo": "This dossier replaces an earlier submission that mistakenly treated the plain fixed-supply ANKR ERC-20 token 0x8290333ceF9e6D528dD5618Fb97a76f268f3EDD4 as the Ankr liquid-staking control plane. A direct eth_call for name() and symbol() returns 'Ankr Network' and 'ANKR' for that address, while 0xE95A203B1a91a908F9B9CE46459d101078c2c3cb returns 'Ankr Staked ETH' and 'ankrETH' with roughly 6637 ETH of total supply. The latter is therefore the correct target. Pacta's own catalog slug 'ankr' pins the former ERC-20 as its rpc_observed primaryContract, so this dossier deliberately sets pacta_slug to null and assesses the ankrETH proxy as an unindexed protocol whose Ethereum TVL is 14,563,474 USD according to DefiLlama. Every control-plane fact below was replayed over public JSON-RPC archive endpoints rather than inferred from a dashboard.\n\nThe deployed runtime is a standard OpenZeppelin TransparentUpgradeableProxy of 2261 bytes, exposing upgradeTo, upgradeToAndCall, changeAdmin, implementation and admin selectors. At the opening checkpoint, block 18,000,000 dated 2023-08-26, the EIP-1967 implementation slot held 0x3ed1dfbccf893b7d2d730ead3e5edbf1f8f95a48 and the admin slot held 0xCc4E08A5BFA887621Ad68826a0D5913d7a2cb392. Two real implementation rotations follow. At block 18,194,082 on 2023-09-22 transaction 0xbfd3fc6743b2b90d1914e153b6ce1e10710c0c2569bfe517057a9ad060686129 emitted Upgraded for 0xe672e0e0101a7f58d728751e2a5e6da5ff1fda64. At block 26,429,786 on 2026-11-16 transaction 0x65248026dc0153f86ca29c4f4d2af64485d7ef1b332b9007d07580af79886d76 emitted Upgraded for 0x5403cf3da1920e46b6ec07724407ab6f5c041402. Both receipts report status 0x1 and were sent to the same address 0xA3464e1b86EE6941A600f9F69C61A47322af918F, which the Pacta MCP scan identifies as a 3-of-5 Gnosis Safe with five owners, threshold three, no guard and no timelock. eth_getStorageAt confirms the implementation value changes between the block immediately preceding and the block of each upgrade, while the admin slot remains byte-identical at 0xCc4E08A5BFA887621Ad68826a0d5913d7a2cb392 at every checkpoint from 18,000,000 through 26,450,616. Independent eth_getCode archive reads on eth.drpc.org and eth-mainnet.public.blastapi.io both return 2261 bytes at blocks 18,000,000, 19,000,000 and 26,450,616, so the proxy runtime itself never changed.\n\nThe engineering bench is weak relative to the authority it controls. The Ankr-network GitHub organisation publishes no Solidity source tree for ankrETH: its official documentation repository Ankr-network/ankr-docs is archived MDX, with 60 commits in the trailing twelve months from four distinct human authors and zero smart-contract commits. Because no public implementation commit can be matched to either on-chain rotation, code_before_upgrade_verified is recorded false and the bus factor for core contract maintenance is one. Reviewers can inspect verified bytecode and reproduce every slot value, yet they cannot compare the deployed implementations against a tagged source tree, a disclosed compiler version or an audit commit that predates execution.\n\nResidual exposure therefore concentrates in governance latency rather than in an immutable contract. A 3-of-5 Safe without a timelock and without a guard can replace the implementation at any block with no mandatory delay, and the risk flags reported by the MCP scan are upgradeable, upgrade_safe_without_guard and upgrade_no_timelock. Neither the archived documentation snapshot nor the dated commits in ankr-docs publish the admin address, the upgrade authority or the two rotation transactions, so the disclosure gap is recorded as unrepaired_open for 1181 days. Curation should treat the ankrETH proxy as an actively governed, upgradeable control plane whose safety rests entirely on signer distribution and off-chain operational discipline, and should re-pin the implementation slot before any integration that assumes bytecode stability.",
+  "contributor_github": "nikolayspb1981",
+  "agent_assist_framework": "opencode",
+  "base_payout_address": "0xF4ea605ec6E6780fd51FFF3679aCAd081FDb7A3C",
+  "mcp_tool_receipt": {
+    "tool": "pacta_scan_control_plane",
+    "arguments": {
+      "chain": "ethereum",
+      "address": "0xE95A203B1a91a908F9B9CE46459d101078c2c3cb"
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\n  \"chain\": \"ethereum\",\n  \"address\": \"0xE95A203B1a91a908F9B9CE46459d101078c2c3cb\",\n  \"block\": {\n    \"number\": 26452763,\n    \"hash\": \"0x0e23518d850d8ab80b4545c5fb44b79bb0742633cd9fa85a2ea741ce66b7132e\",\n    \"timestamp\": 1795135031\n  },\n  \"codeBytes\": 2261,\n  \"eip1967\": {\n    \"implementation\": \"0x5403CF3DA1920e46b6eC07724407Ab6F5c041402\",\n    \"admin\": \"0xCc4E08A5BFA887621Ad68826a0d5913d7a2cb392\",\n    \"beacon\": null\n  },\n  \"owner\": \"0xA3464e1b86EE6941A600f9F69C61A47322af918F\",\n  \"probedStatus\": {\n    \"eip1967Slots\": \"ok\",\n    \"owner\": \"ok\",\n    \"safeGetters\": \"reverted_or_absent\"\n  },\n  \"proxyAdmin\": {\n    \"address\": \"0xCc4E08A5BFA887621Ad68826a0d5913d7a2cb392\",\n    \"codeBytes\": 3723,\n    \"type\": \"contract\",\n    \"owner\": \"0xA3464e1b86EE6941A600f9F69C61A47322af918F\",\n    \"probedStatus\": {\n      \"safeGetters\": \"reverted_or_absent\",\n      \"timelockDelay\": \"reverted_or_absent\",\n      \"owner\": \"ok\"\n    }\n  },\n  \"upgradeAuthority\": {\n    \"address\": \"0xA3464e1b86EE6941A600f9F69C61A47322af918F\",\n    \"codeBytes\": 171,\n    \"type\": \"safe\",\n    \"threshold\": 3,\n    \"owners\": [\n      \"0xC63A2dc360707B718C534eEC2F6dD09d4DD457C8\",\n      \"0x922A8Affe0a3F6BB8940281C05fc65F4993D64dC\",\n      \"0x57F9672bA603251C9C03B36cabdBBcA7Ca8Cfcf4\",\n      \"0x39575F3413C727970E4eD642C27E801Fa807dFfF\",\n      \"0xe088d9E0498A83F05871f8c09d6cE820586B0DD9\"\n    ],\n    \"ownerCount\": 5,\n    \"guard\": null\n  },\n  \"riskFlags\": [\n    \"upgradeable\",\n    \"upgrade_safe_without_guard\",\n    \"upgrade_no_timelock\",\n    \"owner_safe_without_guard\",\n    \"owner_no_timelock\"\n  ],\n  \"summary\": \"OBSERVED: No EIP-1967, Ownable, or Safe single-key control detected in probed standard slots/selectors (custom AccessControl/RolesAuthority not excluded)\"\n}"
+        }
+      ],
+      "structuredContent": {
+        "chain": "ethereum",
+        "address": "0xE95A203B1a91a908F9B9CE46459d101078c2c3cb",
+        "block": {
+          "number": 26452763,
+          "hash": "0x0e23518d850d8ab80b4545c5fb44b79bb0742633cd9fa85a2ea741ce66b7132e",
+          "timestamp": 1795135031
+        },
+        "codeBytes": 2261,
+        "eip1967": {
+          "implementation": "0x5403CF3DA1920e46b6eC07724407Ab6F5c041402",
+          "admin": "0xCc4E08A5BFA887621Ad68826a0d5913d7a2cb392",
+          "beacon": null
+        },
+        "owner": "0xA3464e1b86EE6941A600f9F69C61A47322af918F",
+        "probedStatus": {
+          "eip1967Slots": "ok",
+          "owner": "ok",
+          "safeGetters": "reverted_or_absent"
+        },
+        "proxyAdmin": {
+          "address": "0xCc4E08A5BFA887621Ad68826a0d5913d7a2cb392",
+          "codeBytes": 3723,
+          "type": "contract",
+          "owner": "0xA3464e1b86EE6941A600f9F69C61A47322af918F",
+          "probedStatus": {
+            "safeGetters": "reverted_or_absent",
+            "timelockDelay": "reverted_or_absent",
+            "owner": "ok"
+          }
+        },
+        "upgradeAuthority": {
+          "address": "0xA3464e1b86EE6941A600f9F69C61A47322af918F",
+          "codeBytes": 171,
+          "type": "safe",
+          "threshold": 3,
+          "owners": [
+            "0xC63A2dc360707B718C534eEC2F6dD09d4DD457C8",
+            "0x922A8Affe0a3F6BB8940281C05fc65F4993D64dC",
+            "0x57F9672bA603251C9C03B36cabdBBcA7Ca8Cfcf4",
+            "0x39575F3413C727970E4eD642C27E801Fa807dFfF",
+            "0xe088d9E0498A83F05871f8c09d6cE820586B0DD9"
+          ],
+          "ownerCount": 5,
+          "guard": null
+        },
+        "riskFlags": [
+          "upgradeable",
+          "upgrade_safe_without_guard",
+          "upgrade_no_timelock",
+          "owner_safe_without_guard",
+          "owner_no_timelock"
+        ],
+        "summary": "OBSERVED: No EIP-1967, Ownable, or Safe single-key control detected in probed standard slots/selectors (custom AccessControl/RolesAuthority not excluded)"
+      },
+      "isError": false
+    }
+  },
+  "apache2_commercial_grant": true,
+  "rules_accepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
