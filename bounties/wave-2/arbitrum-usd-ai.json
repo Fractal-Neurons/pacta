@@ -1,0 +1,61 @@
+{
+  "wave": 2,
+  "category": "protocol_mismatch",
+  "slug": "usd-ai",
+  "protocol": "USD.AI",
+  "chainId": 42161,
+  "contractAddress": "0xf53Ae82727D40FeFBf6088212E1Fd7354a63B212",
+  "hunter": "ak10082247-max",
+  "agentFramework": "antigravity",
+  "basePayoutAddress": "0x80E0Ae84679b7f11bE171DaADd492FBECf628cd6",
+  "mcpProof": {
+    "tool": "pacta_lookup_protocol",
+    "arguments": {
+      "query": "0xf53Ae82727D40FeFBf6088212E1Fd7354a63B212"
+    },
+    "result": {
+      "schema": "pacta.protocol_lookup.v1",
+      "query": "0xf53Ae82727D40FeFBf6088212E1Fd7354a63B212",
+      "filters": {
+        "chain": null,
+        "kind": "all",
+        "limit": 10
+      },
+      "totalCatalog": {
+        "protocols": 229,
+        "briefs": 13,
+        "easAttestedProtocols": 99,
+        "rpcObservedProtocols": 130
+      },
+      "totalMatches": 0,
+      "count": 0,
+      "results": [],
+      "catalog": "https://pacta.wtf/api/v1/lookup.json",
+      "nextStep": "Pass a result's preflightArgs ({chain, address}) to pacta_check_preflight (or pacta_scan_control_plane) for a live check.",
+      "note": "easAttested protocols are Base-EAS-anchored records that compare on-chain state with the protocol's documentation. rpc_observed protocols pin the on-chain control plane over archive JSON-RPC and do not assess the documentation (documentationComparison: not_assessed). Briefs are block-pinned verification briefs. preflightArgs re-read the contract live.",
+      "hint": "No match. Call again with an empty query to list what Pacta tracks, or pass a known 0x contract address straight to pacta_check_preflight.",
+      "coverage_gap_hint": "Target is not yet indexed or fully classified. Ask the user if they want you to queue coverage or request this capability via pacta_submit_request (free community queue, or 24h priority clearance for issuers)."
+    }
+  },
+  "blockNumber": 525343263,
+  "blockHash": "0xb41ebe0096447dd047f05f3782d87af93258c0e3a461e77658e3907d1a51e5a8",
+  "castCommands": [
+    "cast call 0xf53Ae82727D40FeFBf6088212E1Fd7354a63B212 \"owner()(address)\" --block 525343263 --rpc-url https://arb1.arbitrum.io/rpc",
+    "cast call 0xf53Ae82727D40FeFBf6088212E1Fd7354a63B212 \"owner()(address)\" --block 525343263 --rpc-url https://gateway.tenderly.co/public/arbitrum"
+  ],
+  "rpcOutputs": {
+    "a": "0x783B08aA21DE056717173f72E04Be0E91328A07b",
+    "b": "0x783B08aA21DE056717173f72E04Be0E91328A07b"
+  },
+  "docsUrl": "https://docs.usd.ai/governance/chip",
+  "docsQuote": "CHIP holders vote on the rules that determine how the protocol operates, including loan pricing, LTV limits, eligible equipment, Compute IQ methodology, utilization, and governance settings. A proposal is first discussed on the governance forum, then put to a Snapshot vote. Where execution is needed, it goes to an on-chain vote and is implemented after a timelock.",
+  "tvlUsd": 157314093.66,
+  "tvlReference": "https://api.llama.fi/protocol/usd-ai",
+  "apache2CommercialGrant": true,
+  "rulesAccepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
