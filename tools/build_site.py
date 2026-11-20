@@ -170,8 +170,8 @@ CHECKOUT_TREASURY = "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14"
 CHECKOUT = {   # sku -> product page; "tier" is the /request/?tier= alias that forwards to the page
     "instant-scan-19": {
         "tier": "instant-19", "route": "scan", "amount": "19.00", "atomic": 19_000_000, "price": "$19 USDC", "unit": "one-time · Base mainnet",
-        "badge": "Ethereum & Base Smart Contract Control-Plane Verification",
-        "h1": "See who actually controls any Ethereum or Base smart contract — in 3 seconds, free, no wallet or signup.",
+        "badge": "Free Ethereum & Base Control-Plane Check",
+        "h1": "Check who actually controls any DeFi protocol — free in 3 seconds.",
         "label": "Instant Contract & Safe Deep-Scan",
         "lede": "Protocol docs often promise a 48-hour timelock while the live smart contract can be upgraded in 0 seconds by a small multisig or single EOA. "
                 "Pacta reads live Ethereum & Base bytecode and authority slots across two independent RPCs to show you who really holds the keys.",
@@ -1471,7 +1471,27 @@ def chain_target(target_label, optional=False):
             f'<p class="form-message" id="co-target-err" data-slot="form-message" hidden></p></div></div>')
 
 
-def scan_checker(lk):
+def scan_sample_finding(idx, lk):
+    """Static zero-network example finding shown inside #pf-out on /scan/ cold load (replaced immediately on first check)."""
+    mw = next((x for x in receipt_data(idx) if x["slug"] == "moonwell-lending-base"), receipt_data(idx)[0])
+    blk = int(mw["e"]["block_number"])
+    addr = mw["e"]["target_contract"]
+    return (
+        f'<div class="pf-sample-card" id="pf-sample-card" data-pf-sample data-pf-sample-slug="moonwell-lending-base">'
+        f'<div class="pf-sample-top">'
+        f'<span class="pf-sample-id">{chain_icon_svg("base")}<b>Moonwell Lending (Base)</b>'
+        f'<span class="pf-opt-sym">WELL</span><span class="pf-st-pill" data-tone="gap">GAP</span></span>'
+        f'<span class="pf-sample-k mono">LIVE EXAMPLE · TAP ANY PROTOCOL ABOVE</span></div>'
+        f'<div class="pf-sample-grid">'
+        f'<div class="pf-s-box pf-s-docs"><span class="pf-s-lbl mono">PUBLISHED DOCS</span>'
+        f'<span>{E(mw["docs"])}</span></div>'
+        f'<div class="pf-s-box pf-s-chain"><span class="pf-s-lbl mono">LIVE CHAIN STORAGE</span>'
+        f'<span><b>{E(mw["chain"])}</b> · 0s delay · Base #{blk:,} ({short_addr(addr)})</span></div>'
+        f'</div></div>'
+    )
+
+
+def scan_checker(lk, idx=None):
     """/scan/: 100% free live preflight checker at the top of the page; 6 real protocol chips with logos run a live check in 1 click."""
     chips = []
     for label, slug in SCAN_CHIPS:
@@ -1486,9 +1506,10 @@ def scan_checker(lk):
                                      f'data-pf-slug="{slug}" data-pf-disp="{E(it["name"])}" data-pf-sym="{E(sym)}" '
                                      f'data-pf-icon="../{proto_icon_rel(slug)}"')))
     examples = (f'<div class="try"><div class="try-row" role="group" aria-label="Example contracts"><span class="try-l">Popular checks:</span>{"".join(chips)}</div></div>')
-    cap = ("Free, read-only live check at the latest finalized block — no wallet, no API key, no signup. Select or type any of 312+ "
-           "protocols & tokens above, click a protocol pill below, or paste any Ethereum / Base 0x… contract address.")
-    return hero_checker(examples, prefix="../", cap=cap, label="Protocol, token or contract address", cta_variant="default", cta_label="Check Protocol (Free)")
+    cap = "Free, read-only live check across 2 archive RPCs — no wallet, no API key, no signup."
+    init_out = scan_sample_finding(idx, lk) if idx is not None else ""
+    return hero_checker(examples, prefix="../", cap=cap, label="Protocol, token or contract address",
+                        cta_variant="default", cta_label="Check Protocol (Free)", initial_out=init_out)
 
 
 def scan_explainer_section():
@@ -1623,7 +1644,7 @@ def product_page(idx, sku):
     crumbs = (f'<nav class="crumbs" aria-label="Breadcrumb"><a href="../">Pacta</a><span aria-hidden="true">/</span>'
               f'<a href="../#pricing">Pricing</a><span aria-hidden="true">/</span><span>{E(c["label"])}</span></nav>')
     if sku == "instant-scan-19":
-        pre, fields = scan_checker(lk), (f'<p class="form-message co-target-msg" id="co-target-err" data-slot="form-message" hidden></p>'
+        pre, fields = scan_checker(lk, idx), (f'<p class="form-message co-target-msg" id="co-target-err" data-slot="form-message" hidden></p>'
                                          + '<div class="co-row2">'
                                          + field("co-docs", "protocol_or_docs", "Docs URL", "https://docs.example.fi", True)
                                          + field("co-contact", "webhook_or_contact", "Delivery email or @telegram", "you@team.xyz or @handle", True)
@@ -1667,10 +1688,13 @@ def product_page(idx, sku):
 
     if sku == "instant-scan-19":
         hero_scan = (
-            f'<div class="pd-head pd-hero-explain"><span data-slot="badge" data-variant="info">{E(c["badge"])}</span>'
-            f'<h1 id="co-title">{E(c["h1"])}</h1>'
+            f'<div class="pd-head pd-hero-explain pd-head-scan"><span data-slot="badge" data-variant="info">{E(c["badge"])}</span>'
+            f'<h1 id="co-title">{E(c["h1"])}</h1></div>'
+        )
+        trust_scan = (
+            f'<div class="scan-trust-strip" aria-label="Verification coverage">'
             f'<p class="pd-lede">{E(c["lede"])}</p>'
-            f'<ul class="pd-proof" aria-label="Verification coverage">'
+            f'<ul class="pd-proof">'
             f'<li><b>{n_proto}+ Protocols Audited</b></li>'
             f'<li><b>{n_sprints} Base Mainnet EAS Attestations</b></li>'
             f'<li><b>2-RPC Archive Proof</b></li>'
@@ -1699,12 +1723,11 @@ def product_page(idx, sku):
                      f'<p class="note">{E(EDITORIAL_FIREWALL)} {E(EDITORIAL_SHORT)} Need multi-contract protocol diligence or continuous SLA monitoring? '
                      f'<a href="../request/">Enterprise &amp; protocol diligence{ARR}</a></p></div></section>')
         main_inner = (
-            f'<section class="sec pd-sec" id="checkout"><div class="wrap">{crumbs}'
+            f'<section class="sec pd-sec pd-sec-scan" id="checkout"><div class="wrap">{crumbs}'
             f'<div class="pd-funnel">{hero_scan}'
             f'<div class="pd-free-box" id="free-check" data-free-check>'
-            f'<div class="pd-step-head"><span class="step-k mono">STEP 1 · FREE 3-SECOND PROTOCOL &amp; CONTRACT CHECK</span>'
-            f'<h2>Select any DeFi protocol or token — or paste a 0x… contract</h2></div>{pre}</div>'
-            f'{scan_explainer_section()}{upgrade_scan}</div></div></section>{foot_note}'
+            f'<div class="pd-step-head"><span class="step-k mono">SELECT ANY DEFI PROTOCOL, SYMBOL OR PASTE 0x…</span></div>{pre}</div>'
+            f'{trust_scan}{scan_explainer_section()}{upgrade_scan}</div></div></section>{foot_note}'
         )
     elif sku == "reverify-seal-99":
         hero_seal = (
@@ -2658,7 +2681,7 @@ EDITORIAL_FIREWALL = "Pacta never sells grades."
 HERO_PLACEHOLDER = "Select or type a protocol / token (Aave, Lido, Pendle, Moonwell…) or paste 0x…"
 
 
-def hero_checker(examples="", prefix="", cap=None, label="Protocol, token or contract address", cta_variant="default", cta_label="Check protocol"):
+def hero_checker(examples="", prefix="", cap=None, label="Protocol, token or contract address", cta_variant="default", cta_label="Check protocol", initial_out=""):
     """U3/A3 + Protocol Select & Autocomplete Combobox: zero-type dropdown of featured gaps & top protocols with official logos,
     instant <2ms search across 312+ protocols & tickers, 1-click live check, and inline 0x + 40-hex paste support."""
     return (f'<div class="pf hero-pf" data-api="{API}" data-lookup="{prefix}api/v1/lookup.json">'
@@ -2686,7 +2709,7 @@ def hero_checker(examples="", prefix="", cap=None, label="Protocol, token or con
                f'or paste any 0x… contract address. No API key, no wallet. Runs when you press Check or pick an example below.</p>')
             +
             f'<noscript><p class="note">Without JavaScript, use the free API: <code>{E(CURL)} "{E(API)}/v1/check/preflight?chain=ethereum&amp;address=0x…"</code></p></noscript>'
-            f'{examples}<div class="pf-out" id="pf-out" aria-live="polite"></div></div>')
+            f'{examples}<div class="pf-out" id="pf-out" aria-live="polite">{initial_out}</div></div>')
 
 
 def sc_drawer(c, prefix=""):

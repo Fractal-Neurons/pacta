@@ -2320,13 +2320,30 @@
     }
     function openCombo(queryOverride) {
       if (!listbox || addr.disabled) return;
+      if (typeof window !== "undefined" && window.innerWidth && window.innerWidth < 640 && window.innerHeight && addr.getBoundingClientRect) {
+        try {
+          var rect = addr.getBoundingClientRect();
+          if (rect && rect.bottom > window.innerHeight * 0.52) {
+            var scTarget = (box.closest && box.closest("#free-check")) || form;
+            if (scTarget && scTarget.scrollIntoView) scTarget.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        } catch (e) { /* ignore */ }
+      }
       listbox.hidden = false;
       addr.setAttribute("aria-expanded", "true");
       if (combo) combo.setAttribute("data-open", "1");
       if (LK) { renderCombo(LK, queryOverride); return; }
       listbox.textContent = "";
-      listbox.appendChild(el("p", { "class": "pf-dd-empty", text: "Loading 312+ indexed protocols\u2026" }));
+      listbox.appendChild(el("p", { "class": "pf-dd-empty", text: "Loading 313+ indexed protocols\u2026" }));
       lookupData().then(function (d) { if (!listbox.hidden) renderCombo(d, queryOverride); });
+    }
+    var sampleCard = $("[data-pf-sample]", out);
+    if (sampleCard) {
+      sampleCard.addEventListener("click", function () {
+        var slug = sampleCard.getAttribute("data-pf-sample-slug") || "moonwell-lending-base";
+        var chip = $('[data-receipt][data-pf-slug="' + slug + '"]');
+        if (chip) chip.click();
+      });
     }
 
     function busy(on) {

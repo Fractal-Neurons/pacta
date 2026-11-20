@@ -1368,6 +1368,35 @@ html:not(.js) [data-scan-upgrade], html:not(.js) [data-co-card] { display: grid 
 .rc-name { font-size: 0.8125rem; font-weight: 600; color: var(--foreground); }
 .rc-sym { font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; padding: 0 5px; border-radius: 4px; background: var(--muted); color: var(--muted-foreground); }
 .rc-sep, .rc-chain { font-size: 0.75rem; color: var(--muted-foreground); }
+/* /scan/ hero-first above-the-fold layout + static zero-network live example card */
+.pd-sec-scan { padding-top: 14px; }
+.pd-sec-scan .crumbs { margin-bottom: 4px; }
+.pd-sec-scan .pd-funnel { gap: 14px; margin-top: 6px; }
+.pd-head-scan { display: grid; gap: 6px; }
+.pd-head-scan h1 { margin: 0; font-size: 1.95rem; line-height: 1.15; letter-spacing: -0.025em; }
+.pd-sec-scan .pd-free-box { padding: 16px 18px; gap: 8px; scroll-margin-top: 64px; }
+.pd-sec-scan .checker-cap { margin-top: 6px; }
+.pd-sec-scan .try { margin-top: 8px; }
+.pd-sec-scan .pf-out { margin-top: 10px; }
+.scan-trust-strip { padding: 14px 18px; border: 1px solid var(--border); border-radius: calc(var(--radius) + 4px); background: var(--card); display: grid; gap: 8px; }
+.scan-trust-strip .pd-lede { font-size: 0.9375rem; line-height: 1.5; max-width: none; }
+.scan-trust-strip .pd-proof { margin: 0; }
+.pf-sample-card { padding: 10px 12px; border: 1px dashed var(--input-border); border-radius: var(--radius); background: var(--background); display: grid; gap: 8px; cursor: pointer; transition: border-color 120ms ease, background-color 120ms ease; }
+.pf-sample-card:hover { border-color: var(--foreground); background: var(--accent); }
+.pf-sample-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; }
+.pf-sample-id { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 0.8125rem; color: var(--foreground); }
+.pf-sample-k { font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.04em; color: var(--muted-foreground); }
+.pf-sample-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.pf-s-box { padding: 7px 10px; border-radius: var(--radius); border: 1px solid var(--border); font-size: 0.8125rem; line-height: 1.38; display: grid; gap: 2px; min-width: 0; }
+.pf-s-docs { background: var(--success-bg); border-color: var(--success-border); }
+.pf-s-chain { background: var(--warning-bg); border-color: var(--warning-border); }
+.dark .pf-s-docs { background: #0c2218; border-color: #1b4d30; }
+.dark .pf-s-chain { background: #261b0a; border-color: #5c3f14; }
+.pf-s-lbl { font-size: 0.625rem; font-weight: 700; letter-spacing: 0.05em; color: var(--muted-foreground); }
+.pf-s-docs .pf-s-lbl { color: var(--success); }
+.pf-s-chain .pf-s-lbl { color: var(--warning); }
+.dark .pf-s-docs .pf-s-lbl { color: #6ee7b7; }
+.dark .pf-s-chain .pf-s-lbl { color: #fcd34d; }
 
 @media (max-width: 639px) {
   .checker { grid-template-columns: minmax(0, 1fr); }
@@ -1379,6 +1408,41 @@ html:not(.js) [data-scan-upgrade], html:not(.js) [data-co-card] { display: grid 
   .pf-clear-btn { right: 44px; }
   .pf-opt { padding: 8px; gap: 8px; }
   .pf-opt-addr { display: none; }
+  .pd-sec-scan { padding-top: 8px; }
+  .pd-sec-scan .crumbs { display: none; }
+  .pd-sec-scan .pd-funnel { gap: 10px; margin-top: 0; }
+  .pd-head-scan { gap: 4px; }
+  .pd-head-scan [data-slot="badge"] { font-size: 0.6875rem; padding: 2px 8px; }
+  .pd-head-scan h1 { font-size: 1.1875rem; line-height: 1.22; }
+  .pd-sec-scan .pd-free-box { padding: 10px 12px; gap: 6px; }
+  .pd-sec-scan .step-k { font-size: 0.6875rem; }
+  .pd-sec-scan .checker { grid-template-columns: 7.125rem minmax(0, 1fr); gap: 6px; }
+  .pd-sec-scan .checker select, .pd-sec-scan .checker input, .pd-sec-scan .checker > [data-slot="button"] { height: 40px; }
+  .pd-sec-scan .pf-chain-dot { left: 8px; }
+  .pd-sec-scan .pf-chain-wrap select { padding-left: 26px; padding-right: 24px; font-size: 0.8125rem; }
+  .pd-sec-scan .pf-combo-lead { left: 9px; }
+  .pd-sec-scan .pf-combo > input { padding-left: 30px; padding-right: 40px; font-size: 0.875rem; }
+  .pd-sec-scan .pf-combo[data-has-clear="1"] > input { padding-right: 68px; }
+  .pd-sec-scan .pf-toggle-btn { height: 30px; padding: 0 6px; right: 4px; }
+  .pd-sec-scan .pf-clear-btn { right: 36px; width: 20px; height: 20px; }
+  .pd-sec-scan .pf-sel-overlay { right: 62px; padding: 0 6px; gap: 5px; }
+  .pd-sec-scan .pf-sel-name { font-size: 0.8125rem; }
+  .pd-sec-scan .checker > [data-slot="button"] { grid-column: 1 / -1; }
+  .pd-sec-scan .pf-dropdown { left: calc(-7.125rem - 6px); width: calc(100% + 7.125rem + 6px); max-height: 316px; }
+  .pd-sec-scan .checker-cap { margin-top: 4px; font-size: 0.6875rem; line-height: 1.35; }
+  .pd-sec-scan .try { margin-top: 6px; }
+  .pd-sec-scan .try-row { gap: 5px 6px; }
+  .pd-sec-scan .try-l { font-size: 0.75rem; }
+  .pd-sec-scan .pd-free-box .receipt { min-height: 28px; padding: 3px 8px; gap: 5px; }
+  .pd-sec-scan .rc-logo { width: 16px; height: 16px; }
+  .pd-sec-scan .rc-name { font-size: 0.75rem; }
+  .pd-sec-scan .pf-out { margin-top: 6px; }
+  .pf-sample-card { padding: 8px 10px; gap: 6px; }
+  .pf-sample-k { font-size: 0.625rem; }
+  .pf-sample-grid { grid-template-columns: minmax(0, 1fr); gap: 5px; }
+  .pf-s-box { padding: 6px 8px; font-size: 0.75rem; }
+  .scan-trust-strip { padding: 12px 14px; gap: 6px; }
+  .scan-trust-strip .pd-lede { font-size: 0.8125rem; line-height: 1.45; }
   .w3-parts, .cred-list, .cred-grid { grid-template-columns: minmax(0, 1fr); }
   .pd-funnel { gap: 18px; }
   .pd-hero-explain h1 { font-size: 1.5rem; }
