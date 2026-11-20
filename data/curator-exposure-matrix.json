@@ -1135,7 +1135,9 @@
       "curator_name": "MEV Capital",
       "x_handle": "@MEVCapital",
       "role_archetype": "Institutional Curated Vault Manager (Morpho, Euler V2, Mellow, Pendle, Lagoon/Upshift)",
-      "direct_wrapper_slugs": [],
+      "direct_wrapper_slugs": [
+        "mev-capital-weth-metamorpho"
+      ],
       "underlying_aligned_protective_slugs": [
         "morpho-blue-core",
         "euler-v2-evk",
@@ -1156,12 +1158,12 @@
         "maple-finance-v2-syrup"
       ],
       "verified_contagion_edges": [
-        "0 standalone MEV Capital wrapper slug indexed yet (queued for Sprint 36 MetaMorpho/Euler wrapper expansion); 15 underlying venues & basis/LRT collaterals already Base-EAS attested"
+        "mev-capital-weth-metamorpho -> morpho-blue-core (curated_vault_allocates_to_markets, Ethereum #26,458,556)"
       ],
       "curator_exposure_insight": "MEV Capital curates active lending, PT-collateral, and basis-trade strategies across Morpho, Euler V2, Mellow, Pendle, Lagoon, and Upshift. Its core strategy stack spans 8 verified Base-EAS DELTAs (USDe 1d timelock, USD0++ 1s timelock, Lagoon 0s-delay 3-of-6 beacon owner, Upshift 2-of-3 vault ProxyAdmin, syrupUSDC 4-of-7 Safe ProxyAdmin).",
       "wrapper_counts": {
-        "total": 0,
-        "aligned_or_protective": 0,
+        "total": 1,
+        "aligned_or_protective": 1,
         "delta": 0,
         "observed": 0
       },
@@ -1170,7 +1172,26 @@
         "adverse_gaps_delta": 8,
         "adverse_gap_share_pct": 53.3
       },
-      "direct_wrappers": [],
+      "direct_wrappers": [
+        {
+          "slug": "mev-capital-weth-metamorpho",
+          "name": "MEV Capital wETH (MetaMorpho)",
+          "grade": "ALIGNED",
+          "easAttested": true,
+          "chains": [
+            "ethereum"
+          ],
+          "pinnedBlock": 26458556,
+          "primaryContract": "0x9a8bC3B04b7f3D87cfC09ba407dCED575f2d61D8",
+          "targetLabel": "MEV Capital wETH (MCwETH, MetaMorpho)",
+          "tokens": [
+            "MCwETH"
+          ],
+          "baseEasUids": [],
+          "summary_short": "MEV Capital's wETH vault timelock is 3 days, within Morpho's documented bounds",
+          "url": "https://pacta.wtf/protocols/mev-capital-weth-metamorpho/"
+        }
+      ],
       "underlying_aligned_protective": [
         {
           "slug": "morpho-blue-core",
