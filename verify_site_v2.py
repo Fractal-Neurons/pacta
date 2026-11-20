@@ -2511,19 +2511,19 @@ def main(argv=None):
         return {**it_, "eta": None if st_ == "executed" else it_["eta"],
                 "operations": [{**o_, "done": st_ == "executed", "pending": st_ != "executed", "ready": st_ == "ready"} for o_ in it_["operations"]]}
     v46 = {
-        "radar.json: 12 items / 18 ops (Lista refresh: 2 ready (ether.fi Liquid 0xf0fb + Lombard 0xd07f, matured, unexecuted), 5 pending (5 ops, Lista 0x21df among them), 0 mixed, executed (11 ops), Beefy on Base + Treehouse, the Lombard upgrades and both Ethena items executed); refreshed_at (Ethereum) + refreshed_at_base (Base)":
+        "radar.json: 12 items / 18 ops (Sprint 36 refresh: 0 ready, 3 pending (ether.fi 0x244e, Compound V3 0x86b4, Yearn V3 0x2a14; 3 ops), 0 mixed, executed (15 ops), Beefy on Base + Treehouse, the Lombard upgrades, both Ethena items, ether.fi Liquid, Cap, Lombard 0xd07f and Lista executed); refreshed_at (Ethereum) + refreshed_at_base (Base)":
             len(rad46["items"]) == 12 and sum(len(it["operations"]) for it in rad46["items"]) == 18
-            and [BS.item_state(it) for it in rad46["items"]].count("ready") == 2 and [BS.item_state(it) for it in rad46["items"]].count("pending") == 5
-            and sum(len(it["operations"]) for it in rad46["items"] if BS.item_state(it) == "ready") == 2
-            and sum(len(it["operations"]) for it in rad46["items"] if BS.item_state(it) == "pending") == 5
+            and [BS.item_state(it) for it in rad46["items"]].count("ready") == 0 and [BS.item_state(it) for it in rad46["items"]].count("pending") == 3
+            and sum(len(it["operations"]) for it in rad46["items"] if BS.item_state(it) == "ready") == 0
+            and sum(len(it["operations"]) for it in rad46["items"] if BS.item_state(it) == "pending") == 3
             and [BS.item_state(it) for it in rad46["items"]].count("mixed") == 0
-            and sum(len(it["operations"]) for it in rad46["items"] if BS.item_state(it) == "executed") == 11
-            and {it["brief"] for it in rad46["items"] if BS.item_state(it) == "ready"} == {"briefs/etherfi-liquid-op-0xf0fb/", "briefs/lombard-op-0xd07f/"}
+            and sum(len(it["operations"]) for it in rad46["items"] if BS.item_state(it) == "executed") == 15
+            and {it["brief"] for it in rad46["items"] if BS.item_state(it) == "pending"} == {"briefs/etherfi-op-0x244e/", "briefs/compound-v3-op-0x86b4/", "briefs/yearn-v3-op-0x2a14/"}
             and all(BS.item_state(it) == "executed" for it in base46)
             and r46["tag"] == rb46.get("tag") == "finalized" and len(base46) == 1 and all(it.get("protocol_slug") and it.get("chain_id") in (1, 8453) for it in rad46["items"]),
-        "counts text '2 ready · 5 pending · Executed (11 ops)' on / and /radar/":
-            BS.radar_counts_text(rad46) == "2 ready · 5 pending · Executed (11 ops)"
-            and all("data-radar-counts>2 ready · 5 pending · Executed (11 ops)</span>" in t for t in (home46, radar46)),
+        "counts text '3 pending · Executed (15 ops)' on / and /radar/":
+            BS.radar_counts_text(rad46) == "3 pending · Executed (15 ops)"
+            and all("data-radar-counts>3 pending · Executed (15 ops)</span>" in t for t in (home46, radar46)),
         "Base items link Basescan (never Etherscan) for the timelock on / and /radar/, carry a 'Base' tag, and the Base brief has 0 etherscan.io links":
             all(f'https://basescan.org/address/{it["timelock"]}' in t and f'etherscan.io/address/{it["timelock"]}' not in t and f'etherscan.io/address/{it["timelock"].lower()}' not in t
                 and '<span class="chain-tag">Base</span>' in t for it in base46 for t in (home46, radar46))

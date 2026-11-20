@@ -174,7 +174,13 @@ test("address aliases: the Aave V3 Base Pool resolves exactly to aave-v3-base; '
     assert.equal(r.results[0].match, "exact", q);
   }
   const aliased = LOOKUP_CATALOG.filter((x) => (x.aliasAddresses || []).length);
-  assert.deepEqual(aliased.map((x) => x.slug), ["aave-v3-base"]);
+  assert.deepEqual(aliased.map((x) => x.slug), ["aave-v3-base", "aave-v3-gho", "circle-gateway", "ethena-usde-susde", "ether-fi-core-eeth-weeth",
+                                                "lido-steth-dual-governance", "morpho-blue-core", "pendle-finance-v2", "spark-sky", "stader-labs-ethx"]);
+  for (const x of aliased) {                                              // every verified alias resolves exactly to its protocol
+    for (const a of x.aliasAddresses) {
+      assert.ok(lookupProtocols({ query: a, limit: 50 }).results.some((r) => r.slug === x.slug && r.match === "exact"), `${x.slug} ${a}`);
+    }
+  }
   for (const x of LOOKUP_CATALOG) {                                       // an alias never collides with another protocol's addresses
     if (x.slug === "aave-v3-base" || x.kind !== "protocol") continue;
     const own = [x.primaryContract, x.controllerAddress, ...(x.surfaces || []).map((s) => s.targetContract)].filter(Boolean).map((a) => a.toLowerCase());
@@ -186,15 +192,17 @@ test("address aliases: the Aave V3 Base Pool resolves exactly to aave-v3-base; '
 });
 
 test("0x address lookup: primary / surface contracts resolve exactly, a token or controller the records name resolves through relatedContracts", () => {
-  const cases = [["0xA0b86991c6218b36c1d19d4a2e9eb0ce3606eB48", "circle-usdc", "exact"], ["0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", "circle-usdc", "exact"],
-                 ["0xA35b1B31Ce002FBF2058D22F30f95D405200A15b", "stader-labs-ethx", "substring"],
+  // Ethereum USDC is a circle-usdc surface and a circle-gateway alias: both resolve exactly; ETHx is a stader-labs-ethx alias (exact)
+  const cases = [["0xA0b86991c6218b36c1d19d4a2e9eb0ce3606eB48", "circle-usdc", "exact"], ["0xA0b86991c6218b36c1d19d4a2e9eb0ce3606eB48", "circle-gateway", "exact"],
+                 ["0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", "circle-usdc", "exact"],
+                 ["0xA35b1B31Ce002FBF2058D22F30f95D405200A15b", "stader-labs-ethx", "exact"],
                  ["0x4F4495243837681061C4743b74B3eEdf548D56A5", "axelar-network", "exact"]];
   for (const [q, slug, match] of cases) {
     for (const v of [q, q.toLowerCase()]) {
       const r = lookupProtocols({ query: v });
       assert.ok(r.totalMatches >= 1, v);
-      assert.equal(r.results[0].slug, slug, v);
-      assert.equal(r.results[0].match, match, v);
+      assert.ok(r.results.some((x) => x.slug === slug && x.match === match), `${v} ${slug} ${match}`);
+      assert.equal(r.results[0].match, "exact", v);
     }
   }
   // an address never prefix / word-matches anything, and an unknown address matches nothing

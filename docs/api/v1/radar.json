@@ -2,102 +2,22 @@
   "schema": "pacta.radar.v1",
   "chain_id": 1,
   "refreshed_at": {
-    "block_number": 26448030,
-    "block_hash": "0xf52a0561c233cb270843176ec6fdc9978eac09dcdf451846da10c21343172608",
-    "block_timestamp": 1795078103,
-    "block_time_utc": "2026-11-19 08:48 UTC",
+    "block_number": 26457377,
+    "block_hash": "0xcbd852ce081352f23d28a211cf7de64acfef22175a55dd54da54b2be3c6810fb",
+    "block_timestamp": 1795190615,
+    "block_time_utc": "2026-11-20 16:03 UTC",
     "tag": "finalized",
     "rpcs_cross_checked": 2
   },
   "refreshed_at_base": {
-    "block_number": 59436640,
-    "block_hash": "0xc2647c73d03351010404b58657ffb92d6a5d5273bb0d433807a4b5f51c06bb50",
-    "block_timestamp": 1795077703,
-    "block_time_utc": "2026-11-19 08:41 UTC",
+    "block_number": 59999187,
+    "block_hash": "0x575d7a39076f07e0f4da4279c7fd58165af9298dda79666d2a13e41b265eb7d2",
+    "block_timestamp": 1795190213,
+    "block_time_utc": "2026-11-20 15:56 UTC",
     "tag": "finalized",
     "rpcs_cross_checked": 2
   },
   "items": [
-    {
-      "protocol": "ether.fi Liquid",
-      "protocol_slug": "ether-fi-liquid-veda-boringvault",
-      "chain_id": 1,
-      "title": "ether.fi Liquid — strategist Merkle roots rotated on liquidUSD, liquidETH and liquidBTC",
-      "summary": "One 5-call batch of setManageRoot on the Veda ManagerWithMerkleVerification contracts of three Liquid vaults: four live strategist roots replaced (a Safe on all three vaults, an EOA on liquidETH) and the liquidUSD manager's own root set to zero. The new roots' leaves are not onchain.",
-      "timelock": "0xD829F278016b90FEc735F9A12Bf8b75E06102C89",
-      "brief": "briefs/etherfi-liquid-op-0xf0fb/",
-      "min_delay_seconds": 86400,
-      "operations": [
-        {
-          "op_id": "0xf0fbfdb07f06c3a429b032811930fbb9b314ed8adc343b4d9ef3a60fe2975eea",
-          "eta": 1795063667,
-          "pending": true,
-          "done": false,
-          "ready": true
-        }
-      ],
-      "eta": 1795063667
-    },
-    {
-      "protocol": "Lombard",
-      "protocol_slug": "lombard-lbtc",
-      "chain_id": 1,
-      "title": "Lombard — LBTC and BTC.b deposit fees set to 2,000 sats; minimum request doubled",
-      "summary": "One 5-call batch on the upgraded AssetRouter: minRequestAmount 2,000 -> 4,000 sats, a 2,000-sat deposit fee on every LBTC and BTC.b proof mint (half the new minimum, above the operator range), and LBTC's redeem charge moved from redeemFee (10,000 -> 0 sats) to toNativeCommission on redeems to Bitcoin (0 -> 10,000 sats).",
-      "timelock": "0x055E84e7FE8955E2781010B866f10Ef6E1E77e59",
-      "brief": "briefs/lombard-op-0xd07f/",
-      "min_delay_seconds": 86400,
-      "operations": [
-        {
-          "op_id": "0xd07fa5ecca21af2317c073b5e59ecddce3968f694270409f76771727ea02e50a",
-          "eta": 1795077227,
-          "pending": true,
-          "done": false,
-          "ready": true
-        }
-      ],
-      "eta": 1795077227
-    },
-    {
-      "protocol": "Cap",
-      "protocol_slug": "cap",
-      "chain_id": 1,
-      "title": "Cap — EigenLayer service-manager upgrade: slashes paid out only after EigenLayer's resolution delay",
-      "summary": "upgradeToAndCall (no initializer) on Cap's EigenServiceManager (UUPS): a slash now queues the payout, valued at slash time, and anyone completes it once EigenLayer's slash resolution delay has passed (completeSlash); rewards become USDC-only and USDC can no longer be registered as collateral. Storage is appended only (pendingSlashes).",
-      "timelock": "0xD8236031d8279d82E615aF2BFab5FC0127A329ab",
-      "brief": "briefs/cap-op-0x3397/",
-      "min_delay_seconds": 86400,
-      "operations": [
-        {
-          "op_id": "0x3397c542581a354278c3bfd01e0b9e853ec74e6c7a6ea1ec36e1d6e6cf7ab94a",
-          "eta": 1795105403,
-          "pending": true,
-          "done": false,
-          "ready": false
-        }
-      ],
-      "eta": 1795105403
-    },
-    {
-      "protocol": "Lista Lending",
-      "protocol_slug": "lista-lending",
-      "chain_id": 1,
-      "title": "Lista Lending — four liquidator upgrades add an emergency pause; PAUSER to a 1-of-15 Safe and the EmergencySwitchHub",
-      "summary": "One 16-call batch: upgradeToAndCall (no initializer) moves Lista's Liquidator, BrokerLiquidator, V3Liquidator and PublicLiquidator (UUPS) to implementations that add OpenZeppelin Pausable (storage layout unchanged), then grants PAUSER to a 1-of-15 Safe and the EmergencySwitchHub, and MANAGER to the hub. One signer can pause liquidations; unpause needs MANAGER.",
-      "timelock": "0xa18ae79AEDA3e711E0CD64cfe1Cd06402d400D61",
-      "brief": "briefs/lista-lending-op-0x21df/",
-      "min_delay_seconds": 86400,
-      "operations": [
-        {
-          "op_id": "0x21dffafc9876aca6c919e6897271e72805f3a4a986b3b7ac22d71950c7da7ebd",
-          "eta": 1795159259,
-          "pending": true,
-          "done": false,
-          "ready": false
-        }
-      ],
-      "eta": 1795159259
-    },
     {
       "protocol": "ether.fi",
       "protocol_slug": "ether-fi-core-eeth-weeth",
@@ -300,6 +220,86 @@
         },
         {
           "op_id": "0x0ca0fcc4856b87f3df9a74532bd60db58d1310c27c17e7d9bfa8a56846f57a90",
+          "eta": null,
+          "pending": false,
+          "done": true,
+          "ready": false
+        }
+      ],
+      "eta": null
+    },
+    {
+      "protocol": "ether.fi Liquid",
+      "protocol_slug": "ether-fi-liquid-veda-boringvault",
+      "chain_id": 1,
+      "title": "ether.fi Liquid — strategist Merkle roots rotated on liquidUSD, liquidETH and liquidBTC",
+      "summary": "One 5-call batch of setManageRoot on the Veda ManagerWithMerkleVerification contracts of three Liquid vaults: four live strategist roots replaced (a Safe on all three vaults, an EOA on liquidETH) and the liquidUSD manager's own root set to zero. The new roots' leaves are not onchain.",
+      "timelock": "0xD829F278016b90FEc735F9A12Bf8b75E06102C89",
+      "brief": "briefs/etherfi-liquid-op-0xf0fb/",
+      "min_delay_seconds": 86400,
+      "operations": [
+        {
+          "op_id": "0xf0fbfdb07f06c3a429b032811930fbb9b314ed8adc343b4d9ef3a60fe2975eea",
+          "eta": null,
+          "pending": false,
+          "done": true,
+          "ready": false
+        }
+      ],
+      "eta": null
+    },
+    {
+      "protocol": "Cap",
+      "protocol_slug": "cap",
+      "chain_id": 1,
+      "title": "Cap — EigenLayer service-manager upgrade: slashes paid out only after EigenLayer's resolution delay",
+      "summary": "upgradeToAndCall (no initializer) on Cap's EigenServiceManager (UUPS): a slash now queues the payout, valued at slash time, and anyone completes it once EigenLayer's slash resolution delay has passed (completeSlash); rewards become USDC-only and USDC can no longer be registered as collateral. Storage is appended only (pendingSlashes).",
+      "timelock": "0xD8236031d8279d82E615aF2BFab5FC0127A329ab",
+      "brief": "briefs/cap-op-0x3397/",
+      "min_delay_seconds": 86400,
+      "operations": [
+        {
+          "op_id": "0x3397c542581a354278c3bfd01e0b9e853ec74e6c7a6ea1ec36e1d6e6cf7ab94a",
+          "eta": null,
+          "pending": false,
+          "done": true,
+          "ready": false
+        }
+      ],
+      "eta": null
+    },
+    {
+      "protocol": "Lombard",
+      "protocol_slug": "lombard-lbtc",
+      "chain_id": 1,
+      "title": "Lombard — LBTC and BTC.b deposit fees set to 2,000 sats; minimum request doubled",
+      "summary": "One 5-call batch on the upgraded AssetRouter: minRequestAmount 2,000 -> 4,000 sats, a 2,000-sat deposit fee on every LBTC and BTC.b proof mint (half the new minimum, above the operator range), and LBTC's redeem charge moved from redeemFee (10,000 -> 0 sats) to toNativeCommission on redeems to Bitcoin (0 -> 10,000 sats).",
+      "timelock": "0x055E84e7FE8955E2781010B866f10Ef6E1E77e59",
+      "brief": "briefs/lombard-op-0xd07f/",
+      "min_delay_seconds": 86400,
+      "operations": [
+        {
+          "op_id": "0xd07fa5ecca21af2317c073b5e59ecddce3968f694270409f76771727ea02e50a",
+          "eta": null,
+          "pending": false,
+          "done": true,
+          "ready": false
+        }
+      ],
+      "eta": null
+    },
+    {
+      "protocol": "Lista Lending",
+      "protocol_slug": "lista-lending",
+      "chain_id": 1,
+      "title": "Lista Lending — four liquidator upgrades add an emergency pause; PAUSER to a 1-of-15 Safe and the EmergencySwitchHub",
+      "summary": "One 16-call batch: upgradeToAndCall (no initializer) moves Lista's Liquidator, BrokerLiquidator, V3Liquidator and PublicLiquidator (UUPS) to implementations that add OpenZeppelin Pausable (storage layout unchanged), then grants PAUSER to a 1-of-15 Safe and the EmergencySwitchHub, and MANAGER to the hub. One signer can pause liquidations; unpause needs MANAGER.",
+      "timelock": "0xa18ae79AEDA3e711E0CD64cfe1Cd06402d400D61",
+      "brief": "briefs/lista-lending-op-0x21df/",
+      "min_delay_seconds": 86400,
+      "operations": [
+        {
+          "op_id": "0x21dffafc9876aca6c919e6897271e72805f3a4a986b3b7ac22d71950c7da7ebd",
           "eta": null,
           "pending": false,
           "done": true,
