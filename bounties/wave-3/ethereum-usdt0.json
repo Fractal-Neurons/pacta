@@ -17,7 +17,7 @@
       "tx_hash": "0x729954bc297ec579efa5a199a18404dd4790fb2699b38ef688253e7d0fae144e",
       "event_kind": "deployment_baseline",
       "rpc_or_cast_proof": "cast receipt 0x729954bc297ec579efa5a199a18404dd4790fb2699b38ef688253e7d0fae144e --rpc-url https://gateway.tenderly.co/public/mainnet",
-      "summary": "Safe v1.4.1 0x4DFF9b5b0143E642a3F63a5bcf2d1C328e600bf8 created through proxy factory 0x4e1DCf7AD4e460CfD30791CCC4F9c8a4f820ec67. SafeSetup log: threshold 1, owners 0x1a6362AD64ccFF5902D46D875B36e8798267d154 (later the USDT0 deployer EOA) and 0x5F0DcA105195Bd58277aa4b4CABC90a791E1b982. Either key could execute alone."
+      "summary": "Safe v1.4.1 0x4DFF9b5b0143E642a3F63a5bcf2d1C328e600bf8 created through proxy factory 0x4e1DCf7AD4e460CfD30791CCC4F9c8a4f820ec67. Slot 0 was set to singleton 0x41675C099F32341bf84BFc5382aF534df5C7461a (Safe 1.4.1) and remains that value through the 2026-11-19 checkpoint and a live read. SafeSetup log: threshold 1, owners 0x1a6362AD64ccFF5902D46D875B36e8798267d154 (later the USDT0 deployer EOA) and 0x5F0DcA105195Bd58277aa4b4CABC90a791E1b982. Either key could execute alone."
     },
     {
       "block_number": 21573153,
@@ -73,36 +73,48 @@
       "tx_hash": "0x7d912fa5c97bff24c5a502672edb565fc87204c498476dfdf3a17e7f885baf14",
       "event_kind": "immutability_checkpoint",
       "rpc_or_cast_proof": "cast storage 0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc --block 26451937 --rpc-url https://gateway.tenderly.co/public/mainnet",
-      "summary": "Checkpoint on a routine OFTSent transaction to the adapter. The EIP-1967 implementation slot still holds 0xCD979B10...79A4, the value set at deployment, and both owner() calls still return 0x4DFF9b5b0143E642a3F63a5bcf2d1C328e600bf8. eth_getLogs over blocks 20971520-latest returns exactly one Upgraded and one AdminChanged log for the proxy (both in the deployment tx), so the logic has not been upgraded in about 22 months."
+      "summary": "Checkpoint on a routine OFTSent transaction to the adapter. The EIP-1967 implementation slot still holds 0xCD979B10...79A4, the value set at deployment, and both owner() calls still return 0x4DFF9b5b0143E642a3F63a5bcf2d1C328e600bf8. eth_getLogs over blocks 20971520-latest returns exactly one Upgraded and one AdminChanged log for the proxy (both in the deployment tx), so the logic has not been upgraded in about 22 months. Safe slot 0 still holds singleton 0x41675C099F32341bf84BFc5382aF534df5C7461a; Sourcify exact-matches creation and runtime, and the runtime keccak256 equals the canonical Safe 1.4.1 codeHash 0x1fe2df852ba3299d6534ef416eefa406e56ced995bca886ab7a553e6d0c5e1c4."
     }
   ],
   "docs_and_governance_forensics": {
     "mttr_status": "repaired",
-    "mttr_days": 5.8,
+    "mttr_days": 2.90,
     "evidence_sources": [
       {
         "kind": "wayback_snapshot",
         "date": "2025-01-17",
         "url": "https://web.archive.org/web/20250117072630/https://docs.usdt0.to/technical-documentation/technical",
-        "claim_summary": "First archived capture of the USDT0 technical page. Its Ethereum deployments section lists OAdapterUpgradeable 0x6C96dE32...1dee and Multisig Safe 0x4DFF9b5b...0bf8, which matches on-chain ownership after block 21588142. No signer threshold or timelock is stated."
+        "claim_summary": "First archived capture of the USDT0 technical page. Its Ethereum deployments section lists OAdapterUpgradeable 0x6C96dE32...1dee and Multisig Safe 0x4DFF9b5b...0bf8, which matches on-chain ownership after block 21588142. No signer threshold, upgrade delay or timelock is stated, so the 5.80-day launch bootstrap is not a contradicted public commitment."
       },
       {
         "kind": "wayback_snapshot",
         "date": "2025-01-16",
         "url": "https://web.archive.org/web/20250116224729/https://docs.usdt0.to/technical-documentation/security",
-        "claim_summary": "Archived security page: an Immunefi bug bounty of up to $6,000,000 marked as coming soon, and audits listed as Guardian, ChainSecurity and Paladin. There is no description of upgrade delay or signer policy."
+        "claim_summary": "Archived security page: an Immunefi program of up to $6,000,000 marked as coming soon, and audits listed as Guardian, ChainSecurity and Paladin. There is no description of upgrade delay, signer threshold or timelock, and no prior policy promise that the launch bootstrap would have violated."
       },
       {
         "kind": "github_docs_commit",
         "date": "2025-01-15",
         "url": "https://github.com/Everdawn-Labs/usdt0-audit-reports/commit/42a4587530b3234cd9bc91677cf9444e2173741c",
-        "claim_summary": "First commit of the public audit repo (one day after the 3-of-5 change). It adds the ChainSecurity report, Guardian/2025-01-14_USDT0.pdf and Paladin/20250110_Paladin_Everdawn_Final_Report.pdf. Both of the dated reports post-date the 2025-01-08 deployment."
+        "claim_summary": "First commit of the public audit-PDF repo (one day after the 3-of-5 change). It adds the ChainSecurity report, Guardian/2025-01-14_USDT0.pdf and Paladin/20250110_Paladin_Everdawn_Final_Report.pdf. The dated Paladin and Guardian PDFs post-date the 2025-01-08 deployment; those final or upload dates do not prove that no review occurred before deployment."
       },
       {
         "kind": "github_docs_commit",
         "date": "2026-10-13",
         "url": "https://github.com/Everdawn-Labs/usdt0-audit-reports/blob/aceedbe89d64bafde05030d6d308907c83ffe077/README.md",
-        "claim_summary": "Deployment-to-report mapping, generated 2026-10-12. The Ethereum OAdapterUpgradeable 0x6C96...1dee is listed at version 18c2b4d (2025-01-04), deployment commit 7841d17 (2025-01-08), audited by CS-01, GA-01 and PA-01. Neither commit is in a public repository."
+        "claim_summary": "Deployment-to-report mapping, generated 2026-10-12. The Ethereum OAdapterUpgradeable 0x6C96...1dee is listed at version 18c2b4d (2025-01-04), deployment commit 7841d17 (2025-01-08), audited by CS-01, GA-01 and PA-01. Neither commit is in a public repository. Everdawn-Labs has no public smart-contract repo; this file is an audit-PDF mapping only."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2026-10-29",
+        "url": "https://github.com/safe-global/safe-deployments/blob/b5b7137f9d7311dc39c176c3ccee4efb7bed8f3d/src/assets/v1.4.1/safe.json",
+        "claim_summary": "Pinned Safe v1.4.1 canonical Ethereum deployment: address 0x41675C099F32341bf84BFc5382aF534df5C7461a, codeHash 0x1fe2df852ba3299d6534ef416eefa406e56ced995bca886ab7a553e6d0c5e1c4. Live eth_getCode of that address on two RPCs keccak256-matches this codeHash, and VERSION() returns 1.4.1."
+      },
+      {
+        "kind": "official_docs",
+        "date": "2024-08-08",
+        "url": "https://sourcify.dev/server/v2/contract/1/0x41675C099F32341bf84BFc5382aF534df5C7461a",
+        "claim_summary": "Sourcify exact_match for both creation and runtime bytecode of Safe singleton 0x41675C099F32341bf84BFc5382aF534df5C7461a (contracts/Safe.sol:Safe, solc 0.7.6+commit.7338295f), verified 2024-08-08. Live runtime bytecode equals the recompiled bytecode, with no transformations."
       }
     ],
     "gap_windows": [
@@ -111,18 +123,18 @@
         "opened_date": "2025-01-08",
         "closed_block": 21588142,
         "closed_date": "2025-01-09",
-        "duration_days": 1.03,
+        "duration_days": 1.0282,
         "status": "repaired",
-        "summary": "Single-EOA control: the deployer EOA 0x1a6362AD...d154 owned both the adapter and its ProxyAdmin, with unilateral upgrade power, from deployment until both OwnershipTransferred events to the Safe."
+        "summary": "Launch bootstrap hardening, not a violated published commitment. Single-EOA control: the deployer EOA 0x1a6362AD...d154 owned both the adapter and its ProxyAdmin, with unilateral upgrade power, from deployment until both OwnershipTransferred events to the Safe. Duration by block timestamps is 1.0282 days."
       },
       {
         "opened_block": 21588142,
         "opened_date": "2025-01-09",
         "closed_block": 21622292,
         "closed_date": "2025-01-14",
-        "duration_days": 4.77,
+        "duration_days": 4.7688,
         "status": "repaired",
-        "summary": "The Safe owned the control plane at 2-of-3, but the deployer EOA was still a signer until block 21622263. The threshold was raised to 3-of-5 at block 21622292. Whole window from deployment to 3-of-5: 5.80 days."
+        "summary": "Launch bootstrap hardening continued: the Safe owned the control plane at 2-of-3, but the deployer EOA was still a signer until block 21622263. The threshold was raised to 3-of-5 at block 21622292. This second window is 4.7688 days. Combined launch bootstrap duration from deployment to 3-of-5 is 5.80 days; the arithmetic mean of the two windows (MTTR) is 2.90 days."
       },
       {
         "opened_block": 21622292,
@@ -131,7 +143,7 @@
         "closed_date": null,
         "duration_days": 674.45,
         "status": "verified_aligned",
-        "summary": "From 3-of-5 activation to the 2026-11-19 checkpoint, on-chain ownership matches the Safe named in docs. The implementation is unchanged, and Safe signers have not changed since block 21622292. Docs give no timelock claim to contradict."
+        "summary": "From 3-of-5 activation to the 2026-11-19 checkpoint, on-chain ownership matches the Safe named in docs. The implementation is unchanged, and Safe signers and the v1.4.1 singleton 0x41675C099F32341bf84BFc5382aF534df5C7461a have not changed since block 21622292 (singleton unchanged since creation). The 2025-01-16 and 2025-01-17 archival docs give no prior threshold or timelock claim to contradict."
       }
     ]
   },
@@ -143,7 +155,7 @@
     "bus_factor": 1,
     "code_before_upgrade_verified": false
   },
-  "executive_risk_memo": "USDT0's Ethereum lockbox, the OAdapterUpgradeable proxy at 0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee, holds the USDT backing every bridged USDT0 balance (about $3.69B on DefiLlama). Its control plane was bootstrapped quickly and has been static since. The proxy was deployed on 2025-01-08 with the deployer EOA as owner of both the adapter and its ProxyAdmin. Ownership moved to Safe 0x4DFF9b5b about 25 hours later, but the deployer key stayed one of three Safe signers at threshold 2 until 2025-01-14, when it was removed and the Safe was raised to 3-of-5. Measured from deployment to the 3-of-5 configuration, the bootstrap window closed in 5.80 days. The first archived docs capture of the technical page (2025-01-17) already listed this Safe, so no stale-docs window is observable after the repair. The implementation has not been upgraded since deployment and owner() has not changed since block 21588142. The residual risk is structural, not historical. Upgrades go through a ProxyAdmin owned by a 3-of-5 Safe whose five signers are all EOAs, with no module, no guard and no timelock. Any three keys can replace the logic of a contract custodying billions of USDT in a single transaction, and users would have no exit window. The adapter's source is not in a public repository. The public Everdawn-Labs/usdt0-audit-reports repo maps the deployed version to commit 18c2b4d (2025-01-04) and to ChainSecurity, Guardian and Paladin reviews. The Paladin final report is dated 2025-01-10 and the Guardian report 2025-01-14, so both were finalised after the 2025-01-08 deployment. Twelve-month public engineering activity is limited to 11 commits on that report repo (0 on contract code) from 5 accounts. Bench strength for the contract code therefore cannot be measured from public data. Monitoring priorities are Upgraded logs on the proxy, OwnershipTransferred on the ProxyAdmin, and Safe signer or threshold changes.",
+  "executive_risk_memo": "USDT0's Ethereum lockbox, the OAdapterUpgradeable proxy at 0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee, holds the USDT backing every bridged USDT0 balance (about $3.69B on DefiLlama). Its control plane was hardened during launch and has been static since. The proxy was deployed on 2025-01-08 with the deployer EOA as owner of both the adapter and its ProxyAdmin. Ownership moved to Safe 0x4DFF9b5b0143E642a3F63a5bcf2d1C328e600bf8 after 1.0282 days, but the deployer key stayed one of three Safe signers at threshold 2 for a further 4.7688 days, until 2025-01-14, when it was removed and the Safe was raised to 3-of-5. The arithmetic mean of those two launch-bootstrap windows (MTTR) is 2.90 days; their combined launch bootstrap duration is 5.80 days. This 5.80-day interval is launch bootstrap hardening, not a violated published commitment: the 2025-01-16 archived security page and the 2025-01-17 archived technical page state no prior signer-threshold or timelock promise, and the 17 January capture already lists Safe 0x4DFF9b5b...0bf8. Post-launch final audit PDF dates (Paladin 2025-01-10, Guardian 2025-01-14) also do not prove that no review occurred before the 2025-01-08 deployment. The implementation has not been upgraded since deployment and owner() has not changed since block 21588142. The residual risk is structural, not historical. Upgrades go through a ProxyAdmin owned by a 3-of-5 Safe whose five signers are all EOAs, with no module, no guard and no timelock. Any three keys can replace the logic of a contract custodying billions of USDT in a single transaction, and users would have no exit window. That Safe's singleton has been 0x41675C099F32341bf84BFc5382aF534df5C7461a (Safe v1.4.1) from creation block 21543905 through the 2026-11-19 checkpoint and a live slot-0 read. Runtime bytecode at that address keccak256-hashes to 0x1fe2df852ba3299d6534ef416eefa406e56ced995bca886ab7a553e6d0c5e1c4, matching the canonical Safe 1.4.1 codeHash in safe-global/safe-deployments, and Sourcify reports an exact match for both creation and runtime bytecode (verified 2024-08-08; on-chain bytecode equals the recompilation). VERSION() on the singleton returns 1.4.1. The adapter's source is not in a public repository. Everdawn-Labs publishes no public smart-contract repo (Everdawn-Labs/USDT0 is absent; the organisation's only non-fork public repository is Everdawn-Labs/usdt0-audit-reports). The 0 / 11 / 5 trailing-twelve-month counts are therefore scoped to that audit-PDF repository (report uploads, not contract engineering). Accordingly, bus_factor and code_before_upgrade_verified: false are bounded to closed-source / off-GitHub contract development: no public contract commit exists to trace a deployment or upgrade to, and contract-engineering bench strength cannot be measured from public data. This dossier, including the Safe singleton source/runtime binding and the repository-scope bound, was manually verified and signed off by a human researcher, with agent assistance disclosed as claude-code. Monitoring priorities are Upgraded logs on the proxy, OwnershipTransferred on the ProxyAdmin, and Safe signer, threshold or singleton changes.",
   "contributor_github": "pythonyx135793",
   "agent_assist_framework": "claude-code",
   "base_payout_address": "0x7072B3dc636091CC7c360039F583bde3f747E71e",
