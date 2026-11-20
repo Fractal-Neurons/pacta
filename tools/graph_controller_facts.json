@@ -298,6 +298,19 @@
       "code_bytes": 1878,
       "code_keccak_hex": "64952234eab8f3aed74355c49119f627965640b1efeb6b28430b5a31b0d3b192"
     },
+    "base:a1b5f2cc9b407177cd8a4acf1699fa0b99955a22": {
+      "code_bytes": 171,
+      "code_keccak_hex": "b89c1b3bdf2cf8827818646bce9a8f6e372885f8c55e5c07acbd307cb133b000",
+      "pin": "base@sprint-35",
+      "safe_threshold": 2,
+      "safe_owners": 3,
+      "safe_owner_hex": [
+        "53352a00316573e8f52696c572f1293ac877ef4d",
+        "41240c8e3034838dcc3ee385b323a9b9d82f7a4b",
+        "490cfd8aab408267bc3087e291a8563493c43e8d"
+      ],
+      "safe_version": "1.3.0"
+    },
     "base:aa8578c937f8ce1edb10477817ffa424edfae6fc": {
       "code_bytes": 1018,
       "code_keccak_hex": "f6cbd6e14ab74f51e41b220a37a5335a2e34df4dff3dc2d276c676ff382d0f98",
@@ -3178,6 +3191,12 @@
       "code_bytes": 3842,
       "code_keccak_hex": "df04354ad449ad82bd6c77894c8db94a70e949b7c41c98b9072366a41883e62c"
     },
+    "ethereum:baceb8ec6b9355dfc0269c18bac9d6e2bdc29c4f": {
+      "code_bytes": 24535,
+      "code_keccak_hex": "055c3751f382475f87df7541c02172835385379d79c3cea5dd9d49010838ad6a",
+      "pin": "ethereum@sprint-35",
+      "owner_hex": "cd03e2e276f6eedd424d41314437531f665187b9"
+    },
     "ethereum:bafa44efe7901e04e39dad13167d089c559c1138": {
       "code_bytes": 12312,
       "code_keccak_hex": "d5517d3be0b131ef314cd993db76434f602e97c316599bdfbc224d1f9683d24c",
@@ -4371,6 +4390,15 @@
       ],
       "timestamp": 1795144119
     },
+    "base@sprint-35": {
+      "block_hash_hex": "58e5d7f07aaf27ccbf361f122a24120a821b455bb9dae30f4478a7da1381f3e8",
+      "block_number": 59847352,
+      "rpcs": [
+        "https://base-rpc.publicnode.com",
+        "https://mainnet.base.org"
+      ],
+      "timestamp": 1795159846
+    },
     "ethereum": {
       "block_hash_hex": "556fd9a91814fe9924c866574d1490144e844861cf18c59b5031aa443cef25d5",
       "block_number": 26422627,
@@ -4514,6 +4542,15 @@
         "https://rpc.mevblocker.io"
       ],
       "timestamp": 1795144535
+    },
+    "ethereum@sprint-35": {
+      "block_hash_hex": "7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
+      "block_number": 26454861,
+      "rpcs": [
+        "https://ethereum-rpc.publicnode.com",
+        "https://rpc.mevblocker.io"
+      ],
+      "timestamp": 1795160279
     }
   },
   "schema": "pacta.graph_controller_facts.v1"

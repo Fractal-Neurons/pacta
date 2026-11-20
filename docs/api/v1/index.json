@@ -1,6 +1,6 @@
 {
   "schema": "pacta.counterparty_control_index.v1",
-  "generated_at": "2026-11-20T03:15:35Z",
+  "generated_at": "2026-11-20T07:37:59Z",
   "publisher": {
     "organization": "Fractal Neurons",
     "unit": "Pacta Protocol Commitments DRI",
@@ -64,10 +64,11 @@
       "31": "0x63d29eafa88f7e52cc6a596668ae3f03c8132704108794092dc25710fa8bde77",
       "32": "0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
       "33": "0x897aa17688d627e9d4fdd7a49c8f4c3a9d4b1943e24e03d7c744563895d9d03c",
-      "34": "0xc281741a4fb297a9ccb30b5485ca6ef2bcfb69be10236c056e7208301e30d992"
+      "34": "0xc281741a4fb297a9ccb30b5485ca6ef2bcfb69be10236c056e7208301e30d992",
+      "35": "0xce8821d521758614be8860ac6476e1cec01ae000d81a660644e7bf1260d8cdfd"
     },
     "attestation_coverage": {
-      "base_eas_attested_sprints": "1-34",
+      "base_eas_attested_sprints": "1-35",
       "eas_multi_attest_tx": "0x8c53e155a4b2f28ffbf069f1b65952fc8f7d81740f362b8aafb39493c6bd001b",
       "pending_batch_attestation_sprints": [],
       "pending_anchor": "none: every indexed record carries its sprint's Base EAS UID; each attestation commits to the sprint's Ethereum block hash and summary SHA-256",
@@ -91,7 +92,8 @@
         "31": "0x0ad2b7a295d4a913504f9b2cb57aedf20f0cf37a6d8892acd34cc250b509424b",
         "32": "0xe89c8f21cb9917923309b9f00983cc332b5d4e927fe9ede90ec9ff677f69b3dc",
         "33": "0x0de27e0dbd440832b0fc55eebd8571d744c05bda2aab79ca134e856f72ebaeea",
-        "34": "0x04389f0a7757652f4297dd1e574fc42c7d49872e9c54ccdf8a795ce591cd37c8"
+        "34": "0x04389f0a7757652f4297dd1e574fc42c7d49872e9c54ccdf8a795ce591cd37c8",
+        "35": "0x276b9b803e4a604c3281faf9242d8a3111e3c070b16416e29413a26c2fe66d65"
       },
       "attested_not_yet_indexed_sprints": []
     },
@@ -112,7 +114,8 @@
     "eas_multi_attest_sprint_31_tx": "0x0ad2b7a295d4a913504f9b2cb57aedf20f0cf37a6d8892acd34cc250b509424b",
     "eas_multi_attest_sprint_32_tx": "0xe89c8f21cb9917923309b9f00983cc332b5d4e927fe9ede90ec9ff677f69b3dc",
     "eas_multi_attest_sprint_33_tx": "0x0de27e0dbd440832b0fc55eebd8571d744c05bda2aab79ca134e856f72ebaeea",
-    "eas_multi_attest_sprint_34_tx": "0x04389f0a7757652f4297dd1e574fc42c7d49872e9c54ccdf8a795ce591cd37c8"
+    "eas_multi_attest_sprint_34_tx": "0x04389f0a7757652f4297dd1e574fc42c7d49872e9c54ccdf8a795ce591cd37c8",
+    "eas_multi_attest_sprint_35_tx": "0x276b9b803e4a604c3281faf9242d8a3111e3c070b16416e29413a26c2fe66d65"
   },
   "methodology": {
     "chain_id": 1,
@@ -139,11 +142,11 @@
     "record_chain": "Records without a chain field are Ethereum Mainnet (chain id 1). Records with chain \"base\" (rpc_env_var $BASE_RPC_URL) are pinned to a Base Mainnet block (chain id 8453) and replayed on mainnet.base.org + base.drpc.org; their Sprint's EAS attestation commits to the Ethereum pin and to the summary SHA-256, which states the Base pin."
   },
   "summary_metrics": {
-    "sprints_completed": 34,
-    "records_indexed": 299,
-    "parameter_deltas": 60,
+    "sprints_completed": 35,
+    "records_indexed": 301,
+    "parameter_deltas": 61,
     "protective_deltas": 11,
-    "aligned_baselines": 228
+    "aligned_baselines": 229
   },
   "entries": [
     {
@@ -9065,6 +9068,64 @@
       "surface": "PIKU supply: 500,000,000, no mint function",
       "target_contract": "0x2E4039E8E31475d65DC00293C366FDBfBBC02DC3",
       "target_label": "PIKU token",
+      "verification_status": "scanner_dual_rpc_replayed_base_eas_attested_pending_static_review"
+    },
+    {
+      "base_eas_uid": "0xce8821d521758614be8860ac6476e1cec01ae000d81a660644e7bf1260d8cdfd",
+      "block_hash": "0x58e5d7f07aaf27ccbf361f122a24120a821b455bb9dae30f4478a7da1381f3e8",
+      "block_number": 59847352,
+      "call_args": [],
+      "call_signature": "getThreshold()",
+      "category": "Base Lending & Integrated Liquidity",
+      "chain": "base",
+      "check_type": "eth_call",
+      "classification": "parameter_delta",
+      "documented_delay_seconds": null,
+      "documented_reference": "'The Community Guardian Multi-Sig currently has ownership over both the Governance Guardian and Protocol Guardian functions.' (raw.githubusercontent.com/seamless-protocol/gitbook/main/governance/seamless-guardians.md); '>0xA1b5f2cc9B407177CD8a4ACF1699fa0b99955A22<' (raw.githubusercontent.com/seamless-protocol/gitbook/main/technical/smart-contracts.md)",
+      "id": "seamless-community-guardian-safe-2-of-3-s35",
+      "observed_delay_seconds": null,
+      "observed_delay_source": null,
+      "onchain_observed": "Guardian 0xA1b5f2cc9B407177CD8a4ACF1699fa0b99955A22 (Base Safe, the address the smart-contracts page lists): getThreshold() = 2 of getOwners() = 3; guard slot empty; getModulesPaginated() lists no module. It holds CANCELLER_ROLE on the governance timelock the same page lists as Timelock short (0x639d2dD24304aC2e6A691d8c1cFf4a2665925fee; hasRole = true), a Governance Guardian function. The docs state the Community Guardian Multi-Sig is a 3/6 multi-sig; on chain 2 signatures of 3 owners execute.",
+      "protocol": "Seamless Protocol (Base)",
+      "repro_calldata": "0xe75235b8",
+      "rpc_env_var": "$BASE_RPC_URL",
+      "selector_or_slot": "0xe75235b8",
+      "sprint": 35,
+      "summary_doc": "audits/sprint-35/block-26454861-summary.md",
+      "summary_sha256": "0xe3eb4a636bc03802bbbc731b9e019c8046933939089f9bf68ecb743e6569589c",
+      "summary_short": "Seamless's guardian Safe is 2-of-3; docs say a 3/6 multi-sig",
+      "surface": "Community Guardian Safe: docs state a 3/6 multi-sig; the Safe is 2-of-3",
+      "target_contract": "0xA1b5f2cc9B407177CD8a4ACF1699fa0b99955A22",
+      "target_label": "Seamless Community Guardian Safe (Base)",
+      "verification_status": "scanner_dual_rpc_replayed_base_eas_attested_pending_static_review"
+    },
+    {
+      "base_eas_uid": "0xce8821d521758614be8860ac6476e1cec01ae000d81a660644e7bf1260d8cdfd",
+      "block_hash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
+      "block_number": 26454861,
+      "call_args": [],
+      "call_signature": "owner()",
+      "category": "Concentrated-liquidity swap pools with tick-range LP positions (Ethereum)",
+      "chain": "ethereum",
+      "check_type": "eth_call",
+      "classification": "aligned_baseline",
+      "documented_delay_seconds": null,
+      "documented_reference": "'Any changes within the core team's purview must pass the Operations Multisig with at least three signatures.' (docs.sushi.com/dao/governance); '[EvmChainId.ETHEREUM]: '0x19b3eb3af5d93b77a5619b047de0eed7115a19e7'' (raw.githubusercontent.com/sushi-labs/sushi/master/src/evm/config/features/operations-multisig.ts); 'ETHEREUM 0xbaceb8ec6b9355dfc0269c18bac9d6e2bdc29c4f' (docs.sushi.com/contracts/clamm)",
+      "id": "sushiswap-v3-factory-operations-multisig-s35",
+      "observed_delay_seconds": null,
+      "observed_delay_source": null,
+      "onchain_observed": "SushiSwap V3 factory 0xbACEB8eC6b9355Dfc0269C18bac9d6E2Bdc29C4F (Ethereum, the clAMM deployments page; not a proxy): owner() = 0xCd03e2e276F6EEdD424d41314437531F665187b9, a V3Manager (verified source: createFeeTier, setFactoryOwner, setProtocolFee, setMaker, doAction and setTrusted are onlyOwner; applyProtocolFee and collectFees are open to owner-set trusted callers) whose owner() = 0x19B3Eb3Af5D93b77a5619b047De0EED7115A19e7, the Ethereum Operations Multisig the official SDK lists. That Safe: getThreshold() = 3 of getOwners() = 5; guard slot empty; getModulesPaginated() lists no module: at least three signatures, as documented.",
+      "protocol": "SushiSwap V3",
+      "repro_calldata": "0x8da5cb5b",
+      "rpc_env_var": "$ETH_RPC_URL",
+      "selector_or_slot": "0x8da5cb5b",
+      "sprint": 35,
+      "summary_doc": "audits/sprint-35/block-26454861-summary.md",
+      "summary_sha256": "0xe3eb4a636bc03802bbbc731b9e019c8046933939089f9bf68ecb743e6569589c",
+      "summary_short": "Sushi V3 factory changes need 3 Operations Multisig signatures, as documented",
+      "surface": "V3 factory owner = V3Manager owned by the Operations Multisig (3-of-5)",
+      "target_contract": "0xbACEB8eC6b9355Dfc0269C18bac9d6E2Bdc29C4F",
+      "target_label": "SushiSwap V3 factory (Ethereum)",
       "verification_status": "scanner_dual_rpc_replayed_base_eas_attested_pending_static_review"
     }
   ]

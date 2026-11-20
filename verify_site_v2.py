@@ -46,14 +46,14 @@ import xml.etree.ElementTree as ET
 ROOT = os.path.dirname(os.path.abspath(__file__))
 DOCS = os.path.join(ROOT, "docs")
 RESULTS = []
-# ---- EXPECT-BEGIN: the published numbers, in one place (tools/apply_sprint34_attestation.py rewrites this block when it stamps a Sprint)
+# ---- EXPECT-BEGIN: the published numbers, in one place (tools/apply_sprint35_attestation.py rewrites this block when it stamps a Sprint)
 EXPECT = {
-    "sprints": 34, "records": 299, "eas_attestations": 34,              # index.json sprints_completed / records_indexed; Base EAS sprint UIDs
-    "protocols": 313, "eas_protocols": 180, "rpc_protocols": 133,          # /protocols/ pages = EAS-attested + RPC-pinned; badges = protocols
-    "briefs": 17, "badge_tiers": {"aligned": 119, "parameter_delta": 61, "rpc_observed": 133},
-    "base_records": 36,                                                  # index.json records with chain "base"
-    "rpc_by_chain": {"ethereum": 122, "base": 11},                         # rpc-pinned.json records per chain (sum = rpc_protocols)
-    "multi_attest_txs": ["1–12", "13–16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34"],                              # attestation_coverage.eas_multi_attest_txs keys
+    "sprints": 35, "records": 301, "eas_attestations": 35,              # index.json sprints_completed / records_indexed; Base EAS sprint UIDs
+    "protocols": 313, "eas_protocols": 182, "rpc_protocols": 131,          # /protocols/ pages = EAS-attested + RPC-pinned; badges = protocols
+    "briefs": 17, "badge_tiers": {"aligned": 120, "parameter_delta": 62, "rpc_observed": 131},
+    "base_records": 37,                                                  # index.json records with chain "base"
+    "rpc_by_chain": {"ethereum": 121, "base": 10},                         # rpc-pinned.json records per chain (sum = rpc_protocols)
+    "multi_attest_txs": ["1–12", "13–16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35"],                              # attestation_coverage.eas_multi_attest_txs keys
     "summaries": {"15": "61c0cc292cfa1fc3840277cf312383d24a6c81af56afac303afdbd84e7316cf6",
                   "16": "91b8e29301ef0e625c4ddc9eadaf5388115812f5958f90b6e0ed53a4808ba8ae",
                   "17": "2fd7ab979c6dfc3aae44f6c46c8f0397959927874ff0358574043a056d3168ea",
@@ -73,13 +73,14 @@ EXPECT = {
                   "31": "98020d2a953d0c6ef6ef75ddca1a7f48a8c43a1b30ecef4926e33b8c1617816d",
                   "32": "d743b19a325763801e120af7b3bd48775dec49dd9a3a3888fbe32192d7f20094",
                   "33": "795432ee6da61e4eb4e8efde2a99e00975d206734bc513080fb28a7da559dea4",
-                  "34": "0f68f60a5ab92cd74ca0fe2221ebf9c75e59ce7f9e5cf24d80488fd38eac6c6c"},   # audits/sprint-<n>/ summary SHA-256 (attested)
+                  "34": "0f68f60a5ab92cd74ca0fe2221ebf9c75e59ce7f9e5cf24d80488fd38eac6c6c",
+                  "35": "e3eb4a636bc03802bbbc731b9e019c8046933939089f9bf68ecb743e6569589c"},   # audits/sprint-<n>/ summary SHA-256 (attested)
 }
 # ---- EXPECT-END
 X = EXPECT
 # sha256 of docs/api/v1/graph-manifest.json: changes only through a deliberate re-pin (a Sprint stage / stamp rewrites it after the
 # rebuild); a merged Wave 2 claim or any site-only change must leave it as is
-GRAPH_MANIFEST_SHA256 = "713555ca9cf53b81e183fe794599b452d51f02b955ab191e04d832fa20377806"
+GRAPH_MANIFEST_SHA256 = "e2fa6012de84eb7504eba9c205b417487a3d429cef961988098011d4b0bbe47e"
 NON_PROTOCOL_PAGES = 39                                                  # docs/**/*.html pages that are not /protocols/<slug>/ (39: + /scan/ /webhook/ /seal/ /miniapp/, + the Cap, Compound V3 and Lista Lending briefs)
 
 
