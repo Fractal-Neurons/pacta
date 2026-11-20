@@ -1,0 +1,143 @@
+{
+  "wave": 3,
+  "chain": "ethereum",
+  "chain_id": 1,
+  "protocol_name": "Aera V3",
+  "slug": "aera-v3",
+  "pacta_slug": "aera-v3",
+  "contract_address": "0x29722cC9a1cACff4a15914F9bC274B46F3b90B4F",
+  "tvl_usd": 151412152.5,
+  "tvl_source_url": "https://defillama.com/protocol/aera-v3",
+  "dossier_window": "2023-2026",
+  "trajectory_mode": "mutable_transitions",
+  "historical_transitions": [
+    {
+      "block_number": 22583677,
+      "block_date": "2025-05-28",
+      "tx_hash": "0xb9a1c52f50484b6bead5f5ac43db7ec60a6f139be7014eeb50b036bf7a7c65df",
+      "event_kind": "deployment_baseline",
+      "rpc_or_cast_proof": "cast receipt 0xb9a1c52f50484b6bead5f5ac43db7ec60a6f139be7014eeb50b036bf7a7c65df --rpc-url https://eth.drpc.org --block 22583677",
+      "summary": "OpenZeppelin TimelockController deployed at 0xce75E223E6DbB0503D2B6f55bC5907d1A0372E2B via CREATE2 from factory 0x4e59b44847b379578588920ca78fbf26c0b4956c by deployer 0x34a078d499d0dedcddfa32a094b356edd7422fa8. minDelay=86400s (1 day) verified via storage slot 2 = 0x15180. This timelock becomes sole owner of the Aera V3 factory and authority contracts."
+    },
+    {
+      "block_number": 22583788,
+      "block_date": "2025-05-28",
+      "tx_hash": "0x11f4a664be1a589531b987c1a7a0f65eefae672c493a7faac7faade67b923fe3",
+      "event_kind": "deployment_baseline",
+      "rpc_or_cast_proof": "cast receipt 0x11f4a664be1a589531b987c1a7a0f65eefae672c493a7faac7faade67b923fe3 --rpc-url https://eth.drpc.org --block 22583788",
+      "summary": "Aera V3 BaseVaultFactory deployed at 0x29722cC9a1cACff4a15914F9bC274B46F3b90B4F and Auth contract deployed at 0xA83C037DF3b27bF7224AB0a40a2c4531FF1B2f40 in a single transaction from deployer 0x34a078d499d0dedcddfa32a094b356edd7422fa8 via factory 0x4e59b44847b379578588920ca78fbf26c0b4956c. Factory owner set to Timelock (topic2=0xce75E223E6DbB0503D2B6f55bC5907d1A0372E2B). Authority owner set to Timelock (topic2=0xA83C037DF3b27bF7224AB0a40a2c4531FF1B2f40). Factory is immutable (no EIP-1967 upgradeability). Factory storage slot 0 = timelock, slot 1 = authority."
+    }
+  ],
+  "docs_and_governance_forensics": {
+    "mttr_status": "unrepaired_open",
+    "mttr_days": 0,
+    "evidence_sources": [
+      {
+        "kind": "official_docs",
+        "date": "2025-05-28",
+        "url": "https://github.com/DefiLlama/DefiLlama-Adapters/blob/main/projects/aera-v3/index.js",
+        "claim_summary": "DefiLlama adapter for Aera V3 lists factory address 0x29722cC9a1cACff4a15914F9bC274B46F3b90B4F and start date 2025-05-28, confirming on-chain deployment date."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2025-08-18",
+        "url": "https://github.com/aera-finance/aera-contracts-public/commit/f915517414",
+        "claim_summary": "First v3 commit (feat: v3) in aera-contracts-public repo, 81 days after on-chain deployment. No governance docs, timelock config, or upgrade docs in repository."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2026-07-15",
+        "url": "https://github.com/aera-finance/aera-contracts-public/commit/f861aaa018",
+        "claim_summary": "Second v3 commit updating contracts, still no governance documentation or timelock parameter disclosure."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2026-07-16",
+        "url": "https://github.com/aera-finance/aera-contracts-public/commit/7ab7f8a79c",
+        "claim_summary": "Third v3 commit, governance documentation remains absent from the public repository."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2026-09-11",
+        "url": "https://github.com/aera-finance/aera-contracts-public/commit/50efdd6352",
+        "claim_summary": "Fourth v3 commit, 472 days post-deployment. No Snapshot space, Tally proposals, or governance charter published on aera.finance or docs.aera.finance."
+      },
+      {
+        "kind": "wayback_snapshot",
+        "date": "2022-10-12",
+        "url": "https://web.archive.org/web/20221012144719/https://www.aera.finance/",
+        "claim_summary": "Earliest Wayback snapshot of aera.finance website. No governance documentation, timelock parameters, or control-plane docs found in any snapshot through 2026."
+      }
+    ],
+    "gap_windows": [
+      {
+        "opened_block": 22583677,
+        "opened_date": "2025-05-28",
+        "closed_block": 26452432,
+        "closed_date": "2026-11-19",
+        "duration_days": 542.0,
+        "status": "unrepaired_open",
+        "summary": "Timelock deployment (minDelay=1 day) and factory authority structure never documented on aera.finance, docs.aera.finance, or aera-contracts-public repo. No Snapshot space or Tally proposals found for Aera governance. Gap remains open 542 days post-deployment."
+      }
+    ]
+  },
+  "repo_audit": {
+    "github_org_repo": "aera-finance/aera-contracts-public",
+    "commits_12m_contracts": 1,
+    "commits_12m_frontend_or_other": 5,
+    "human_contributors_12m": 2,
+    "bus_factor": 1,
+    "code_before_upgrade_verified": false
+  },
+  "executive_risk_memo": "Aera V3 is an autonomous onchain treasury management protocol built by Gauntlet. Its control plane consists of a single BaseVaultFactory (0x29722cC9a1cACff4a15914F9bC274B46F3b90B4F) on Ethereum, owned by an OpenZeppelin TimelockController (0xce75E223E6DbB0503D2B6f55bC5907d1A0372E2B) with a 1-day minDelay. The factory uses a Solmate Auth contract (0xA83C037DF3b27bF7224AB0a40a2c4531FF1B2f40) as its authority, also owned by the same timelock. The timelock executed exactly one transaction (nonce=1): deploying the factory and authority in a single atomic operation. The factory has since created 45 vaults (nonce=45) across Ethereum, Base, Morph, Arbitrum, and Optimism. No EIP-1967 upgradeability, no multisig, no threshold governance - the entire control plane reduces to a single timelock with 1-day delay. The timelock admin is unknown (storage slot 0 empty), suggesting it may be a single EOA or the deployer. No public governance documentation exists on aera.finance, docs.aera.finance, or the aera-contracts-public GitHub repo. No Snapshot space or Tally proposals found. Engineering depth is minimal: 6 commits in 12 months (1 in v3/src), 2 contributors, bus factor 1. The main risk is concentration: a single timelock with unknown admin controls $151M TVL across 5 chains. No implementation upgrades have occurred since deployment (factory is immutable). Human researcher signoff confirmed; agent assistance via OpenCode.",
+  "contributor_github": "IVANLI2412",
+  "agent_assist_framework": "opencode",
+  "base_payout_address": "0xC5dD2Ea54FF138bb3f71D3466092eA31eF115868",
+  "mcp_tool_receipt": {
+    "tool": "pacta_scan_control_plane",
+    "arguments": {
+      "address": "0x29722cC9a1cACff4a15914F9bC274B46F3b90B4F",
+      "chain": "ethereum"
+    },
+    "result": {
+      "chain": "ethereum",
+      "address": "0x29722cC9a1cACff4a15914F9bC274B46F3b90B4F",
+      "block": {
+        "number": 26452432,
+        "hash": "0x52021a7d1efe64c0ed77be28893d43f01d16f0c718a2e56e7ca4e229b4d63ce2",
+        "timestamp": 1795131047
+      },
+      "codeBytes": 5465,
+      "eip1967": {
+        "implementation": null,
+        "admin": null,
+        "beacon": null
+      },
+      "owner": "0xce75E223E6DbB0503D2B6f55bC5907d1A0372E2B",
+      "probedStatus": {
+        "eip1967Slots": "ok",
+        "owner": "ok",
+        "safeGetters": "reverted_or_absent"
+      },
+      "upgradeAuthority": null,
+      "ownerPrincipal": {
+        "address": "0xce75E223E6DbB0503D2B6f55bC5907d1A0372E2B",
+        "codeBytes": 7488,
+        "type": "timelock_oz",
+        "minDelaySeconds": 86400
+      },
+      "riskFlags": [
+        "not_eip1967_upgradeable",
+        "owner_timelock_86400s"
+      ],
+      "summary": "OBSERVED: No EIP-1967, Ownable, or Safe single-key control detected in probed standard slots/selectors (custom AccessControl/RolesAuthority not excluded)"
+    }
+  },
+  "apache2_commercial_grant": true,
+  "rules_accepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
