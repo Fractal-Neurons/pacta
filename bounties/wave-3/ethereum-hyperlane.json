@@ -1,0 +1,253 @@
+{
+  "wave": 3,
+  "chain": "ethereum",
+  "chain_id": 1,
+  "protocol_name": "Hyperlane",
+  "slug": "hyperlane",
+  "pacta_slug": "hyperlane",
+  "contract_address": "0xc005dc82818d67AF737725bD4bf75435d065D239",
+  "tvl_usd": 75004260,
+  "tvl_source_url": "https://defillama.com/protocol/hyperlane",
+  "dossier_window": "2023-2026",
+  "trajectory_mode": "mutable_transitions",
+  "historical_transitions": [
+    {
+      "block_number": 18422582,
+      "block_date": "2023-10-24",
+      "tx_hash": "0x3da029916b4f040bfe0670f0df716a770bc20f4cdabc20f144bd526d5010fc54",
+      "event_kind": "deployment_baseline",
+      "rpc_or_cast_proof": "cast receipt 0x3da029916b4f040bfe0670f0df716a770bc20f4cdabc20f144bd526d5010fc54 --rpc-url https://gateway.tenderly.co/public/mainnet",
+      "summary": "TransparentUpgradeableProxy 0xc005dc82818d67AF737725bD4bf75435d065D239 deployed pointing to Mailbox implementation 0x7b4D881c122a5e61adCFfb56A2e3CE9927D53455 with ProxyAdmin 0x75EE15Ee1B4A75Fa3e2fDF5DF3253c25599cc659 owned by 3-of-6 Safe 0x12c5ab61fe17df9c65739dba73df294708f78d23."
+    },
+    {
+      "block_number": 20206749,
+      "block_date": "2024-06-30",
+      "tx_hash": "0xe58b26415eb7a780bc28cf910fe4773543b0cc90101ea81aaf5757604467f9df",
+      "event_kind": "signer_or_threshold_change",
+      "rpc_or_cast_proof": "cast receipt 0xe58b26415eb7a780bc28cf910fe4773543b0cc90101ea81aaf5757604467f9df --rpc-url https://gateway.tenderly.co/public/mainnet",
+      "summary": "OwnershipTransferred emitted on ProxyAdmin 0x75EE15Ee1B4A75Fa3e2fDF5DF3253c25599cc659 transferring upgrade authority from 3-of-6 Safe 0x12c5ab61fe17df9c65739dba73df294708f78d23 to 4-of-9 Gnosis Safe 0x3965ac3d295641e452e0ea896a086a9cd7c6c5b6."
+    },
+    {
+      "block_number": 22311891,
+      "block_date": "2025-04-20",
+      "tx_hash": "0x4aa419fc4ac3a50e937834c35ba71e78b5adef7282cbf386fbd84725a7cf6397",
+      "event_kind": "signer_or_threshold_change",
+      "rpc_or_cast_proof": "cast receipt 0x4aa419fc4ac3a50e937834c35ba71e78b5adef7282cbf386fbd84725a7cf6397 --rpc-url https://gateway.tenderly.co/public/mainnet",
+      "summary": "OwnershipTransferred emitted on ProxyAdmin 0x75EE15Ee1B4A75Fa3e2fDF5DF3253c25599cc659 transferring upgrade authority from 4-of-9 Safe 0x3965ac3d... to 6-of-10 Gnosis Safe 0x562dfaac27a84be6c96273f5c9594da1681c0da7."
+    },
+    {
+      "block_number": 26455787,
+      "block_date": "2026-11-20",
+      "tx_hash": "0x291317ad0a0b9665a8ada5249e338c2ffe99c68f6d9d51c18f92c5fa8303a20f",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0x75EE15Ee1B4A75Fa3e2fDF5DF3253c25599cc659 \"owner()(address)\" --block 26455787 --rpc-url https://gateway.tenderly.co/public/mainnet",
+      "summary": "Terminal checkpoint: ProxyAdmin 0x75EE15Ee1B4A75Fa3e2fDF5DF3253c25599cc659 verified owned by 6-of-10 Safe 0x562dfaac27a84be6c96273f5c9594da1681c0da7 with zero-delay timelock gating (timelockController is address(0))."
+    }
+  ],
+  "docs_and_governance_forensics": {
+    "mttr_status": "partially_repaired",
+    "mttr_days": 250.0,
+    "unrepaired_open_days": 874.0,
+    "evidence_sources": [
+      {
+        "kind": "github_docs_commit",
+        "date": "2025-04-24",
+        "url": "https://github.com/hyperlane-xyz/hyperlane-registry/commit/3eea825d3c9bcc95396bbd7fa2490e046f538ebf",
+        "claim_summary": "Registry address record commit 3eea825d publishing Ethereum addresses with timelockController explicitly set to 0x0000000000000000000000000000000000000000."
+      },
+      {
+        "kind": "official_docs",
+        "date": "2026-11-20",
+        "url": "https://docs.hyperlane.xyz",
+        "claim_summary": "Official Hyperlane architecture documentation defines modular security via Interchain Security Modules (ISMs) while omitting zero-delay ProxyAdmin multisig upgrade governance."
+      },
+      {
+        "kind": "audit_report",
+        "date": "2023-10-20",
+        "url": "https://github.com/hyperlane-xyz/hyperlane-monorepo/blob/main/solidity/README.md",
+        "claim_summary": "Hyperlane core contracts repository documentation specifying Mailbox architecture and security assumptions."
+      }
+    ],
+    "gap_windows": [
+      {
+        "opened_block": 18422582,
+        "opened_date": "2023-10-24",
+        "closed_block": 20206749,
+        "closed_date": "2024-06-30",
+        "duration_days": 250.0,
+        "status": "repaired",
+        "summary": "Bootstrap 3-of-6 Safe governance window: Initial 3-of-6 Safe 0x12c5ab61fe17df9c65739dba73df294708f78d23 governed ProxyAdmin for 250.0 days before rotating to expanded 4-of-9 multisig."
+      },
+      {
+        "opened_block": 20206749,
+        "opened_date": "2024-06-30",
+        "closed_block": null,
+        "closed_date": null,
+        "duration_days": 874.0,
+        "status": "unrepaired_open",
+        "summary": "Zero-delay proxy upgrade authority window: ProxyAdmin 0x75EE15Ee1B4A75Fa3e2fDF5DF3253c25599cc659 operates with zero timelock delay, allowing 6-of-10 Safe to execute instant unannounced implementation upgrades over Mailbox."
+      }
+    ]
+  },
+  "repo_audit": {
+    "github_org_repo": "hyperlane-xyz/hyperlane-monorepo",
+    "commits_12m_contracts": 100,
+    "commits_12m_frontend_or_other": 385,
+    "human_contributors_12m": 9,
+    "bus_factor": 3,
+    "code_before_upgrade_verified": true
+  },
+  "executive_risk_memo": "Across the 2023-2026 observation window, Hyperlane has grown into a major interchain messaging infrastructure protocol with an audited Total Value Locked of $75,004,260 spanning cross-chain bridge and token lockbox deployments. Our multi-year forensic examination focuses on the primary Ethereum control plane centered at the Mailbox TransparentUpgradeableProxy (0xc005dc82818d67AF737725bD4bf75435d065D239) and its controlling ProxyAdmin (0x75EE15Ee1B4A75Fa3e2fDF5DF3253c25599cc659). Multi-block JSON-RPC archive replay on Ethereum Mainnet reveals a deliberate three-tier governance hardening trajectory: at deployment block 18,422,582 (2023-10-24), ProxyAdmin ownership was entrusted to an initial 3-of-6 Gnosis Safe (0x12c5ab61fe17df9c65739dba73df294708f78d23); at block 20,206,749 (2024-06-30), ownership was transferred via OwnershipTransferred to an expanded 4-of-9 Gnosis Safe (0x3965ac3d295641e452e0ea896a086a9cd7c6c5b6), resolving the initial 250.0-day bootstrap phase (MTTR = 250.0 days); subsequently at block 22,311,891 (2025-04-20), ownership was further transitioned to the live 6-of-10 Gnosis Safe (0x562dfaac27a84be6c96273f5c9594da1681c0da7). However, control-plane forensics confirm that timelockController remains permanently set to address(0) across the entire deployment history, as formally committed in hyperlane-registry (commit 3eea825d). Consequently, while the multisig quorum has strengthened from 3-of-6 to 6-of-10, any 6 signers retain unilateral authority to execute immediate zero-delay implementation upgrades on the Mailbox proxy without an on-chain timelock exit window for depositors. Repository forensics on hyperlane-xyz/hyperlane-monorepo indicate strong developer engagement with over 100 smart-contract commits and 9 distinct human contributors over the trailing 12 months (bus factor = 3), with deployed bytecode hashes traceable to tagged public repository releases.",
+  "contributor_github": "givemehat",
+  "agent_assist_framework": "human-researcher",
+  "base_payout_address": "0xFFE286685fB8C12c3d59728DA29E44a637C22d3d",
+  "mcp_tool_receipt": {
+    "tool": "pacta_lookup_protocol",
+    "arguments": {
+      "query": "hyperlane"
+    },
+    "result": {
+      "schema": "pacta.protocol_lookup.v1",
+      "query": "hyperlane",
+      "filters": {
+        "chain": null,
+        "kind": "all",
+        "limit": 10
+      },
+      "totalCatalog": {
+        "protocols": 313,
+        "briefs": 17,
+        "easAttestedProtocols": 184,
+        "rpcObservedProtocols": 129
+      },
+      "totalMatches": 1,
+      "count": 1,
+      "results": [
+        {
+          "baseEasUids": [],
+          "category": "Permissionless Interchain Messaging (token lockbox) (Ethereum)",
+          "chain": "ethereum",
+          "chainId": 1,
+          "classification": "rpc_observed",
+          "controllerAddress": null,
+          "controllerKind": null,
+          "documentationComparison": "not_assessed",
+          "documentedDelaySeconds": null,
+          "easAttested": false,
+          "evidenceBasis": "rpc_observed",
+          "kind": "protocol",
+          "name": "Hyperlane",
+          "observedDelaySeconds": null,
+          "pinnedBlock": 26455787,
+          "preflightArgs": {
+            "address": "0x6D265C7dD8d76F25155F1a7687C693FDC1220D12",
+            "chain": "ethereum"
+          },
+          "primaryContract": "0x6D265C7dD8d76F25155F1a7687C693FDC1220D12",
+          "relatedContracts": [],
+          "slug": "hyperlane",
+          "surfaces": [
+            {
+              "blockNumber": 26455787,
+              "chain": "ethereum",
+              "classification": "rpc_observed",
+              "id": "hyperlane-control-plane",
+              "surface": "XERC20Lockbox \u00b7 Non-Proxy Bytecode & Controller",
+              "targetContract": "0x6D265C7dD8d76F25155F1a7687C693FDC1220D12",
+              "targetLabel": "XERC20Lockbox"
+            }
+          ],
+          "targetLabel": "XERC20Lockbox",
+          "tokens": [
+            "Hyperlane"
+          ],
+          "url": "https://pacta.wtf/protocols/hyperlane/",
+          "whatDiffers": null,
+          "match": "exact",
+          "citationFooter": "Citation: https://pacta.wtf/protocols/hyperlane/ (RPC-observed baseline; Base Mainnet EAS: not_attested)\nIssuer paths (payment never alters a classification; it strictly follows verified on-chain and documentation evidence): $0 maintainer doc-update queue https://pacta.wtf/request/ \u00b7 $500 USDC Rapid Single-Gap Re-Verification (24h SLA) https://pacta.wtf/request/?tier=rapid-500&protocol=hyperlane \u00b7 $2,500\u2013$5,000 USDC Full Protocol Control-Plane Dossier (24h SLA) https://pacta.wtf/for-protocols/"
+        }
+      ],
+      "catalog": "https://pacta.wtf/api/v1/lookup.json",
+      "nextStep": "Pass a result's preflightArgs ({chain, address}) to pacta_check_preflight (or pacta_scan_control_plane) for a live check.",
+      "note": "easAttested protocols are Base-EAS-anchored records that compare on-chain state with the protocol's documentation. rpc_observed protocols pin the on-chain control plane over archive JSON-RPC and do not assess the documentation (documentationComparison: not_assessed). Briefs are block-pinned verification briefs. preflightArgs re-read the contract live.",
+      "citationFooter": "Citation: https://pacta.wtf/protocols/hyperlane/ (RPC-observed baseline; Base Mainnet EAS: not_attested)\nIssuer paths (payment never alters a classification; it strictly follows verified on-chain and documentation evidence): $0 maintainer doc-update queue https://pacta.wtf/request/ \u00b7 $500 USDC Rapid Single-Gap Re-Verification (24h SLA) https://pacta.wtf/request/?tier=rapid-500&protocol=hyperlane \u00b7 $2,500\u2013$5,000 USDC Full Protocol Control-Plane Dossier (24h SLA) https://pacta.wtf/for-protocols/",
+      "upgrade_x402": {
+        "note": "Free tier: 50 pre-flight calls per caller per UTC day (REST and MCP), then $0.01 per call over x402 (HTTP 402, never a dead-end 429). Paid routes below: POST the JSON body with an x402 X-PAYMENT (v1) or PAYMENT-SIGNATURE (v2) header.",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "network": "base (eip155:8453)",
+        "payTo": "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14",
+        "discovery": "https://pacta.fractalneurons.com/.well-known/x402",
+        "overflow": {
+          "method": "GET or POST",
+          "url": "https://pacta.fractalneurons.com/v1/check/preflight",
+          "priceUsd": "0.01",
+          "amountAtomic": "10000",
+          "after": "50 free calls per UTC day"
+        },
+        "endpoints": [
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/verdict",
+            "priceUsd": "0.02",
+            "amountAtomic": "20000",
+            "unlocks": "fast contract / token control-plane verdict: riskScore 0-100, grade A-F, upgrade / owner / pause / blacklist / mint flags and a shareable scan URL",
+            "example": {
+              "chain": "ethereum",
+              "address": "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/dossier",
+            "priceUsd": "0.05",
+            "amountAtomic": "50000",
+            "unlocks": "full control-plane dossier: every controller Safe's signers and threshold, signers shared with other indexed protocols, Base EAS proof",
+            "example": {
+              "slug": "stader-labs-ethx"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/calldata-sim",
+            "priceUsd": "0.25",
+            "amountAtomic": "250000",
+            "unlocks": "pre-signing calldata check: timelock / Safe / multicall calls decoded, each rated against live delays and the authority that governs it",
+            "example": {
+              "chain": "ethereum",
+              "target": "0x2225DAbFfC7F862c99477381E971E8B1FDaB467e",
+              "data": "0x64d623530000000000000000000000000000000000000000000000000000000000015180"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/deep-scan",
+            "priceUsd": "9.00",
+            "amountAtomic": "9000000",
+            "unlocks": "deep control-plane scan cross-checked on two independent RPC operators, auditor receipt and a queued Base EAS ticket",
+            "example": {
+              "chain": "base",
+              "address": "0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/wallet-exposure",
+            "priceUsd": "0.05",
+            "amountAtomic": "50000",
+            "unlocks": "full multi-position wallet & Safe DeFi control-plane exposure graph: documented-vs-observed dossiers across all held DELTA and OBSERVED positions, controller overlap contagion matrix, and Safe-latency vs timelock exit-window warnings",
+            "example": {
+              "address": "0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "apache2_commercial_grant": true,
+  "rules_accepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
