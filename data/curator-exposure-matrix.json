@@ -5,15 +5,15 @@
     "indexed_protocols": 313,
     "lookup_items_with_briefs": 330,
     "timelock_and_onboarding_briefs": 17,
-    "base_eas_attested_protocols": 182,
+    "base_eas_attested_protocols": 184,
     "grades_breakdown": {
-      "ALIGNED": 120,
+      "ALIGNED": 122,
       "DELTA_adverse_gaps": 55,
       "PROTECTIVE": 7,
-      "OBSERVED_rpc_pinned": 131
+      "OBSERVED_rpc_pinned": 129
     },
-    "graph_nodes": 980,
-    "graph_edges": 849,
+    "graph_nodes": 985,
+    "graph_edges": 856,
     "collateral_contagion_upstream_edges": 7
   },
   "curators_and_institutional_allocators": [
@@ -256,9 +256,10 @@
           "grade": "ALIGNED",
           "easAttested": true,
           "chains": [
+            "base",
             "ethereum"
           ],
-          "pinnedBlock": 26401638,
+          "pinnedBlock": 59903224,
           "primaryContract": "0xbE286431454714F511008713973d3B053A2d38f3",
           "targetLabel": "GSM_PAUSE_PROXY",
           "tokens": [
@@ -270,7 +271,8 @@
             "SPK"
           ],
           "baseEasUids": [
-            "0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779"
+            "0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779",
+            "0xe16008e972c9b16353100f32e3a2d4ae61152f26d34e600ca205723c77602edf"
           ],
           "summary_short": "Addresses provider owner and governance delay match the docs",
           "url": "https://pacta.wtf/protocols/spark-sky/"
@@ -813,7 +815,7 @@
           "chains": [
             "ethereum"
           ],
-          "pinnedBlock": 26454861,
+          "pinnedBlock": 26455787,
           "primaryContract": "0x29722cC9a1cACff4a15914F9bC274B46F3b90B4F",
           "targetLabel": "MultiDepositorVaultFactory",
           "tokens": [
@@ -1544,7 +1546,7 @@
           "chains": [
             "ethereum"
           ],
-          "pinnedBlock": 26454861,
+          "pinnedBlock": 26455787,
           "primaryContract": "0xdC47953c816531a8CA9E1D461AB53687d48EEA26",
           "targetLabel": "MigratableEntityProxy",
           "tokens": [
@@ -2094,7 +2096,7 @@
           "chains": [
             "ethereum"
           ],
-          "pinnedBlock": 26454861,
+          "pinnedBlock": 26455787,
           "primaryContract": "0x5232bc0F5999f8dA604c42E1748A13a170F94A1B",
           "targetLabel": "ArcticArchitectureLens",
           "tokens": [
@@ -2905,7 +2907,7 @@
           "chains": [
             "ethereum"
           ],
-          "pinnedBlock": 26454861,
+          "pinnedBlock": 26455787,
           "primaryContract": "0x54F862fa0612A8709F6Dec4A7B39AF015CD4E82E",
           "targetLabel": "ERC1967Factory",
           "tokens": [
@@ -3035,9 +3037,10 @@
           "grade": "ALIGNED",
           "easAttested": true,
           "chains": [
+            "base",
             "ethereum"
           ],
-          "pinnedBlock": 26401638,
+          "pinnedBlock": 59903224,
           "primaryContract": "0xbE286431454714F511008713973d3B053A2d38f3",
           "targetLabel": "GSM_PAUSE_PROXY",
           "tokens": [
@@ -3049,7 +3052,8 @@
             "SPK"
           ],
           "baseEasUids": [
-            "0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779"
+            "0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779",
+            "0xe16008e972c9b16353100f32e3a2d4ae61152f26d34e600ca205723c77602edf"
           ],
           "summary_short": "Addresses provider owner and governance delay match the docs",
           "url": "https://pacta.wtf/protocols/spark-sky/"
@@ -3532,9 +3536,9 @@
       "curator_exposure_insight": "Both Yearn V3 (stale signer roster on 6-of-9 yChad Safe vs docs at ETH #26,441,165) and Beefy Finance Base (0s chain timelock on vault upgrades/ops vs 6-hour documented timelock at Base #58,885,628) are Base-EAS DELTAs, routing depositor capital across downstream lending/AMM pools that include Aerodrome Base and crvUSD DELTAs.",
       "wrapper_counts": {
         "total": 3,
-        "aligned_or_protective": 0,
+        "aligned_or_protective": 1,
         "delta": 2,
-        "observed": 1
+        "observed": 0
       },
       "underlying_182_eas_counts": {
         "aligned_or_protective": 6,
@@ -3587,19 +3591,21 @@
         {
           "slug": "sommelier",
           "name": "Sommelier",
-          "grade": "OBSERVED",
-          "easAttested": false,
+          "grade": "ALIGNED",
+          "easAttested": true,
           "chains": [
             "ethereum"
           ],
-          "pinnedBlock": 26454861,
-          "primaryContract": "0xa670d7237398238DE01267472C6f13e5B8010FD1",
-          "targetLabel": "somm (CosmosERC20)",
+          "pinnedBlock": 26455787,
+          "primaryContract": "0x2Cbd27E034FEE53f79b607430dA7771B22050741",
+          "targetLabel": "Sommelier Registry (Cellars V2)",
           "tokens": [
             "somm"
           ],
-          "baseEasUids": [],
-          "summary_short": "Non-proxy contract no readable owner or admin; docs not assessed",
+          "baseEasUids": [
+            "0xe16008e972c9b16353100f32e3a2d4ae61152f26d34e600ca205723c77602edf"
+          ],
+          "summary_short": "Sommelier's Registry and PriceRouter are managed by its multisig, as documented",
           "url": "https://pacta.wtf/protocols/sommelier/"
         }
       ],
@@ -3693,9 +3699,10 @@
           "grade": "ALIGNED",
           "easAttested": true,
           "chains": [
+            "base",
             "ethereum"
           ],
-          "pinnedBlock": 26401638,
+          "pinnedBlock": 59903224,
           "primaryContract": "0xbE286431454714F511008713973d3B053A2d38f3",
           "targetLabel": "GSM_PAUSE_PROXY",
           "tokens": [
@@ -3707,7 +3714,8 @@
             "SPK"
           ],
           "baseEasUids": [
-            "0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779"
+            "0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779",
+            "0xe16008e972c9b16353100f32e3a2d4ae61152f26d34e600ca205723c77602edf"
           ],
           "summary_short": "Addresses provider owner and governance delay match the docs",
           "url": "https://pacta.wtf/protocols/spark-sky/"
@@ -3966,9 +3974,10 @@
           "grade": "ALIGNED",
           "easAttested": true,
           "chains": [
+            "base",
             "ethereum"
           ],
-          "pinnedBlock": 26401638,
+          "pinnedBlock": 59903224,
           "primaryContract": "0xbE286431454714F511008713973d3B053A2d38f3",
           "targetLabel": "GSM_PAUSE_PROXY",
           "tokens": [
@@ -3980,7 +3989,8 @@
             "SPK"
           ],
           "baseEasUids": [
-            "0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779"
+            "0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779",
+            "0xe16008e972c9b16353100f32e3a2d4ae61152f26d34e600ca205723c77602edf"
           ],
           "summary_short": "Addresses provider owner and governance delay match the docs",
           "url": "https://pacta.wtf/protocols/spark-sky/"
@@ -4134,7 +4144,7 @@
           "chains": [
             "ethereum"
           ],
-          "pinnedBlock": 26454861,
+          "pinnedBlock": 26455787,
           "primaryContract": "0x953972ea0C1703c58F09FB6fD2477Fdcf0FEe074",
           "targetLabel": "Ember Y10K (EmberVault)",
           "tokens": [
@@ -4152,7 +4162,7 @@
           "chains": [
             "ethereum"
           ],
-          "pinnedBlock": 26454861,
+          "pinnedBlock": 26455787,
           "primaryContract": "0xca1207647Ff814039530D7d35df0e1Dd2e91Fa84",
           "targetLabel": "dHedge DAO Token (DHedgeTokenProxy)",
           "tokens": [
@@ -4170,7 +4180,7 @@
           "chains": [
             "ethereum"
           ],
-          "pinnedBlock": 26454861,
+          "pinnedBlock": 26455787,
           "primaryContract": "0x8ECC0B419dfe3AE197BC96f2a03636b5E1BE91db",
           "targetLabel": "Stable Gain Vault (UUPSProxy)",
           "tokens": [

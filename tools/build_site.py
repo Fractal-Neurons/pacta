@@ -173,7 +173,7 @@ CHECKOUT = {   # sku -> product page; "tier" is the /request/?tier= alias that f
         "badge": "Free Ethereum & Base Wallet, Safe & Protocol Scanner",
         "h1": "Paste any wallet, Safe, or protocol to scan live DeFi control-plane exposure.",
         "label": "Full Wallet & Safe Exposure Report",
-        "lede": "Instant read-only Multicall3 balanceOf + Safe custody scan across 313 Ethereum & Base protocols (182 Base-EAS attested · 55 verified adverse control-plane gaps). "
+        "lede": "Instant read-only Multicall3 balanceOf + Safe custody scan across 313 Ethereum & Base protocols (184 Base-EAS attested · 55 verified adverse control-plane gaps). "
                 "Zero wallet connection, zero signature, zero upfront price tags.",
         "cta": "Pay $9 USDC on Base & Unlock Full Report",
         "title": "Free Wallet, Safe & Protocol Control-Plane Exposure Scanner · Pacta", "card": "x-card-scan19-1200x628.png",

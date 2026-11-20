@@ -287,8 +287,8 @@
   "pacta-proto-yo-protocol"
  ],
  "minted_before": {
-  "sprint": 35,
-  "count": 976,
+  "sprint": 36,
+  "count": 980,
   "nodes": [
    "pacta-ctrl-base-00000000",
    "pacta-ctrl-base-01ea7904",
@@ -331,6 +331,7 @@
    "pacta-ctrl-base-8963712b",
    "pacta-ctrl-base-92a19381",
    "pacta-ctrl-base-9c4ec768",
+   "pacta-ctrl-base-a1b5f2cc",
    "pacta-ctrl-base-aa8578c9",
    "pacta-ctrl-base-aed7c2ed",
    "pacta-ctrl-base-b237eb3c",
@@ -710,6 +711,7 @@
    "pacta-ctrl-ethereum-b9dc54c8",
    "pacta-ctrl-ethereum-ba122222",
    "pacta-ctrl-ethereum-ba829003",
+   "pacta-ctrl-ethereum-baceb8ec",
    "pacta-ctrl-ethereum-bafa44ef",
    "pacta-ctrl-ethereum-bb2ea70c",
    "pacta-ctrl-ethereum-bb7d94a4",
@@ -883,6 +885,7 @@
    "pacta-eas-sprint-32",
    "pacta-eas-sprint-33",
    "pacta-eas-sprint-34",
+   "pacta-eas-sprint-35",
    "pacta-eas-sprint-4",
    "pacta-eas-sprint-5",
    "pacta-eas-sprint-6",
@@ -937,6 +940,7 @@
    "pacta-gap-renzo-ezeth-deposit-queue-fee-s29",
    "pacta-gap-resupply-main-multisig-3of5-s22",
    "pacta-gap-rocket-pool-reth-security-council-leave-time-28d-s19",
+   "pacta-gap-seamless-community-guardian-safe-2-of-3-s35",
    "pacta-gap-sonic-gateway-fail-safe-200-days-s31",
    "pacta-gap-stader-ethx-manager-safe-and-timelock",
    "pacta-gap-stake-dao-timelock-executor-permissioned-s22",

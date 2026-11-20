@@ -27,13 +27,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x54F862fa0612A8709F6Dec4A7B39AF015CD4E82E",
+   "relatedContracts": [],
    "slug": "3f",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "3f-control-plane",
@@ -74,6 +75,7 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x3D3C41419Ab401cd25055E8f9421D7D96d887885",
+   "relatedContracts": [],
    "slug": "3jane-lending",
    "sprints": [
     26
@@ -123,6 +125,10 @@
     "chain": "base"
    },
    "primaryContract": "0x87f18b377e625b62c708D5f6EA96EC193558EFD0",
+   "relatedContracts": [
+    "0xb43b30c405c61BC330227968635d130994450735",
+    "0xfF16fd3D147220E6CC002a8e4a1f942ac41DBD23"
+   ],
    "slug": "40-acres-base",
    "sprints": [
     28
@@ -148,6 +154,9 @@
    "url": "https://pacta.wtf/protocols/40-acres-base/"
   },
   {
+   "aliasAddresses": [
+    "0xA238Dd80C259a72e81d7e4664a9801593F98d1c5"
+   ],
    "badge": {
     "label": "Aligned · Base EAS",
     "live": "https://pacta-x402.pacta.workers.dev/v1/badges/aave-v3-base.svg",
@@ -172,6 +181,13 @@
     "chain": "base"
    },
    "primaryContract": "0x56C1a4b54921DEA9A344967a8693C7E661D72968",
+   "relatedContracts": [
+    "0x43955b0899Ab7232E3a454cf84AedD22Ad46FD33",
+    "0x9390B1735def18560c509E2d0bc090E9d6BA257a",
+    "0x9AEE0B04504CeF83A65AC3f0e838D0593BCb2BC7",
+    "0xe20fCBdBfFC4Dd138cE8b2E6FBb6CB49777ad64D",
+    "0xA238Dd80C259a72e81d7e4664a9801593F98d1c5"
+   ],
    "slug": "aave-v3-base",
    "sprints": [
     19
@@ -210,6 +226,12 @@
    "url": "https://pacta.wtf/protocols/aave-v3-base/"
   },
   {
+   "aliasAddresses": [
+    "0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2",
+    "0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9",
+    "0x40D16FC0246aD3160Ccc09B8D0D3A2cD28aE6C2f",
+    "0x2f39d218133AFaB8F2B819B1066c7E434Ad94E9e"
+   ],
    "badge": {
     "label": "Aligned · Base EAS",
     "live": "https://pacta-x402.pacta.workers.dev/v1/badges/aave-v3-gho.svg",
@@ -234,6 +256,15 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xc2aaCf6553D20d1e9d78E365AAba8032af9c85b0",
+   "relatedContracts": [
+    "0x5300A1a15135EA4dc7aD5a167152C01EFc9b192A",
+    "0xdAbad81aF85554E9ae636395611C58F7eC1aAEc5",
+    "0x2CFe3ec4d5a6811f4B8067F0DE7e47DfA938Aa30",
+    "0x40D16FC0246aD3160Ccc09B8D0D3A2cD28aE6C2f",
+    "0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2",
+    "0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9",
+    "0x2f39d218133AFaB8F2B819B1066c7E434Ad94E9e"
+   ],
    "slug": "aave-v3-gho",
    "sprints": [
     9
@@ -284,6 +315,9 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x5f0DeE98360d8200b20812e174d139A1a633EDd2",
+   "relatedContracts": [
+    "0x99D8a9C45b2ecA8864373A26D1459e3Dff1e17F3"
+   ],
    "slug": "abracadabra-spell",
    "sprints": [
     30
@@ -333,6 +367,9 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xc186fA914353c44b2E33eBE05f21846F1048bEda",
+   "relatedContracts": [
+    "0xf7bAc63fc7CEaCf0589F25454Ecf5C2ce904997c"
+   ],
    "slug": "across-protocol-hubpool",
    "sprints": [
     22
@@ -392,13 +429,16 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x8B1484d57abBE239bB280661377363b03c89CaEa",
+   "relatedContracts": [
+    "0x9cb8142aEBBcdc60AF7c97Af897A67A8f3CA71C2"
+   ],
    "slug": "adi-bridge",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "adi-bridge-control-plane",
@@ -439,6 +479,16 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x4274cD7277C7bb0806Bd5FE84b9aDAE466a8DA0a",
+   "relatedContracts": [
+    "0x4Fe78eF65BD8EDDED480efaB030BA680646503c8",
+    "0xc86168d2424d28942EE0866F043c1206bc9E4900",
+    "0x90cCF2C4b3DEe7aeac9AF5950a7C60f89AF1db00",
+    "0x2B4Ad1d479561064cd1C311004Aca93d15041aEc",
+    "0xfA449DC17194Fdaca1dd2237C828938f1917e0E7",
+    "0xC4Df68e592245cA5202fE8b7C438d2b799820fc2",
+    "0xBB0F32D176590faEdC7bc552b7EAD7A86809b520",
+    "0x8aDCFAf1B64Cc514524B80565bCc732273dDEafD"
+   ],
    "slug": "aegis-yusd",
    "sprints": [
     34
@@ -486,13 +536,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x29722cC9a1cACff4a15914F9bC274B46F3b90B4F",
+   "relatedContracts": [],
    "slug": "aera-v3",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "aera-v3-control-plane",
@@ -533,6 +584,12 @@
     "chain": "base"
    },
    "primaryContract": "0x420DD381b31aEf6683db6B902084cB0FFECe40Da",
+   "relatedContracts": [
+    "0x22a2F7340a3fB4C7C389D91eE954766B12476721",
+    "0x42255e3C2d0b71a0b006243148fdF1a71d054cE0",
+    "0xE6A41fE61E7a1996B59d508661e3f524d6A32075",
+    "0x5C3F18F06CC09CA1910767A34a20F771039E37C0"
+   ],
    "slug": "aerodrome-finance-base",
    "sprints": [
     21
@@ -595,6 +652,14 @@
     "chain": "base"
    },
    "primaryContract": "0x5e7BB104d84c7CB9B682AaC2F3d509f5F406809A",
+   "relatedContracts": [
+    "0xE6A41fE61E7a1996B59d508661e3f524d6A32075",
+    "0x090b2A6bb475c00e2256e2095A60887cD710803b",
+    "0x0AD08370c76Ff426F534bb2AFFD9b5555338ee68",
+    "0x16613524e02ad97eDfeF371bC883F2F5d6C480A5",
+    "0x22a2F7340a3fB4C7C389D91eE954766B12476721",
+    "0x99249b10593fCa1Ae9DAE6D4819F1A6dae5C013D"
+   ],
    "slug": "aerodrome-slipstream-base",
    "sprints": [
     18
@@ -645,6 +710,7 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xF56D660138815fC5d7a06cd0E1630225E788293D",
+   "relatedContracts": [],
    "slug": "alchemix-v3",
    "sprints": [
     31
@@ -692,13 +758,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x8c213ee79581Ff4984583C6a801e5263418C4b86",
+   "relatedContracts": [],
    "slug": "anemoy-capital",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "anemoy-capital-control-plane",
@@ -737,13 +804,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x31429d1856aD1377A8A0079410B297e1a9e214c2",
+   "relatedContracts": [],
    "slug": "angle",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "angle-control-plane",
@@ -784,6 +852,9 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x0000000aa232009084Bd71A5797d089AA4Edfad4",
+   "relatedContracts": [
+    "0x1746484EA5e11C75e009252c102C8C33e0315fD4"
+   ],
    "slug": "angstrom",
    "sprints": [
     34
@@ -831,13 +902,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x8290333ceF9e6D528dD5618Fb97a76f268f3EDD4",
+   "relatedContracts": [],
    "slug": "ankr",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "ankr-control-plane",
@@ -876,13 +948,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xAEEAa594e7dc112D67b8547fe9767a02c15B5597",
+   "relatedContracts": [],
    "slug": "anvil",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "anvil-control-plane",
@@ -921,13 +994,16 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xfE08D40Eee53d64936D3128838867c867602665c",
+   "relatedContracts": [
+    "0x76488832A88475AF0aC223d8FD4d053177A012cc"
+   ],
    "slug": "ao-bridge",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "ao-bridge-control-plane",
@@ -966,13 +1042,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x52A8845DF664D76C69d2EEa607CD793565aF42B8",
+   "relatedContracts": [],
    "slug": "apex-pro",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "apex-pro-control-plane",
@@ -1013,6 +1090,10 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xe18b0365D5D09F394f84eE56ed29DD2d8D6Fba5f",
+   "relatedContracts": [
+    "0xDD0fC21319C4cA133A758f9893028Aac834e8493",
+    "0x7965283631253DfCb71Db63a60C656DEDF76234f"
+   ],
    "slug": "apy-finance",
    "sprints": [
     28
@@ -1060,13 +1141,17 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xEA623eebd9c5bFd56067e36C89Db0C13e6c70ba8",
+   "relatedContracts": [
+    "0x9Cd84E2587A78b424eC913Ac3fA23cA810e91776",
+    "0xC0096A2032Cd8ad726181D1399C5F20768037fc1"
+   ],
    "slug": "arkis",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "arkis-control-plane",
@@ -1107,6 +1192,15 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xAf6f9640092cB1236E5DB6E517576355b6C40b7f",
+   "relatedContracts": [
+    "0x820FB8127a689327C863de8433278d6181123982",
+    "0x2e6E879648293e939aA68bA4c6c129A1Be733bDA",
+    "0xE973Cf1e347EcF26232A95dBCc862AA488b0351b",
+    "0xFf0474792DEe71935a0CeF1306D93fC1DCF47BD9",
+    "0xdf4975A3515168f8c446aD4a2E974B89c64b6A38",
+    "0x022a0C7dc85Fc3fF81f9f8Ef65Ae2813A062F556",
+    "0x1436877899273D748eb433eFd6C437e37D627255"
+   ],
    "slug": "arrakis-modular",
    "sprints": [
     30
@@ -1154,13 +1248,16 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x604DD02d620633Ae427888d41bfd15e38483736E",
+   "relatedContracts": [
+    "0x2CC878ac49C3BF8B0f2B053af7845BA6590eEc4f"
+   ],
    "slug": "aster-bridge",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "aster-bridge-control-plane",
@@ -1201,6 +1298,9 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x00000069aBbB0B1Ad6975bcF753eEe15D318A0BF",
+   "relatedContracts": [
+    "0xb628B1fdbE8C01777aEa2bF3bd386df4Af84e8d3"
+   ],
    "slug": "asymmetry-finance",
    "sprints": [
     28
@@ -1248,13 +1348,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x221657776846890989a759BA2973e427DfF5C9bB",
+   "relatedContracts": [],
    "slug": "augur",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "augur-control-plane",
@@ -1272,44 +1373,53 @@
   },
   {
    "badge": {
-    "label": "RPC-Observed",
+    "label": "Aligned · Base EAS",
     "live": "https://pacta-x402.pacta.workers.dev/v1/badges/aura.svg",
     "svg": "https://pacta.wtf/badges/aura.svg",
-    "tier": "rpc_observed"
+    "tier": "aligned"
    },
-   "baseEasUids": [],
+   "baseEasUids": [
+    "0xe16008e972c9b16353100f32e3a2d4ae61152f26d34e600ca205723c77602edf"
+   ],
    "category": "Yield booster pooling veBAL voting power to lift Balancer LP rewards (auraBAL) (Ethereum)",
    "chain": "ethereum",
    "chainId": 1,
-   "classification": "rpc_observed",
+   "classification": "aligned_baseline",
    "controllerAddress": null,
    "controllerKind": null,
-   "documentationComparison": "not_assessed",
-   "easAttested": false,
-   "evidenceBasis": "rpc_observed",
+   "documentationComparison": "compared",
+   "easAttested": true,
+   "evidenceBasis": "eas_attested",
    "name": "Aura",
    "preflightArgs": {
-    "address": "0xC0c293ce456fF0ED870ADd98a0828Dd4d2903DBF",
+    "address": "0x3Fa73f1E5d8A792C80F426fc8F84FBF7Ce9bBCAC",
     "chain": "ethereum"
    },
-   "primaryContract": "0xC0c293ce456fF0ED870ADd98a0828Dd4d2903DBF",
+   "primaryContract": "0x3Fa73f1E5d8A792C80F426fc8F84FBF7Ce9bBCAC",
+   "relatedContracts": [
+    "0x5feA4413E3Cc5Cf3A29a49dB41ac0c24850417a0",
+    "0x2b5Ac82C5e934407514768CE3e399d9c18381621",
+    "0x48e529218743E41F6De5B7E8D552E8173707cE81"
+   ],
    "slug": "aura",
-   "sprints": [],
+   "sprints": [
+    36
+   ],
    "surfaces": [
     {
-     "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "baseEasUid": "0xe16008e972c9b16353100f32e3a2d4ae61152f26d34e600ca205723c77602edf",
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
-     "classification": "rpc_observed",
-     "id": "aura-control-plane",
-     "sprint": null,
-     "surface": "Aura · Non-Proxy Bytecode & Controller",
-     "targetContract": "0xC0c293ce456fF0ED870ADd98a0828Dd4d2903DBF",
-     "targetLabel": "Aura"
+     "classification": "aligned_baseline",
+     "id": "aura-protocol-multisig-4-of-7-s36",
+     "sprint": 36,
+     "surface": "AuraLocker owner = Protocol Multisig, 4-of-7 (docs: 4/7); 2 vetted keeper modules",
+     "targetContract": "0x3Fa73f1E5d8A792C80F426fc8F84FBF7Ce9bBCAC",
+     "targetLabel": "AuraLocker (vlAURA)"
     }
    ],
-   "targetLabel": "Aura",
+   "targetLabel": "AuraLocker (vlAURA)",
    "tokens": [
     "Aura"
    ],
@@ -1338,13 +1448,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x2218F90A98b0C070676f249EF44834686dAa4285",
+   "relatedContracts": [],
    "slug": "autofinance",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "autofinance-control-plane",
@@ -1383,13 +1494,17 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x5c8D0C48810FD37A0A824D074ee290E64f7A8Fa2",
+   "relatedContracts": [
+    "0x3228995749610Bea00b59C44F8d1df21C14027F1",
+    "0xbA7468D7ACcd1Bb2E346a003ab1713C3d8C4Da6d"
+   ],
    "slug": "avalon-superearn",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "avalon-superearn-control-plane",
@@ -1428,13 +1543,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x9469470C9878bf3d6d0604831d9A3A366156f7EE",
+   "relatedContracts": [],
    "slug": "avant-aveth",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "avant-aveth-control-plane",
@@ -1475,6 +1591,13 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x4F4495243837681061C4743b74B3eEdf548D56A5",
+   "relatedContracts": [
+    "0x16C22cbDD77350b1AC88AdDA344F691c12f41960",
+    "0x3d3C73E91B1b0C243f1437F2d8363b1D5B093BD0",
+    "0x99B5FA03a5ea4315725c43346e55a6A6fbd94098",
+    "0xE3B83f79Fbf01B25659f8A814945aB82186A8AD0",
+    "0xc8a8399c3D1207f4e109673be7047604737c1D56"
+   ],
    "slug": "axelar-network",
    "sprints": [
     25
@@ -1573,13 +1696,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+   "relatedContracts": [],
    "slug": "badger-dao",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "badger-dao-control-plane",
@@ -1620,6 +1744,9 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xBA12222222228d8Ba445958a75a0704d566BF2C8",
+   "relatedContracts": [
+    "0x10A19e7eE7d7F8a52822f6817de8ea18204F2e4f"
+   ],
    "slug": "balancer-v2-vault-timelock",
    "sprints": [
     21
@@ -1682,6 +1809,7 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x7E3692A6D8c34a762079Fa9057AeD87be7e67cb8",
+   "relatedContracts": [],
    "slug": "bancor-v3",
    "sprints": [
     31
@@ -1731,6 +1859,12 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x0475cBCAebd9CE8AfA5025828d5b98DFb67E059E",
+   "relatedContracts": [
+    "0x7bB41C3008B3f03FE483B28b8DB90e19Cf07595c",
+    "0x9855054731540A48b28990B63DcF4f33d8AE46A1",
+    "0x20AcF55A3DCfe07fC4cecaCFa1628F788EC8A4Dd",
+    "0x5a0Aae59D09fccBdDb6C6CcEB07B7279367C3d2A"
+   ],
    "slug": "base-bridge",
    "sprints": [
     29
@@ -1778,13 +1912,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x9fDbDE76236998Dc2836FE67A9954eDE456A1D63",
+   "relatedContracts": [],
    "slug": "baseline-protocol",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "baseline-protocol-control-plane",
@@ -1825,6 +1960,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x047D41F2544B7F63A8e991aF2068a363d210d6Da",
+   "relatedContracts": [
+    "0xc590D9fb8eE78a0909dFF341ccf717000b7b7fF2",
+    "0xE542919E4b281f10b437F947c8Ba224DdfaBc716",
+    "0x004E9C3EF86bc1ca1f0bB5C7662861Ee93350568",
+    "0x9251fd3D79522bB2243a58FFf1dB43E25A495aaB",
+    "0x029E4FbDAa31DE075dD74B2238222A08233978f6",
+    "0xC9dA980fFABbE2bbe15d4734FDae5761B86b5Fc3"
+   ],
    "slug": "bedrock-unibtc",
    "sprints": [
     30
@@ -1874,6 +2017,12 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xF1376bceF0f78459C0Ed0ba5ddce976F1ddF51F4",
+   "relatedContracts": [
+    "0x1e4D0A963953e7c08Fc7602B01e683547Fc4E518",
+    "0x9609Af0490b96D7AdD7EEa3554b1a944ee440262",
+    "0xa5F2B6AB5B38b88Ba221741b3A189999b4c889C6",
+    "0x3050620423f4dB43E1904815E898C466526387b8"
+   ],
    "slug": "bedrock-unieth",
    "sprints": [
     25
@@ -1960,6 +2109,10 @@
     "chain": "base"
    },
    "primaryContract": "0xfc69704cC3cAac545cC7577009Ea4AA04F1a61Eb",
+   "relatedContracts": [
+    "0xAb35d11199216c7F7368080Cf41beD8f3AbBc4E4",
+    "0x2b0C9702A4724f2BFe7922DB92c4082098533c62"
+   ],
    "slug": "beefy-finance-base",
    "sprints": [
     22,
@@ -2046,6 +2199,11 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x4e4C314E2391A58775be6a15d7A05419ba7D2B6e",
+   "relatedContracts": [
+    "0x0d02755a5700414B26FF040e1dE35D337DF56218",
+    "0x02863C14603C3b157379999F567DDECE151e9153",
+    "0x859f6e05410893fe64BC84d92BdA773fF798cf66"
+   ],
    "slug": "benddao-ape-staking",
    "sprints": [
     32
@@ -2095,6 +2253,11 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xcb1592591996765Ec0eFc1f92599A19767ee5ffA",
+   "relatedContracts": [
+    "0xd9C6Ee1547Fd6d48F8872dD866473893Bbe8A1Ab",
+    "0x1783E7d1F498321D7E15044d769621E1beDc7F4C",
+    "0x2bBaCb406d043D93997344F28a74A25069f3e9E3"
+   ],
    "slug": "bio-protocol",
    "sprints": [
     32
@@ -2142,13 +2305,16 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xCdFb58c8C859Cb3F62ebe9Cf2767F9e036C7fb15",
+   "relatedContracts": [
+    "0x4ca67a794051e036eefB5Aa4b34fE2bd836069F0"
+   ],
    "slug": "bitfi-basis",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "bitfi-basis-control-plane",
@@ -2187,13 +2353,16 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x5F6AE08B8AeB7078cf2F96AFb089D7c9f51DA47d",
+   "relatedContracts": [
+    "0x0bD88b59D580549285f0A207Db5F06bf24a8e561"
+   ],
    "slug": "blast-pre-launch-farm",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "blast-pre-launch-farm-control-plane",
@@ -2232,13 +2401,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x5283D291DBCF85356A21bA090E6db59121208b44",
+   "relatedContracts": [],
    "slug": "blur-bids",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "blur-bids-control-plane",
@@ -2277,13 +2447,17 @@
     "chain": "base"
    },
    "primaryContract": "0x6D63921D8203044f6AbaD8F346d3AEa9A2719dDD",
+   "relatedContracts": [
+    "0x589910C5836711a779eDf19Fce2935dc7aC95107",
+    "0x5146C35725d9b8F11A84ebD4a3abe9845698Ada9"
+   ],
    "slug": "bmx-freestyle",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x58e5d7f07aaf27ccbf361f122a24120a821b455bb9dae30f4478a7da1381f3e8",
-     "blockNumber": 59847352,
+     "blockHash": "0xaa2914dfd5a622683bab79cf60de172e5d03b3c572aa19dc567689173d59bbd3",
+     "blockNumber": 59903224,
      "chain": "base",
      "classification": "rpc_observed",
      "id": "bmx-freestyle-control-plane",
@@ -2322,13 +2496,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x0A638F07ACc6969abF392bB009f216D22aDEa36d",
+   "relatedContracts": [],
    "slug": "brickken",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "brickken-control-plane",
@@ -2370,6 +2545,10 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xD8236031d8279d82E615aF2BFab5FC0127A329ab",
+   "relatedContracts": [
+    "0xb8FC49402dF3ee4f8587268FB89fda4d621a8793",
+    "0xcCcc62962d17b8914c62D74FfB843d73B2a3cccC"
+   ],
    "slug": "cap",
    "sprints": [
     20,
@@ -2458,6 +2637,9 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x5427FEFA711Eff984124bFBB1AB6fbf5E3DA1820",
+   "relatedContracts": [
+    "0xF380166F8490F24AF32Bf47D1aA217FBA62B6575"
+   ],
    "slug": "cbridge",
    "sprints": [
     33
@@ -2507,6 +2689,12 @@
     "chain": "base"
    },
    "primaryContract": "0x7Ed48C31f2fdC40d37407cBaBf0870B2b688368f",
+   "relatedContracts": [
+    "0x055589229506Ee89645EF08ebE9B9a863486d0dE",
+    "0xd21413291444C5c104F1b5918cA0D2f6EC91Ad16",
+    "0xCEb7eD5d5B3bAD3088f6A1697738B60d829635c6",
+    "0x9711730060C73Ee7Fcfe1890e8A0993858a7D225"
+   ],
    "slug": "centrifuge-liquidity-pools-base",
    "sprints": [
     24
@@ -2581,6 +2769,16 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x80226fc0Ee2b096224EeAc085Bb9a8cba1146f7D",
+   "relatedContracts": [
+    "0x411dE17f12D1A34ecC7F45f49844626267c75e81",
+    "0x117ec8aD107976e1dBCc21717ff78407Bc36aADc",
+    "0x6608920e3F6b591EC3Cf15CA1DDf66fBE117F56A",
+    "0x8C00Cc7cC37396e88BbFe66371341a59D1b5771F",
+    "0xE53289F32c8E690b7173aA33affE9B6B0CB0012F",
+    "0xD6597750bf74DCAEC57e0F9aD2ec998D837005bf",
+    "0xD9757aA52907798d1aF2FDa7A6C0cC733E5aCf7e",
+    "0xEd3fc513F5888BD65E868ba77D25E8799FfFa18e"
+   ],
    "slug": "chainlink-ccip",
    "sprints": [
     24,
@@ -2679,13 +2877,16 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xca1207647Ff814039530D7d35df0e1Dd2e91Fa84",
+   "relatedContracts": [
+    "0x50a6B25101173B41E41C1A30A5bae42f213b2687"
+   ],
    "slug": "chamber-vaults",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "chamber-vaults-control-plane",
@@ -2726,6 +2927,12 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xB13aa2d0345b0439b064f26B82D8dCf3f508775d",
+   "relatedContracts": [
+    "0xA1Dc0B6A02AB091580DC57bDd5Fe8a9E577E0842",
+    "0x261090afE1E7305474F4e3eEFCAca9964eBffFf5",
+    "0xf24955E9D0a05222373d4555f8831f7A05e83F62",
+    "0x0CBee811C47C3A5cb4637f1E58d98B0Abbb4c54f"
+   ],
    "slug": "cian-yield-layer",
    "sprints": [
     31
@@ -2751,6 +2958,9 @@
    "url": "https://pacta.wtf/protocols/cian-yield-layer/"
   },
   {
+   "aliasAddresses": [
+    "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+   ],
    "badge": {
     "label": "Parameter Delta",
     "live": "https://pacta-x402.pacta.workers.dev/v1/badges/circle-gateway.svg",
@@ -2775,6 +2985,13 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x77777777Dcc4d5A8B6E418Fd04D8997ef11000eE",
+   "relatedContracts": [
+    "0xF7a6D9D7Df917c072ac8987A820c58aA27A0e798",
+    "0x2A6A86466F181721ec8ff946967b56f1AA4758c5",
+    "0x9812d5F0a0832d9A0a78a1ba728fACd87bC35b19",
+    "0x7359fD9aA258992eb4B6d9572c6f6c74Cf719a94",
+    "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+   ],
    "slug": "circle-gateway",
    "sprints": [
     32
@@ -2824,6 +3041,22 @@
     "chain": "base"
    },
    "primaryContract": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+   "relatedContracts": [
+    "0x3ABd6f64A422225E61E435baE41db12096106df7",
+    "0xD3571B3bc51CECFf49194AD67aFFFC648d5e07b4",
+    "0x1f2e3A640175d20ac31ed523B6733B977173E277",
+    "0x2230393EDAD0299b7E7B59F20AA856cD1bEd52e1",
+    "0xb5bff84d169a72e76e94eC950da51Bac90b60284",
+    "0x4fc7850364958d97B4d3f5A08f79db2493f8cA44",
+    "0x2Ce6311ddAE708829bc0784C967b7d77D19FD779",
+    "0xFcb19e6a322b27c06842A71e8c725399f049AE3a",
+    "0x4914f61d25e5C567143774B76EdbF4D5109a8566",
+    "0x0A06BE16275B95a7d2567fBdAE118b36C7DA78F9",
+    "0xE982615d461DD5cD06575BbeA87624fda4e3de17",
+    "0xC1d9fe41D19Dd52cb3Ae5d1D3b0030B5D498c704",
+    "0x807a96288A1A408dBC13DE2b1d087d10356395d2",
+    "0x43506849D7C04F9138D1A2050bbF3A0c054402dd"
+   ],
    "slug": "circle-usdc",
    "sprints": [
     23
@@ -2907,13 +3140,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xd8F1460044925d2D5c723C7054cd9247027415B7",
+   "relatedContracts": [],
    "slug": "clipper",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "clipper-control-plane",
@@ -2954,6 +3188,16 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xBe9895146f7AF43049ca1c1AE358B0541Ea49704",
+   "relatedContracts": [
+    "0x9b37180d847B27ADC13C2277299045C1237Ae281",
+    "0xA57aFe0Ba93f6854ed1DCd58dCE301E10B15D1D6",
+    "0xEeE4Ac8A22a6b310c53d59a7d59b3E0336C19577",
+    "0x4b8741C89ABFf2562e854899E24d67A36406eA03",
+    "0x9596EAE1744997161ac094252e5020E9314BDCc2",
+    "0xBE3c68821D585Cf1552214897a1c091014B1EB0a",
+    "0x7Dd4aa646b2e2850f9D809F9299E8E87AC97b77a",
+    "0x31724cA0C982A31fbb5C57f4217AB585271fc9a5"
+   ],
    "slug": "coinbase-wrapped-staked-eth",
    "sprints": [
     21
@@ -3015,6 +3259,14 @@
     "chain": "base"
    },
    "primaryContract": "0x18281dfC4d00905DA1aaA6731414EABa843c468A",
+   "relatedContracts": [
+    "0x6d903f6003cca6255D85CcA4D3B5E5146dC33925",
+    "0xb125E6687d4313864e53df431d5425969c15Eb2F",
+    "0xbdE8F31D2DdDA895264e27DD990faB3DC87b372d",
+    "0x45939657d1CA34A8FA39A924B71D28Fe8431e581",
+    "0x3cb4653F3B45F448D9100b118B75a1503281d2ee",
+    "0xbbf3f1421D886E9b2c5D716B5192aC998af2012c"
+   ],
    "slug": "compound-v3-base",
    "sprints": [
     19
@@ -3077,6 +3329,11 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xc3d688B66703497DAA19211EEdff47f25384cdc3",
+   "relatedContracts": [
+    "0xA17581A9E3356d9A858b789D68B4d866e593aE94",
+    "0x309a862bbC1A00e45506cB8A802D1ff10004c8C0",
+    "0xbbf3f1421D886E9b2c5D716B5192aC998af2012c"
+   ],
    "slug": "compound-v3-comet",
    "sprints": [
     9
@@ -3126,13 +3383,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xb3Ad645dB386D7F6D753B2b9C3F4B853DA6890B8",
+   "relatedContracts": [],
    "slug": "concentrator",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "concentrator-control-plane",
@@ -3173,6 +3431,11 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xB9DC54c8261745CB97070CeFBE3D3d815aee8f20",
+   "relatedContracts": [
+    "0x70EBF87bA7a1517c204979e51979cfbf693364F9",
+    "0x0265d73a8E61F698d8EB0dfeb91Ddce55516844C",
+    "0xFB65336D4323BA79d07F7024c81B8B69E1781527"
+   ],
    "slug": "concrete",
    "sprints": [
     20
@@ -3245,13 +3508,17 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xB0Afc8363b8F36E0ccE5D54251e20720FfaeaeE7",
+   "relatedContracts": [
+    "0xbdbdDc4bF67e9Bc02706e4Ce53BC14d6cE3038f1",
+    "0x0af815364BD9e9E60f3d2D3bAc1320B77d3E35F7"
+   ],
    "slug": "convergence-fi",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "convergence-fi-control-plane",
@@ -3292,6 +3559,11 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xF403C135812408BFbE8713b5A23a04b3D48AAE31",
+   "relatedContracts": [
+    "0x3cE6408F923326f81A7D7929952947748180f1E6",
+    "0x256e1bbA846611C37CF89844a02435E6C098b86D",
+    "0xa3C5A1e09150B75ff251c1a7815A07182c3de2FB"
+   ],
    "slug": "convex-finance",
    "sprints": [
     4
@@ -3342,6 +3614,7 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x245cc372C84B3645Bf0Ffe6538620B04a217988B",
+   "relatedContracts": [],
    "slug": "cooler-loans",
    "sprints": [
     26
@@ -3389,13 +3662,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x2ba592F78dB6436527729929AAf6c908497cB200",
+   "relatedContracts": [],
    "slug": "creth2",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "creth2-control-plane",
@@ -3434,13 +3708,16 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x28Ff2E4dD1B58efEB0fC138602A28D5aE81e44e2",
+   "relatedContracts": [
+    "0x34B35beD5AceD7C4472De906912Acb3e4C4616A5"
+   ],
    "slug": "cronos-zkevm-bridge",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "cronos-zkevm-bridge-control-plane",
@@ -3481,6 +3758,7 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x467947EE34aF926cF1DCac093870f613C96B1E0c",
+   "relatedContracts": [],
    "slug": "curve-dex-ethereum",
    "sprints": [
     26
@@ -3530,6 +3808,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC",
+   "relatedContracts": [
+    "0xeDA020b067872717901916a3B8C724C21f6080d1",
+    "0x40907540d8a6C65c637785e8f8B742ae6b0b9968",
+    "0xE478de485ad2fe566d49342Cbd03E49ed7DB3356",
+    "0x467947EE34aF926cF1DCac093870f613C96B1E0c",
+    "0xf939E0A03FB07F59A73314E73794Be0E57ac1b4E",
+    "0x370a449FeBb9411c95bf897021377fe0B7D100c0"
+   ],
    "slug": "curve-finance-crvusd",
    "sprints": [
     11
@@ -3580,6 +3866,7 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x62359Ed7505Efc61FF1D56fEF82158CcaffA23D7",
+   "relatedContracts": [],
    "slug": "cvault-finance",
    "sprints": [
     33
@@ -3627,13 +3914,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x07Dff4087b43c4A759f4Fc69511c26d51929dAF4",
+   "relatedContracts": [],
    "slug": "d2-finance",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "d2-finance-control-plane",
@@ -3674,6 +3962,11 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x949b3B3c098348b879C9e4F15cecc8046d9C8A8c",
+   "relatedContracts": [
+    "0xfE7De3c1e1BD252C67667B56347cABFC6df08dF4",
+    "0x43dE2d77BF8027e25dBD179B491e8d64f38398aA",
+    "0x4bC16662A2cE381E7bb54Dc577c05619C5E67526"
+   ],
    "slug": "debridge",
    "sprints": [
     33
@@ -3723,6 +4016,7 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x760233b90e45d186A9A98E911B115F7F4B90d3D9",
+   "relatedContracts": [],
    "slug": "decentralized-euro",
    "sprints": [
     31
@@ -3772,6 +4066,10 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xBc841B0dE0b93205e912CFBBd1D0c160A1ec6F00",
+   "relatedContracts": [
+    "0x287778F121F134C66212FB16c9b53eC991D32f5b",
+    "0xCCf3d848e08b94478Ed8f46fFead3008faF581fD"
+   ],
    "slug": "defi-saver",
    "sprints": [
     28
@@ -3819,13 +4117,16 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x09ce2B746C32528B7d864A1e3979Bd97d2f095AB",
+   "relatedContracts": [
+    "0x557EdaaFD875569F0bd6AbaE1185c17fD5A30Ba0"
+   ],
    "slug": "defil",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "defil-control-plane",
@@ -3864,13 +4165,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x62F161BF3692E4015BefB05A03a94A40f520d1c0",
+   "relatedContracts": [],
    "slug": "delv-yield",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "delv-yield-control-plane",
@@ -3909,13 +4211,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x3A880652F47bFaa771908C07Dd8673A787dAEd3A",
+   "relatedContracts": [],
    "slug": "derivadex",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "derivadex-control-plane",
@@ -3954,13 +4257,16 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xB1D1eae60EEA9525032a6DCb4c1CE336a1dE71BE",
+   "relatedContracts": [
+    "0x4909AD99441Ea5311b90a94650C394cEa4A881B8"
+   ],
    "slug": "derive-v3-options",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "derive-v3-options-control-plane",
@@ -3999,13 +4305,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x4C1a8a04577286Ce58d0723b1a90160F380E550A",
+   "relatedContracts": [],
    "slug": "dexfi-aggregator",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "dexfi-aggregator-control-plane",
@@ -4046,6 +4353,7 @@
     "chain": "base"
    },
    "primaryContract": "0x01Ea790410D9863A57771D992D2A72ea326DD7C9",
+   "relatedContracts": [],
    "slug": "diem-relay",
    "sprints": [
     28
@@ -4093,13 +4401,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x43Dfc4159D86F3A37A5A4B3D4580b888ad7d4DDd",
+   "relatedContracts": [],
    "slug": "dodo-amm",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "dodo-amm-control-plane",
@@ -4140,6 +4449,7 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xa75c21C5BE284122a87A37a76cc6C4DD3E55a1D4",
+   "relatedContracts": [],
    "slug": "dolomite",
    "sprints": [
     31
@@ -4187,13 +4497,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x2B5895b716311A1eaC8f93fB88C56aF9eC8C1A69",
+   "relatedContracts": [],
    "slug": "drakewell-usddw",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "drakewell-usddw-control-plane",
@@ -4232,13 +4543,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xF063fE1aB7a291c5d06a86e14730b00BF24cB589",
+   "relatedContracts": [],
    "slug": "dxsale",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "dxsale-control-plane",
@@ -4279,6 +4591,9 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x64c7d40c07EFAbec2AafdC243bF59eaF2195c6dc",
+   "relatedContracts": [
+    "0x92D6C1e31e14520e676a687F0a93788B716BEff5"
+   ],
    "slug": "dydx-v3",
    "sprints": [
     32
@@ -4326,13 +4641,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xEa5eDef1287AfDF9Eb8A46f9773AbFc10820c61c",
+   "relatedContracts": [],
    "slug": "easedefi-org",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "easedefi-org-control-plane",
@@ -4373,6 +4689,9 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x7B2c1CbB33c53c3C6a695e36096AD2cfCE1c0efC",
+   "relatedContracts": [
+    "0x6055Dc6Ff1077eebe5e6D2BA1a1f53d7Ef8430dE"
+   ],
    "slug": "eclipse-bridge",
    "sprints": [
     27
@@ -4420,13 +4739,16 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xB0076DE78Dc50581770BBa1D211dDc0aD4F2a241",
+   "relatedContracts": [
+    "0x9406dD76452c172B3CC77092B42398e87daB3161"
+   ],
    "slug": "edgex-bridge",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "edgex-bridge-control-plane",
@@ -4467,6 +4789,13 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xC06Fd4F821eaC1fF1ae8067b36342899b57BAa2d",
+   "relatedContracts": [
+    "0x39053D51B77DC0d36036Fc1fCc8Cb819df8Ef37A",
+    "0x8b9566AdA63B64d1E1dcF1418b43fd1433b72444",
+    "0x369e6F597e22EaB55fFb173C6d9cD234BD699111",
+    "0xFEA47018D632A77bA579846c840d5706705Dc598",
+    "0xB8765ed72235d279c3Fb53936E4606db0Ef12806"
+   ],
    "slug": "eigenlayer-core",
    "sprints": [
     9
@@ -4514,13 +4843,17 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x20b70E4A1883b81429533FeD944d7957121c7CAB",
+   "relatedContracts": [
+    "0x416dFb213f640B18E367A91Fd39E6EE0F55f6753",
+    "0xf433c2A2D6FACeCDd9Edd7B8cE9cEaaB96F41866"
+   ],
    "slug": "eigenpie",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "eigenpie-control-plane",
@@ -4561,6 +4894,10 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xe0e0e08A6A4b9Dc7bD67BCB7aadE5cF48157d444",
+   "relatedContracts": [
+    "0x1E0EF4162e42C9bF820c307218c4E41cCcA6E9CC",
+    "0xc662c410C0ECf747543f5bA90660f6ABeBD9C8c4"
+   ],
    "slug": "ekubo",
    "sprints": [
     32
@@ -4608,13 +4945,14 @@
     "chain": "base"
    },
    "primaryContract": "0x64f8bE47A011DF0fAB47319d5De258D18E93f4ef",
+   "relatedContracts": [],
    "slug": "elfomofi",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x58e5d7f07aaf27ccbf361f122a24120a821b455bb9dae30f4478a7da1381f3e8",
-     "blockNumber": 59847352,
+     "blockHash": "0xaa2914dfd5a622683bab79cf60de172e5d03b3c572aa19dc567689173d59bbd3",
+     "blockNumber": 59903224,
      "chain": "base",
      "classification": "rpc_observed",
      "id": "elfomofi-control-plane",
@@ -4655,6 +4993,10 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xC3DC853dD716bd5754f421ef94fdCbac3902ab32",
+   "relatedContracts": [
+    "0xb270FE91e8E4b80452fBF1b4704208792A350f53",
+    "0x4f1C53F096533C04d8157EFB6Bca3eb22ddC6360"
+   ],
    "slug": "enzyme-finance",
    "sprints": [
     18
@@ -4705,6 +5047,7 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xe2A63438747D2c71E14BdC2Cc222be89B1C11D03",
+   "relatedContracts": [],
    "slug": "equilibria",
    "sprints": [
     27
@@ -4754,6 +5097,7 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xC53CCed6332D06972A7eaEDc64FDF6d4aF5220b8",
+   "relatedContracts": [],
    "slug": "eth-strategy",
    "sprints": [
     27
@@ -4779,6 +5123,11 @@
    "url": "https://pacta.wtf/protocols/eth-strategy/"
   },
   {
+   "aliasAddresses": [
+    "0x4c9EDD5852cd905f086C759E8383e09bff1E68B3",
+    "0x9D39A5DE30e57443BfF2A8307A4256c8797A3497",
+    "0x57e114B691Db790C35207b2e685D4A43181e6061"
+   ],
    "badge": {
     "label": "Parameter Delta",
     "live": "https://pacta-x402.pacta.workers.dev/v1/badges/ethena-usde-susde.svg",
@@ -4804,6 +5153,13 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94",
+   "relatedContracts": [
+    "0x3B0AAf6e6fCd4a7cEEf8c92C32DFeA9E64dC1862",
+    "0xe3490297a08d6fC8Da46Edb7B6142E4F461b62D3",
+    "0x4c9EDD5852cd905f086C759E8383e09bff1E68B3",
+    "0x9D39A5DE30e57443BfF2A8307A4256c8797A3497",
+    "0x57e114B691Db790C35207b2e685D4A43181e6061"
+   ],
    "slug": "ethena-usde-susde",
    "sprints": [
     7,
@@ -4868,6 +5224,13 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x73E35C5c35A274E34AdE6EB13cC7f62aEE323728",
+   "relatedContracts": [
+    "0x3B0AAf6e6fCd4a7cEEf8c92C32DFeA9E64dC1862",
+    "0xd93826BB299765c87D13AeBa2A7E5d9B27A03956",
+    "0x3C405F68d5C6eCE868e5646cAC926679839aCd68",
+    "0x9D6d77a21702b9AFcF924983fbFB84AAAAe79589",
+    "0xe897D8620D5EbA2C8ecAAF0aDa191a23230aB8Ec"
+   ],
    "slug": "ethena-usdtb",
    "sprints": [
     19
@@ -4906,6 +5269,11 @@
    "url": "https://pacta.wtf/protocols/ethena-usdtb/"
   },
   {
+   "aliasAddresses": [
+    "0x35fA164735182de50811E8e2E824cFb9B6118ac2",
+    "0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee",
+    "0xFe0c30065B384F05761f15d0CC899D4F9F9Cc0eB"
+   ],
    "badge": {
     "label": "Parameter Delta",
     "live": "https://pacta-x402.pacta.workers.dev/v1/badges/ether-fi-core-eeth-weeth.svg",
@@ -4931,6 +5299,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x9f26d4C958fD811A1F59B01B86Be7dFFc9d20761",
+   "relatedContracts": [
+    "0xcD425f44758a08BaAB3C4908f3e3dE5776e45d7a",
+    "0x308861A430be4cce5502d0A12724771Fc6DaF216",
+    "0xD789870beA40D056A4d26055d0bEFcC8755DA146",
+    "0x35fA164735182de50811E8e2E824cFb9B6118ac2",
+    "0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee",
+    "0xFe0c30065B384F05761f15d0CC899D4F9F9Cc0eB"
+   ],
    "slug": "ether-fi-core-eeth-weeth",
    "sprints": [
     7,
@@ -4995,6 +5371,9 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x485Bde66Bb668a51f2372E34e45B1c6226798122",
+   "relatedContracts": [
+    "0x0d05D94a5F1E76C18fbeB7A13d17C8a314088198"
+   ],
    "slug": "ether-fi-liquid-veda-boringvault",
    "sprints": [
     3
@@ -5046,6 +5425,15 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x29a56a1b8214D9Cf7c5561811750D5cBDb45CC8e",
+   "relatedContracts": [
+    "0x2F13256E04022d6356d8CE8C53C7364e13DC1f3d",
+    "0xcAD001c30E96765aC90307669d578219D4fb1DCe",
+    "0xb3b84e8320250Afe7a5fb313Ee32B52982b73c53",
+    "0xB1345E7A4D35FB3E6bF22A32B3741Ae74E5Fba27",
+    "0xff217004BdD3A6A592162380dc0E6BbF143291eB",
+    "0xcC6451385685721778E7Bd80B54F8c92b484F601",
+    "0x0C9a3dd6b8F28529d72d7f9cE918D493519EE383"
+   ],
    "slug": "euler-v2-evk",
    "sprints": [
     18
@@ -5097,6 +5485,10 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x92024C4bDa9DA602b711B9AbB610d072018eb58b",
+   "relatedContracts": [
+    "0x310A2694521f75C7B2b64b5937C16CE65C3EFE01",
+    "0x3866eA62494597A5EDeA4A97f9429f82b9d7Ca34"
+   ],
    "slug": "exactly",
    "sprints": [
     30
@@ -5144,13 +5536,14 @@
     "chain": "base"
    },
    "primaryContract": "0xBB505c54D71E9e599cB8435b4F0cEEc05fC71cbD",
+   "relatedContracts": [],
    "slug": "extra-finance-base",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x58e5d7f07aaf27ccbf361f122a24120a821b455bb9dae30f4478a7da1381f3e8",
-     "blockNumber": 59847352,
+     "blockHash": "0xaa2914dfd5a622683bab79cf60de172e5d03b3c572aa19dc567689173d59bbd3",
+     "blockNumber": 59903224,
      "chain": "base",
      "classification": "rpc_observed",
      "id": "extra-finance-base-control-plane",
@@ -5192,6 +5585,15 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x32356FE312Eba9B7D6A157ad28D1ca91b571CdA6",
+   "relatedContracts": [
+    "0xb178197E88D58Da21bE22A408E850d1e6Dc09A38",
+    "0x6D9e81c5b7C4b37d0Fe9E8CDA776e057f4040868",
+    "0x87d5e4cAaF4358A4337C10859c7107c7AEF4f8Ce",
+    "0x26B2ec4E02ebe2F54583af25b647b1D619e67BbF",
+    "0x28c921adAC4c1072658eB01a28DA06b5F651eF62",
+    "0x68863fb8855b04509a835082478D6E3D0bE4E61a",
+    "0x221ffB180AD01213FF882ab7DE9c75E23F9efA63"
+   ],
    "slug": "f-x-protocol-v2",
    "sprints": [
     2,
@@ -5253,13 +5655,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845",
+   "relatedContracts": [],
    "slug": "fake-world-assets-v2",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "fake-world-assets-v2-control-plane",
@@ -5300,6 +5703,12 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xc8CF6D7991f15525488b2A83Df53468D682Ba4B0",
+   "relatedContracts": [
+    "0xFa2B947eEc368f42195f24F36d2aF29f7c24CeC2",
+    "0x3Ef1127Fdf81B553066daE0FaEA58785A2AA6E14",
+    "0x16a2605C026BFe4f4B7f4471933714D9b2149AcE",
+    "0x1E482B60bf19Cb1cc859389e0eA3DED153f16Bd7"
+   ],
    "slug": "falcon-finance-usdf-susdf",
    "sprints": [
     17
@@ -5348,13 +5757,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xb1076fE3AB5e28005C7c323Bac5AC06a680d452e",
+   "relatedContracts": [],
    "slug": "fermiswap",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "fermiswap-control-plane",
@@ -5395,6 +5805,7 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x6c4c0CD7E0E5eeFfbd77AAfe1820d3b9B1ef27b0",
+   "relatedContracts": [],
    "slug": "flaunch",
    "sprints": [
     29
@@ -5442,13 +5853,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xfF20817765cB7f73d4bde2e66e067E58D11095C2",
+   "relatedContracts": [],
    "slug": "flexa",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "flexa-control-plane",
@@ -5487,13 +5899,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xcf0C122c6b73ff809C693DB761e7BaeBe62b6a2E",
+   "relatedContracts": [],
    "slug": "flokifi-locker",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "flokifi-locker-control-plane",
@@ -5534,6 +5947,13 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x324c5Dc1fC42c7a4D43d92df1eBA58a54d13Bf2d",
+   "relatedContracts": [
+    "0x4F6F977aCDD1177DCD81aB83074855EcB9C2D49e",
+    "0x7FE0B032cB5982Af72498F96be3DD6566F7B7de8",
+    "0xee327311D8640156E87eC33ea55FcbF2309e0ce6",
+    "0x984636a30ed2B4A61FB7150CED644096349275d3",
+    "0x0e19B64F3A79FeeE12Df1b6f239929c6ab6C7ED0"
+   ],
    "slug": "fluid-instadapp",
    "sprints": [
     5
@@ -5584,6 +6004,9 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x1118e1c057211306a40A4d7006C040dbfE1370Cb",
+   "relatedContracts": [
+    "0x5DD1A7A369e8273371d2DBf9d83356057088082c"
+   ],
    "slug": "flying-tulip-lend",
    "sprints": [
     30
@@ -5631,13 +6054,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xDb861830D9Ae2d1fCF99fA0cfd3973de382B0B5b",
+   "relatedContracts": [],
    "slug": "frankencoin",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "frankencoin-control-plane",
@@ -5678,6 +6102,12 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xbAFA44EFE7901E04E39Dad13167D089C559c1138",
+   "relatedContracts": [
+    "0x1c1649A38f4A3c5A0c4a24070f688C525AB7D6E6",
+    "0xbBc424e58ED38dd911309611ae2d7A23014Bd960",
+    "0xfFFffF4F3baC444b2C0ecf2A1840d018bE783937",
+    "0x223a681fc5c5522c85C96157c0efA18cd6c5405c"
+   ],
    "slug": "frax-ether-sfrxeth",
    "sprints": [
     20
@@ -5753,6 +6183,13 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xCAcd6fd266aF91b8AeD52aCCc382b4e165586E29",
+   "relatedContracts": [
+    "0x0b2C3dF006b2bd43cBCC60075e7a0bf314474eD6",
+    "0xfFFffF4F3baC444b2C0ecf2A1840d018bE783937",
+    "0xeA0a6EC8114a0Af6Cf74Ca0036Ab31d892Df13cB",
+    "0xB1748C79709f4Ba2Dd82834B8c82D4a505003f27",
+    "0x4b45D73b83686e69d08E61105FdB7F7b51f41Bc1"
+   ],
    "slug": "frax-usd-frxusd",
    "sprints": [
     23
@@ -5825,13 +6262,14 @@
     "chain": "base"
    },
    "primaryContract": "0x0bD4887f7D41B35CD75DFF9FfeE2856106f86670",
+   "relatedContracts": [],
    "slug": "friend-tech-v1",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x58e5d7f07aaf27ccbf361f122a24120a821b455bb9dae30f4478a7da1381f3e8",
-     "blockNumber": 59847352,
+     "blockHash": "0xaa2914dfd5a622683bab79cf60de172e5d03b3c572aa19dc567689173d59bbd3",
+     "blockNumber": 59903224,
      "chain": "base",
      "classification": "rpc_observed",
      "id": "friend-tech-v1-control-plane",
@@ -5872,6 +6310,7 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x6BeA7CFEF803D1e3d5f7C0103f7ded065644e197",
+   "relatedContracts": [],
    "slug": "gamma",
    "sprints": [
     34
@@ -5921,6 +6360,15 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xa133C9A92Fb8dDB962Af1cbae58b2723A0bdf23b",
+   "relatedContracts": [
+    "0x29B97F37B3E0C704bCFD785F5b7bBa2A0B7df2c7",
+    "0x77777777144339Bdc3aCceE992D8d4D31734CB2e",
+    "0x1E9ec044853611F4bCD4BBcFE7657508BD1c53D3",
+    "0xA7D5DDc1b8557914F158076b228AA91eF613f1D5",
+    "0xbb803559B4D58b75E12dd74641AB955e8B0Df40E",
+    "0x7b065Fcb0760dF0CEA8CFd144e08554F3CeA73D1",
+    "0x3E965117A51186e41c2BB58b729A1e518A715e5F"
+   ],
    "slug": "gearbox-v3-v3-1",
    "sprints": [
     11
@@ -5968,13 +6416,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x3802c218221390025BCEABBaD5D8C59F40eB74B8",
+   "relatedContracts": [],
    "slug": "geth",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "geth-control-plane",
@@ -6013,13 +6462,16 @@
     "chain": "base"
    },
    "primaryContract": "0xAeD7C2eD7Bb84396AfCB55fF72c8F8E87FFb68f3",
+   "relatedContracts": [
+    "0x530a0cDd4E5f24A5BE77587146A05056c35edcEb"
+   ],
    "slug": "glif",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x58e5d7f07aaf27ccbf361f122a24120a821b455bb9dae30f4478a7da1381f3e8",
-     "blockNumber": 59847352,
+     "blockHash": "0xaa2914dfd5a622683bab79cf60de172e5d03b3c572aa19dc567689173d59bbd3",
+     "blockNumber": 59903224,
      "chain": "base",
      "classification": "rpc_observed",
      "id": "glif-control-plane",
@@ -6060,6 +6512,7 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xBEb28978B2c755155f20fd3d09Cb37e300A6981f",
+   "relatedContracts": [],
    "slug": "goldfinch",
    "sprints": [
     30
@@ -6107,13 +6560,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xf65B99CE6DC5F6c556172BCC0Ff27D3665a7d9A8",
+   "relatedContracts": [],
    "slug": "gondi-v3",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "gondi-v3-control-plane",
@@ -6154,6 +6608,7 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xbD6e434dB90FD8AD4E28d85C133AD34cA6fbfB6D",
+   "relatedContracts": [],
    "slug": "gravity-by-galxe-bridge",
    "sprints": [
     27
@@ -6201,13 +6656,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x3Ec8798B81485A254928B70CDA1cf0A2BB0B74D7",
+   "relatedContracts": [],
    "slug": "gro",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "gro-control-plane",
@@ -6248,6 +6704,12 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x491EDFB0B8b608044e227225C715981a30F3A44E",
+   "relatedContracts": [
+    "0x5F5cfCB8a463868E37Ab27B5eFF3ba02112dF19a",
+    "0x1369f7b2b38c76B6478c0f0E66D94923421891Ba",
+    "0xB0113804960345fd0a245788b3423319c86940e5",
+    "0x0eEC86649E756a23CBc68d9EFEd756f16aD5F85f"
+   ],
    "slug": "grove-finance",
    "sprints": [
     21
@@ -6320,13 +6782,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xAD29F2723fcdBcF665F210F25E06f97477e417cF",
+   "relatedContracts": [],
    "slug": "grvt-bridge",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "grvt-bridge-control-plane",
@@ -6367,6 +6830,13 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xF2B8f214Dc81b849ed3BDCAEdA6c8c39625c500A",
+   "relatedContracts": [
+    "0x9033c3677E6C63FC252E9546AD5b5E7d66Fc0926",
+    "0x1D075f1F543bB09Df4530F44ed21CA50303A65B2",
+    "0xF9aCeFD1A4e4360eE3A534Cb3485Bce36F5F05A4",
+    "0x784e010430a923Ce2a3Ff9846C4010694Bb7BEfb",
+    "0x0E29e5AbbB5FD88e28b2d355774e73BD47dE3bcd"
+   ],
    "slug": "hakka-finance",
    "sprints": [
     34
@@ -6414,13 +6884,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xa0246c9032bC3A600820415aE600c6388619A14D",
+   "relatedContracts": [],
    "slug": "harvest-finance",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "harvest-finance-control-plane",
@@ -6461,6 +6932,10 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x367e59b559283C8506207d75B0c5D8C66c4Cd4B7",
+   "relatedContracts": [
+    "0xe79c9Bb508f00ab7B03cf3043929639e86626EF9",
+    "0x10AB2d9C085c816f43ccB0FB1b27d024224E36f1"
+   ],
    "slug": "hashport",
    "sprints": [
     32
@@ -6508,13 +6983,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x584bC13c7D411c00c01A62e8019472dE68768430",
+   "relatedContracts": [],
    "slug": "hegic",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "hegic-control-plane",
@@ -6555,6 +7031,11 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xb8901acB165ed027E32754E0FFe830802919727f",
+   "relatedContracts": [
+    "0x1ec078551A5ac8F0f51fAc57Ffc48Ea7d9A86E9d",
+    "0xed8Bdb5895B8B7f9Fdb3C087628FD8410E853D48",
+    "0xeeA8422a08258e73c139Fc32a25e10410c14bd7a"
+   ],
    "slug": "hop-protocol",
    "sprints": [
     34
@@ -6602,13 +7083,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x6D265C7dD8d76F25155F1a7687C693FDC1220D12",
+   "relatedContracts": [],
    "slug": "hyperlane",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "hyperlane-control-plane",
@@ -6649,6 +7131,9 @@
     "chain": "base"
    },
    "primaryContract": "0x1039CB48254a3150fC604d4B9ea08F66f4739D37",
+   "relatedContracts": [
+    "0x44D8172b95a208082327f58c5b42269d48a34847"
+   ],
    "slug": "iaero-protocol",
    "sprints": [
     30
@@ -6696,13 +7181,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x111111517e4929D3dcbdfa7CCe55d30d4B6BC4d6",
+   "relatedContracts": [],
    "slug": "ichi",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "ichi-control-plane",
@@ -6741,13 +7227,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xB705268213D593B8FD88d3FDEFF93AFF5CbDcfAE",
+   "relatedContracts": [],
    "slug": "idex-v1",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "idex-v1-control-plane",
@@ -6788,6 +7275,10 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xD6dABBc2b275114a2366555d6C481EF08FDC2556",
+   "relatedContracts": [
+    "0x3D5Fc645320be0A085A32885F078F7121e5E5375",
+    "0xFb3bD022D5DAcF95eE28a6B07825D4Ff9C5b3814"
+   ],
    "slug": "idle",
    "sprints": [
     31
@@ -6837,6 +7328,15 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x650bD9Dee50E3eE15cbb49749ff6ABcf55A8FB1e",
+   "relatedContracts": [
+    "0x814CC6B8fd2555845541FB843f37418b05977d8d",
+    "0x9Bb0F64c5A5e9120f55cde6B15683FF11Abc0eD4",
+    "0xB81e55e7Ee6B286aF6abFEa4eFad83f7BA4D1f1e",
+    "0xD496417a50DB34279631e0aF459493Cf9685F529",
+    "0xb83ad67814BeD3478BB4239a5961391d836fCe4d",
+    "0x177bFf0AD93B8132012F05081A10a0e574fa5F97",
+    "0x8e6C8799B542E507bfDDCA1a424867e885D96e79"
+   ],
    "slug": "inceptionlrt-isolated-restaking",
    "sprints": [
     32
@@ -6886,6 +7386,7 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x0954906da0Bf32d5479e25f46056d22f08464cab",
+   "relatedContracts": [],
    "slug": "index-coop",
    "sprints": [
     33
@@ -6936,6 +7437,11 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x3D18480CC32B6AB3B833dCabD80E76CfD41c48a9",
+   "relatedContracts": [
+    "0x4B174afbeD7b98BA01F50E36109EEE5e6d327c32",
+    "0xee529A21Cea25EFDF527e85BB4c597603E14CcfC",
+    "0x579B18E60d0245c0F66Fa9463610b15E226Ae8FD"
+   ],
    "slug": "infinifi",
    "sprints": [
     20,
@@ -7022,13 +7528,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xe28b3B32B6c345A34Ff64674606124Dd5Aceca30",
+   "relatedContracts": [],
    "slug": "injective-bridge",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "injective-bridge-control-plane",
@@ -7067,13 +7574,17 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x2A54bA2964C8Cd459Dc568853F79813a60761B58",
+   "relatedContracts": [
+    "0x57d0E13F353d630ab5218aC841C88985AB31A066",
+    "0x3CB68a6762041aA05E762814A8791CA9d98E79A0"
+   ],
    "slug": "interest-protocol",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "interest-protocol-control-plane",
@@ -7117,6 +7628,11 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7",
+   "relatedContracts": [
+    "0xBeCCB6bb0aa4ab551966A7E4B97cec74bb359Bf6",
+    "0x941c2699eC7E55a50Bde030d8E1e70649839259D",
+    "0xC45E9c231ab5D9Bd3F1131E7901B100D8D236C4d"
+   ],
    "slug": "inverse-finance-firm",
    "sprints": [
     1,
@@ -7207,6 +7723,9 @@
     "chain": "base"
    },
    "primaryContract": "0x1455717668fA96534f675856347A973fA907e922",
+   "relatedContracts": [
+    "0x378fEb2E96082FB965E2BB922AEE484d07c14014"
+   ],
    "slug": "ipor-fusion",
    "sprints": [
     26
@@ -7256,6 +7775,7 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xf27de84F11E089B838769EDFcFf9872BC45c84Fe",
+   "relatedContracts": [],
    "slug": "jpy-defi",
    "sprints": [
     30
@@ -7303,13 +7823,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x3abF2A4f8452cCC2CF7b4C1e4663147600646f66",
+   "relatedContracts": [],
    "slug": "juicebox-v1",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "juicebox-v1-control-plane",
@@ -7348,13 +7869,17 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xdC47953c816531a8CA9E1D461AB53687d48EEA26",
+   "relatedContracts": [
+    "0xDd649AdaB2e67cAdC2EC29d75ABe73f3Df08065c",
+    "0x5721ce64Ee0D772Ce613b62D411350091C544cD0"
+   ],
    "slug": "k3-capital",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "k3-capital-control-plane",
@@ -7398,6 +7923,13 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x49bD9989E31aD35B0A62c20BE86335196A3135B1",
+   "relatedContracts": [
+    "0xb61e0E39b6d4030C36A176f576aaBE44BF59Dc78",
+    "0xb3696a817D01C8623E66D156B6798291fa10a46d",
+    "0x036676389e48133B63a802f8635AD39E752D375D",
+    "0x7AAd74b7f0d60D5867B59dbD377a71783425af47",
+    "0xCbcdd778AA25476F203814214dD3E9b9c46829A1"
+   ],
    "slug": "kelp-dao-rseth",
    "sprints": [
     9,
@@ -7484,13 +8016,16 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xbB7D94a423f4978545ecf73161f0678e8AfD1a92",
+   "relatedContracts": [
+    "0xa6e17aE4b683Ed2Ee7cB7414A92bD8316f330191"
+   ],
    "slug": "kine-finance",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "kine-finance-control-plane",
@@ -7529,13 +8064,16 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x8F08B70456eb22f6109F57b8fafE862ED28E6040",
+   "relatedContracts": [
+    "0x1cB489ef513E1Cc35C4657c91853A2E6fF1957dE"
+   ],
    "slug": "king-protocol",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "king-protocol-control-plane",
@@ -7576,6 +8114,7 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x8b884f80B3B839F52b6cE168f133e7a5D1f0A537",
+   "relatedContracts": [],
    "slug": "kpk",
    "sprints": [
     30
@@ -7625,6 +8164,7 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xB5502747AABDCa21E832951b4caaF739dA33f450",
+   "relatedContracts": [],
    "slug": "kuma-protocol",
    "sprints": [
     27
@@ -7674,6 +8214,10 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202",
+   "relatedContracts": [
+    "0xe5E8E834086F1a964f9A089eB6Ae11796862e4CE",
+    "0x500180A94cB854e98770872AF4E4BB1dD67Af559"
+   ],
    "slug": "kyberswap-classic",
    "sprints": [
     28
@@ -7723,6 +8267,11 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x707D622cdA4b5459e7DcEe8Ba8E429F154f96A27",
+   "relatedContracts": [
+    "0xB09F761Cb13baCa8eC087Ac476647361b6314F98",
+    "0x6C77c47FB8168E22976C3B0338CB1769c952249f",
+    "0x6D46e28aB34622d9A39d0F306a37a8dC270951aF"
+   ],
    "slug": "lagoon",
    "sprints": [
     29
@@ -7770,13 +8319,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x08A1C30BBB26425c1031ee9E43FA0B9960742539",
+   "relatedContracts": [],
    "slug": "landx-finance",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "landx-finance-control-plane",
@@ -7817,6 +8367,19 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x1a44076050125825900e736c501f859c50fE728c",
+   "relatedContracts": [
+    "0xBe010A7e3686FdF65E93344ab664D065A0B02478",
+    "0xa0392d116D71ED3b75086194aBa6De3CD1e39B7E",
+    "0x380275805876Ff19055EA900CDb2B46a94ecF20D",
+    "0x589dEDbD617e0CBcB916A9223F4d1300c294236b",
+    "0xa4fE5A5B9A846458a70Cd0748228aED3bF65c2cd",
+    "0xa59BA433ac34D2927232918Ef5B2eaAfcF130BA5",
+    "0xc70AB6f32772f59fBfc23889Caf4Ba3376C84bAf",
+    "0x554833698Ae0FB22ECC90B01222903fD62CA4B47",
+    "0x9e059a54699a285714207b43B055483E78FAac25",
+    "0xa7b5189bcA84Cd304D8553977c7C614329750d99",
+    "0xcd37CA043f8479064e10635020c65FfC005d36f6"
+   ],
    "slug": "layerzero-v2",
    "sprints": [
     25
@@ -7890,13 +8453,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xd53B68fB4eb907c3c1E348CD7d7bEDE34f763805",
+   "relatedContracts": [],
    "slug": "lazy",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "lazy-control-plane",
@@ -7935,13 +8499,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x482dF7483a52496F4C65AB499966dfcdf4DDFDbc",
+   "relatedContracts": [],
    "slug": "ledgity-yield",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "ledgity-yield-control-plane",
@@ -7980,13 +8545,16 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xa0BeB0A8C765482c128a2986c063AF5C3171ff2F",
+   "relatedContracts": [
+    "0x17C61f4a7f41b96eb9c0D8805255b8411387c63b"
+   ],
    "slug": "legion",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "legion-control-plane",
@@ -8025,13 +8593,16 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xB620Be8a1949AA9532e6a3510132864EF9Bc3F82",
+   "relatedContracts": [
+    "0xEf9423D140C8009597d1185b4b6d5302df21ca0f"
+   ],
    "slug": "lendflare",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "lendflare-control-plane",
@@ -8048,6 +8619,11 @@
    "url": "https://pacta.wtf/protocols/lendflare/"
   },
   {
+   "aliasAddresses": [
+    "0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84",
+    "0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0",
+    "0x5A98FcBEA516Cf06857215779Fd812CA3beF1B32"
+   ],
    "badge": {
     "label": "Aligned · Base EAS",
     "live": "https://pacta-x402.pacta.workers.dev/v1/badges/lido-steth-dual-governance.svg",
@@ -8073,6 +8649,16 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xCE0425301C85c5Ea2A0873A2dEe44d78E02D2316",
+   "relatedContracts": [
+    "0xC1db28B3301331277e307FDCfF8DE28242A4486E",
+    "0xFFe21561251c49AdccFad065C94Fb4931dF49081",
+    "0x8772E3a2D86B9347A2688f9bc1808A6d8917760C",
+    "0x237Cddf3aA765260cf6b60E064065Da7c3Aa1559",
+    "0x3554630ec64e7756007dF4137abf7c5881C533D0",
+    "0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84",
+    "0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0",
+    "0x5A98FcBEA516Cf06857215779Fd812CA3beF1B32"
+   ],
    "slug": "lido-steth-dual-governance",
    "sprints": [
     10,
@@ -8147,13 +8733,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x232CE3bd40fCd6f80f3d55A522d03f25Df784Ee2",
+   "relatedContracts": [],
    "slug": "lighter-bridge",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "lighter-bridge-control-plane",
@@ -8194,6 +8781,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x8c1BEd5b9a0928467c9B1341Da1D7BD5e10b6549",
+   "relatedContracts": [
+    "0x3A5b4db174a3CC17d8cE40C5B04272737195151b",
+    "0x8EE3fC0Bcd7B57429203751C5bE5fdf1AB8409f3",
+    "0xd745A68c705F5aa75DFf528540678288ed2aD9eE",
+    "0xE3208Aa9d1186c1D1C8A5b76E794b2B68E6cb3a5",
+    "0xDE55C9dc78f985fE1502484Cb98EBfAB66A56B62",
+    "0x0056f9ed62dAa4dc3F972340C92326AcCddd1a9D"
+   ],
    "slug": "liquid-collective-lseth",
    "sprints": [
     19
@@ -8256,6 +8851,11 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xA39739EF8b0231DbFA0DcdA07d7e29faAbCf4bb2",
+   "relatedContracts": [
+    "0x24179CD81c9e782A4096035f7eC97fB8B783e007",
+    "0x66017D22b0f8556afDd19FC67041899Eb65a21bb",
+    "0x5f98805A4E8be255a32880FDeC7F6728C6568bA0"
+   ],
    "slug": "liquity-v1-lusd",
    "sprints": [
     22
@@ -8330,6 +8930,10 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x6440f144b7e50D6a8439336510312d2F54beB01D",
+   "relatedContracts": [
+    "0x807DEf5E7d057DF05C796F4bc75C3Fe82Bd6EeE1",
+    "0xf949982B91C8c61e952B3bA942cbbfaef5386684"
+   ],
    "slug": "liquity-v2-bold",
    "sprints": [
     6
@@ -8380,6 +8984,9 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xf820fB4680712CD7263a0D3D024D5b5aEA82Fd70",
+   "relatedContracts": [
+    "0xD7C983093065E0169e955c44ab8370110231D3cf"
+   ],
    "slug": "lista-lending",
    "sprints": [
     32
@@ -8430,6 +9037,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x055E84e7FE8955E2781010B866f10Ef6E1E77e59",
+   "relatedContracts": [
+    "0x8236a87084f8B84306f72007F36F2618A5634494",
+    "0xbae061C73876952aa2C5e483B74DfA785425f879",
+    "0xBf4202c8a0d852D432266dfE112ED624a1a36754",
+    "0x1629AE77cC70DaAc95Ec479caAEA23ECE77c67c5",
+    "0x251a604E8E8f6906d60f8dedC5aAeb8CD38F4892",
+    "0x87bde523e05Fee2C557d6F592F7EB686C69189Ab"
+   ],
    "slug": "lombard-lbtc",
    "sprints": [
     11,
@@ -8492,6 +9107,11 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xB9D7DdDca9a4AC480991865EfEf82E01273F79C3",
+   "relatedContracts": [
+    "0x57619FE9C539f890b19c61812226F9703ce37137",
+    "0xFEB4acf3df3cDEA7399794D0869ef76A6EfAff52",
+    "0xa8384862219188a8f03c144953Cf21fc124029Ee"
+   ],
    "slug": "lusd-chickenbonds",
    "sprints": [
     34
@@ -8541,6 +9161,12 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x866A2BF4E572CbcF37D5071A7a58503Bfb36be1b",
+   "relatedContracts": [
+    "0xf7f9638cb444D65e5A40bF5ff98ebE4ff319F04E",
+    "0xB024aC5a7c6bC92fbACc8C3387E628a07e1Da016",
+    "0x886d405949F709bC3f4451491bDd07ff51Cdf90A",
+    "0xa0DAFaEEA4A1d44534e1b9227e19CAE6358b80FE"
+   ],
    "slug": "m0-protocol-m",
    "sprints": [
     17
@@ -8604,6 +9230,11 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x0fCEfa3f1047F35521A49cD8B06faBd588665d7F",
+   "relatedContracts": [
+    "0x62244C74e1d09b3D86EF7342d354b5D7770bDE10",
+    "0x8d28A69328561eF9F171c58996fEcB9F494e070c",
+    "0xEb78836D3aa3A0518A96fd7C9c549d0FFB7D6dA9"
+   ],
    "slug": "makina",
    "sprints": [
     30
@@ -8653,6 +9284,11 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xc26016f1166bE7b6c5611AAB104122E0f6c2aCE2",
+   "relatedContracts": [
+    "0xd5F7838F5C461fefF7FE49ea5ebaF7728bB0ADfa",
+    "0xe3cBd06D7dadB3F4e6557bAb7EdD924CD1489E8f",
+    "0x4e59e778a0fb77fBb305637435C62FaeD9aED40f"
+   ],
    "slug": "mantle-liquid-staking-meth-cmeth",
    "sprints": [
     10
@@ -8703,6 +9339,12 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xBe10aDcE8B6E3E02Db384E7FaDA5395DD113D8b3",
+   "relatedContracts": [
+    "0xd6d4Bcde6c816F17889f1Dd3000aF0261B03a196",
+    "0x804a6F5F667170F545Bf14e5DDB48C70B788390C",
+    "0x2eFFf88747EB5a3FF00d4d8d0f0800E306C0426b",
+    "0x80ac24aA929eaF5013f6436cdA2a7ba190f5Cc0b"
+   ],
    "slug": "maple-finance-v2-syrup",
    "sprints": [
     6
@@ -8754,6 +9396,9 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x38ca50c6E3391A5bf73c2504bd9Cd9c0b9D89053",
+   "relatedContracts": [
+    "0x4e352cF164E64ADCBad318C3a1e222E9EBa4Ce42"
+   ],
    "slug": "mcdex",
    "sprints": [
     28
@@ -8803,6 +9448,11 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xe5abcc40196174Ae0d12153dE286F0D8E401769d",
+   "relatedContracts": [
+    "0x6a37725ca7f4CE81c004c955f7280d5C704a249e",
+    "0x014e6DA8F283C4aF65B2AA0f201438680A004452",
+    "0x0Dd73341d6158a72b4D224541f1094188f57076E"
+   ],
    "slug": "mellow-protocol-lido-earn",
    "sprints": [
     4
@@ -8853,6 +9503,13 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x806F870ee04A2CC8bf2aD053BAa5ed9999A1f182",
+   "relatedContracts": [
+    "0xD06f6a56c5f599cB375B616DF306f32B7F6f4A0E",
+    "0xD3dB79D2D00A6B82531D8Ccf65C376d9eE9513aC",
+    "0x48AFbBd342F64EF8a9Ab1C143719b63C2AD81710",
+    "0xdF261F967E87B2aa44e18a22f4aCE5d7f74f03Cc",
+    "0x24D9664Ba8384D94499d6698ab285b69E879D971"
+   ],
    "slug": "meta-pool-eth",
    "sprints": [
     30
@@ -8902,6 +9559,12 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x78Fc2c2eD1A4cDb5402365934aE5648aDAd094d0",
+   "relatedContracts": [
+    "0xE86399fE6d7007FdEcb08A2ee1434Ee677a04433",
+    "0x0000000000000000000000000000000000000000",
+    "0x95EeF579155cd2C5510F312c8fA39208c3Be01a8",
+    "0x2F80ba89362f86a9acC71BFfE5EcF4997F52BDd4"
+   ],
    "slug": "metamorpho-re7-weth-vs-re7-usdt",
    "sprints": [
     5
@@ -8951,13 +9614,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x9E32b13ce7f2E80A01932B42553652E053D6ed8e",
+   "relatedContracts": [],
    "slug": "metis-bridge",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "metis-bridge-control-plane",
@@ -8998,6 +9662,10 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x2a53833cc95548cf52c7b159110e22D3a9018f32",
+   "relatedContracts": [
+    "0x032a22958EE9277eCce675E04e8302B85224a1B0",
+    "0xa082C768B1C40f5e980b75959D85cF245AFF0FAE"
+   ],
    "slug": "metric-v1",
    "sprints": [
     32
@@ -9045,13 +9713,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x2Ebd53d035150f328bd754D6DC66B99B0eDB89aa",
+   "relatedContracts": [],
    "slug": "metronome-synth",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "metronome-synth-control-plane",
@@ -9090,13 +9759,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x6D961c9DCF1AD73566822BA4B087892e3839B849",
+   "relatedContracts": [],
    "slug": "monolith-market",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "monolith-market-control-plane",
@@ -9137,6 +9807,13 @@
     "chain": "base"
    },
    "primaryContract": "0xfBb21d0380beE3312B33c4353c8936a0F13EF26C",
+   "relatedContracts": [
+    "0x5B710010586C1b728B047c3E42473c700eeA4026",
+    "0x446342AF4F3bCD374276891C6bb3411bf2F8779E",
+    "0x08eDEbFFaE68970DCf751baa826182b3a4aCFC05",
+    "0x8b621804a7637b781e2BbD58e256a591F2dF7d51",
+    "0x8769B70ac7c93AF0e75de0D69877709B66d75838"
+   ],
    "slug": "moonwell-lending-base",
    "sprints": [
     18
@@ -9196,13 +9873,17 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xDc71366EFFA760804DCFC3EDF87fa2A6f1623304",
+   "relatedContracts": [
+    "0x0cC37d5239F9027A1269f53D83c73084D538f3a9",
+    "0x542675E90E269F20ecbb9e0095d4751ac155B530"
+   ],
    "slug": "morph-bridge",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "morph-bridge-control-plane",
@@ -9243,6 +9924,10 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x1FE04BC15Cf2c5A2d41a0b3a96725596676eBa1E",
+   "relatedContracts": [
+    "0x47176B2Af9885dC6C4575d4eFd63895f7Aaa4790",
+    "0xdB10dAEF167eA2233Ba6811457dD24D676FbD670"
+   ],
    "slug": "morpheusai",
    "sprints": [
     32
@@ -9268,6 +9953,9 @@
    "url": "https://pacta.wtf/protocols/morpheusai/"
   },
   {
+   "aliasAddresses": [
+    "0x58D97B57BB95320F9a05dC918Aef65434969c2B2"
+   ],
    "badge": {
     "label": "Aligned · Base EAS",
     "live": "https://pacta-x402.pacta.workers.dev/v1/badges/morpho-blue-core.svg",
@@ -9292,6 +9980,10 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb",
+   "relatedContracts": [
+    "0xcBa28b38103307Ec8dA98377ffF9816C164f9AFa",
+    "0x58D97B57BB95320F9a05dC918Aef65434969c2B2"
+   ],
    "slug": "morpho-blue-core",
    "sprints": [
     3
@@ -9339,13 +10031,14 @@
     "chain": "base"
    },
    "primaryContract": "0x1bE87D273d47C3832Ab7853812E9A995A4DE9EEA",
+   "relatedContracts": [],
    "slug": "mortgagefi",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x58e5d7f07aaf27ccbf361f122a24120a821b455bb9dae30f4478a7da1381f3e8",
-     "blockNumber": 59847352,
+     "blockHash": "0xaa2914dfd5a622683bab79cf60de172e5d03b3c572aa19dc567689173d59bbd3",
+     "blockNumber": 59903224,
      "chain": "base",
      "classification": "rpc_observed",
      "id": "mortgagefi-control-plane",
@@ -9384,13 +10077,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x9Fb9a33956351cf4fa040f65A13b835A3C8764E3",
+   "relatedContracts": [],
    "slug": "multichain",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "multichain-control-plane",
@@ -9429,13 +10123,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x0100000002935Dce071f4AFA607b961575672b4C",
+   "relatedContracts": [],
    "slug": "nami",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "nami-control-plane",
@@ -9474,13 +10169,16 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xe3D41d19564922C9952f692C5Dd0563030f5f2EF",
+   "relatedContracts": [
+    "0x83fc28e6962E41e38F7854308eFF827E3f6b906B"
+   ],
    "slug": "native-credit-pool",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "native-credit-pool-control-plane",
@@ -9521,6 +10219,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xcafea6063d4Ec6b045d9676e58897C1f0882Ca32",
+   "relatedContracts": [
+    "0xcafea466bF6dEFe480cdd54056C020c63b7DA830",
+    "0xcafea2c575550512582090AA06d0a069E7236b9e",
+    "0x6FE2C2643cb5064951fB7DD87FbCE4777FB146E3",
+    "0x01BFd82675DBCc7762C84019cA518e701C0cD07e",
+    "0x4A5C681dDC32acC6ccA51ac17e9d461e6be87900",
+    "0x51ad1265C8702c9e96Ea61Fe4088C2e22eD4418e"
+   ],
    "slug": "nexus-mutual",
    "sprints": [
     18
@@ -9570,13 +10276,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x87d73E916D7057945c9BcD8cdd94e42A6F47f776",
+   "relatedContracts": [],
    "slug": "nftx",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "nftx-control-plane",
@@ -9615,13 +10322,16 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xd7C049CD4ba216679ecC04Eb2767cC5E39812121",
+   "relatedContracts": [
+    "0x857BF02B1f5fD85E064e6726658eA1864a14d948"
+   ],
    "slug": "nodedao",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "nodedao-control-plane",
@@ -9662,6 +10372,12 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xE5e412C212B4FBbF550A94e7BD5e83dB0B315A7F",
+   "relatedContracts": [
+    "0xdA67B4284609d2d48e5d10cfAc411572727dc1eD",
+    "0x79FD7FE2a8EbcAE47798321b2AC97107dF3de229",
+    "0x55f39512cb43111A13E8440ee3e3602e72628239",
+    "0x1ea169EcCcf7714E7ba04900e1a3357cCA77327f"
+   ],
    "slug": "noon",
    "sprints": [
     31
@@ -9709,13 +10425,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x52E4d8989fa8b3E1C06696e7b16DEf5d7707A0d1",
+   "relatedContracts": [],
    "slug": "nucleus",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "nucleus-control-plane",
@@ -9756,6 +10473,10 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xDEa75A312b2F99b5A7558c4636897b39C195E241",
+   "relatedContracts": [
+    "0x50AE1e4A612A4623b747aEeFb30aFBA82804e12c",
+    "0x027207E16E2BB920dc89AA9FeF7826e23091588a"
+   ],
    "slug": "nuva",
    "sprints": [
     30
@@ -9805,6 +10526,11 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xCdBf527842Ab04Da548d33EB09d03DB831381Fb0",
+   "relatedContracts": [
+    "0x02b5D1Fd67246c0513223D320901474aA20Bf973",
+    "0x7E90E03654732ABedF89Faf87f05BcD03ACEeFdC",
+    "0x42D201CC4d9C1e31c032397F54caCE2f48C1FA72"
+   ],
    "slug": "obol-network",
    "sprints": [
     24
@@ -9892,6 +10618,11 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x98Db502215Da1ad9F626D4a0090A8A2f4971003c",
+   "relatedContracts": [
+    "0x1B19C19393e2d034D8Ff31ff34c81252FcBbee92",
+    "0x95Af143a021DF745bc78e845b54591C53a8B3A51",
+    "0x336505EC1BcC1A020EeDe459f57581725D23465A"
+   ],
    "slug": "ondo-finance-ousg-flux-finance",
    "sprints": [
     10
@@ -9941,13 +10672,16 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x54e44DbB92dBA848ACe27F44c0CB4268981eF1CC",
+   "relatedContracts": [
+    "0x3788f64A0805f3eC777Ce26080BB2EeeB29C1199"
+   ],
    "slug": "opengdp-shared-security",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "opengdp-shared-security-control-plane",
@@ -9988,6 +10722,7 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xABD4C63d2616A5201454168269031355f4764337",
+   "relatedContracts": [],
    "slug": "orderly-bridge",
    "sprints": [
     33
@@ -10035,13 +10770,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x07c5500359161b81eb0DfFF83097d5025D3cF5A2",
+   "relatedContracts": [],
    "slug": "origami-finance",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "origami-finance-control-plane",
@@ -10082,6 +10818,11 @@
     "chain": "base"
    },
    "primaryContract": "0x92A19381444A001d62cE67BaFF066fA1111d7202",
+   "relatedContracts": [
+    "0xDBFeFD2e8460a6Ee4955A68582F85708BAEA60A3",
+    "0xCcd483cE093682D7D9a41e645EEb710AFaa88249",
+    "0xf817cb3092179083c48c014688D98B72fB61464f"
+   ],
    "slug": "origin-superoeth-base",
    "sprints": [
     31
@@ -10131,13 +10872,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x0b8de441B26E36f461b2748919ed71f50593A67b",
+   "relatedContracts": [],
    "slug": "outcome-finance",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "outcome-finance-control-plane",
@@ -10176,13 +10918,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x90cE5720c17587D28E4Af120ae2d313B3BAD1722",
+   "relatedContracts": [],
    "slug": "overtime",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "overtime-control-plane",
@@ -10221,13 +10964,16 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865",
+   "relatedContracts": [
+    "0x21835332cBDf1b3530fAE9f6Cd66FEB9477dFC02"
+   ],
    "slug": "pancakeswap-amm-v3",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "pancakeswap-amm-v3-control-plane",
@@ -10268,6 +11014,10 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x000000000000ffE5eFdB5AE76b9200263C58b4c0",
+   "relatedContracts": [
+    "0x000000000000f69c150aFEa8Cc4f8fC4462AdBB4",
+    "0x22BD5EC2Ee6685C373781420E12c1426dd7776F2"
+   ],
    "slug": "panoptic-v2",
    "sprints": [
     30
@@ -10315,13 +11065,16 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xb32E10022FFBeDfE10bc818a1C7e67D9d87e0fa7",
+   "relatedContracts": [
+    "0x515244B743dde07925d2D9e6478930528AE5e3Fc"
+   ],
    "slug": "paradex-bridge",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "paradex-bridge-control-plane",
@@ -10362,6 +11115,7 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x6c0aeceeDc55c9d55d8B99216a670D85330941c3",
+   "relatedContracts": [],
    "slug": "parallel-protocol-v3",
    "sprints": [
     33
@@ -10411,6 +11165,13 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x6c3ea9036406852006290770BEdFcAbA0e23A0e8",
+   "relatedContracts": [
+    "0x3Af3e85f4f97De7AD0f000B724Fb77fE5ffc024B",
+    "0xC94BcF6e1d8B3558E3B62e743630D50497E3851C",
+    "0x8C35CaA5FD5bDC64b6B11344aD57594A3676256a",
+    "0x31d9bDEa6F104606C954f8FE6ba614F1BD347Ec3",
+    "0xFaB5891ED867a1195303251912013b92c4fc3a1D"
+   ],
    "slug": "paypal-usd-pyusd",
    "sprints": [
     23
@@ -10484,6 +11245,7 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x02f92800F57BCD74066F5709F1Daa1A4302Df875",
+   "relatedContracts": [],
    "slug": "peapods-finance",
    "sprints": [
     33
@@ -10509,6 +11271,11 @@
    "url": "https://pacta.wtf/protocols/peapods-finance/"
   },
   {
+   "aliasAddresses": [
+    "0x888888888889758F76e7103c6CbF23ABbF58F946",
+    "0x808507121B80c02388fAd14726482e061B8da827",
+    "0x4f30A9D41B80ecC5B94306AB4364951AE3170210"
+   ],
    "badge": {
     "label": "Aligned · Base EAS",
     "live": "https://pacta-x402.pacta.workers.dev/v1/badges/pendle-finance-v2.svg",
@@ -10533,6 +11300,15 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x6d247b1c044fA1E22e6B04fA9F71Baf99EB29A9f",
+   "relatedContracts": [
+    "0x8270400d528c34e1596EF367eeDEc99080A1b592",
+    "0x2aD631F72fB16d91c4953A7f4260A97C2fE2f31e",
+    "0x8119EC16F0573B7dAc7C0CB94EB504FB32456ee1",
+    "0xA28c08f165116587D4F3E708743B4dEe155c5E64",
+    "0x888888888889758F76e7103c6CbF23ABbF58F946",
+    "0x808507121B80c02388fAd14726482e061B8da827",
+    "0x4f30A9D41B80ecC5B94306AB4364951AE3170210"
+   ],
    "slug": "pendle-finance-v2",
    "sprints": [
     19
@@ -10595,6 +11371,11 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xbD17B1ce622d73bD438b9E658acA5996dc394b0d",
+   "relatedContracts": [
+    "0x429881672B9AE42b8EbA0E26cD9C73711b891Ca5",
+    "0x9d074E37d408542FD38be78848e8814AFB38db17",
+    "0x0040E05CE9A5fc9C0aBF89889f7b60c2fC278416"
+   ],
    "slug": "pickle",
    "sprints": [
     32
@@ -10644,6 +11425,7 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x2E4039E8E31475d65DC00293C366FDBfBBC02DC3",
+   "relatedContracts": [],
    "slug": "piku-finance",
    "sprints": [
     34
@@ -10691,13 +11473,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xc55126051B22eBb829D00368f4B12Bde432de5Da",
+   "relatedContracts": [],
    "slug": "pirex",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "pirex-control-plane",
@@ -10739,6 +11522,11 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xFa7D2a996aC6350f4b56C043112Da0366a59b74c",
+   "relatedContracts": [
+    "0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf",
+    "0x8484Ef722627bf18ca5Ae6BcF031c23E6e922B30",
+    "0xCaf0aa768A3AE1297DF20072419Db8Bb8b5C8cEf"
+   ],
    "slug": "polygon-bridge",
    "sprints": [
     26,
@@ -10813,6 +11601,7 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x0cEC1A9154Ff802e7934Fc916Ed7Ca50bDE6844e",
+   "relatedContracts": [],
    "slug": "pooltogether-v3",
    "sprints": [
     33
@@ -10862,6 +11651,9 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x0Eb42804BF897662aF851370eaeAdcDBEC1b97ed",
+   "relatedContracts": [
+    "0x5F89cD5c3610c2AD870B1b33126d209fECdb69c7"
+   ],
    "slug": "privacy-pools-v1",
    "sprints": [
     27
@@ -10911,6 +11703,7 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xD9A442856C234a39a81a089C06451EBAa4306a72",
+   "relatedContracts": [],
    "slug": "puffer-finance-pufeth",
    "sprints": [
     20
@@ -10983,13 +11776,16 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x000000000000A6fA31F5fC51c1640aAc76866750",
+   "relatedContracts": [
+    "0x83Ea85356358411Ce320e1909Cc75DBd216d6182"
+   ],
    "slug": "punks-terminal",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "punks-terminal-control-plane",
@@ -11028,13 +11824,14 @@
     "chain": "base"
    },
    "primaryContract": "0xC5396866754799B9720125B104AE01d935Ab9C7b",
+   "relatedContracts": [],
    "slug": "quickswap-v4",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x58e5d7f07aaf27ccbf361f122a24120a821b455bb9dae30f4478a7da1381f3e8",
-     "blockNumber": 59847352,
+     "blockHash": "0xaa2914dfd5a622683bab79cf60de172e5d03b3c572aa19dc567689173d59bbd3",
+     "blockNumber": 59903224,
      "chain": "base",
      "classification": "rpc_observed",
      "id": "quickswap-v4-control-plane",
@@ -11075,6 +11872,9 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xFA7093CDD9EE6932B4eb2c9e1cde7CE00B1FA4b9",
+   "relatedContracts": [
+    "0xE8A8B458BcD1Ececc6b6b58F80929b29cCecFF40"
+   ],
    "slug": "railgun",
    "sprints": [
     25
@@ -11161,6 +11961,10 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x5086bf358635B81D8C47C66d1C8b9E567Db70c72",
+   "relatedContracts": [
+    "0xdDC0f880ff6e4e22E4B74632fBb43Ce4DF6cCC5a",
+    "0x8eec10616802Ef639CA55c98ac856553fAdEfBaD"
+   ],
    "slug": "re",
    "sprints": [
     21
@@ -11234,13 +12038,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x6243d8CEA23066d098a15582d81a598b4e8391F4",
+   "relatedContracts": [],
    "slug": "reflexer",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "reflexer-control-plane",
@@ -11282,6 +12087,12 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xf2F305D14DCD8aaef887E0428B3c9534795D0d60",
+   "relatedContracts": [
+    "0xD1e6626310fD54Eceb5b9a51dA2eC329D6D4B68A",
+    "0xbf5495Efe5DB9ce00f80364C8B423567e58d2110",
+    "0x10586b9b7Ff0F842913a57539f8167CE143C3011",
+    "0x24Aa958C90b7973DC16c63C9992f69E1767377Ae"
+   ],
    "slug": "renzo-protocol-ezeth",
    "sprints": [
     8,
@@ -11345,6 +12156,7 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xA0d69E286B938e21CBf7E51D71F6A4c8918f482F",
+   "relatedContracts": [],
    "slug": "reserve-protocol-rtoken",
    "sprints": [
     23
@@ -11420,6 +12232,12 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x66a1E37c9b0eAddca17d3662D6c05F4DECf3e110",
+   "relatedContracts": [
+    "0xD6889F307BE1b83Bb355d5DA7d4478FB0d2Af547",
+    "0xc7AB90c2Ea9271EFB31f5fA2843Eeb4B331eaFA0",
+    "0x4956b52aE2fF65D74CA2d61207523288e4528f96",
+    "0x15CAd41e6BdCaDc7121ce65080489C92CF6de398"
+   ],
    "slug": "resolv-usr-rlp",
    "sprints": [
     11,
@@ -11485,6 +12303,10 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xc07e000044F95655c11fda4cD37F70A94d7e0a7d",
+   "relatedContracts": [
+    "0x74C85620F1459862834A947dB9441911BCEBF066",
+    "0x4CF97a55d58Aad14C493A46C8151a0BFffb10403"
+   ],
    "slug": "resupply",
    "sprints": [
     22
@@ -11569,13 +12391,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x6123B0049F904d730dB3C36a31167D9d4121fA6B",
+   "relatedContracts": [],
    "slug": "ribbon",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "ribbon-control-plane",
@@ -11614,13 +12437,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x7D86394139bf1122E82FDF45Bb4e3b038A4464DD",
+   "relatedContracts": [],
    "slug": "ring-few",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "ring-few-control-plane",
@@ -11659,13 +12483,16 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x953972ea0C1703c58F09FB6fD2477Fdcf0FEe074",
+   "relatedContracts": [
+    "0xd0Ac2Cd802604702DF874Bc45AEE88E8884B896D"
+   ],
    "slug": "rockawayx",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "rockawayx-control-plane",
@@ -11706,6 +12533,9 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xdA1AB39e62E0A5297AF44C7064E501b0613f0D01",
+   "relatedContracts": [
+    "0x6C565aF34f15dE064b56afEdF7B0F59C15bB20FE"
+   ],
    "slug": "rocket-pool-reth",
    "sprints": [
     19
@@ -11778,13 +12608,16 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x7cC6fB28eC7b5e7afC3cB3986141797ffc27253C",
+   "relatedContracts": [
+    "0x34DB2f4215e55ec8e2c3dE0a826935EBF158be77"
+   ],
    "slug": "royco-v2",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "royco-v2-control-plane",
@@ -11825,6 +12658,10 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x41675C099F32341bf84BFc5382aF534df5C7461a",
+   "relatedContracts": [
+    "0xAeE017052DF6Ac002647229D58B786E380B9721A",
+    "0x3050620423f4dB43E1904815E898C466526387b8"
+   ],
    "slug": "safe-singleton-core",
    "sprints": [
     25
@@ -11908,13 +12745,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xb753428af26E81097e7fD17f40c88aaA3E04902c",
+   "relatedContracts": [],
    "slug": "saffron-vaults",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "saffron-vaults-control-plane",
@@ -11953,13 +12791,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x0000f07d2B5F1Ddf3244b8780F972f306EFd2888",
+   "relatedContracts": [],
    "slug": "sato",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "sato-control-plane",
@@ -11998,13 +12837,17 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x23238f20b894f29041f48D88eE91131C395Aaa71",
+   "relatedContracts": [
+    "0x496a4A33b6181F4536203488d9a05AC1429E702c",
+    "0xfD5782E3BFF366601da3973aE30C583dE4F08A67"
+   ],
    "slug": "saturn",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "saturn-control-plane",
@@ -12045,6 +12888,9 @@
     "chain": "base"
    },
    "primaryContract": "0xA1b5f2cc9B407177CD8a4ACF1699fa0b99955A22",
+   "relatedContracts": [
+    "0x639d2dD24304aC2e6A691d8c1cFf4a2665925fee"
+   ],
    "slug": "seamless-protocol-base",
    "sprints": [
     35
@@ -12094,6 +12940,7 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x4cC8D45644eCCD8cA77DBF3A8E3eE2dBf4596983",
+   "relatedContracts": [],
    "slug": "shift-defi",
    "sprints": [
     30
@@ -12141,13 +12988,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xe1b1252652A2FF0CC3A4214eE73d9FeD1FEa5b4f",
+   "relatedContracts": [],
    "slug": "sierra-protocol",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "sierra-protocol-control-plane",
@@ -12186,13 +13034,16 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x656cB8C6d154Aad29d8771384089be5B5141f01a",
+   "relatedContracts": [
+    "0x271df5517a4DaacB7caB988Aa64D23dEbda4c498"
+   ],
    "slug": "smardex-usdn",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "smardex-usdn-control-plane",
@@ -12233,6 +13084,9 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x57B96D4aF698605563A4653D882635da59Bf11AF",
+   "relatedContracts": [
+    "0x5a8cDDa6CA37B284b32eF8D513Ef71Ddac553270"
+   ],
    "slug": "sofa-org",
    "sprints": [
     34
@@ -12282,6 +13136,12 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x7A56E1C57C7475CCf742a1832B028F0456652F97",
+   "relatedContracts": [
+    "0x0c2Bc4d2698820e12E6eBe863E7b9E2650CD5b7D",
+    "0xFc335FdA7E6a33329A83F4d5F578eC7d8A43DC4A",
+    "0xA4b6cf2BAaA235ab7Fe10EADB84b82460165B38F",
+    "0x443628281E4f3E5b5A5D029B9a0D13900ae41578"
+   ],
    "slug": "solv-protocol-solvbtc",
    "sprints": [
     17
@@ -12321,44 +13181,52 @@
   },
   {
    "badge": {
-    "label": "RPC-Observed",
+    "label": "Aligned · Base EAS",
     "live": "https://pacta-x402.pacta.workers.dev/v1/badges/sommelier.svg",
     "svg": "https://pacta.wtf/badges/sommelier.svg",
-    "tier": "rpc_observed"
+    "tier": "aligned"
    },
-   "baseEasUids": [],
+   "baseEasUids": [
+    "0xe16008e972c9b16353100f32e3a2d4ae61152f26d34e600ca205723c77602edf"
+   ],
    "category": "Automated vaults seeking yields while mitigating risk (Ethereum)",
    "chain": "ethereum",
    "chainId": 1,
-   "classification": "rpc_observed",
-   "controllerAddress": null,
-   "controllerKind": null,
-   "documentationComparison": "not_assessed",
-   "easAttested": false,
-   "evidenceBasis": "rpc_observed",
+   "classification": "aligned_baseline",
+   "controllerAddress": "0xaDa78a5E01325B91Bc7879a63c309F7D54d42950",
+   "controllerKind": "timelock",
+   "documentationComparison": "compared",
+   "easAttested": true,
+   "evidenceBasis": "eas_attested",
    "name": "Sommelier",
    "preflightArgs": {
-    "address": "0xa670d7237398238DE01267472C6f13e5B8010FD1",
+    "address": "0x2Cbd27E034FEE53f79b607430dA7771B22050741",
     "chain": "ethereum"
    },
-   "primaryContract": "0xa670d7237398238DE01267472C6f13e5B8010FD1",
+   "primaryContract": "0x2Cbd27E034FEE53f79b607430dA7771B22050741",
+   "relatedContracts": [
+    "0x138a6d8c49428D4c71dD7596571fbd4699C7D3DA",
+    "0x7340D1FeCD4B64A4ac34f826B21c945d44d7407F"
+   ],
    "slug": "sommelier",
-   "sprints": [],
+   "sprints": [
+    36
+   ],
    "surfaces": [
     {
-     "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "baseEasUid": "0xe16008e972c9b16353100f32e3a2d4ae61152f26d34e600ca205723c77602edf",
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
-     "classification": "rpc_observed",
-     "id": "sommelier-control-plane",
-     "sprint": null,
-     "surface": "somm (CosmosERC20) · Non-Proxy Bytecode & Controller",
-     "targetContract": "0xa670d7237398238DE01267472C6f13e5B8010FD1",
-     "targetLabel": "somm (CosmosERC20)"
+     "classification": "aligned_baseline",
+     "id": "sommelier-registry-pricerouter-multisig-timelock-s36",
+     "sprint": 36,
+     "surface": "Registry / PriceRouter: Operations Multisig via a 3-day timelock",
+     "targetContract": "0x2Cbd27E034FEE53f79b607430dA7771B22050741",
+     "targetLabel": "Sommelier Registry (Cellars V2)"
     }
    ],
-   "targetLabel": "somm (CosmosERC20)",
+   "targetLabel": "Sommelier Registry (Cellars V2)",
    "tokens": [
     "somm"
    ],
@@ -12389,6 +13257,12 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xa1E2481a9CD0Cb0447EeB1cbc26F1b3fff3bec20",
+   "relatedContracts": [
+    "0xAdE2eF0101278fe11490F2EE2aaD7915a094ADe9",
+    "0x7390251Bf35AA7eA7C196fc4750bd5d6c5918329",
+    "0x9Fe65a5418850015a9D8ad3Ca50d6a0B9769FbE0",
+    "0xB7e8CC3F5FeA12443136f0cc13D81F109B2dEd7f"
+   ],
    "slug": "sonic-gateway",
    "sprints": [
     31
@@ -12438,6 +13312,10 @@
     "chain": "base"
    },
    "primaryContract": "0x624e2e7fDc8903165F64891672267AB0FCB98831",
+   "relatedContracts": [
+    "0x4200000000000000000000000000000000000010",
+    "0x76A0e27618462bDAC7a29104bdcfFf4E6BFCea2D"
+   ],
    "slug": "sosovalue-basis",
    "sprints": [
     33
@@ -12463,6 +13341,13 @@
    "url": "https://pacta.wtf/protocols/sosovalue-basis/"
   },
   {
+   "aliasAddresses": [
+    "0xdC035D45d973E3EC169d2276DDab16f1e407384F",
+    "0xa3931d71877C0E7a3148CB7Eb4463524FEc27fbD",
+    "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+    "0x56072C95FAA701256059aa122697B133aDEd9279",
+    "0xC13e21B648A5Ee794902342038FF3aDAB66BE987"
+   ],
    "badge": {
     "label": "Aligned · Base EAS",
     "live": "https://pacta-x402.pacta.workers.dev/v1/badges/spark-sky.svg",
@@ -12470,7 +13355,8 @@
     "tier": "aligned"
    },
    "baseEasUids": [
-    "0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779"
+    "0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779",
+    "0xe16008e972c9b16353100f32e3a2d4ae61152f26d34e600ca205723c77602edf"
    ],
    "category": "Decentralized Credit & Liquidity",
    "chain": "ethereum",
@@ -12487,9 +13373,21 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xbE286431454714F511008713973d3B053A2d38f3",
+   "relatedContracts": [
+    "0x02C3eA4e34C0cBd694D2adFa2c690EECbC1793eE",
+    "0x3300f198988e4C9C63F75dF86De36421f06af8c4",
+    "0x6ACC02ddd82206a44ff4EC13977E63d1a29C7723",
+    "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+    "0xdC035D45d973E3EC169d2276DDab16f1e407384F",
+    "0xa3931d71877C0E7a3148CB7Eb4463524FEc27fbD",
+    "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+    "0x56072C95FAA701256059aa122697B133aDEd9279",
+    "0xC13e21B648A5Ee794902342038FF3aDAB66BE987"
+   ],
    "slug": "spark-sky",
    "sprints": [
-    7
+    7,
+    36
    ],
    "surfaces": [
     {
@@ -12503,6 +13401,18 @@
      "surface": "Sampled PoolAddressesProvider Owner & GSM Delay",
      "targetContract": "0xbE286431454714F511008713973d3B053A2d38f3",
      "targetLabel": "GSM_PAUSE_PROXY"
+    },
+    {
+     "baseEasUid": "0xe16008e972c9b16353100f32e3a2d4ae61152f26d34e600ca205723c77602edf",
+     "blockHash": "0xaa2914dfd5a622683bab79cf60de172e5d03b3c572aa19dc567689173d59bbd3",
+     "blockNumber": 59903224,
+     "chain": "base",
+     "classification": "aligned_baseline",
+     "id": "spark-susdc-base-uups-as-documented-s36",
+     "sprint": 36,
+     "surface": "Base sUSDC: ERC-1967 UUPS proxy (UsdcVaultL2, upgrades by wards), as documented",
+     "targetContract": "0x3128a0F7f0ea68E7B7c9B00AFa7E41045828e858",
+     "targetLabel": "Spark USDC Vault (sUSDC, Base)"
     }
    ],
    "targetLabel": "GSM_PAUSE_PROXY",
@@ -12541,6 +13451,10 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x16b28223b607B4D90e2eC628fdC1a0AD9Ee1f6B8",
+   "relatedContracts": [
+    "0x47a9B7E7E1bf368D2e0f3053Dde9270DD8E48eEA",
+    "0xf300d5032D7F607f1C5a54BA70b93bAA62172f20"
+   ],
    "slug": "spectra-metavaults",
    "sprints": [
     30
@@ -12588,13 +13502,16 @@
     "chain": "base"
    },
    "primaryContract": "0x16EE7ecAc70d1028E7712751E2Ee6BA808a7dd92",
+   "relatedContracts": [
+    "0x14ad363A292a2d837dFf864556663ec9Fa958Cb6"
+   ],
    "slug": "sport-fun",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x58e5d7f07aaf27ccbf361f122a24120a821b455bb9dae30f4478a7da1381f3e8",
-     "blockNumber": 59847352,
+     "blockHash": "0xaa2914dfd5a622683bab79cf60de172e5d03b3c572aa19dc567689173d59bbd3",
+     "blockNumber": 59903224,
      "chain": "base",
      "classification": "rpc_observed",
      "id": "sport-fun-control-plane",
@@ -12635,6 +13552,9 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xDD9BC35aE942eF0cFa76930954a156B3fF30a4E1",
+   "relatedContracts": [
+    "0xb35096b074fdb9bBac63E3AdaE0Bbde512B2E6b6"
+   ],
    "slug": "ssv-network",
    "sprints": [
     21
@@ -12694,13 +13614,16 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x109D3042a3c682F94107b3818e93b3aDE2A47544",
+   "relatedContracts": [
+    "0xc34DF695167aA2F9571976fFD5e3E0E95A53E470"
+   ],
    "slug": "stablehodl",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "stablehodl-control-plane",
@@ -12717,6 +13640,9 @@
    "url": "https://pacta.wtf/protocols/stablehodl/"
   },
   {
+   "aliasAddresses": [
+    "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b"
+   ],
    "badge": {
     "label": "Parameter Delta",
     "live": "https://pacta-x402.pacta.workers.dev/v1/badges/stader-labs-ethx.svg",
@@ -12741,6 +13667,13 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xAAfb31780e4b9c95Bc920e388f4925A874cd07AF",
+   "relatedContracts": [
+    "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b",
+    "0x67B12264Ca3e0037Fc7E22F2457b42643a04C86e",
+    "0x45B977CeCB9Dfaa17dFcBa88826ef684b8489fF6",
+    "0x4ABEF2263d5A5ED582FC9A9789a41D85b68d69DB",
+    "0xcf5EA1b38380f6aF39068375516Daf40Ed70D299"
+   ],
    "slug": "stader-labs-ethx",
    "sprints": [
     12
@@ -12789,13 +13722,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xef3A930e1FfFFAcd2fc13434aC81bD278B0ecC8d",
+   "relatedContracts": [],
    "slug": "stafi",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "stafi-control-plane",
@@ -12836,6 +13770,9 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xb27afc7844988948FBd6210AeF4E1362bC2d8E6a",
+   "relatedContracts": [
+    "0xB0552b6860CE5C0202976Db056b5e3Cc4f9CC765"
+   ],
    "slug": "stake-dao",
    "sprints": [
     22
@@ -12922,6 +13859,11 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xb72d8F5213b3E52FAf13Aa074b03C4788e78349F",
+   "relatedContracts": [
+    "0xb8b295df2cd735b15BE5Eb419517Aa626fc43cD5",
+    "0x8753C00D1a94D04A01b931830011d882A3F8Cc72",
+    "0xAc12290b097f6893322F5430627e472131fBC1B5"
+   ],
    "slug": "stake-link",
    "sprints": [
     20
@@ -12996,6 +13938,7 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x1D88713b483A8E45cfF0e5CD7c2e15E5Fab4534d",
+   "relatedContracts": [],
    "slug": "stakestone-stone",
    "sprints": [
     34
@@ -13046,6 +13989,12 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x6B5815467da09DaA7DC83Db21c9239d98Bb487b5",
+   "relatedContracts": [
+    "0xf1C9acDc66974dFB6dEcB12aA385b9cD01190E38",
+    "0x0000000000000000000000000000000000000000",
+    "0x2A261e60FB14586B474C208b1B7AC6D0f5000306",
+    "0x287d1e2A8dE183A8bf8f2b09Fa1340fBd766eb59"
+   ],
    "slug": "stakewise-v3-oseth",
    "sprints": [
     12,
@@ -13109,6 +14058,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xc026395860Db2d07ee33e05fE50ed7bD583189C7",
+   "relatedContracts": [
+    "0xBE634B030FEAaB661300667EaF82510a3a025413",
+    "0x6d6620eFa72948C5f68A3C8646d58C00d3f4A980",
+    "0x1041D127b2d4BC700F0F563883bC689502606918",
+    "0xe37f7c80ceD04c4F243C0Fd04A5510D663CB88b5",
+    "0x52B35406CB2FB5e0038EdEcFc129A152a1f74087",
+    "0x65bb797c2B9830d891D87288F029ed8dACc19705"
+   ],
    "slug": "stargate-v2",
    "sprints": [
     18
@@ -13157,13 +14114,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xCa14007Eff0dB1f8135f4C25B34De49AB0d42766",
+   "relatedContracts": [],
    "slug": "starknet-bridge",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "starknet-bridge-control-plane",
@@ -13204,6 +14162,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB",
+   "relatedContracts": [
+    "0xaa0500198B4425DfC4E272FbE42C8E64E21fc03d",
+    "0xbEef047a543E45807105E51A8BBEFCc5950fcfBa",
+    "0xbEEF02e5E13584ab96848af90261f0C8Ee04722a",
+    "0xaeC761545Fd135db6d04D27C92BCB3951668c67F",
+    "0xCcFd0E9CEC732fb839fadDeCc72B6154530bC90f",
+    "0x827e86072B06674a077f592A531dcE4590aDeCdB"
+   ],
    "slug": "steakhouse-financial-ethereum",
    "sprints": [
     24
@@ -13292,6 +14258,9 @@
     "chain": "base"
    },
    "primaryContract": "0xBEEFE94c8aD530842bfE7d8B397938fFc1cb83b2",
+   "relatedContracts": [
+    "0x894d59017Ed0F8dcd8f2B6e89a3C26eF76876D33"
+   ],
    "slug": "steakhouse-prime-usdc-base",
    "sprints": [
     28
@@ -13353,6 +14322,13 @@
     "chain": "base"
    },
    "primaryContract": "0xbeeF010f9cb27031ad51e3333f9aF9C6B1228183",
+   "relatedContracts": [
+    "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+    "0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb",
+    "0x0A0e559bc3b0950a7e448F0d4894db195b9cf8DD",
+    "0x827e86072B06674a077f592A531dcE4590aDeCdB",
+    "0x9e0FdDDa790651E6a05CD2dE69e624B94C04eAf5"
+   ],
    "slug": "steakhouse-usdc-metamorpho-base",
    "sprints": [
     17
@@ -13402,13 +14378,17 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xCEBF1A54A9Ce703FC80967760b5A6cbDb4111099",
+   "relatedContracts": [
+    "0xAc7D3A933c44b4D4bad6D5F0685900482E0d995E",
+    "0x570cE31D1309bb145DD3736B48c7328cc13f7e85"
+   ],
    "slug": "steer-protocol",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "steer-protocol-control-plane",
@@ -13449,6 +14429,7 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x4be3749a0F6557b8fd98F3967e859DbD7C694eF4",
+   "relatedContracts": [],
    "slug": "strata-markets",
    "sprints": [
     28
@@ -13498,6 +14479,9 @@
     "chain": "base"
    },
    "primaryContract": "0x10AC0b33e1C4501CF3ec1cB1AE51ebfdbd2d4698",
+   "relatedContracts": [
+    "0xB5396ef2bF8CA360cEB4166b77AFb2bed20e74d4"
+   ],
    "slug": "superform-v2-base",
    "sprints": [
     32
@@ -13546,13 +14530,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x44B7fBd4D87149eFa5347c451E74B9FD18E89c55",
+   "relatedContracts": [],
    "slug": "supernova-cl",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "supernova-cl-control-plane",
@@ -13593,6 +14578,11 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x43415eB6ff9DB7E26A15b704e7A3eDCe97d31C4e",
+   "relatedContracts": [
+    "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    "0x774AE279c21B6a17a6E2BD5ab5398FF98F398807",
+    "0x14d60E7FDC0D71d8611742720E4C50E7a974020c"
+   ],
    "slug": "superstate-ustb-uscc",
    "sprints": [
     12
@@ -13643,6 +14633,10 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xbACEB8eC6b9355Dfc0269C18bac9d6E2Bdc29C4F",
+   "relatedContracts": [
+    "0xCd03e2e276F6EEdD424d41314437531F665187b9",
+    "0x19B3Eb3Af5D93b77a5619b047De0EED7115A19e7"
+   ],
    "slug": "sushiswap-v3",
    "sprints": [
     35
@@ -13692,6 +14686,15 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xbA829003e6b5dD858fbed3945719939a6DC3073b",
+   "relatedContracts": [
+    "0xf951E335afb289353dc249e82926178EaC7DEd78",
+    "0x25EAf579cA2255fAA5463c635eec28697b5b8846",
+    "0xFAe103DC9cf190eD75350761e95403b7b8aFa6c0",
+    "0xD750B84845f1cAdfEAc63f96Ec74635e949bFd14",
+    "0x20fDF47509C5eFC0e1101e3CE443691781C17F90",
+    "0x625087d72c762254a72CB22cC2ECa40da6b95EAC",
+    "0x796592b2092F7E150C48643dA19Dd2F28be3333F"
+   ],
    "slug": "swell-sweth-rsweth",
    "sprints": [
     12
@@ -13741,13 +14744,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xd38BB40815d2B0c2d2c866e0c72c5728ffC76dd9",
+   "relatedContracts": [],
    "slug": "symbiosis",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "symbiosis-control-plane",
@@ -13788,6 +14792,13 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xAEb6bdd95c502390db8f52c8909F703E9Af6a346",
+   "relatedContracts": [
+    "0xAd817a6Bc954F678451A71363f04150FDD81Af9F",
+    "0xC773b1011461e7314CF05f97d95aa8e92C1Fd8aA",
+    "0x5721ce64Ee0D772Ce613b62D411350091C544cD0",
+    "0x788823C9579A049D986eB76718bC758C0998594a",
+    "0xf6BB2e64Bd201A862f2Fe5461fc7Ef01e2040b6A"
+   ],
    "slug": "symbiotic-core",
    "sprints": [
     10
@@ -13835,13 +14846,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x0f2D719407FdBeFF09D87557AbB7232601FD9F29",
+   "relatedContracts": [],
    "slug": "synapse-cross-chain-bridge",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "synapse-cross-chain-bridge-control-plane",
@@ -13882,6 +14894,7 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x6e15A54B5EcAc17e58daDedDbe8506a7560252F9",
+   "relatedContracts": [],
    "slug": "synfutures-v3",
    "sprints": [
     33
@@ -13931,6 +14944,9 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xffffffaEff0B96Ea8e4f94b2253f31abdD875847",
+   "relatedContracts": [
+    "0x58ce7364744e59402B3672D3Cf3Bb415a12441cD"
+   ],
    "slug": "synthetix-v3-core",
    "sprints": [
     24
@@ -14015,13 +15031,17 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x1b2CB79a4564206f53Ba80b4d780F251b4Ae6765",
+   "relatedContracts": [
+    "0xE50554ec802375C9c3F9c087a8a7bb8C26d3DEDf",
+    "0x3daB62f33E7032bD33C532808092D033887EB456"
+   ],
    "slug": "syntropia",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "syntropia-control-plane",
@@ -14062,6 +15082,15 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x2AffADEb2ef5e1F2a7F58964ee191F1e88317ECd",
+   "relatedContracts": [
+    "0x9CDf589C941ee81D75F34d3755671d614f7cf261",
+    "0x989E348275b659d36f8751ea1c10D146211650BE",
+    "0xD7dA1C25E915438720692bC55eb3a7170cA90321",
+    "0x437E450452E8Bc142bd5317199296EcB187c514b",
+    "0x8510d389236d7213eE9B9C38CAaBc0aD24853C25",
+    "0x5B0Da2FB08754a5dDf32e28887D2F5437485f085",
+    "0x0F95E6968EC1B28c794CF1aD99609431de5179c2"
+   ],
    "slug": "taiko-bridge",
    "sprints": [
     34
@@ -14111,6 +15140,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x214C8A1023B30032a2Eded109146658C6D6F2781",
+   "relatedContracts": [
+    "0x461B62CB3A7e9Df8f800aE058AE92F855F2c27Ca",
+    "0xF3f7669dcEED2f985815011C19eD68F667267215",
+    "0xB1c2Db5d6cA03FCe73dBd304d320bF76C55Ae1B1",
+    "0xB4e1d3bBd2843263d58B4D648C599512cea6e88b",
+    "0x1461D76aA1C9c523398301D9174098c6D53ce639",
+    "0x10b1f36452e27f08B0b5747f577fF816b0E6b5fa"
+   ],
    "slug": "tangent-finance",
    "sprints": [
     34
@@ -14158,13 +15195,16 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xCC4304A31d09258b0029eA7FE63d032f52e44EFe",
+   "relatedContracts": [
+    "0xffe273a973c66da5b8ad6772f2476dBd6491034e"
+   ],
    "slug": "team-finance",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "team-finance-control-plane",
@@ -14205,6 +15245,9 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+   "relatedContracts": [
+    "0xC6CDE7C39eB2f0F0095F41570af89eFC2C1Ea828"
+   ],
    "slug": "tether-usdt",
    "sprints": [
     23
@@ -14266,6 +15309,7 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x9416bA76e88D873050A06e5956A3EBF10386b863",
+   "relatedContracts": [],
    "slug": "the-idols",
    "sprints": [
     33
@@ -14313,13 +15357,16 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xa3fE5c7596024E6811E14F029937D5bd8Ae485b3",
+   "relatedContracts": [
+    "0xCD04F57464d25F257089A286AAb47DF096d300Ad"
+   ],
    "slug": "theo-network-thusd",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "theo-network-thusd-control-plane",
@@ -14361,6 +15408,11 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x92f2d8b72a7F6a551Be60b9aa4194248E9B4913D",
+   "relatedContracts": [
+    "0x7Affa05f726D293eB1193807A91617318292008e",
+    "0x46d52E41C2F300BC82217Ce22b920c34995204eb",
+    "0x14fAD0C11C83AC736e5929D5661bbA7E6BB9c0D6"
+   ],
    "slug": "threshold-network-tbtc",
    "sprints": [
     15,
@@ -14422,13 +15474,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xA1a196b5BE89Be04a2c1dc71643689CE013c22e5",
+   "relatedContracts": [],
    "slug": "tokenworks",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "tokenworks-control-plane",
@@ -14469,6 +15522,11 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xd0580192E98eA6CEB9c7b6191Ed2E27560911697",
+   "relatedContracts": [
+    "0xb1d133fE29255EB4Ac9B05d647d49cd7F05ff631",
+    "0xA952453E39F77108Ee37C1b92de593F1C59A6ef4",
+    "0x0C6Bbfd2d5666d44bf28580eDEec0263692C8316"
+   ],
    "slug": "tori-finance",
    "sprints": [
     32
@@ -14516,13 +15574,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x77777FeDdddFfC19Ff86DB637967013e6C6A116C",
+   "relatedContracts": [],
    "slug": "tornado-cash",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "tornado-cash-control-plane",
@@ -14565,6 +15624,10 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x2225DAbFfC7F862c99477381E971E8B1FDaB467e",
+   "relatedContracts": [
+    "0x0fedcbfEBc293Ad8048726B0F887e6C1126EffA6",
+    "0x22261B4D6F629D8cF946C3524df86bF7222901F6"
+   ],
    "slug": "treehouse-tree-teth",
    "sprints": [
     14,
@@ -14641,6 +15704,9 @@
     "chain": "base"
    },
    "primaryContract": "0x8175b0A1e803aC4205aE35F614315Ba801275baA",
+   "relatedContracts": [
+    "0xfF21c2c73784d35578f497e2D6975D8a430d7B9a"
+   ],
    "slug": "trueo",
    "sprints": [
     31
@@ -14688,13 +15754,16 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x8ECC0B419dfe3AE197BC96f2a03636b5E1BE91db",
+   "relatedContracts": [
+    "0xE66f6a37C807F71591854e22075b3A613B46abe2"
+   ],
    "slug": "ultrayield-vaults",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "ultrayield-vaults-control-plane",
@@ -14735,6 +15804,9 @@
     "chain": "base"
    },
    "primaryContract": "0xD0193fFAF565B6E530C1a6bbBb2FB13243f29177",
+   "relatedContracts": [
+    "0xBc35cB6cCc4BE46AA491960EBf5281cD5310c653"
+   ],
    "slug": "umia",
    "sprints": [
     27
@@ -14794,13 +15866,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xaDB2437e6F65682B85F814fBc12FeC0508A7B1D0",
+   "relatedContracts": [],
    "slug": "uncx-network-v2",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "uncx-network-v2-control-plane",
@@ -14841,6 +15914,7 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x1F98431c8aD98523631AE4a59f267346ea31F984",
+   "relatedContracts": [],
    "slug": "uniswap-governance-timelock",
    "sprints": [
     23
@@ -14926,6 +16000,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x000000000004444c5dc75cB358380D2e3dE08A90",
+   "relatedContracts": [
+    "0x408ED6354d4973f66138C91495F2f2FCbd8724C3",
+    "0xc53DD825dedBE7814562528A1A30e8e5BCbB4b55",
+    "0x9bD25e67bF390437C8fAF480AC735a27BcF6168c",
+    "0x31FAfd4889FA1269F7a13A66eE0fB458f27D72A9",
+    "0xf38521f130fcCF29dB1961597bc5d2B60F995f85",
+    "0x1cd822b70a0591420F65E94b9B3A0D0b0fB3a314"
+   ],
    "slug": "uniswap-v4",
    "sprints": [
     24
@@ -15011,13 +16093,17 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x3B6564b5DA73A41d3A66e6558a98FD0e9E1e77ad",
+   "relatedContracts": [
+    "0xC42aEce42Fb38437aFBBdFa0773e6C2C756e03E9",
+    "0xd6F77422cF2825Cfa241CeaDD85d905D38255e58"
+   ],
    "slug": "unitus",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "unitus-control-plane",
@@ -15056,13 +16142,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xE0e05c43c097B0982Db6c9d626c4eb9e95C3b9ce",
+   "relatedContracts": [],
    "slug": "unslashed",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "unslashed-control-plane",
@@ -15103,6 +16190,11 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x4107557d726933f0BcA591A4218Afc92978457F7",
+   "relatedContracts": [
+    "0xE9B725010A9E419412ed67d0fA5f3A5f40159D32",
+    "0xB5fBf201A35327Ddd89986FfA60CF5A675B2bDbc",
+    "0x17ab7568Cd5386DF6C8E4552438E32794D057cC1"
+   ],
    "slug": "upshift",
    "sprints": [
     28
@@ -15150,13 +16242,17 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee",
+   "relatedContracts": [
+    "0xCD979B10A55FCdAC23ec785CE3066c6ef8a479A4",
+    "0x4DFF9b5b0143E642a3F63a5bcf2d1C328e600bf8"
+   ],
    "slug": "usdt0",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "usdt0-control-plane",
@@ -15197,6 +16293,9 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x0D374775E962c3608B8F0A4b8B10567DF739bb56",
+   "relatedContracts": [
+    "0x6e9d65eC80D69b1f508560Bc7aeA5003db1f7FB7"
+   ],
    "slug": "usual-money-usd0-usd0",
    "sprints": [
     8
@@ -15246,13 +16345,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x5232bc0F5999f8dA604c42E1748A13a170F94A1B",
+   "relatedContracts": [],
    "slug": "veda",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "veda-control-plane",
@@ -15293,6 +16393,11 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x9520b477Aa81180E6DdC006Fc09Fb6d3eb4e807A",
+   "relatedContracts": [
+    "0xd1C117319B3595fbc39b471AB1fd485629eb05F2",
+    "0x3aEd4dd0b5ba616156Fa352274670c18D2Ec2A81",
+    "0x025a05f1967521806BB4c8a10Ba4b8c00A794F65"
+   ],
    "slug": "vesper-v1",
    "sprints": [
     28
@@ -15342,6 +16447,10 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xDaD503f8B9d42bb7af3AfC588358D30163e4416F",
+   "relatedContracts": [
+    "0x07Ee70DFd5a74d4a038Ff6AAE1d31Ca2C71F4DF1",
+    "0x83B2435d9A30b7463B3Ba997ba47a14B73149e2A"
+   ],
    "slug": "vetro",
    "sprints": [
     30
@@ -15389,13 +16498,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xfCeAAaEB8D564a9D0e71Ef36f027b9D162bC334e",
+   "relatedContracts": [],
    "slug": "wan-bridge",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "wan-bridge-control-plane",
@@ -15436,6 +16546,10 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x1eCdB32e59e948C010a189a0798C674a2d0c6603",
+   "relatedContracts": [
+    "0x623620b3Eff4e1A30e9f1154f88198Ab26952EeB",
+    "0xeB5E772919661F455619A4cABd9B2b64715505E6"
+   ],
    "slug": "whales-market",
    "sprints": [
     28
@@ -15483,13 +16597,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xfEB516d9D946dD487A9346F6fee11f40C6945eE4",
+   "relatedContracts": [],
    "slug": "wildcat-protocol",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "wildcat-protocol-control-plane",
@@ -15530,6 +16645,9 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x4687E45bB5518a995913a24BB2816fe2031d74D8",
+   "relatedContracts": [
+    "0x3d5EcCb62974178236A768A7ef14D3ce468Fbe91"
+   ],
    "slug": "wintermute-confidential-wbtc-ethereum",
    "sprints": [
     28
@@ -15577,13 +16695,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x4691937a7508860F876c9c0a2a617E7d9E945D4B",
+   "relatedContracts": [],
    "slug": "woofi-earn",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "woofi-earn-control-plane",
@@ -15622,13 +16741,17 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x90BB48fe3310499Db36437dCAE642F721e32d094",
+   "relatedContracts": [
+    "0x8F40Cc98D694AB986F026C5383A181FCc9B6B281",
+    "0xA4fB12D15Eb85dc9284a7df0AdBC8B696EdbbF1d"
+   ],
    "slug": "world-chain-bridge",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "world-chain-bridge-control-plane",
@@ -15669,6 +16792,10 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x98f3c9e6E3fAce36bAAd05FE09d375Ef1464288B",
+   "relatedContracts": [
+    "0x3c3d457f1522D3540AB3325Aa5f1864E34cBA9D0",
+    "0xFc0D459b8c299095Dee743645caAc8Ed3f9aBc4d"
+   ],
    "slug": "wormhole-core-ntt",
    "sprints": [
     25
@@ -15756,6 +16883,10 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x42F38ec5A75acCEc50054671233dfAC9C0E7A3F6",
+   "relatedContracts": [
+    "0x4aa42145Aa6Ebf72e164C9bBC74fbD3788045016",
+    "0x257bDD093Cab1Bd39eBF837dCB60f33d031d7d49"
+   ],
    "slug": "xdai-stake-bridge",
    "sprints": [
     34
@@ -15803,13 +16934,16 @@
     "chain": "base"
    },
    "primaryContract": "0xBA515304d8153c4b162dC79f867E152DF9c127eb",
+   "relatedContracts": [
+    "0xF2F6E1a62d3d1f0efB01C28e485f1dC8B173cE2B"
+   ],
    "slug": "xsy",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x58e5d7f07aaf27ccbf361f122a24120a821b455bb9dae30f4478a7da1381f3e8",
-     "blockNumber": 59847352,
+     "blockHash": "0xaa2914dfd5a622683bab79cf60de172e5d03b3c572aa19dc567689173d59bbd3",
+     "blockNumber": 59903224,
      "chain": "base",
      "classification": "rpc_observed",
      "id": "xsy-control-plane",
@@ -15851,6 +16985,10 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xb3bd6B2E61753C311EFbCF0111f75D29706D9a41",
+   "relatedContracts": [
+    "0x16388463d60FFE0661Cf7F1f31a7D658aC790ff7",
+    "0x6F2A8Ee9452ba7d336b3fba03caC27f7818AeAD6"
+   ],
    "slug": "yearn-v3",
    "sprints": [
     8,
@@ -15913,6 +17051,7 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x01791F726B4103694969820be083196cC7c045fF",
+   "relatedContracts": [],
    "slug": "yield-basis",
    "sprints": [
     33
@@ -15960,13 +17099,17 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x19Ebd191f7A24ECE672ba13A302212b5eF7F35cb",
+   "relatedContracts": [
+    "0x5bf44d32260AeE6b807c490e92eF0481D15Ab493",
+    "0x8E31eFdA4453494a84Fa6168D53Eb1418c0b4aC4"
+   ],
    "slug": "yieldfi",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "yieldfi-control-plane",
@@ -16007,6 +17150,7 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xDF51B7843817F76220C0970eF58Ba726630028eF",
+   "relatedContracts": [],
    "slug": "yieldnest",
    "sprints": [
     26
@@ -16068,6 +17212,13 @@
     "chain": "base"
    },
    "primaryContract": "0xB4b3F5C964A360bBd7201f72a55D0c48B8aD7021",
+   "relatedContracts": [
+    "0x67b6F699F1c8040414032a3C2C88a54db144FCd2",
+    "0x3A43AEC53490CB9Fa922847385D82fe25d0E9De7",
+    "0x0000000f2eB9f69274678c76222B35eEc7588a65",
+    "0x12E81209d180fF0b3FBFbfe8fA9fFdb5990e1073",
+    "0xc84a6E01BFF58996540F1ABC22355A9DFE0d78DC"
+   ],
    "slug": "yo-protocol",
    "sprints": [
     22
@@ -16141,13 +17292,17 @@
     "chain": "ethereum"
    },
    "primaryContract": "0x224e90591A2d63fb66E677D0561Ea4A6Ad1F098D",
+   "relatedContracts": [
+    "0x577C202011Dd122Bcb0ad1bf4a71e01E9F999b68",
+    "0xD2160Ad387C592010650B3BFE14a5e1A17DC7E5e"
+   ],
    "slug": "yuzu-money",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "yuzu-money-control-plane",
@@ -16188,6 +17343,7 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xA12CC123ba206d4031D1c7f6223D1C2Ec249f4f3",
+   "relatedContracts": [],
    "slug": "zama",
    "sprints": [
     33
@@ -16235,13 +17391,14 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xfAB99fCF605fD8f4593EDb70A43bA56542777777",
+   "relatedContracts": [],
    "slug": "zerobase-cedefi",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "zerobase-cedefi-control-plane",
@@ -16282,6 +17439,7 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xC463EaC02572CC964D43D2414023E2c6B62bAF38",
+   "relatedContracts": [],
    "slug": "zircuit-staking",
    "sprints": [
     28
@@ -16329,13 +17487,14 @@
     "chain": "base"
    },
    "primaryContract": "0x1111111111166b7FE7bd91427724B487980aFc69",
+   "relatedContracts": [],
    "slug": "zora-bridge",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x58e5d7f07aaf27ccbf361f122a24120a821b455bb9dae30f4478a7da1381f3e8",
-     "blockNumber": 59847352,
+     "blockHash": "0xaa2914dfd5a622683bab79cf60de172e5d03b3c572aa19dc567689173d59bbd3",
+     "blockNumber": 59903224,
      "chain": "base",
      "classification": "rpc_observed",
      "id": "zora-bridge-control-plane",
@@ -16374,13 +17533,16 @@
     "chain": "ethereum"
    },
    "primaryContract": "0xfEd3D6557Dc46A1B25d0A6F666513Cb33835864B",
+   "relatedContracts": [
+    "0xf5429683A15340a859dFdbD1B2De37b1ea77c2d5"
+   ],
    "slug": "ztln-p",
    "sprints": [],
    "surfaces": [
     {
      "baseEasUid": null,
-     "blockHash": "0x7bb963434c873374e3a77f428d6998353152af08ccbfd79b556fef43f07ff4ec",
-     "blockNumber": 26454861,
+     "blockHash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+     "blockNumber": 26455787,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "ztln-p-control-plane",
@@ -16408,13 +17570,13 @@
  },
  "totals": {
   "badgeTiers": {
-   "aligned": 120,
+   "aligned": 122,
    "parameter_delta": 62,
-   "rpc_observed": 131
+   "rpc_observed": 129
   },
-  "easAttested": 182,
+  "easAttested": 184,
   "protocols": 313,
-  "rpcObserved": 131,
-  "surfaces": 432
+  "rpcObserved": 129,
+  "surfaces": 433
  }
 }

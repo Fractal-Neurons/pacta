@@ -53,6 +53,16 @@
    "controller_kind": "multisig_safe"
   },
   {
+   "slug": "aura",
+   "chain": "ethereum",
+   "record_id": "aura-control-plane",
+   "retired_at_sprint": 36,
+   "target_contract": "0xC0c293ce456fF0ED870ADd98a0828Dd4d2903DBF",
+   "target_label": "Aura",
+   "controller_address": null,
+   "controller_kind": null
+  },
+  {
    "slug": "bancor-v3",
    "chain": "ethereum",
    "record_id": "bancor-v3-control-plane",
@@ -491,6 +501,16 @@
    "target_label": "RCH Token",
    "controller_address": "0x5a8cDDa6CA37B284b32eF8D513Ef71Ddac553270",
    "controller_kind": "contract_controller"
+  },
+  {
+   "slug": "sommelier",
+   "chain": "ethereum",
+   "record_id": "sommelier-control-plane",
+   "retired_at_sprint": 36,
+   "target_contract": "0xa670d7237398238DE01267472C6f13e5B8010FD1",
+   "target_label": "somm (CosmosERC20)",
+   "controller_address": null,
+   "controller_kind": null
   },
   {
    "slug": "sonic-gateway",

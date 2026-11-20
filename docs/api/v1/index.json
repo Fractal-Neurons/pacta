@@ -1,6 +1,6 @@
 {
   "schema": "pacta.counterparty_control_index.v1",
-  "generated_at": "2026-11-20T07:37:59Z",
+  "generated_at": "2026-11-20T10:43:35Z",
   "publisher": {
     "organization": "Fractal Neurons",
     "unit": "Pacta Protocol Commitments DRI",
@@ -65,10 +65,11 @@
       "32": "0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
       "33": "0x897aa17688d627e9d4fdd7a49c8f4c3a9d4b1943e24e03d7c744563895d9d03c",
       "34": "0xc281741a4fb297a9ccb30b5485ca6ef2bcfb69be10236c056e7208301e30d992",
-      "35": "0xce8821d521758614be8860ac6476e1cec01ae000d81a660644e7bf1260d8cdfd"
+      "35": "0xce8821d521758614be8860ac6476e1cec01ae000d81a660644e7bf1260d8cdfd",
+      "36": "0xe16008e972c9b16353100f32e3a2d4ae61152f26d34e600ca205723c77602edf"
     },
     "attestation_coverage": {
-      "base_eas_attested_sprints": "1-35",
+      "base_eas_attested_sprints": "1-36",
       "eas_multi_attest_tx": "0x8c53e155a4b2f28ffbf069f1b65952fc8f7d81740f362b8aafb39493c6bd001b",
       "pending_batch_attestation_sprints": [],
       "pending_anchor": "none: every indexed record carries its sprint's Base EAS UID; each attestation commits to the sprint's Ethereum block hash and summary SHA-256",
@@ -93,7 +94,8 @@
         "32": "0xe89c8f21cb9917923309b9f00983cc332b5d4e927fe9ede90ec9ff677f69b3dc",
         "33": "0x0de27e0dbd440832b0fc55eebd8571d744c05bda2aab79ca134e856f72ebaeea",
         "34": "0x04389f0a7757652f4297dd1e574fc42c7d49872e9c54ccdf8a795ce591cd37c8",
-        "35": "0x276b9b803e4a604c3281faf9242d8a3111e3c070b16416e29413a26c2fe66d65"
+        "35": "0x276b9b803e4a604c3281faf9242d8a3111e3c070b16416e29413a26c2fe66d65",
+        "36": "0x34bbdf84cb4ac7755b850ff1738bf90f8ed10a810607b4636b2c4ef836cd3a4b"
       },
       "attested_not_yet_indexed_sprints": []
     },
@@ -115,7 +117,8 @@
     "eas_multi_attest_sprint_32_tx": "0xe89c8f21cb9917923309b9f00983cc332b5d4e927fe9ede90ec9ff677f69b3dc",
     "eas_multi_attest_sprint_33_tx": "0x0de27e0dbd440832b0fc55eebd8571d744c05bda2aab79ca134e856f72ebaeea",
     "eas_multi_attest_sprint_34_tx": "0x04389f0a7757652f4297dd1e574fc42c7d49872e9c54ccdf8a795ce591cd37c8",
-    "eas_multi_attest_sprint_35_tx": "0x276b9b803e4a604c3281faf9242d8a3111e3c070b16416e29413a26c2fe66d65"
+    "eas_multi_attest_sprint_35_tx": "0x276b9b803e4a604c3281faf9242d8a3111e3c070b16416e29413a26c2fe66d65",
+    "eas_multi_attest_sprint_36_tx": "0x34bbdf84cb4ac7755b850ff1738bf90f8ed10a810607b4636b2c4ef836cd3a4b"
   },
   "methodology": {
     "chain_id": 1,
@@ -142,11 +145,11 @@
     "record_chain": "Records without a chain field are Ethereum Mainnet (chain id 1). Records with chain \"base\" (rpc_env_var $BASE_RPC_URL) are pinned to a Base Mainnet block (chain id 8453) and replayed on mainnet.base.org + base.drpc.org; their Sprint's EAS attestation commits to the Ethereum pin and to the summary SHA-256, which states the Base pin."
   },
   "summary_metrics": {
-    "sprints_completed": 35,
-    "records_indexed": 301,
+    "sprints_completed": 36,
+    "records_indexed": 304,
     "parameter_deltas": 61,
     "protective_deltas": 11,
-    "aligned_baselines": 229
+    "aligned_baselines": 232
   },
   "entries": [
     {
@@ -9126,6 +9129,97 @@
       "surface": "V3 factory owner = V3Manager owned by the Operations Multisig (3-of-5)",
       "target_contract": "0xbACEB8eC6b9355Dfc0269C18bac9d6E2Bdc29C4F",
       "target_label": "SushiSwap V3 factory (Ethereum)",
+      "verification_status": "scanner_dual_rpc_replayed_base_eas_attested_pending_static_review"
+    },
+    {
+      "base_eas_uid": "0xe16008e972c9b16353100f32e3a2d4ae61152f26d34e600ca205723c77602edf",
+      "block_hash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+      "block_number": 26455787,
+      "call_args": [],
+      "call_signature": "owner()",
+      "category": "Yield booster pooling veBAL voting power to lift Balancer LP rewards (auraBAL) (Ethereum)",
+      "chain": "ethereum",
+      "check_type": "eth_call",
+      "classification": "aligned_baseline",
+      "documented_delay_seconds": null,
+      "documented_reference": "'Initially consisting of 7 signers (4/7 majority needed).' (raw.githubusercontent.com/aurafinance/aura-docs/main/aura/governance/multisig-composition.md); '0x3Fa73f1E5d8A792C80F426fc8F84FBF7Ce9bBCAC' (raw.githubusercontent.com/aurafinance/aura-docs/main/aura/governance/multisig-rights.md)",
+      "id": "aura-protocol-multisig-4-of-7-s36",
+      "observed_delay_seconds": null,
+      "observed_delay_source": null,
+      "onchain_observed": "AuraLocker 0x3Fa73f1E5d8A792C80F426fc8F84FBF7Ce9bBCAC (Ethereum, not a proxy; the multisig-rights page links it as a contract the Protocol Multisig administers): owner() = 0x5feA4413E3Cc5Cf3A29a49dB41ac0c24850417a0, a Safe: getThreshold() = 4 of getOwners() = 7; guard slot empty. Its two enabled modules (getModulesPaginated: one complete page, next = the sentinel) were vetted from verified source; each has owner() and safeWallet() = the Safe and exposes only onlyKeeper functions that make a zero-value Call to a fixed (immutable) target, without the Safe owners' signatures: GaugeVoterModule 0x2b5Ac82C5e934407514768CE3e399d9c18381621: voteGaugeWeight(address[],uint256[]) (gauge-weight votes, capped at MAX_WEIGHT() = 2500 per gauge) and setDstChainId(address[],uint16[]) (sets gauges' destination chain ids on the GaugeVoter); ExtraRewardStashModule 0x48e529218743E41F6De5B7E8D552E8173707cE81: setStashExtraReward(pid, token) for tokens the Safe authorized (updateAuthorizedTokens is onlyOwner). Keepers and authorized tokens are set by the Safe. Neither module reaches AuraLocker, the Booster's fees, the VoterProxy, shutdown or the Safe's own owner / threshold / module configuration, so that non-delegated authority needs 4 of 7 signatures; the delegated keeper actions (capped gauge votes, gauge destination chain ids, stash rewards for authorized tokens) do not.",
+      "protocol": "Aura",
+      "repro_calldata": "0x8da5cb5b",
+      "rpc_env_var": "$ETH_RPC_URL",
+      "selector_or_slot": "0x8da5cb5b",
+      "sprint": 36,
+      "summary_doc": "audits/sprint-36/block-26455787-summary.md",
+      "summary_sha256": "0xd955b44c8a45b41e8e5c3b5c26d67e4e62c9e2c16185ab997ec0247c70d38d35",
+      "summary_short": "Aura's Protocol Multisig is 4-of-7, as documented",
+      "surface": "AuraLocker owner = Protocol Multisig, 4-of-7 (docs: 4/7); 2 vetted keeper modules",
+      "target_contract": "0x3Fa73f1E5d8A792C80F426fc8F84FBF7Ce9bBCAC",
+      "target_label": "AuraLocker (vlAURA)",
+      "verification_status": "scanner_dual_rpc_replayed_base_eas_attested_pending_static_review"
+    },
+    {
+      "base_eas_uid": "0xe16008e972c9b16353100f32e3a2d4ae61152f26d34e600ca205723c77602edf",
+      "block_hash": "0x4fa7e0b166d674666a68121cfde1ecd9d61d03f101c4fe20f2081610e9f91316",
+      "block_number": 26455787,
+      "call_args": [],
+      "call_signature": "owner()",
+      "category": "Automated vaults seeking yields while mitigating risk (Ethereum)",
+      "chain": "ethereum",
+      "check_type": "eth_call",
+      "classification": "aligned_baseline",
+      "documented_delay_seconds": null,
+      "documented_reference": "'It should be noted that a MultiSig is used to manage the Registry and PriceRouter smart contracts.' (sommelier-finance.gitbook.io/llms-full.txt)",
+      "id": "sommelier-registry-pricerouter-multisig-timelock-s36",
+      "observed_delay_seconds": 259200,
+      "observed_delay_source": {
+        "contract": "0xaDa78a5E01325B91Bc7879a63c309F7D54d42950",
+        "getter": "getMinDelay()",
+        "selector": "0xf27a0c92"
+      },
+      "onchain_observed": "Registry 0x2Cbd27E034FEE53f79b607430dA7771B22050741 and Price Router 0x138a6d8c49428D4c71dD7596571fbd4699C7D3DA (Ethereum, the Cellars V2 infrastructure table): owner() = the Operations Timelock 0xaDa78a5E01325B91Bc7879a63c309F7D54d42950 (OpenZeppelin TimelockController, verified; getMinDelay() = 259,200 s), on which the Operations Multisig 0x7340D1FeCD4B64A4ac34f826B21c945d44d7407F holds PROPOSER_ROLE and EXECUTOR_ROLE (hasRole = true). The Multisig is a Safe: getThreshold() = 2 of getOwners() = 2; guard slot empty; getModulesPaginated() lists no module.",
+      "protocol": "Sommelier",
+      "repro_calldata": "0x8da5cb5b",
+      "rpc_env_var": "$ETH_RPC_URL",
+      "selector_or_slot": "0x8da5cb5b",
+      "sprint": 36,
+      "summary_doc": "audits/sprint-36/block-26455787-summary.md",
+      "summary_sha256": "0xd955b44c8a45b41e8e5c3b5c26d67e4e62c9e2c16185ab997ec0247c70d38d35",
+      "summary_short": "Sommelier's Registry and PriceRouter are managed by its multisig, as documented",
+      "surface": "Registry / PriceRouter: Operations Multisig via a 3-day timelock",
+      "target_contract": "0x2Cbd27E034FEE53f79b607430dA7771B22050741",
+      "target_label": "Sommelier Registry (Cellars V2)",
+      "verification_status": "scanner_dual_rpc_replayed_base_eas_attested_pending_static_review"
+    },
+    {
+      "base_eas_uid": "0xe16008e972c9b16353100f32e3a2d4ae61152f26d34e600ca205723c77602edf",
+      "block_hash": "0xaa2914dfd5a622683bab79cf60de172e5d03b3c572aa19dc567689173d59bbd3",
+      "block_number": 59903224,
+      "call_args": [],
+      "call_signature": "asset()",
+      "category": "Decentralized Credit & Liquidity",
+      "chain": "base",
+      "check_type": "eth_call",
+      "classification": "aligned_baseline",
+      "documented_delay_seconds": null,
+      "documented_reference": "'The contract uses the ERC-1822 UUPS pattern for upgradeability and the ERC-1967 proxy storage slots standard.' (docs.spark.fi/llms-full.txt)",
+      "id": "spark-susdc-base-uups-as-documented-s36",
+      "observed_delay_seconds": null,
+      "observed_delay_source": null,
+      "onchain_observed": "sUSDC 0x3128a0F7f0ea68E7B7c9B00AFa7E41045828e858 (Base, the address the sUSDC page lists): ERC-1967 implementation slot = 0x6ACC02ddd82206a44ff4EC13977E63d1a29C7723, admin slot empty (the UUPS pattern: the implementation carries upgradeToAndCall); the implementation is UsdcVaultL2 (verified, UUPSUpgradeable; _authorizeUpgrade is `auth`, i.e. its wards; ward holders cannot be enumerated without event logs). name() = Spark USDC Vault, symbol() = sUSDC, decimals() = 18 and asset() = 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913 (USDC on Base), as the page documents.",
+      "protocol": "Spark / Sky",
+      "repro_calldata": "0x38d52e0f",
+      "rpc_env_var": "$BASE_RPC_URL",
+      "selector_or_slot": "0x38d52e0f",
+      "sprint": 36,
+      "summary_doc": "audits/sprint-36/block-26455787-summary.md",
+      "summary_sha256": "0xd955b44c8a45b41e8e5c3b5c26d67e4e62c9e2c16185ab997ec0247c70d38d35",
+      "summary_short": "Spark's Base sUSDC is an ERC-1967 UUPS proxy, as documented",
+      "surface": "Base sUSDC: ERC-1967 UUPS proxy (UsdcVaultL2, upgrades by wards), as documented",
+      "target_contract": "0x3128a0F7f0ea68E7B7c9B00AFa7E41045828e858",
+      "target_label": "Spark USDC Vault (sUSDC, Base)",
       "verification_status": "scanner_dual_rpc_replayed_base_eas_attested_pending_static_review"
     }
   ]
