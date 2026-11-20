@@ -25,7 +25,7 @@
       "tx_hash": "0x28418337a098338aac8ac9462f40b341c4b9e8d2340bd993d30141acff5a01a5",
       "event_kind": "timelock_or_role_mutation",
       "rpc_or_cast_proof": "cast call 0x2218F90A98b0C070676f249EF44834686dAa4285 \"owner()(address)\" --block 20765084 --rpc-url https://mainnet.gateway.tenderly.co",
-      "summary": "Two-step OwnershipTransferred completed to zero-timelock 6-of-11 Safe 0x8b4334d4812C530574Bd4F2763FcD22dE94A969B, closing the 17.68-day SystemRegistry EOA ownership gap."
+      "summary": "Two-step OwnershipTransferred completed to zero-timelock 6-of-11 Safe 0x8b4334d4812C530574Bd4F2763FcD22dE94A969B, completing the 17.68-day SystemRegistry EOA-to-Safe bootstrap handover."
     },
     {
       "block_number": 21775447,
@@ -33,7 +33,7 @@
       "tx_hash": "0x3cf46fa02de6d03ba89c6b5d6d1cc1fe234e39033d8bb58c4bddf20d235ebc82",
       "event_kind": "parameter_or_pause_mutation",
       "rpc_or_cast_proof": "cast call 0x2218F90A98b0C070676f249EF44834686dAa4285 \"systemSecurity()(address)\" --block 21775447 --rpc-url https://eth.drpc.org",
-      "summary": "Safe 0x8b4334... replaced SystemSecurity (0x027a... -> 0xe57A2eC5EF4CC7F6576BB1ed5Ec3759878F39B20), SwapRouter (0x6201... -> 0x955b...), and AutopilotRouter without updating docs."
+      "summary": "Safe 0x8b4334... replaced SystemSecurity (0x027a... -> 0xe57A2eC5EF4CC7F6576BB1ed5Ec3759878F39B20), SwapRouter (0x6201... -> 0x955b5AdcdBBA6870fECA78338137191F774679cA), and AutopilotRouter without updating docs."
     },
     {
       "block_number": 22239605,
@@ -41,7 +41,7 @@
       "tx_hash": "0xae15a71d57edfe79af013cb90f8deb166619a55c273ac8132f67cceaeaacac70",
       "event_kind": "timelock_or_role_mutation",
       "rpc_or_cast_proof": "cast call 0x37767cBfF88Cb623E9404e959560984F7D742dF6 \"getRoleMemberCount(bytes32)(uint256)\" 0x0000000000000000000000000000000000000000000000000000000000000000 --block 22239605 --rpc-url https://mainnet.gateway.tenderly.co",
-      "summary": "Deployer EOA 0x123c... self-revoked DEFAULT_ADMIN_ROLE on AccessController after 223.57 days, leaving two 6-of-11 Safes (0x8b4334... and 0x6c4D84...) as RBAC admins."
+      "summary": "Deployer EOA 0x123c... self-revoked DEFAULT_ADMIN_ROLE on AccessController after 223.57 days of post-launch bootstrap hardening, leaving two 6-of-11 Safes (0x8b4334... and 0x6c4D84...) as RBAC admins."
     },
     {
       "block_number": 22582341,
@@ -73,7 +73,23 @@
       "tx_hash": "0x49611b0d2f8d54a91b25eff01e74d5c4c96306c4f934c97227e273dfebf8f0db",
       "event_kind": "immutability_checkpoint",
       "rpc_or_cast_proof": "cast call 0x2218F90A98b0C070676f249EF44834686dAa4285 \"owner()(address)\" --block 25633353 --rpc-url https://mainnet.gateway.tenderly.co",
-      "summary": "Latest RewardTokenAdded registry event confirms SystemRegistry remains non-proxy and owned directly by zero-timelock 6-of-11 Safe 0x8b4334... with no Governor contract deployed."
+      "summary": "Latest RewardTokenAdded registry event confirms SystemRegistry remains non-proxy and owned directly by zero-timelock 6-of-11 Safe 0x8b4334...; eventual transition to a Governor contract remains unscheduled."
+    },
+    {
+      "block_number": 26452182,
+      "block_date": "2026-11-19",
+      "tx_hash": "0x899b11b0da4d53004519515fda59041870fa1bebfb1a80b39a66335b0cb3665d",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0x2218F90A98b0C070676f249EF44834686dAa4285 \"systemSecurity()(address)\" --block 26452182 --rpc-url https://eth.drpc.org",
+      "summary": "Pinned block 26,452,182 getter proof confirms live SystemRegistry.systemSecurity() remains 0xe57A2eC5EF4CC7F6576BB1ed5Ec3759878F39B20 while official contract-addresses docs still publish obsolete 0x027a3359b803885261B140415873845f72238833."
+    },
+    {
+      "block_number": 26452373,
+      "block_date": "2026-11-19",
+      "tx_hash": "0xa1858ae67514ca2cd1310d1783c94ee102561dbc5d2ffb4851c445b58ff9608b",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0x2218F90A98b0C070676f249EF44834686dAa4285 \"swapRouter()(address)\" --block 26452373 --rpc-url https://mainnet.gateway.tenderly.co",
+      "summary": "Pinned Pacta catalog block 26,452,373 getter proof confirms live SystemRegistry.swapRouter() remains 0x955b5AdcdBBA6870fECA78338137191F774679cA (with systemSecurity() unchanged at 0xe57A...9B20) while docs still list obsolete 0x6201523176dC66CCd249248b9c422Aac725eA3f2."
     }
   ],
   "docs_and_governance_forensics": {
@@ -85,31 +101,49 @@
         "kind": "github_docs_commit",
         "date": "2024-08-28",
         "url": "https://github.com/Tokemak/v2-core-pub/commit/545571ba8e3e5d829c7ced65b20ac46fef0d3242",
-        "claim_summary": "Last pre-deployment commit touching src/SystemRegistry.sol in Tokemak/v2-core-pub prior to mainnet deployment on 2024-08-30; repository froze after 2024-10-15."
+        "claim_summary": "Last commit touching Tokemak/v2-core-pub prior to mainnet SystemRegistry deployment on 2024-08-30."
       },
       {
         "kind": "github_docs_commit",
-        "date": "2026-04-16",
-        "url": "https://github.com/Tokemak/v2-config/commit/e65a02e11774ac670cfa19358c08139be06dab3e",
-        "claim_summary": "Latest operational configuration commit in Tokemak/v2-config showing active JSON config maintenance (16 commits across 2 engineers) while Solidity repos remain dormant."
+        "date": "2024-10-16",
+        "url": "https://github.com/Tokemak/v2-core-pub/commit/de163d5a1edf99281d7d000783b4dc8ade03591e",
+        "claim_summary": "Final commit in Tokemak/v2-core-pub (authored 2024-10-15, committed 2024-10-16), leaving zero trailing-12m activity in the public core repo."
+      },
+      {
+        "kind": "wayback_snapshot",
+        "date": "2025-01-21",
+        "url": "https://web.archive.org/web/20250121010417/https://docs.tokemak.xyz/developer-docs/contracts-overview/contract-addresses",
+        "claim_summary": "Pre-replacement Wayback snapshot (14 days before block 21,775,447) publishing System Security 0x027a3359b803885261B140415873845f72238833 and Swap Router 0x6201523176dC66CCd249248b9c422Aac725eA3f2."
+      },
+      {
+        "kind": "wayback_snapshot",
+        "date": "2025-04-26",
+        "url": "https://web.archive.org/web/20250426203635/https://docs.tokemak.xyz/developer-docs/contracts-overview/contract-addresses",
+        "claim_summary": "Post-replacement Wayback snapshot (81 days after block 21,775,447) confirming docs still listed obsolete 0x027a...8833 and 0x6201...A3f2 after live rotation."
+      },
+      {
+        "kind": "wayback_snapshot",
+        "date": "2026-08-26",
+        "url": "https://web.archive.org/web/20260826151939/https://docs.auto.finance/developer-docs/contracts-overview/contract-addresses",
+        "claim_summary": "AutoFinance-domain Wayback snapshot updating Autopilot Router to 0x39ff6d... while continuing to publish obsolete 0x027a...8833 and 0x6201...A3f2."
       },
       {
         "kind": "governance_proposal",
         "date": "2022-06-23",
         "url": "https://snapshot.org/#/tokemak.eth/proposal/0x4afb4bf67aa994cfab7beac8c713a8a3529c18b77b3f9340dd9d323d0491ba76",
-        "claim_summary": "Tokemak Snapshot governance space (toke.eth) showing a single historical 2022 foundation proposal (TRU-1) and no subsequent Snapshot votes for Autopools or SystemRegistry."
+        "claim_summary": "Snapshot GraphQL (hub.snapshot.org/graphql) for space tokemak.eth (proposalsCount = 1, admin = 0x8b4334...969B) records only TRU-1 (closed 2022-06-23, 181 votes) and zero Autopools proposals."
       },
       {
         "kind": "official_docs",
         "date": "2026-11-19",
         "url": "https://docs.auto.finance/developer-docs/contracts-overview/autopool-eth-contracts-overview/autopool-contracts-and-systems/autopool-contract-security",
-        "claim_summary": "Official docs state SystemRegistry uses onlyOwner 'which will be granted to a multisig and eventually a Governor contract' and call AccessController unchangeable."
+        "claim_summary": "Official docs state SystemRegistry uses onlyOwner 'which will be granted to a multisig and eventually a Governor contract' with no target date or deadline."
       },
       {
         "kind": "official_docs",
         "date": "2026-11-19",
         "url": "https://docs.auto.finance/developer-docs/contracts-overview/contract-addresses",
-        "claim_summary": "Official Ethereum contract table publishes current AutopilotRouter (0x39ff...) but still lists obsolete 2024 SystemSecurity (0x027a...) and SwapRouter (0x6201...) addresses."
+        "claim_summary": "Live Ethereum address table lists current AutopilotRouter (0x39ff...) while retaining obsolete 2024 SystemSecurity (0x027a...) and SwapRouter (0x6201...) addresses."
       }
     ],
     "gap_windows": [
@@ -120,7 +154,7 @@
         "closed_date": "2024-09-16",
         "duration_days": 17.68,
         "status": "repaired",
-        "summary": "Deployer EOA 0x123cC4AFA59160C6328C0152cf333343F510e5A3 held unilateral SystemRegistry.owner() control for 17.68 days before OwnershipTransferred to 6-of-11 Safe 0x8b4334...."
+        "summary": "EOA-to-Safe bootstrap hardening interval (rather than repair of a violated deadline): deployer EOA 0x123c... held unilateral SystemRegistry.owner() control for 17.68 days before OwnershipTransferred to 6-of-11 Safe 0x8b4334...."
       },
       {
         "opened_block": 20638414,
@@ -129,7 +163,7 @@
         "closed_date": "2025-04-10",
         "duration_days": 223.57,
         "status": "repaired",
-        "summary": "Deployer EOA 0x123c... retained DEFAULT_ADMIN_ROLE on immutable AccessController 0x37767c... alongside Safe multisigs for 223.57 days until self-revocation at block 22,239,605."
+        "summary": "EOA-to-Safe bootstrap hardening interval (rather than repair of a violated deadline): deployer EOA 0x123c... retained DEFAULT_ADMIN_ROLE on immutable AccessController 0x37767c... alongside Safe multisigs for 223.57 days until self-revocation."
       },
       {
         "opened_block": 21775447,
@@ -138,7 +172,7 @@
         "closed_date": null,
         "duration_days": 653.1,
         "status": "unrepaired_open",
-        "summary": "Official docs retain obsolete 2024 SystemSecurity (0x027a...) and SwapRouter (0x6201...) addresses 653.10 days after block 21,775,447 replacement, and promised Governor control remains unimplemented."
+        "summary": "Anchored to the 2025-01-21 Wayback snapshot, official docs still list obsolete SystemSecurity (0x027a...) and SwapRouter (0x6201...) 653.10 days after block 21,775,447 replaced them with 0xe57A... and 0x955b...; eventual Governor ownership remains unscheduled."
       }
     ]
   },
@@ -150,7 +184,7 @@
     "bus_factor": 0,
     "code_before_upgrade_verified": false
   },
-  "executive_risk_memo": "Between August 2024 and November 2026, AUTOfinance (Tokemak Autopools) transitioned SystemRegistry (0x2218F90A98b0C070676f249EF44834686dAa4285) from an initial 17.68-day deployer EOA bootstrap window to a zero-timelock 6-of-11 Gnosis Safe (0x8b4334d4812C530574Bd4F2763FcD22dE94A969B) carrying an active Allowance Module (0xCFbFaC74C26F8647cBDb8c5caf80BB5b32E43134) and three 2025-2026 signer rotations, while the deployer EOA retained overlapping DEFAULT_ADMIN_ROLE privileges on immutable AccessController (0x37767cBfF88Cb623E9404e959560984F7D742dF6) for 223.57 days until self-revocation at block 22,239,605 (repaired gap mean MTTR = 120.63 days). In May 2025, RBAC admin oversight expanded to three distinct Safes by adding a 6-of-14 Safe (42.9% quorum). Crucially, a 653.10-day disclosure and governance gap remains unrepaired at finalized block 26,452,182: official docs still list obsolete 2024 SystemSecurity and SwapRouter addresses replaced on 2025-02-04, never migrated SystemRegistry ownership to a promised Governor contract, and reflect zero trailing 12-month smart-contract commits in dormant Tokemak/v2-core-pub (bus factor 0; post-2024 SystemSecurityL1 and router swaps lack pre-deployment source commits in the public repo, while Tokemak/v2-config saw 16 config updates across 2 engineers).",
+  "executive_risk_memo": "Between August 2024 and November 2026, AUTOfinance (Tokemak Autopools) completed two EOA-to-Safe bootstrap hardening transitions on Ethereum ($27,831,154 single-chain TVL): SystemRegistry (0x2218F90A98b0C070676f249EF44834686dAa4285) moved from deployer EOA ownership to a zero-timelock 6-of-11 Gnosis Safe (0x8b4334d4812C530574Bd4F2763FcD22dE94A969B) after 17.68 days (block 20,765,084; carrying Allowance Module 0xCFbFaC74C26F8647cBDb8c5caf80BB5b32E43134 and three 2025-2026 signer rotations), and the deployer EOA self-revoked DEFAULT_ADMIN_ROLE on immutable AccessController (0x37767cBfF88Cb623E9404e959560984F7D742dF6) after 223.57 days (block 22,239,605; bootstrap hardening mean = 120.63 days, measuring operational handover rather than remediation of any missed deadline). In May 2025, AccessController RBAC oversight expanded to three Safes via 6-of-14 Safe 0xa9900B2d... (42.9% quorum). Regarding governance, security docs state ownership will 'eventually' move to a Governor without setting a deadline, and Snapshot GraphQL (hub.snapshot.org/graphql) confirms space tokemak.eth holds only one 2022 proposal (TRU-1, 181 votes, admin 0x8b4334...) with zero Autopools proposals. Separately, an open 653.10-day documentation discrepancy persists from the pre-replacement 2025-01-21 Wayback archive through live docs: contract-addresses still publishes 2024 SystemSecurity (0x027a...) and SwapRouter (0x6201...), whereas dual-RPC getters at pinned blocks 26,452,182 and 26,452,373 prove live systemSecurity() = 0xe57A2eC5EF4CC7F6576BB1ed5Ec3759878F39B20 and swapRouter() = 0x955b5AdcdBBA6870fECA78338137191F774679cA. Trailing-12-month engineering in Tokemak/v2-core-pub shows 0 commits and bus factor 0 (dormant since 2024-10-16; post-2024 component rotations lack public pre-deployment commits in that repository).",
   "contributor_github": "VB-Blue",
   "agent_assist_framework": "antigravity",
   "base_payout_address": "0xe0a3AAe6e7d042f42e82830f4eEbF426cc1270a2",
@@ -219,7 +253,7 @@
         "surfaces": [
           {
             "id": "autofinance-control-plane",
-            "surface": "SystemRegistry \u00b7 Non-Proxy Bytecode & Controller",
+            "surface": "SystemRegistry · Non-Proxy Bytecode & Controller",
             "classification": "rpc_observed",
             "targetContract": "0x2218F90A98b0C070676f249EF44834686dAa4285",
             "blockNumber": 26451608
