@@ -287,8 +287,8 @@
   "pacta-proto-yo-protocol"
  ],
  "minted_before": {
-  "sprint": 33,
-  "count": 963,
+  "sprint": 34,
+  "count": 967,
   "nodes": [
    "pacta-ctrl-base-00000000",
    "pacta-ctrl-base-01ea7904",
@@ -524,6 +524,7 @@
    "pacta-ctrl-ethereum-52a8845d",
    "pacta-ctrl-ethereum-52e4d898",
    "pacta-ctrl-ethereum-533a36b5",
+   "pacta-ctrl-ethereum-5427fefa",
    "pacta-ctrl-ethereum-54e44dbb",
    "pacta-ctrl-ethereum-54f862fa",
    "pacta-ctrl-ethereum-55f39512",
@@ -626,6 +627,7 @@
    "pacta-ctrl-ethereum-9416ba76",
    "pacta-ctrl-ethereum-9469470c",
    "pacta-ctrl-ethereum-947cb493",
+   "pacta-ctrl-ethereum-949b3b3c",
    "pacta-ctrl-ethereum-9520b477",
    "pacta-ctrl-ethereum-953972ea",
    "pacta-ctrl-ethereum-98db5022",
@@ -874,6 +876,7 @@
    "pacta-eas-sprint-30",
    "pacta-eas-sprint-31",
    "pacta-eas-sprint-32",
+   "pacta-eas-sprint-33",
    "pacta-eas-sprint-4",
    "pacta-eas-sprint-5",
    "pacta-eas-sprint-6",
@@ -894,6 +897,7 @@
    "pacta-gap-bounty-slot-2-resupply",
    "pacta-gap-bounty-slot-3-yo-protocol",
    "pacta-gap-bounty-slot-4-inverse-finance-firm",
+   "pacta-gap-cbridge-liquidity-bridge-owner-resets-signers-s33",
    "pacta-gap-chainlink-ccip-timelock-proposers-s24",
    "pacta-gap-cian-yield-layer-allocation-no-timelock-s31",
    "pacta-gap-circle-gateway-wallet-eoa-owner-and-pauser-s32",

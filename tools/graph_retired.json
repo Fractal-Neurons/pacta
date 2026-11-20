@@ -13,12 +13,32 @@
    "controller_kind": "multisig_safe"
   },
   {
+   "slug": "aegis-yusd",
+   "chain": "ethereum",
+   "record_id": "aegis-yusd-control-plane",
+   "retired_at_sprint": 34,
+   "target_contract": "0x4274cD7277C7bb0806Bd5FE84b9aDAE466a8DA0a",
+   "target_label": "YUSD",
+   "controller_address": "0x4Fe78eF65BD8EDDED480efaB030BA680646503c8",
+   "controller_kind": "multisig_safe"
+  },
+  {
    "slug": "alchemix-v3",
    "chain": "ethereum",
    "record_id": "alchemix-v3-control-plane",
    "retired_at_sprint": 31,
    "target_contract": "0xdBdb4d16EdA451D0503b854CF79D55697F90c8DF",
    "target_label": "Alchemix (AlchemixToken)",
+   "controller_address": null,
+   "controller_kind": null
+  },
+  {
+   "slug": "angstrom",
+   "chain": "ethereum",
+   "record_id": "angstrom-control-plane",
+   "retired_at_sprint": 34,
+   "target_contract": "0x0000000aa232009084Bd71A5797d089AA4Edfad4",
+   "target_label": "Angstrom",
    "controller_address": null,
    "controller_kind": null
   },
@@ -173,6 +193,16 @@
    "controller_kind": "multisig_safe"
   },
   {
+   "slug": "gamma",
+   "chain": "ethereum",
+   "record_id": "gamma-control-plane",
+   "retired_at_sprint": 34,
+   "target_contract": "0x6BeA7CFEF803D1e3d5f7C0103f7ded065644e197",
+   "target_label": "Gamma",
+   "controller_address": "0xf2c58cca8ce82df7a2A4f7F936608d61f45a9a47",
+   "controller_kind": "multisig_safe"
+  },
+  {
    "slug": "goldfinch",
    "chain": "ethereum",
    "record_id": "goldfinch-control-plane",
@@ -183,6 +213,16 @@
    "controller_kind": null
   },
   {
+   "slug": "hakka-finance",
+   "chain": "ethereum",
+   "record_id": "hakka-finance-control-plane",
+   "retired_at_sprint": 34,
+   "target_contract": "0x0E29e5AbbB5FD88e28b2d355774e73BD47dE3bcd",
+   "target_label": "Hakka Finance",
+   "controller_address": "0xF2B8f214Dc81b849ed3BDCAEdA6c8c39625c500A",
+   "controller_kind": "multisig_safe"
+  },
+  {
    "slug": "hashport",
    "chain": "ethereum",
    "record_id": "hashport-control-plane",
@@ -191,6 +231,16 @@
    "target_label": "Router",
    "controller_address": "0x10AB2d9C085c816f43ccB0FB1b27d024224E36f1",
    "controller_kind": "multisig_safe"
+  },
+  {
+   "slug": "hop-protocol",
+   "chain": "ethereum",
+   "record_id": "hop-protocol-control-plane",
+   "retired_at_sprint": 34,
+   "target_contract": "0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC",
+   "target_label": "Hop",
+   "controller_address": "0xeeA8422a08258e73c139Fc32a25e10410c14bd7a",
+   "controller_kind": "timelock"
   },
   {
    "slug": "iaero-protocol",
@@ -261,6 +311,16 @@
    "target_label": "Moolah",
    "controller_address": "0xa18ae79AEDA3e711E0CD64cfe1Cd06402d400D61",
    "controller_kind": "timelock"
+  },
+  {
+   "slug": "lusd-chickenbonds",
+   "chain": "ethereum",
+   "record_id": "lusd-chickenbonds-control-plane",
+   "retired_at_sprint": 34,
+   "target_contract": "0xB9D7DdDca9a4AC480991865EfEf82E01273F79C3",
+   "target_label": "bLUSD",
+   "controller_address": null,
+   "controller_kind": null
   },
   {
    "slug": "makina",
@@ -383,6 +443,16 @@
    "controller_kind": "contract_controller"
   },
   {
+   "slug": "piku-finance",
+   "chain": "ethereum",
+   "record_id": "piku-finance-control-plane",
+   "retired_at_sprint": 34,
+   "target_contract": "0x2E4039E8E31475d65DC00293C366FDBfBBC02DC3",
+   "target_label": "Piku Utility Token",
+   "controller_address": "0x27d12198852acA3FECb86F55832D8944cc7c6a56",
+   "controller_kind": "multisig_safe"
+  },
+  {
    "slug": "pooltogether-v3",
    "chain": "ethereum",
    "record_id": "pooltogether-v3-control-plane",
@@ -400,6 +470,16 @@
    "target_contract": "0x1d71c888961c4600cF0E31F6196b4dA7fE72e4B3",
    "target_label": "Shift-DeFi USDC Vault (Vault)",
    "controller_address": "0x83B975e5F33c0251eFEA5D355A91b3d8d58E6d9a",
+   "controller_kind": "contract_controller"
+  },
+  {
+   "slug": "sofa-org",
+   "chain": "ethereum",
+   "record_id": "sofa-org-control-plane",
+   "retired_at_sprint": 34,
+   "target_contract": "0x57B96D4aF698605563A4653D882635da59Bf11AF",
+   "target_label": "RCH Token",
+   "controller_address": "0x5a8cDDa6CA37B284b32eF8D513Ef71Ddac553270",
    "controller_kind": "contract_controller"
   },
   {
@@ -433,6 +513,16 @@
    "controller_kind": "contract_controller"
   },
   {
+   "slug": "stakestone-stone",
+   "chain": "ethereum",
+   "record_id": "stakestone-stone-control-plane",
+   "retired_at_sprint": 34,
+   "target_contract": "0x1D88713b483A8E45cfF0e5CD7c2e15E5Fab4534d",
+   "target_label": "StakeStone (STO)",
+   "controller_address": null,
+   "controller_kind": null
+  },
+  {
    "slug": "strata-markets",
    "chain": "ethereum",
    "record_id": "strata-markets-control-plane",
@@ -461,6 +551,26 @@
    "target_label": "SynFutures",
    "controller_address": null,
    "controller_kind": null
+  },
+  {
+   "slug": "taiko-bridge",
+   "chain": "ethereum",
+   "record_id": "taiko-bridge-control-plane",
+   "retired_at_sprint": 34,
+   "target_contract": "0x10dea67478c5F8C5E2D90e5E9B26dBe60c54d800",
+   "target_label": "Taiko Token",
+   "controller_address": "0x75Ba76403b13b26AD1beC70D6eE937314eeaCD0a",
+   "controller_kind": "contract_controller"
+  },
+  {
+   "slug": "tangent-finance",
+   "chain": "ethereum",
+   "record_id": "tangent-finance-control-plane",
+   "retired_at_sprint": 34,
+   "target_contract": "0x214C8A1023B30032a2Eded109146658C6D6F2781",
+   "target_label": "MarketCreator",
+   "controller_address": "0x461B62CB3A7e9Df8f800aE058AE92F855F2c27Ca",
+   "controller_kind": "multisig_safe"
   },
   {
    "slug": "the-idols",
@@ -510,6 +620,16 @@
    "target_contract": "0xC8317A10385BE07901A4c9ee3d06E1D83AE378c9",
    "target_label": "Treasury",
    "controller_address": "0x6649Ddb5c7e52348b73c8bBdD2A1cbA630b7AaEA",
+   "controller_kind": "multisig_safe"
+  },
+  {
+   "slug": "xdai-stake-bridge",
+   "chain": "ethereum",
+   "record_id": "xdai-stake-bridge-control-plane",
+   "retired_at_sprint": 34,
+   "target_contract": "0x0Ae055097C6d159879521C384F1D2123D1f195e6",
+   "target_label": "STAKE (ERC677MultiBridgeToken)",
+   "controller_address": "0x0DF05ADaC0159e215111696339AD4998e5871B3D",
    "controller_kind": "multisig_safe"
   },
   {

@@ -223,7 +223,7 @@
   }
  ],
  "url": "https://pacta.wtf/",
- "version": "2026.11.19",
+ "version": "2026.11.20",
  "x402": {
   "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
   "bareProbe": "A bare GET (no query) or zero-byte POST with no payment header on any paid URL returns HTTP 402 at once: the v1 JSON body (x402Version 1, network base, maxAmountRequired) plus the v2 PAYMENT-REQUIRED header (x402Version 2, network eip155:8453, amount, extensions.bazaar with a JSON Schema draft 2020-12 schema).",
