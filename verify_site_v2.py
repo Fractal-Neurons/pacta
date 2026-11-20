@@ -992,24 +992,25 @@ def main(argv=None):
     subs = re.compile(r"Curator Radar|Commitment CI Gate|\$3,000|/ year|USDC/mo\)|USDC/yr", re.I)
     bad_s = sorted({f"{f}: {m.group(0)}" for f in copy_files for m in subs.finditer(read(f))})
     check("no curator / SaaS subscription tracks (one paid offer only)", not bad_s, str(bad_s[:4]))
-    # M4 / M5 (v4): one tier family, byte-identical pricing cards on / and /request/ (only the relative link prefix differs)
-    offer = ("Free scorecards, API &amp; MCP", "$0", "Full Wallet &amp; Safe Exposure Report", "$9", "Live Timelock &amp; Signer Webhook", "$49",
-             "24h Mainnet Control-Plane Seal", "$99", "Multi-contract dossiers", "$2,500–$5,000", "Continuous Control-Plane Monitoring", "$1,500 / month",
-             "Community queue", "API SLA", "data-enterprise-strip")
+    # M4 / M5: one 3-door human funnel, byte-identical pricing cards on / and /request/ (only the relative link prefix differs)
+    offer = ("Scan &amp; Verify Free", "$0", "Fund a Verification Pool", "$50+",
+             "Watch My Positions", "$0 Pilot", "Pre-launch &amp; suite dossiers", "$2,500–$5,000",
+             "Wholesale ecosystem sweep", "$150 / protocol", "Continuous Control-Plane Monitoring", "$500–$2,500 / month",
+             "Free 7-day fix re-check", "API SLA", "data-enterprise-strip")
     def plans_of(t):
         a = t.find('<div class="plans" data-pricing>')
         b = t.find('<p class="note">', a)
         return t[a:b] if 0 <= a < b else ""
     plans_h, plans_r = plans_of(page), plans_of(req_page).replace('href="../', 'href="')
-    check("homepage #pricing and /request/ carry the same self-serve grid ($0 free / $19 scan / $49 per month webhook / $99 seal) and the enterprise strip "
-          "($2,500-$5,000 dossiers / $1,500 per month Continuous Control-Plane Monitoring / free queue / API SLA), identical; vulnerabilities routed to Immunefi / Cantina",
-          all(t in plans_h for t in offer) and plans_h == plans_r and plans_h.count('data-plan="') == 4
+    check("homepage #pricing and /request/ carry the same 3-door grid ($0 Scan Free / $50+ Verification Pool / Free Pilot Watch) and the enterprise strip "
+          "($2,500-$5,000 dossiers / $150 per protocol Wholesale Sweep / $500-$2,500 per month Continuous Control-Plane Monitoring / free 7-day fix re-check / API SLA), identical; vulnerabilities routed to Immunefi / Cantina",
+          all(t in plans_h for t in offer) and plans_h == plans_r and plans_h.count('data-plan="') == 3
           and all(x in read("docs/protocols/stader-labs-ethx/index.html") for x in ("Immunefi", "Cantina")))
     check("public data stated free and real-time (homepage, llms.txt, README)",
           "free, with live re-check on demand" in page and "Free and real-time" in llms_txt(read) and "Free and real-time" in read("README.md"))   # v4.5 G-P2-1 wording on the pricing card
     radios = re.findall(r'name="tier" value="([\w-]+)"', req_page)
-    check("request builder (/request/) offers exactly the pricing tiers in pricing order (community, rapid-500, clearance default, continuous, api_sla); the homepage links there",
-          radios == ["community", "rapid-500", "clearance", "continuous", "api_sla"]
+    check("request builder (/request/) offers exactly the pricing tiers in pricing order (community, wholesale-150, clearance default, continuous, api_sla); the homepage links there",
+          radios == ["community", "wholesale-150", "clearance", "continuous", "api_sla"]
           and len(re.findall(r'name="tier" value="[\w-]+" checked', req_page)) == 1 and 'value="clearance" checked' in req_page
           and 'name="tier"' not in page and 'href="request/?tier=clearance" data-tier="clearance"' in page,
           str(radios))
@@ -1023,8 +1024,11 @@ def main(argv=None):
     js_opts = re.findall(r'"([^"]+)",\s*\n\s*"Pacta [^"]+ request"', read("tools/app.src.js"))
     set_opts = re.findall(r'^\s+- "(.+)"$', tmpl.split("id: settlement_preference", 1)[1].split("validations", 1)[0], re.M) if "id: settlement_preference" in tmpl else []
     js_set = re.findall(r'"(Option [AB]: [^"]+)"', read("tools/app.src.js"))
-    check("GitHub dropdown prefill strings match the issue template exactly (5 tracks incl. the $500 Rapid Single-Gap Re-Verification + 2 settlement options)",
-          sorted(opts) == sorted(js_opts) and len(opts) == 5 and "Rapid Single-Gap Re-Verification ($500 USDC, 24h SLA)" in opts and sorted(set_opts) == sorted(js_set) and len(set_opts) == 2
+    check("GitHub dropdown prefill strings match the issue template exactly (5 tracks incl. Wholesale Sweep & Free 7-day fix re-verification + 2 settlement options)",
+          sorted(opts) == sorted(js_opts) and len(opts) == 5
+          and "Wholesale Ecosystem & Curator Vault Sweep ($150 per protocol)" in opts
+          and "Free factual re-verification within 7 days (merged docs or on-chain fix)" in opts
+          and sorted(set_opts) == sorted(js_set) and len(set_opts) == 2
           and all(f'id: {k}' in tmpl for k in ("forum_proposal_url", "payment_tx_hash", "settlement_preference")),
           f"template {opts} {set_opts} app.js {js_opts} {js_set}")
     sums_ = {k: (hashlib.sha256(read(p_, "rb")).hexdigest() if os.path.exists(os.path.join(ROOT, p_)) else None)
@@ -1346,6 +1350,9 @@ def main(argv=None):
                         protocols_index_html=pages.get(os.path.join("protocols", "index.html"), ""),
                         extra={"rescue": read("docs/404-rescue.js") if os.path.exists(os.path.join(DOCS, "404-rescue.js")) else "",
                                "miniapp": dom_tree(pages[os.path.join("miniapp", "index.html")]) if os.path.join("miniapp", "index.html") in pages else None,
+                               "scan": dom_tree(pages[os.path.join("scan", "index.html")]) if os.path.join("scan", "index.html") in pages else None,
+                               "seal": dom_tree(pages[os.path.join("seal", "index.html")]) if os.path.join("seal", "index.html") in pages else None,
+                               "bounties": dom_tree(pages[os.path.join("bounties", "index.html")]) if os.path.join("bounties", "index.html") in pages else None,
                                **{v_["route"]: dom_tree(pages[os.path.join(v_["route"], "index.html")]) for v_ in BS.CHECKOUT.values()
                                   if os.path.join(v_["route"], "index.html") in pages},
                                "checkout": {"api": BS.ORDERS_VERIFY_API, "treasury": BS.CHECKOUT_TREASURY, "usdc": BS.USDC["Base"],
@@ -1532,25 +1539,22 @@ def main(argv=None):
     check("Edge v3 hero: h1 + subhead, 3 receipt pills (live check + pinned receipt), the instant checker in the hero (before the proof bar); remote MCP (Claude Code + Cursor), curl /v1/check/preflight, OpenAPI / SKILL / agent.json / MCP links in the agents column",
           hero_ok and pf_ok, f"hero {hero_ok}; checker {pf_ok}")
     pr = re.search(r'<section class="sec" id="pricing">.*?</section>', home, re.S)
-    pricing_ok = bool(pr) and all(x in pr.group(0) for x in ("$0", "$9", "$49", "$99", "$2,500–$5,000", "$1,500", "Free scorecards, API &amp; MCP",
-                                                              "Full Wallet &amp; Safe Exposure Report", "Live Timelock &amp; Signer Webhook", "24h Mainnet Control-Plane Seal",
-                                                              "Continuous Control-Plane Monitoring", "API SLA", "50 free preflight / wallet-exposure checks a day, then $0.01 a call over x402",
-                                                              "data-x402-strip", "$0.02 / call", "$0.05 / call", "$0.25 / call", "$9.00 / call",
-                                                              html.escape(BS.EDITORIAL_FIREWALL, quote=False)))
+    pricing_ok = (bool(pr) and "data-x402-strip" not in pr.group(0)
+                  and all(x in pr.group(0) for x in ("$0", "$50+", "$0 Pilot", "$2,500–$5,000", "$150 / protocol", "$500–$2,500 / month",
+                                                     "Scan &amp; Verify Free", "Fund a Verification Pool",
+                                                     "Watch My Positions", "Continuous Control-Plane Monitoring",
+                                                     "API SLA", "within 7 days", html.escape(BS.EDITORIAL_FIREWALL, quote=False))))
     req_ok = "Every scorecard, the API and the MCP server stay free" in req_page and 'id="pricing"' in req_page
-    check("pricing: #pricing = Free $0 (50 checks / day, then $0.01 over x402) + Agent & API x402 strip ($0.02 / $0.05 / $0.25 / $9.00) / $19 scan / $49 per month webhook / $99 seal + dossiers $2,500-$5,000 / Continuous Control-Plane Monitoring $1,500 / API SLA under the editorial firewall; /request/ carries the same",
+    check("pricing: #pricing = 3 Clear Human Doors ($0 Scan Free / $50+ Verification Pool / Free Pilot Watch) + enterprise strip ($2,500-$5,000 dossiers / $150 per protocol Wholesale Sweep / $500-$2,500 Continuous Control-Plane Monitoring / free 7-day fix re-check / API SLA) with zero x402 jargon strip; /request/ carries the same",
           pricing_ok and req_ok, f"#pricing {pricing_ok}; /request/ {req_ok}")
-    # unbundled #pricing: 2 cards (free; issuers with no API jargon) + one high-throughput bar below the grid
-    # M4 / M5 (v4): every pricing card links its own closed tier=; Continuous Control-Plane Monitoring says the result can still be Delta; no tier name
-    # anywhere implies a paid Aligned status; the editorial firewall sits above the cards on / and /request/
     tier_ok = {}
     for rel, t in (("index.html", page), (os.path.join("request", "index.html"), req_page)):
         sec = re.search(r'<section class="sec" id="pricing">.*?</section>', t, re.S)
         sec = sec.group(0) if sec else ""
         pre_ = "" if rel == "index.html" else "../"
         req_ = pre_ + "request/"
-        tier_ok[rel] = (re.findall(r'data-plan="([\w-]+)"', sec) == ["free", "wallet-report-9", "radar-webhook-49", "reverify-seal-99"]
-                        and all(f'href="{pre_}{h_}" data-cta="{k_}"' in sec for _, _, _, _, _, (_, h_, k_), _ in BS.SELF_SERVE_PLANS)
+        tier_ok[rel] = (re.findall(r'data-plan="([\w-]+)"', sec) == ["scan-free", "sponsor-pool", "watch-positions"]
+                        and all(f'href="{pre_}{h_}" data-cta="{k_}"' in sec for _, _, _, _, _, (_, h_, k_), _, _ in BS.SELF_SERVE_PLANS)
                         and all(f'href="{req_}?tier={k}" data-tier="{k}"' in sec for k, _, _ in BS.ENTERPRISE_STRIP)
                         and "can still read Delta" in sec and "free, with live re-check on demand" in sec
                         and sec.find("data-editorial") < sec.find('data-pricing') and html.escape(BS.EDITORIAL_FIREWALL, quote=False) in sec)
@@ -1934,8 +1938,7 @@ def main(argv=None):
     # ---- Option B v2: three single-SKU product pages, the site-wide entry points, the /request/ launcher and the checkout engine ----
     lk_v2 = {i_["slug"]: i_ for i_ in json.loads(read("docs/api/v1/lookup.json"))["items"]}
     sm_v2 = read("docs/sitemap.xml")
-    CTA_V2 = {"wallet-report-9": "Pay $9 USDC on Base &amp; Unlock Full Report", "radar-webhook-49": "Pay $49 USDC on Base &amp; Activate Webhook",
-              "reverify-seal-99": "Pay $99 USDC on Base &amp; Book 24h Re-Verification"}
+    CTA_V2 = {"radar-webhook-49": "Pay $49 USDC on Base &amp; Activate Webhook"}
     pd_bad = {}
     for k_, v_ in BS.CHECKOUT.items():
         t_ = pages.get(os.path.join(v_["route"], "index.html"), "")
@@ -1971,40 +1974,54 @@ def main(argv=None):
     alert_ = BS.DECODED[BS.ALERT_EXAMPLE]["operations"][0]
     seal_ = pages.get(os.path.join("seal", "index.html"), "")
     previews_ok = {
-        "scan: the free live checker is the scanner (4 real indexed protocol chips) and the sample is the real Stader record":
+        "scan: 100% free full Wallet, Safe & Protocol scanner (6 real protocol chips + 2 demo wallets) + Free Watch Pilot with privacy disclosure":
             'class="pf hero-pf"' in scan_ and 'data-lookup="../api/v1/lookup.json"' in scan_ and chips_v2 == want_chips
-            and f'block #{int(st_r["e"]["block_number"]):,}' in scan_
-            and f'data-variant="warning">Delta · {html.escape(st_r["chain"].replace("Manager Safe is ", ""), quote=False)} on chain vs {html.escape(st_r["docs"].replace("Manager Safe is ", ""), quote=False)} docs</span>' in scan_
-            and "<svg" in scan_.split('data-preview="scan"')[-1].split('class="pv-rows"')[0]
-            and all(f'<code class="sel-chip">{html.escape(c_)}</code>' in scan_ and c_ in pages.get(os.path.join("protocols", "stader-labs-ethx", "index.html"), "")
-                    for c_ in BS.SCAN_SAMPLE_CHIPS)
+            and 'id="watch-pilot"' in scan_ and 'data-watch-pilot-form' in scan_
+            and "Pacta Strategy desk (<code>pacta@dri.network</code>)" in scan_
+            and 'href="../privacy/#watch-pilot"' in scan_ and 'id="co-form"' not in scan_
             and 'id="pf-submit"' in scan_ and re.search(r'data-variant="default" data-size="lg" type="submit" id="pf-submit"', scan_) is not None,
         "webhook: quick picks + an alert card built from the decoded radar brief (block, decoded call, live ETA countdown)":
             web_.count("data-co-pick") == len(BS.WEBHOOK_PICKS) and f'Ethereum #{alert_["scheduled"]["block"]:,}' in web_
-            and f'data-eta="{alert_["eta"]}"' in web_ and alert_["calls"][0]["function"] in web_,
-        "seal: three deliverables (EAS seal with rosette + badge, Safe Transaction Builder JSON, docs PR diff) and the editorial guarantee":
+            and f'data-eta="{alert_["eta"]}"' in web_ and alert_["calls"][0]["function"] in web_
+            and 'id="watch-pilot"' in web_,
+        "seal: reframed 3-path Base-EAS attestation (Free 7-day fix re-check, Verification Pool, Suite Dossier), 3 deliverables & editorial guarantee":
             seal_.count('class="pv-d"') == 3 and "<svg" in seal_.split('data-preview="seal"')[-1] and f'src="../badges/{BS.BADGE_DEMO}.svg"' in seal_
-            and html.escape(BS.SEAL_GUARANTEE, quote=False) in seal_,
+            and html.escape(BS.SEAL_GUARANTEE, quote=False) in seal_ and 'id="co-form"' not in seal_
+            and "within 7 days" in seal_ and "../bounties/#sponsor-pool" in seal_,
     }
-    scan_cold_part = re.sub(r'<section class="scan-upgrade" id="scan-upgrade"[^>]*hidden>.*?</section>', "", scan_, flags=re.S)
+    bnt_sp = pages.get(os.path.join("bounties", "index.html"), "")
+    priv_pg = pages.get(os.path.join("privacy", "index.html"), "")
+    VERBATIM_SP = ("Sponsor funds sit in a 2-of-3 Safe on Base. One key is held by the founder. "
+                   "Two are held by separate automated systems run by the Pacta project, each on a different machine. "
+                   "The founder approves every payout and refund in writing. We hold at most $500 at a time.")
+    sp_ok = (BS.SPONSOR_POOL_ADDRESS == "" and 'id="sponsor-pool" data-sponsor-pool data-sponsor-address=""' in bnt_sp
+             and all(f'data-custody-rule="{r_}"' in bnt_sp for r_ in ("a", "b", "c", "d"))
+             and bnt_sp.count(VERBATIM_SP) >= 2 and "$2,000" not in bnt_sp
+             and "$500 USDC" in bnt_sp and "100% on-chain refund after 30 days" in bnt_sp
+             and 'data-sponsor-self-check' in bnt_sp and "Pending verification" in bnt_sp
+             and "Modules" in bnt_sp and "0 (None)" in bnt_sp and "0x0 (None)" in bnt_sp
+             and 'id="sponsor-ledger"' in bnt_sp and "Dec 4 milestone" in bnt_sp
+             and 0 < bnt_sp.find('id="sponsor-pool"') < bnt_sp.find('id="sponsor-ledger"') < bnt_sp.find('id="wave-3"')
+             and 'id="watch-pilot"' in priv_pg and "pacta@dri.network" in priv_pg)
     cur_pg = pages.get(os.path.join("curators", "index.html"), "")
     cur_mat = json.loads(read("data/curator-exposure-matrix.json"))
     cur_ids = [c_["curator_id"] for c_ in cur_mat["curators_and_institutional_allocators"]]
     cur_ok = (len(cur_ids) >= 13 and all(f'data-curator-card="{cid_}"' in cur_pg and f'data-curator-row="{cid_}"' in cur_pg for cid_ in cur_ids)
               and all(nm_ in cur_pg for nm_ in ("Steakhouse Financial", "Gauntlet", "Re7 Labs", "MEV Capital"))
               and 'data-tone="aligned"' in cur_pg and 'data-tone="gap"' in cur_pg
-              and "https://base.easscan.org/attestation/view/" in cur_pg and "../scan/?chain=" in cur_pg and "../seal/" in cur_pg
+              and "https://base.easscan.org/attestation/view/" in cur_pg and "../scan/?chain=" in cur_pg
+              and "../bounties/#sponsor-pool" in cur_pg and 'id="watch-pilot"' in cur_pg
               and f"<loc>{BS.BASE_URL}/curators/</loc>" in sm_v2)
-    check("Cold-traffic explainer, Unified Wallet/Safe Omnibox & Curator Matrix (/scan/, /curators/ & /seal/): zero upfront $9/$19/$49/$99/$0.05 on initial /scan/ load, "
-          "2 instant Wallet/Safe demo chips + 6 live protocol chips, Multicall3 fallback, progressive $9/$49/mo/$0.05 unlock, and /curators/ institutional matrix (harness)",
-          'id="scan-upgrade" data-scan-upgrade hidden' in scan_ and 'id="co-card" data-co-card hidden' in scan_
-          and all(p_ not in scan_cold_part for p_ in ("$9", "$19", "$49", "$99", "$0.05"))
+    check("3-Door Free Wallet/Safe Omnibox, Watch Pilot, Sponsor Pools & Curator Matrix (/scan/, /bounties/#sponsor-pool, /curators/ & /seal/): zero $9/$19/$99 gate on /scan/ & /seal/, "
+          "2 instant Wallet/Safe demo chips + 6 live protocol chips, Multicall3 fallback, Free Watch Pilot w/ privacy disclosure, isolated Sponsor Pool custody rules 1-4 + #sponsor-ledger (harness)",
+          all(p_ not in scan_ for p_ in ("$9", "$19", "$49", "$99"))
+          and all(p_ not in seal_ for p_ in ("$9", "$19", "$99", "$500 /")) and "$500 max held cap" in seal_
           and scan_.count("data-wallet-demo=") == 2 and scan_.count('class="ex-item"') == 5
           and "PUBLISHED DOCS PROMISE" in scan_ and "LIVE ON-CHAIN REALITY" in scan_
-          and 0 < seal_.find("data-seal-explainer") < seal_.find('data-preview="seal"') < seal_.find('id="co-form"')
-          and 'data-seal-free-first' in seal_ and res.get("co_progressive_scan_funnel") is True
+          and 0 < seal_.find("data-seal-paths") < seal_.find("data-seal-explainer") < seal_.find('data-preview="seal"')
+          and 'data-seal-free-first' in seal_ and sp_ok and res.get("co_progressive_scan_funnel") is True
           and res.get("wl_demo_and_multicall_fallback") is True and cur_ok,
-          f"funnel={res.get('co_progressive_scan_funnel')}; wl={res.get('wl_demo_and_multicall_fallback')}; cur_ok={cur_ok}; cold_prices={[p_ for p_ in ('$9','$19','$49','$99','$0.05') if p_ in scan_cold_part]}")
+          f"funnel={res.get('co_progressive_scan_funnel')}; wl={res.get('wl_demo_and_multicall_fallback')}; sp_ok={sp_ok}; cur_ok={cur_ok}")
     nav_bad = [r_ for r_, t_ in pages.items() if 'class="topbar"' in t_ and not all(x_ in (re.search(r'<nav data-slot="navigation-menu" class="nav" aria-label="Primary">.*?</nav>', t_, re.S) or re.search("$^", "")).group(0).replace(' aria-current="page"', "")
                                                                                  for x_ in ('curators/">Curators</a>', 'scan/">Instant Scan</a>', '#pricing">Pricing</a>', 'bounties/">Bounties</a>',
                                                                                             'radar/">Radar</a>', 'scorecards/">Scorecards</a>', 'mcp/">MCP</a>'))]
@@ -2012,12 +2029,12 @@ def main(argv=None):
     seal_cta_bad = []
     for name_, v in BS.site_protocols(idx).items():
         pg_ = pages.get(os.path.join("protocols", v["slug"], "index.html"), "")
-        has_ = f'href="../../seal/?protocol={v["slug"]}" data-cta="seal_99"' in pg_
+        has_ = f'href="../../bounties/?protocol={v["slug"]}#sponsor-pool" data-cta="sponsor_pool"' in pg_
         if has_ != ('id="issuer-clearance"' in pg_):
             seal_cta_bad.append(v["slug"])
     req_v2 = read("docs/request/index.html")
     launch_ok = ('<nav class="launcher" aria-label="Instant self-serve checks" data-launcher>' in req_v2 and "<h1>Request a dossier</h1>" in req_v2
-                 and all(f'href="../{v_["route"]}/" data-sku="{k_}"' in req_v2 for k_, v_ in BS.CHECKOUT.items())
+                 and all(f'data-sku="{s_}"' in req_v2 for s_ in ("scan-free", "sponsor-pool", "radar-webhook-49"))
                  and req_v2.find("data-launcher") < req_v2.find('id="req-form"'))
     co_src = read("tools/app.src.js")
     co_js = co_src[co_src.find("var CO_TREASURY"):co_src.find("function initLauncher")]
@@ -2049,7 +2066,7 @@ def main(argv=None):
                and (wd_ is None or (('href="#seal-cta" data-cta="seal_wd"' in wd_.group(0)) == (wd_.group(1) is None))))
         if not ok_:
             maint_bad.append(v["slug"])
-    ftr_v2 = [r_ for r_, t_ in pages.items() if 'class="ftr"' in t_ and not all(f'{x_}</a></li>' in t_ for x_ in ('scan/">Instant scan', 'webhook/">Timelock webhooks', 'seal/">24h mainnet seal'))]
+    ftr_v2 = [r_ for r_, t_ in pages.items() if 'class="ftr"' in t_ and not all(f'{x_}</a></li>' in t_ for x_ in ('scan/">Instant scan', 'webhook/">Timelock webhooks', 'seal/">Base-EAS attestation'))]
     web_one = ('id="co-watch" type="text"' in web_ and '<input type="hidden" id="co-target" name="target_address">' in web_
                and '<input type="hidden" id="co-docs" name="protocol_or_docs">' in web_ and 'for="co-target"' not in web_ and 'for="co-docs"' not in web_)
     co_keys = ["co_single_sku_pages", "co_no_wallet_opens_drawer", "co_scan_chip_previews_and_orders", "co_verify_posts_exact_body", "co_result_text_only",
@@ -2123,8 +2140,8 @@ def main(argv=None):
     data_api = set(re.findall(r'data-api="([^"]+)"', "".join(pages.values())))
     app_fetch = len(re.findall(r"\bfetch\(", appjs))
     check("page script boundaries: b.js/theme.js touch zero cookies/storage/third-party scripts; app.js uses localStorage only for pacta-theme + pacta-x-purchased dedup + opt-in pacta_internal QA tag, injects only host-gated uwt.js, and fetch() calls only this site's JSON, data-api, data-live-timelocks, and the four allow-listed public RPCs",
-          not js_bad and script_el_ok and ls_vars == {"THEME_KEY", "X_PURCHASE_KEY", "INTERNAL_QA_KEY"} and ls_keys == {"pacta-theme", "pacta-x-purchased", "pacta_internal"} and appjs.count("localStorage") == 8 and data_api <= {API_, API_ + "/v1/requests", API_ + "/v1/orders/verify"}
-          and app_fetch == 12 and appjs[appjs.find("function initCheckout()"):appjs.find("function initLauncher")].count("fetch(api, opts)") == 1 and "fetch(pfUrl," in appjs[appjs.find("function initMiniApp()"):] and "fetch(verifyApi," in appjs[appjs.find("function initMiniApp()"):] and 'j(root + "api/v1/lookup.json")' in appjs and 'j(root + "api/v1/scorecards.json")' in appjs and 'fetch(api, init)' in appjs[appjs.find("function initRequest()"):] and "REQ_API_RE.test(api)" in appjs and 'fetch(document.documentElement.getAttribute("data-api") || "api/v1/index.json")' in appjs
+          not js_bad and script_el_ok and ls_vars == {"THEME_KEY", "X_PURCHASE_KEY", "INTERNAL_QA_KEY"} and ls_keys == {"pacta-theme", "pacta-x-purchased", "pacta_internal"} and appjs.count("localStorage") == 8 and data_api <= {API_, API_ + "/v1/requests", API_ + "/v1/orders/verify", API_ + "/v1/pilot/watch", API_ + "/v1/pilot/sponsor-pool"}
+          and app_fetch == 13 and appjs[appjs.find("function initCheckout()"):appjs.find("function initLauncher")].count("fetch(api, opts)") == 1 and "fetch(pfUrl," in appjs[appjs.find("function initMiniApp()"):] and "fetch(verifyApi," in appjs[appjs.find("function initMiniApp()"):] and 'j(root + "api/v1/lookup.json")' in appjs and 'j(root + "api/v1/scorecards.json")' in appjs and 'fetch(api, init)' in appjs[appjs.find("function initRequest()"):] and "REQ_API_RE.test(api)" in appjs and 'fetch(document.documentElement.getAttribute("data-api") || "api/v1/index.json")' in appjs
           and 'fetch(body.getAttribute("data-src") || "api/v1/scorecards.json")' in appjs
           # the user-initiated "Verify live on RPC" + Multicall3 wallet-exposure fallback, POSTing JSON-RPC only to the four allow-listed public RPCs
           and "      return fetch(url, opts).then(function (res) { return res.json(); })" in appjs
@@ -2276,9 +2293,9 @@ def main(argv=None):
             and all(res.get(k) is True for k in ("v43_n1_try_fills_and_runs", "pf_preset_fetches_once", "v_hero_click_fetches")),
         "N1 robustness: every init starts on its own (a simulated early failure leaves the examples working and is still reported); 0 init errors (harness)":
             all(res.get(k) is True for k in ("v43_init_isolation", "v43_no_init_errors")),
-        "N3 (v2): one 4-column self-serve grid ($19 scan featured; 2 x 2 tablet, 1 column phone), equal-height cards with every CTA on one baseline (the free card's MCP link row reserved in each card), badges as opaque tabs (/ and /request/)":
-            all(plans43(t) == [("plan", "free"), ("plan feat", "wallet-report-9"), ("plan", "radar-webhook-49"), ("plan", "reverify-seal-99")] for t in (home43, req43))
-            and "grid-template-columns: repeat(4, minmax(0, 1fr))" in css_rule(".plans") and "align-items: stretch;" in css_rule(".plans")
+        "N3 (v2): one 3-column human door grid (Verification Pool featured; 1 column tablet/phone), equal-height cards with every CTA on one baseline, badges as opaque tabs (/ and /request/)":
+            all(plans43(t) == [("plan", "scan-free"), ("plan feat", "sponsor-pool"), ("plan", "watch-positions")] for t in (home43, req43))
+            and "grid-template-columns: repeat(3, minmax(0, 1fr))" in css_rule(".plans") and "align-items: stretch;" in css_rule(".plans")
             and "display: flex; flex-direction: column;" in css_rule(".plan") and "margin-top: auto; display: grid; grid-template-rows: auto 24px;" in css_rule(".plan-cta")
             and "position: absolute;" in css_rule('.plan > [data-slot="badge"]') and "background: var(--card);" in css_rule('.plan > [data-slot="badge"]'),
         "N4: the audience cards do not stretch to equal height (align-items: start)": "align-items: start;" in css_rule(".aud"),
@@ -2449,7 +2466,7 @@ def main(argv=None):
         "G-P2-8: /request/ description 150-160 characters, /terms/ about 115":
             150 <= len(desc45(req43)) <= 160 and 105 <= len(desc45(terms45)) <= 125,
         "G-P2-9: README and REMEDIATION_SERVICES carry the site's tiers and counts":
-            all(x in readme45 and x in remed45 for x in ("$500", "$2,500–$5,000", "$1,500 USDC / month", "Continuous Control-Plane Monitoring"))
+            all(x in readme45 and x in remed45 for x in ("$150", "$2,500–$5,000", "$500–$2,500 USDC", "within 7 days", "Continuous Control-Plane Monitoring"))
             and f'**{nums45["protocols"]} protocols ({nums45["eas_protocols"]} Base-EAS attested + {nums45["observed"]} RPC-observed)' in readme45
             and f'**{nums45["protocols"]} protocols ({nums45["eas_protocols"]} Base-EAS attested + {nums45["observed"]} RPC-observed)**' in remed45
             and "flat" not in remed45 and "$5,000 USDC` flat" not in readme45,
@@ -3669,12 +3686,13 @@ def main(argv=None):
             ro_bad.append(k_)
     e3[f"every /protocols/<slug>/ page ({X['protocols']}): grade pill, 5-slice rosette whose aria-label names all 5 factors, the 5-factor breakdown; hollow uncompared parity on RPC-observed pages"] = not ro_bad
     fp_ = pages.get(os.path.join("for-protocols", "index.html"), "")
-    e3["/for-protocols/: h1, 4 verified case studies (Stader, YO, Stake DAO, Moonwell), live badge widget over every protocol, 4-question FAQ, $0 / $500 / $2,500-$5,000 CTAs, in the sitemap"] = (
+    e3["/for-protocols/: h1, 4 verified case studies (Stader, YO, Stake DAO, Moonwell), live badge widget over every protocol, 4-question FAQ, $0 / $50+ pool / $2,500-$5,000 CTAs, in the sitemap"] = (
         "<h1>Turn control-plane transparency into allocator trust.</h1>" in fp_
         and all(f'data-case="{x_}"' in fp_ for x_ in ("stader-labs-ethx", "yo-protocol", "stake-dao", "moonwell-lending-base"))
         and fp_.count("<option value=") == X["protocols"] and "data-badge-widget" in fp_ and fp_.count("<dt>") >= 4
-        and all(f'href="../request/?tier={t_}"' in fp_ for t_ in ("community", "rapid-500", "clearance"))
-        and "Re-verification · $500, 24h" in fp_ and "Full dossier · $2,500–$5,000, 24h" in fp_ and f"<loc>{BS.BASE_URL}/for-protocols/</loc>" in read("docs/sitemap.xml"))
+        and all(f'href="../request/?tier={t_}"' in fp_ for t_ in ("community", "clearance"))
+        and 'href="../bounties/#sponsor-pool"' in fp_
+        and "Free 7-day fix re-check · $0" in fp_ and "Full dossier · $2,500–$5,000, 24h" in fp_ and f"<loc>{BS.BASE_URL}/for-protocols/</loc>" in read("docs/sitemap.xml"))
     oa_ = json.loads(read("docs/api/v1/openapi.json"))
     e3["root discovery files /agent.json, /mcp.json, /openapi.json are valid JSON and byte-identical to /.well-known/agent.json, /.well-known/mcp.json, /api/v1/openapi.json (OpenAPI 3.1 snapshot of the Worker)"] = (
         all(read(f"docs/{a_}") == read(f"docs/{b_}") and isinstance(json.loads(read(f"docs/{a_}")), dict)
@@ -3881,7 +3899,7 @@ def main(argv=None):
         i_ed = t.find("data-editorial-independence")
         i_paid = max(t.find("Reconciliation Dossier"), t.find("callout"))
         last_rec = max(t.rfind(f'id="{html.escape(e["id"])}"') for e in v["entries"])
-        paid_at = [m_.start() for m_ in re.finditer(r"\$5,000|\$1,500|\$99|\$19\b|Reconciliation Dossier|id=\"badge-status\"|id=\"issuer-clearance\"|data-cta=\"seal_99\"|data-cta=\"scan_19\"", t)]
+        paid_at = [m_.start() for m_ in re.finditer(r"\$5,000|\$500–\$2,500|\$1,500|\$99|\$19\b|Reconciliation Dossier|id=\"badge-status\"|id=\"issuer-clearance\"|id=\"issuer-maintenance\"|data-cta=\"sponsor_pool\"", t)]
         if not (0 < last_rec < i_ed and html.escape(BS.EDITORIAL_INDEPENDENCE, quote=False) in t and t.find("cast ") < i_ed
                 and (t.find('class="callout') == -1 or i_ed < t.find('class="callout')) and paid_at and all(i_ed < p_ for p_ in paid_at)):
             ed_bad.append(v["slug"])

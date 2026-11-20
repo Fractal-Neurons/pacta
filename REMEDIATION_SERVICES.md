@@ -20,9 +20,11 @@ For **protocol teams and collateral issuers** onboarding a new asset to Morpho, 
 
 | Tier | Price | Scope |
 | --- | --- | --- |
-| Rapid Single-Gap Re-Verification | `$500 USDC` (24h SLA) | A fresh re-read of one fixed Safe, timelock or documentation gap at a finalized block on two archive RPCs, an updated docs diff and a new Base EAS attestation. |
-| Full Protocol Control-Plane Dossier | `$2,500–$5,000 USDC` (24h SLA) | `$2,500` single chain (up to 8 contracts) · `$5,000` multi-chain with a 90-day drift watch; the four deliverables below. |
-| Continuous Control-Plane Monitoring | `$1,500 USDC / month` | Re-checks after governance proposals, signer rotations and timelock upgrades, with a refreshed dossier and attestation after every change. The result can still be Delta. |
+| Free Post-Fix Re-Verification | `$0` (within 7 days) | Free factual re-verification within 7 days whenever a protocol merges a public docs or on-chain fix. |
+| Sponsor Verification Pool | `$50` or `$150 USDC` | Independent single-protocol Live Control-Plane Pool (`$50`, min `$25` top-up) or 3-Year Trajectory Dossier Pool (`$150`), held in isolated custody with a 30-day refund if unfulfilled (`pacta.wtf/bounties/#sponsor-pool`). |
+| Wholesale Ecosystem & Curator Vault Sweep | `$150 per protocol` | Multi-protocol control-plane sweeps for L2 ecosystems, grant councils and vault curators; undelivered targets never charged. |
+| Full Protocol Control-Plane Dossier | `$2,500–$5,000 USDC` (24h SLA) | Pre-launch or multi-contract suite diligence: `$2,500` single chain (up to 8 contracts) · `$5,000` multi-chain with a 90-day drift watch; the four deliverables below. |
+| Continuous Control-Plane Monitoring | `$500–$2,500 USDC / month` | Institutional allocator & multi-vault control-plane watch SLA (`$49 / month` Safe Guard after a free 30-day pilot). The result can still be Delta. |
 
 The Full Protocol Control-Plane Dossier delivers:
 
@@ -40,7 +42,7 @@ Delivered within **24 hours** of confirmed scope and settlement. The classificat
 
 **High-throughput API (more than 60 requests / minute or a dedicated SLA):** x402 metered endpoints, or an Enterprise API key priced on scope at [`pacta.wtf/request/?tier=api_sla`](https://pacta.wtf/request/?tier=api_sla).
 
-**Community queue (free):** the standard public queue, unscheduled (typically 6–8 weeks).
+**Free Post-Fix Re-Verification:** Free factual re-verification within 7 days whenever a protocol merges a public docs or on-chain fix (`pacta.wtf/request/?tier=community`).
 
 ---
 

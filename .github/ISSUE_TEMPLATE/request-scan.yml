@@ -1,5 +1,5 @@
-name: "Request a Pacta 24h Dossier, Re-Verification, Continuous Control-Plane Monitoring, API SLA or Community Queue Scope"
-description: "Submit non-sensitive public scope for a full protocol control-plane dossier ($2,500–$5,000 USDC, 24h SLA), a $500 rapid single-gap re-verification, Continuous Control-Plane Monitoring ($1,500 USDC per month; the result can still be Delta), an enterprise API SLA, or the free community queue."
+name: "Request a Pacta Dossier, Wholesale Sweep, Continuous Control-Plane Monitoring, API SLA or Free 7-Day Fix Re-Verification"
+description: "Submit non-sensitive public scope for a full protocol control-plane dossier ($2,500–$5,000 USDC, 24h SLA), a Wholesale Ecosystem & Curator Vault Sweep ($150 per protocol), Continuous Control-Plane Monitoring ($500–$2,500 USDC per month; the result can still be Delta), an enterprise API SLA, or free factual re-verification within 7 days of a merged docs or on-chain fix."
 title: "[Pacta Scope] <Organization / Protocol Name>"
 labels: ["pacta-intake"]
 body:
@@ -30,10 +30,10 @@ body:
       label: "3. Track"
       options:
         - "Full Protocol Control-Plane Dossier ($2,500–$5,000 USDC, 24h SLA)"
-        - "Continuous Control-Plane Monitoring ($1,500 USDC per month)"
+        - "Wholesale Ecosystem & Curator Vault Sweep ($150 per protocol)"
+        - "Continuous Control-Plane Monitoring ($500–$2,500 USDC per month)"
         - "Enterprise / High-Throughput API SLA (priced on scope)"
-        - "Rapid Single-Gap Re-Verification ($500 USDC, 24h SLA)"
-        - "Community queue (free; unscheduled, typically 6–8 weeks)"
+        - "Free factual re-verification within 7 days (merged docs or on-chain fix)"
     validations:
       required: true
   - type: dropdown
