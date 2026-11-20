@@ -540,7 +540,7 @@ code { overflow-wrap: break-word; }
 .hero .lede { margin-bottom: 24px; }
 .hero-routes { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 16px; font-size: 0.875rem; color: var(--muted-foreground); }
 .hero-routes a { display: inline-flex; align-items: center; min-height: 24px; }
-.checker { display: grid; grid-template-columns: 9rem minmax(0, 1fr) auto; gap: 8px; align-items: start; scroll-margin-top: 72px; }
+.checker { display: grid; grid-template-columns: 8.85rem minmax(0, 1fr) auto; gap: 8px; align-items: start; scroll-margin-top: 72px; }
 .checker select, .checker input { height: 40px; font-size: 1rem; }
 .checker input { font-family: var(--font-mono); }
 .checker input::placeholder { font-family: var(--font-sans); letter-spacing: 0; }
@@ -1127,6 +1127,7 @@ html:not(.js) [data-theme-menu], html:not(.js) .menu-btn, html:not(.js) [data-li
   .checker { grid-template-columns: minmax(0, 1fr); }
   .checker input { font-size: 1rem; }
   .checker [data-slot="button"] { width: 100%; }
+  .pf-dropdown { width: 100%; min-width: 0; right: 0; }
   /* v4.4 R-V3: example chips wrap onto a second line (no clipped chip; replaces the R6 swipe row) */
   .try-row { flex-wrap: wrap; gap: 6px 8px; }
   .steps, .aud, .cases, .fp-ctas, .faq { grid-template-columns: minmax(0, 1fr); }
@@ -1307,7 +1308,77 @@ html:not(.js) [data-scan-upgrade], html:not(.js) [data-co-card] { display: grid 
 .cred-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .cred-li { border: 1px solid var(--input-border); background: var(--background); font-weight: 600; }
 
+/* ---------------------------------------------------------------- PROTOCOL SELECT & AUTOCOMPLETE COMBOBOX */
+.checker select, .checker input, .checker > [data-slot="button"] { height: 44px; }
+.pf-chain-wrap { position: relative; display: flex; align-items: center; min-width: 0; }
+.pf-chain-dot { position: absolute; left: 10px; display: inline-flex; align-items: center; pointer-events: none; z-index: 2; }
+.pf-chain-wrap select { width: 100%; padding-left: 30px; font-weight: 500; }
+.pf-combo { position: relative; display: flex; align-items: center; min-width: 0; width: 100%; }
+.pf-combo-lead { position: absolute; left: 11px; color: var(--muted-foreground); display: inline-flex; align-items: center; pointer-events: none; z-index: 2; }
+.pf-combo-lead svg.i { width: 16px; height: 16px; }
+.pf-combo > input { width: 100%; min-width: 0; padding-left: 34px; padding-right: 96px; font-family: var(--font-sans); font-size: 0.9375rem; }
+.pf-combo[data-has-clear="1"] > input { padding-right: 124px; }
+.pf-combo[data-is-hex="1"] > input { font-family: var(--font-mono); font-size: 0.875rem; }
+.pf-combo-seal > input { height: 40px; padding-left: 12px; padding-right: 96px; }
+.pf-sel-overlay { position: absolute; top: 2px; bottom: 2px; left: 2px; right: 124px; z-index: 2; border-radius: calc(var(--radius) - 1px); background: var(--background); display: flex; align-items: center; gap: 8px; padding: 0 8px 0 10px; cursor: pointer; overflow: hidden; min-width: 0; }
+.pf-sel-overlay:hover { background: var(--accent); }
+.pf-sel-overlay[hidden], .pf-clear-btn[hidden], .pf-dropdown[hidden] { display: none !important; }
+.pf-sel-ava { position: relative; width: 24px; height: 24px; flex: none; }
+.pf-sel-logo { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; display: block; border: 1px solid var(--border); background: var(--muted); }
+.pf-sel-ch { position: absolute; right: -2px; bottom: -2px; width: 12px; height: 12px; border-radius: 50%; background: var(--background); display: grid; place-items: center; }
+.pf-sel-ch svg { width: 11px; height: 11px; display: block; }
+.pf-sel-name { font-size: 0.9rem; font-weight: 600; color: var(--foreground); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.pf-sel-sym { font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; padding: 1px 5px; border-radius: 4px; background: var(--muted); border: 1px solid var(--border); color: var(--foreground); flex: none; }
+.pf-sel-addr { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted-foreground); white-space: nowrap; flex: none; }
+.pf-clear-btn { position: absolute; right: 98px; z-index: 3; width: 22px; height: 22px; padding: 0; border-radius: 50%; border: 1px solid var(--border); background: var(--muted); color: var(--muted-foreground); font-size: 0.95rem; line-height: 1; display: inline-grid; place-items: center; cursor: pointer; }
+.pf-clear-btn:hover { color: var(--foreground); border-color: var(--foreground); }
+.pf-toggle-btn { position: absolute; right: 5px; z-index: 3; height: 32px; padding: 0 9px; border-radius: calc(var(--radius) - 2px); border: 1px solid var(--border); background: var(--muted); color: var(--foreground); font: inherit; font-size: 0.75rem; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; cursor: pointer; white-space: nowrap; }
+.pf-toggle-btn:hover, .pf-combo[data-open="1"] .pf-toggle-btn { border-color: var(--foreground); background: var(--accent); }
+.pf-toggle-btn svg.i { width: 14px; height: 14px; transition: transform 0.14s ease; }
+.pf-combo[data-open="1"] .pf-toggle-btn svg.i { transform: rotate(180deg); }
+.pf-dropdown { position: absolute; top: calc(100% + 6px); left: 0; min-width: 100%; width: min(560px, calc(100vw - 32px)); max-height: 396px; overflow-y: auto; z-index: 65; border: 1px solid var(--border); border-radius: calc(var(--radius) + 4px); background: var(--card); color: var(--foreground); box-shadow: 0 20px 44px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(0, 0, 0, 0.08); padding: 6px; display: grid; gap: 2px; }
+.dark .pf-dropdown { box-shadow: 0 22px 48px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.06); }
+.pf-dd-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 10px 4px; font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted-foreground); }
+.pf-dd-foot { margin: 2px 0 0; padding: 8px 10px 6px; border-top: 1px solid var(--border); font-size: 0.75rem; color: var(--muted-foreground); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 10px; }
+.pf-dd-empty { padding: 14px 12px; font-size: 0.8125rem; color: var(--muted-foreground); line-height: 1.45; }
+.pf-opt { display: grid; grid-template-columns: 32px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 8px 10px; border-radius: var(--radius); cursor: pointer; text-align: left; border: 1px solid transparent; background: transparent; color: var(--foreground); width: 100%; font: inherit; }
+.pf-opt:hover, .pf-opt[aria-selected="true"] { background: var(--accent); border-color: var(--border); }
+.pf-opt-ava { position: relative; width: 30px; height: 30px; flex: none; }
+.pf-opt-logo { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; display: block; background: var(--muted); border: 1px solid var(--border); }
+.pf-opt-ch { position: absolute; right: -1px; bottom: -1px; width: 14px; height: 14px; border-radius: 50%; background: var(--card); padding: 1px; display: grid; place-items: center; }
+.pf-opt-ch svg { width: 12px; height: 12px; display: block; }
+.pf-opt-main { display: grid; gap: 2px; min-width: 0; }
+.pf-opt-top { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.pf-opt-name { font-size: 0.875rem; font-weight: 600; color: var(--foreground); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pf-opt-sym { font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; padding: 1px 5px; border-radius: 4px; background: var(--muted); border: 1px solid var(--border); color: var(--foreground); white-space: nowrap; flex: none; }
+.pf-opt-sub { font-size: 0.75rem; color: var(--muted-foreground); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pf-opt-right { display: grid; justify-items: end; gap: 2px; flex: none; }
+.pf-opt-addr { font-family: var(--font-mono); font-size: 0.6875rem; color: var(--muted-foreground); }
+.pf-st-pill, .rc-st { display: inline-flex; align-items: center; padding: 1px 6px; border-radius: 4px; font-size: 0.625rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; border: 1px solid var(--border); background: var(--muted); color: var(--muted-foreground); white-space: nowrap; }
+.pf-st-pill[data-tone="gap"], .rc-st[data-tone="gap"] { background: #fef3c7; border-color: #fcd34d; color: #92400e; }
+.dark .pf-st-pill[data-tone="gap"], .dark .rc-st[data-tone="gap"] { background: #2c1f0b; border-color: #6b4714; color: #fcd34d; }
+.pf-st-pill[data-tone="protective"], .rc-st[data-tone="protective"] { background: #e0f2fe; border-color: #7dd3fc; color: #075985; }
+.dark .pf-st-pill[data-tone="protective"], .dark .rc-st[data-tone="protective"] { background: #0c2538; border-color: #1e4b6e; color: #7dd3fc; }
+.pf-st-pill[data-tone="aligned"], .rc-st[data-tone="aligned"] { background: #dcfce7; border-color: #86efac; color: #166534; }
+.dark .pf-st-pill[data-tone="aligned"], .dark .rc-st[data-tone="aligned"] { background: #0d2818; border-color: #1b4d30; color: #6ee7b7; }
+/* Upgraded visual 1-tap preset chips with protocol logos */
+.receipt { height: auto; min-height: 34px; padding: 5px 10px; gap: 6px; border-radius: calc(var(--radius) + 12px); background: var(--card); }
+.receipt:hover { border-color: var(--foreground); background: var(--accent); }
+.rc-logo { width: 18px; height: 18px; border-radius: 50%; object-fit: cover; flex: none; border: 1px solid var(--border); background: var(--muted); }
+.rc-name { font-size: 0.8125rem; font-weight: 600; color: var(--foreground); }
+.rc-sym { font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; padding: 0 5px; border-radius: 4px; background: var(--muted); color: var(--muted-foreground); }
+.rc-sep, .rc-chain { font-size: 0.75rem; color: var(--muted-foreground); }
+
 @media (max-width: 639px) {
+  .checker { grid-template-columns: minmax(0, 1fr); }
+  .pf-dropdown { width: 100%; min-width: 0; right: 0; max-height: 330px; }
+  .pf-toggle-lbl, .pf-sel-addr, .rc-sep, .rc-chain { display: none; }
+  .pf-combo > input { padding-right: 46px; font-size: 0.9375rem; }
+  .pf-combo[data-has-clear="1"] > input { padding-right: 76px; }
+  .pf-sel-overlay { right: 72px; }
+  .pf-clear-btn { right: 44px; }
+  .pf-opt { padding: 8px; gap: 8px; }
+  .pf-opt-addr { display: none; }
   .w3-parts, .cred-list, .cred-grid { grid-template-columns: minmax(0, 1fr); }
   .pd-funnel { gap: 18px; }
   .pd-hero-explain h1 { font-size: 1.5rem; }
