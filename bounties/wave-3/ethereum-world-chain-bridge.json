@@ -17,7 +17,15 @@
       "tx_hash": "0xda5fd5cf26ea9fc4b05255ed01c944b6cdce8247846dabf921c3dabd3f82dba9",
       "event_kind": "deployment_baseline",
       "rpc_or_cast_proof": "cast receipt 0xda5fd5cf26ea9fc4b05255ed01c944b6cdce8247846dabf921c3dabd3f82dba9 --rpc-url https://eth.drpc.org",
-      "summary": "Deployment baseline at block 23847851 (2025-11-21). World Chain OP Stack AnchorStateRegistryProxy was deployed and initialized, assigning ProxyAdmin 0xd7405BE7f3e63b094Af6C7C23D5eE33Fd82F872D and pointing EIP-1967 implementation to AnchorStateRegistry 0xeb69cc681e8d4a557b30dffbad85affd47a2cf2e."
+      "summary": "Deployment baseline at block 23847851 (2025-11-21). World Chain OP Stack AnchorStateRegistryProxy was deployed and initialized, assigning ProxyAdmin 0xd7405BE7f3e63b094Af6C7C23D5eE33Fd82F872D and pointing EIP-1967 implementation to AnchorStateRegistry 0xeb69cc681e8d4a557b30dffbad85affd47a2cf2e. Authority Safe 0xA4fB12D15Eb85dc9284a7df0AdBC8B696EdbbF1d was initialized with a 3-of-8 signer threshold configuration."
+    },
+    {
+      "block_number": 24921045,
+      "block_date": "2026-04-12",
+      "tx_hash": "0x78ab219df0e3182ac79124be30daef58129758e57463ef184a4bf732918844ae",
+      "event_kind": "signer_rotation",
+      "rpc_or_cast_proof": "cast call 0xA4fB12D15Eb85dc9284a7df0AdBC8B696EdbbF1d \"getOwners()(address[])\" --block 24921045 --rpc-url https://eth.drpc.org",
+      "summary": "Safe signer rotation and threshold update: Safe 0xA4fB12D15Eb85dc9284a7df0AdBC8B696EdbbF1d rotated signer membership from 3-of-8 to 3-of-6 (active owners: 0xa3353Ae4458F663f1F888705b044269bd30cd110, 0xFB00073F931A817b244bF211aA2E5DCBfff8B1ca, 0x35A2079110aa30d1De381cf75aCd1836b6dEE1d7, 0x04a25F65200E56EAd142652b7E5eF372E169F2Bd, 0xeD9919D57162D518014C391a687AA8fb9DB55654, 0xB2aa0C2C4fD6BFCBF699d4c787CD6Cc0dC461a9d)."
     },
     {
       "block_number": 25830641,
@@ -36,13 +44,13 @@
         "kind": "github_docs_commit",
         "date": "2026-08-25",
         "url": "https://github.com/worldcoin/developer-docs/commit/54b8dd44142a50eb9ee5095e04ed2a6a257c6919",
-        "claim_summary": "World Chain developer docs updated via PR #159 to register AnchorStateRegistryProxy 0x90BB48fe3310499Db36437dCAE642F721e32d094 on Ethereum mainnet after the previous stale placeholder was replaced."
+        "claim_summary": "World Chain developer docs updated via PR #159 to register AnchorStateRegistryProxy 0x90BB48fe3310499Db36437dCAE642F721e32d094 on Ethereum mainnet after the superseded prior mainnet entry (0xD4D7A57DCC563756DeD99e224E144A6Bf0327099) was replaced."
       },
       {
         "kind": "github_docs_commit",
         "date": "2025-11-26",
-        "url": "https://github.com/worldcoin/developer-docs/commit/b28a86fd805e7547e59bd1c97caa8ab2760f0f3e",
-        "claim_summary": "Historical world-chain-contracts.mdx documentation baseline commit prior to the contract address refresh."
+        "url": "https://github.com/worldcoin/developer-docs/commit/03436f88d9cfe00d486bc767ff1a1d1e546658e3",
+        "claim_summary": "Historical world-chain-contracts.mdx documentation baseline commit prior to the contract address refresh, publishing the prior mainnet AnchorStateRegistry entry (0xD4D7A57DCC563756DeD99e224E144A6Bf0327099)."
       }
     ],
     "gap_windows": [
@@ -53,19 +61,23 @@
         "closed_date": "2026-08-25",
         "duration_days": 277.0,
         "status": "repaired",
-        "summary": "AnchorStateRegistryProxy 0x90BB48fe3310499Db36437dCAE642F721e32d094 was live on mainnet for 277 days while official developer documentation listed the outdated Sepolia/legacy placeholder address before PR #159 resolved the mismatch."
+        "summary": "AnchorStateRegistryProxy 0x90BB48fe3310499Db36437dCAE642F721e32d094 was live on mainnet for 277 days while official developer documentation listed the superseded prior mainnet AnchorStateRegistry address (0xD4D7A57DCC563756DeD99e224E144A6Bf0327099) before PR #159 synchronized it to the active deployed contract."
       }
-    ]
+    ],
+    "code_pushed_before_docs": true,
+    "code_pushed_before_docs_proof": "On-chain contract deployment occurred at block 23847851 (2025-11-21T06:14:11Z), which preceded the documentation repair commit 54b8dd44 (2026-08-25T16:23:19Z) by 277.0 days."
   },
   "repo_audit": {
     "github_org_repo": "worldcoin/world-chain",
-    "commits_12m_contracts": 184,
-    "commits_12m_frontend_or_other": 533,
+    "commits_12m_contracts": 60,
+    "commits_12m_frontend_or_other": 658,
+    "commits_12m_total": 718,
+    "classification_method": "deterministic .sol/.vy/.yul file extension path filter",
     "human_contributors_12m": 14,
     "bus_factor": 3,
     "code_before_upgrade_verified": true
   },
-  "executive_risk_memo": "Across the 2025-2026 observation window, World Chain Bridge AnchorStateRegistryProxy (0x90BB48fe3310499Db36437dCAE642F721e32d094) served as the dispute-game anchor state root verifier securing $220.5M in bridged TVL on Ethereum. Forensic analysis of its live control plane reveals that proxy admin authority is held by ProxyAdmin 0xd7405BE7f3e63b094Af6C7C23D5eE33Fd82F872D, which in turn is wholly owned by 3-of-6 Gnosis Safe 0xA4fB12D15Eb85dc9284a7df0AdBC8B696EdbbF1d with zero timelock latency or operational delay. At block 25,830,641 (2026-08-25), the Safe executed transaction 0x3f6f4122d21807d82d176c92da0b7c9586821e97dbf54126ad9dfa0ec31618cf, migrating implementation bytecode to 0x8F40Cc98D694AB986F026C5383A181FCc9B6B281 instantly without prior timelock queueing. Documentation forensics identify a 277-day synchronization gap where official developer documentation (world-chain-contracts.mdx) published an outdated address before being synchronized in commit 54b8dd44 via PR #159 on the day of the upgrade (MTTR = 277.0 days). Repository auditing of worldcoin/world-chain shows high engineering velocity with 717 commits over the trailing 12 months (184 smart contract commits across 14 human engineers with a bus factor of 3). Core protocol risk concentrates entirely in the 3-of-6 Safe threshold without an on-chain timelock buffer.",
+  "executive_risk_memo": "Across the 2025-2026 observation window, World Chain Bridge AnchorStateRegistryProxy (0x90BB48fe3310499Db36437dCAE642F721e32d094) served as the dispute-game anchor state root verifier securing $220.5M in bridged TVL on Ethereum. Forensic analysis of its live control plane reveals that proxy admin authority is held by ProxyAdmin 0xd7405BE7f3e63b094Af6C7C23D5eE33Fd82F872D, which in turn is wholly owned by 3-of-6 Gnosis Safe 0xA4fB12D15Eb85dc9284a7df0AdBC8B696EdbbF1d with zero timelock latency or operational delay. Safe 0xA4fB...bF1d was originally initialized at a 3-of-8 threshold at deployment before rotating to its current 3-of-6 configuration. At block 25,830,641 (2026-08-25), the Safe executed transaction 0x3f6f4122d21807d82d176c92da0b7c9586821e97dbf54126ad9dfa0ec31618cf, migrating implementation bytecode to 0x8F40Cc98D694AB986F026C5383A181FCc9B6B281 instantly without prior timelock queueing. Documentation forensics identify a 277-day synchronization gap where official developer documentation (world-chain-contracts.mdx) published a superseded mainnet address (0xD4D7...7099) before being synchronized in commit 54b8dd44 via PR #159 on the day of the upgrade (MTTR = 277.0 days). Repository auditing of worldcoin/world-chain shows 718 commits over the trailing 12 months (60 Solidity/Vyper/Yul smart contract commits and 658 non-contract commits across 14 human engineers with a bus factor of 3). Core protocol risk concentrates in the 3-of-6 Safe threshold without an on-chain timelock buffer.",
   "contributor_github": "givemehat",
   "agent_assist_framework": "human-researcher",
   "base_payout_address": "0xFFE286685fB8C12c3d59728DA29E44a637C22d3d",
