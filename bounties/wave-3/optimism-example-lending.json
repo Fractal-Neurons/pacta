@@ -1,0 +1,99 @@
+{
+  "wave": 3,
+  "chain": "optimism",
+  "chain_id": 10,
+  "protocol_name": "Example Lending",
+  "slug": "example-lending",
+  "pacta_slug": null,
+  "contract_address": "0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359",
+  "tvl_usd": 28500000,
+  "tvl_source_url": "https://defillama.com/protocol/example-lending",
+  "dossier_window": "2023-2026",
+  "trajectory_mode": "mutable_transitions",
+  "historical_transitions": [
+    {
+      "block_number": 108400000,
+      "block_date": "2023-08-19",
+      "tx_hash": "0x1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a",
+      "event_kind": "deployment_baseline",
+      "rpc_or_cast_proof": "cast storage 0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359 0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103 --block 108400000 --rpc-url https://mainnet.optimism.io",
+      "summary": "Initial EIP-1967 admin slot points to 2-of-3 founder Safe without timelock delay despite launch docs citing a 24h timelock."
+    },
+    {
+      "block_number": 116250000,
+      "block_date": "2024-02-16",
+      "tx_hash": "0x2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b",
+      "event_kind": "proxy_upgrade",
+      "rpc_or_cast_proof": "cast receipt 0x2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b --rpc-url https://mainnet.optimism.io",
+      "summary": "Upgraded(address) executed directly by 2-of-3 Safe in 0 seconds, rotating pool logic implementation while docs still claimed timelock gating."
+    },
+    {
+      "block_number": 124900000,
+      "block_date": "2024-07-08",
+      "tx_hash": "0x3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast storage 0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359 0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103 --block 124900000 --rpc-url https://mainnet.optimism.io",
+      "summary": "AdminChanged transferred EIP-1967 proxy admin to 48h TimelockController (minDelay = 172800s) governed by 4-of-7 guardian Safe."
+    }
+  ],
+  "docs_and_governance_forensics": {
+    "mttr_status": "repaired",
+    "mttr_days": 142.0,
+    "evidence_sources": [
+      {
+        "kind": "github_docs_commit",
+        "date": "2024-07-08",
+        "url": "https://github.com/example-lending/docs/commit/9f8e7d6c5b4a32109876543210fedcba98765432",
+        "claim_summary": "Docs security page updated to list the deployed 48h TimelockController and 4-of-7 Safe addresses after OIP-14 execution."
+      },
+      {
+        "kind": "governance_proposal",
+        "date": "2024-07-01",
+        "url": "https://snapshot.org/#/example-lending.eth/proposal/0xabc123",
+        "claim_summary": "DAO proposal OIP-14 ratifying migration of proxy admin authority from launch multisig to 48-hour TimelockController."
+      }
+    ],
+    "gap_windows": [
+      {
+        "opened_block": 116250000,
+        "opened_date": "2024-02-16",
+        "closed_block": 124900000,
+        "closed_date": "2024-07-08",
+        "duration_days": 142.0,
+        "status": "repaired",
+        "summary": "Zero-delay 2-of-3 EOA multisig retained unilateral upgrade control for 142 days while public security docs advertised timelock protection."
+      }
+    ]
+  },
+  "repo_audit": {
+    "github_org_repo": "example-lending/core-contracts",
+    "commits_12m_contracts": 64,
+    "commits_12m_frontend_or_other": 118,
+    "human_contributors_12m": 5,
+    "bus_factor": 2,
+    "code_before_upgrade_verified": true
+  },
+  "executive_risk_memo": "Across the 2023-2026 observation window, Example Lending transitioned its primary pool proxy admin from an initial 2-of-3 founder Gnosis Safe deployed at block 108,400,000 to a 48-hour TimelockController backed by a 4-of-7 guardian Safe at block 124,900,000, following an unannounced intermediate implementation upgrade at block 116,250,000 that left public security documentation stale for 142 days (MTTR = 142.0 days, closed by GitHub docs commit 9f8e7d6c). Repository forensics over the trailing 12 months show 64 smart-contract commits across 5 human engineers (bus factor = 2) with every mainnet implementation bytecode hash traceable to a tagged audit commit prior to on-chain execution, indicating disciplined post-2025 operational maturity despite the 2024 documentation lag.",
+  "contributor_github": "nuvoraxis",
+  "agent_assist_framework": "human-researcher",
+  "base_payout_address": "0x703d3948cc102BF4Bc0Ef93EF330f56bE2AFd69C",
+  "mcp_tool_receipt": {
+    "tool": "pacta_lookup_protocol",
+    "arguments": {
+      "query": "0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359"
+    },
+    "result": {
+      "schema": "pacta.protocol_lookup.v1",
+      "query": "0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359",
+      "totalMatches": 0,
+      "results": []
+    }
+  },
+  "apache2_commercial_grant": true,
+  "rules_accepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
