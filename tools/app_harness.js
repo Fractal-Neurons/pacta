@@ -151,8 +151,19 @@ function run(tree, app, loc) {
   const host = loc.hostname || "pacta.wtf";
   const location = { href: "https://" + host + loc.path + (loc.search || "") + (loc.hash || ""), search: loc.search || "", hash: loc.hash || "",
     pathname: loc.path, protocol: loc.protocol || "https:", hostname: host };
+  const history = {
+    replaceState: (_s, _t, u) => {
+      try {
+        const parsed = new URL(String(u), "https://" + host);
+        location.pathname = parsed.pathname;
+        location.search = parsed.search;
+        location.hash = parsed.hash;
+        location.href = parsed.href;
+      } catch (_) {}
+    }
+  };
   const window = {
-    addEventListener: (t, fn) => { (winListeners[t] = winListeners[t] || []).push(fn); }, isSecureContext: false, location,
+    addEventListener: (t, fn) => { (winListeners[t] = winListeners[t] || []).push(fn); }, isSecureContext: false, location, history,
     scrollY: 0, innerHeight: 800
   };
   Object.assign(window, loc.win || {});
@@ -1799,9 +1810,89 @@ async function pfComboboxScenario() {
   const clearedOk = inp.value === "" && selChip.hidden === true && lb.hidden === false;
   res.pf_combobox_select_and_autocomplete = zeroTypeOk && tickerAndNameOk && selectedOk && clearedOk;
 }
+
+async function internalQaScenario() {
+  const ADDR = "0xa35b1b31ce002fbf2058d22f30f95d405200a15b";
+  const makeStore = (init = {}) => {
+    const map = Object.assign({}, init);
+    const writes = [];
+    return {
+      map,
+      writes,
+      storage: {
+        getItem: (k) => (Object.prototype.hasOwnProperty.call(map, k) ? map[k] : null),
+        setItem: (k, v) => { writes.push(["set", k, String(v)]); map[k] = String(v); },
+        removeItem: (k) => { writes.push(["rm", k]); delete map[k]; }
+      }
+    };
+  };
+  const pfUrls = [];
+  const pfFetch = (url) => {
+    const u = String(url);
+    if (/\/v1\/check\/preflight/.test(u)) {
+      pfUrls.push(u);
+      return Promise.resolve({ status: 200, ok: true, json: () => Promise.resolve(PF_EXAMPLE) });
+    }
+    return Promise.resolve({ status: 200, ok: true, json: () => Promise.resolve({ items: [] }) });
+  };
+
+  // 1. External visitor: 0 storage writes, no i field on beacons, caller_agent=pacta-wtf-checker, no footer badge
+  const extStore = makeStore();
+  const ext = run(input.scan, input.app, { path: "/scan/", hostname: "pacta.wtf", beacon: input.beacon, storage: extStore.storage, fetch: pfFetch });
+  ext.document.getElementById("pf-address").value = ADDR;
+  ext.document.getElementById("pf-form").dispatchEvent(new Event_("submit"));
+  await flush();
+  const extEv = ext.events();
+  res.qa_external_untouched = extStore.writes.length === 0
+    && ext.window.__pactaInternal === 0
+    && extEv.length === 2 && !("i" in extEv[0]) && !("i" in extEv[1])
+    && pfUrls[0].includes("caller_agent=pacta-wtf-checker")
+    && !ext.document.querySelector("[data-internal-qa-badge]");
+
+  // 2. ?internal=1&utm_source=x: sets pacta_internal="1", strips internal=1 keeping ?utm_source=x, tags beacons i:1, sends caller_agent=pacta-founder-qa, renders footer badge + skips uwt.js & xTrackLead
+  const qaStore = makeStore();
+  const qa = run(input.scan, input.app, { path: "/scan/", search: "?internal=1&utm_source=x", hash: "#top", hostname: "pacta.wtf", beacon: input.beacon, storage: qaStore.storage, fetch: pfFetch });
+  qa.document.getElementById("pf-address").value = ADDR;
+  qa.document.getElementById("pf-form").dispatchEvent(new Event_("submit"));
+  await flush();
+  const qaEv = qa.events();
+  const qaBadge = qa.document.querySelector("[data-internal-qa-badge]");
+  res.qa_opt_in_persists_and_tags = qaStore.map.pacta_internal === "1"
+    && qa.location.search === "?utm_source=x" && qa.location.hash === "#top"
+    && qa.window.__pactaInternal === 1
+    && qaEv.length === 2 && qaEv[0].e === "page_load" && qaEv[0].i === 1 && qaEv[1].e === "live_checker_submit" && qaEv[1].i === 1
+    && pfUrls[1].includes("caller_agent=pacta-founder-qa")
+    && !!qaBadge && qaBadge.textContent.includes("Internal QA mode active")
+    && qa.document.querySelectorAll('script[src="https://static.ads-twitter.com/uwt.js"]').length === 0
+    && !qa.window.__pactaTwqEvents.some((e) => e[0] === "event");
+
+  // 3. Subsequent visit without ?internal=1 keeps QA mode active; clicking [Turn off] clears storage, hides badge, and stops tagging
+  const nextVisit = run(input.scan, input.app, { path: "/scan/", hostname: "pacta.wtf", beacon: input.beacon, storage: qaStore.storage, fetch: pfFetch });
+  const persistedOk = nextVisit.window.__pactaInternal === 1 && nextVisit.events()[0].i === 1 && !!nextVisit.document.querySelector("[data-internal-qa-badge]");
+  const offBtn = nextVisit.document.querySelector("[data-internal-qa-off]");
+  offBtn.dispatchEvent(new Event_("click"));
+  nextVisit.window.scrollY = 3000;
+  (nextVisit.winListeners.scroll || []).forEach((fn) => fn());
+  const nextEv = nextVisit.events();
+  res.qa_turn_off_and_param_zero = persistedOk
+    && !("pacta_internal" in qaStore.map)
+    && nextVisit.window.__pactaInternal === 0
+    && nextVisit.document.querySelector("[data-internal-qa-badge]").hidden === true
+    && nextEv.some((x) => x.e === "scroll_50" && !("i" in x));
+
+  // 4. Visiting ?internal=0 clears persisted storage and strips ?internal=0
+  const clearStore = makeStore({ pacta_internal: "1" });
+  const cleared = run(input.scan, input.app, { path: "/scan/", search: "?internal=0", hostname: "pacta.wtf", beacon: input.beacon, storage: clearStore.storage });
+  res.qa_param_zero_clears = !("pacta_internal" in clearStore.map)
+    && cleared.location.search === ""
+    && cleared.window.__pactaInternal === 0
+    && !("i" in cleared.events()[0])
+    && !cleared.document.querySelector("[data-internal-qa-badge]");
+}
 (async () => {
   try { await v45Scenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
   try { await pfComboboxScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
+  try { await internalQaScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
   try { await requestBriefScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
   try { await liveCardScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
   try { await tryExampleScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }

@@ -1755,9 +1755,10 @@ def main(argv=None):
     cdoc = {f: read(f) for f in ("docs/SKILL.md", "docs/llms.txt", "docs/llms-full.txt", "docs/llms/index.html", "packages/mcp-server/README.md")}
     cbad = [f for f, t in cdoc.items() if not (all(x in t for x in ["caller_agent", "requester_role", "caller_purpose"] + roles_ + purposes_)
                                               and "Cloudflare edge country" in t and re.search(r"never[^.]{0,40}(?:name|e-mail)", t))]
-    check("free MCP tier caller fields (caller_agent slug + requester_role / caller_purpose closed enums) documented in SKILL.md, llms.txt, llms-full.txt, /llms/ and the MCP README (no personal data; location only from the Cloudflare edge); docs SKILL.md == packages/mcp-server/SKILL.md; the live checker passes caller_agent=pacta-wtf-checker",
+    check("free MCP tier caller fields (caller_agent slug + requester_role / caller_purpose closed enums) documented in SKILL.md, llms.txt, llms-full.txt, /llms/ and the MCP README (no personal data; location only from the Cloudflare edge); docs SKILL.md == packages/mcp-server/SKILL.md; the live checker passes caller_agent=pacta-wtf-checker (or pacta-founder-qa under opt-in ?internal=1)",
           not cbad and read("docs/SKILL.md") == read("packages/mcp-server/SKILL.md")
-          and "&caller_agent=pacta-wtf-checker&requester_role=individual_user&caller_purpose=general_research" in read("tools/app.src.js"), str(cbad))
+          and '"pacta-wtf-checker"' in read("tools/app.src.js") and '"pacta-founder-qa"' in read("tools/app.src.js")
+          and '"&caller_agent=" + checkerCallerAgent() + "&requester_role=individual_user&caller_purpose=general_research"' in read("tools/app.src.js"), str(cbad))
     bare = []
     for dp, _dn, fns in os.walk(ROOT):
         if os.sep + ".git" in dp:
@@ -2099,15 +2100,16 @@ def main(argv=None):
     ls_vars = set(re.findall(r"localStorage\.\w+\((\w+)", appjs))
     ls_keys = set(re.findall(r'localStorage\.(?:getItem|setItem)\("([^"]+)"', appjs)) | (
         {"pacta-theme"} if 'var THEME_KEY = "pacta-theme";' in appjs and "THEME_KEY" in ls_vars else set()) | (
-        {"pacta-x-purchased"} if 'X_PURCHASE_KEY = "pacta-x-purchased"' in appjs and "X_PURCHASE_KEY" in ls_vars else set())
+        {"pacta-x-purchased"} if 'X_PURCHASE_KEY = "pacta-x-purchased"' in appjs and "X_PURCHASE_KEY" in ls_vars else set()) | (
+        {"pacta_internal"} if 'var INTERNAL_QA_KEY = "pacta_internal";' in appjs and "INTERNAL_QA_KEY" in ls_vars else set())
     js_bad = sorted(f for f, t in page_js.items() if re.search(
         r"document\.cookie|sessionStorage|indexedDB|XMLHttpRequest|new Image\b|WebSocket|EventSource|importScripts"
         + (r"|createElement\(\s*\"script" if f != "docs/app.js" else r""), t))
     script_el_ok = len(re.findall(r'createElement\(\s*"script"', appjs)) == 1 and 'X_UWT_SRC = "https://static.ads-twitter.com/uwt.js"' in appjs
     data_api = set(re.findall(r'data-api="([^"]+)"', "".join(pages.values())))
     app_fetch = len(re.findall(r"\bfetch\(", appjs))
-    check("page script boundaries: b.js/theme.js touch zero cookies/storage/third-party scripts; app.js uses localStorage only for pacta-theme + pacta-x-purchased dedup, injects only host-gated uwt.js, and fetch() calls only this site's JSON, data-api, data-live-timelocks, and the four allow-listed public RPCs",
-          not js_bad and script_el_ok and ls_vars == {"THEME_KEY", "X_PURCHASE_KEY"} and ls_keys == {"pacta-theme", "pacta-x-purchased"} and appjs.count("localStorage") == 5 and data_api <= {API_, API_ + "/v1/requests", API_ + "/v1/orders/verify"}
+    check("page script boundaries: b.js/theme.js touch zero cookies/storage/third-party scripts; app.js uses localStorage only for pacta-theme + pacta-x-purchased dedup + opt-in pacta_internal QA tag, injects only host-gated uwt.js, and fetch() calls only this site's JSON, data-api, data-live-timelocks, and the four allow-listed public RPCs",
+          not js_bad and script_el_ok and ls_vars == {"THEME_KEY", "X_PURCHASE_KEY", "INTERNAL_QA_KEY"} and ls_keys == {"pacta-theme", "pacta-x-purchased", "pacta_internal"} and appjs.count("localStorage") == 8 and data_api <= {API_, API_ + "/v1/requests", API_ + "/v1/orders/verify"}
           and app_fetch == 10 and appjs[appjs.find("function initCheckout()"):appjs.find("function initLauncher")].count("fetch(api, opts)") == 1 and "fetch(pfUrl," in appjs[appjs.find("function initMiniApp()"):] and "fetch(verifyApi," in appjs[appjs.find("function initMiniApp()"):] and 'j(root + "api/v1/lookup.json")' in appjs and 'j(root + "api/v1/scorecards.json")' in appjs and 'fetch(api, init)' in appjs[appjs.find("function initRequest()"):] and "REQ_API_RE.test(api)" in appjs and 'fetch(document.documentElement.getAttribute("data-api") || "api/v1/index.json")' in appjs
           and 'fetch(body.getAttribute("data-src") || "api/v1/scorecards.json")' in appjs
           # the 4th fetch: the user-initiated "Verify live on RPC" button, POSTing JSON-RPC only to the four allow-listed public RPCs
@@ -2119,13 +2121,14 @@ def main(argv=None):
           and "    fetch(url, init)\n" in appjs and "if (!LIVE_TL_RE.test(url)) { liveSettled(false, null); return; }" in appjs
           and set(re.findall(r'data-live-timelocks="([^"]+)"', "".join(pages.values()))) == {html.escape(BS.LIVE_TIMELOCKS_URL)}
           and BS.LIVE_TIMELOCKS_URL.startswith(API_ + "/v1/briefs/live-timelocks?")
-          and 'fetch(api + "/v1/check/preflight?chain=" + ch + "&address=" + a + "&caller_agent=pacta-wtf-checker&requester_role=individual_user&caller_purpose=general_research", opts)' in appjs,
+          and 'fetch(api + "/v1/check/preflight?chain=" + ch + "&address=" + a + "&caller_agent=" + checkerCallerAgent() + "&requester_role=individual_user&caller_purpose=general_research", opts)' in appjs,
           f"bad {js_bad}; localStorage keys {sorted(ls_keys)}; data-api {sorted(data_api)}; fetch {app_fetch}")
     b_keys = ["b_page_load_payload", "b_hook_exposed", "b_copy_and_cta_events", "b_scroll_once_each", "b_live_checker_submit", "b_invalid_submit_not_reported",
               "b_protocol_view", "b_protocol_copy_curl_and_cta", "b_not_found_404", "b_not_found_path_sanitised", "b_not_found_copy_mcp",
               "b_dnt_sends_nothing", "b_non_https_sends_nothing", "b_fetch_fallback", "b_no_cookie_access",
               "b_c1_spec_payloads", "b_c1_referrers_redacted", "b_c1_utm_redacted", "b_c1_all_protocol_slugs_kept", "b_c1_page_paths",
-              "b_c2_slug_only_from_canonical", "b_cta_aligned_maintenance", "b_cta_clearance_protocol", "b_cta_clearance_brief", "b_cta_pricing"]
+              "b_c2_slug_only_from_canonical", "b_cta_aligned_maintenance", "b_cta_clearance_protocol", "b_cta_clearance_brief", "b_cta_pricing",
+              "qa_external_untouched", "qa_opt_in_persists_and_tags", "qa_turn_off_and_param_zero", "qa_param_zero_clears"]
     failed_bk = [k for k in b_keys if res.get(k) is not True] + (["harness_error: " + res["harness_error"][:200]] if "harness_error" in res else [])
     check("beacon behaviour (node harness, mocked navigator.sendBeacon): page_load {r, u}, same-site r=self, protocol_view t=slug, copy_mcp_url / copy_curl / copy_skill_md / cta_click hooks, scroll_50/90 once, live_checker_submit t=chain:address, 404 path sanitised, DNT and http send nothing, fetch keepalive fallback",
           not failed_bk, f"{len(b_keys) - len([k for k in b_keys if res.get(k) is not True])}/{len(b_keys)}; failed {failed_bk[:4]}")

@@ -20,6 +20,59 @@ function arrowLink(attrs, label, kind) { return el("a", attrs, [String(label), a
 var BASE = (function () { var b = document.documentElement.getAttribute("data-base-path") || ""; return /^(?:\/(?!\.{1,2}(?:\/|$))[A-Za-z0-9._-]+)+$/.test(b) ? b : ""; })();
 function siteUrl(u) { var m = /^https:\/\/pacta\.wtf(\/[^\s"<>]*)$/.exec(String(u)); return BASE && m ? BASE + m[1] : String(u); }
 function num(n) { return Number(n).toLocaleString("en-US"); }
+var INTERNAL_QA_KEY = "pacta_internal";
+function clearInternalQaStorage() { try { localStorage.removeItem(INTERNAL_QA_KEY); } catch (e) {  } }
+function stripInternalParam() {
+try {
+var raw = String((location && location.search) || "");
+if (!/[?&]internal=[01](?:&|$)/.test(raw)) return;
+var parts = raw.replace(/^\?/, "").split("&").filter(function (kv) { return kv && !/^internal=[01]$/.test(kv); });
+var nextSearch = parts.length ? "?" + parts.join("&") : "";
+var nextUrl = String((location && location.pathname) || "/") + nextSearch + String((location && location.hash) || "");
+if (window.history && typeof window.history.replaceState === "function") window.history.replaceState(null, "", nextUrl);
+} catch (e) {  }
+}
+function syncInternalQaFlag() {
+var search = String((location && location.search) || "");
+var host = String((location && location.hostname) || "");
+var m = /(?:^|[?&])internal=(1|0)(?:&|$)/.exec(search);
+var param = m ? m[1] : null;
+if (param === "1") {
+try { localStorage.setItem(INTERNAL_QA_KEY, "1"); } catch (e) {  }
+stripInternalParam();
+window.__pactaInternal = 1;
+return;
+}
+if (param === "0") {
+clearInternalQaStorage();
+stripInternalParam();
+window.__pactaInternal = 0;
+return;
+}
+var stored = null;
+try { stored = localStorage.getItem(INTERNAL_QA_KEY); } catch (e) {  }
+window.__pactaInternal = (stored === "1" || host === "pacta.dri.network") ? 1 : 0;
+}
+syncInternalQaFlag();
+function isInternalQa() { return window.__pactaInternal === 1; }
+function checkerCallerAgent() { return isInternalQa() ? "pacta-founder-qa" : "pacta-wtf-checker"; }
+function initInternalQaBadge() {
+if (!isInternalQa()) return;
+var wrap = $(".ftr .wrap") || $(".ftr");
+if (!wrap || $("[data-internal-qa-badge]", wrap)) return;
+var offBtn = el("button", { type: "button", class: "qa-mode-off", "data-internal-qa-off": "1", text: "Turn off" });
+var bar = el("div", { class: "qa-mode-bar", "data-internal-qa-badge": "1", role: "status" }, [
+el("span", { class: "qa-mode-dot", "aria-hidden": "true" }),
+el("span", { text: "Internal QA mode active (excluded from external funnel) · " }),
+offBtn
+]);
+offBtn.addEventListener("click", function () {
+clearInternalQaStorage();
+window.__pactaInternal = 0;
+bar.hidden = true;
+});
+wrap.appendChild(bar);
+}
 function applyTheme(pref) {
 var dark = pref === "dark" || (pref === "system" && systemDark());
 document.documentElement.classList.toggle("dark", dark);
@@ -479,7 +532,7 @@ window.twq = s;
 }
 if ($("[data-nf]") || window.pactaRescued) return;
 xCallTwq("config", X_PIXEL_ID);
-if (xIsProdHost() && !$('script[src="' + X_UWT_SRC + '"]')) {
+if (xIsProdHost() && !isInternalQa() && !$('script[src="' + X_UWT_SRC + '"]')) {
 var sc = document.createElement("script");
 sc.async = true;
 sc.setAttribute("async", "");
@@ -489,7 +542,7 @@ if (hd) hd.appendChild(sc);
 }
 }
 function xTrackLead() {
-if (xLeadSent) return;
+if (xLeadSent || isInternalQa()) return;
 xLeadSent = true;
 try { xCallTwq("event", X_LEAD_EVENT, {}); } catch (e) {  }
 }
@@ -1552,7 +1605,7 @@ if (cSub) cSub.disabled = true;
 if (vSum) vSum.textContent = "Reading " + short(a, 6, 4) + " on " + (ch === "base" ? "Base" : "Ethereum") + "…";
 if (typeof window.pactaBeacon === "function") { try { window.pactaBeacon("live_checker_submit", ch + ":" + a.toLowerCase()); } catch (e) {  } }
 xTrackLead();
-var pfUrl = api + "/v1/check/preflight?chain=" + ch + "&address=" + a + "&caller_agent=pacta-wtf-checker&requester_role=individual_user&caller_purpose=general_research";
+var pfUrl = api + "/v1/check/preflight?chain=" + ch + "&address=" + a + "&caller_agent=" + checkerCallerAgent() + "&requester_role=individual_user&caller_purpose=general_research";
 Promise.all([
 fetch(pfUrl, { headers: { Accept: "application/json" } }).then(function (r) { return r.json().then(function (b) { return { s: r.status, b: b }; }); }),
 lookupData().catch(function () { return []; })
@@ -2390,7 +2443,7 @@ var who = pfSelectedMeta && pfSelectedMeta.address.toLowerCase() === a.toLowerCa
 ? pfSelectedMeta.name + " (" + short(a, 6, 4) + ")"
 : short(a, 6, 4);
 msg("Checking " + who + " on " + (ch === "base" ? "Base" : "Ethereum") + " at the latest block…", "loading");
-fetch(api + "/v1/check/preflight?chain=" + ch + "&address=" + a + "&caller_agent=pacta-wtf-checker&requester_role=individual_user&caller_purpose=general_research", opts)
+fetch(api + "/v1/check/preflight?chain=" + ch + "&address=" + a + "&caller_agent=" + checkerCallerAgent() + "&requester_role=individual_user&caller_purpose=general_research", opts)
 .then(function (res) { return res.json().then(function (b) { return { status: res.status, body: b }; }); })
 .then(function (x) {
 if (my !== seq) return;
@@ -2976,7 +3029,7 @@ openCheckout();
 }
 }
 document.addEventListener("DOMContentLoaded", function () {
-[initTheme, initXPixel, initSheet, initTabs, initTabLinks, initDetailsHash, initCmdk, initTooltips, initCopy, initBeaconHooks, tick, initIndex, initRequest, initLauncher, initCheckout, initScanFunnel, initSealCombo, initMiniApp, initInspector, initPreflight,
+[initTheme, initInternalQaBadge, initXPixel, initSheet, initTabs, initTabLinks, initDetailsHash, initCmdk, initTooltips, initCopy, initBeaconHooks, tick, initIndex, initRequest, initLauncher, initCheckout, initScanFunnel, initSealCombo, initMiniApp, initInspector, initPreflight,
 initLiveTimelocks, initProtocolFilter, initAges, initRefresh, initHeroCheck, initBadgeWidget, initScorecards, initReceipts].forEach(function (f) {
 try { f(); } catch (e) { setTimeout(function () { throw e; }, 0); }
 });
