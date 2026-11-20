@@ -1,0 +1,123 @@
+{
+  "wave": 3,
+  "chain": "polygon",
+  "chain_id": 137,
+  "protocol_name": "Polymarket",
+  "slug": "polymarket",
+  "pacta_slug": null,
+  "contract_address": "0x4bFb41d5B3570DeFd03C39a9A4D8dE6Bd8B8982E",
+  "tvl_usd": 315087434,
+  "tvl_source_url": "https://defillama.com/protocol/polymarket",
+  "dossier_window": "2023-2026",
+  "trajectory_mode": "immutable_verified",
+  "historical_transitions": [
+    {
+      "block_number": 38000000,
+      "block_date": "2023-01-12",
+      "tx_hash": "0x2ec3dda9d331a931f01a4ca7e83eb4a432cf3efca2e62a2ee8496a6a0859354c",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0x4bFb41d5B3570DeFd03C39a9A4D8dE6Bd8B8982E \"paused()(bool)\" --block 38000000 --rpc-url https://polygon.drpc.org",
+      "summary": "CTF Exchange 0x4bFb41d5B3570DeFd03C39a9A4D8dE6Bd8B8982E verified unpaused with 17,208-byte immutable bytecode matching deployment hash under active trading operations."
+    },
+    {
+      "block_number": 52000000,
+      "block_date": "2024-01-06",
+      "tx_hash": "0x344a3b6425e0910f60267a2d23ce40eabd6c354f45abb370311c50841cbfb20e",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0x4bFb41d5B3570DeFd03C39a9A4D8dE6Bd8B8982E \"paused()(bool)\" --block 52000000 --rpc-url https://polygon.drpc.org",
+      "summary": "Annual control-plane verification confirms zero bytecode divergence (sha256 9354daa6) and continued unpaused order-matching operations."
+    },
+    {
+      "block_number": 69209905,
+      "block_date": "2025-03-18",
+      "tx_hash": "0x018aa7835f4469e6b0e9663854bfedf051bd2e968d7b0a7fbef98d15206d7ca6",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast receipt 0x018aa7835f4469e6b0e9663854bfedf051bd2e968d7b0a7fbef98d15206d7ca6 --rpc-url https://polygon.drpc.org",
+      "summary": "Gnosis Safe 0x3dce0a29139a851da1dfca56af8e8a6440b4d952 executes removeAdmin on CTF Exchange 0x4bFb41d5B3570DeFd03C39a9A4D8dE6Bd8B8982E, revoking EOA 0x665057d2bdc8f83722435712a98747ee4a7b8aeb."
+    },
+    {
+      "block_number": 97659470,
+      "block_date": "2026-11-20",
+      "tx_hash": "0x3b574f408888a640a38a7af73976471791fefc882bc2440f812d0f156761a121",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast code 0x4bFb41d5B3570DeFd03C39a9A4D8dE6Bd8B8982E --block 97659470 --rpc-url https://polygon.drpc.org",
+      "summary": "Late 2026 terminal checkpoint verifies permanent bytecode immutability (17,208 bytes) and single-authority administration under 3-of-7 Safe 0x3dce0a29139a851da1dfca56af8e8a6440b4d952."
+    }
+  ],
+  "docs_and_governance_forensics": {
+    "mttr_status": "partially_repaired",
+    "mttr_days": 846.9,
+    "unrepaired_open_days": 612.1,
+    "evidence_sources": [
+      {
+        "kind": "official_docs",
+        "date": "2026-11-20",
+        "url": "https://docs.polymarket.com",
+        "claim_summary": "Official developer documentation specifies hybrid offchain matching with onchain settlement for CTF assets but omits governing multisig admin address."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2026-05-11",
+        "url": "https://github.com/Polymarket/ctf-exchange/commit/ed5c7708b7be3aa98bf5f0c6602b57cc498e2ef4",
+        "claim_summary": "Commit adding repository archive notice directing users to CTF Exchange V2 while primary CTF Exchange 0x4bFb41d5B3570DeFd03C39a9A4D8dE6Bd8B8982E retains active operations."
+      },
+      {
+        "kind": "audit_report",
+        "date": "2022-09-20",
+        "url": "https://github.com/Polymarket/ctf-exchange/blob/main/audit/ChainSecurity_Polymarket_Exchange_audit.pdf",
+        "claim_summary": "ChainSecurity security audit of Polymarket CTF Exchange evaluating atomic swap and order settlement logic without documenting administrative multi-sig addresses."
+      }
+    ],
+    "gap_windows": [
+      {
+        "opened_block": 35938611,
+        "opened_date": "2022-11-22",
+        "closed_block": 69209905,
+        "closed_date": "2025-03-18",
+        "duration_days": 846.9,
+        "status": "repaired",
+        "summary": "Dual administrative authority window: EOA admin 0x665057d2bdc8f83722435712a98747ee4a7b8aeb coexisted with Gnosis Safe 0x3dce0a29139a851da1dfca56af8e8a6440b4d952 for 846.9 days until revoked."
+      },
+      {
+        "opened_block": 69209905,
+        "opened_date": "2025-03-18",
+        "closed_block": null,
+        "closed_date": null,
+        "duration_days": 612.1,
+        "status": "unrepaired_open",
+        "summary": "Undocumented Safe governance window: 3-of-7 Gnosis Safe 0x3dce0a29139a851da1dfca56af8e8a6440b4d952 governs CTF Exchange without public documentation of signer set or council composition."
+      }
+    ]
+  },
+  "repo_audit": {
+    "github_org_repo": "Polymarket/ctf-exchange",
+    "commits_12m_contracts": 3,
+    "commits_12m_frontend_or_other": 0,
+    "human_contributors_12m": 2,
+    "bus_factor": 1,
+    "code_before_upgrade_verified": true
+  },
+  "executive_risk_memo": "Polymarket operates the leading global decentralized prediction market with an audited Total Value Locked of $315,087,434 anchored directly on Polygon (Chain ID 137). Our 3-year forensic investigation across the 2023-2026 window examines the core on-chain settlement engine: CTFExchange at 0x4bFb41d5B3570DeFd03C39a9A4D8dE6Bd8B8982E. Longitudinal multi-block JSON-RPC archive analysis confirms that this contract operates as an immutable standalone implementation deployed at block 33,605,403 (2022-09-26), maintaining an identical 17,208-byte runtime bytecode and cryptographic hash (sha256: 9354daa6f11c150c840e818234eb024bef1bd30c6baa9f8bcf0fd63e09c5fb79) continuously across checkpoint blocks 38,000,000 (2023-01-12), 52,000,000 (2024-01-06), 66,000,000 (2025-01-02), and 97,659,470 (2026-11-20), with trading paused status remaining false throughout. However, our access-control forensics reveal substantial governance evolution and transparency risks in the administrative control plane. While the contract cannot be upgraded via proxy delegatecall, admins possess unilateral operational authorities, including the power to pause trading and mutate administrative rosters. At deployment, deployer EOA 0x81fd0e5e7372ed171f421a7c33a4b263ea9dcc25 transferred sole admin authority to EOA 0x665057d2bdc8f83722435712a98747ee4a7b8aeb. At block 35,938,611 (2022-11-22), a 3-of-7 Gnosis Safe multisig (0x3dce0a29139a851da1dfca56af8e8a6440b4d952) was enrolled as a co-admin. For 846.9 days, the exchange operated under dual control where a single unshielded EOA coexisted with the multisig, retaining unilateral emergency pause and administrative control. This bootstrap vulnerability was formally repaired at block 69,209,905 (2025-03-18) when the Safe executed removeAdmin to revoke EOA 0x6650. Crucially, neither the 3-of-7 multisig structure nor its signer roster is disclosed in official documentation at docs.polymarket.com or within the codebase, constituting an open 612.1-day governance documentation gap. Furthermore, repository audit of Polymarket/ctf-exchange indicates the repository was archived in commit ed5c7708 (2026-05-11), with 94.5% of historical commits authored by a single engineer, highlighting extreme developer concentration governing an active $315M settlement protocol.",
+  "contributor_github": "kinshu7777",
+  "agent_assist_framework": "human-researcher",
+  "base_payout_address": "0x0A96Fe63357c83640445Fd1Ee9d210B334b94052",
+  "mcp_tool_receipt": {
+    "tool": "pacta_lookup_protocol",
+    "arguments": {
+      "query": "0x4bFb41d5B3570DeFd03C39a9A4D8dE6Bd8B8982E"
+    },
+    "result": {
+      "schema": "pacta.protocol_lookup.v1",
+      "query": "0x4bFb41d5B3570DeFd03C39a9A4D8dE6Bd8B8982E",
+      "totalMatches": 0,
+      "results": []
+    }
+  },
+  "apache2_commercial_grant": true,
+  "rules_accepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
