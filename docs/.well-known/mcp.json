@@ -58,7 +58,7 @@
   "catalog": "https://pacta.wtf/api/v1/lookup.json",
   "free": true,
   "http": "https://pacta-x402.pacta.workers.dev/v1/protocols/lookup",
-  "note": "Name lookup first: if you only have a protocol or token name (e.g. Aave, Ethena, USDe, Moonwell, kUSD), call pacta_lookup_protocol (or GET https://pacta-x402.pacta.workers.dev/v1/protocols/lookup?q=<name>) to resolve its verified record: canonical slug and page URL, checksummed primary contract and controller, classification with its evidence basis (eas_attested: Base-EAS-attested, documentation compared; rpc_observed: on-chain control plane pinned over JSON-RPC, documentationComparison not_assessed; briefs), and preflightArgs {chain, address} for pacta_check_preflight. 313 protocols + 17 briefs, answered in memory with no RPC; free in every pricing mode; an empty query lists the catalog. Catalog: https://pacta.wtf/api/v1/lookup.json.",
+  "note": "Name lookup first: if you only have a protocol or token name (e.g. Aave, Ethena, USDe, Moonwell, kUSD), call pacta_lookup_protocol (or GET https://pacta-x402.pacta.workers.dev/v1/protocols/lookup?q=<name>) to resolve its verified record: canonical slug and page URL, checksummed primary contract and controller, classification with its evidence basis (eas_attested: Base-EAS-attested, documentation compared; rpc_observed: on-chain control plane pinned over JSON-RPC, documentationComparison not_assessed; briefs), and preflightArgs {chain, address} for pacta_check_preflight. 316 protocols + 17 briefs, answered in memory with no RPC; free in every pricing mode; an empty query lists the catalog. Catalog: https://pacta.wtf/api/v1/lookup.json.",
   "tool": "pacta_lookup_protocol"
  },
  "name": "io.github.Fractal-Neurons/pacta",

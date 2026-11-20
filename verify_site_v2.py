@@ -46,14 +46,14 @@ import xml.etree.ElementTree as ET
 ROOT = os.path.dirname(os.path.abspath(__file__))
 DOCS = os.path.join(ROOT, "docs")
 RESULTS = []
-# ---- EXPECT-BEGIN: the published numbers, in one place (tools/apply_sprint36_attestation.py rewrites this block when it stamps a Sprint)
+# ---- EXPECT-BEGIN: the published numbers, in one place (tools/apply_sprint37_attestation.py rewrites this block when it stamps a Sprint)
 EXPECT = {
-    "sprints": 36, "records": 304, "eas_attestations": 36,              # index.json sprints_completed / records_indexed; Base EAS sprint UIDs
-    "protocols": 313, "eas_protocols": 184, "rpc_protocols": 129,          # /protocols/ pages = EAS-attested + RPC-pinned; badges = protocols
-    "briefs": 17, "badge_tiers": {"aligned": 122, "parameter_delta": 62, "rpc_observed": 129},
+    "sprints": 37, "records": 309, "eas_attestations": 37,              # index.json sprints_completed / records_indexed; Base EAS sprint UIDs
+    "protocols": 316, "eas_protocols": 189, "rpc_protocols": 127,          # /protocols/ pages = EAS-attested + RPC-pinned; badges = protocols
+    "briefs": 17, "badge_tiers": {"aligned": 126, "parameter_delta": 63, "rpc_observed": 127},
     "base_records": 38,                                                  # index.json records with chain "base"
-    "rpc_by_chain": {"ethereum": 119, "base": 10},                         # rpc-pinned.json records per chain (sum = rpc_protocols)
-    "multi_attest_txs": ["1–12", "13–16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36"],                              # attestation_coverage.eas_multi_attest_txs keys
+    "rpc_by_chain": {"ethereum": 117, "base": 10},                         # rpc-pinned.json records per chain (sum = rpc_protocols)
+    "multi_attest_txs": ["1–12", "13–16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37"],                              # attestation_coverage.eas_multi_attest_txs keys
     "summaries": {"15": "61c0cc292cfa1fc3840277cf312383d24a6c81af56afac303afdbd84e7316cf6",
                   "16": "91b8e29301ef0e625c4ddc9eadaf5388115812f5958f90b6e0ed53a4808ba8ae",
                   "17": "2fd7ab979c6dfc3aae44f6c46c8f0397959927874ff0358574043a056d3168ea",
@@ -75,13 +75,14 @@ EXPECT = {
                   "33": "795432ee6da61e4eb4e8efde2a99e00975d206734bc513080fb28a7da559dea4",
                   "34": "0f68f60a5ab92cd74ca0fe2221ebf9c75e59ce7f9e5cf24d80488fd38eac6c6c",
                   "35": "e3eb4a636bc03802bbbc731b9e019c8046933939089f9bf68ecb743e6569589c",
-                  "36": "d955b44c8a45b41e8e5c3b5c26d67e4e62c9e2c16185ab997ec0247c70d38d35"},   # audits/sprint-<n>/ summary SHA-256 (attested)
+                  "36": "d955b44c8a45b41e8e5c3b5c26d67e4e62c9e2c16185ab997ec0247c70d38d35",
+                  "37": "14758a8d891e0d55321017f25f0caa9f87eb200875a21cf26e47e43404c7a285"},   # audits/sprint-<n>/ summary SHA-256 (attested)
 }
 # ---- EXPECT-END
 X = EXPECT
 # sha256 of docs/api/v1/graph-manifest.json: changes only through a deliberate re-pin (a Sprint stage / stamp rewrites it after the
 # rebuild); a merged Wave 2 claim or any site-only change must leave it as is
-GRAPH_MANIFEST_SHA256 = "945ec4a64926272bc664a24c8f53bb12a44d6e8a27f22fa8c6773876aac4336e"
+GRAPH_MANIFEST_SHA256 = "7a88b1b779136798f22e97443055da6b43027713462ffa7a73df2424efede5e9"
 NON_PROTOCOL_PAGES = 40                                                  # docs/**/*.html pages that are not /protocols/<slug>/ (40: + /curators/ /scan/ /webhook/ /seal/ /miniapp/, + the Cap, Compound V3 and Lista Lending briefs)
 
 
@@ -2629,7 +2630,7 @@ def main(argv=None):
         "V47-02: the command input paints a 2 px inset --ring outline on :focus-visible (both themes)":
             ".cmdk-head input:focus-visible { outline: 2px solid var(--ring); outline-offset: -2px; box-shadow: none; }" in css471
             and ".cmdk-head input:focus, .cmdk-head input:focus-visible { outline: none" not in css471,
-        "V47-03: ?basket= keeps underscores (exact <option> values): stable_rwa 69, eth_lst_lrt 46, lending_vaults 121, base 34; combined with ?grade= and ?q= (harness)":
+        "V47-03: ?basket= keeps underscores (exact <option> values): stable_rwa 69, eth_lst_lrt 46, lending_vaults 122, base 34; combined with ?grade= and ?q= (harness)":
             "replace(/[^a-z0-9-]/g" not in appjs and res.get("v471_basket_urls") is True,
     }
     check("v4.7.1 review fixes (V47-01 stable audience-tab height, V47-02 command-input focus ring, V47-03 basket URLs with underscores)",

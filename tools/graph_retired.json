@@ -43,6 +43,16 @@
    "controller_kind": null
   },
   {
+   "slug": "anvil",
+   "chain": "ethereum",
+   "record_id": "anvil-control-plane",
+   "retired_at_sprint": 37,
+   "target_contract": "0xAEEAa594e7dc112D67b8547fe9767a02c15B5597",
+   "target_label": "Anvil",
+   "controller_address": null,
+   "controller_kind": null
+  },
+  {
    "slug": "arrakis-modular",
    "chain": "ethereum",
    "record_id": "arrakis-modular-control-plane",
@@ -91,6 +101,16 @@
    "target_label": "BIO",
    "controller_address": "0xE57a09C3fdFb6bD2B8Ebc46E0FF884876fae60Fd",
    "controller_kind": "multisig_safe"
+  },
+  {
+   "slug": "bitfi-basis",
+   "chain": "ethereum",
+   "record_id": "bitfi-basis-control-plane",
+   "retired_at_sprint": 37,
+   "target_contract": "0xCdFb58c8C859Cb3F62ebe9Cf2767F9e036C7fb15",
+   "target_label": "BitFi Bitcoin (Bfbtc)",
+   "controller_address": "0xd931401B37c3A368505E7AE6dE700f2b0ad14ac6",
+   "controller_kind": "eoa"
   },
   {
    "slug": "cbridge",

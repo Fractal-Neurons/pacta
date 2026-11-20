@@ -2,18 +2,18 @@
   "schema": "pacta.growth.curator_exposure_matrix.v1",
   "created_at": "2026-11-20T10:02:00Z",
   "dataset_totals": {
-    "indexed_protocols": 313,
-    "lookup_items_with_briefs": 330,
+    "indexed_protocols": 316,
+    "lookup_items_with_briefs": 333,
     "timelock_and_onboarding_briefs": 17,
-    "base_eas_attested_protocols": 184,
+    "base_eas_attested_protocols": 189,
     "grades_breakdown": {
-      "ALIGNED": 122,
-      "DELTA_adverse_gaps": 55,
+      "ALIGNED": 126,
+      "DELTA_adverse_gaps": 56,
       "PROTECTIVE": 7,
-      "OBSERVED_rpc_pinned": 129
+      "OBSERVED_rpc_pinned": 127
     },
-    "graph_nodes": 985,
-    "graph_edges": 856,
+    "graph_nodes": 994,
+    "graph_edges": 866,
     "collateral_contagion_upstream_edges": 7
   },
   "curators_and_institutional_allocators": [
@@ -815,7 +815,7 @@
           "chains": [
             "ethereum"
           ],
-          "pinnedBlock": 26455787,
+          "pinnedBlock": 26458556,
           "primaryContract": "0x29722cC9a1cACff4a15914F9bC274B46F3b90B4F",
           "targetLabel": "MultiDepositorVaultFactory",
           "tokens": [
@@ -1187,7 +1187,9 @@
           "tokens": [
             "MCwETH"
           ],
-          "baseEasUids": [],
+          "baseEasUids": [
+            "0xa20a0fa97ac80abb3d3f9d4de615018ff3a07f42eb4f124375dc26a216f896a5"
+          ],
           "summary_short": "MEV Capital's wETH vault timelock is 3 days, within Morpho's documented bounds",
           "url": "https://pacta.wtf/protocols/mev-capital-weth-metamorpho/"
         }
@@ -1567,7 +1569,7 @@
           "chains": [
             "ethereum"
           ],
-          "pinnedBlock": 26455787,
+          "pinnedBlock": 26458556,
           "primaryContract": "0xdC47953c816531a8CA9E1D461AB53687d48EEA26",
           "targetLabel": "MigratableEntityProxy",
           "tokens": [
@@ -2117,7 +2119,7 @@
           "chains": [
             "ethereum"
           ],
-          "pinnedBlock": 26455787,
+          "pinnedBlock": 26458556,
           "primaryContract": "0x5232bc0F5999f8dA604c42E1748A13a170F94A1B",
           "targetLabel": "ArcticArchitectureLens",
           "tokens": [
@@ -2928,7 +2930,7 @@
           "chains": [
             "ethereum"
           ],
-          "pinnedBlock": 26455787,
+          "pinnedBlock": 26458556,
           "primaryContract": "0x54F862fa0612A8709F6Dec4A7B39AF015CD4E82E",
           "targetLabel": "ERC1967Factory",
           "tokens": [
@@ -4165,7 +4167,7 @@
           "chains": [
             "ethereum"
           ],
-          "pinnedBlock": 26455787,
+          "pinnedBlock": 26458556,
           "primaryContract": "0x953972ea0C1703c58F09FB6fD2477Fdcf0FEe074",
           "targetLabel": "Ember Y10K (EmberVault)",
           "tokens": [
@@ -4183,7 +4185,7 @@
           "chains": [
             "ethereum"
           ],
-          "pinnedBlock": 26455787,
+          "pinnedBlock": 26458556,
           "primaryContract": "0xca1207647Ff814039530D7d35df0e1Dd2e91Fa84",
           "targetLabel": "dHedge DAO Token (DHedgeTokenProxy)",
           "tokens": [
@@ -4201,7 +4203,7 @@
           "chains": [
             "ethereum"
           ],
-          "pinnedBlock": 26455787,
+          "pinnedBlock": 26458556,
           "primaryContract": "0x8ECC0B419dfe3AE197BC96f2a03636b5E1BE91db",
           "targetLabel": "Stable Gain Vault (UUPSProxy)",
           "tokens": [

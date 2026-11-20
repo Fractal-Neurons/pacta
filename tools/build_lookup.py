@@ -139,6 +139,8 @@ TOKENS = {
     "bedrock-unibtc": ["Bedrock(uniBTC)"],
     # Sprint 32 promotion (bulk harvester v2.0)
     "circle-gateway": ["CircleGateway"],
+    # Sprint 37 promotion (bulk harvester v2.0)
+    "katana": ["KAT"], "mev-capital-weth-metamorpho": ["MCwETH"], "odyssey-finance": ["Odyssey"],
     # briefs
     "kerne-kusd-base": ["kUSD", "Kerne"], "efix-efixdi-base": ["efixDI+", "EFIXDI", "EFIX"], "circle-cirbtc-eth": ["cirBTC", "Circle"],
     "paxos-paxgy-eth": ["PAXGy", "Paxos"], "tether-usat-eth": ["USAT", "Tether"], "ethena-ops-0x0ca0-0x1fe5": ["USDe", "RLUSD", "USAT"],

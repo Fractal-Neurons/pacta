@@ -1,6 +1,6 @@
 {
   "schema": "pacta.counterparty_control_index.v1",
-  "generated_at": "2026-11-20T10:43:35Z",
+  "generated_at": "2026-11-20T20:00:23Z",
   "publisher": {
     "organization": "Fractal Neurons",
     "unit": "Pacta Protocol Commitments DRI",
@@ -66,10 +66,11 @@
       "33": "0x897aa17688d627e9d4fdd7a49c8f4c3a9d4b1943e24e03d7c744563895d9d03c",
       "34": "0xc281741a4fb297a9ccb30b5485ca6ef2bcfb69be10236c056e7208301e30d992",
       "35": "0xce8821d521758614be8860ac6476e1cec01ae000d81a660644e7bf1260d8cdfd",
-      "36": "0xe16008e972c9b16353100f32e3a2d4ae61152f26d34e600ca205723c77602edf"
+      "36": "0xe16008e972c9b16353100f32e3a2d4ae61152f26d34e600ca205723c77602edf",
+      "37": "0xa20a0fa97ac80abb3d3f9d4de615018ff3a07f42eb4f124375dc26a216f896a5"
     },
     "attestation_coverage": {
-      "base_eas_attested_sprints": "1-36",
+      "base_eas_attested_sprints": "1-37",
       "eas_multi_attest_tx": "0x8c53e155a4b2f28ffbf069f1b65952fc8f7d81740f362b8aafb39493c6bd001b",
       "pending_batch_attestation_sprints": [],
       "pending_anchor": "none: every indexed record carries its sprint's Base EAS UID; each attestation commits to the sprint's Ethereum block hash and summary SHA-256",
@@ -95,7 +96,8 @@
         "33": "0x0de27e0dbd440832b0fc55eebd8571d744c05bda2aab79ca134e856f72ebaeea",
         "34": "0x04389f0a7757652f4297dd1e574fc42c7d49872e9c54ccdf8a795ce591cd37c8",
         "35": "0x276b9b803e4a604c3281faf9242d8a3111e3c070b16416e29413a26c2fe66d65",
-        "36": "0x34bbdf84cb4ac7755b850ff1738bf90f8ed10a810607b4636b2c4ef836cd3a4b"
+        "36": "0x34bbdf84cb4ac7755b850ff1738bf90f8ed10a810607b4636b2c4ef836cd3a4b",
+        "37": "0xa11a7a8e5990fecce09ef912cd7caf7324fb447539182ee2894100573685af13"
       },
       "attested_not_yet_indexed_sprints": []
     },
@@ -118,7 +120,8 @@
     "eas_multi_attest_sprint_33_tx": "0x0de27e0dbd440832b0fc55eebd8571d744c05bda2aab79ca134e856f72ebaeea",
     "eas_multi_attest_sprint_34_tx": "0x04389f0a7757652f4297dd1e574fc42c7d49872e9c54ccdf8a795ce591cd37c8",
     "eas_multi_attest_sprint_35_tx": "0x276b9b803e4a604c3281faf9242d8a3111e3c070b16416e29413a26c2fe66d65",
-    "eas_multi_attest_sprint_36_tx": "0x34bbdf84cb4ac7755b850ff1738bf90f8ed10a810607b4636b2c4ef836cd3a4b"
+    "eas_multi_attest_sprint_36_tx": "0x34bbdf84cb4ac7755b850ff1738bf90f8ed10a810607b4636b2c4ef836cd3a4b",
+    "eas_multi_attest_sprint_37_tx": "0xa11a7a8e5990fecce09ef912cd7caf7324fb447539182ee2894100573685af13"
   },
   "methodology": {
     "chain_id": 1,
@@ -134,8 +137,8 @@
     "scope_limitation": "Entries report sampled historical read-only getter/slot returns alongside cited documentation; they do not certify protocol-wide immutability, exhaustive authority coverage, downstream mutation semantics, or exploitability.",
     "archive_rpc_endpoints_by_chain": {
       "ethereum": [
-        "https://ethereum-rpc.publicnode.com",
-        "https://rpc.mevblocker.io"
+        "https://rpc.mevblocker.io",
+        "https://gateway.tenderly.co/public/mainnet"
       ],
       "base": [
         "https://base-rpc.publicnode.com",
@@ -145,11 +148,11 @@
     "record_chain": "Records without a chain field are Ethereum Mainnet (chain id 1). Records with chain \"base\" (rpc_env_var $BASE_RPC_URL) are pinned to a Base Mainnet block (chain id 8453) and replayed on mainnet.base.org + base.drpc.org; their Sprint's EAS attestation commits to the Ethereum pin and to the summary SHA-256, which states the Base pin."
   },
   "summary_metrics": {
-    "sprints_completed": 36,
-    "records_indexed": 304,
-    "parameter_deltas": 61,
+    "sprints_completed": 37,
+    "records_indexed": 309,
+    "parameter_deltas": 62,
     "protective_deltas": 11,
-    "aligned_baselines": 232
+    "aligned_baselines": 236
   },
   "entries": [
     {
@@ -9220,6 +9223,159 @@
       "surface": "Base sUSDC: ERC-1967 UUPS proxy (UsdcVaultL2, upgrades by wards), as documented",
       "target_contract": "0x3128a0F7f0ea68E7B7c9B00AFa7E41045828e858",
       "target_label": "Spark USDC Vault (sUSDC, Base)",
+      "verification_status": "scanner_dual_rpc_replayed_base_eas_attested_pending_static_review"
+    },
+    {
+      "base_eas_uid": "0xa20a0fa97ac80abb3d3f9d4de615018ff3a07f42eb4f124375dc26a216f896a5",
+      "block_hash": "0xe258bb1cbcc988e2dfdba4ba173f9f8690520dba3647cdcae18e0651822769d2",
+      "block_number": 26458556,
+      "call_args": [],
+      "call_signature": "owner()",
+      "category": "Automated DeFi position manager: strategies, order executors and fee policies behind upgradeable proxies",
+      "chain": "ethereum",
+      "check_type": "eth_call",
+      "classification": "parameter_delta",
+      "documented_delay_seconds": null,
+      "documented_reference": "'Control of upgrades and emergency actions rests with a designated **governor**, currently managed through a secure multi-signature wallet **(3/5)**.' (docs.odyssey.finance/architecture/protocol.md); '## Mainnet' (docs.odyssey.finance/resources/contracts.md)",
+      "id": "odyssey-finance-governor-safe-2-of-4-vs-3-of-5-s37",
+      "observed_delay_seconds": null,
+      "observed_delay_source": null,
+      "onchain_observed": "PositionRegistry 0xeE156D8ea7b96a5524CcC3CF9283ab85E80E9534 (Ethereum; the contracts page lists it as PositionRegistry_Proxy for Mainnet and Base): TransparentUpgradeableProxy whose EIP-1967 admin slot = 0x3F6da0A118B3A0ddfdbaB4690cC96b2cF73B488D, the PositionRegistry_ProxyAdmin the page lists (OZ 5 ProxyAdmin, verified on Sourcify, exact match; upgradeAndCall onlyOwner). owner() of that ProxyAdmin and of the five other *_ProxyAdmin contracts the page lists (ApyTieredFeePolicy_1000_5_5_ProxyAdmin, ApyTieredFeePolicy_600_5_5_ProxyAdmin, PerformanceFeePolicy_1000_5_5_ProxyAdmin, PerformanceFeePolicy_600_5_5_ProxyAdmin, ProtocolTieredFeePolicy_5_5_ProxyAdmin) = 0xd44A3e93A256c445F17a12f35A0ffEf975ec6817; PositionRegistry's own owner() = the same Safe (its verified source makes addStrategy, addKeeper, removeKeeper, updateFeePolicy, updateImplementation, updateIsActive, updateFeeCollector, updateSwapAggregator, addCalldataToWhitelist and removeCalldataFromWhitelist onlyOwner; updateIsActive is the documented emergency restriction). Every upgrade and emergency controller read for this record is that one Safe: getThreshold() = 2 of getOwners() = 4; guard slot empty; getModulesPaginated() lists no module; its owners have no code (keys). On Base, at the Sprint Base pin, the same addresses read the same way: the registry's admin slot is the same ProxyAdmin (runtime code identical to the Ethereum one), all six ProxyAdmins and the registry are owned by 0xd44A3e93A256c445F17a12f35A0ffEf975ec6817, a Safe there too: getThreshold() = 2 of getOwners() = 4; guard slot empty; getModulesPaginated() lists no module. The protocol page names no address; this record binds its statement about the governor to the one Safe all listed controllers resolve to. The docs state the governor is a 3/5 multi-signature wallet; on chain 2 signatures of 4 owners execute an upgrade or an emergency restriction, with no timelock in the path. This record does not allege any misuse of these powers.",
+      "protocol": "Odyssey Finance",
+      "repro_calldata": "0x8da5cb5b",
+      "rpc_env_var": "$ETH_RPC_URL",
+      "selector_or_slot": "0x8da5cb5b",
+      "sprint": 37,
+      "summary_doc": "audits/sprint-37/block-26458556-summary.md",
+      "summary_sha256": "0x14758a8d891e0d55321017f25f0caa9f87eb200875a21cf26e47e43404c7a285",
+      "summary_short": "Odyssey's upgrade governor is a 2-of-4 Safe; docs say 3/5",
+      "surface": "Upgrade governor: docs state a 3/5 multisig; every ProxyAdmin owner is one Safe, 2-of-4 (Ethereum and Base)",
+      "target_contract": "0x3F6da0A118B3A0ddfdbaB4690cC96b2cF73B488D",
+      "target_label": "PositionRegistry ProxyAdmin (Ethereum)",
+      "verification_status": "scanner_dual_rpc_replayed_base_eas_attested_pending_static_review"
+    },
+    {
+      "base_eas_uid": "0xa20a0fa97ac80abb3d3f9d4de615018ff3a07f42eb4f124375dc26a216f896a5",
+      "block_hash": "0xe258bb1cbcc988e2dfdba4ba173f9f8690520dba3647cdcae18e0651822769d2",
+      "block_number": 26458556,
+      "call_args": [],
+      "call_signature": "getMinDelay()",
+      "category": "Collateral management for fully secured onchain credit (Ethereum)",
+      "chain": "ethereum",
+      "check_type": "eth_call",
+      "classification": "aligned_baseline",
+      "documented_delay_seconds": 604800,
+      "documented_reference": "'For successful proposals, there is currently a 7-day timelock to provide all Protocol users time to understand the new parameters and their implications prior to the update.' (docs.anvil.xyz/governance/proposal-process.md); '[AnvilTimelock](https://etherscan.io/address/0x4eeB7c5BB75Fc0DBEa4826BF568FD577f62cad21)' (docs.anvil.xyz/core-contracts/overview.md)",
+      "id": "anvil-timelock-7-day-as-documented-s37",
+      "observed_delay_seconds": 604800,
+      "observed_delay_source": {
+        "contract": "0x4eeB7c5BB75Fc0DBEa4826BF568FD577f62cad21",
+        "getter": "getMinDelay()",
+        "selector": "0xf27a0c92"
+      },
+      "onchain_observed": "AnvilTimelock 0x4eeB7c5BB75Fc0DBEa4826BF568FD577f62cad21 (Ethereum; the core-contracts table lists it as the contract that 'Owns the CollateralVault, LetterOfCredit, and PythPriceOracle contracts'): an OpenZeppelin v5 TimelockController (verified source: updateDelay only by the timelock itself, schedule only by PROPOSER_ROLE and never below getMinDelay()), getMinDelay() = 604,800 s. owner() = the timelock on CollateralVault 0x5d2725fdE4d7Aa3388DA4519ac0449Cc031d675f, on the LetterOfCredit proxy 0x14db9a91933aD9433E1A0dB04D08e5D9EF7c4808 (whose EIP-1967 admin is ProxyAdmin 0x12225bB169b38EF8849DD4F5Cc466ae5996e341D, owner() = the timelock), on PythPriceOracle 0xC6f3405c861Fa0dca04EC4BA59Bc189D1d56Ee05 and on the TimeBasedCollateralPool beacon 0x1f00D6f7C18a8edf4f8Bb4Ead8a898aBDd9c9E14. The AnvilGovernorDelegator 0x00e83d0698FAf01BD080A4Dd2927e6aB7C4874c9 has the timelock as its EIP-1967 admin and timelock(); it holds PROPOSER_ROLE (hasRole = true) and the timelock holds its own DEFAULT_ADMIN_ROLE. Role holders cannot be enumerated without event logs; no holder can schedule below the minimum delay. The published primary contract (the ANVL token) has no owner or admin function.",
+      "protocol": "Anvil",
+      "repro_calldata": "0xf27a0c92",
+      "rpc_env_var": "$ETH_RPC_URL",
+      "selector_or_slot": "0xf27a0c92",
+      "sprint": 37,
+      "summary_doc": "audits/sprint-37/block-26458556-summary.md",
+      "summary_sha256": "0x14758a8d891e0d55321017f25f0caa9f87eb200875a21cf26e47e43404c7a285",
+      "summary_short": "Anvil's governance timelock is 7 days, as documented",
+      "surface": "AnvilTimelock: getMinDelay() = 604,800 s (7 days), as documented; owns the documented contracts",
+      "target_contract": "0x4eeB7c5BB75Fc0DBEa4826BF568FD577f62cad21",
+      "target_label": "AnvilTimelock (OpenZeppelin TimelockController)",
+      "verification_status": "scanner_dual_rpc_replayed_base_eas_attested_pending_static_review"
+    },
+    {
+      "base_eas_uid": "0xa20a0fa97ac80abb3d3f9d4de615018ff3a07f42eb4f124375dc26a216f896a5",
+      "block_hash": "0xe258bb1cbcc988e2dfdba4ba173f9f8690520dba3647cdcae18e0651822769d2",
+      "block_number": 26458556,
+      "call_args": [],
+      "call_signature": "multisig()",
+      "category": "Basis-Trade Yield Token (bfUSD issuer) (Ethereum)",
+      "chain": "ethereum",
+      "check_type": "eth_call",
+      "classification": "aligned_baseline",
+      "documented_delay_seconds": null,
+      "documented_reference": "'After a request is submitted, it must be approved by an authorized multisig manager.' (docs.bitfi.one/developer/using-contract/unstake-bfbtc); 'This is an administrative function callable only by the designated multisig manager.' (docs.bitfi.one/developer/using-contract/stake-bfbtc); 'bfBTC: 0xCdFb58c8C859Cb3F62ebe9Cf2767F9e036C7fb15' (docs.bitfi.one/developer/bfbtc-overview/deployed-contracts)",
+      "id": "bitfi-bfbtc-multisig-manager-is-a-safe-s37",
+      "observed_delay_seconds": null,
+      "observed_delay_source": null,
+      "onchain_observed": "bfBTC 0xCdFb58c8C859Cb3F62ebe9Cf2767F9e036C7fb15 (Ethereum; the deployed-contracts page lists it): ERC-1967 proxy, implementation slot = 0x4ca67a794051e036eefB5Aa4b34fE2bd836069F0, admin slot empty (UUPS); implementation Bfbtc (verified source). multisig() = 0x1Eb14eC5fc6D596C041F4DEA2Bf0F2cb6EF0dD03, a Safe: getThreshold() = 2 of getOwners() = 3; guard slot empty; getModulesPaginated() lists no module; its owners have no code. In the verified source depositNative, approveWithdraw, nativeWithdraw and updateEpoch are onlyMultisig (msg.sender == multisig), the functions the docs assign to the multisig manager. Not documented, and stated here: owner() = 0xd931401B37c3A368505E7AE6dE700f2b0ad14ac6, an account with no code at this pin, and the owner functions include setMultisig (replacing the multisig manager), _authorizeUpgrade (the UUPS upgrade), setPause, setBlacklisted, setFee and setFeeReceiver, with no timelock in the path. The docs say nothing about the owner role, so this record compares only the documented multisig manager. This record does not allege any misuse of these powers.",
+      "protocol": "BitFi Basis",
+      "repro_calldata": "0x4783c35b",
+      "rpc_env_var": "$ETH_RPC_URL",
+      "selector_or_slot": "0x4783c35b",
+      "sprint": 37,
+      "summary_doc": "audits/sprint-37/block-26458556-summary.md",
+      "summary_sha256": "0x14758a8d891e0d55321017f25f0caa9f87eb200875a21cf26e47e43404c7a285",
+      "summary_short": "bfBTC withdrawals are approved by a multisig manager (2-of-3 Safe), as documented",
+      "surface": "bfBTC multisig manager: multisig() = a 2-of-3 Safe, as documented; owner() a key",
+      "target_contract": "0xCdFb58c8C859Cb3F62ebe9Cf2767F9e036C7fb15",
+      "target_label": "bfBTC (ERC-1967 UUPS proxy, Ethereum)",
+      "verification_status": "scanner_dual_rpc_replayed_base_eas_attested_pending_static_review"
+    },
+    {
+      "base_eas_uid": "0xa20a0fa97ac80abb3d3f9d4de615018ff3a07f42eb4f124375dc26a216f896a5",
+      "block_hash": "0xe258bb1cbcc988e2dfdba4ba173f9f8690520dba3647cdcae18e0651822769d2",
+      "block_number": 26458556,
+      "call_args": [],
+      "call_signature": "getThreshold()",
+      "category": "DeFi-focused network on the Agglayer; upgrades proposed by the Katana Admin multisig",
+      "chain": "ethereum",
+      "check_type": "eth_call",
+      "classification": "aligned_baseline",
+      "documented_delay_seconds": null,
+      "documented_reference": "'**3-of-5 multisig**, controlled by major network partners Katana Foundation, GSR, and Polygon Labs.' (docs.katana.network/katana/core-concepts/governance/index.md)",
+      "id": "katana-admin-multisig-3-of-5-s37",
+      "observed_delay_seconds": null,
+      "observed_delay_source": null,
+      "onchain_observed": "Katana Admin 0xd512543315c95506E4209805b888414EEF15C8C4 (Ethereum; the governance page names it as the Admin multisig address, next to the 3-of-5 statement): a Safe, getThreshold() = 3 of getOwners() = 5; guard slot empty; getModulesPaginated() lists no module. The same page says upgrades proposed by the Admin enter a 10-day timelock; that timelock is not identified here (no Katana-specific timelock is readable without event logs), so this record compares only the documented quorum.",
+      "protocol": "Katana",
+      "repro_calldata": "0xe75235b8",
+      "rpc_env_var": "$ETH_RPC_URL",
+      "selector_or_slot": "0xe75235b8",
+      "sprint": 37,
+      "summary_doc": "audits/sprint-37/block-26458556-summary.md",
+      "summary_sha256": "0x14758a8d891e0d55321017f25f0caa9f87eb200875a21cf26e47e43404c7a285",
+      "summary_short": "The Katana Admin multisig is 3-of-5, as documented",
+      "surface": "Katana Admin multisig (Ethereum): 3-of-5 Safe (docs: 3-of-5)",
+      "target_contract": "0xd512543315c95506E4209805b888414EEF15C8C4",
+      "target_label": "Katana Admin multisig (Ethereum Safe)",
+      "verification_status": "scanner_dual_rpc_replayed_base_eas_attested_pending_static_review"
+    },
+    {
+      "base_eas_uid": "0xa20a0fa97ac80abb3d3f9d4de615018ff3a07f42eb4f124375dc26a216f896a5",
+      "block_hash": "0xe258bb1cbcc988e2dfdba4ba173f9f8690520dba3647cdcae18e0651822769d2",
+      "block_number": 26458556,
+      "call_args": [],
+      "call_signature": "timelock()",
+      "category": "MetaMorpho (Morpho Vaults V1) WETH vault curated by MEV Capital",
+      "chain": "ethereum",
+      "check_type": "eth_call",
+      "classification": "aligned_baseline",
+      "documented_delay_seconds": null,
+      "documented_reference": "'After the initial setup, any change to the timelock must set its duration to be between **1 day and 2 weeks**.' (docs.morpho.org/curate/concepts/timelock.md)",
+      "id": "mev-capital-weth-metamorpho-timelock-within-bounds-s37",
+      "observed_delay_seconds": 259200,
+      "observed_delay_source": {
+        "contract": "0x9a8bC3B04b7f3D87cfC09ba407dCED575f2d61D8",
+        "getter": "timelock()",
+        "selector": "0xd33219b4"
+      },
+      "onchain_observed": "MCwETH 0x9a8bC3B04b7f3D87cfC09ba407dCED575f2d61D8 (Ethereum): a MetaMorpho vault (isMetaMorpho = true on the MetaMorpho factory 0xA9c3D3a366466Fa809d1Ae982Fb2c46E5fC41101; verified source MetaMorpho, ConstantsLib MIN_TIMELOCK = 1 days and MAX_TIMELOCK = 2 weeks, enforced by _checkTimelockBounds), asset() = WETH, fee() = 10%. timelock() = 259,200 s, within the bounds Morpho documents for Vaults V1; guardian() = 0x777498D046d593F747Fd5884A73B3b9964479711 (a contract; it can revoke pending timelocked actions). owner() = 0x38afC3aA2c76b4cA1F8e1DabA68e998e1F4782DB, a Safe: getThreshold() = 2 of getOwners() = 5; guard slot empty; getModulesPaginated() lists no module; in the verified source setCurator, setIsAllocator, setFee, setFeeRecipient, setSkimRecipient, submitTimelock and submitGuardian are onlyOwner (timelock decreases and guardian changes wait for the timelock). The same Safe owns MEV Capital's sibling vaults, read at this pin: MC.eUSDC 0x1265a81d42d513Df40d0031f8f2e1346954d665a: timelock() = 86,400 s, guardian() = the zero address (no guardian); USUALUSDC+ 0xd63070114470f685b75B74D60EEc7c1113d33a3D: timelock() = 259,200 s, guardian() = 0x6e9d65eC80D69b1f508560Bc7aeA5003db1f7FB7.",
+      "protocol": "MEV Capital wETH (MetaMorpho)",
+      "repro_calldata": "0xd33219b4",
+      "rpc_env_var": "$ETH_RPC_URL",
+      "selector_or_slot": "0xd33219b4",
+      "sprint": 37,
+      "summary_doc": "audits/sprint-37/block-26458556-summary.md",
+      "summary_sha256": "0x14758a8d891e0d55321017f25f0caa9f87eb200875a21cf26e47e43404c7a285",
+      "summary_short": "MEV Capital's wETH vault timelock is 3 days, within Morpho's documented bounds",
+      "surface": "MCwETH: timelock() = 259,200 s (3 days), within Morpho V1's documented 1 day - 2 weeks; guardian set",
+      "target_contract": "0x9a8bC3B04b7f3D87cfC09ba407dCED575f2d61D8",
+      "target_label": "MEV Capital wETH (MCwETH, MetaMorpho)",
       "verification_status": "scanner_dual_rpc_replayed_base_eas_attested_pending_static_review"
     }
   ]

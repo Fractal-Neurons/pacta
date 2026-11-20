@@ -173,7 +173,7 @@ CHECKOUT = {   # sku -> product page; "tier" is the /request/?tier= alias that f
         "badge": "Free Ethereum & Base Wallet, Safe & Protocol Scanner",
         "h1": "Paste any wallet, Safe, or protocol to scan live DeFi control-plane exposure.",
         "label": "Full Wallet & Safe Exposure Report",
-        "lede": "Instant read-only Multicall3 balanceOf + Safe custody scan across 313 Ethereum & Base protocols (184 Base-EAS attested · 55 verified adverse control-plane gaps). "
+        "lede": "Instant read-only Multicall3 balanceOf + Safe custody scan across 316 Ethereum & Base protocols (189 Base-EAS attested · 56 verified adverse control-plane gaps). "
                 "Zero wallet connection, zero signature, zero upfront price tags.",
         "cta": "Pay $9 USDC on Base & Unlock Full Report",
         "title": "Free Wallet, Safe & Protocol Control-Plane Exposure Scanner · Pacta", "card": "x-card-scan19-1200x628.png",
@@ -1491,7 +1491,7 @@ def scan_sample_finding(idx, lk):
     )
 
 
-SCAN_OMNIBOX_PLACEHOLDER = "Paste wallet / Safe (0x…) or search 313 protocols & tickers (steakUSDC, Moonwell, ETHx)…"
+SCAN_OMNIBOX_PLACEHOLDER = "Paste wallet / Safe (0x…) or search 316 protocols & tickers (steakUSDC, Moonwell, ETHx)…"
 WALLET_DEMO_CHIPS = (
     ("demo_safe_eth_base", "0x5afE00003f5D8B29c4107E3A92d1b64E8C410305", "Demo Treasury Safe (4 positions · 2 Gaps)", "3-of-5 SAFE", "2 GAPS"),
     ("demo_base_yield", "0xba5E00007C41D92e8A305F6b11c8E92D40A20845", "Demo Base Yield Wallet (3 positions · 2 Gaps)", "BASE EOA", "2 GAPS"),

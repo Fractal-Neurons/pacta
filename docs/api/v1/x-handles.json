@@ -6800,6 +6800,16 @@
       }
     },
     {
+      "slug": "katana",
+      "protocolName": "Katana",
+      "xHandle": null,
+      "xUrl": null,
+      "verificationSource": null,
+      "sources": [],
+      "reason": "no relevant first-party handle",
+      "candidates": {}
+    },
+    {
       "slug": "kelp-dao-rseth",
       "protocolName": "Kelp DAO (rsETH)",
       "xHandle": null,
@@ -8335,6 +8345,16 @@
       }
     },
     {
+      "slug": "mev-capital-weth-metamorpho",
+      "protocolName": "MEV Capital wETH (MetaMorpho)",
+      "xHandle": null,
+      "xUrl": null,
+      "verificationSource": null,
+      "sources": [],
+      "reason": "no relevant first-party handle",
+      "candidates": {}
+    },
+    {
       "slug": "monolith-market",
       "protocolName": "Monolith Market",
       "xHandle": "@monolithmarket",
@@ -9119,6 +9139,16 @@
           "obol.org"
         ]
       }
+    },
+    {
+      "slug": "odyssey-finance",
+      "protocolName": "Odyssey Finance",
+      "xHandle": null,
+      "xUrl": null,
+      "verificationSource": null,
+      "sources": [],
+      "reason": "no relevant first-party handle",
+      "candidates": {}
     },
     {
       "slug": "ondo-finance-ousg-flux-finance",
