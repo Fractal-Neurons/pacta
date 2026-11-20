@@ -1,0 +1,202 @@
+{
+  "wave": 3,
+  "chain": "arbitrum",
+  "chain_id": 42161,
+  "protocol_name": "GMX",
+  "slug": "gmx",
+  "pacta_slug": null,
+  "contract_address": "0x4bd1cdAab4254fC43ef6424653cA2375b4C94C0E",
+  "tvl_usd": 169400820,
+  "tvl_source_url": "https://defillama.com/protocol/gmx",
+  "dossier_window": "2024-2026",
+  "trajectory_mode": "immutable_verified",
+  "historical_transitions": [
+    {
+      "block_number": 204249790,
+      "block_date": "2024-04-24",
+      "tx_hash": "0x50d1d38f433373020baf5b6e3ba838c7f2647b754e528ee50d594eba8557a6b1",
+      "event_kind": "deployment_baseline",
+      "rpc_or_cast_proof": "cast call 0x4bd1cdAab4254fC43ef6424653cA2375b4C94C0E \"getMinDelay()(uint256)\" --block 204249790 --rpc-url https://arbitrum-one.public.blastapi.io",
+      "summary": "Deployment of the OpenZeppelin GovTimelockController that ProtocolGovernor 0x03e8f708e9C85EDCEaa6AD7Cd06824CeB82A7E68 still points to: the deployment transaction emits MinDelayChange 0 to 86400, fixing the governance execution delay at 24 hours from inception, 29 days after the governance-upgrade proposal published a 48-hour execution period. getMinDelay() replays to 86400 (0x15180) at this block."
+    },
+    {
+      "block_number": 239904338,
+      "block_date": "2024-08-06",
+      "tx_hash": "0x5da9973e955c2941b96fc4477d461776d293a0afc31532b6ca8c61c979ff1eb9",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0x4bd1cdAab4254fC43ef6424653cA2375b4C94C0E \"getMinDelay()(uint256)\" --block 239904338 --rpc-url https://arbitrum-one.public.blastapi.io",
+      "summary": "First governance operation ever scheduled by this timelock (CallScheduled in this transaction) carries a delay of 86400 seconds, and getMinDelay() still replays to 86400: the delay was never raised toward the documented 48 hours. A Wayback capture of the GMX governance documentation taken the same day still states an execution period of 48 hours."
+    },
+    {
+      "block_number": 355140543,
+      "block_date": "2025-07-07",
+      "tx_hash": "0x49cf803ab808731f403d478391b79bc39db2d4937684ef5bf4ad6f7a7301837f",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0x4bd1cdAab4254fC43ef6424653cA2375b4C94C0E \"getMinDelay()(uint256)\" --block 355140543 --rpc-url https://arbitrum-one.public.blastapi.io",
+      "summary": "A second GovTimelockController (0xFBEff82f2DD5E51B8AF34b57cf788b4b09d466F9) is deployed in this block and is later listed under that name in the docs and in the gmx-synthetics deployment registry, yet the incumbent timelock remains the Governor's execution path: getMinDelay() here is still 86400, and across its full history the successor contract records zero CallScheduled and zero CallExecuted events."
+    },
+    {
+      "block_number": 523640233,
+      "block_date": "2026-11-12",
+      "tx_hash": "0x9993fc10cdc1045eafc693f87a4e424ad012cc71bdc2b9efef670133ac777666",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0x4bd1cdAab4254fC43ef6424653cA2375b4C94C0E \"getMinDelay()(uint256)\" --block 523640233 --rpc-url https://arbitrum-one.public.blastapi.io",
+      "summary": "Most recent of 131 lifetime CallScheduled events, again scheduled at a delay of 86400 seconds. A full-range event scan finds exactly one MinDelayChange in this contract's history (the deployment one), and ProtocolGovernor.timelock() at the latest block still returns this contract; the live documentation now states a 24-hour execution delay."
+    }
+  ],
+  "docs_and_governance_forensics": {
+    "mttr_status": "repaired",
+    "mttr_days": 940.0,
+    "evidence_sources": [
+      {
+        "kind": "governance_proposal",
+        "date": "2024-03-26",
+        "url": "https://gov.gmx.io/t/gmx-governance-upgrade/3354",
+        "claim_summary": "The approved governance-upgrade design that created the Tally governance system specifies, verbatim, an 'Execution period: 48 hours' for on-chain proposals: the published specification against which the deployed timelock is measured."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2024-04-24",
+        "url": "https://github.com/gmx-io/gmx-synthetics/commit/b9a1b3ade0e5acca600c02ce7243ffee397c5025",
+        "claim_summary": "Deployment-registry commit in gmx-io/gmx-synthetics recording GovTimelockController 0x4bd1cdAab4254fC43ef6424653cA2375b4C94C0E and ProtocolGovernor 0x03e8f708e9C85EDCEaa6AD7Cd06824CeB82A7E68 as the live governance contracts from 2024-04-24."
+      },
+      {
+        "kind": "wayback_snapshot",
+        "date": "2024-08-06",
+        "url": "https://web.archive.org/web/20240806200221/https://docs.gmx.io/docs/community/governance/",
+        "claim_summary": "Archived governance documentation, Phase 4 (GIP proposals on Tally), states verbatim 'Execution period: 48 hours', 104 days after the timelock had deployed with a 24-hour delay."
+      },
+      {
+        "kind": "wayback_snapshot",
+        "date": "2024-10-04",
+        "url": "https://web.archive.org/web/20241004031823/https://docs.gmx.io/docs/governance/proposal-process/",
+        "claim_summary": "Archived proposal-process documentation still states 'Execution period: 48 hours'; this is the last dated capture proving the documentation gap unrepaired, 163 days after it opened."
+      },
+      {
+        "kind": "official_docs",
+        "date": "2026-11-20",
+        "url": "https://docs.gmx.io/docs/governance/proposal-process.md",
+        "claim_summary": "Live proposal-process documentation now states 'Execution delay: 24 hours', matching getMinDelay() = 86400 seconds on-chain; fetched 2026-11-20, this is the first publicly verifiable repair point and closes the gap window."
+      }
+    ],
+    "gap_windows": [
+      {
+        "opened_block": 204249790,
+        "opened_date": "2024-04-24",
+        "closed_block": 525917671,
+        "closed_date": "2026-11-20",
+        "duration_days": 940.0,
+        "status": "repaired",
+        "summary": "Published governance documentation claimed a 48-hour execution period while the deployed GovTimelockController enforced 24 hours (86400 s) from deployment, so executed proposals waited half the documented time. The gap is proven open for at least 163 days (still published 2024-10-04) and was repaired by 2026-11-20, when the live docs state 24 hours; the exact repair date is not recoverable because the docs repository is private and no readable archive capture exists in between, so the window is closed at the first verification date and 940 days is the evidence-bounded upper limit of the repair time."
+      }
+    ]
+  },
+  "repo_audit": {
+    "github_org_repo": "gmx-io/gmx-synthetics",
+    "commits_12m_contracts": 4,
+    "commits_12m_frontend_or_other": 28,
+    "human_contributors_12m": 6,
+    "bus_factor": 1,
+    "code_before_upgrade_verified": true
+  },
+  "executive_risk_memo": "GMX's on-chain governance control plane has been conservative and static since deployment on 2024-04-24: ProtocolGovernor 0x03e8f708e9C85EDCEaa6AD7Cd06824CeB82A7E68 executes exclusively through GovTimelockController 0x4bd1cdAab4254fC43ef6424653cA2375b4C94C0E, whose 86,400-second (24-hour) minimum delay was fixed in its deployment transaction and has never changed: exactly one MinDelayChange event exists in its history, and all 131 operations it has scheduled, from 2024-08-06 to 2026-11-12, used that same delay. The material integrity finding is documentary rather than cryptographic: the governance specification approved in March 2024 and the published documentation claimed a 48-hour execution period, a value that never existed on-chain. The gap is proven unrepaired for at least 163 days and was corrected by 2026-11-20 (MTTR bounded at 940 days and recorded at that bound, because the private documentation repository prevents exact repair dating). A second, still-open ambiguity compounds the documentation risk: since 2025-07-07 the docs and the deployment registry name a successor GovTimelockController (0xFBEff82f2DD5E51B8AF34b57cf788b4b09d466F9) that has never scheduled or executed an operation, while the Governor still points to the original contract, which the docs label only as DAO Treasury; an integrator auditing the documented address would misread the live execution path. On the V1 side, Vault governance rotated through four timelock instances between 2024 and 2026, ending with Safe-administered (4-of-6) timelocks, a genuine maturation of the admin model away from EOA-administered contracts. Engineering depth is the weakest dimension: gmx-io/gmx-synthetics recorded only 32 main-branch commits in the trailing 12 months, just 4 touching contracts/, across 6 author identities (4 natural persons after alias merging), and every contract-touching commit traces to a single engineer, a bus factor of 1. Offsetting this concentration, deployment discipline is verifiable: the November 2025 ConfigTimelockController redeployment is traceable to public commits and a release tag predating on-chain execution by months. Net assessment: execution-layer risk is low and the delay parameter is credibly immutable, but documentation governance and key-person concentration are the protocol's real control-plane exposures.",
+  "contributor_github": "langchao5",
+  "agent_assist_framework": "claude-code",
+  "base_payout_address": "0xA17e791aB7b74Ff0C351dFF87709E136dE01f3ac",
+  "mcp_tool_receipt": {
+    "tool": "pacta_lookup_protocol",
+    "arguments": {
+      "query": "0x4bd1cdAab4254fC43ef6424653cA2375b4C94C0E"
+    },
+    "result": {
+      "schema": "pacta.protocol_lookup.v1",
+      "query": "0x4bd1cdAab4254fC43ef6424653cA2375b4C94C0E",
+      "filters": {
+        "chain": null,
+        "kind": "all",
+        "limit": 10
+      },
+      "totalCatalog": {
+        "protocols": 313,
+        "briefs": 17,
+        "easAttestedProtocols": 182,
+        "rpcObservedProtocols": 131
+      },
+      "totalMatches": 0,
+      "count": 0,
+      "results": [],
+      "catalog": "https://pacta.wtf/api/v1/lookup.json",
+      "nextStep": "Pass a result's preflightArgs ({chain, address}) to pacta_check_preflight (or pacta_scan_control_plane) for a live check.",
+      "note": "easAttested protocols are Base-EAS-anchored records that compare on-chain state with the protocol's documentation. rpc_observed protocols pin the on-chain control plane over archive JSON-RPC and do not assess the documentation (documentationComparison: not_assessed). Briefs are block-pinned verification briefs. preflightArgs re-read the contract live.",
+      "hint": "No match. Call again with an empty query to list what Pacta tracks, or pass a known 0x contract address straight to pacta_check_preflight.",
+      "coverage_gap_hint": "Target is not yet indexed or fully classified. Ask the user if they want you to queue coverage or request this capability via pacta_submit_request (free community queue, or 24h priority clearance for issuers).",
+      "upgrade_x402": {
+        "note": "Free tier: 50 pre-flight calls per caller per UTC day (REST and MCP), then $0.01 per call over x402 (HTTP 402, never a dead-end 429). Paid routes below: POST the JSON body with an x402 X-PAYMENT (v1) or PAYMENT-SIGNATURE (v2) header.",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "network": "base (eip155:8453)",
+        "payTo": "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14",
+        "discovery": "https://pacta.fractalneurons.com/.well-known/x402",
+        "overflow": {
+          "method": "GET or POST",
+          "url": "https://pacta.fractalneurons.com/v1/check/preflight",
+          "priceUsd": "0.01",
+          "amountAtomic": "10000",
+          "after": "50 free calls per UTC day"
+        },
+        "endpoints": [
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/verdict",
+            "priceUsd": "0.02",
+            "amountAtomic": "20000",
+            "unlocks": "fast contract / token control-plane verdict: riskScore 0-100, grade A-F, upgrade / owner / pause / blacklist / mint flags and a shareable scan URL",
+            "example": {
+              "chain": "ethereum",
+              "address": "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/dossier",
+            "priceUsd": "0.05",
+            "amountAtomic": "50000",
+            "unlocks": "full control-plane dossier: every controller Safe's signers and threshold, signers shared with other indexed protocols, Base EAS proof",
+            "example": {
+              "slug": "stader-labs-ethx"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/calldata-sim",
+            "priceUsd": "0.25",
+            "amountAtomic": "250000",
+            "unlocks": "pre-signing calldata check: timelock / Safe / multicall calls decoded, each rated against live delays and the authority that governs it",
+            "example": {
+              "chain": "ethereum",
+              "target": "0x2225DAbFfC7F862c99477381E971E8B1FDaB467e",
+              "data": "0x64d623530000000000000000000000000000000000000000000000000000000000015180"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/deep-scan",
+            "priceUsd": "9.00",
+            "amountAtomic": "9000000",
+            "unlocks": "deep control-plane scan cross-checked on two independent RPC operators, auditor receipt and a queued Base EAS ticket",
+            "example": {
+              "chain": "base",
+              "address": "0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "apache2_commercial_grant": true,
+  "rules_accepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
