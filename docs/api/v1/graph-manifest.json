@@ -14,8 +14,8 @@
  ],
  "sources": {
   "sha256": {
-   "protocols.json": "79cebfc7f1a25679e57be6f47f952cd0235a5fa5e942dd351f25e0d35463a336",
-   "index.json": "ca049505a79477531edbf54edab960fc015a29377c841a4af91eb6c568e67d44",
+   "protocols.json": "5912b044cfc460fa8b3c691ece5e636f07b6bd26650137bc2672f96cee27b33f",
+   "index.json": "51b812c514561eee550a9c916537ee9b5ec8594bbab9c8675df837847dc43de9",
    "rpc-pinned.json": "108919b7ce46d2c3e09943bbd5dad4344ee375a275c6056f4b391a57ee11a418",
    "graph_dependencies.json": "c32f718b692f497f33bd8e50e300b883ae1ce3316215fb5e2d01f2c235bff4fa",
    "graph_controller_facts.json": "8bf0299b9aaf52211fccdc5ced9e9b60603b877b7942b19c9e0afe82d10a9ddf"
@@ -3428,7 +3428,7 @@
   {
    "id": "pacta-gap-40-acres-base-upgradeability-s28",
    "kind": "control_plane_gap",
-   "text": "Control-plane gap 40-acres-base-upgradeability-s28: 40 Acres (Base) — Lending vault proxy: docs call the contracts immutable, but it is an upgradeable proxy. Observed: 40 Acres proxy 0x87f1..EFD0 (Base): EIP-1967 implementation slot = 0xb43b..0735; the implementation's proxiableUUID() = the EIP-1967 slot (UUPS), UPGRADE_INTERFACE_VERSION() = '5.0.0'; owner() = 0xfF16..BD23, a Safe 2-of-3. Documented: '40 Acres has completed four independent audits with Sherlock. Smart contracts are immutable and non-upgradeable post-deployment.' (docs.40acres.finance) Sprint 28, Base block 59025642."
+   "text": "Control-plane gap 40-acres-base-upgradeability-s28: 40 Acres (Base) — AERO USDC Loan proxy: docs call the contracts immutable, but it is an upgradeable proxy. Observed: 40 Acres AERO USDC Loan proxy 0x87f1..EFD0 (Base): EIP-1967 implementation slot = 0xb43b..0735; the implementation's proxiableUUID() = the EIP-1967 slot (UUPS), UPGRADE_INTERFACE_VERSION() = '5.0.0'; owner() = 0xfF16..BD23, a Safe 2-of-3. Documented: '40 Acres has completed four independent audits with Sherlock. Smart contracts are immutable and non-upgradeable post-deployment.' (docs.40acres.finance) Sprint 28, Base block 59025642."
   },
   {
    "id": "pacta-gap-abracadabra-spell-safe-threshold-s30",
@@ -13923,12 +13923,12 @@
     "target_contract_hex": "8f5f1d40243b259ceb7ab44ba421ff191bcd3381",
     "block_number": 26425374,
     "block_hash_hex": "fa22e277760f1df7134b0af20499d6305ee4e017219a917a61a78aa76e89382d",
-    "surface": "Vault owner, VAULT_MANAGER and factory manager Safe threshold: 1-of-2",
+    "surface": "ctDeltaWeETH: owner, VAULT_MANAGER and factory-manager roles share a 1-of-2 Safe; single-key full control or draining is not established",
     "observed_delay_seconds": null,
     "documented_delay_seconds": null,
     "summary_sha256_hex": "ecf3ff31366c88541b265c13153f7dd3cd087d7f1f6ae7a801b63669d2fc94af"
    },
-   "content_hash": "23ce6230225a6cb780a0c382b7dc11a4130d48d49caae672308dec174211c4c1"
+   "content_hash": "3368fe006456cdc65ff0239db4616994a2d4cf874c553d1d5ab8c73992c7e4b2"
   },
   {
    "edge_key": "exhibits_control_plane_gap:pacta-proto-curve-finance-crvusd->pacta-gap-curve-crvusd-factory-lending-owner-proxy",
@@ -14463,12 +14463,12 @@
     "target_contract_hex": "707d622cda4b5459e7dcee8ba8e429f154f96a27",
     "block_number": 26448221,
     "block_hash_hex": "a7818c0e1b8807aac0c999c2dc9aeeea40b91b4f19b1b76a62ad02d8d17607c8",
-    "surface": "Legacy cbBTC vault beacon upgrades: no enforced delay under a 3-of-6 Safe; coverage by the 24 h Opt-in delay docs is unverified",
+    "surface": "Legacy cbBTC vault: immediate beacon upgrades; coverage by the documented 24-hour Opt-in delay is unverified",
     "observed_delay_seconds": 0,
     "documented_delay_seconds": 86400,
     "summary_sha256_hex": "ba61b61feb65e1b23d10c998f70bcabce22a8b27203581542ef1cc3b68a4507f"
    },
-   "content_hash": "3ceb79332152f2241b7cef6383fcc1b86d60217252e6e2579da1ac4f571fc8b8"
+   "content_hash": "6e2e546f6002e5b8de8fe58b701485f294724a478f575d7bd662c32482c28ffa"
   },
   {
    "edge_key": "exhibits_control_plane_gap:pacta-proto-maple-finance-v2-syrup->pacta-gap-maple-v2-syrup-ppm-admin",
@@ -14565,12 +14565,12 @@
     "target_contract_hex": "78fc2c2ed1a4cdb5402365934ae5648adad094d0",
     "block_number": 26401405,
     "block_hash_hex": "26e155e1569d436406a52ecee31c94d8d8ef2ca4c45d82211a84c8c802be1510",
-    "surface": "Sampled MetaMorpho Vault Guardian Configuration",
+    "surface": "Re7 WETH has no guardian; Re7 USDT has an Aragon guardian — no promise of matching configurations was verified",
     "observed_delay_seconds": 259200,
     "documented_delay_seconds": 259200,
     "summary_sha256_hex": "fd13461161313f9bd5ae867e4076d5f07b787e05370bca7516dcbbc8ba8f63a2"
    },
-   "content_hash": "b35db0df5d78706b4f78539e619cd4ccac4dbecd076053ff32d4fa4a53473dce"
+   "content_hash": "5a0424d5e32356eef68cd0f2797a33b4c9c747ca35d349feb7f2c8a91e0c895f"
   },
   {
    "edge_key": "exhibits_control_plane_gap:pacta-proto-moonwell-lending-base->pacta-gap-moonwell-pause-guardian-2of4-safe-s18",
@@ -14871,12 +14871,12 @@
     "target_contract_hex": "f2f305d14dcd8aaef887e0428b3c9534795d0d60",
     "block_number": 26401725,
     "block_hash_hex": "ec3820f0a9db32c01728e66f78dc1958e410269e1077fd1db53df4fbce2ad7a1",
-    "surface": "DepositQueue.feeBasisPoints Parameter vs. Staking Docs",
+    "surface": "DepositQueue fee parameter at earlier block #26,401,725: 1,500 bps; effective reward fee and onward distribution are not verified",
     "observed_delay_seconds": null,
     "documented_delay_seconds": null,
     "summary_sha256_hex": "7f5605538db468ccb2f51a5822ea2dabf29fb36858f7ae301e36b1a57f6dd2d2"
    },
-   "content_hash": "77ac89995c77e12b190fedc7256e1ae3d27eb3c72eaa5682bf1a45aef45a0327"
+   "content_hash": "13a3e2992b62e17657d90a13085966d1967ab2814059bc0f1457924e47fe4a55"
   },
   {
    "edge_key": "exhibits_control_plane_gap:pacta-proto-renzo-protocol-ezeth->pacta-gap-renzo-ezeth-deposit-queue-fee-s29",
@@ -14905,12 +14905,12 @@
     "target_contract_hex": "f2f305d14dcd8aaef887e0428b3c9534795d0d60",
     "block_number": 26448221,
     "block_hash_hex": "a7818c0e1b8807aac0c999c2dc9aeeea40b91b4f19b1b76a62ad02d8d17607c8",
-    "surface": "DepositQueue fee: docs state 10% of restaking rewards; feeBasisPoints() reads 10,000 (100%), 1,500 at #26,433,001",
+    "surface": "DepositQueue fee parameter: 10,000 bps; effective reward fee and onward distribution are not verified",
     "observed_delay_seconds": null,
     "documented_delay_seconds": null,
     "summary_sha256_hex": "ba61b61feb65e1b23d10c998f70bcabce22a8b27203581542ef1cc3b68a4507f"
    },
-   "content_hash": "8238875a1db5ebd56ba23b4edb50e325642a39f410b02ffa1dca5fcda0aa429b"
+   "content_hash": "b11203065294de642a571ff46097cd9e051a2120006ee301bc517aead1c7f9d3"
   },
   {
    "edge_key": "exhibits_control_plane_gap:pacta-proto-resupply->pacta-gap-bounty-slot-2-resupply",
@@ -15271,12 +15271,12 @@
     "target_contract_hex": "d0580192e98ea6ceb9c7b6191ed2e27560911697",
     "block_number": 26451608,
     "block_hash_hex": "0266af5bcad519d93b3be78e41b76a62985e22fbe4feef043ac3225f6f217a17",
-    "surface": "trUSD TIMELOCK_ADMIN_ROLE: a second ToriTimelock, not the documented timelock",
+    "surface": "trUSD TIMELOCK_ADMIN_ROLE: current documentation names the same 24-hour controller (0xcd3c…667b) as the retained observation",
     "observed_delay_seconds": 86400,
     "documented_delay_seconds": 86400,
     "summary_sha256_hex": "d743b19a325763801e120af7b3bd48775dec49dd9a3a3888fbe32192d7f20094"
    },
-   "content_hash": "357e303974e8fb3da3ae19ba3f43ace7e11fc097233f4bbbc44541f7585144b1"
+   "content_hash": "598ad07bbccec9eabecd54446157d368b4a471657467a4ad2186a8ae72af8cdc"
   },
   {
    "edge_key": "exhibits_control_plane_gap:pacta-proto-treehouse-tree-teth->pacta-gap-treehouse-tree-teth-tree-blacklister-safe-s27",
@@ -15475,12 +15475,12 @@
     "target_contract_hex": "1ecdb32e59e948c010a189a0798c674a2d0c6603",
     "block_number": 26441165,
     "block_hash_hex": "5182be2c61af5f48ed2ec43d3c177dedad257c4e966a7e384120829de73901d9",
-    "surface": "Whales Market TransparentUpgradeableProxy: upgradeable; coverage by the pre-market escrow immutability statement is unverified",
+    "surface": "Sampled Whales Market proxy is upgradeable; coverage by the pre-market escrow immutability promise is unverified",
     "observed_delay_seconds": null,
     "documented_delay_seconds": null,
     "summary_sha256_hex": "062632d4abf0411664883823e185de5f974c9e989bf8497c0e8863b557b878bd"
    },
-   "content_hash": "aff028691c841b41d5e846d6604bdc1ee6ccc61e432ce1df9968d0152ae4ddd6"
+   "content_hash": "727f55307bc486bbddf7a9bfb67ab58736f388fbabb613c3204d4fb883099cc5"
   },
   {
    "edge_key": "exhibits_control_plane_gap:pacta-proto-yearn-v3->pacta-gap-yearn-v3-ychad-safe-signers-s28",
@@ -15509,12 +15509,12 @@
     "target_contract_hex": "feb4acf3df3cdea7399794d0869ef76a6efaff52",
     "block_number": 26441165,
     "block_hash_hex": "5182be2c61af5f48ed2ec43d3c177dedad257c4e966a7e384120829de73901d9",
-    "surface": "yChad governance Safe: documented signer 0x6F2A…eAD6 is no longer an owner",
+    "surface": "yChad governance Safe: 6-of-9 threshold retained; signer 0x6F2A…eAD6 rotated to 0x3839…a7F7 41h before pin (docs not yet updated)",
     "observed_delay_seconds": null,
     "documented_delay_seconds": null,
     "summary_sha256_hex": "062632d4abf0411664883823e185de5f974c9e989bf8497c0e8863b557b878bd"
    },
-   "content_hash": "9403f0298c7b3525475dc4546f412ee0b62688811f6a52b1376d4f14c07afdb7"
+   "content_hash": "f93139d8b6d672c273c1d302f3a48811a1b73d05e1673c9f3ae30349d3fdba52"
   },
   {
    "edge_key": "exhibits_control_plane_gap:pacta-proto-yieldnest->pacta-gap-yieldnest-safe-threshold-df51b7-s26",
@@ -41193,5 +41193,5 @@
    "content_hash": "05ef371295b62fdb44d9ca5283d2bb88c8b04b97efbd3cd97341b187a3797141"
   }
  ],
- "manifest_sha256": "b5a8b2a80636bce424f9d57da36876eb4994fd6c3b667f074354fd2f72012aa4"
+ "manifest_sha256": "6875c2c2f12dda1a38130bb5559c3607395e33dbbc0f719e8cedfa7418e927d4"
 }

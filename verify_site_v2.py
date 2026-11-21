@@ -83,7 +83,7 @@ EXPECT = {
 X = EXPECT
 # sha256 of docs/api/v1/graph-manifest.json: changes only through a deliberate re-pin (a Sprint stage / stamp rewrites it after the
 # rebuild); a merged Wave 2 claim or any site-only change must leave it as is
-GRAPH_MANIFEST_SHA256 = "a20e21ea3aea8629b4383e898e115a62b684bcf5d59aba9bdee638a75d310cd8"
+GRAPH_MANIFEST_SHA256 = "d2cf7a35136691a99f5da249b8e6ed67697dfe98f62c7f44cfc584e15ae4f253"
 NON_PROTOCOL_PAGES = 40                                                  # docs/**/*.html pages that are not /protocols/<slug>/ (40: + /curators/ /scan/ /webhook/ /seal/ /miniapp/, + the Cap, Compound V3 and Lista Lending briefs)
 
 
@@ -992,7 +992,8 @@ def main(argv=None):
     # verbatim (HTML-escaped too) before the scan, so any other "free of charge" / "at no cost" copy still fails
     sys.path.insert(0, os.path.join(ROOT, "tools"))
     _ei = __import__("build_site").EDITORIAL_INDEPENDENCE
-    policy = [_ei, html.escape(_ei, quote=False)]
+    _cs = __import__("build_site").CLEARANCE_SELF_CORRECTION     # the issuer callout's statement of the same rule
+    policy = [_ei, html.escape(_ei, quote=False), _cs, html.escape(_cs, quote=False)]
     bad_c = sorted({f"{f}: {m.group(0)}" for f in copy_files
                     for m in charity.finditer(functools.reduce(lambda t, x: t.replace(x, ""), policy, read(f)))})
     check('zero "private disclosure" / "$0" / gratis copy in public files', not bad_c, f"{len(copy_files)} files; {bad_c[:4]}")
@@ -1581,7 +1582,7 @@ def main(argv=None):
                     and f'<a data-slot="button" data-variant="outline" href="../../request/?{qf}" data-cta="free_notify">{_html.escape(BS.FREE_NOTIFY_CTA)}</a>' in pg
                     and f'<a data-slot="button" data-variant="{dossier}" href="../../request/?{q}" data-cta="clearance">{_html.escape(BS.DOSSIER_CTA)}</a>' in pg
                     and f'<a href="../../request/?{q}&amp;settlement=invoice" data-cta="clearance_invoice">Request a commercial invoice (PDF)</a>' in pg
-                    and "changes only when the onchain state or the documentation aligns at a new finalized block" in pg
+                    and _html.escape(BS.CLEARANCE_SELF_CORRECTION, quote=False) in pg
                     and "within 24 hours" not in pg and "Clear findings" not in pg and "Request 24h Clearance" not in pg and MNT_H not in pg)
         return (f"<h2>Operating {_html.escape(name)}? {MNT_H}</h2>" in pg and "issuer-clearance" not in pg and CLR_H not in pg
                 and "Request 24h Clearance" not in pg and "Clear findings" not in pg
@@ -1613,6 +1614,9 @@ def main(argv=None):
             n_cl += 1
             fu = v["entries"][0].get("governance_url") if v["pinned"] else None
             ok_ = callout_ok(pg, "clearance", name_, v["slug"], fu, dossier="outline") and (bool(cls_ & {"parameter_delta", "rpc_observed", "protective_delta"}))
+            # an Unresolved / Changed recently page (tools/scorecard_corrections.json) never asks "Fixed this gap?" (no gap is established)
+            if (__import__("scorecard_corrections").status(v["slug"]) or "") in ("unresolved", "recent_change"):
+                ok_ = ok_ and 'id="seal-cta"' not in pg and "Fixed this gap?" not in pg and "Book $99 seal" not in pg
         if not ok_:
             proto_bad.append(v["slug"])
     every_delta = all(not ({e["classification"] for e in v["entries"]} & {"parameter_delta", "rpc_observed"})
@@ -2019,7 +2023,9 @@ def main(argv=None):
     for name_, v in BS.site_protocols(idx).items():
         pg_ = pages.get(os.path.join("protocols", v["slug"], "index.html"), "")
         has_ = f'href="../../seal/?protocol={v["slug"]}" data-cta="seal_99"' in pg_
-        if has_ != ('id="issuer-clearance"' in pg_):
+        # every flagged page links the $99 seal, except an Unresolved / Changed recently page, which never offers to re-check a "fixed gap"
+        neutral_ = (__import__("scorecard_corrections").status(v["slug"]) or "") in ("unresolved", "recent_change")
+        if has_ != ('id="issuer-clearance"' in pg_ and not neutral_):
             seal_cta_bad.append(v["slug"])
     req_v2 = read("docs/request/index.html")
     launch_ok = ('<nav class="launcher" aria-label="Instant self-serve checks" data-launcher>' in req_v2 and "<h1>Request a dossier</h1>" in req_v2
@@ -2047,6 +2053,12 @@ def main(argv=None):
     for name_, v in BS.site_protocols(idx).items():
         pg_ = pages.get(os.path.join("protocols", v["slug"], "index.html"), "")
         if 'id="issuer-clearance"' not in pg_:
+            continue
+        if (__import__("scorecard_corrections").status(v["slug"]) or "") in ("unresolved", "recent_change"):
+            # Unresolved / Changed recently: the issuer callout alone (one convert section), no seal card and no "fixed this gap" pointer
+            if not (pg_.count('class="memo-sec convert') == 1 and 'id="seal-cta"' not in pg_ and 'data-cta="seal_wd"' not in pg_
+                    and 'data-cta="seal_99"' not in pg_):
+                maint_bad.append(v["slug"])
             continue
         card_ = re.search(r'<section class="memo-sec convert maint" id="seal-cta">.*?</section>', pg_, re.S)
         wd_ = re.search(r'<section class="memo-sec whatdiffers( protective)?" data-what-differs>.*?</section>', pg_, re.S)

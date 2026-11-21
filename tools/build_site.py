@@ -66,6 +66,11 @@ EDITORIAL_INDEPENDENCE = ("Payment never alters a Pacta classification. A status
                           "documentation changes and is verified at a new finalized block — or immediately and free of charge whenever "
                           "Pacta corrects an overstatement or scoping error in its own comparison.")
 SELF_CORRECTION = ("Pacta corrects its own errors immediately and for free, without requiring any protocol change or paid re-check.")
+# the issuer callout's statement of the same rule (clearance_body): self-correction first, otherwise a verified Delta moves only with
+# the chain or the documentation at a new finalized block
+CLEARANCE_SELF_CORRECTION = ("Pacta corrects its own scoping errors or overstatements immediately and free of charge, without requiring any "
+                             "protocol change or paid re-check; otherwise a verified Delta changes only when the onchain state or the public "
+                             "documentation changes and aligns at a new finalized block.")
 HERO_EXAMPLE = ("stader-labs-ethx", "ethereum", "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b")   # (record slug, chain, ETHx token)
 # Live checker presets: (label, chain, address). Public contracts; the ETHx token is an indexed record (Stader, sprint 12).
 PREFLIGHT_PRESETS = [("USDC on Base", "base", "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"),
@@ -760,6 +765,9 @@ def scorecards(idx, pinned=None, sp=None):
             finding = lead["surface"]
         cats = {e.get("category", "") for e in es}
         lead = next((e for e in es if e["classification"] == "parameter_delta"), es[0])
+        if corr.get("leadRecord"):   # a correction binds its finding, evidence and reproduction to the record it is about
+            lead = next(e for e in es if e["id"] == corr["leadRecord"])
+            assert int(lead["block_number"]) == corr["pinnedBlock"] and lead["classification"] == "parameter_delta", v["slug"]
         probe = {k: lead.get(k) for k in ("id", "chain", "target_contract", "target_label", "check_type", "selector_or_slot", "call_signature",
                                            "call_args", "repro_calldata", "block_number", "block_hash", "rpc_env_var", "extra_calls")}
         probe["chain"] = chain_of(lead)
@@ -770,12 +778,15 @@ def scorecards(idx, pinned=None, sp=None):
                           + sorted(protocol_addresses(v["slug"], es))).lower()
         _SHORT_SEARCH[v["slug"]] = " ".join([name, v["slug"], es[0].get("category", "")] + list(LK.TOKENS.get(v["slug"], []))
                                             + sorted({e["target_contract"] for e in es})).lower()
-        ev_e = next((e for e in es if wd and wd.get("changed") and e["id"] == wd["changed"][0]["recordId"]), None) or lead
+        ev_e = (lead if corr.get("leadRecord") else
+                next((e for e in es if wd and wd.get("changed") and e["id"] == wd["changed"][0]["recordId"]), None) or lead)
         assert v["slug"] in SS.SUMMARY and not SS.problems(SS.SUMMARY[v["slug"]]), v["slug"]
         out.append({"slug": v["slug"], "name": name, "grade": g, "gradeLabel": SC.GRADES[g][0], "reconciled": bool(recon),
                     "summary_short": SS.SUMMARY[v["slug"]],
                     "evidence": {"recordId": ev_e["id"], "surface": ev_e["surface"], "documented": ev_e["documented_reference"],
-                                 "observed": ev_e["onchain_observed"]},
+                                 "observed": ev_e["onchain_observed"], "chain": chain_of(ev_e), "block": int(ev_e["block_number"]),
+                                 "blockHash": ev_e["block_hash"], "target": ev_e["target_contract"],
+                                 "baseEasUid": ev_e.get("base_eas_uid")},
                     "reconciledFrom": [e["reconciledFrom"] for e in recon],
                     "reconciledTo": [{"blockNumber": int(e["block_number"]), "easUid": e.get("base_eas_uid"),
                                       "docsCommit": e.get("docsCommit") or e.get("docs_commit"),
@@ -788,6 +799,7 @@ def scorecards(idx, pinned=None, sp=None):
                     **({"subPill": corr["subPill"]} if corr.get("subPill") else {}),
                     **({"subtitle": corr["subtitle"]} if corr.get("subtitle") else {}),
                     **({"findingClass": CORR.finding_class(v["slug"])} if CORR.finding_class(v["slug"]) else {}),
+                    **({"recentChange": corr["recentChange"]} if corr.get("recentChange") else {}),
                     "pinnedBlock": max(int(e["block_number"]) for e in es),
                     "factors": fs, "rosetteAria": SC.aria(fs, name), "url": f"{BASE_URL}/protocols/{v['slug']}/",
                     "probe": probe, "search": search})
@@ -973,7 +985,10 @@ def what_differs_html(entries, compact=False, seal_cta=False):
                        for lbl, t in (("Show the full onchain evidence", o_full), ("Show the full documented text", d_full)) if t)
         items.append(f'<li data-wd-changed><b>{E(c["parameter"])}</b>: <span class="obs">{o_ex}</span> observed vs '
                      f'<span class="doc">{d_ex}</span> documented{more}</li>')
-    mt = "".join(f'<li data-wd-matched>{E(m["parameter"])}: {E(m["value"])}</li>' for m in wd["matched"])
+    # MATCHED lists only records whose own status is aligned or protective: a matching parameter inside a flagged (or Unresolved /
+    # Changed recently) record never reads as "matched"; with none left, the subheading is omitted
+    ok_cls = {e["id"]: e.get("classification") in ("aligned_baseline", "protective_delta") for e in entries}
+    mt = "".join(f'<li data-wd-matched>{E(m["parameter"])}: {E(m["value"])}</li>' for m in wd["matched"] if ok_cls.get(m.get("recordId")))
     tag = "div" if compact else "section"
     protective = all(c.get("classification") == "protective_delta" for c in wd["changed"])
     unres = corr.get("status") == "unresolved"
@@ -2333,8 +2348,7 @@ def clearance_body(name, slug, forum=None, home="../../", dossier="default"):
     return (f'<h2>Maintaining {E(name)}? Verify and reconcile the record</h2>'
             f'<p>Two paths, both public. A free doc-update notice asks the maintainers to correct the documentation or the onchain '
             f'parameter; anyone can send it. A Full Control-Plane Dossier ({E(CLEARANCE_PRICE)}, 24h SLA) re-reads the multisig and '
-            f'timelock control planes on archive RPCs and prepares an upstream docs reconciliation PR. Either way the classification '
-            f'changes only when the onchain state or the documentation aligns at a new finalized block.</p>'
+            f'timelock control planes on archive RPCs and prepares an upstream docs reconciliation PR. {E(CLEARANCE_SELF_CORRECTION)}</p>'
             f'<div class="convert-cta">'
             + U.button(E(FREE_NOTIFY_CTA), href=request_href("community", slug, forum, home=home), variant="outline", attrs='data-cta="free_notify"')
             + U.button(E(DOSSIER_CTA), href=request_href("clearance", slug, forum, home=home), variant=dossier, attrs='data-cta="clearance"')
@@ -2584,7 +2598,8 @@ def protocol_page(name, entries, idx, radar, digest=None, slug=None):
         prov = "RPC-pinned, not EAS-attested" if pinned else f'sprint {E(str(e["sprint"]))}'
         ctrl = f'<dt>Controller</dt><dd>{controller_dd(e)}</dd>' if pinned else ""
         eas_dd = "" if pinned else f'<dt>Attestation</dt><dd>{proof_html(e)}</dd>'   # EAS-attested records link their Base EAS UID
-        doc_lbl = "Documentation (linked, not compared)." if pinned else "Documented."
+        doc_lbl = ("Documentation (linked, not compared)." if pinned else
+                   CORR.record_display(e["id"]).get("documentedLabel") or "Documented.")
         records += (f'<article class="memo-sec" id="{E(e["id"])}"><h2>{E(e["surface"])}</h2>'
                     f'<dl class="memo-meta"><dt>Status</dt><dd>{record_badge(e)}</dd>'
                     f'<dt>Target</dt><dd>{E(e["target_label"])} {hexref(e["target_contract"])} · {explorer_link(e, "address")}</dd>'
@@ -2649,6 +2664,11 @@ def protocol_page(name, entries, idx, radar, digest=None, slug=None):
     if is_aligned_page(entries):
         callout = maintenance_callout(name, slug)
         foot = f'<a href="{E(request_href("continuous", slug))}">Continuous Control-Plane Monitoring · {E(MONITORING_PRICE)}{ARR}</a>'
+    elif corr_t.get("status") in CORR.NEUTRAL:
+        # Unresolved / Changed recently: no "Fixed this gap?" seal prompt (no gap is established); the free notice and dossier remain
+        callout = (f'<section class="memo-sec convert" id="issuer-clearance"><span class="label">For issuers and maintainers</span>'
+                   + clearance_body(name, slug, forum, dossier="outline") + '</section>\n')
+        foot = f'<a href="{E(request_href("clearance", slug, forum))}">Request a dossier (24h SLA){ARR}</a>'
     else:
         callout = maintainer_card(name, slug, forum)
         foot = f'<a href="{E(request_href("clearance", slug, forum))}">Request a dossier (24h SLA){ARR}</a>'
@@ -3001,7 +3021,10 @@ def vault_factories_page(idx, sp):
                    f'<td class="num">{tiers.get(t, 0)}</td><td>{E(d)}</td></tr>'
                    for t, s_, d in (("aligned", "aave-v3-gho", "Every record is a Base-EAS-attested aligned baseline: on-chain state matches the documentation."),
                                     ("parameter_delta", "curve-finance-crvusd", "Base-EAS-attested; at least one surface differs from the documentation."),
-                                    ("rpc_observed", "bedrock-unieth", "RPC-pinned only: control plane pinned at an archive block; documentation not assessed; not EAS-attested.")))
+                                    ("rpc_observed", "bedrock-unieth", "RPC-pinned only: control plane pinned at an archive block; documentation not assessed; not EAS-attested."),
+                                    ("unresolved", "lagoon", "Observed on chain; the comparison does not establish that a documented commitment is broken (neither Delta nor Aligned)."),
+                                    ("docs_updated", "tori-finance", "The documentation now names the observed controller; neutral until a fresh finalized-block chain read."),
+                                    ("recent_change", "yearn-v3", "Observed within 48 hours of an on-chain change; due for a fresh chain-and-documentation re-read once the 72-hour window elapses.")))
     plat = "".join(f"<tr><td><b>{E(a)}</b></td><td><code>{E(b)}</code></td><td>{E(d)}</td></tr>" for a, b, d in (
         ("Morpho Vault V2", "checkMorphoV2AbsoluteCapIncrease(vault, collateral, idData, newCap)",
          "Before a curator submits increaseAbsoluteCap. Reads absoluteCap(keccak256(idData)); decreaseAbsoluteCap and sentinel revoke are never gated."),
@@ -3023,7 +3046,7 @@ def vault_factories_page(idx, sp):
 {snippet(js, "JavaScript", "Copy JavaScript")}
 <p>Show RPC-observed protocols as observed control planes only: never present them as aligned or as having a documentation delta. For a live re-read of any contract, call the free <code>{E(API)}/v1/check/preflight</code> with <code>preflightArgs</code>.</p></section>
 <section class="memo-sec" id="badges"><h2>2. Control-plane status badges</h2>
-<p>Static: <code>{E(BASE_URL)}/badges/&lt;slug&gt;.svg</code> (rebuilt with the site). Live: <code>{E(API)}/v1/badges/&lt;slug&gt;.svg</code> (5-minute cache, CORS open). Three tiers, per protocol page:</p>
+<p>Static: <code>{E(BASE_URL)}/badges/&lt;slug&gt;.svg</code> (rebuilt with the site). Live: <code>{E(API)}/v1/badges/&lt;slug&gt;.svg</code> (5-minute cache, CORS open). Six tiers, per protocol page:</p>
 <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Badge</th><th class="r">Protocols</th><th>Meaning</th></tr></thead><tbody>{rows}</tbody></table></div>
 {snippet(md, "Markdown", "Copy Markdown")}</section>
 <section class="memo-sec" id="sentinel-guard"><h2>3. PactaSentinelGuard.sol: refuse unhealthy cap increases, never block a decrease</h2>

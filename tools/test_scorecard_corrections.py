@@ -125,6 +125,105 @@ class Polish(unittest.TestCase):
         self.assertLess(lead, page.find('data-wd-scope>Upshift describes the ProxyAdmin Safe as generally 4-of-6'))
 
 
+NEUTRAL7 = ["concrete", "lagoon", "renzo-protocol-ezeth", "whales-market", "metamorpho-re7-weth-vs-re7-usdt", "tori-finance", "yearn-v3"]
+
+
+def page(slug):
+    return open(os.path.join(ROOT, "docs", "protocols", slug, "index.html"), encoding="utf-8").read()
+
+
+class V4(unittest.TestCase):
+    def test_1_no_seal_prompt_on_neutral_pages(self):
+        for s in NEUTRAL7:
+            t = page(s)
+            for bad in ('id="seal-cta"', "Fixed this gap?", "Book $99 seal", 'data-cta="seal_wd"'):
+                self.assertNotIn(bad, t, (s, bad))
+            self.assertIn('id="issuer-clearance"', t, s)                      # the free notice and dossier path remain
+        self.assertIn('id="seal-cta"', page("usual-money-usd0-usd0"))           # a Delta page keeps the seal
+
+    def test_2_record_cards_carry_the_scoped_wording(self):
+        import html as H
+        want = {"concrete-vault-owner-safe-1of2-s20": ("concrete", "ctDeltaWeETH: owner, VAULT_MANAGER and factory-manager roles share a 1-of-2 Safe; single-key full control or draining is not established"),
+                "lagoon-vault-beacon-upgrade-delay-s29": ("lagoon", "Legacy cbBTC vault: immediate beacon upgrades; coverage by the documented 24-hour Opt-in delay is unverified"),
+                "renzo-ezeth-deposit-queue-fee-s29": ("renzo-protocol-ezeth", "DepositQueue fee parameter: 10,000 bps; effective reward fee and onward distribution are not verified"),
+                "renzo-ezeth-deposit-queue-fee": ("renzo-protocol-ezeth", "DepositQueue fee parameter at earlier block #26,401,725: 1,500 bps; effective reward fee and onward distribution are not verified"),
+                "whales-market-upgradeability-s28": ("whales-market", "Sampled Whales Market proxy is upgradeable; coverage by the pre-market escrow immutability promise is unverified"),
+                "metamorpho-re7-weth-guardian-parity": ("metamorpho-re7-weth-vs-re7-usdt", "Re7 WETH has no guardian; Re7 USDT has an Aragon guardian — no promise of matching configurations was verified"),
+                "tori-trusd-timelock-admin-undocumented-timelock-s32": ("tori-finance", "trUSD TIMELOCK_ADMIN_ROLE: current documentation names the same 24-hour controller (0xcd3c…667b) as the retained observation"),
+                "yearn-v3-ychad-safe-signers-s28": ("yearn-v3", "yChad governance Safe: 6-of-9 threshold retained; signer 0x6F2A…eAD6 rotated to 0x3839…a7F7 41h before pin (docs not yet updated)")}
+        for rid, (s, h2) in want.items():
+            t = page(s)
+            card = t[t.index(f'<article class="memo-sec" id="{rid}">'):]
+            card = card[:card.index("</article>")]
+            self.assertIn(f"<h2>{H.escape(h2, quote=False)}</h2>", card, rid)
+            self.assertNotIn('<span class="badge delta">', card, rid)            # never a Delta pill (both Renzo records included)
+        for s, gone in (("lagoon", "Immediate beacon upgrades vs 24h wait"), ("renzo-protocol-ezeth", "100% vs 10%"), ("renzo-protocol-ezeth", "15% vs 10%"),
+                        ("whales-market", "docs describe it as immutable"), ("metamorpho-re7-weth-vs-re7-usdt", "documented: Re7 USDT"),
+                        ("tori-finance", "a second ToriTimelock, not the documented timelock"), ("tori-finance", "is the timelock the roles page names;"), ("yearn-v3", "documented signer 0x6F2A…eAD6 is no longer an owner")):
+            self.assertNotIn(gone, page(s), (s, gone))
+        self.assertIn("<b>Sister vault reference.</b>", page("metamorpho-re7-weth-vs-re7-usdt"))
+        self.assertIn("21 November 2026", page("tori-finance"))
+
+    def test_3_matched_lists_only_aligned_or_protective_records(self):
+        idx = {e["id"]: e for e in j("api", "v1", "index.json")["entries"]}
+        import re
+        for s in CARDS:
+            t = open(os.path.join(ROOT, "docs", "protocols", s, "index.html"), encoding="utf-8").read()
+            box = re.search(r'data-what-differs>.*?</(?:section|div)>', t, re.S)
+            if box and "Matched" in box.group(0):
+                self.assertIn("data-wd-matched", box.group(0), s)
+        self.assertNotIn("data-wd-matched", page("tori-finance"))
+        self.assertNotIn('<p class="wd-l">Matched</p>', page("tori-finance"))
+        for it in j("api", "v1", "lookup.json")["items"]:
+            for m in ((it.get("whatDiffers") or {}).get("matched") or []):
+                self.assertIn(idx[m["recordId"]]["classification"], ("aligned_baseline", "protective_delta"), (it.get("slug"), m))
+
+    def test_4_evidence_and_x_feed_bind_to_the_lead_record(self):
+        idx = {e["id"]: e for e in j("api", "v1", "index.json")["entries"]}
+        feed = {i["slug"]: i for i in j("api", "v1", "x-feed.json")["items"] if i["kind"] != "radar_timelock"}
+        reg = CORR.data()["protocols"]
+        self.assertEqual(len(reg), 19)
+        for s, c in reg.items():
+            r = idx[c["leadRecord"]]
+            ev = CARDS[s]["evidence"]
+            self.assertEqual((ev["recordId"], ev["block"], ev["blockHash"], ev["baseEasUid"]),
+                             (r["id"], int(r["block_number"]), r["block_hash"], r.get("base_eas_uid")), s)
+            self.assertEqual((feed[s]["recordId"], feed[s]["pinnedBlock"], feed[s]["blockHash"], feed[s]["easUid"]),
+                             (r["id"], int(r["block_number"]), r["block_hash"], r.get("base_eas_uid")), s)
+        self.assertEqual(CARDS["renzo-protocol-ezeth"]["evidence"]["block"], 26448221)
+        self.assertEqual(CARDS["f-x-protocol-v2"]["evidence"]["recordId"], "f-x-protocol-v2-router-owner-safe-s29")
+
+    def test_5_yearn_rotation_provenance_and_overdue_copy(self):
+        rc = CARDS["yearn-v3"]["recentChange"]
+        self.assertEqual((rc["rotationBlock"], rc["rotationTxHash"], rc["rotationTimestampIso"], rc["hoursBeforePin"], rc["recheckDueIso"], rc["recheckStatus"]),
+                         (26428839, "0xf2ac69b26faa0ebcffcf6bdc8ea20263ca70331dc28336121a053b0d180b63ac", "2026-11-16T16:39:11Z", 41.22,
+                          "2026-11-19T16:39:11Z", "pending_fresh_read"))
+        self.assertEqual(CARDS["yearn-v3"]["subtitle"], "Changed on chain 41h before pin (16 Nov 2026); 72h window elapsed — pending fresh chain and docs re-read")
+        self.assertEqual(CARDS["yearn-v3"]["grade"], "recent_change")
+        self.assertIn("never reinstates Delta", j("api", "v1", "scorecards.json")["recentChangeRule"])
+        meth = open(os.path.join(ROOT, "docs", "methodology", "index.html"), encoding="utf-8").read()
+        self.assertIn("never reinstates Delta", meth)
+
+    def test_6_no_lending_vault_proxy_anywhere(self):
+        import glob
+        hits = [f for f in glob.glob(os.path.join(ROOT, "docs", "**", "*"), recursive=True)
+                if os.path.isfile(f) and f.endswith((".html", ".json", ".txt", ".xml", ".svg", ".js")) and
+                "lending vault proxy" in open(f, encoding="utf-8", errors="ignore").read().lower()]
+        self.assertEqual(hits, [])
+
+    def test_7_clearance_states_free_self_correction(self):
+        import html as H
+        self.assertIn(H.escape(BS.CLEARANCE_SELF_CORRECTION, quote=False), page("usual-money-usd0-usd0"))
+        self.assertIn("free of charge", BS.CLEARANCE_SELF_CORRECTION)
+
+    def test_8_bounties_page_matches_base_apart_from_asset_keys(self):
+        import re
+        base = subprocess.check_output(["git", "-C", ROOT, "show", "d8a1d9d050aeecd055cc05b6bfedf2bab4b35a83:docs/bounties/index.html"], text=True)
+        now = open(os.path.join(ROOT, "docs", "bounties", "index.html"), encoding="utf-8").read()
+        strip = lambda t: re.sub(r'\?v=[0-9a-f]+', "?v=", t)
+        self.assertEqual(strip(base), strip(now))
+
+
 class Wording(unittest.TestCase):
     def test_no_aggregate_overstatement(self):
         self.assertNotIn("across control surfaces", json.dumps(j("api", "v1", "scorecards.json")))

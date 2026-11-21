@@ -51,6 +51,20 @@ def neutral(slug):
     return status(slug) in NEUTRAL
 
 
+def lead_record(slug):
+    """The record id a correction is about (its headline, pinned block and evidence bind to it), or None."""
+    c = get(slug)
+    return c.get("leadRecord") if c else None
+
+
+def record_display(record_id):
+    """Display-only wording for one record card (e.g. {"documentedLabel": "Sister vault reference."}); never written to index.json."""
+    for c in data()["protocols"].values():
+        if record_id in (c.get("recordDisplay") or {}):
+            return c["recordDisplay"][record_id]
+    return {}
+
+
 def recent_change_rule():
     return data()["recentChangeRule"]["text"]
 
@@ -152,6 +166,8 @@ def check():
     if len(members) != len(set(members)):
         errs.append("findingClasses: a protocol is in more than one class")
     for s, c in data()["protocols"].items():
+        if not c.get("leadRecord"):
+            errs.append(f"{s}: every correction names its leadRecord")
         if c.get("status") == "recent_change" and not c.get("recentChange"):
             errs.append(f"{s}: recent_change needs the recentChange observation note")
     return errs

@@ -3479,7 +3479,7 @@
      "classification": "parameter_delta",
      "id": "concrete-vault-owner-safe-1of2-s20",
      "sprint": 20,
-     "surface": "Vault owner, VAULT_MANAGER and factory manager Safe threshold: 1-of-2",
+     "surface": "ctDeltaWeETH: owner, VAULT_MANAGER and factory-manager roles share a 1-of-2 Safe; single-key full control or draining is not established",
      "targetContract": "0x8F5f1d40243b259cEB7aB44bA421Ff191bCD3381",
      "targetLabel": "Concrete Delta WeETH owner multisig"
     },
@@ -8354,7 +8354,7 @@
      "classification": "parameter_delta",
      "id": "lagoon-vault-beacon-upgrade-delay-s29",
      "sprint": 29,
-     "surface": "Legacy cbBTC vault beacon upgrades: no enforced delay under a 3-of-6 Safe; coverage by the 24 h Opt-in delay docs is unverified",
+     "surface": "Legacy cbBTC vault: immediate beacon upgrades; coverage by the documented 24-hour Opt-in delay is unverified",
      "targetContract": "0x707D622cdA4b5459e7DcEe8Ba8E429F154f96A27",
      "targetLabel": "Lagoon cbBTC vault UpgradeableBeacon"
     }
@@ -9648,7 +9648,7 @@
      "classification": "parameter_delta",
      "id": "metamorpho-re7-weth-guardian-parity",
      "sprint": 5,
-     "surface": "Sampled MetaMorpho Vault Guardian Configuration",
+     "surface": "Re7 WETH has no guardian; Re7 USDT has an Aragon guardian — no promise of matching configurations was verified",
      "targetContract": "0x78Fc2c2eD1A4cDb5402365934aE5648aDAd094d0",
      "targetLabel": "MetaMorpho Re7 WETH"
     }
@@ -12288,7 +12288,7 @@
      "classification": "parameter_delta",
      "id": "renzo-ezeth-deposit-queue-fee",
      "sprint": 8,
-     "surface": "DepositQueue.feeBasisPoints Parameter vs. Staking Docs",
+     "surface": "DepositQueue fee parameter at earlier block #26,401,725: 1,500 bps; effective reward fee and onward distribution are not verified",
      "targetContract": "0xf2F305D14DCD8aaef887E0428B3c9534795D0d60",
      "targetLabel": "DepositQueue"
     },
@@ -12300,7 +12300,7 @@
      "classification": "parameter_delta",
      "id": "renzo-ezeth-deposit-queue-fee-s29",
      "sprint": 29,
-     "surface": "DepositQueue fee: docs state 10% of restaking rewards; feeBasisPoints() reads 10,000 (100%), 1,500 at #26,433,001",
+     "surface": "DepositQueue fee parameter: 10,000 bps; effective reward fee and onward distribution are not verified",
      "targetContract": "0xf2F305D14DCD8aaef887E0428B3c9534795D0d60",
      "targetLabel": "Renzo DepositQueue"
     }
@@ -15723,7 +15723,7 @@
      "classification": "parameter_delta",
      "id": "tori-trusd-timelock-admin-undocumented-timelock-s32",
      "sprint": 32,
-     "surface": "trUSD TIMELOCK_ADMIN_ROLE: a second ToriTimelock, not the documented timelock",
+     "surface": "trUSD TIMELOCK_ADMIN_ROLE: current documentation names the same 24-hour controller (0xcd3c…667b) as the retained observation",
      "targetContract": "0xd0580192E98eA6CEB9c7b6191Ed2E27560911697",
      "targetLabel": "Tori trUSD"
     }
@@ -16747,7 +16747,7 @@
      "classification": "parameter_delta",
      "id": "whales-market-upgradeability-s28",
      "sprint": 28,
-     "surface": "Whales Market TransparentUpgradeableProxy: upgradeable; coverage by the pre-market escrow immutability statement is unverified",
+     "surface": "Sampled Whales Market proxy is upgradeable; coverage by the pre-market escrow immutability promise is unverified",
      "targetContract": "0x1eCdB32e59e948C010a189a0798C674a2d0c6603",
      "targetLabel": "Whales Market TransparentUpgradeableProxy"
     }
@@ -17200,7 +17200,7 @@
      "classification": "parameter_delta",
      "id": "yearn-v3-ychad-safe-signers-s28",
      "sprint": 28,
-     "surface": "yChad governance Safe: documented signer 0x6F2A…eAD6 is no longer an owner",
+     "surface": "yChad governance Safe: 6-of-9 threshold retained; signer 0x6F2A…eAD6 rotated to 0x3839…a7F7 41h before pin (docs not yet updated)",
      "targetContract": "0xFEB4acf3df3cDEA7399794D0869ef76A6EfAff52",
      "targetLabel": "yChad Governance Safe"
     }

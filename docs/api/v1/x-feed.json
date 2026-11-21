@@ -3,11 +3,11 @@
  "description": "Pacta findings ready to post on X: one item per published protocol (docs-vs-chain delta, changed recently, unresolved scope, protective delta, aligned baseline or RPC-observed) plus active timelock operations from the radar. mainPostText has no links; replyPostText carries the receipt page and the Base EAS attestation. feedId is stable: post each id once.",
  "generatedFrom": {
   "site": {
-   "scorecards.json": "e460827363b1408b089a0d7b4fafe2edeb4ef157ccba73ccd8f39fd47c08ced3",
-   "index.json": "ca049505a79477531edbf54edab960fc015a29377c841a4af91eb6c568e67d44",
+   "scorecards.json": "ac1a5a4b8f0adf521ace5476b98494c2050f8875f06ee7802776cba094a1d77a",
+   "index.json": "51b812c514561eee550a9c916537ee9b5ec8594bbab9c8675df837847dc43de9",
    "rpc-pinned.json": "108919b7ce46d2c3e09943bbd5dad4344ee375a275c6056f4b391a57ee11a418",
    "radar.json": "16d9637777dc1df9babb767d0ac31c4e1fe8c339332ea815cc32db745d097e1d",
-   "protocols.json": "79cebfc7f1a25679e57be6f47f952cd0235a5fa5e942dd351f25e0d35463a336"
+   "protocols.json": "5912b044cfc460fa8b3c691ece5e636f07b6bd26650137bc2672f96cee27b33f"
   },
   "xHandles": "7cfe44213e579618486dd28fee3bbc8b9205bb82843823ed2dc931314c1598c3",
   "radarBlock": 26457377,
@@ -1591,11 +1591,11 @@
    "xUrl": null,
    "kind": "adverse_delta",
    "chain": "ethereum",
-   "pinnedBlock": 26400152,
-   "blockHash": "0xa9a61622304ec55c5fec49abbcabec60069f66f28792cf841bdd7aef12ce63aa",
-   "easUid": "0xca4b525bf5142d8e88433cbed2a1aa87bb06a97d1353cb77621ec41a51ce8101",
+   "pinnedBlock": 26448221,
+   "blockHash": "0xa7818c0e1b8807aac0c999c2dc9aeeea40b91b4f19b1b76a62ad02d8d17607c8",
+   "easUid": "0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
    "sprint": 29,
-   "recordId": "fx-protocol-v2-treasury-admin",
+   "recordId": "f-x-protocol-v2-router-owner-safe-s29",
    "summaryShort": "V2 Router owner is the 6-of-9 operational Safe; separate timelock keeps 3 days",
    "rosette": [
     {
@@ -1636,11 +1636,11 @@
    ],
    "docsSay": "a 3-day public timelock for queued transactions",
    "chainSays": "the V2 Router's owner is the 6-of-9 operational Safe directly; the separate timelock keeps 3 days",
-   "mainPostText": "f(x) Protocol v2. Docs say: A 3-day public timelock for queued transactions. On-chain at Ethereum block #26,400,152: The V2 Router's owner is the 6-of-9 operational Safe directly; the separate timelock keeps 3 days. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/f-x-protocol-v2/ · Base attestation: https://base.easscan.org/attestation/view/0xca4b525bf5142d8e88433cbed2a1aa87bb06a97d1353cb77621ec41a51ce8101",
+   "mainPostText": "f(x) Protocol v2. Docs say: A 3-day public timelock for queued transactions. On-chain at Ethereum block #26,448,221: The V2 Router's owner is the 6-of-9 operational Safe directly; the separate timelock keeps 3 days. Docs and chain differ. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/f-x-protocol-v2/ · Base attestation: https://base.easscan.org/attestation/view/0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
    "cardFilename": "f-x-protocol-v2.png",
    "receiptUrl": "https://pacta.wtf/protocols/f-x-protocol-v2/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0xca4b525bf5142d8e88433cbed2a1aa87bb06a97d1353cb77621ec41a51ce8101",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
    "priority": 27
   },
   {
@@ -3571,11 +3571,11 @@
    "xUrl": "https://x.com/renzoai",
    "kind": "unresolved_scope",
    "chain": "ethereum",
-   "pinnedBlock": 26401725,
-   "blockHash": "0xec3820f0a9db32c01728e66f78dc1958e410269e1077fd1db53df4fbce2ad7a1",
-   "easUid": "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2",
+   "pinnedBlock": 26448221,
+   "blockHash": "0xa7818c0e1b8807aac0c999c2dc9aeeea40b91b4f19b1b76a62ad02d8d17607c8",
+   "easUid": "0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
    "sprint": 29,
-   "recordId": "renzo-ezeth-deposit-queue-fee",
+   "recordId": "renzo-ezeth-deposit-queue-fee-s29",
    "summaryShort": "DepositQueue feeBasisPoints reads 10,000 bps; effective fee and routing unverified",
    "rosette": [
     {
@@ -3616,11 +3616,11 @@
    ],
    "docsSay": "documentation scope not verified; a documented breach is not established",
    "chainSays": "DepositQueue feeBasisPoints reads 10,000 bps; effective fee and routing unverified",
-   "mainPostText": "Renzo Protocol (ezETH) @renzoai: DepositQueue feeBasisPoints reads 10,000 bps; effective fee and routing unverified. On-chain at Ethereum block #26,401,725. Observed on chain; a breach of a documented commitment is not established. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/renzo-protocol-ezeth/ · Base attestation: https://base.easscan.org/attestation/view/0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2",
+   "mainPostText": "Renzo Protocol (ezETH) @renzoai: DepositQueue feeBasisPoints reads 10,000 bps; effective fee and routing unverified. On-chain at Ethereum block #26,448,221. Observed on chain; a breach of a documented commitment is not established. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/renzo-protocol-ezeth/ · Base attestation: https://base.easscan.org/attestation/view/0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
    "cardFilename": "renzo-protocol-ezeth.png",
    "receiptUrl": "https://pacta.wtf/protocols/renzo-protocol-ezeth/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
    "priority": 60
   },
   {

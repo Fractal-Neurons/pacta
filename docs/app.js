@@ -740,14 +740,14 @@ function whatDiffers(e) {
 if (e.classification !== "parameter_delta" && e.classification !== "protective_delta") return null;
 var changed = [], matched = [], paired = false, obs = thresholds(e.onchain_observed), doc = thresholds(e.documented_reference);
 doc.forEach(function (d) {
-if (obs.indexOf(d) >= 0) { matched.push([e.surface || e.target_label || "Safe threshold", d]); return; }
+if (obs.indexOf(d) >= 0) { if (e.classification === "protective_delta") matched.push([e.surface || e.target_label || "Safe threshold", d]); return; }
 var dk = d.split("-of-"), o = obs.filter(function (x) { return x.split("-of-")[0] === dk[0] && doc.indexOf(x) < 0; })[0]
 || obs.filter(function (x) { return x.split("-of-")[1] === dk[1] && doc.indexOf(x) < 0; })[0];
 if (o) { changed.push([e.surface || e.target_label || "Safe threshold", o, d]); paired = true; }
 });
 var od = fmtDelay(e.observed_delay_seconds), dd = fmtDelay(e.documented_delay_seconds);
 var dl = e.surface || e.target_label || "Timelock delay";
-if (od && dd) { if (e.observed_delay_seconds === e.documented_delay_seconds) matched.push([dl, od]); else { changed.push([dl, od, dd]); paired = true; } }
+if (od && dd) { if (e.observed_delay_seconds === e.documented_delay_seconds) { if (e.classification === "protective_delta") matched.push([dl, od]); } else { changed.push([dl, od, dd]); paired = true; } }
 if (!paired) changed.push([e.surface || e.id, firstSentence(e.onchain_observed), firstSentence(e.documented_reference)]);
 return { changed: changed, matched: matched };
 }

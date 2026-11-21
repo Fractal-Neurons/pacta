@@ -74,11 +74,15 @@ def what_differs(entries):
         return None
     changed, matched = [], []
     for e in flagged:
+        # a parameter that happens to match inside a flagged (parameter_delta) record is never listed as "matched": only aligned and
+        # protective records are (the record's status is not an agreement with the documentation)
+        keep_match = e.get("classification") == "protective_delta"
         obs_t, doc_t = thresholds(e.get("onchain_observed")), thresholds(e.get("documented_reference"))
         paired = False
         for d in doc_t:
             if d in obs_t:
-                matched.append({"parameter": _label(e, "Safe threshold"), "value": fmt_threshold(d), "recordId": e["id"]})
+                if keep_match:
+                    matched.append({"parameter": _label(e, "Safe threshold"), "value": fmt_threshold(d), "recordId": e["id"]})
                 continue
             o = next((x for x in obs_t if x[0] == d[0] and x not in doc_t), None) or next((x for x in obs_t if x[1] == d[1] and x not in doc_t), None)
             if o:
@@ -88,7 +92,8 @@ def what_differs(entries):
         od, dd = fmt_delay(e.get("observed_delay_seconds")), fmt_delay(e.get("documented_delay_seconds"))
         if od and dd:
             if e.get("observed_delay_seconds") == e.get("documented_delay_seconds"):
-                matched.append({"parameter": _label(e, "Timelock delay"), "value": od, "recordId": e["id"]})
+                if keep_match:
+                    matched.append({"parameter": _label(e, "Timelock delay"), "value": od, "recordId": e["id"]})
             else:
                 changed.append({"parameter": _label(e, "Timelock delay"), "observed": od, "documented": dd, "recordId": e["id"],
                                 "classification": e["classification"]})

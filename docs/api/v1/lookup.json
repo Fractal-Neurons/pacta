@@ -3385,7 +3385,7 @@
      "chain": "ethereum",
      "classification": "parameter_delta",
      "id": "concrete-vault-owner-safe-1of2-s20",
-     "surface": "Vault owner, VAULT_MANAGER and factory manager Safe threshold: 1-of-2",
+     "surface": "ctDeltaWeETH: owner, VAULT_MANAGER and factory-manager roles share a 1-of-2 Safe; single-key full control or draining is not established",
      "targetContract": "0x8F5f1d40243b259cEB7aB44bA421Ff191bCD3381",
      "targetLabel": "Concrete Delta WeETH owner multisig"
     },
@@ -3409,9 +3409,9 @@
     "changed": [
      {
       "classification": "parameter_delta",
-      "documented": "docs.concrete.xyz (risks and safety): 'Separated roles.",
+      "documented": "docs.concrete.xyz (risks and safety), 16 November 2026 snapshot: 'Separated roles.",
       "observed": "Safe 0x8F5f1d40243b259cEB7aB44bA421Ff191bCD3381: getThreshold() = 1 with 2 owners;",
-      "parameter": "Vault owner, VAULT_MANAGER and factory manager Safe threshold: 1-of-2",
+      "parameter": "ctDeltaWeETH: owner, VAULT_MANAGER and factory-manager roles share a 1-of-2 Safe; single-key full control or draining is not established",
       "recordId": "concrete-vault-owner-safe-1of2-s20"
      }
     ],
@@ -6192,13 +6192,7 @@
       "recordId": "gearbox-v3-legacy-timelock-and-instance-safe"
      }
     ],
-    "matched": [
-     {
-      "parameter": "LegacyTimelock Delay & InstanceManager Safe Quorum",
-      "recordId": "gearbox-v3-legacy-timelock-and-instance-safe",
-      "value": "4-of-12"
-     }
-    ]
+    "matched": []
    }
   },
   {
@@ -7465,11 +7459,6 @@
     ],
     "matched": [
      {
-      "parameter": "Policy Committee Safe Quorum & GovernorMills Timelock",
-      "recordId": "inverse-finance-firm-policy-safe",
-      "value": "2 d"
-     },
-     {
       "parameter": "BorrowController stalenessThreshold 0-sentinel — queued 48h fix for sDOLA market",
       "recordId": "inverse-firm-borrowcontroller-staleness-sentinel",
       "value": "2 d"
@@ -8053,7 +8042,7 @@
      "chain": "ethereum",
      "classification": "parameter_delta",
      "id": "lagoon-vault-beacon-upgrade-delay-s29",
-     "surface": "Legacy cbBTC vault beacon upgrades: no enforced delay under a 3-of-6 Safe; coverage by the 24 h Opt-in delay docs is unverified",
+     "surface": "Legacy cbBTC vault: immediate beacon upgrades; coverage by the documented 24-hour Opt-in delay is unverified",
      "targetContract": "0x707D622cdA4b5459e7DcEe8Ba8E429F154f96A27",
      "targetLabel": "Lagoon cbBTC vault UpgradeableBeacon"
     }
@@ -8069,7 +8058,7 @@
       "classification": "parameter_delta",
       "documented": "1 d",
       "observed": "0 s (no delay)",
-      "parameter": "Legacy cbBTC vault beacon upgrades: no enforced delay under a 3-of-6 Safe; coverage by the 24 h Opt-in delay docs is unverified",
+      "parameter": "Legacy cbBTC vault: immediate beacon upgrades; coverage by the documented 24-hour Opt-in delay is unverified",
       "recordId": "lagoon-vault-beacon-upgrade-delay-s29"
      }
     ],
@@ -9270,7 +9259,7 @@
      "chain": "ethereum",
      "classification": "parameter_delta",
      "id": "metamorpho-re7-weth-guardian-parity",
-     "surface": "Sampled MetaMorpho Vault Guardian Configuration",
+     "surface": "Re7 WETH has no guardian; Re7 USDT has an Aragon guardian — no promise of matching configurations was verified",
      "targetContract": "0x78Fc2c2eD1A4cDb5402365934aE5648aDAd094d0",
      "targetLabel": "MetaMorpho Re7 WETH"
     }
@@ -9286,19 +9275,13 @@
     "changed": [
      {
       "classification": "parameter_delta",
-      "documented": "Peer-vault configuration comparison (Re7 WETH vs Re7 USDT guardian settings);",
+      "documented": "Sister vault reference: Re7 USDT (0x95EeF579155cd2C5510F312c8fA39208c3Be01a8) sets an Aragon guardian;",
       "observed": "Re7 WETH owner() = 0xE86399fE6d7007FdEcb08A2ee1434Ee677a04433 (2-of-4 Safe), timelock() = 259200s (3d), guardian() = 0x0000000000000000000000000000000000000000, pendingGuardian() = (0x0, 0);",
-      "parameter": "Sampled MetaMorpho Vault Guardian Configuration",
+      "parameter": "Re7 WETH has no guardian; Re7 USDT has an Aragon guardian — no promise of matching configurations was verified",
       "recordId": "metamorpho-re7-weth-guardian-parity"
      }
     ],
-    "matched": [
-     {
-      "parameter": "Sampled MetaMorpho Vault Guardian Configuration",
-      "recordId": "metamorpho-re7-weth-guardian-parity",
-      "value": "3 d"
-     }
-    ]
+    "matched": []
    }
   },
   {
@@ -9596,11 +9579,6 @@
      }
     ],
     "matched": [
-     {
-      "parameter": "Comptroller pauseGuardian = 2-of-4 Safe (Constitution: pause = Security Council 3-of-5)",
-      "recordId": "moonwell-pause-guardian-2of4-safe-s18",
-      "value": "3-of-5"
-     },
      {
       "parameter": "Unitroller admin = TemporalGovernor (24h proposal delay), owned by the 3-of-5 Security Council",
       "recordId": "moonwell-temporal-governor-24h-security-council-3of5-s18",
@@ -10426,13 +10404,7 @@
       "recordId": "ondo-ousg-rate-limiter-and-flux-timelock"
      }
     ],
-    "matched": [
-     {
-      "parameter": "OUSG RateLimiter Global Subscription Limit & Flux 1d Timelock",
-      "recordId": "ondo-ousg-rate-limiter-and-flux-timelock",
-      "value": "1 d"
-     }
-    ]
+    "matched": []
    }
   },
   {
@@ -11822,7 +11794,7 @@
      "chain": "ethereum",
      "classification": "parameter_delta",
      "id": "renzo-ezeth-deposit-queue-fee",
-     "surface": "DepositQueue.feeBasisPoints Parameter vs. Staking Docs",
+     "surface": "DepositQueue fee parameter at earlier block #26,401,725: 1,500 bps; effective reward fee and onward distribution are not verified",
      "targetContract": "0xf2F305D14DCD8aaef887E0428B3c9534795D0d60",
      "targetLabel": "DepositQueue"
     },
@@ -11831,7 +11803,7 @@
      "chain": "ethereum",
      "classification": "parameter_delta",
      "id": "renzo-ezeth-deposit-queue-fee-s29",
-     "surface": "DepositQueue fee: docs state 10% of restaking rewards; feeBasisPoints() reads 10,000 (100%), 1,500 at #26,433,001",
+     "surface": "DepositQueue fee parameter: 10,000 bps; effective reward fee and onward distribution are not verified",
      "targetContract": "0xf2F305D14DCD8aaef887E0428B3c9534795D0d60",
      "targetLabel": "Renzo DepositQueue"
     }
@@ -11848,14 +11820,14 @@
       "classification": "parameter_delta",
       "documented": "docs.renzoprotocol.com/docs/products/staking-suite/ezeth states 10% fee on restaking rewards.",
       "observed": "feeBasisPoints() = 1500 (15%);",
-      "parameter": "DepositQueue.feeBasisPoints Parameter vs. Staking Docs",
+      "parameter": "DepositQueue fee parameter at earlier block #26,401,725: 1,500 bps; effective reward fee and onward distribution are not verified",
       "recordId": "renzo-ezeth-deposit-queue-fee"
      },
      {
       "classification": "parameter_delta",
       "documented": "'Renzo charges a 10% fee on rewards generated via restaking.' (docs.renzoprotocol.com/docs/products/staking-suite/ezeth)",
       "observed": "Renzo DepositQueue 0xf2F305D14DCD8aaef887E0428B3c9534795D0d60 (Ethereum): feeBasisPoints() = 10,000 (100% in basis points) at this pin;",
-      "parameter": "DepositQueue fee: docs state 10% of restaking rewards; feeBasisPoints() reads 10,000 (100%), 1,500 at #26,433,001",
+      "parameter": "DepositQueue fee parameter: 10,000 bps; effective reward fee and onward distribution are not verified",
       "recordId": "renzo-ezeth-deposit-queue-fee-s29"
      }
     ],
@@ -13365,13 +13337,7 @@
       "recordId": "stader-ethx-manager-safe-and-timelock"
      }
     ],
-    "matched": [
-     {
-      "parameter": "Manager Safe Quorum & 7-Day TimelockController Admin Path",
-      "recordId": "stader-ethx-manager-safe-and-timelock",
-      "value": "7 d"
-     }
-    ]
+    "matched": []
    }
   },
   {
@@ -15075,7 +15041,7 @@
      "chain": "ethereum",
      "classification": "parameter_delta",
      "id": "tori-trusd-timelock-admin-undocumented-timelock-s32",
-     "surface": "trUSD TIMELOCK_ADMIN_ROLE: a second ToriTimelock, not the documented timelock",
+     "surface": "trUSD TIMELOCK_ADMIN_ROLE: current documentation names the same 24-hour controller (0xcd3c…667b) as the retained observation",
      "targetContract": "0xd0580192E98eA6CEB9c7b6191Ed2E27560911697",
      "targetLabel": "Tori trUSD"
     }
@@ -15089,19 +15055,13 @@
     "changed": [
      {
       "classification": "parameter_delta",
-      "documented": "'It holds the Timelock Admin role on the core contracts' (docs.tori.finance/security/roles.md)",
+      "documented": "Prior snapshot: 'It holds the Timelock Admin role on the core contracts' (docs.tori.finance/security/roles.md, captured 19 November 2026, naming 0xA952453E39F77108Ee37C1b92de593F1C59A6ef4).",
       "observed": "Tori trUSD 0xd0580192E98eA6CEB9c7b6191Ed2E27560911697 (Ethereum, EIP-1967 proxy, implementation 0xb1d133fE29255EB4Ac9B05d647d49cd7F05ff631): hasRole(TIMELOCK_ADMIN_ROLE 0x5f58e3a2316349923ce3780f8d587db2d72378aed66a8261…",
-      "parameter": "trUSD TIMELOCK_ADMIN_ROLE: a second ToriTimelock, not the documented timelock",
+      "parameter": "trUSD TIMELOCK_ADMIN_ROLE: current documentation names the same 24-hour controller (0xcd3c…667b) as the retained observation",
       "recordId": "tori-trusd-timelock-admin-undocumented-timelock-s32"
      }
     ],
-    "matched": [
-     {
-      "parameter": "trUSD TIMELOCK_ADMIN_ROLE: a second ToriTimelock, not the documented timelock",
-      "recordId": "tori-trusd-timelock-admin-undocumented-timelock-s32",
-      "value": "1 d"
-     }
-    ]
+    "matched": []
    }
   },
   {
@@ -16091,7 +16051,7 @@
      "chain": "ethereum",
      "classification": "parameter_delta",
      "id": "whales-market-upgradeability-s28",
-     "surface": "Whales Market TransparentUpgradeableProxy: upgradeable; coverage by the pre-market escrow immutability statement is unverified",
+     "surface": "Sampled Whales Market proxy is upgradeable; coverage by the pre-market escrow immutability promise is unverified",
      "targetContract": "0x1eCdB32e59e948C010a189a0798C674a2d0c6603",
      "targetLabel": "Whales Market TransparentUpgradeableProxy"
     }
@@ -16107,7 +16067,7 @@
       "classification": "parameter_delta",
       "documented": "'Your deposited funds will be sent to and stored in an escrow secured by **an immutable smart contract,**' (docs.whales.market/llms-full.txt)",
       "observed": "Whales Market TransparentUpgradeableProxy 0x1eCdB32e59e948C010a189a0798C674a2d0c6603 (Ethereum): EIP-1967 implementation slot = 0x623620b3Eff4e1A30e9f1154f88198Ab26952EeB, admin slot = 0xeB5E772919661F455619A4cABd9B2b64…",
-      "parameter": "Whales Market TransparentUpgradeableProxy: upgradeable; coverage by the pre-market escrow immutability statement is unverified",
+      "parameter": "Sampled Whales Market proxy is upgradeable; coverage by the pre-market escrow immutability promise is unverified",
       "recordId": "whales-market-upgradeability-s28"
      }
     ],
@@ -16507,7 +16467,7 @@
      "chain": "ethereum",
      "classification": "parameter_delta",
      "id": "yearn-v3-ychad-safe-signers-s28",
-     "surface": "yChad governance Safe: documented signer 0x6F2A…eAD6 is no longer an owner",
+     "surface": "yChad governance Safe: 6-of-9 threshold retained; signer 0x6F2A…eAD6 rotated to 0x3839…a7F7 41h before pin (docs not yet updated)",
      "targetContract": "0xFEB4acf3df3cDEA7399794D0869ef76A6EfAff52",
      "targetLabel": "yChad Governance Safe"
     }
@@ -16523,7 +16483,7 @@
       "classification": "parameter_delta",
       "documented": "'| [0x6F2A8Ee9452ba7d336b3fba03caC27f7818AeAD6](https://etherscan.io/address/0x6F2A8Ee9452ba7d336b3fba03caC27f7818AeAD6) | Mariano Conti (nanexcool.com, prev.",
       "observed": "yChad Safe 0xFEB4acf3df3cDEA7399794D0869ef76A6EfAff52 (Ethereum): getThreshold() = 6 of getOwners() = 9 owners;",
-      "parameter": "yChad governance Safe: documented signer 0x6F2A…eAD6 is no longer an owner",
+      "parameter": "yChad governance Safe: 6-of-9 threshold retained; signer 0x6F2A…eAD6 rotated to 0x3839…a7F7 41h before pin (docs not yet updated)",
       "recordId": "yearn-v3-ychad-safe-signers-s28"
      },
      {
