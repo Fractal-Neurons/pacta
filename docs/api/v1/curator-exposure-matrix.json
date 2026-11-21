@@ -8,14 +8,22 @@
     "base_eas_attested_protocols": 189,
     "grades_breakdown": {
       "ALIGNED": 126,
-      "DELTA_adverse_gaps": 50,
+      "DELTA_adverse_gaps": 49,
+      "CHANGED_RECENTLY": 1,
       "UNRESOLVED": 6,
       "PROTECTIVE": 7,
       "OBSERVED_rpc_pinned": 127
     },
     "graph_nodes": 994,
     "graph_edges": 866,
-    "collateral_contagion_upstream_edges": 7
+    "collateral_contagion_upstream_edges": 7,
+    "flagged_comparisons_breakdown": {
+      "historically_flagged": 56,
+      "clearWeaker": 16,
+      "needsExplanation": 17,
+      "bookkeeping": 13,
+      "unresolved": 10
+    }
   },
   "curators_and_institutional_allocators": [
     {
@@ -1837,7 +1845,7 @@
       "verified_contagion_edges": [
         "upshift (0x4107...57F7, ETH #26,441,165, EAS 0x541d...5768): Vault ProxyAdmin Safe is 2-of-3 vs documented 4-of-6"
       ],
-      "curator_exposure_insight": "Direct wrapper DELTA: Upshift documentation states a 4-of-6 ProxyAdmin multisig, whereas on-chain inspection at Ethereum #26,441,165 proves a 2-of-3 Safe controls the vault's ProxyAdmin, compounding downstream DELTA exposure across USDe, syrupUSDC, tETH, and uniBTC strategies.",
+      "curator_exposure_insight": "Direct wrapper DELTA: Upshift's documentation describes its ProxyAdmin Safe as generally 4-of-6 and discloses upgrades without a timelock, while Pacta recorded the ProxyAdmin owner of vault 0xE9B7…9D32 as 2-of-3 at Ethereum #26,441,165; the different signer count does not by itself show that one organization can upgrade alone. Its strategies also route into USDe, syrupUSDC, tETH and uniBTC, which carry their own DELTA findings.",
       "wrapper_counts": {
         "total": 1,
         "aligned_or_protective": 0,
@@ -3598,13 +3606,14 @@
       "verified_contagion_edges": [
         "Live Timelock Radar briefs: yearn-v3-op-0x2a14 (8 new strategies added across yvUSDC-1, yvUSD, yvWETH-1, yvFlexUSDC) & beefy-base-op-0x3302 (Aerodrome CLM calm-check widened 9 -> 25 ticks)"
       ],
-      "curator_exposure_insight": "Both Yearn V3 (stale signer roster on 6-of-9 yChad Safe vs docs at ETH #26,441,165) and Beefy Finance Base (0s chain timelock on vault upgrades/ops vs 6-hour documented timelock at Base #58,885,628) are Base-EAS DELTAs, routing depositor capital across downstream lending/AMM pools that include Aerodrome Base and crvUSD DELTAs.",
+      "curator_exposure_insight": "Yearn V3 is Changed recently: at ETH #26,441,165 one address on yChad's documented signer list was no longer an owner of the 6-of-9 Safe, observed within 48 hours of the October 28 signer-rotation proposal, so it is re-checked after 72 hours before it counts as a documentation gap. Beefy Finance Base is a Base-EAS DELTA: its Base vault-owner timelock reads zero delay while strategy-owner changes keep 6 hours (Base #58,315,414). Both route depositor capital across downstream lending/AMM pools that include Aerodrome Base and crvUSD DELTAs.",
       "wrapper_counts": {
         "total": 3,
         "aligned_or_protective": 1,
-        "delta": 2,
+        "delta": 1,
         "unresolved": 0,
-        "observed": 0
+        "observed": 0,
+        "recent_change": 1
       },
       "underlying_182_eas_counts": {
         "aligned_or_protective": 6,
@@ -3615,7 +3624,7 @@
         {
           "slug": "yearn-v3",
           "name": "Yearn V3",
-          "grade": "DELTA",
+          "grade": "CHANGED RECENTLY",
           "easAttested": true,
           "chains": [
             "ethereum"
@@ -4649,7 +4658,7 @@
       "baseEasUids": [
         "0x105ea2849a5cd9ef601ae565e6b0adf288884771c8ac82c1c3d0a87aa789eb4f"
       ],
-      "summary_short": "Pause guardian: docs 3-of-5 Security Council · chain 2-of-4 Safe",
+      "summary_short": "Base pause guardian is a 2-of-4 Safe (Oct MIP-X71); older constitution says 3-of-5",
       "url": "https://pacta.wtf/protocols/moonwell-lending-base/",
       "surface": "Comptroller pauseGuardian = 2-of-4 Safe (Constitution: pause = Security Council 3-of-5)",
       "documented_excerpt": "Moonwell DAO Constitution 8.1: 'The Security Council has the power to execute any pause functionality, or perform other required actions with no delay ... Performing any Emergency Action requires a 3-of-5 approval from the Security Council.'",
@@ -4883,7 +4892,7 @@
       "baseEasUids": [
         "0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5"
       ],
-      "summary_short": "Timelock delay: docs 2 days · chain none",
+      "summary_short": "Approval Registry owned by Admin Safe; vault upgrades keep a 48-hour timelock",
       "url": "https://pacta.wtf/protocols/yo-protocol/",
       "surface": "Approval Registry owner: the Admin Multisig directly, not the 48-hour timelock",
       "documented_excerpt": "docs.yo.xyz (YO V2 Security Framework): 'Approval Registry: Onchain, timelocked caps on how much of each asset a vault may approve to each contract' and 'Every path a dollar can take is written into immutable adapters and timelocked registries'",
@@ -4967,7 +4976,7 @@
       "baseEasUids": [
         "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768"
       ],
-      "summary_short": "Docs call 40 Acres immutable, but an upgradeable proxy sits on chain",
+      "summary_short": "Base AERO USDC Loan contract is upgradeable (2-of-3 Safe); intro says immutable",
       "url": "https://pacta.wtf/protocols/40-acres-base/",
       "surface": "AERO USDC Loan contract (UUPS proxy): docs call the contracts immutable, but it is an upgradeable proxy",
       "documented_excerpt": "'40 Acres has completed four independent audits with Sherlock. Smart contracts are immutable and non-upgradeable post-deployment.' (docs.40acres.finance)",
@@ -5159,7 +5168,7 @@
       "baseEasUids": [
         "0x749d96e1a3d214a4ab66c528ca12c84dce085fa138dc370dd0eb817d890f09fa"
       ],
-      "summary_short": "Proxy admin is the 4-of-7 DAO Safe; docs describe a 3-day GovernorTimelock",
+      "summary_short": "PoolPermissionManager proxy admin is the 4-of-7 DAO Safe, not GovernorTimelock",
       "url": "https://pacta.wtf/protocols/maple-finance-v2-syrup/",
       "contagion_note": "syrupUSDC ProxyAdmin is 4-of-7 DAO Safe directly vs documented 3-day GovernorTimelock (active Aave V4 ARFC)",
       "surface": "EIP-1967 Proxy Admin Slot vs. GovernorTimelock"
@@ -5213,7 +5222,7 @@
     {
       "slug": "renzo-protocol-ezeth",
       "name": "Renzo Protocol (ezETH)",
-      "grade": "DELTA",
+      "grade": "UNRESOLVED",
       "easAttested": true,
       "chains": [
         "ethereum"
@@ -5229,7 +5238,7 @@
         "0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
         "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2"
       ],
-      "summary_short": "Docs state a 10% reward fee; feeBasisPoints() now reads 10,000 (100%), up from 1,500",
+      "summary_short": "DepositQueue feeBasisPoints reads 10,000 bps; effective fee and routing unverified",
       "url": "https://pacta.wtf/protocols/renzo-protocol-ezeth/",
       "contagion_note": "feeBasisPoints() on chain reads 10,000 (100%) vs 10% reward fee stated in docs",
       "surface": "DepositQueue.feeBasisPoints Parameter vs. Staking Docs"
@@ -5276,7 +5285,7 @@
       "baseEasUids": [
         "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2"
       ],
-      "summary_short": "Timelock delay: docs 3 days · chain 1 second",
+      "summary_short": "DEFAULT_ADMIN handover delay: 1 second observed vs 3 days documented",
       "url": "https://pacta.wtf/protocols/usual-money-usd0-usd0/",
       "contagion_note": "Timelock minimum delay reads 1 second on chain vs 3 days in docs",
       "surface": "OpenZeppelin AccessControlDefaultAdminRules Delay"
@@ -5301,7 +5310,7 @@
         "0x5c12867816bee7d00c13412cf7ec67c00b7d42f3020643ab2a2ca577a28de424",
         "0x8965ae6e51a78132a77eb14c0ac1c6cd1be357d6f261253efff28869478ae5b8"
       ],
-      "summary_short": "A 5-of-7 Safe can freeze TREE transfers at once; docs promise a 5-day timelock",
+      "summary_short": "TREE blacklisting has no delay; TREE and tETH owner paths keep 5-day timelocks",
       "url": "https://pacta.wtf/protocols/treehouse-tree-teth/",
       "contagion_note": "5-of-7 Safe can freeze TREE transfers immediately vs documented 5-day timelock (+ queued Blacklistable upgrade)",
       "surface": "TREE token: a 5-of-7 Safe can blacklist holders with no delay; docs state a 5-day timelock on every contract"
@@ -5323,7 +5332,7 @@
       "baseEasUids": [
         "0x754edd7612258b755ff2e56903243d1f8867bad53c29ce3febb5ed9114005e42"
       ],
-      "summary_short": "Timelock delay: docs 2 days · chain 36 hours",
+      "summary_short": "LegacyTimelock reads 36 hours; V3.0 technical-change docs describe 2 days",
       "url": "https://pacta.wtf/protocols/gearbox-v3-v3-1/",
       "contagion_note": "On-chain timelock delay reads 36 hours vs 2 days (48h) in docs",
       "surface": "LegacyTimelock Delay & InstanceManager Safe Quorum"
@@ -5347,7 +5356,7 @@
       "baseEasUids": [
         "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768"
       ],
-      "summary_short": "Docs call 40 Acres immutable, but an upgradeable proxy sits on chain",
+      "summary_short": "Base AERO USDC Loan contract is upgradeable (2-of-3 Safe); intro says immutable",
       "url": "https://pacta.wtf/protocols/40-acres-base/",
       "category": "veNFT-backed lending (AERO USDC Loan UUPS proxy on Base)",
       "surface": "AERO USDC Loan contract (UUPS proxy): docs call the contracts immutable, but it is an upgradeable proxy",
@@ -5513,7 +5522,7 @@
         "0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5",
         "0x6692c36731ecd514fb7a92fe3de0a6770b67f68f55eece26faa669c2c84b3a08"
       ],
-      "summary_short": "Timelock delay: docs 6 hours · chain none",
+      "summary_short": "Base vault-owner timelock has zero delay; strategy-owner changes keep 6 hours",
       "url": "https://pacta.wtf/protocols/beefy-finance-base/",
       "category": "Automated Yield Vaults & CLM (Base)",
       "surface": "Vault owner timelock: no delay (0 seconds)",
@@ -5663,7 +5672,7 @@
     {
       "slug": "concrete",
       "name": "Concrete",
-      "grade": "DELTA",
+      "grade": "UNRESOLVED",
       "easAttested": true,
       "chains": [
         "ethereum"
@@ -5678,7 +5687,7 @@
       "baseEasUids": [
         "0xe712dd31d79ab492e2e64eb5847396651dee81daa9f895ead45548e97f1a2eb7"
       ],
-      "summary_short": "Vault and factory manager Safe runs at 1-of-2 despite documented role separation",
+      "summary_short": "ctDeltaWeETH owner/manager share a 1-of-2 Safe; single-key drain not established",
       "url": "https://pacta.wtf/protocols/concrete/",
       "category": "Yield Vaults (ERC-4626)",
       "surface": "Vault owner, VAULT_MANAGER and factory manager Safe threshold: 1-of-2",
@@ -5776,7 +5785,7 @@
         "0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
         "0xca4b525bf5142d8e88433cbed2a1aa87bb06a97d1353cb77621ec41a51ce8101"
       ],
-      "summary_short": "Docs set a 3-day timelock on every transaction; the V2 Router's owner is a 6-of-9 Safe",
+      "summary_short": "V2 Router owner is the 6-of-9 operational Safe; separate timelock keeps 3 days",
       "url": "https://pacta.wtf/protocols/f-x-protocol-v2/",
       "category": "Leveraged ETH / Stablecoin",
       "surface": "ProtocolTreasury DEFAULT_ADMIN_ROLE Holders",
@@ -5823,7 +5832,7 @@
       "baseEasUids": [
         "0x754edd7612258b755ff2e56903243d1f8867bad53c29ce3febb5ed9114005e42"
       ],
-      "summary_short": "Timelock delay: docs 2 days · chain 36 hours",
+      "summary_short": "LegacyTimelock reads 36 hours; V3.0 technical-change docs describe 2 days",
       "url": "https://pacta.wtf/protocols/gearbox-v3-v3-1/",
       "category": "Leveraged Credit & Curated Lending",
       "surface": "LegacyTimelock Delay & InstanceManager Safe Quorum",
@@ -5955,7 +5964,7 @@
     {
       "slug": "lagoon",
       "name": "Lagoon",
-      "grade": "DELTA",
+      "grade": "UNRESOLVED",
       "easAttested": true,
       "chains": [
         "ethereum"
@@ -5969,10 +5978,10 @@
       "baseEasUids": [
         "0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13"
       ],
-      "summary_short": "Docs require a 24 h minimum upgrade wait; the vault beacon's owner is a 3-of-6 Safe",
+      "summary_short": "Legacy cbBTC beacon upgrades have no delay; 24h Opt-in doc coverage unverified",
       "url": "https://pacta.wtf/protocols/lagoon/",
       "category": "Curated vault infrastructure: ERC-7540 vaults behind upgradeable proxies",
-      "surface": "cbBTC vault upgrades: docs require a 24 h to 30 day wait; the vault's beacon owner is a 3-of-6 Safe with no delay",
+      "surface": "Legacy cbBTC vault beacon upgrades: no enforced delay under a 3-of-6 Safe; coverage by the 24 h Opt-in delay docs is unverified",
       "recordId": "lagoon-vault-beacon-upgrade-delay-s29"
     },
     {
@@ -5994,7 +6003,7 @@
       "baseEasUids": [
         "0x749d96e1a3d214a4ab66c528ca12c84dce085fa138dc370dd0eb817d890f09fa"
       ],
-      "summary_short": "Proxy admin is the 4-of-7 DAO Safe; docs describe a 3-day GovernorTimelock",
+      "summary_short": "PoolPermissionManager proxy admin is the 4-of-7 DAO Safe, not GovernorTimelock",
       "url": "https://pacta.wtf/protocols/maple-finance-v2-syrup/",
       "category": "Institutional Credit / RWA",
       "surface": "EIP-1967 Proxy Admin Slot vs. GovernorTimelock",
@@ -6027,7 +6036,7 @@
     {
       "slug": "metamorpho-re7-weth-vs-re7-usdt",
       "name": "MetaMorpho (Re7 WETH vs. Re7 USDT)",
-      "grade": "DELTA",
+      "grade": "UNRESOLVED",
       "easAttested": true,
       "chains": [
         "ethereum"
@@ -6043,7 +6052,7 @@
       "baseEasUids": [
         "0x804289d4357b0a8d5a360911ec450c13ca36c4422d1e811c4c7040ef7d2628e5"
       ],
-      "summary_short": "Re7 WETH vault has no guardian; its owner is a 2-of-4 Safe with a 3-day timelock",
+      "summary_short": "Re7 WETH has no guardian while Re7 USDT does; no parity promise was verified",
       "url": "https://pacta.wtf/protocols/metamorpho-re7-weth-vs-re7-usdt/",
       "category": "Curated Lending Vaults",
       "surface": "Sampled MetaMorpho Vault Guardian Configuration",
@@ -6066,7 +6075,7 @@
       "baseEasUids": [
         "0x105ea2849a5cd9ef601ae565e6b0adf288884771c8ac82c1c3d0a87aa789eb4f"
       ],
-      "summary_short": "Pause guardian: docs 3-of-5 Security Council · chain 2-of-4 Safe",
+      "summary_short": "Base pause guardian is a 2-of-4 Safe (Oct MIP-X71); older constitution says 3-of-5",
       "url": "https://pacta.wtf/protocols/moonwell-lending-base/",
       "category": "Base Lending & Borrowing",
       "surface": "Comptroller pauseGuardian = 2-of-4 Safe (Constitution: pause = Security Council 3-of-5)",
@@ -6196,7 +6205,7 @@
     {
       "slug": "renzo-protocol-ezeth",
       "name": "Renzo Protocol (ezETH)",
-      "grade": "DELTA",
+      "grade": "UNRESOLVED",
       "easAttested": true,
       "chains": [
         "ethereum"
@@ -6212,7 +6221,7 @@
         "0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
         "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2"
       ],
-      "summary_short": "Docs state a 10% reward fee; feeBasisPoints() now reads 10,000 (100%), up from 1,500",
+      "summary_short": "DepositQueue feeBasisPoints reads 10,000 bps; effective fee and routing unverified",
       "url": "https://pacta.wtf/protocols/renzo-protocol-ezeth/",
       "category": "Liquid Restaking",
       "surface": "DepositQueue.feeBasisPoints Parameter vs. Staking Docs",
@@ -6386,7 +6395,7 @@
     {
       "slug": "tori-finance",
       "name": "Tori Finance",
-      "grade": "DELTA",
+      "grade": "UNRESOLVED",
       "easAttested": true,
       "chains": [
         "ethereum"
@@ -6400,7 +6409,7 @@
       "baseEasUids": [
         "0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc"
       ],
-      "summary_short": "trUSD's Timelock Admin is a second ToriTimelock, not the one the roles page names",
+      "summary_short": "trUSD timelock: current docs name the same 24-hour controller as observed",
       "url": "https://pacta.wtf/protocols/tori-finance/",
       "category": "Delta-Neutral Synthetic Dollar (staked strUSD) (Ethereum)",
       "surface": "trUSD TIMELOCK_ADMIN_ROLE: a second ToriTimelock, not the documented timelock",
@@ -6426,7 +6435,7 @@
         "0x5c12867816bee7d00c13412cf7ec67c00b7d42f3020643ab2a2ca577a28de424",
         "0x8965ae6e51a78132a77eb14c0ac1c6cd1be357d6f261253efff28869478ae5b8"
       ],
-      "summary_short": "A 5-of-7 Safe can freeze TREE transfers at once; docs promise a 5-day timelock",
+      "summary_short": "TREE blacklisting has no delay; TREE and tETH owner paths keep 5-day timelocks",
       "url": "https://pacta.wtf/protocols/treehouse-tree-teth/",
       "category": "Fixed Income / LST",
       "surface": "TREE token: a 5-of-7 Safe can blacklist holders with no delay; docs state a 5-day timelock on every contract",
@@ -6472,7 +6481,7 @@
       "baseEasUids": [
         "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768"
       ],
-      "summary_short": "Docs state a 4-of-6 ProxyAdmin multisig; the vault's is 2-of-3",
+      "summary_short": "Docs say ProxyAdmin is generally 4-of-6 (no timelock disclosed); vault's is 2-of-3",
       "url": "https://pacta.wtf/protocols/upshift/",
       "category": "Institutional curated vaults run through a Safe owner and a ProxyAdmin multisig",
       "surface": "Vault ProxyAdmin multisig: docs state generally 4 of 6, the Safe is 2-of-3",
@@ -6497,7 +6506,7 @@
       "baseEasUids": [
         "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2"
       ],
-      "summary_short": "Timelock delay: docs 3 days · chain 1 second",
+      "summary_short": "DEFAULT_ADMIN handover delay: 1 second observed vs 3 days documented",
       "url": "https://pacta.wtf/protocols/usual-money-usd0-usd0/",
       "category": "RWA Stablecoin",
       "surface": "OpenZeppelin AccessControlDefaultAdminRules Delay",
@@ -6529,7 +6538,7 @@
     {
       "slug": "whales-market",
       "name": "Whales Market",
-      "grade": "DELTA",
+      "grade": "UNRESOLVED",
       "easAttested": true,
       "chains": [
         "ethereum"
@@ -6543,16 +6552,16 @@
       "baseEasUids": [
         "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768"
       ],
-      "summary_short": "Docs call Whales Market immutable, but an upgradeable proxy sits on chain",
+      "summary_short": "Sampled Whales Market proxy is upgradeable; escrow doc coverage is unverified",
       "url": "https://pacta.wtf/protocols/whales-market/",
       "category": "Peer-to-peer escrow for pre-market token and points trades (Ethereum)",
-      "surface": "Whales Market TransparentUpgradeableProxy: docs describe it as immutable, but it is an upgradeable proxy",
+      "surface": "Whales Market TransparentUpgradeableProxy: upgradeable; coverage by the pre-market escrow immutability statement is unverified",
       "recordId": "whales-market-upgradeability-s28"
     },
     {
       "slug": "yearn-v3",
       "name": "Yearn V3",
-      "grade": "DELTA",
+      "grade": "CHANGED RECENTLY",
       "easAttested": true,
       "chains": [
         "ethereum"
@@ -6567,7 +6576,7 @@
         "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
         "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2"
       ],
-      "summary_short": "Docs list a yChad signer who is no longer on the 6-of-9 Safe",
+      "summary_short": "Sampled RoleManager uses a 7-day timelock; yChad signer roster differs (6-of-9)",
       "url": "https://pacta.wtf/protocols/yearn-v3/",
       "category": "Yield Aggregation Vaults",
       "surface": "Sampled RoleManager.governance() Timelock Wiring",
@@ -6615,7 +6624,7 @@
       "baseEasUids": [
         "0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5"
       ],
-      "summary_short": "Timelock delay: docs 2 days · chain none",
+      "summary_short": "Approval Registry owned by Admin Safe; vault upgrades keep a 48-hour timelock",
       "url": "https://pacta.wtf/protocols/yo-protocol/",
       "category": "Cross-Chain Yield Optimizer Vaults",
       "surface": "Approval Registry owner: the Admin Multisig directly, not the 48-hour timelock",

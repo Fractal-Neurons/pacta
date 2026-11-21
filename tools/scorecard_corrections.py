@@ -38,6 +38,58 @@ def unresolved(slug):
     return status(slug) == "unresolved"
 
 
+# the two neutral statuses: neither Delta nor Aligned, never the amber Parameter Delta badge, never the paid re-check prompt
+NEUTRAL = ("unresolved", "recent_change")
+
+
+def recent_change(slug):
+    """Changed recently: observed within 48 hours of an on-chain change; re-checked after 72 hours before it counts as a Delta."""
+    return status(slug) == "recent_change"
+
+
+def neutral(slug):
+    return status(slug) in NEUTRAL
+
+
+def recent_change_rule():
+    return data()["recentChangeRule"]["text"]
+
+
+def finding_class(slug):
+    """The class of one of the 56 historically flagged comparisons (clear_weaker / real_difference / bookkeeping / unresolved), or None."""
+    for k, members in data()["findingClasses"]["members"].items():
+        if slug in members:
+            return k
+    return None
+
+
+def breakdown():
+    """{"clearWeaker": 16, "needsExplanation": 17, "bookkeeping": 13, "unresolved": 10} from the registry's class members."""
+    fc = data()["findingClasses"]
+    return {fc["breakdownKeys"][k]: len(v) for k, v in fc["members"].items()}
+
+
+def flagged_total():
+    return sum(breakdown().values())
+
+
+def breakdown_text(sep=", ", last=", and "):
+    """'16 clear cases where the chain looks weaker than documented, 17 real differences needing explanation, 13 bookkeeping
+    differences, and 10 unresolved' (plain words; never 'adverse')."""
+    b = breakdown()
+    parts = [f'{b["clearWeaker"]} clear cases where the chain looks weaker than documented',
+             f'{b["needsExplanation"]} real differences needing explanation', f'{b["bookkeeping"]} bookkeeping differences',
+             f'{b["unresolved"]} unresolved']
+    return sep.join(parts[:-1]) + last + parts[-1]
+
+
+def breakdown_short():
+    """'16 weaker · 17 needing explanation · 13 bookkeeping · 10 unresolved'."""
+    b = breakdown()
+    return (f'{b["clearWeaker"]} weaker · {b["needsExplanation"]} needing explanation · {b["bookkeeping"]} bookkeeping · '
+            f'{b["unresolved"]} unresolved')
+
+
 def slug_of(name):
     """The site's slug rule for a protocol name (build_site.protocol_slug, imported lazily)."""
     import build_site
@@ -88,7 +140,7 @@ def check():
     """Structural check of the registry (asserted by the build): known statuses, <= 90-character summaries, no stale wording."""
     errs = []
     for s, c in data()["protocols"].items():
-        if c.get("status") not in ("unresolved", "delta"):
+        if c.get("status") not in ("unresolved", "recent_change", "delta"):
             errs.append(f"{s}: unknown status {c.get('status')!r}")
         if c.get("summaryShort") and len(c["summaryShort"]) > 90:
             errs.append(f"{s}: summaryShort over 90 characters")
@@ -96,4 +148,10 @@ def check():
             errs.append(f"{s}: pinnedBlock must be the historical block number")
         if re.search(r"across control surfaces", json.dumps(c)):
             errs.append(f"{s}: 'across control surfaces' overstates a sampled surface")
+    members = [x for v in data()["findingClasses"]["members"].values() for x in v]
+    if len(members) != len(set(members)):
+        errs.append("findingClasses: a protocol is in more than one class")
+    for s, c in data()["protocols"].items():
+        if c.get("status") == "recent_change" and not c.get("recentChange"):
+            errs.append(f"{s}: recent_change needs the recentChange observation note")
     return errs

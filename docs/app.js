@@ -258,8 +258,8 @@ if (pres[1]) pres[1].textContent = '<a href="' + base + "/protocols/" + slug + '
 });
 }
 var SC_STATE = { g: "Strong", b: "Moderate", a: "Weak", n: "Not determined", u: "Uncompared" };
-var SC_GRADE = { delta: "Delta", unresolved: "Unresolved", protective: "Protective", aligned: "Aligned", observed: "Observed" };
-var SC_VARIANT = { delta: "warning", unresolved: "outline", protective: "info", aligned: "neutral", observed: "outline" };
+var SC_GRADE = { delta: "Delta", recent_change: "Changed recently", unresolved: "Unresolved", protective: "Protective", aligned: "Aligned", observed: "Observed" };
+var SC_VARIANT = { delta: "warning", recent_change: "info", unresolved: "outline", protective: "info", aligned: "neutral", observed: "outline" };
 var SC_LETTER = { g: "S", b: "M", a: "W", n: "—", u: "—" };
 var SC_RADIUS = { g: 1, b: 0.78, a: 0.56, n: 1, u: 1 };
 var SC_CHAIN = { ethereum: "Ethereum", base: "Base" };
@@ -652,7 +652,9 @@ var CLS = { parameter_delta: ["delta", "Parameter delta"], protective_delta: ["p
 function badge(c, text, extra) { var k = CLS[c] || CLS.aligned_baseline; return el("span", { "class": ("badge " + (extra || k[0])).trim(), text: text || k[1] }); }
 function recBadge(e) {
 var o = DATA && DATA.scorecard_status_overrides ? DATA.scorecard_status_overrides[e.id] : null;
-return o && o.status === "unresolved" ? el("span", { "class": "badge unresolved", text: String(o.label || "Unresolved") }) : badge(e.classification);
+return o && (o.status === "unresolved" || o.status === "recent_change")
+? el("span", { "class": "badge " + o.status, text: String(o.label || (o.status === "unresolved" ? "Unresolved" : "Changed recently")) })
+: badge(e.classification);
 }
 function secs(s) {
 if (s === null || s === undefined) return "—";
@@ -749,8 +751,8 @@ function whatDiffersBox(e) {
 var wd = whatDiffers(e); if (!wd) return null;
 var co = DATA && DATA.scorecard_wording_overrides ? DATA.scorecard_wording_overrides[e.id] : null;
 if (co) {
-var cb = el("div", { "class": "whatdiffers" + (co.unresolved ? " unresolved" : ""), "data-what-differs": "" },
-[el("h2", { "class": "wd-h", text: co.unresolved ? "Verification scope" : "What differs" })]);
+var cb = el("div", { "class": "whatdiffers" + (co.unresolved ? " unresolved" : co.recentChange ? " recent_change" : ""), "data-what-differs": "" },
+[el("h2", { "class": "wd-h", text: co.unresolved ? "Verification scope" : co.recentChange ? "Changed recently" : "What differs" })]);
 if (co.headline) cb.appendChild(el("p", { "class": "wd-lead", "data-wd-headline": "" }, [el("strong", { text: String(co.headline) }), " ",
 el("span", { "class": "wd-block mono", text: "(#" + num(co.pinnedBlock) + ")" })]));
 if (co.scope) cb.appendChild(el("p", { "class": "wd-scope", "data-wd-scope": "", text: String(co.scope) }));
@@ -1576,8 +1578,10 @@ return n + " s";
 }
 function renderMaVerdict(ch, addr, pf, catIt) {
 var cls = catIt && catIt.classification;
-var status = catIt ? (cls === "parameter_delta" || cls === "mixed" ? "ADVERSE DELTA" : "ALIGNED") : "UNINDEXED";
-var tone = status === "ALIGNED" ? "aligned" : status === "ADVERSE DELTA" ? "delta" : "unindexed";
+var neutral = catIt && (catIt.scorecardStatus === "unresolved" || catIt.scorecardStatus === "recent_change");
+var status = !catIt ? "UNINDEXED" : neutral ? (catIt.scorecardStatus === "unresolved" ? "UNRESOLVED" : "CHANGED RECENTLY")
+: (cls === "parameter_delta" || cls === "mixed" ? "DOCUMENTATION DIFFERENCE" : "ALIGNED");
+var tone = status === "ALIGNED" ? "aligned" : status === "DOCUMENTATION DIFFERENCE" ? "delta" : "unindexed";
 if (vSec) vSec.setAttribute("data-ma-status", status);
 if (vPill) { vPill.textContent = status; vPill.setAttribute("data-tone", tone); }
 var chainLbl = ch === "base" ? "Base" : "Ethereum";
@@ -2149,7 +2153,7 @@ var grade = total === 0 ? "A" : verdictGradeFromScore(riskScore);
 var head = total === 0
 ? "No indexed DeFi positions detected in " + short(wallet, 6, 4) + " across Ethereum + Base Multicall3 scan"
 : "Found " + total + " active DeFi position" + (total === 1 ? "" : "s") + " in " + short(wallet, 6, 4)
-+ " \u2014 " + (alignedCount + protectiveCount) + " ALIGNED, " + adverseGapCount + " ADVERSE GAP" + (adverseGapCount === 1 ? "" : "S")
++ " \u2014 " + (alignedCount + protectiveCount) + " ALIGNED, " + adverseGapCount + " FLAGGED"
 + (observedCount > 0 ? ", " + observedCount + " OBSERVED" : "");
 var deltas = allPos.filter(function (p) { return p.status === "DELTA"; });
 var topGap = null;
@@ -2354,7 +2358,8 @@ bar.appendChild(btn);
 card.appendChild(bar);
 }
 function wlToneOf(st) {
-if (st === "DELTA") return { lbl: "ADVERSE GAP", tone: "gap" };
+if (st === "DELTA") return { lbl: "FLAGGED", tone: "gap" };
+if (st === "UNRESOLVED" || st === "CHANGED RECENTLY") return { lbl: st, tone: "observed" };
 if (st === "PROTECTIVE") return { lbl: "PROTECTIVE", tone: "protective" };
 if (st === "ALIGNED") return { lbl: "ALIGNED", tone: "aligned" };
 return { lbl: "PINNED", tone: "observed" };
@@ -2389,7 +2394,7 @@ var exitTxt = exitSec === null || exitSec === undefined ? "No timelock gap seen"
 var metrics = el("dl", { "class": "pf-metrics wl-metrics" }, [
 el("div", {}, [el("dt", { text: "Portfolio Risk Score" }), el("dd", { "data-wallet-risk": "", text: String(sum.portfolioRiskScore || 0) + "/100 \u00b7 Grade " + String(sum.grade || "A") })]),
 el("div", {}, [el("dt", { text: "Shortest Exit Window" }), el("dd", { "class": exitSec === 0 ? "wl-warn-txt" : "", "data-wallet-exit": "", text: exitTxt })]),
-el("div", {}, [el("dt", { text: "Held Breakdown" }), el("dd", { text: (Number(sum.alignedCount || 0) + Number(sum.protectiveCount || 0)) + " Aligned \u00b7 " + Number(sum.adverseGapCount || 0) + " Adverse Gaps" })])
+el("div", {}, [el("dt", { text: "Held Breakdown" }), el("dd", { text: (Number(sum.alignedCount || 0) + Number(sum.protectiveCount || 0)) + " Aligned \u00b7 " + Number(sum.adverseGapCount || 0) + " Flagged" })])
 ]);
 card.appendChild(metrics);
 if (pos.length > 0) {
@@ -2543,6 +2548,8 @@ return clean.slice(0, 2).join(" \u00b7 ");
 }
 function protoStatusMeta(x) {
 var g = x.card && x.card.grade ? x.card.grade : "", cl = (x.it && x.it.classification) || "";
+if (g === "unresolved" || g === "recent_change" || (x.it && (x.it.scorecardStatus === "unresolved" || x.it.scorecardStatus === "recent_change")))
+return { label: g === "recent_change" || (x.it && x.it.scorecardStatus === "recent_change") ? "CHANGED RECENTLY" : "UNRESOLVED", tone: "observed", rank: 3 };
 if (g === "delta" || cl === "parameter_delta" || cl === "mixed") return { label: "GAP", tone: "gap", rank: 0 };
 if (g === "protective" || cl === "protective_delta") return { label: "PROTECTIVE", tone: "protective", rank: 1 };
 if (g === "aligned" || cl === "aligned_baseline") return { label: "ALIGNED", tone: "aligned", rank: 2 };
@@ -3341,7 +3348,7 @@ return (data || []).map(function (x) { return { x: x, r: lkRank(x, q) }; }).filt
 .sort(function (a, b) { return a.r - b.r || (a.x.it.kind === "brief") - (b.x.it.kind === "brief") || (a.x.name < b.x.name ? -1 : a.x.name > b.x.name ? 1 : 0); })
 .slice(0, n).map(function (m) { return m.x; });
 }
-var GRADE_WORD = { delta: "Delta", unresolved: "Unresolved", protective: "Protective", aligned: "Aligned", observed: "Observed" };
+var GRADE_WORD = { delta: "Delta", recent_change: "Changed recently", unresolved: "Unresolved", protective: "Protective", aligned: "Aligned", observed: "Observed" };
 function lkSub(x) {
 var it = x.it, ch = it.chain === "base" ? "Base" : "Ethereum";
 if (it.kind === "brief") return "Brief · " + ch + " · " + String(it.category || "");

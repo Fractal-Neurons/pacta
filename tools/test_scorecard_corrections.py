@@ -36,7 +36,7 @@ class Grades(unittest.TestCase):
     def test_totals(self):
         from collections import Counter
         self.assertEqual(Counter(c["grade"] for c in CARDS.values()),
-                         Counter({"aligned": 126, "protective": 7, "delta": 50, "unresolved": 6, "observed": 127}))
+                         Counter({"aligned": 126, "protective": 7, "delta": 49, "recent_change": 1, "unresolved": 6, "observed": 127}))
 
     def test_unresolved_is_neither_delta_nor_aligned(self):
         for s in UNRES:
@@ -51,6 +51,62 @@ class Grades(unittest.TestCase):
             self.assertNotIn('<span class="badge delta">', page, s)
             self.assertNotIn('data-cta="seal_wd"', page, s)
         self.assertIn("Docs updated · pending chain read", CARDS["tori-finance"].get("subPill", ""))
+
+
+    def test_changed_recently_is_neither_delta_nor_aligned(self):
+        c = CARDS["yearn-v3"]
+        self.assertEqual((c["grade"], c["gradeLabel"]), ("recent_change", "CHANGED RECENTLY"))
+        parity = next(f for f in c["factors"] if f["key"] == "parity")
+        self.assertEqual(parity["state"], "n")
+        self.assertIn("re-checked after 72 hours", parity["value"])
+        svg = open(os.path.join(ROOT, "docs", "badges", "yearn-v3.svg"), encoding="utf-8").read()
+        self.assertIn("Changed Recently · Re-Check Pending", svg)
+        self.assertNotIn("Parameter Delta", svg)
+        page = open(os.path.join(ROOT, "docs", "protocols", "yearn-v3", "index.html"), encoding="utf-8").read()
+        self.assertNotIn('<span class="badge delta">', page)
+        self.assertNotIn('data-cta="seal_wd"', page)
+        self.assertIn("re-checked after 72 hours", page)
+        meth = open(os.path.join(ROOT, "docs", "methodology", "index.html"), encoding="utf-8").read()
+        self.assertIn(CORR.recent_change_rule(), meth)
+
+    def test_neutral_protocols_never_show_a_delta_status_anywhere(self):
+        wallet = j("api", "v1", "wallet-tokens.json")["protocols"]
+        for s in UNRES + ["yearn-v3"]:
+            if s in wallet:
+                self.assertIn(wallet[s]["status"], ("UNRESOLVED", "CHANGED RECENTLY"), s)
+            prot = next(p for p in j("api", "v1", "protocols.json")["protocols"] if p["slug"] == s)
+            self.assertIn(prot["badge"]["tier"], ("unresolved", "docs_updated", "recent_change"), s)
+
+
+class Breakdown(unittest.TestCase):
+    def test_the_four_way_breakdown_of_the_56_flagged_comparisons(self):
+        self.assertEqual(CORR.breakdown(), {"clearWeaker": 16, "needsExplanation": 17, "bookkeeping": 13, "unresolved": 10})
+        self.assertEqual(j("api", "v1", "scorecards.json")["findingBreakdown"], CORR.breakdown())
+        flagged = sorted(s for s, c in CARDS.items() if c.get("findingClass"))
+        self.assertEqual(len(flagged), 56)
+        self.assertTrue(all(CARDS[s]["grade"] in ("delta", "unresolved", "recent_change") for s in flagged))
+
+    def test_no_adverse_claim_on_home_radar_scorecards_scan_curators(self):
+        for page in (("index.html",), ("radar", "index.html"), ("scorecards", "index.html"), ("scan", "index.html"),
+                     ("curators", "index.html"), ("miniapp", "index.html")):
+            t = open(os.path.join(ROOT, "docs", *page), encoding="utf-8").read()
+            for bad in ("56 adverse", "Adverse: chain looser than docs", "verified adverse", "Verified Adverse", "ADVERSE DELTA", "ADVERSE GAP"):
+                self.assertNotIn(bad, t, (page, bad))
+        radar = open(os.path.join(ROOT, "docs", "radar", "index.html"), encoding="utf-8").read()
+        self.assertIn("16 clear cases where the chain looks weaker than documented", radar)
+
+
+class Upgradeability(unittest.TestCase):
+    def test_a_not_a_proxy_target_is_never_labelled_upgradeable(self):
+        import scorecard as SC
+        idx = j("api", "v1", "index.json")
+        hit = {BS.protocol_slug(e["protocol"]) for e in idx["entries"] if SC._target_not_proxy(e, str(e.get("onchain_observed") or ""))}
+        self.assertIn("bio-protocol", hit)
+        for s in hit:
+            up = next(f for f in CARDS[s]["factors"] if f["key"] == "upgrade")
+            self.assertFalse(up["value"].startswith("Upgradeable"), (s, up["value"]))
+        bio = next(f for f in CARDS["bio-protocol"]["factors"] if f["key"] == "upgrade")
+        self.assertEqual(bio["value"], "BIO token contract is not a proxy (non-upgradeable); one MINTER_ROLE holder is an ERC-1967 Wormhole NttManager proxy")
 
 
 class Wording(unittest.TestCase):

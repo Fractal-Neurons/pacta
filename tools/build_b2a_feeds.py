@@ -422,7 +422,7 @@ def agent_card(prop, onb, idx):
              "tags": ["preflight", "agent-safety", "proxy", "timelock", "multisig", "free"], "inputModes": ["application/json"], "outputModes": ["application/json"],
              "examples": [f"GET {X402_URL}/v1/check/preflight?chain=base&address=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", "MCP tool pacta_check_preflight {\"chain\": \"ethereum\", \"address\": \"0x...\"}"]},
             {"id": "wallet-exposure", "name": "Wallet & Safe DeFi control-plane exposure scan",
-             "description": "Read-only Multicall3 balanceOf + Safe custody scan across Ethereum & Base indexed DeFi protocols: portfolio risk score, shortest exit window, aligned vs adverse gap breakdown, and cross-position contagion.",
+             "description": "Read-only Multicall3 balanceOf + Safe custody scan across Ethereum & Base indexed DeFi protocols: portfolio risk score, shortest exit window, aligned vs flagged breakdown, and cross-position contagion.",
              "tags": ["wallet", "safe", "portfolio", "multicall3", "agent-safety", "free"], "inputModes": ["application/json"], "outputModes": ["application/json"],
              "examples": [f"GET {X402_URL}/v1/check/wallet-exposure?address=0x...", "MCP tool pacta_scan_wallet_exposure {\"address\": \"0x...\", \"chain\": \"all\"}"]},
             {"id": "control-plane-lookup", "name": "Control-plane lookup",

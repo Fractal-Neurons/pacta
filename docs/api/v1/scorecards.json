@@ -1,11 +1,11 @@
 {
- "description": "One canonical grade per published protocol (DELTA / PROTECTIVE / ALIGNED / OBSERVED) and a 5-factor control-plane rosette derived deterministically from Pacta's published records (index.json, rpc-pinned.json) and controller facts. A factor the published evidence does not decide is 'n' (not determined); docs-vs-chain parity is 'u' (uncompared) for every RPC-observed protocol. States: g strong, b moderate, a weak, n not determined, u uncompared.",
+ "description": "One canonical grade per published protocol (DELTA / CHANGED RECENTLY / UNRESOLVED / PROTECTIVE / ALIGNED / OBSERVED) and a 5-factor control-plane rosette derived deterministically from Pacta's published records (index.json, rpc-pinned.json) and controller facts. A factor the published evidence does not decide is 'n' (not determined); docs-vs-chain parity is 'u' (uncompared) for every RPC-observed protocol. States: g strong, b moderate, a weak, n not determined, u uncompared.",
  "factorCoverage": {
   "emergency": 25,
-  "parity": 183,
+  "parity": 182,
   "quorum": 168,
-  "timelock": 102,
-  "upgrade": 44
+  "timelock": 101,
+  "upgrade": 59
  },
  "factors": [
   {
@@ -29,6 +29,18 @@
    "label": "Docs-vs-chain parity"
   }
  ],
+ "findingBreakdown": {
+  "bookkeeping": 13,
+  "clearWeaker": 16,
+  "needsExplanation": 17,
+  "unresolved": 10
+ },
+ "findingClasses": {
+  "bookkeeping": "Bookkeeping: roster or address difference without weaker protection",
+  "clear_weaker": "Chain looks weaker than documented",
+  "real_difference": "Real difference needing explanation",
+  "unresolved": "Unresolved scope or unverified source"
+ },
  "grades": {
   "aligned": {
    "label": "ALIGNED",
@@ -38,7 +50,7 @@
   "delta": {
    "label": "DELTA",
    "meaning": "Docs and chain differ",
-   "protocols": 50
+   "protocols": 49
   },
   "observed": {
    "label": "OBSERVED",
@@ -49,6 +61,11 @@
    "label": "PROTECTIVE",
    "meaning": "Chain stronger than documented",
    "protocols": 7
+  },
+  "recent_change": {
+   "label": "CHANGED RECENTLY",
+   "meaning": "Changed on chain recently; documents not yet updated",
+   "protocols": 1
   },
   "unresolved": {
    "label": "UNRESOLVED",
@@ -279,6 +296,7 @@
     }
    ],
    "finding": "40 Acres Base loan contract is upgradeable under a 2-of-3 Safe; its introduction describes contracts as immutable (#59,025,642)",
+   "findingClass": "clear_weaker",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "40 Acres (Base)",
@@ -532,6 +550,7 @@
     }
    ],
    "finding": "Abracadabra Spell multisig: docs state 5-of-10, the Safe is 5-of-11: docs say 'The 5/10 multisign is composed of:' (docs.abracadabra.money/llms-full.txt) · chain says Abracadabra Spell Safe 0x5f0DeE98360d8200b20812e174d139A1a633EDd2 (Ethereum): getThreshold() = 5 of getOwners() = 11 owners (Safe v1.3.0);",
+   "findingClass": "bookkeeping",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Abracadabra Spell",
@@ -945,6 +964,7 @@
     }
    ],
    "finding": "Voter emergency council and epoch governor: the AerodromeMigration contract: docs say github.com/aerodrome-finance/contracts (README): 'EpochGovernor.sol A simple epoch-based governance contract used exclusively for adjusting emissions.' / SPECIFICATION.md: 'Managed NFTs can be deactivated, a process whi… · chain says Voter 0x16613524e02ad97eDfeF371bC883F2F5d6C480A5: emergencyCouncil() = epochGovernor() = AerodromeMigration 0x22a2F7340a3fB4C7C389D91eE954766B12476721 (Sourcify match;",
+   "findingClass": "real_difference",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Aerodrome Finance (Base)",
@@ -2593,6 +2613,7 @@
     }
    ],
    "finding": "Gateway implementation and auth module differ from the deployment config: docs say axelar-contract-deployments (mainnet config, chains.ethereum, linked from docs.axelar.dev): '\"implementation\": \"0x99B5FA03a5ea4315725c43346e55a6A6fbd94098\"' / '\"authModule\": \"0xE3B83f79Fbf01B25659f8A814945aB82186A8AD0\"' · chain says AxelarGateway 0x4F4495243837681061C4743b74B3eEdf548D56A5: implementation() = 0x16C22cbDD77350b1AC88AdDA344F691c12f41960, authModule() = 0x3d3C73E91B1b0C243f1437F2d8363b1D5B093BD0 (whose owner() is the gateway);",
+   "findingClass": "bookkeeping",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Axelar Network",
@@ -2924,6 +2945,7 @@
     }
    ],
    "finding": "L1 ProxyAdmin owner: docs name 0x5a0A…3d2A; owner() is another 2-of-2 Safe: docs say 'Authorized to update the L1 Proxy Admin.' (docs.base.org/specifications/reference/configuration, row L1 ProxyAdmin Owner: 0x5a0Aae59D09fccBdDb6C6CcEB07B7279367C3d2A) · chain says Base L1 ProxyAdmin 0x0475cBCAebd9CE8AfA5025828d5b98DFb67E059E (Ethereum): owner() = Safe 0x7bB41C3008B3f03FE483B28b8DB90e19Cf07595c with getThreshold() = 2 of getOwners() = 2 owners: 0x9855054731540A48b28990B63DcF4f33d8…",
+   "findingClass": "bookkeeping",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Base Bridge",
@@ -3089,6 +3111,7 @@
     }
    ],
    "finding": "Secure Mint precondition: adequacyRatio() 900 (existing supply x 0.9 vs reserves): docs say 'Before any minting action occurs, the smart contract automatically checks reserve sufficiency using the on-chain Proof of Reserve feed. · chain says Bedrock VaultWithoutNative 0x047D41F2544B7F63A8e991aF2068a363d210d6Da (Ethereum): adequacyRatio() = 900, so checkReserve() evaluates existing supply * 900 / 1000 <= reserves before minting (feeders: reserve 0xc590D9fb8e…",
+   "findingClass": "clear_weaker",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Bedrock (uniBTC)",
@@ -3172,6 +3195,7 @@
     }
    ],
    "finding": "Restaking implementation differs from the one the docs list: docs say docs.bedrock.technology (uniETH contracts): 'Restaking proxy contract: https://etherscan.io/address/0x3f4eaceb930b0edfa78a1dfcbae5c5494e6e9850' / 'Restaking implementation: https://etherscan.io/address/0x9609af0490b96d7… · chain says Restaking proxy 0x3F4eaCeb930b0Edfa78a1DFCbaE5c5494E6e9850: EIP-1967 implementation = 0x1e4D0A963953e7c08Fc7602B01e683547Fc4E518 (Sourcify match), not the documented 0x9609Af0490b96D7AdD7EEa3554b1a944ee440262;",
+   "findingClass": "bookkeeping",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Bedrock (uniETH)",
@@ -3256,6 +3280,7 @@
     }
    ],
    "finding": "Base vault-owner timelock: zero delay; strategy-owner changes retain six hours (#58,315,414)",
+   "findingClass": "real_difference",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Beefy Finance (Base)",
@@ -3340,6 +3365,7 @@
     }
    ],
    "finding": "BEND ProxyAdmin owner: BendDAO Timelock 7D, getMinDelay() 86,400 s: docs say 7 d · chain says 1 d",
+   "findingClass": "clear_weaker",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "BendDAO APE Staking",
@@ -3385,11 +3411,11 @@
    },
    "factors": [
     {
-     "evidence": "bio-token-mint-role-safe-no-new-contract-s32: BIO token 0xcb1592591996765Ec0eFc1f92599A19767ee5ffA (Ethereum, not a proxy; BioToken, verified source): mint(to, amount) is onlyRole(MINTER_ROLE) and the token …",
+     "evidence": "bio-token-mint-role-safe-no-new-contract-s32: … 0xcb1592591996765Ec0eFc1f92599A19767ee5ffA (Ethereum, not a proxy; BioToken, verified source): mint(to, …",
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "value": "BIO token contract is not a proxy (non-upgradeable); one MINTER_ROLE holder is an ERC-1967 Wormhole NttManager proxy"
     },
     {
      "evidence": null,
@@ -3421,6 +3447,7 @@
     }
    ],
    "finding": "BIO mint(): MINTER_ROLE held by a 5-of-11 Safe and a bridge manager; no cap: docs say 'The supply is uncapped, meaning new BIO can be minted for future protocol or network growth. · chain says BIO token 0xcb1592591996765Ec0eFc1f92599A19767ee5ffA (Ethereum, not a proxy;",
+   "findingClass": "clear_weaker",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Bio Protocol",
@@ -3447,7 +3474,7 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "Bio Protocol control-plane rosette: Upgradeability not determined; Timelock floor not determined; Signer quorum strong; Emergency / freeze scope not determined; Docs-vs-chain parity weak",
+   "rosetteAria": "Bio Protocol control-plane rosette: Upgradeability strong; Timelock floor not determined; Signer quorum strong; Emergency / freeze scope not determined; Docs-vs-chain parity weak",
    "search": "bio protocol bio-protocol decentralized-science funding layer for biotech projects (ethereum) bio 0x1783e7d1f498321d7e15044d769621e1bedc7f4c 0x2bbacb406d043d93997344f28a74a25069f3e9e3 0xcb1592591996765ec0efc1f92599a19767ee5ffa 0xd9c6ee1547fd6d48f8872dd866473893bbe8a1ab",
    "slug": "bio-protocol",
    "summary_short": "BIO can be minted on the current contract by a Safe; docs: minting needs a new contract",
@@ -4002,6 +4029,7 @@
     }
    ],
    "finding": "Pool Bridge signers: owner can resetSigners after 7-day notice; owner = 3-of-5 EOA governance: docs say 'It is only when nodes with more than ⅔ of the total stake are malicious, that the fund pool will be at risk.' (cbridge-docs.celer.network/print.html) · chain says cBridge Bridge 0x5427FEFA711Eff984124bFBB1AB6fbf5E3DA1820 (Ethereum, not a proxy;",
+   "findingClass": "clear_weaker",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "cBridge",
@@ -4169,6 +4197,7 @@
     }
    ],
    "finding": "Timelock proposers: a 6-of-12 Safe besides the ManyChainMultiSigs (docs: all proposals from an MCMS): docs say docs.chain.link (CCIP upgradability): 'All proposals originate from a ManyChainMultiSig (MCMS), which requires multiple independent signers to sign off.' / 'For example, you can view the Ethereum mainnet MCMS on Ethersc… · chain says RBACTimelock 0x44835bBBA9D40DEDa9b64858095EcFB2693c9449: getRoleMemberCount(PROPOSER_ROLE) = 3: ManyChainMultiSig 0xE53289F32c8E690b7173aA33affE9B6B0CB0012F (the MCMS the docs link), GnosisSafeProxy 0xD6597750bf74DCAEC5…",
+   "findingClass": "real_difference",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Chainlink CCIP",
@@ -4338,6 +4367,7 @@
     }
    ],
    "finding": "Fund allocation setters: owner is a 3-of-4 Safe, the documented TimeLock is not in the path: docs say 'Fund allocation parameters are made transparent through multi-signature and time-lock mechanisms.' (docs.cian.app/llms-full.txt) · chain says CIAN stETH Yield Layer vault 0xB13aa2d0345b0439b064f26B82D8dCf3f508775d (Ethereum): EIP-1967 proxy, implementation 0xA1Dc0B6A02AB091580DC57bDd5Fe8a9E577E0842;",
+   "findingClass": "clear_weaker",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "CIAN Yield Layer",
@@ -4419,6 +4449,7 @@
     }
    ],
    "finding": "GatewayWallet: EOA owner (UUPS upgrade, withdrawal delay) and EOA pauser over withdrawals: docs say 'Users have full control of their deposited assets. · chain says Circle GatewayWallet 0x77777777Dcc4d5A8B6E418Fd04D8997ef11000eE (Ethereum;",
+   "findingClass": "clear_weaker",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Circle Gateway",
@@ -4999,6 +5030,7 @@
     }
    ],
    "finding": "ctDeltaWeETH: owner and manager roles share a 1-of-2 Safe; single-key full control or draining is not established (#26,425,374)",
+   "findingClass": "unresolved",
    "grade": "unresolved",
    "gradeLabel": "UNRESOLVED",
    "name": "Concrete",
@@ -5577,6 +5609,7 @@
     }
    ],
    "finding": "ControllerFactory Admin Proxy & EmergencyDAO Debt-Ceiling Guard: docs say curvefi/docs docs/developer/crvusd/factory.md states 'Only its admin, the CurveOwnershipAgent, can call to add a market'; · chain says ControllerFactory (0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC) admin() = LendingOwnerProxy (0xeDA020b067872717901916a3B8C724C21f6080d1), where dao() = CurveOwnershipAgent (0x40907540d8a6C65c637785e8f8B742ae6b0b9968, Ara…",
+   "findingClass": "real_difference",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Curve Finance (crvUSD)",
@@ -5622,18 +5655,18 @@
    },
    "factors": [
     {
-     "evidence": "cvault-core-no-new-tokens-s33: CORE token 0x62359Ed7505Efc61FF1D56fEF82158CcaffA23D7 (Ethereum; not a proxy: EIP-1967 implementation, admin and beacon slots all empty; verified source) …",
+     "evidence": "cvault-core-no-new-tokens-s33: … 0x62359Ed7505Efc61FF1D56fEF82158CcaffA23D7 (Ethereum; not a proxy: EIP-1967 implementation, admin and …",
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "a",
-     "value": "Upgradeable with no enforced delay: no timelock in front of upgrades"
+     "state": "g",
+     "value": "Not upgradeable: the target contract is not a proxy"
     },
     {
-     "evidence": "cvault-core-no-new-tokens-s33: CORE token 0x62359Ed7505Efc61FF1D56fEF82158CcaffA23D7 (Ethereum; not a proxy: EIP-1967 implementation, admin and beacon slots all empty; verified source) …",
+     "evidence": null,
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "a",
-     "value": "No enforced delay on at least one sampled control surface (0s)"
+     "state": "n",
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "cvault-core-no-new-tokens-s33: … one at construction. The owner (an externally owned account) can still set the transfer …",
@@ -5681,7 +5714,7 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "cVault Finance control-plane rosette: Upgradeability weak; Timelock floor weak; Signer quorum weak; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
+   "rosetteAria": "cVault Finance control-plane rosette: Upgradeability strong; Timelock floor not determined; Signer quorum weak; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
    "search": "cvault finance cvault-finance deflationary farming token with locked liquidity (ethereum) core 0x62359ed7505efc61ff1d56fef82158ccaffa23d7",
    "slug": "cvault-finance",
    "summary_short": "No new CORE can be created, as documented",
@@ -5984,6 +6017,7 @@
     }
    ],
    "finding": "AdminVault Owner multisig: docs state 3/5, the Safe is 3-of-6: docs say 'Automation contracts are upgradeable, with any upgrades being locked behind a 24h timelock which can be activated by a 2/3 multisig (Admin) with actual upgrades initiable by a different 3/5 multisig (Owner).' (docs.def… · chain says DFSRegistry 0x287778F121F134C66212FB16c9b53eC991D32f5b adminVault() = AdminVault 0xCCf3d848e08b94478Ed8f46fFead3008faF581fD;",
+   "findingClass": "bookkeeping",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "DeFi Saver",
@@ -7792,6 +7826,7 @@
     }
    ],
    "finding": "TimelockController MinDelay & Dev Multisig Quorum: docs say 7 d · chain says 1 d",
+   "findingClass": "real_difference",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Ethena (USDe / sUSDe)",
@@ -8376,6 +8411,7 @@
     }
    ],
    "finding": "V2 Router owner is the operational Safe; the separate timelock retains three days (#26,448,221)",
+   "findingClass": "real_difference",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "f(x) Protocol v2",
@@ -8955,6 +8991,7 @@
     }
    ],
    "finding": "VaultFactory.isVaultAuth Migration Scope: docs say fluid-permissions-and-mutability.md describes narrow fee/reward/magnifier team multisig scope outside migration grants. · chain says isVaultAuth(vault, 0x4F6F977aCDD1177DCD81aB83074855EcB9C2D49e) returns true on Vault 76 (0x7FE0B032cB5982Af72498F96be3DD6566F7B7de8), Vault 110 (0xee327311D8640156E87eC33ea55FcbF2309e0ce6), Vault 111 (0x984636a30ed2B4A6…",
+   "findingClass": "real_difference",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Fluid / Instadapp",
@@ -9421,11 +9458,11 @@
    },
    "factors": [
     {
-     "evidence": "gamma-token-supply-100m-s34: GAMMA token 0x6BeA7CFEF803D1e3d5f7C0103f7ded065644e197 (Ethereum; not a proxy: EIP-1967 implementation, admin and beacon slots all empty; verified source) …",
+     "evidence": "gamma-token-supply-100m-s34: … 0x6BeA7CFEF803D1e3d5f7C0103f7ded065644e197 (Ethereum; not a proxy: EIP-1967 implementation, admin and …",
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "value": "Not upgradeable: the target contract is not a proxy"
     },
     {
      "evidence": null,
@@ -9480,7 +9517,7 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "Gamma control-plane rosette: Upgradeability not determined; Timelock floor not determined; Signer quorum not determined; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
+   "rosetteAria": "Gamma control-plane rosette: Upgradeability strong; Timelock floor not determined; Signer quorum not determined; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
    "search": "gamma gamma automated rebalancing of concentrated-liquidity positions and market-making strategies for partners (ethereum) gamma 0x6bea7cfef803d1e3d5f7c0103f7ded065644e197",
    "slug": "gamma",
    "summary_short": "GAMMA's supply is 100M with no mint function, as documented",
@@ -9541,6 +9578,7 @@
     }
    ],
    "finding": "LegacyTimelock reads 36 hours; V3.0 technical-change docs describe two days (#26,403,523)",
+   "findingClass": "real_difference",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Gearbox V3 / V3.1",
@@ -9793,6 +9831,7 @@
     }
    ],
    "finding": "Goldfinch multisig: docs state 6-of-10, the Safe is 6-of-12: docs say 'The Goldfinch Council is a 6-of-10 multisig with 10 members who represent all stakeholders of the protocol' (docs.goldfinch.finance/goldfinch/goldfinch-v1/governance.md) · chain says Goldfinch Safe 0xBEb28978B2c755155f20fd3d09Cb37e300A6981f (Ethereum): getThreshold() = 6 of getOwners() = 12 owners (Safe v1.1.1).",
+   "findingClass": "bookkeeping",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Goldfinch",
@@ -10287,6 +10326,7 @@
     }
    ],
    "finding": "Multi-sig: docs name 3 keyholders; the Safe is 2-of-4 with 1 unnamed owner: docs say 'The keyholders are as follows.' (hakkafinance.gitbook.io/hakka-wiki/governance/multi-sig.md) · chain says Hakka multi-sig 0xF2B8f214Dc81b849ed3BDCAEdA6c8c39625c500A (Ethereum Safe, the address the page gives): getThreshold() = 2 of getOwners() = 4;",
+   "findingClass": "unresolved",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Hakka Finance",
@@ -10613,6 +10653,7 @@
     }
    ],
    "finding": "L1 ETH Bridge governance: 24h Timelock whose admin is a 2-of-3 key Safe: docs say 'In summary, the Hop DAO controls every aspect of the protocol.' (docs.hop.exchange/governance/into-to-hop-dao); · chain says Hop L1_ETH_Bridge 0xb8901acB165ed027E32754E0FFe830802919727f (Ethereum, not a proxy;",
+   "findingClass": "real_difference",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Hop Protocol",
@@ -11151,11 +11192,11 @@
    },
    "factors": [
     {
-     "evidence": "index-coop-index-max-supply-10m-s33: INDEX token 0x0954906da0Bf32d5479e25f46056d22f08464cab (Ethereum; not a proxy: EIP-1967 implementation, admin and beacon slots all empty; verified source) …",
+     "evidence": "index-coop-index-max-supply-10m-s33: … 0x0954906da0Bf32d5479e25f46056d22f08464cab (Ethereum; not a proxy: EIP-1967 implementation, admin and …",
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "value": "Not upgradeable: the target contract is not a proxy"
     },
     {
      "evidence": null,
@@ -11210,7 +11251,7 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "Index Coop control-plane rosette: Upgradeability not determined; Timelock floor not determined; Signer quorum not determined; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
+   "rosetteAria": "Index Coop control-plane rosette: Upgradeability strong; Timelock floor not determined; Signer quorum not determined; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
    "search": "index coop index-coop fully collateralized crypto index products and leveraged indices (ethereum) index 0x0954906da0bf32d5479e25f46056d22f08464cab",
    "slug": "index-coop",
    "summary_short": "INDEX is fully minted at its 10M maximum, as documented",
@@ -11271,6 +11312,7 @@
     }
    ],
    "finding": "PAUSE / UNPAUSE role admin: MINOR_ROLES_MANAGER, not GOVERNOR: docs say docs.infinifi.xyz (roles documentation): 'PAUSE / Pause protocol functions / GOVERNOR / UNPAUSE / Unpause functions / GOVERNOR' · chain says InfiniFiCore 0xF6d48735EcCf12bDC1DF2674b1ce3fcb3bD25490: getRoleAdmin(UNPAUSE) = getRoleAdmin(PAUSE) = keccak256(\"MINOR_ROLES_MANAGER\") (0x9849206c..6512), whose members are the Team Multisig 0x80608f852D152024c0a2087b1…",
+   "findingClass": "unresolved",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "infiniFi",
@@ -11521,6 +11563,7 @@
     }
    ],
    "finding": "Policy Committee Safe Quorum & GovernorMills Timelock: docs say Working-groups governance documentation lists 5-of-9 Policy Committee multisig. · chain says GovernorMills (0xBeCCB6bb0aa4ab551966A7E4B97cec74bb359Bf6) guardian() wrapper (0x941c2699eC7E55a50Bde030d8E1e70649839259D) references Policy Committee Safe (0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7) with getThreshold(…",
+   "findingClass": "clear_weaker",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Inverse Finance (FiRM)",
@@ -12513,6 +12556,7 @@
     }
    ],
    "finding": "Legacy cbBTC vault: immediate beacon upgrades; coverage by the documented 24-hour Opt-in delay is unverified (#26,448,221)",
+   "findingClass": "unresolved",
    "grade": "unresolved",
    "gradeLabel": "UNRESOLVED",
    "name": "Lagoon",
@@ -13998,6 +14042,7 @@
     }
    ],
    "finding": "PoolPermissionManager proxy admin is the 4-of-7 DAO Safe, not GovernorTimelock (#26,401,540)",
+   "findingClass": "clear_weaker",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Maple Finance V2 / Syrup",
@@ -14164,6 +14209,7 @@
     }
    ],
    "finding": "Curator Safe Quorum & Lazy Admin Signer Overlap: docs say lidofinance/docs (earn/deployment-contracts.md line 199) lists 3/6 multisig; · chain says getThreshold() = 3, getOwners().length = 5 (3-of-5 Gnosis Safe);",
+   "findingClass": "real_difference",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Mellow Protocol / Lido Earn",
@@ -14330,6 +14376,7 @@
     }
    ],
    "finding": "Re7 WETH has no guardian; Re7 USDT has an Aragon guardian—no promise of matching configurations was verified (#26,401,405)",
+   "findingClass": "real_difference",
    "grade": "unresolved",
    "gradeLabel": "UNRESOLVED",
    "name": "MetaMorpho (Re7 WETH vs. Re7 USDT)",
@@ -14829,6 +14876,7 @@
     }
    ],
    "finding": "Base pause guardian: 2-of-4 Safe, disclosed in the October governance migration; older constitution says 3-of-5 (#57,842,915)",
+   "findingClass": "real_difference",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Moonwell Lending (Base)",
@@ -15985,6 +16033,7 @@
     }
    ],
    "finding": "OBOL supply: documented cap of 500M, no cap on-chain; a 2-of-3 Safe holds MINTER_ROLE: docs say docs.obol.org (token distribution; · chain says ObolToken 0x0B010000b7624eb9B3DfBC279673C76E9D29D5F7 (Sourcify exact match): totalSupply() = 500000000000000103303500000 (500,000,000.0000001033035 OBOL);",
+   "findingClass": "clear_weaker",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Obol Network",
@@ -16066,6 +16115,7 @@
     }
    ],
    "finding": "Upgrade governor: docs state a 3/5 multisig; every ProxyAdmin owner is one Safe, 2-of-4 (Ethereum and Base): docs say 'Control of upgrades and emergency actions rests with a designated **governor**, currently managed through a secure multi-signature wallet **(3/5)**.' (docs.odyssey.finance/architecture/protocol.md); · chain says PositionRegistry 0xeE156D8ea7b96a5524CcC3CF9283ab85E80E9534 (Ethereum;",
+   "findingClass": "unresolved",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Odyssey Finance",
@@ -16149,6 +16199,7 @@
     }
    ],
    "finding": "OUSG RateLimiter Global Subscription Limit & Flux 1d Timelock: docs say docs.ondo.finance/qualified-access-products/ousg/instant-limits.md states 'Instant minting has a $50M Global Limit' and 'Instant redemptions have a $50M Global Limit'; · chain says RateLimiter (0x98Db502215Da1ad9F626D4a0090A8A2f4971003c) globalSubscriptionLimits(0x1B19C19393e2d034D8Ff31ff34c81252FcBbee92) word [2] = 100000000000000000000000000 ($100M per 86400s window), globalRedemptionLimits(OUSG…",
+   "findingClass": "real_difference",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Ondo Finance (OUSG & Flux Finance)",
@@ -16279,11 +16330,11 @@
    },
    "factors": [
     {
-     "evidence": "orderly-order-max-supply-1b-s33: ORDER token 0xABD4C63d2616A5201454168269031355f4764337 (Ethereum; not a proxy: EIP-1967 implementation, admin and beacon slots all empty; verified source) …",
+     "evidence": "orderly-order-max-supply-1b-s33: … 0xABD4C63d2616A5201454168269031355f4764337 (Ethereum; not a proxy: EIP-1967 implementation, admin and …",
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "value": "Not upgradeable: the target contract is not a proxy"
     },
     {
      "evidence": null,
@@ -16338,7 +16389,7 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "Orderly Bridge control-plane rosette: Upgradeability not determined; Timelock floor not determined; Signer quorum not determined; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
+   "rosetteAria": "Orderly Bridge control-plane rosette: Upgradeability strong; Timelock floor not determined; Signer quorum not determined; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
    "search": "orderly bridge orderly-bridge omnichain order-book liquidity layer deposits (ethereum) order 0xabd4c63d2616a5201454168269031355f4764337",
    "slug": "orderly-bridge",
    "summary_short": "ORDER is fully minted at its 1B maximum, as documented",
@@ -16935,11 +16986,11 @@
    },
    "factors": [
     {
-     "evidence": "parallel-prl-no-mint-s33: PRL token 0x6c0aeceeDc55c9d55d8B99216a670D85330941c3 (Ethereum; not a proxy: EIP-1967 implementation, admin and beacon slots all empty; verified source) …",
+     "evidence": "parallel-prl-no-mint-s33: … 0x6c0aeceeDc55c9d55d8B99216a670D85330941c3 (Ethereum; not a proxy: EIP-1967 implementation, admin and …",
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "value": "Not upgradeable: the target contract is not a proxy"
     },
     {
      "evidence": null,
@@ -16994,7 +17045,7 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "Parallel Protocol V3 control-plane rosette: Upgradeability not determined; Timelock floor not determined; Signer quorum not determined; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
+   "rosetteAria": "Parallel Protocol V3 control-plane rosette: Upgradeability strong; Timelock floor not determined; Signer quorum not determined; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
    "search": "parallel protocol v3 parallel-protocol-v3 modular overcollateralized stablecoins minted against yield-bearing baskets (ethereum) prl 0x6c0aeceedc55c9d55d8b99216a670d85330941c3",
    "slug": "parallel-protocol-v3",
    "summary_short": "PRL has no mint function, as documented",
@@ -17101,11 +17152,11 @@
    },
    "factors": [
     {
-     "evidence": "peapods-peas-no-mint-ethereum-s33: PEAS token 0x02f92800F57BCD74066F5709F1Daa1A4302Df875 (Ethereum; not a proxy: EIP-1967 implementation, admin and beacon slots all empty; verified source) …",
+     "evidence": "peapods-peas-no-mint-ethereum-s33: … 0x02f92800F57BCD74066F5709F1Daa1A4302Df875 (Ethereum; not a proxy: EIP-1967 implementation, admin and …",
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "value": "Not upgradeable: the target contract is not a proxy"
     },
     {
      "evidence": null,
@@ -17160,7 +17211,7 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "Peapods Finance control-plane rosette: Upgradeability not determined; Timelock floor not determined; Signer quorum not determined; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
+   "rosetteAria": "Peapods Finance control-plane rosette: Upgradeability strong; Timelock floor not determined; Signer quorum not determined; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
    "search": "peapods finance peapods-finance volatility farming indexes that earn yield on liquid assets (ethereum) peas 0x02f92800f57bcd74066f5709f1daa1a4302df875",
    "slug": "peapods-finance",
    "summary_short": "No PEAS can be minted on Ethereum, as documented",
@@ -17304,6 +17355,7 @@
     }
    ],
    "finding": "MasterChef admin: owner is a 2-of-6 Safe, the documented 24 h timelock is not in the path: docs say 'All key admin functions on the MasterChef contract, which controls the emission of PICKLEs to the Farms are controlled by a 24 hour timelock contract' (docs.pickle.finance/security/audits-and-timelock/timelocks-and-mul… · chain says Pickle MasterChef 0xbD17B1ce622d73bD438b9E658acA5996dc394b0d (Ethereum, not a proxy): its verified source makes add, set, setPicklePerBlock, setBonusEndBlock, setDevFundDivRate and the PICKLE mint path onlyOwner;",
+   "findingClass": "clear_weaker",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Pickle",
@@ -17352,11 +17404,11 @@
    },
    "factors": [
     {
-     "evidence": "piku-token-supply-500m-s34: PIKU token 0x2E4039E8E31475d65DC00293C366FDBfBBC02DC3 (Ethereum; not a proxy: EIP-1967 implementation, admin and beacon slots all empty; verified source) …",
+     "evidence": "piku-token-supply-500m-s34: … 0x2E4039E8E31475d65DC00293C366FDBfBBC02DC3 (Ethereum; not a proxy: EIP-1967 implementation, admin and …",
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "value": "Not upgradeable: the target contract is not a proxy"
     },
     {
      "evidence": null,
@@ -17411,7 +17463,7 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "Piku Finance control-plane rosette: Upgradeability not determined; Timelock floor not determined; Signer quorum not determined; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
+   "rosetteAria": "Piku Finance control-plane rosette: Upgradeability strong; Timelock floor not determined; Signer quorum not determined; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
    "search": "piku finance piku-finance yield-optimized stablecoin (usp) with institutional vaults (ethereum) piku 0x2e4039e8e31475d65dc00293c366fdbfbbc02dc3",
    "slug": "piku-finance",
    "summary_short": "PIKU's supply is 500M with no mint function, as documented",
@@ -17552,6 +17604,7 @@
     }
    ],
    "finding": "Custom ChildERC20 mapping Safe: 4-of-13 (docs: 4/8): docs say '4/8 Multisig 0x424bDE99FCfB68c5a1218fd3215caFfD031f19C4' (docs.polygon.technology/pos/reference/commit-chain-multisigs) · chain says Polygon custom ChildERC20 mapping Safe 0x424bDE99FCfB68c5a1218fd3215caFfD031f19C4 (Ethereum): getThreshold() = 4 of 13 owners;",
+   "findingClass": "real_difference",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Polygon Bridge",
@@ -17597,11 +17650,11 @@
    },
    "factors": [
     {
-     "evidence": "pooltogether-pool-supply-10m-no-minter-s33: POOL token 0x0cEC1A9154Ff802e7934Fc916Ed7Ca50bDE6844e (Ethereum; not a proxy: EIP-1967 implementation, admin and beacon slots all empty; verified source) …",
+     "evidence": "pooltogether-pool-supply-10m-no-minter-s33: … 0x0cEC1A9154Ff802e7934Fc916Ed7Ca50bDE6844e (Ethereum; not a proxy: EIP-1967 implementation, admin and …",
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "value": "Not upgradeable: the target contract is not a proxy"
     },
     {
      "evidence": null,
@@ -17656,7 +17709,7 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "PoolTogether V3 control-plane rosette: Upgradeability not determined; Timelock floor not determined; Signer quorum not determined; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
+   "rosetteAria": "PoolTogether V3 control-plane rosette: Upgradeability strong; Timelock floor not determined; Signer quorum not determined; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
    "search": "pooltogether v3 pooltogether-v3 no-loss prize savings lottery (ethereum) pool 0x0cec1a9154ff802e7934fc916ed7ca50bde6844e",
    "slug": "pooltogether-v3",
    "summary_short": "POOL supply is 10 million and no minter remains, as documented",
@@ -17797,6 +17850,7 @@
     }
    ],
    "finding": "Community Multisig threshold: 3-of-7: docs say docs.puffer.fi (multisig): 'Puffer's Community Multisig is a 3-of-6 multisig composed of reputable and aligned Ethereum community members and auditing firms.' · chain says Safe 0x446d4d6b26815f9bA78B5D454E303315D586Cb2a (= Timelock COMMUNITY_MULTISIG()): getThreshold() = 3 with 7 owners (v1.3.0);",
+   "findingClass": "bookkeeping",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Puffer Finance (pufETH)",
@@ -18294,6 +18348,7 @@
     }
    ],
    "finding": "DepositQueue fee parameter: 10,000 bps; effective reward fee and onward distribution are not verified (#26,448,221)",
+   "findingClass": "unresolved",
    "grade": "unresolved",
    "gradeLabel": "UNRESOLVED",
    "name": "Renzo Protocol (ezETH)",
@@ -18543,6 +18598,7 @@
     }
    ],
    "finding": "Main multisig: 3-of-5 signers: docs say 3-of-4 · chain says 3-of-5",
+   "findingClass": "bookkeeping",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Resupply",
@@ -18873,6 +18929,7 @@
     }
    ],
    "finding": "Security council members.leave.time = 28 days (RPIP-33 bound: < 14 days): docs say rpips.rocketpool.net RPIP-33 parameter table, members.leave.time: 'How long a member must give notice for before manually leaving the security council' with the bound '< 14 days' · chain says RocketDAOProtocolSettingsSecurity (0xC9D771AaF504F33bB3C8a7E67eA9f1881F837cFf).getLeaveTime() = 2419200s (28 days).",
+   "findingClass": "real_difference",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Rocket Pool (rETH)",
@@ -19368,6 +19425,7 @@
     }
    ],
    "finding": "Community Guardian Safe: docs state a 3/6 multi-sig; the Safe is 2-of-3: docs say 'The Community Guardian Multi-Sig currently has ownership over both the Governance Guardian and Protocol Guardian functions.' (raw.githubusercontent.com/seamless-protocol/gitbook/main/governance/seamless-guardians.md); · chain says Guardian 0xA1b5f2cc9B407177CD8a4ACF1699fa0b99955A22 (Base Safe, the address the smart-contracts page lists): getThreshold() = 2 of getOwners() = 3;",
+   "findingClass": "unresolved",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Seamless Protocol (Base)",
@@ -19662,11 +19720,11 @@
    },
    "factors": [
     {
-     "evidence": "sofa-rch-supply-capped-37m-s34: RCH token 0x57B96D4aF698605563A4653D882635da59Bf11AF (Ethereum; not a proxy: EIP-1967 implementation, admin and beacon slots all empty; verified source) …",
+     "evidence": "sofa-rch-supply-capped-37m-s34: … 0x57B96D4aF698605563A4653D882635da59Bf11AF (Ethereum; not a proxy: EIP-1967 implementation, admin and …",
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "value": "Not upgradeable: the target contract is not a proxy"
     },
     {
      "evidence": null,
@@ -19721,7 +19779,7 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "SOFA.org control-plane rosette: Upgradeability not determined; Timelock floor not determined; Signer quorum not determined; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
+   "rosetteAria": "SOFA.org control-plane rosette: Upgradeability strong; Timelock floor not determined; Signer quorum not determined; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
    "search": "sofa.org sofa-org atomic on-chain settlement layer for options products (ethereum) rch 0x57b96d4af698605563a4653d882635da59bf11af 0x5a8cdda6ca37b284b32ef8d513ef71ddac553270",
    "slug": "sofa-org",
    "summary_short": "RCH minting is capped at 37,000,000, as documented",
@@ -19943,6 +20001,7 @@
     }
    ],
    "finding": "Fail-safe recovery: bridge declared dead after 200 days offline (docs: 14 days, immutable): docs say 'In the highly unlikely event that the Gateway or the Sonic chain is down for 14 consecutive days, users are able to reclaim their bridged assets on Ethereum.' (docs.soniclabs.com/llms-full.txt) · chain says Sonic Gateway TokenDeposit 0xa1E2481a9CD0Cb0447EeB1cbc26F1b3fff3bec20 (Ethereum): UUPS proxy, implementation 0xAdE2eF0101278fe11490F2EE2aaD7915a094ADe9.",
+   "findingClass": "clear_weaker",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Sonic Gateway",
@@ -19991,11 +20050,11 @@
    },
    "factors": [
     {
-     "evidence": "sosovalue-soso-base-canonical-bridge-mint-s33: SOSO token (Base) 0x624e2e7fDc8903165F64891672267AB0FCB98831 (Base; not a proxy: EIP-1967 implementation, admin and beacon slots all empty; verified source) …",
+     "evidence": "sosovalue-soso-base-canonical-bridge-mint-s33: … 0x624e2e7fDc8903165F64891672267AB0FCB98831 (Base; not a proxy: EIP-1967 implementation, admin and …",
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "value": "Not upgradeable: the target contract is not a proxy"
     },
     {
      "evidence": null,
@@ -20050,7 +20109,7 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "SoSoValue Basis control-plane rosette: Upgradeability not determined; Timelock floor not determined; Signer quorum not determined; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
+   "rosetteAria": "SoSoValue Basis control-plane rosette: Upgradeability strong; Timelock floor not determined; Signer quorum not determined; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
    "search": "sosovalue basis sosovalue-basis spot crypto index tokens (ssi) with basis yield (base) soso 0x4200000000000000000000000000000000000010 0x624e2e7fdc8903165f64891672267ab0fcb98831 0x76a0e27618462bdac7a29104bdcfff4e6bfcea2d",
    "slug": "sosovalue-basis",
    "summary_short": "Base SOSO is minted only by the official Base bridge, as documented",
@@ -20528,6 +20587,7 @@
     }
    ],
    "finding": "Manager Safe Quorum & 7-Day TimelockController Admin Path: docs say 3-of-5 · chain says 3-of-6",
+   "findingClass": "bookkeeping",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Stader Labs (ETHx)",
@@ -20694,6 +20754,7 @@
     }
    ],
    "finding": "Executing queued changes: permissioned (EXECUTOR_ROLE held by the governance multisig), not permissionless: docs say docs.stakedao.org (timelock, role structure): Executor 'Can execute operations after delay (permissionless)'; · chain says ProtocolTimelock 0xb27afc7844988948FBd6210AeF4E1362bC2d8E6a: hasRole(EXECUTOR_ROLE, address(0)) = false, so execution is permissioned, not permissionless;",
+   "findingClass": "real_difference",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Stake DAO",
@@ -20828,11 +20889,11 @@
    },
    "factors": [
     {
-     "evidence": "stakestone-sto-max-supply-1b-s34: STO token 0x1D88713b483A8E45cfF0e5CD7c2e15E5Fab4534d (Ethereum; not a proxy: EIP-1967 implementation, admin and beacon slots all empty; verified source) …",
+     "evidence": "stakestone-sto-max-supply-1b-s34: … 0x1D88713b483A8E45cfF0e5CD7c2e15E5Fab4534d (Ethereum; not a proxy: EIP-1967 implementation, admin and …",
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "value": "Not upgradeable: the target contract is not a proxy"
     },
     {
      "evidence": null,
@@ -20887,7 +20948,7 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "StakeStone STONE control-plane rosette: Upgradeability not determined; Timelock floor not determined; Signer quorum not determined; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
+   "rosetteAria": "StakeStone STONE control-plane rosette: Upgradeability strong; Timelock floor not determined; Signer quorum not determined; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
    "search": "stakestone stone stakestone-stone omnichain liquid staking token with rebalanced validator yield (ethereum) sto 0x1d88713b483a8e45cff0e5cd7c2e15e5fab4534d",
    "slug": "stakestone-stone",
    "summary_short": "STO is fully minted at its 1B maximum on Ethereum, as documented",
@@ -22234,11 +22295,11 @@
    },
    "factors": [
     {
-     "evidence": "synfutures-f-max-supply-10b-s33: SynFutures $F token 0x6e15A54B5EcAc17e58daDedDbe8506a7560252F9 (Ethereum; not a proxy: EIP-1967 implementation, admin and beacon slots all empty; verified …",
+     "evidence": "synfutures-f-max-supply-10b-s33: … 0x6e15A54B5EcAc17e58daDedDbe8506a7560252F9 (Ethereum; not a proxy: EIP-1967 implementation, admin and …",
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "value": "Not upgradeable: the target contract is not a proxy"
     },
     {
      "evidence": null,
@@ -22293,7 +22354,7 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "SynFutures V3 control-plane rosette: Upgradeability not determined; Timelock floor not determined; Signer quorum not determined; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
+   "rosetteAria": "SynFutures V3 control-plane rosette: Upgradeability strong; Timelock floor not determined; Signer quorum not determined; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
    "search": "synfutures v3 synfutures-v3 perpetual futures on any asset via an oracle-based automated market maker (ethereum) synfutures 0x6e15a54b5ecac17e58dadeddbe8506a7560252f9",
    "slug": "synfutures-v3",
    "summary_short": "SynFutures $F is fully minted at its 10B maximum, as documented",
@@ -22518,6 +22579,7 @@
     }
    ],
    "finding": "Emergency Multisig: minApprovals 4 of 5 signers (docs: 6); standard 3 (docs: 5): docs say 'The proposal must receive 6 approvals within 14 days from Security Council members to be executable.' (dao-docs.taiko.xyz/guides/making-an-emergency-proposal); · chain says Taiko DAO 0x9CDf589C941ee81D75F34d3755671d614f7cf261 (owner of controller.taiko.eth in the taiko-mono deployment log): hasPermission() grants EXECUTE_PERMISSION on the DAO to the OptimisticTokenVoting plugin 0x989E34827…",
+   "findingClass": "unresolved",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Taiko Bridge",
@@ -22812,11 +22874,11 @@
    },
    "factors": [
     {
-     "evidence": "the-idols-virtue-non-mintable-s33: VIRTUE token 0x9416bA76e88D873050A06e5956A3EBF10386b863 (Ethereum; not a proxy: EIP-1967 implementation, admin and beacon slots all empty; verified source) …",
+     "evidence": "the-idols-virtue-non-mintable-s33: … 0x9416bA76e88D873050A06e5956A3EBF10386b863 (Ethereum; not a proxy: EIP-1967 implementation, admin and …",
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "value": "Not upgradeable: the target contract is not a proxy"
     },
     {
      "evidence": null,
@@ -22871,7 +22933,7 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "The Idols control-plane rosette: Upgradeability not determined; Timelock floor not determined; Signer quorum not determined; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
+   "rosetteAria": "The Idols control-plane rosette: Upgradeability strong; Timelock floor not determined; Signer quorum not determined; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
    "search": "the idols the-idols staked-ether nft collection sharing staking rewards (ethereum) virtue 0x9416ba76e88d873050a06e5956a3ebf10386b863",
    "slug": "the-idols",
    "summary_short": "VIRTUE is non-mintable and under its 100M maximum, as documented",
@@ -23177,6 +23239,7 @@
     }
    ],
    "finding": "trUSD timelock: current documentation names the same 24-hour controller as the retained observation (#26,451,608)",
+   "findingClass": "bookkeeping",
    "grade": "unresolved",
    "gradeLabel": "UNRESOLVED",
    "name": "Tori Finance",
@@ -23347,6 +23410,7 @@
     }
    ],
    "finding": "TREE transfer blacklisting: no enforced delay; TREE and tETH owner paths retain five-day timelocks (#26,440,048)",
+   "findingClass": "clear_weaker",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Treehouse (TREE / tETH)",
@@ -23761,6 +23825,7 @@
     }
    ],
    "finding": "Voting period: 40,320 blocks (~5.6 days at 12-second slots), not 7 days: docs say developers.uniswap.org (governance process): '7-day voting period for the community to vote' / 'Duration: 2-day waiting period, 7-day voting period, 2-day timelock (if passed)' · chain says GovernorBravoDelegator 0x408ED6354d4973f66138C91495F2f2FCbd8724C3: votingPeriod() = 40320 blocks = 483,840s (5.6 days) at 12-second slots;",
+   "findingClass": "clear_weaker",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Uniswap V3 & Governance Timelock",
@@ -24093,6 +24158,7 @@
     }
    ],
    "finding": "Vault ProxyAdmin multisig: docs state generally 4 of 6, the Safe is 2-of-3: docs say 'Upgrades to the vault's code are approved by the ProxyAdmin multisig. · chain says Upshift vault 0xE9B725010A9E419412ed67d0fA5f3A5f40159D32 (Ethereum): EIP-1967 admin slot = ProxyAdmin 0xB5fBf201A35327Ddd89986FfA60CF5A675B2bDbc, whose owner() = Safe 0x4107557d726933f0BcA591A4218Afc92978457F7 with getT…",
+   "findingClass": "real_difference",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Upshift",
@@ -24260,6 +24326,7 @@
     }
    ],
    "finding": "DEFAULT_ADMIN handover: one-second delay observed versus three days documented (#26,401,725)",
+   "findingClass": "clear_weaker",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Usual Money (USD0 / USD0++)",
@@ -24427,6 +24494,7 @@
     }
    ],
    "finding": "Pool governor multisig: docs state 3 of 5 signers, the Safe is 3-of-6: docs say 'Multisig is a contract where n people vote on transaction before it gets executed. · chain says Vesper governor Safe 0x9520b477Aa81180E6DdC006Fc09Fb6d3eb4e807A (Ethereum): getThreshold() = 3 of getOwners() = 6 owners (Safe v1.3.0);",
+   "findingClass": "bookkeeping",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Vesper V1",
@@ -24675,6 +24743,7 @@
     }
    ],
    "finding": "Sampled Whales Market proxy is upgradeable; coverage by the pre-market escrow immutability promise is unverified (#26,441,165)",
+   "findingClass": "unresolved",
    "grade": "unresolved",
    "gradeLabel": "UNRESOLVED",
    "name": "Whales Market",
@@ -25337,13 +25406,14 @@
      "evidence": null,
      "key": "parity",
      "label": "Docs-vs-chain parity",
-     "state": "a",
-     "value": "Documentation differs from the chain (parameter delta)"
+     "state": "n",
+     "value": "Changed on chain within 48h of pin; re-checked after 72 hours before counting as a documentation gap"
     }
    ],
    "finding": "Sampled V3 RoleManager uses a seven-day timelock; yChad's documented signer roster differs (#26,441,165)",
-   "grade": "delta",
-   "gradeLabel": "DELTA",
+   "findingClass": "bookkeeping",
+   "grade": "recent_change",
+   "gradeLabel": "CHANGED RECENTLY",
    "name": "Yearn V3",
    "pinnedBlock": 26441165,
    "probe": {
@@ -25365,10 +25435,11 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 2,
-   "rosetteAria": "Yearn V3 control-plane rosette: Upgradeability not determined; Timelock floor strong; Signer quorum strong; Emergency / freeze scope not determined; Docs-vs-chain parity weak",
+   "rosetteAria": "Yearn V3 control-plane rosette: Upgradeability not determined; Timelock floor strong; Signer quorum strong; Emergency / freeze scope not determined; Docs-vs-chain parity not determined",
    "scopeNote": "At Ethereum block 26,441,165 the yChad Safe retains its 6-of-9 threshold while one address listed on the multisig documentation page is no longer an owner (consistent with an October 28 signer-rotation proposal, not a reduced threshold); separately, at block 26,401,725 a sampled V3 RoleManager points governance() to a 7-day TimelockController whereas Yearn's security overview notes the governance role itself is not behind a timelock.",
    "search": "yearn v3 yearn-v3 yield aggregation vaults yfi 0x16388463d60ffe0661cf7f1f31a7d658ac790ff7 0x6f2a8ee9452ba7d336b3fba03cac27f7818aead6 0x88ba032be87d5ef1fbe87336b7090767f367bf73 0xb3bd6b2e61753c311efbcf0111f75d29706d9a41 0xfeb4acf3df3cdea7399794d0869ef76a6efaff52",
    "slug": "yearn-v3",
+   "subtitle": "Changed on chain recently; documents not yet updated (re-checked after 72h)",
    "summary_short": "Sampled RoleManager uses a 7-day timelock; yChad signer roster differs (6-of-9)",
    "url": "https://pacta.wtf/protocols/yearn-v3/"
   },
@@ -25388,11 +25459,11 @@
    },
    "factors": [
     {
-     "evidence": "yield-basis-yb-renounced-reserve-1b-s33: YB token 0x01791F726B4103694969820be083196cC7c045fF (Ethereum; not a proxy: EIP-1967 implementation, admin and beacon slots all empty; verified source) …",
+     "evidence": "yield-basis-yb-renounced-reserve-1b-s33: … 0x01791F726B4103694969820be083196cC7c045fF (Ethereum; not a proxy: EIP-1967 implementation, admin and …",
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "value": "Not upgradeable: the target contract is not a proxy"
     },
     {
      "evidence": null,
@@ -25447,7 +25518,7 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "Yield Basis control-plane rosette: Upgradeability not determined; Timelock floor not determined; Signer quorum not determined; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
+   "rosetteAria": "Yield Basis control-plane rosette: Upgradeability strong; Timelock floor not determined; Signer quorum not determined; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
    "search": "yield basis yield-basis impermanent-loss-free leveraged amm liquidity (ethereum) yb 0x01791f726b4103694969820be083196cc7c045ff",
    "slug": "yield-basis",
    "summary_short": "YB ownership is renounced and reserve plus supply is 1B, as documented",
@@ -25592,6 +25663,7 @@
     }
    ],
    "finding": "YNDelegator (delegates the eigenpods to the operators): docs state 2-of-3, the Safe is 2-of-4: docs say 'YNDelegator 2/3 0xDF51B7843817F76220C0970eF58Ba726630028eF' / 'Delegates the EigenPods to the operators' (docs.yieldnest.finance/security/roles.md) · chain says YNDelegator Safe 0xDF51B7843817F76220C0970eF58Ba726630028eF (Ethereum): getThreshold() = 2 of getOwners() = 4 owners (Safe v1.3.0).",
+   "findingClass": "bookkeeping",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "YieldNest",
@@ -25676,6 +25748,7 @@
     }
    ],
    "finding": "Approval Registry is owned directly by the Admin Safe; vault upgrades retain a 48-hour timelock (#58,315,414)",
+   "findingClass": "unresolved",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "YO Protocol",
@@ -25806,11 +25879,11 @@
    },
    "factors": [
     {
-     "evidence": "zama-token-not-upgradeable-s33: ZAMA token 0xA12CC123ba206d4031D1c7f6223D1C2Ec249f4f3 (Ethereum; not a proxy: EIP-1967 implementation, admin and beacon slots all empty; verified source) …",
+     "evidence": "zama-token-not-upgradeable-s33: … 0xA12CC123ba206d4031D1c7f6223D1C2Ec249f4f3 (Ethereum; not a proxy: EIP-1967 implementation, admin and …",
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "value": "Not upgradeable: the target contract is not a proxy"
     },
     {
      "evidence": null,
@@ -25865,7 +25938,7 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "Zama control-plane rosette: Upgradeability not determined; Timelock floor not determined; Signer quorum not determined; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
+   "rosetteAria": "Zama control-plane rosette: Upgradeability strong; Timelock floor not determined; Signer quorum not determined; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
    "search": "zama zama fully homomorphic encryption network token (ethereum) zama 0xa12cc123ba206d4031d1c7f6223d1c2ec249f4f3",
    "slug": "zama",
    "summary_short": "The ZAMA token cannot be upgraded, as documented",
@@ -26007,6 +26080,7 @@
     }
    ],
    "finding": "Zircuit Staking multisig: docs state 6-of-8, the Safe is 4-of-6: docs say '`6/8` means at least six out of eight owners need to sign the message. · chain says Zircuit Staking Safe 0xC463EaC02572CC964D43D2414023E2c6B62bAF38 (Ethereum): getThreshold() = 4 of getOwners() = 6 owners (Safe v1.3.0).",
+   "findingClass": "clear_weaker",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Zircuit Staking",
@@ -26203,5 +26277,6 @@
    "url": "https://pacta.wtf/protocols/ztln-p/"
   }
  ],
+ "recentChangeRule": "Any finding observed within 48 hours of an on-chain change carries Changed recently (changed on chain recently; documents not yet updated) and is re-checked after 72 hours before it counts as a Delta.",
  "schema": "pacta.scorecards.v1"
 }

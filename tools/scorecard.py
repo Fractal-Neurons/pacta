@@ -8,11 +8,15 @@ RPC-observed protocol, whose documentation Pacta has not assessed.
 
 Grades (protocol level): DELTA (any parameter_delta record), UNRESOLVED (a protocol tools/scorecard_corrections.json marks
 "unresolved": the chain state is pinned, but a breach of a documented commitment is not established; neither DELTA nor ALIGNED),
+CHANGED RECENTLY ("recent_change": observed within 48 hours of an on-chain change, documents not yet updated; re-checked after
+72 hours before it counts as a DELTA; neither DELTA nor ALIGNED),
 PROTECTIVE (no parameter delta, at least one protective_delta), ALIGNED (every record an aligned baseline), OBSERVED (RPC-pinned only). A protocol whose record carries "reconciledFrom" provenance
 (a former delta reconciled at a later attested block) is ALIGNED with the "Reconciled" sub-pill and a before / after trail."""
 import re
 
-GRADES = {"delta": ("DELTA", "Docs and chain differ"), "unresolved": ("UNRESOLVED", "Observed on chain; document breach not established"),
+GRADES = {"delta": ("DELTA", "Docs and chain differ"),
+          "recent_change": ("CHANGED RECENTLY", "Changed on chain recently; documents not yet updated"),
+          "unresolved": ("UNRESOLVED", "Observed on chain; document breach not established"),
           "protective": ("PROTECTIVE", "Chain stronger than documented"),
           "aligned": ("ALIGNED", "Docs and chain match"), "observed": ("OBSERVED", "Chain pinned; docs not assessed")}
 FACTORS = [("upgrade", "Upgradeability"), ("timelock", "Timelock floor"), ("quorum", "Signer quorum"),
@@ -71,6 +75,7 @@ _EMERGENCY = re.compile(r"\bpause|\bblacklist|\bfreez|PAUSE_ROLE|ASSET_PROTECTIO
 
 
 UNRESOLVED_PARITY = "Observed onchain state pinned; a breach of a documented commitment is not established"
+RECENT_CHANGE_PARITY = "Changed on chain within 48h of pin; re-checked after 72 hours before counting as a documentation gap"
 
 
 def grade(classifications, easattested, reconciled=False, slug=None):
@@ -78,8 +83,8 @@ def grade(classifications, easattested, reconciled=False, slug=None):
         return "observed"
     if slug is not None:
         import scorecard_corrections as CORR
-        if CORR.unresolved(slug):
-            return "unresolved"
+        if CORR.status(slug) in CORR.NEUTRAL:      # "unresolved" / "recent_change": neither Delta nor Aligned
+            return CORR.status(slug)
     cl = set(classifications)
     if "parameter_delta" in cl:
         return "delta"
@@ -96,6 +101,21 @@ def _snip(text, m, width=70):
     while b < len(text) and not text[b].isspace():
         b += 1
     return ("… " if a else "") + text[a:b].strip() + (" …" if b < len(text) else "")
+
+
+_NOT_PROXY = re.compile(r"not a proxy|non-proxy|no proxies")
+# a proxy another contract in the record IS (a role holder, minter or helper), never a negated "no selector of upgradeTo(...)"
+_HELPER_PROXY = re.compile(r"\b(?:ERC|EIP)-1967 prox|TransparentUpgradeableProxy|AdminUpgradeabilityProxy|\bUUPS prox|\bProxyAdmin\b")
+
+
+def _target_not_proxy(r, t):
+    """True when the record states its own target contract is not a proxy: "not a proxy" within the parenthetical or clause that
+    follows the target address (e.g. "BIO token 0xcb15… (Ethereum, not a proxy; BioToken, verified source)")."""
+    tc = str(r.get("target_contract") or "")
+    i = t.lower().find(tc.lower()) if tc.startswith("0x") else -1
+    if i < 0:
+        return False
+    return bool(_NOT_PROXY.search(t[i + len(tc): i + len(tc) + 120].split(":")[0].split(". ")[0]))
 
 
 def clauses(text):
@@ -196,9 +216,15 @@ def factors(records, easattested, g, facts=(), parity_text=None):
         if isinstance(f.get("timelock_min_delay"), int) and f.get("address"):
             known[f["address"].lower()] = f["timelock_min_delay"]
     # 1: upgradeability: every upgrade clause on its own; the weakest established path decides
-    paths, undecided, prox, pending, admins = [], 0, None, [], {}
+    paths, undecided, prox, pending, admins, helper, notprox = [], 0, None, [], {}, None, None
     for rid, t, r in texts:
         prev = None
+        if _target_not_proxy(r, t):
+            # the record's own target is stated "not a proxy": a proxy it names (a role holder, minter or helper) is another
+            # contract's upgrade path, never the target's, so it does not make the protocol "Upgradeable"
+            helper = helper or ((rid, t) if _HELPER_PROXY.search(t) else None)
+            notprox = notprox or (rid if _PROXY.search(t) else None)   # e.g. "no selector of upgradeTo(address)" on a plain token
+            continue
         for c in clauses(t):
             if not _PROXY.search(c):
                 continue
@@ -233,6 +259,11 @@ def factors(records, easattested, g, facts=(), parity_text=None):
             out["upgrade"] = ("a", f"Upgradeable with no enforced delay: {why}{more}", ev)
     elif prox:
         out["upgrade"] = ("n", "Upgradeable; the delay gating the upgrade path is not in the published records", f"{prox[0]}: {_clip(prox[1])}")
+    elif imm and helper and imm[0] == helper[0]:
+        out["upgrade"] = ("g", "Target contract is not a proxy (non-upgradeable); a proxy named in the same record is a role holder or "
+                               "helper, not the target", f"{imm[0]}: {_snip(imm[1], imm[2])}")
+    elif imm and imm[0] == notprox:
+        out["upgrade"] = ("g", "Not upgradeable: the target contract is not a proxy", f"{imm[0]}: {_snip(imm[1], imm[2])}")
     elif imm:
         out["upgrade"] = ("g", "Immutable or ownership renounced", f"{imm[0]}: {_snip(imm[1], imm[2])}")
     else:
@@ -322,6 +353,7 @@ def factors(records, easattested, g, facts=(), parity_text=None):
     # an unresolved protocol is never coloured: the comparison does not establish a breach (hollow "n"), never weak, never strong
     out["parity"] = (("u", "Uncompared: documentation not assessed (RPC-observed)", None) if not easattested else
                      ("n", parity_text or UNRESOLVED_PARITY, None) if g == "unresolved" else
+                     ("n", parity_text or RECENT_CHANGE_PARITY, None) if g == "recent_change" else
                      ("a", "Documentation differs from the chain (parameter delta)", None) if g == "delta" else
                      ("g", "Chain matches or is stronger than the documentation", None))
     return [{"key": k, "label": lbl, "state": out[k][0], "value": out[k][1], "evidence": out[k][2]} for k, lbl in FACTORS]

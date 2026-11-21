@@ -62,7 +62,7 @@ def render_miniapp_card(font_dir, out_path):
     cv.rounded(X, 396, R, 636, 12, D_CARD, border=D_LINE, bw=1.0)
     px = X + 28
     px = pill(cv, mono_md, px, 422, "ALIGNED · DOCS = CHAIN", D_GREEN_BG, D_GREEN_FG, "#1b4d30")
-    px = pill(cv, mono_md, px + 14, 422, "ADVERSE DELTA · 0s MULTISIG", D_AMBER_BG, D_AMBER_FG, "#5c3f14")
+    px = pill(cv, mono_md, px + 14, 422, "DOCS DIFFER · 0s MULTISIG", D_AMBER_BG, D_AMBER_FG, "#5c3f14")
     pill(cv, mono_md, px + 14, 422, "BASE EAS ATTESTED", D_BLUE_BG, D_BLUE_FG, "#26406e")
 
     cv.rect(X + 28, 482, R - 28, 483, D_LINE)

@@ -51,7 +51,7 @@ RESULTS = []
 EXPECT = {
     "sprints": 37, "records": 309, "eas_attestations": 37,              # index.json sprints_completed / records_indexed; Base EAS sprint UIDs
     "protocols": 316, "eas_protocols": 189, "rpc_protocols": 127,          # /protocols/ pages = EAS-attested + RPC-pinned; badges = protocols
-    "briefs": 17, "badge_tiers": {"aligned": 126, "parameter_delta": 57, "rpc_observed": 127, "unresolved": 5, "docs_updated": 1},
+    "briefs": 17, "badge_tiers": {"aligned": 126, "parameter_delta": 56, "rpc_observed": 127, "unresolved": 5, "docs_updated": 1, "recent_change": 1},
     "base_records": 38,                                                  # index.json records with chain "base"
     "rpc_by_chain": {"ethereum": 117, "base": 10},                         # rpc-pinned.json records per chain (sum = rpc_protocols)
     "multi_attest_txs": ["1–12", "13–16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37"],                              # attestation_coverage.eas_multi_attest_txs keys
@@ -83,7 +83,7 @@ EXPECT = {
 X = EXPECT
 # sha256 of docs/api/v1/graph-manifest.json: changes only through a deliberate re-pin (a Sprint stage / stamp rewrites it after the
 # rebuild); a merged Wave 2 claim or any site-only change must leave it as is
-GRAPH_MANIFEST_SHA256 = "4e620a150b02d262e06b522950870960e77de7b95a2d4b6d23ea271f07a764bd"
+GRAPH_MANIFEST_SHA256 = "43574d55c181b0f36125b8e43a033aa0ed1ed44d9476e6bcad8f47069337d2d1"
 NON_PROTOCOL_PAGES = 40                                                  # docs/**/*.html pages that are not /protocols/<slug>/ (40: + /curators/ /scan/ /webhook/ /seal/ /miniapp/, + the Cap, Compound V3 and Lista Lending briefs)
 
 
@@ -705,7 +705,7 @@ def graph_manifest_checks(args):
     prot_doc = json.loads(read("docs/api/v1/protocols.json"))
     flip = {"aligned_baseline": "protective_delta", "protective_delta": "aligned_baseline", "parameter_delta": "protective_delta",
             "rpc_observed": "aligned_baseline", "mixed": "aligned_baseline"}
-    tiers = ["aligned", "parameter_delta", "rpc_observed", "unresolved", "docs_updated"]   # every badge tier build_lookup can emit
+    tiers = ["aligned", "parameter_delta", "rpc_observed", "unresolved", "docs_updated", "recent_change"]   # every badge tier build_lookup can emit
     moved_p = json.loads(json.dumps(prot_doc))
     for q in moved_p["protocols"]:                  # every changing protocol fact moves (an rpc_observed <-> EAS conversion and more)
         q["badge"] = {**(q.get("badge") or {}), "tier": tiers[(tiers.index((q.get("badge") or {}).get("tier", "aligned")) + 1) % len(tiers)]}
@@ -2396,7 +2396,7 @@ def main(argv=None):
                  and all(b[:8] == b"\x89PNG\r\n\x1a\n" and _st45.unpack(">II", b[16:24]) == (1200, 675) for b in cards45.values()))
     try:
         xf45, xh45 = json.loads(read("docs/api/v1/x-feed.json")), json.loads(read("docs/api/v1/x-handles.json"))
-        kind_grade = {"adverse_delta": "delta", "unresolved_scope": "unresolved", "protective_delta": "protective", "aligned_baseline": "aligned",
+        kind_grade = {"adverse_delta": "delta", "recent_change": "recent_change", "unresolved_scope": "unresolved", "protective_delta": "protective", "aligned_baseline": "aligned",
                       "rpc_observed": "observed"}
         sc_g45 = {c["slug"]: c["grade"] for c in json.loads(read("docs/api/v1/scorecards.json"))["protocols"]}
         prot_items = [i for i in xf45["items"] if i.get("kind") in kind_grade]
@@ -2443,7 +2443,9 @@ def main(argv=None):
             "free, with live re-check on demand" in pricing43(home43) and "stays free, with live re-check on demand" in req43,
         "G-P2-2: 'Heuristic score' in the checker, limits link to /methodology/#live-checker, which explains the heuristic and the delta counts (+ harness)":
             '"Heuristic score"' in app43 and "Risk score" not in app43 and '<section class="memo-sec" id="live-checker">' in meth43
-            and f'{nums45["delta"]} of the {nums45["protocols"]} protocols carry at least one adverse docs-vs-chain delta' in meth43
+            and f'{nums45["delta"]} of the {nums45["protocols"]} protocols carry a Delta status' in meth43
+            and (lambda C_: html.escape(f'of the {C_.flagged_total()} historically flagged comparisons, {C_.breakdown_text()}', quote=True) in meth43)(
+                __import__("scorecard_corrections"))
             and res.get("v45_live_checker_link") is True,
         "G-P2-3: combobox ranks prefix matches first, matches 0x addresses, a mouse pick closes it (aria-expanded=false) and clears the query (harness)":
             res.get("v45_combobox_prefix_address_click") is True,
@@ -2485,17 +2487,23 @@ def main(argv=None):
     al_col = LK451.BADGE_TIERS["aligned"][1]
     rgb451 = [int(al_col[i:i + 2], 16) for i in (1, 3, 5)]
     n451 = BS.site_numbers(json.loads(read("docs/api/v1/index.json")))
-    line451 = (f'<p class="delta-line" data-delta-line>{n451["delta"] + n451["protective"]} of {n451["protocols"]} protocols differ from their docs: '
-               f'{n451["delta"]} adverse, {n451["protective"]} protective.</p>')
+    C451 = __import__("scorecard_corrections")      # the independent four-way classification of the historically flagged comparisons
+    line451 = html.escape(f'Across the {C451.flagged_total()} historically flagged comparisons: {C451.breakdown_text()} — plus '
+                          f'{n451["protective"]} protective cases where the chain is stricter than documented.', quote=True)
+    line451 = f'<p class="delta-line" data-delta-line>{line451}</p>'
     v451 = {
         "R3-01: every Aligned SVG badge is neutral (no #047857 / green anywhere in the badges; white on the Aligned fill >= 7.5:1)":
             bool(aligned451) and not any("#047857" in t for t in badges451.values())
             and all(f'fill="{al_col}"' in t for t in aligned451) and cr45("#ffffff", al_col) >= 7.5 and max(rgb451) - min(rgb451) <= 40,
         "R3-02: the demo receipt link is >= 24 px tall (inline-flex, min-height 24px; script unchanged)":
             ".live-receipt a { display:inline-flex; align-items:center; min-height:24px;" in demo_css,
-        "'N of M protocols differ from their docs: D adverse, P protective.' under the homepage tiles and the /scorecards/ intro (from the data)":
+        "the four-way line 'Across the 56 historically flagged comparisons: 16 … weaker …, 17 …, 13 bookkeeping …, and 10 unresolved — plus P "
+        "protective cases …' under the homepage tiles and the /scorecards/ intro (registry + data); no 'adverse' tile":
             line451 in home43 and line451 in pages[os.path.join("scorecards", "index.html")]
-            and home43.find('data-proof>') < home43.find(line451) and "<span>Deltas</span><small>Adverse: chain looser than docs</small>" in home43,
+            and home43.find('data-proof>') < home43.find(line451)
+            and (f'<b>{C451.breakdown()["clearWeaker"]}</b><span>Weaker than documented</span><small>Plus '
+                 f'{C451.breakdown_short().split(" · ", 1)[1]}</small>') in home43
+            and "Adverse: chain looser than docs" not in home43 and " adverse, " not in home43,
     }
     check("v4.5.1 polish (R3-01 neutral Aligned badges, R3-02 demo receipt link target, '36 of 90' reconciliation line)", all(v451.values()),
           str([k for k, x in v451.items() if not x]))
@@ -2816,7 +2824,7 @@ def main(argv=None):
                 and act_.get("type") == "launch_miniapp" and act_.get("url") == f"{BS.BASE_URL}/miniapp/")
     ma_keys = ["ma_frame_ready_handshake", "ma_instant_verdicts", "ma_wallet_upgrade_19_and_99"]
     check("Base & Farcaster Mini-App: /.well-known/farcaster.json v1 manifest, 1200x800 (3:2 <=500KB) miniapp-preview.png, valid fc:miniapp meta on /miniapp/ & /scan/, "
-          "embedded ready() postMessage + ALIGNED / ADVERSE DELTA / UNINDEXED checks + 1-tap $19/$99 Base USDC upgrades (harness)",
+          "embedded ready() postMessage + ALIGNED / DOCUMENTATION DIFFERENCE / UNRESOLVED / CHANGED RECENTLY / UNINDEXED checks + 1-tap $19/$99 Base USDC upgrades (harness)",
           isinstance(fc_ma, dict) and fc_ma.get("version") == "1" and fc_ma.get("name") == "Pacta Control-Plane Check"
           and fc_ma.get("homeUrl") == f"{BS.BASE_URL}/miniapp/" and fc_ma.get("splashBackgroundColor") == "#0a0b0d"
           and fc_ma.get("subtitle") == "Docs vs Chain DeFi Verdicts" and fc_ma.get("primaryCategory") == "developer-tools"
@@ -2934,6 +2942,8 @@ def main(argv=None):
         c_ = CORR_.get(v["slug"]) or {}
         if c_.get("status") == "unresolved":
             return "docs_updated" if c_.get("subPill") else "unresolved"
+        if c_.get("status") == "recent_change":
+            return "recent_change"
         return "aligned" if BS.is_aligned_page(v["entries"]) else "parameter_delta"
     tier_of = {v["slug"]: _tier(v) for v in sp_lk.values()}
     card_bad = []
@@ -2949,6 +2959,9 @@ def main(argv=None):
         elif t in ("unresolved", "docs_updated"):   # the neutral status card: copyable embed, never the paid clearance prompt
             ok_ = 'class="memo-sec badge-card unresolved" id="badge-status"' in pg and html.escape(md_) in pg and 'id="embed-badge"' not in pg \
                 and 'data-cta="seal_wd"' not in pg and "Control-plane badge: Parameter Delta" not in pg
+        elif t == "recent_change":   # the info status card (changed on chain recently): copyable embed, never the paid prompts
+            ok_ = 'class="memo-sec badge-card recent_change" id="badge-status"' in pg and html.escape(md_) in pg and 'id="embed-badge"' not in pg \
+                and 'data-cta="seal_wd"' not in pg and "Control-plane badge: Parameter Delta" not in pg and "re-checked after 72 hours" in pg
         else:   # RPC-observed: the slate status card with a copyable embed, and never an Aligned / Base EAS claim
             ok_ = 'id="embed-badge"' not in pg and 'class="memo-sec badge-card observed" id="badge-status"' in pg and html.escape(md_) in pg \
                 and "Aligned · Base EAS" not in pg
@@ -2964,7 +2977,8 @@ def main(argv=None):
         "== worker badgeSvg (node)": len(js_badges) == X["protocols"] == len(svg_files) and all(js_badges[s_] == read(f"docs/badges/{s_}.svg") for s_ in tier_of),
         "badge tiers (EXPECT)": counts_ == X["badge_tiers"]
             and all({"aligned": "Aligned · Base EAS", "parameter_delta": "Parameter Delta", "rpc_observed": "RPC-Observed",
-                     "unresolved": "Unresolved · Unverified Scope", "docs_updated": "Docs Updated · Pending Re-Read"}[t] in read(f"docs/badges/{s_}.svg")
+                     "unresolved": "Unresolved · Unverified Scope", "docs_updated": "Docs Updated · Pending Re-Read",
+                     "recent_change": "Changed Recently · Re-Check Pending"}[t] in read(f"docs/badges/{s_}.svg")
                     for s_, t in tier_of.items()),
         "RPC-observed never implies EAS": not any("EAS" in read(f"docs/badges/{s_}.svg") for s_, t in tier_of.items() if t == "rpc_observed"),
         "cards": not card_bad,
@@ -3104,11 +3118,11 @@ def main(argv=None):
         "MCP recipes (Claude Code / OpenAI Agents SDK / LangChain, <= 10 lines) in README + SKILL.md": all(code in read("README.md") and code in read("docs/SKILL.md")
                                                                                                          and len(code.splitlines()) <= 10 for _, _, code in B2AV.MCP_RECIPES)
             and [t for t, _, _ in B2AV.MCP_RECIPES] == ["Claude Code", "OpenAI Agents SDK (Python)", "LangChain (langchain-mcp-adapters)"],
-        "/protocols/ filter: input + Docs vs chain (6), Chain (3) and Basket (5) groups, Clear all, active state, empty-state slot, data attrs on every protocol row":
-            all(f'data-pfilter-status="{k}"' in hub_ for k in ("all", "delta", "unresolved", "protective", "aligned", "observed"))
+        "/protocols/ filter: input + Docs vs chain (7), Chain (3) and Basket (5) groups, Clear all, active state, empty-state slot, data attrs on every protocol row":
+            all(f'data-pfilter-status="{k}"' in hub_ for k in ("all", "delta", "recent_change", "unresolved", "protective", "aligned", "observed"))
             and all(f'data-pfilter-chain="{k}"' in hub_ for k in ("all", "ethereum", "base"))
             and all(x in hub_ for x in ('id="proto-clear"', 'id="proto-active"', 'id="proto-empty"', 'data-pgroup="status"', 'data-pgroup="chain"'))
-            and 'id="proto-q"' in hub_ and len(re.findall(r'<tr data-ptier="(?:delta|unresolved|protective|aligned|observed)" data-pchains="[a-z ]+" data-pbaskets="[a-z_ ]*" data-psearch="[^"]*">', hub_)) == X["protocols"]
+            and 'id="proto-q"' in hub_ and len(re.findall(r'<tr data-ptier="(?:delta|recent_change|unresolved|protective|aligned|observed)" data-pchains="[a-z ]+" data-pbaskets="[a-z_ ]*" data-psearch="[^"]*">', hub_)) == X["protocols"]
             and all(f'data-pfilter-basket="{k}"' in hub_ for k in ["all"] + [b[0] for b in BS.BASKETS]),
         "/protocols/ filter: textContent / hidden only": (lambda m: bool(m) and not re.search(r"innerHTML|outerHTML|insertAdjacentHTML|document\.write|fetch\(", m.group(0)))(
             re.search(r"function initProtocolFilter\(\) \{.*?\n  \}\n", appjs, re.S)),
@@ -3674,11 +3688,17 @@ def main(argv=None):
        "hollow 'u' for every RPC-observed protocol and never 'u' for an attested one; states only g/b/a/n/u; byte-identical rebuild"] = (
         sc_.get("schema") == "pacta.scorecards.v1" and set(cards_) == set(pjp_) and len(cards_) == X["protocols"]
         and all((c_["grade"] == "observed") == (not pjp_[k_]["easAttested"]) for k_, c_ in cards_.items())
-        and all((c_["grade"] in ("delta", "unresolved")) == any(sf_["classification"] == "parameter_delta" for sf_ in pjp_[k_]["surfaces"])
+        and all((c_["grade"] in ("delta", "unresolved", "recent_change")) == any(sf_["classification"] == "parameter_delta" for sf_ in pjp_[k_]["surfaces"])
                 for k_, c_ in cards_.items())
         # UNRESOLVED <=> tools/scorecard_corrections.json marks the protocol unresolved (a documented breach not established)
         and all((c_["grade"] == "unresolved") == ((__import__("scorecard_corrections").get(k_) or {}).get("status") == "unresolved")
                 for k_, c_ in cards_.items())
+        # CHANGED RECENTLY <=> the registry marks it recent_change (observed within 48h of an on-chain change; re-checked after 72h)
+        and all((c_["grade"] == "recent_change") == ((__import__("scorecard_corrections").get(k_) or {}).get("status") == "recent_change")
+                for k_, c_ in cards_.items())
+        # the four-way breakdown of the historically flagged comparisons is exposed, and each flagged card carries its class
+        and sc_.get("findingBreakdown") == __import__("scorecard_corrections").breakdown()
+        and sum(1 for c_ in cards_.values() if c_.get("findingClass")) == sum(sc_["findingBreakdown"].values())
         and all((c_["factors"][4]["state"] == "u") == (not c_["easAttested"]) for c_ in cards_.values())
         and sum(c_["factors"][4]["state"] == "u" for c_ in cards_.values()) == X["rpc_protocols"]
         and all(f_["state"] in ("g", "b", "a", "n", "u") and [x_["key"] for x_ in c_["factors"]] == ["upgrade", "timelock", "quorum", "emergency", "parity"]
@@ -3729,7 +3749,7 @@ def main(argv=None):
         and re.findall(r'<section class="(?:sec|hero hero-v3)" id="([a-z]+)"|<section class="hero hero-v3">', hv_) is not None
         and [m_ for m_ in re.findall(r'<section class="[^"]+"(?: id="([a-z-]+)")?[^>]*>', hv_)] == ["", "how-it-works", "scorecards", "radar", "audiences", "pricing"]
         and '<h1><span class="l">Protocol docs drift.</span><br><span class="l">The chain doesn’t.</span></h1>' in hv_ and 'class="ftr"' in hv_
-        and f'class="stat" data-slot="card"><b>{sum(c_["grade"] == "delta" for c_ in cards_.values())}</b><span>Deltas</span>' in hv_
+        and f'class="stat" data-slot="card"><b>{sc_["findingBreakdown"]["clearWeaker"]}</b><span>Weaker than documented</span>' in hv_
         and f'class="stat" data-slot="card"><b>{sum(c_["grade"] == "protective" for c_ in cards_.values())}</b><span>Protective</span>' in hv_
         and f'Deltas <span class="num">({sum(c_["grade"] == "delta" for c_ in cards_.values())})</span>' in hv_
         and f'All <span class="num">({X["protocols"]})</span>' in hv_)

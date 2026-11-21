@@ -1,9 +1,10 @@
 {
  "schema": "pacta.scorecard_corrections.v1",
- "description": "Declarative scorecard wording, scope and status corrections, consumed at build time by tools/control_diff.py, tools/scorecard.py, tools/summary_short.py, tools/build_lookup.py and tools/build_site.py. One entry per protocol slug; adding or updating a correction takes only an entry here and a rebuild. Pinned blocks are the historical observation blocks of the published records: no entry represents a fresh chain read. docs/api/v1/index.json (the attested record store) is not rewritten; recordOverrides are applied to the derived pages and feeds.",
+ "description": "Declarative scorecard wording, scope and status corrections, consumed at build time by tools/control_diff.py, tools/scorecard.py, tools/summary_short.py, tools/build_lookup.py and tools/build_site.py. One entry per protocol slug; adding or updating a correction takes only an entry here and a rebuild. Pinned blocks are the historical observation blocks of the published records: no entry represents a fresh chain read. recordOverrides correct a record's published wording only: tools/apply_scorecard_corrections.py writes them (with the status and wording override maps) into docs/api/v1/index.json, and every attested field (id, block, hash, classification, summary document and its SHA-256, Base EAS UID, target, delays) is asserted unchanged; the audits/ summary documents are never touched.",
  "statuses": {
   "unresolved": "Observed on chain; a breach of a documented commitment is not established (neither Delta nor Aligned)",
-  "delta": "Docs and chain differ (kept, with the corrected headline and scope)"
+  "delta": "Docs and chain differ (kept, with the corrected headline and scope)",
+  "recent_change": "Changed on chain recently; documents not yet updated (observed within 48 hours of an on-chain change; re-checked after 72 hours before it counts as a Delta)"
  },
  "protocols": {
   "concrete": {
@@ -86,12 +87,20 @@
    "summaryShort": "LegacyTimelock reads 36 hours; V3.0 technical-change docs describe 2 days"
   },
   "yearn-v3": {
-   "status": "delta",
+   "status": "recent_change",
    "chain": "ethereum",
    "pinnedBlock": 26441165,
    "headline": "Sampled V3 RoleManager uses a seven-day timelock; yChad's documented signer roster differs",
    "explanatorySentence": "At Ethereum block 26,441,165 the yChad Safe retains its 6-of-9 threshold while one address listed on the multisig documentation page is no longer an owner (consistent with an October 28 signer-rotation proposal, not a reduced threshold); separately, at block 26,401,725 a sampled V3 RoleManager points governance() to a 7-day TimelockController whereas Yearn's security overview notes the governance role itself is not behind a timelock.",
-   "summaryShort": "Sampled RoleManager uses a 7-day timelock; yChad signer roster differs (6-of-9)"
+   "summaryShort": "Sampled RoleManager uses a 7-day timelock; yChad signer roster differs (6-of-9)",
+   "subtitle": "Changed on chain recently; documents not yet updated (re-checked after 72h)",
+   "parityText": "Changed on chain within 48h of pin; re-checked after 72 hours before counting as a documentation gap",
+   "recentChange": {
+    "change": "yChad Safe signer rotation (October 28 signer-rotation proposal)",
+    "observedBlock": 26441165,
+    "chain": "ethereum",
+    "note": "Observed within 48 hours of the on-chain signer rotation; re-check after 72 hours before counting as a documentation gap."
+   }
   },
   "yo-protocol": {
    "status": "delta",
@@ -210,6 +219,103 @@
    "factorOverrides": {
     "timelock": "5d Token House governance timelock (getMinDelay() = 432,000s); OBOL MINTER_ROLE sits with a separate 2-of-3 Safe outside this timelock"
    }
+  },
+  "bio-protocol": {
+   "status": "delta",
+   "chain": "ethereum",
+   "pinnedBlock": 26451608,
+   "headline": null,
+   "explanatorySentence": null,
+   "summaryShort": null,
+   "factorOverrides": {
+    "upgrade": "BIO token contract is not a proxy (non-upgradeable); one MINTER_ROLE holder is an ERC-1967 Wormhole NttManager proxy"
+   }
+  }
+ },
+ "recentChangeRule": {
+  "windowHours": 48,
+  "recheckAfterHours": 72,
+  "text": "Any finding observed within 48 hours of an on-chain change carries Changed recently (changed on chain recently; documents not yet updated) and is re-checked after 72 hours before it counts as a Delta."
+ },
+ "findingClasses": {
+  "description": "Independent classification of the 56 historically flagged docs-vs-chain comparisons (one class each). A historical-comparison class, not a fresh chain read and not a severity grade.",
+  "labels": {
+   "clear_weaker": "Chain looks weaker than documented",
+   "real_difference": "Real difference needing explanation",
+   "bookkeeping": "Bookkeeping: roster or address difference without weaker protection",
+   "unresolved": "Unresolved scope or unverified source"
+  },
+  "breakdownKeys": {
+   "clear_weaker": "clearWeaker",
+   "real_difference": "needsExplanation",
+   "bookkeeping": "bookkeeping",
+   "unresolved": "unresolved"
+  },
+  "members": {
+   "clear_weaker": [
+    "40-acres-base",
+    "bedrock-unibtc",
+    "benddao-ape-staking",
+    "bio-protocol",
+    "cbridge",
+    "cian-yield-layer",
+    "circle-gateway",
+    "inverse-finance-firm",
+    "maple-finance-v2-syrup",
+    "obol-network",
+    "pickle",
+    "sonic-gateway",
+    "treehouse-tree-teth",
+    "uniswap-governance-timelock",
+    "usual-money-usd0-usd0",
+    "zircuit-staking"
+   ],
+   "real_difference": [
+    "aerodrome-finance-base",
+    "beefy-finance-base",
+    "chainlink-ccip",
+    "curve-finance-crvusd",
+    "ethena-usde-susde",
+    "f-x-protocol-v2",
+    "fluid-instadapp",
+    "gearbox-v3-v3-1",
+    "hop-protocol",
+    "mellow-protocol-lido-earn",
+    "metamorpho-re7-weth-vs-re7-usdt",
+    "moonwell-lending-base",
+    "ondo-finance-ousg-flux-finance",
+    "polygon-bridge",
+    "rocket-pool-reth",
+    "stake-dao",
+    "upshift"
+   ],
+   "bookkeeping": [
+    "abracadabra-spell",
+    "axelar-network",
+    "base-bridge",
+    "bedrock-unieth",
+    "defi-saver",
+    "goldfinch",
+    "puffer-finance-pufeth",
+    "resupply",
+    "stader-labs-ethx",
+    "tori-finance",
+    "vesper-v1",
+    "yearn-v3",
+    "yieldnest"
+   ],
+   "unresolved": [
+    "concrete",
+    "hakka-finance",
+    "infinifi",
+    "lagoon",
+    "odyssey-finance",
+    "renzo-protocol-ezeth",
+    "seamless-protocol-base",
+    "taiko-bridge",
+    "whales-market",
+    "yo-protocol"
+   ]
   }
  }
 }

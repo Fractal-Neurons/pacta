@@ -226,13 +226,14 @@ ADDRESS_ALIASES = {
 
 
 def _corrected_status(slug, pinned):
-    """{"scorecardStatus": "unresolved"} for a protocol tools/scorecard_corrections.json marks unresolved (its comparison does
-    not establish a documented breach), with the correction's sub-pill as a note when it has one; {} otherwise."""
+    """{"scorecardStatus": "unresolved" | "recent_change"} for a protocol tools/scorecard_corrections.json marks with a neutral
+    status (unresolved: the comparison does not establish a documented breach; recent_change: observed within 48 hours of an
+    on-chain change, re-checked after 72 hours), with the correction's sub-pill as a note when it has one; {} otherwise."""
     import scorecard_corrections as CORR
     c = CORR.get(slug) or {}
-    if pinned or c.get("status") != "unresolved":
+    if pinned or c.get("status") not in CORR.NEUTRAL:
         return {}
-    return {"scorecardStatus": "unresolved", **({"scorecardStatusNote": c["subPill"]} if c.get("subPill") else {})}
+    return {"scorecardStatus": c["status"], **({"scorecardStatusNote": c["subPill"]} if c.get("subPill") else {})}
 
 
 def _protocol_item(name, v):
@@ -376,7 +377,9 @@ BADGE_TIERS = {"aligned": ("Aligned · Base EAS", "#374151"), "parameter_delta":
                "rpc_observed": ("RPC-Observed", "#475569"),
                # neutral slate tiers for a protocol whose comparison does not establish a documented breach
                # (tools/scorecard_corrections.json status "unresolved"): never the amber Parameter Delta, never Aligned
-               "unresolved": ("Unresolved · Unverified Scope", "#475569"), "docs_updated": ("Docs Updated · Pending Re-Read", "#475569")}
+               "unresolved": ("Unresolved · Unverified Scope", "#475569"), "docs_updated": ("Docs Updated · Pending Re-Read", "#475569"),
+               # info blue for status "recent_change": changed on chain within 48h of the pin, re-checked after 72h before any Delta
+               "recent_change": ("Changed Recently · Re-Check Pending", "#0369a1")}
 
 
 def badge_tier(item):
@@ -384,6 +387,8 @@ def badge_tier(item):
         return None
     if item.get("evidenceBasis") == "rpc_observed":
         return "rpc_observed"
+    if item.get("scorecardStatus") == "recent_change":      # info: changed on chain recently; documents not yet updated
+        return "recent_change"
     if item.get("scorecardStatus") == "unresolved":         # neutral: a documented breach is not established
         return "docs_updated" if item.get("scorecardStatusNote") else "unresolved"
     return "aligned" if item.get("classification") == "aligned_baseline" else "parameter_delta"

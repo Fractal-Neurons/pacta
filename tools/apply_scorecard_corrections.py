@@ -4,8 +4,8 @@
     python3 tools/apply_scorecard_corrections.py            # rewrite the corrected records in place
     python3 tools/apply_scorecard_corrections.py --check    # exit 1 when index.json lacks a correction
 
-It also writes idx["scorecard_status_overrides"] = {record id: {"status": "unresolved", "label": ...}} for the flagged records of a
-protocol the registry marks unresolved, so the browser (which reads only index.json) shows the neutral status, never "Parameter
+It also writes idx["scorecard_status_overrides"] = {record id: {"status": "unresolved" | "recent_change", "label": ...}} for the
+flagged records of a protocol the registry marks with a neutral status (Unresolved / Changed recently), so the browser (which reads only index.json) shows the neutral status, never "Parameter
 delta". Only the corrected wording fields of the named records change (surface, target_label, category, documented_reference, or the given
 substrings of onchain_observed / documented_reference). Block numbers, block hashes, classifications, summary documents, summary
 SHA-256 digests and Base EAS UIDs are never touched, and audits/ is never written."""
@@ -32,8 +32,9 @@ def main(argv):
     ov = {}
     for e in new:
         c = CORR.get(CORR.slug_of(e["protocol"])) or {}
-        if c.get("status") == "unresolved" and e["classification"] == "parameter_delta":
-            ov[e["id"]] = {"status": "unresolved", "label": c.get("subPill") or "Unresolved"}
+        if c.get("status") in CORR.NEUTRAL and e["classification"] == "parameter_delta":
+            ov[e["id"]] = {"status": c["status"],
+                           "label": c.get("subPill") or ("Unresolved" if c["status"] == "unresolved" else "Changed recently")}
     ov = dict(sorted(ov.items()))
     if idx.get("scorecard_status_overrides") != ov:
         changed.append("scorecard_status_overrides")
@@ -43,7 +44,7 @@ def main(argv):
         c = CORR.get(CORR.slug_of(e["protocol"])) or {}
         if (c.get("headline") or c.get("explanatorySentence")) and e["classification"] in ("parameter_delta", "protective_delta"):
             wo[e["id"]] = {"headline": c.get("headline"), "pinnedBlock": c["pinnedBlock"], "scope": c.get("explanatorySentence"),
-                           "unresolved": c.get("status") == "unresolved"}
+                           "unresolved": c.get("status") == "unresolved", "recentChange": c.get("status") == "recent_change"}
     wo = dict(sorted(wo.items()))
     if idx.get("scorecard_wording_overrides") != wo:
         changed.append("scorecard_wording_overrides")

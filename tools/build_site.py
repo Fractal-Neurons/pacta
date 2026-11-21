@@ -176,7 +176,8 @@ CHECKOUT = {   # sku -> product page; "tier" is the /request/?tier= alias that f
         "badge": "Free Ethereum & Base Wallet, Safe & Protocol Scanner",
         "h1": "Paste any wallet, Safe, or protocol to scan live DeFi control-plane exposure.",
         "label": "Full Wallet & Safe Exposure Report",
-        "lede": "Instant read-only Multicall3 balanceOf + Safe custody scan across 316 Ethereum & Base protocols (189 Base-EAS attested · 50 verified adverse control-plane gaps). "
+        "lede": "Instant read-only Multicall3 balanceOf + Safe custody scan across 316 Ethereum & Base protocols (189 Base-EAS attested · 56 historically flagged comparisons: "
+                "16 weaker than documented, 17 needing explanation, 13 bookkeeping, 10 unresolved). "
                 "Zero wallet connection, zero signature, zero upfront price tags.",
         "cta": "Pay $9 USDC on Base & Unlock Full Report",
         "title": "Free Wallet, Safe & Protocol Control-Plane Exposure Scanner · Pacta", "card": "x-card-scan19-1200x628.png",
@@ -786,6 +787,7 @@ def scorecards(idx, pinned=None, sp=None):
                     **({"scopeNote": corr["explanatorySentence"]} if corr.get("explanatorySentence") else {}),
                     **({"subPill": corr["subPill"]} if corr.get("subPill") else {}),
                     **({"subtitle": corr["subtitle"]} if corr.get("subtitle") else {}),
+                    **({"findingClass": CORR.finding_class(v["slug"])} if CORR.finding_class(v["slug"]) else {}),
                     "pinnedBlock": max(int(e["block_number"]) for e in es),
                     "factors": fs, "rosetteAria": SC.aria(fs, name), "url": f"{BASE_URL}/protocols/{v['slug']}/",
                     "probe": probe, "search": search})
@@ -797,12 +799,17 @@ def scorecards_json(cards):
     totals = {g: sum(c["grade"] == g for c in cards) for g in SC.GRADES}
     coverage = {k: sum(next(f for f in c["factors"] if f["key"] == k)["state"] not in ("n", "u") for c in cards) for k, _ in SC.FACTORS}
     doc = {"schema": "pacta.scorecards.v1",
-           "description": "One canonical grade per published protocol (DELTA / PROTECTIVE / ALIGNED / OBSERVED) and a 5-factor control-plane "
+           "description": "One canonical grade per published protocol (DELTA / CHANGED RECENTLY / UNRESOLVED / PROTECTIVE / ALIGNED / "
+                          "OBSERVED) and a 5-factor control-plane "
                           "rosette derived deterministically from Pacta's published records (index.json, rpc-pinned.json) and controller facts. "
                           "A factor the published evidence does not decide is 'n' (not determined); docs-vs-chain parity is 'u' (uncompared) "
                           "for every RPC-observed protocol. States: g strong, b moderate, a weak, n not determined, u uncompared.",
            "grades": {g: {"label": SC.GRADES[g][0], "meaning": SC.GRADES[g][1], "protocols": totals[g]} for g in SC.GRADES},
            "factors": [{"key": k, "label": lbl} for k, lbl in SC.FACTORS], "factorCoverage": coverage,
+           # the independent four-way classification of the 56 historically flagged comparisons (not a fresh chain read, not a
+           # severity grade): each flagged protocol's class is its card's "findingClass"
+           "findingBreakdown": CORR.breakdown(), "findingClasses": CORR.data()["findingClasses"]["labels"],
+           "recentChangeRule": CORR.recent_change_rule(),
            "protocols": cards}
     return json.dumps(doc, indent=1, ensure_ascii=False, sort_keys=True) + "\n"
 
@@ -876,6 +883,8 @@ def record_badge(e):
     c = CORR.get(protocol_slug(e["protocol"])) or {}
     if c.get("status") == "unresolved" and e.get("classification") == "parameter_delta":
         return f'<span class="badge unresolved">{E(c.get("subPill") or "Unresolved")}</span>'
+    if c.get("status") == "recent_change" and e.get("classification") == "parameter_delta":
+        return f'<span class="badge recent_change">{E(c.get("subPill") or "Changed recently")}</span>'
     return badge(e["classification"])
 
 
@@ -968,17 +977,18 @@ def what_differs_html(entries, compact=False, seal_cta=False):
     tag = "div" if compact else "section"
     protective = all(c.get("classification") == "protective_delta" for c in wd["changed"])
     unres = corr.get("status") == "unresolved"
+    recent = corr.get("status") == "recent_change"
     wd_cta = (f'<p class="wd-cta">Protocol maintainer and fixed this gap? <a href="#seal-cta" data-cta="seal_wd">Get it re-verified on mainnet in 24h{ARR}</a></p>'
-              if seal_cta and not protective and not unres else "")
+              if seal_cta and not protective and not unres and not recent else "")
     if corr.get("headline") or corr.get("explanatorySentence"):
         # a declarative correction (tools/scorecard_corrections.json): its headline and pinned block lead, its scope sentence follows,
         # and the generic or overstated per-parameter lines are not repeated
         lead = (f'<p class="wd-lead" data-wd-headline><strong>{E(corr["headline"])}</strong> '
                 f'<span class="wd-block mono">(#{corr["pinnedBlock"]:,})</span></p>' if corr.get("headline") else "")
         scope = f'<p class="wd-scope" data-wd-scope>{E(corr["explanatorySentence"])}</p>' if corr.get("explanatorySentence") else ""
-        cls = " unresolved" if unres else (" protective" if protective else "")
+        cls = " unresolved" if unres else " recent_change" if recent else (" protective" if protective else "")
         return (f'<{tag} class="{"memo-sec " if not compact else ""}whatdiffers{cls}" data-what-differs>'
-                f'<h2 class="wd-h">{"Verification scope" if unres else "What differs"}</h2>{lead}{scope}'
+                f'<h2 class="wd-h">{"Verification scope" if unres else "Changed recently" if recent else "What differs"}</h2>{lead}{scope}'
                 + (f'<p class="wd-l">Matched</p><ul class="wd-matched">{mt}</ul>' if mt else "") + wd_cta + f'</{tag}>\n')
     return (f'<{tag} class="{"memo-sec " if not compact else ""}whatdiffers{" protective" if protective else ""}" data-what-differs><h2 class="wd-h">What differs</h2>'
             f'<p class="wd-l">Changed / discrepant</p><ul class="wd-changed">{"".join(items)}</ul>'
@@ -1232,6 +1242,16 @@ def radar_counts_text(radar):
     return " · ".join(parts)
 
 
+def radar_context(prefix=""):
+    """One plain line at the top of the radar: what the live snapshot is, and how Pacta classifies its historical document
+    comparisons (the independent four-way breakdown from tools/scorecard_corrections.json; never an "adverse" claim)."""
+    b = CORR.breakdown()
+    return (f'<p class="radar-context s" data-radar-context>This radar is a live snapshot of governance changes queued in onchain timelocks. '
+            f'Separately, Pacta classifies its {CORR.flagged_total()} historical document comparisons: {b["clearWeaker"]} clear cases where '
+            f'the chain looks weaker than documented · {b["needsExplanation"]} real differences needing explanation · '
+            f'{b["bookkeeping"]} bookkeeping · {b["unresolved"]} unresolved (<a href="{prefix}scorecards/">scorecards</a>).</p>')
+
+
 def radar_section(radar, prefix="", full=False):
     """T1: with JavaScript the state badges start as skeletons and appear once the live re-check settles (or fails), so a label never
     changes after first paint; without JavaScript the pinned snapshot shows. R3: cards below 640 px. A5: caption.
@@ -1292,6 +1312,7 @@ def radar_section(radar, prefix="", full=False):
                         '/v1/briefs/live-timelocks endpoint. Countdowns run locally from each onchain ETA.</p></div>') + '</div>')
     return f"""<section class="sec" id="radar" data-live-timelocks="{E(LIVE_TIMELOCKS_URL)}"><div class="wrap">
 <div class="sec-head"><{"h1" if full else "h2"}>Queued timelock radar</{"h1" if full else "h2"}><p class="aside">Governance changes waiting in onchain timelocks, and when each one can execute.</p></div>
+{radar_context(prefix)}
 <div class="radar-head"><span class="radar-counts" data-radar-counts>{E(radar_counts_text(radar))}</span><span class="live-status" data-live-status><span class="spinner" aria-hidden="true"></span><span data-live-status-text>Checking live chain state…</span></span><a href="{prefix}feed.xml" data-feed-subscribe>Subscribe (RSS / JSON Feed)</a></div>
 {livebar_html(radar)}
 {live_note}
@@ -1593,7 +1614,7 @@ def scan_explainer_section():
         '<div class="dvc-box dvc-docs"><span class="dvc-k mono">PUBLISHED DOCS PROMISE</span>'
         '<p class="dvc-q">&ldquo;All smart contract upgrades pass through a 48-hour Timelock.&rdquo;</p></div>'
         '<div class="dvc-box dvc-chain"><span class="dvc-k mono">LIVE ON-CHAIN REALITY</span>'
-        '<p class="dvc-q"><b>ADVERSE DELTA</b> — 3-of-6 Gnosis Safe owns ProxyAdmin directly (0-second upgrade delay, no timelock in path).</p></div></div>'
+        '<p class="dvc-q"><b>DOCUMENTATION DIFFERENCE</b> — 3-of-6 Gnosis Safe owns ProxyAdmin directly (0-second upgrade delay, no timelock in path).</p></div></div>'
         f'<ul class="ex-grid" aria-label="Five control-plane checks">{cards}</ul>'
         '<div class="scan-reveal-row" id="scan-reveal-row">'
         '<button type="button" class="scan-reveal-btn" id="scan-reveal-btn" data-scan-reveal aria-expanded="false">'
@@ -2001,10 +2022,10 @@ def miniapp_page(idx):
     </div>
   </form>
 
-  <section class="ma-card ma-verdict" id="ma-verdict" aria-live="polite" data-ma-status="ADVERSE DELTA">
+  <section class="ma-card ma-verdict" id="ma-verdict" aria-live="polite" data-ma-status="DOCUMENTATION DIFFERENCE">
     <div class="ma-v-head">
       <div>
-        <span class="ma-status-pill" id="ma-v-pill" data-tone="delta">ADVERSE DELTA</span>
+        <span class="ma-status-pill" id="ma-v-pill" data-tone="delta">DOCUMENTATION DIFFERENCE</span>
         <h2 id="ma-v-title">{E(sample["name"])} · Base</h2>
       </div>
       <img class="cp-badge" id="ma-v-badge" src="../badges/moonwell-lending-base.svg" alt="{E(LK.BADGE_TITLE)}: {E(b_label)}" width="{b_w}" height="20">
@@ -2441,6 +2462,16 @@ def badge_section(name, slug, tier):
                 f'<p><a class="btn" href="{E(request_href("community", slug))}" data-cta="badge_free_notify">{E(FREE_NOTIFY_CTA)} <span class="arr">{ARR}</span></a></p>'
                 f'<p class="s">Embed this badge (it updates when the status changes):</p>{badge_embed(name, slug, tier)}'
                 f'<p class="s">Badge: <code>{E(BASE_URL)}/badges/{E(slug)}.svg</code> · live: <code>{E(live)}</code>.</p></section>\n')
+    if tier == "recent_change":
+        c = CORR.get(slug) or {}
+        return (f'<section class="memo-sec badge-card recent_change" id="badge-status"><h2>Control-plane badge: {E(label)}</h2>'
+                f'<p class="badge-preview">{img}</p>'
+                f'<p>This badge is informational: it is neither the amber <b>Parameter Delta</b> nor the <b>Aligned · Base EAS</b> shield. '
+                f'Pacta observed this difference within 48 hours of an on-chain change, so it reads as changed on chain recently with '
+                f'documents not yet updated, not as a protocol misdescribing itself. {E(CORR.recent_change_rule())} {E(SELF_CORRECTION)}</p>'
+                + (f'<p class="s">{E(c["explanatorySentence"])}</p>' if c.get("explanatorySentence") else "")
+                + f'<p class="s">Embed this badge (it updates when the status changes):</p>{badge_embed(name, slug, tier)}'
+                f'<p class="s">Badge: <code>{E(BASE_URL)}/badges/{E(slug)}.svg</code> · live: <code>{E(live)}</code>.</p></section>\n')
     if tier in ("unresolved", "docs_updated"):
         c = CORR.get(slug) or {}
         why = ("Pacta's comparison was resolved on the documentation side: the current documentation names the controller Pacta "
@@ -2612,6 +2643,7 @@ def protocol_page(name, entries, idx, radar, digest=None, slug=None):
     corr_t = CORR.get(slug) or {}
     tier = ("rpc_observed" if pinned else
             ("docs_updated" if corr_t.get("subPill") else "unresolved") if corr_t.get("status") == "unresolved" else
+            "recent_change" if corr_t.get("status") == "recent_change" else
             ("aligned" if is_aligned_page(entries) else "parameter_delta"))
     badge_html = badge_section(name, slug, tier)
     if is_aligned_page(entries):
@@ -2672,7 +2704,8 @@ def protocols_index_page(idx, sp=None):
 
     g = {k: sum(x["grade"] == k for x in cards.values()) for k in GRADE_UI}
     n_chain = {ch: sum(any(e.get("chain", "ethereum") == ch for e in v["entries"]) for v in sp.values()) for ch in ("ethereum", "base")}
-    status = [("all", "All", len(sp)), ("delta", "Deltas", g["delta"]), ("unresolved", "Unresolved", g["unresolved"]),
+    status = [("all", "All", len(sp)), ("delta", "Deltas", g["delta"]), ("recent_change", "Changed recently", g["recent_change"]),
+              ("unresolved", "Unresolved", g["unresolved"]),
               ("protective", "Protective", g["protective"]), ("aligned", "Aligned", g["aligned"]), ("observed", "Observed", g["observed"])]
     chain_pills = [("all", "All chains", len(sp)), ("ethereum", "Ethereum", n_chain["ethereum"]), ("base", "Base", n_chain["base"])]
     group = lambda kind, label, pills: (f'<div class="seg" data-slot="toggle-group" role="group" aria-label="{label}" data-pgroup="{kind}"><span class="seg-l">{label}</span>'
@@ -2755,11 +2788,11 @@ HOME_H1 = "Protocol docs drift. The chain doesn’t."
 HOME_EYEBROW = "For DeFi risk curators & diligence teams"
 HOME_SUB = ("Pacta reads who can upgrade, pause or change {n} DeFi protocols on Ethereum and Base, and flags where that differs from their "
             "docs. Every finding is pinned to a block and attested onchain.")
-# v4.7 W1: the homepage previews 8 high-signal protocols, by severity: adverse deltas first, then one protective and two aligned
+# v4.7 W1: the homepage previews 8 high-signal protocols, by severity: clearer differences first, then one protective and two aligned
 # references (the grades come from the data; build_site asserts the order). /scorecards/ and /protocols/ keep all of them.
 FLAGSHIP = ["stader-labs-ethx", "yo-protocol", "moonwell-lending-base", "ethena-usde-susde", "axelar-network",
             "ethena-usdtb", "aave-v3-gho", "eigenlayer-core"]
-GRADE_RANK = {"delta": 0, "unresolved": 1, "protective": 2, "aligned": 3, "observed": 4}
+GRADE_RANK = {"delta": 0, "recent_change": 1, "unresolved": 2, "protective": 3, "aligned": 4, "observed": 5}
 # (slug, record id, label, "docs say", "chain says", tokens asserted in the documented / observed evidence)
 # (slug, record id, label, "docs say", "chain says", tokens asserted in the documented / observed evidence)
 RECEIPTS = [
@@ -2863,7 +2896,8 @@ def scorecards_section(cards, prefix="", full=False, heading="h2"):
     rows = "".join(sc_row(c, prefix, short=not full, mobile_more=not full and i >= MOBILE_FIRST_ROWS) for i, c in enumerate(shown))
     n = len(cards)
     g = {k: sum(c["grade"] == k for c in cards) for k in GRADE_UI}
-    filt = [("all", "All", n), ("delta", "Deltas", g["delta"]), ("unresolved", "Unresolved", g["unresolved"]), ("protective", "Protective", g["protective"]),
+    filt = [("all", "All", n), ("delta", "Deltas", g["delta"]), ("recent_change", "Changed recently", g["recent_change"]),
+            ("unresolved", "Unresolved", g["unresolved"]), ("protective", "Protective", g["protective"]),
             ("aligned", "Aligned", g["aligned"]), ("observed", "Observed", g["observed"])]
     pills = "".join(f'<button data-slot="toggle-group-item" type="button" data-sc-f="{k}" aria-pressed="{"true" if k == "all" else "false"}">'
                     f'{lbl} <span class="num">({cnt})</span></button>' for k, lbl, cnt in filt)
@@ -2874,7 +2908,7 @@ def scorecards_section(cards, prefix="", full=False, heading="h2"):
     head_html = (f'<div class="sec-head"><{heading}>Protocol scorecards</{heading}><p class="aside">Docs vs chain, a five-factor control-plane '
                  f'rosette and the main difference for each of {n} protocols. Select a row for the evidence.</p></div>' if full else
                  f'<div class="sec-head"><{heading}>Protocol scorecards</{heading}><p class="aside">{len(shown)} of {n} protocols, highest signal '
-                 f'first: adverse deltas, then protective and aligned references. Search or filter to load all {n}.</p></div>')
+                 f'first: clearer differences first, then protective and aligned references. Search or filter to load all {n}.</p></div>')
     intro_line = delta_line({"delta": g["delta"], "protective": g["protective"], "protocols": n}) if full else ""   # v4.5.1 "36 of 90"
     return f"""<section class="sec" id="scorecards"><div class="wrap">
 {head_html}{intro_line}
@@ -4268,12 +4302,13 @@ def site_numbers(idx, cards=None, pinned=None):
     pinned = load_pinned() if pinned is None else pinned
     cards = scorecards(idx, pinned) if cards is None else cards
     c = counts(idx)
-    g = {k: sum(x["grade"] == k for x in cards) for k in ("delta", "unresolved", "protective", "aligned", "observed")}
+    g = {k: sum(x["grade"] == k for x in cards) for k in ("delta", "recent_change", "unresolved", "protective", "aligned", "observed")}
     eas = sum(1 for x in cards if x["easAttested"])
     n = len(cards)
     assert n == sum(g.values()) == eas + g["observed"], (n, g, eas)
     assert g["observed"] == sum(1 for x in cards if not x["easAttested"]), "observed grade = RPC-observed protocols"
-    res = {"protocols": n, "eas_protocols": eas, "observed": g["observed"], "delta": g["delta"], "unresolved": g["unresolved"],
+    res = {"protocols": n, "eas_protocols": eas, "observed": g["observed"], "delta": g["delta"], "recent_change": g["recent_change"],
+           "unresolved": g["unresolved"],
            "protective": g["protective"],
            "aligned": g["aligned"], "checks": c["records"], "batches": c["eas_n"], "sprints": c["sprints"],
            "observed_records": len(pinned["entries"])}
@@ -4281,7 +4316,8 @@ def site_numbers(idx, cards=None, pinned=None):
     return res
 
 
-GRADE_UI = {"delta": ("Delta", "warning"), "unresolved": ("Unresolved", "outline"), "protective": ("Protective", "info"),
+GRADE_UI = {"delta": ("Delta", "warning"), "recent_change": ("Changed recently", "info"), "unresolved": ("Unresolved", "outline"),
+            "protective": ("Protective", "info"),
             "aligned": ("Aligned", "neutral"), "observed": ("Observed", "outline")}
 
 
@@ -4354,15 +4390,17 @@ def proof_card(idx, prefix=""):
 
 
 def delta_line(s):
-    """v4.5.1: one line reconciling the tiles: protocols whose docs and chain differ = adverse deltas + protective deltas (from the data)."""
-    return (f'<p class="delta-line" data-delta-line>{s["delta"] + s["protective"]} of {s["protocols"]} protocols differ from their docs: '
-            f'{s["delta"]} adverse, {s["protective"]} protective.</p>')
+    """One line reconciling the tiles: the independent four-way classification of the historically flagged comparisons (from
+    tools/scorecard_corrections.json; never "adverse") plus the protective cases (from the data)."""
+    return (f'<p class="delta-line" data-delta-line>Across the {CORR.flagged_total()} historically flagged comparisons: '
+            f'{CORR.breakdown_text()} — plus {s["protective"]} protective cases where the chain is stricter than documented.</p>')
 
 
 def stats_cards(idx, cards):
     s = site_numbers(idx, cards)
     items = [(s["protocols"], "Protocols scored", f'{s["eas_protocols"]} Base-EAS attested · {s["observed"]} RPC-observed'),
-             (s["delta"], "Deltas", "Adverse: chain looser than docs"),
+             (CORR.breakdown()["clearWeaker"], "Weaker than documented",
+              "Plus " + CORR.breakdown_short().split(" · ", 1)[1]),
              (s["protective"], "Protective", "Chain stricter than the docs"),
              (s["checks"], "Attested checks", f'Across {s["batches"]} Base EAS batch attestations')]
     return ('<div class="stats" data-proof>' + "".join(
@@ -4675,8 +4713,9 @@ def live_checker_note(idx, s):
             f'storage: who can upgrade or change it, through which controller, and how fast. A Docs-vs-chain status is different: it compares '
             f'everything a protocol documents about its control plane with every record Pacta has pinned for it, across many contracts. A '
             f'protocol can be Delta while one of its contracts scores 0, and an Aligned protocol can include a contract a multisig can change. '
-            f'Across the catalog, {s["delta"]} of the {s["protocols"]} protocols carry at least one adverse docs-vs-chain delta ({n_pd} parameter-level deltas across '
-            f'{s["checks"]} attested checks), and {s["protective"]} carry protective deltas where the chain is stricter than documented.')
+            f'Across the catalog, {s["delta"]} of the {s["protocols"]} protocols carry a Delta status ({n_pd} parameter-level differences across '
+            f'{s["checks"]} attested checks); of the {CORR.flagged_total()} historically flagged comparisons, {CORR.breakdown_text()}; and '
+            f'{s["protective"]} carry protective deltas where the chain is stricter than documented.')
 
 
 def methodology_page(idx):
@@ -4685,6 +4724,9 @@ def methodology_page(idx):
     s = site_numbers(idx)
     status_rows = [("Aligned", "neutral", "The published documentation matches the sampled onchain controls. It says the docs are accurate, not that the protocol is low-risk.", s["aligned"]),
                    ("Delta", "warning", "Docs and chain differ: the live controls are looser than, or different from, what the protocol documents.", s["delta"]),
+                   ("Changed recently", "info", "Changed on chain recently; documents not yet updated. " + CORR.recent_change_rule(), s["recent_change"]),
+                   ("Unresolved", "outline", "Observed on chain, but the comparison does not establish that a documented commitment is broken "
+                    "(the scope of the documentation, or what the observed parameter implies, is not verified). Never Delta, never Aligned.", s["unresolved"]),
                    ("Protective", "info", "Docs and chain differ in the safe direction: the live controls are stricter than documented.", s["protective"]),
                    ("Observed", "outline", "The onchain control plane is pinned at a finalized block over RPC; the documentation has not been compared yet.", s["observed"])]
     status = "".join(f'<tr><td>{U.badge(k, v, cls="grade")}</td><td>{E(d)}</td><td class="num">{n}</td></tr>' for k, v, d, n in status_rows)
@@ -4734,7 +4776,7 @@ def methodology_page(idx):
          f'pinned over RPC and reproducible with <code>cast</code>, but not attested yet. Machine-readable: '
          f'<a href="../api/v1/scorecards.json">scorecards.json</a>, <a href="../api/v1/index.json">index.json</a>, '
          f'<a href="../api/v1/rpc-pinned.json">rpc-pinned.json</a>.</p>'),
-        ("independence", "Independence policy", f'<p>{E(EDITORIAL_FIREWALL)} {E(EDITORIAL_INDEPENDENCE)}</p>'
+        ("independence", "Independence policy", f'<p>{E(EDITORIAL_FIREWALL)} {E(EDITORIAL_INDEPENDENCE)} {E(SELF_CORRECTION)}</p>'
          '<p><b>Auditor referrals.</b> When code changes are needed, Pacta can refer a team to an independent smart-contract auditor, under '
          'a 15% referral partnership with the audit firm. Referrals never influence docs-vs-chain status: a referred protocol is re-read at a '
          'finalized block like every other, and its status follows the onchain and documentation evidence only.</p>'
@@ -4871,6 +4913,8 @@ def _effective_wallet_status(it, card):
     g = (card or {}).get("grade", "").lower()
     cl = (it or {}).get("classification", "")
     changed = ((it or {}).get("whatDiffers") or {}).get("changed") or []
+    if g in CORR.NEUTRAL:     # Unresolved / Changed recently: the attested classification stands, never shown as a DELTA gap
+        return ("UNRESOLVED" if g == "unresolved" else "CHANGED RECENTLY"), cl or "parameter_delta"
     if g == "delta" or cl == "parameter_delta" or any(c.get("classification") == "parameter_delta" for c in changed):
         return "DELTA", "parameter_delta"
     if g == "protective" or cl == "protective_delta" or any(c.get("classification") == "protective_delta" for c in changed):
@@ -4973,8 +5017,9 @@ def _curator_item_row(it, tone="aligned"):
     blk = it.get("pinnedBlock")
     uid = (it.get("baseEasUids") or [""])[0]
     addr = it.get("primaryContract") or ""
-    unres = it.get("grade") == "UNRESOLVED"     # never an adverse gap, never aligned: the neutral tone
-    pill_lbl = ("UNRESOLVED" if unres else "ADVERSE GAP" if tone == "gap" else
+    # Unresolved / Changed recently: never a flagged gap, never aligned: the neutral tone
+    unres = it.get("grade") in ("UNRESOLVED", "CHANGED RECENTLY")
+    pill_lbl = (it["grade"] if unres else "FLAGGED" if tone == "gap" else
                 ("PROTECTIVE" if it.get("grade") == "PROTECTIVE" else ("OBSERVED" if it.get("grade") == "OBSERVED" else "ALIGNED")))
     pill_tone = ("observed" if unres else "gap" if tone == "gap" else
                  ("protective" if it.get("grade") == "PROTECTIVE" else ("observed" if it.get("grade") == "OBSERVED" else "aligned")))
@@ -5025,6 +5070,8 @@ def curators_page(idx):
             w_badges = f'<span class="pf-st-pill" data-tone="aligned">{wc["aligned_or_protective"]} ALIGNED</span>'
             if wc.get("delta", 0) > 0:
                 w_badges += f' <span class="pf-st-pill" data-tone="gap">{wc["delta"]} GAP</span>'
+            if wc.get("recent_change", 0) > 0:
+                w_badges += f' <span class="pf-st-pill" data-tone="observed">{wc["recent_change"]} CHANGED RECENTLY</span>'
             if wc.get("unresolved", 0) > 0:
                 w_badges += f' <span class="pf-st-pill" data-tone="observed">{wc["unresolved"]} UNRESOLVED</span>'
             if wc.get("observed", 0) > 0:
@@ -5033,7 +5080,7 @@ def curators_page(idx):
             w_badges = '<span class="pf-st-pill" data-tone="observed">DIRECT MARKET CURATION</span>'
 
         u_badges = (f'<span class="pf-st-pill" data-tone="aligned">{uc["aligned_or_protective"]} ALIGNED</span> '
-                    f'<span class="pf-st-pill" data-tone="gap">{uc["adverse_gaps_delta"]} ADVERSE GAPS</span>'
+                    f'<span class="pf-st-pill" data-tone="gap">{uc["adverse_gaps_delta"]} FLAGGED</span>'
                     + (f' <span class="pf-st-pill" data-tone="observed">{uc["unresolved"]} UNRESOLVED</span>' if uc.get("unresolved") else ""))
 
         short_insight = clean_excerpt(c["curator_exposure_insight"], 145)
@@ -5106,7 +5153,9 @@ def curators_page(idx):
         f'<h1>Wrapper vaults are often Aligned. Collateral risk sits one layer deeper.</h1>'
         f'<p class="lede">Pacta reconciles published security documentation against block-pinned Ethereum &amp; Base storage across '
         f'{totals["indexed_protocols"]} protocols ({totals["base_eas_attested_protocols"]} Base-EAS attested · '
-        f'{totals["grades_breakdown"]["DELTA_adverse_gaps"]} verified adverse control-plane gaps). Inspect how direct MetaMorpho, '
+        f'{CORR.flagged_total()} historically flagged comparisons: {CORR.breakdown()["clearWeaker"]} weaker than documented, '
+        f'{CORR.breakdown()["needsExplanation"]} needing explanation, {CORR.breakdown()["bookkeeping"]} bookkeeping, '
+        f'{CORR.breakdown()["unresolved"]} unresolved). Inspect how direct MetaMorpho, '
         f'BoringVault, ERC-4626, and treasury wrappers compare against their downstream RWA, LST, and lending collateral markets.</p>'
         f'<div class="cur-hero-ctas">'
         + U.button("Scan Any Safe", href="../scan/", variant="default", size="lg", attrs='data-cta="curators_scan"')
@@ -5115,7 +5164,8 @@ def curators_page(idx):
         f'<div class="cur-stats" aria-label="Curator matrix totals">'
         f'<div class="cur-stat"><b>{len(curators)}</b><span>Curator &amp; Allocator Stacks</span></div>'
         f'<div class="cur-stat"><b>{totals["base_eas_attested_protocols"]}</b><span>Base-EAS Attested Protocols</span></div>'
-        f'<div class="cur-stat"><b class="cur-amber">{totals["grades_breakdown"]["DELTA_adverse_gaps"]}</b><span>Verified Adverse Gaps</span></div>'
+        f'<div class="cur-stat"><b class="cur-amber">{CORR.breakdown()["clearWeaker"]}</b><span>Weaker Than Documented '
+        f'(of {CORR.flagged_total()} Flagged)</span></div>'
         f'<div class="cur-stat"><b>0</b><span>Paid Grades · Pure Evidence</span></div>'
         f'</div></div>'
         f'<div class="tbl-wrap cur-tbl-wrap" id="curator-matrix"><table class="tbl cur-tbl">'

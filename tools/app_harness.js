@@ -1716,7 +1716,7 @@ async function miniAppScenario() {
     && p.document.getElementById("ma-root").getAttribute("data-eip5792") === "true"
     && /Coinbase Wallet Ready/.test(p.document.getElementById("ma-wallet-pill").textContent);
 
-  // 2. Instant Free Check: ALIGNED (USDC preset), ADVERSE DELTA (Moonwell preset), UNINDEXED (custom 0x...)
+  // 2. Instant Free Check: ALIGNED (USDC preset), DOCUMENTATION DIFFERENCE (Moonwell preset), UNINDEXED (custom 0x...)
   const presets = p.document.querySelectorAll("[data-ma-preset]");
   const usdcPreset = presets.find((b) => b.getAttribute("data-slug") === "circle-usdc");
   const mwPreset = presets.find((b) => b.getAttribute("data-slug") === "moonwell-lending-base");
@@ -1728,7 +1728,7 @@ async function miniAppScenario() {
 
   click(mwPreset);
   for (let i = 0; i < 6; i++) await flush();
-  const deltaOk = p.document.getElementById("ma-verdict").getAttribute("data-ma-status") === "ADVERSE DELTA"
+  const deltaOk = p.document.getElementById("ma-verdict").getAttribute("data-ma-status") === "DOCUMENTATION DIFFERENCE"
     && p.document.getElementById("ma-v-badge").hidden === false;
 
   p.document.getElementById("ma-address").value = UNIDX;
@@ -1969,7 +1969,7 @@ async function walletExposureScenario() {
   const safeBadge = d.querySelector("[data-wallet-safe-badge]");
   const topGap = d.querySelector("[data-wallet-top-gap]");
   const b2bBar = d.querySelector("[data-wallet-b2b]");
-  const demoOk = coldOk && !!hl && hl.textContent.includes("Found 4 active DeFi positions") && hl.textContent.includes("2 ALIGNED, 2 ADVERSE GAPS")
+  const demoOk = coldOk && !!hl && hl.textContent.includes("Found 4 active DeFi positions") && hl.textContent.includes("2 ALIGNED, 2 FLAGGED")
     && !!safeBadge && safeBadge.textContent.includes("Gnosis Safe 3-of-5")
     && !!topGap && topGap.getAttribute("data-wallet-top-gap") === "yo-protocol"
     && !!b2bBar && d.getElementById("scan-upgrade").hidden === false

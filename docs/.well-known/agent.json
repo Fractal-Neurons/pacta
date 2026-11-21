@@ -121,7 +121,7 @@
    ]
   },
   {
-   "description": "Read-only Multicall3 balanceOf + Safe custody scan across Ethereum & Base indexed DeFi protocols: portfolio risk score, shortest exit window, aligned vs adverse gap breakdown, and cross-position contagion.",
+   "description": "Read-only Multicall3 balanceOf + Safe custody scan across Ethereum & Base indexed DeFi protocols: portfolio risk score, shortest exit window, aligned vs flagged breakdown, and cross-position contagion.",
    "examples": [
     "GET https://pacta-x402.pacta.workers.dev/v1/check/wallet-exposure?address=0x...",
     "MCP tool pacta_scan_wallet_exposure {\"address\": \"0x...\", \"chain\": \"all\"}"

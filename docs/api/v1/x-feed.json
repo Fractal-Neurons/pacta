@@ -1,20 +1,21 @@
 {
  "schema": "pacta.x_feed.v1",
- "description": "Pacta findings ready to post on X: one item per published protocol (docs-vs-chain delta, unresolved scope, protective delta, aligned baseline or RPC-observed) plus active timelock operations from the radar. mainPostText has no links; replyPostText carries the receipt page and the Base EAS attestation. feedId is stable: post each id once.",
+ "description": "Pacta findings ready to post on X: one item per published protocol (docs-vs-chain delta, changed recently, unresolved scope, protective delta, aligned baseline or RPC-observed) plus active timelock operations from the radar. mainPostText has no links; replyPostText carries the receipt page and the Base EAS attestation. feedId is stable: post each id once.",
  "generatedFrom": {
   "site": {
-   "scorecards.json": "e1015a3998d0e2e2c363f102586f665135ba8680385b56b2457d316f3584d7a2",
-   "index.json": "bbb8df53cc3e404b3d135e2b20e37298cd739664acad5cfd9e95a85fe95abe04",
+   "scorecards.json": "079ec7b8afa38706207fcb16ae7053febc4abc4a10ce70584dd129f9ab361481",
+   "index.json": "dcd3f01f6506793b828761e552dbefa30f3d1005ec29861087dcc70baed0ef73",
    "rpc-pinned.json": "108919b7ce46d2c3e09943bbd5dad4344ee375a275c6056f4b391a57ee11a418",
    "radar.json": "16d9637777dc1df9babb767d0ac31c4e1fe8c339332ea815cc32db745d097e1d",
-   "protocols.json": "460640035cd2baaeae02c7bf4ab9e6db15975c82910c6983bef05390ab14fd14"
+   "protocols.json": "79cebfc7f1a25679e57be6f47f952cd0235a5fa5e942dd351f25e0d35463a336"
   },
   "xHandles": "7cfe44213e579618486dd28fee3bbc8b9205bb82843823ed2dc931314c1598c3",
   "radarBlock": 26457377,
   "radarBlockBase": 59999187
  },
  "counts": {
-  "adverse_delta": 50,
+  "adverse_delta": 49,
+  "recent_change": 1,
   "unresolved_scope": 6,
   "protective_delta": 7,
   "radar_timelock": 3,
@@ -580,9 +581,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "BIO token contract is not a proxy (non-upgradeable); one MINTER_ROLE holder is an ERC-1967 Wormhole NttManager proxy"
     },
     {
      "key": "timelock",
@@ -1943,66 +1944,6 @@
    "priority": 32
   },
   {
-   "feedId": "finding:yearn-v3:S28:adverse_delta",
-   "slug": "yearn-v3",
-   "protocolName": "Yearn V3",
-   "xHandle": "@yearnfi",
-   "xUrl": "https://x.com/yearnfi",
-   "kind": "adverse_delta",
-   "chain": "ethereum",
-   "pinnedBlock": 26441165,
-   "blockHash": "0x5182be2c61af5f48ed2ec43d3c177dedad257c4e966a7e384120829de73901d9",
-   "easUid": "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
-   "sprint": 28,
-   "recordId": "yearn-v3-ychad-safe-signers-s28",
-   "summaryShort": "Sampled RoleManager uses a 7-day timelock; yChad signer roster differs (6-of-9)",
-   "rosette": [
-    {
-     "key": "upgrade",
-     "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
-    },
-    {
-     "key": "timelock",
-     "label": "Timelock floor",
-     "state": "g",
-     "cue": "S",
-     "value": "7d minimum enforced delay on sampled timelocked surfaces"
-    },
-    {
-     "key": "quorum",
-     "label": "Signer quorum",
-     "state": "g",
-     "cue": "S",
-     "value": "Lowest controlling quorum: 3-of-6"
-    },
-    {
-     "key": "emergency",
-     "label": "Emergency / freeze scope",
-     "state": "n",
-     "cue": "—",
-     "value": "No pause / freeze authority in the published records"
-    },
-    {
-     "key": "parity",
-     "label": "Docs-vs-chain parity",
-     "state": "a",
-     "cue": "W",
-     "value": "Documentation differs from the chain (parameter delta)"
-    }
-   ],
-   "docsSay": "a yChad signer roster that no longer matches the Safe",
-   "chainSays": "a 6-of-9 yChad Safe without one documented signer; a sampled RoleManager uses a 7-day timelock",
-   "mainPostText": "Yearn V3 @yearnfi. Docs say: A yChad signer roster that no longer matches the Safe. On-chain at Ethereum block #26,441,165: A 6-of-9 yChad Safe without one documented signer; a sampled RoleManager uses a 7-day timelock. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/yearn-v3/ · Base attestation: https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
-   "cardFilename": "yearn-v3.png",
-   "receiptUrl": "https://pacta.wtf/protocols/yearn-v3/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
-   "priority": 33
-  },
-  {
    "feedId": "finding:zircuit-staking:S28:adverse_delta",
    "slug": "zircuit-staking",
    "protocolName": "Zircuit Staking",
@@ -2060,7 +2001,7 @@
    "cardFilename": "zircuit-staking.png",
    "receiptUrl": "https://pacta.wtf/protocols/zircuit-staking/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
-   "priority": 34
+   "priority": 33
   },
   {
    "feedId": "finding:treehouse-tree-teth:S27:adverse_delta",
@@ -2120,7 +2061,7 @@
    "cardFilename": "treehouse-tree-teth.png",
    "receiptUrl": "https://pacta.wtf/protocols/treehouse-tree-teth/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x5c12867816bee7d00c13412cf7ec67c00b7d42f3020643ab2a2ca577a28de424",
-   "priority": 35
+   "priority": 34
   },
   {
    "feedId": "finding:beefy-finance-base:S26:adverse_delta",
@@ -2180,7 +2121,7 @@
    "cardFilename": "beefy-finance-base.png",
    "receiptUrl": "https://pacta.wtf/protocols/beefy-finance-base/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5",
-   "priority": 36
+   "priority": 35
   },
   {
    "feedId": "finding:yieldnest:S26:adverse_delta",
@@ -2240,7 +2181,7 @@
    "cardFilename": "yieldnest.png",
    "receiptUrl": "https://pacta.wtf/protocols/yieldnest/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x6692c36731ecd514fb7a92fe3de0a6770b67f68f55eece26faa669c2c84b3a08",
-   "priority": 37
+   "priority": 36
   },
   {
    "feedId": "finding:axelar-network:S25:adverse_delta",
@@ -2300,7 +2241,7 @@
    "cardFilename": "axelar-network.png",
    "receiptUrl": "https://pacta.wtf/protocols/axelar-network/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x1c379ef9f845a2affa9c42715ba2b1b4b2f750b71b4edf9c50d0e1ae739e11ff",
-   "priority": 38
+   "priority": 37
   },
   {
    "feedId": "finding:bedrock-unieth:S25:adverse_delta",
@@ -2360,7 +2301,7 @@
    "cardFilename": "bedrock-unieth.png",
    "receiptUrl": "https://pacta.wtf/protocols/bedrock-unieth/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x1c379ef9f845a2affa9c42715ba2b1b4b2f750b71b4edf9c50d0e1ae739e11ff",
-   "priority": 39
+   "priority": 38
   },
   {
    "feedId": "finding:obol-network:S24:adverse_delta",
@@ -2420,7 +2361,7 @@
    "cardFilename": "obol-network.png",
    "receiptUrl": "https://pacta.wtf/protocols/obol-network/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x61c2970c176b85ab604e6b565c5f050a7176b62e725d449e8d27d700365283d6",
-   "priority": 40
+   "priority": 39
   },
   {
    "feedId": "finding:uniswap-governance-timelock:S23:adverse_delta",
@@ -2480,7 +2421,7 @@
    "cardFilename": "uniswap-governance-timelock.png",
    "receiptUrl": "https://pacta.wtf/protocols/uniswap-governance-timelock/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x435a5212e2490cd6024859f474dbbd897752b24985480413301d7573cb195801",
-   "priority": 41
+   "priority": 40
   },
   {
    "feedId": "finding:stake-dao:S22:adverse_delta",
@@ -2540,7 +2481,7 @@
    "cardFilename": "stake-dao.png",
    "receiptUrl": "https://pacta.wtf/protocols/stake-dao/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5",
-   "priority": 42
+   "priority": 41
   },
   {
    "feedId": "finding:yo-protocol:S22:adverse_delta",
@@ -2600,7 +2541,7 @@
    "cardFilename": "yo-protocol.png",
    "receiptUrl": "https://pacta.wtf/protocols/yo-protocol/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5",
-   "priority": 43
+   "priority": 42
   },
   {
    "feedId": "finding:resupply:S22:adverse_delta",
@@ -2660,7 +2601,7 @@
    "cardFilename": "resupply.png",
    "receiptUrl": "https://pacta.wtf/protocols/resupply/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5",
-   "priority": 44
+   "priority": 43
   },
   {
    "feedId": "finding:aerodrome-finance-base:S21:adverse_delta",
@@ -2720,7 +2661,7 @@
    "cardFilename": "aerodrome-finance-base.png",
    "receiptUrl": "https://pacta.wtf/protocols/aerodrome-finance-base/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0xaddd478e0a488405a28720e11fed8d1942853dbb36fc75bb5a0725b83a460ad6",
-   "priority": 45
+   "priority": 44
   },
   {
    "feedId": "finding:puffer-finance-pufeth:S20:adverse_delta",
@@ -2780,7 +2721,7 @@
    "cardFilename": "puffer-finance-pufeth.png",
    "receiptUrl": "https://pacta.wtf/protocols/puffer-finance-pufeth/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0xe712dd31d79ab492e2e64eb5847396651dee81daa9f895ead45548e97f1a2eb7",
-   "priority": 46
+   "priority": 45
   },
   {
    "feedId": "finding:rocket-pool-reth:S19:adverse_delta",
@@ -2840,7 +2781,7 @@
    "cardFilename": "rocket-pool-reth.png",
    "receiptUrl": "https://pacta.wtf/protocols/rocket-pool-reth/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0xa04d9c98873fce6fffb60fe535510092f22284f3afeeb78e36e4a0c25d5ea928",
-   "priority": 47
+   "priority": 46
   },
   {
    "feedId": "finding:moonwell-lending-base:S18:adverse_delta",
@@ -2900,7 +2841,7 @@
    "cardFilename": "moonwell-lending-base.png",
    "receiptUrl": "https://pacta.wtf/protocols/moonwell-lending-base/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x105ea2849a5cd9ef601ae565e6b0adf288884771c8ac82c1c3d0a87aa789eb4f",
-   "priority": 48
+   "priority": 47
   },
   {
    "feedId": "finding:ethena-usde-susde:S14:adverse_delta",
@@ -2960,7 +2901,7 @@
    "cardFilename": "ethena-usde-susde.png",
    "receiptUrl": "https://pacta.wtf/protocols/ethena-usde-susde/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779",
-   "priority": 49
+   "priority": 48
   },
   {
    "feedId": "finding:stader-labs-ethx:S12:adverse_delta",
@@ -3020,7 +2961,7 @@
    "cardFilename": "stader-labs-ethx.png",
    "receiptUrl": "https://pacta.wtf/protocols/stader-labs-ethx/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x7caae9c22c86ae171392def07dce83fa5da6fbf904b1ba9b5ff66a5021b16de9",
-   "priority": 50
+   "priority": 49
   },
   {
    "feedId": "finding:curve-finance-crvusd:S11:adverse_delta",
@@ -3080,7 +3021,7 @@
    "cardFilename": "curve-finance-crvusd.png",
    "receiptUrl": "https://pacta.wtf/protocols/curve-finance-crvusd/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x754edd7612258b755ff2e56903243d1f8867bad53c29ce3febb5ed9114005e42",
-   "priority": 51
+   "priority": 50
   },
   {
    "feedId": "finding:gearbox-v3-v3-1:S11:adverse_delta",
@@ -3140,7 +3081,7 @@
    "cardFilename": "gearbox-v3-v3-1.png",
    "receiptUrl": "https://pacta.wtf/protocols/gearbox-v3-v3-1/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x754edd7612258b755ff2e56903243d1f8867bad53c29ce3febb5ed9114005e42",
-   "priority": 52
+   "priority": 51
   },
   {
    "feedId": "finding:ondo-finance-ousg-flux-finance:S10:adverse_delta",
@@ -3200,7 +3141,7 @@
    "cardFilename": "ondo-finance-ousg-flux-finance.png",
    "receiptUrl": "https://pacta.wtf/protocols/ondo-finance-ousg-flux-finance/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0xfdd83c8091ef6e8ffe67e8a55a78892fcfbb1092683b21ff2d85f8cc09750e6c",
-   "priority": 53
+   "priority": 52
   },
   {
    "feedId": "finding:usual-money-usd0-usd0:S8:adverse_delta",
@@ -3260,7 +3201,7 @@
    "cardFilename": "usual-money-usd0-usd0.png",
    "receiptUrl": "https://pacta.wtf/protocols/usual-money-usd0-usd0/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2",
-   "priority": 54
+   "priority": 53
   },
   {
    "feedId": "finding:maple-finance-v2-syrup:S6:adverse_delta",
@@ -3320,7 +3261,7 @@
    "cardFilename": "maple-finance-v2-syrup.png",
    "receiptUrl": "https://pacta.wtf/protocols/maple-finance-v2-syrup/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x749d96e1a3d214a4ab66c528ca12c84dce085fa138dc370dd0eb817d890f09fa",
-   "priority": 55
+   "priority": 54
   },
   {
    "feedId": "finding:fluid-instadapp:S5:adverse_delta",
@@ -3380,7 +3321,7 @@
    "cardFilename": "fluid-instadapp.png",
    "receiptUrl": "https://pacta.wtf/protocols/fluid-instadapp/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x804289d4357b0a8d5a360911ec450c13ca36c4422d1e811c4c7040ef7d2628e5",
-   "priority": 56
+   "priority": 55
   },
   {
    "feedId": "finding:mellow-protocol-lido-earn:S4:adverse_delta",
@@ -3440,6 +3381,66 @@
    "cardFilename": "mellow-protocol-lido-earn.png",
    "receiptUrl": "https://pacta.wtf/protocols/mellow-protocol-lido-earn/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0xa26f81b0e68248c7f286527286b3d2e6b299502d53f4dfbc4397df7d22262986",
+   "priority": 56
+  },
+  {
+   "feedId": "finding:yearn-v3:S28:recent_change",
+   "slug": "yearn-v3",
+   "protocolName": "Yearn V3",
+   "xHandle": "@yearnfi",
+   "xUrl": "https://x.com/yearnfi",
+   "kind": "recent_change",
+   "chain": "ethereum",
+   "pinnedBlock": 26441165,
+   "blockHash": "0x5182be2c61af5f48ed2ec43d3c177dedad257c4e966a7e384120829de73901d9",
+   "easUid": "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
+   "sprint": 28,
+   "recordId": "yearn-v3-ychad-safe-signers-s28",
+   "summaryShort": "Sampled RoleManager uses a 7-day timelock; yChad signer roster differs (6-of-9)",
+   "rosette": [
+    {
+     "key": "upgrade",
+     "label": "Upgradeability",
+     "state": "n",
+     "cue": "—",
+     "value": "Upgrade path not in the published records"
+    },
+    {
+     "key": "timelock",
+     "label": "Timelock floor",
+     "state": "g",
+     "cue": "S",
+     "value": "7d minimum enforced delay on sampled timelocked surfaces"
+    },
+    {
+     "key": "quorum",
+     "label": "Signer quorum",
+     "state": "g",
+     "cue": "S",
+     "value": "Lowest controlling quorum: 3-of-6"
+    },
+    {
+     "key": "emergency",
+     "label": "Emergency / freeze scope",
+     "state": "n",
+     "cue": "—",
+     "value": "No pause / freeze authority in the published records"
+    },
+    {
+     "key": "parity",
+     "label": "Docs-vs-chain parity",
+     "state": "n",
+     "cue": "—",
+     "value": "Changed on chain within 48h of pin; re-checked after 72 hours before counting as a documentation gap"
+    }
+   ],
+   "docsSay": "not yet updated after a recent on-chain change; re-checked after 72 hours",
+   "chainSays": "Sampled RoleManager uses a 7-day timelock; yChad signer roster differs (6-of-9)",
+   "mainPostText": "Yearn V3 @yearnfi: Sampled RoleManager uses a 7-day timelock; yChad signer roster differs (6-of-9). On-chain at Ethereum block #26,441,165. Changed on chain recently; documents not yet updated. Re-checked after 72 hours. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/yearn-v3/ · Base attestation: https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
+   "cardFilename": "yearn-v3.png",
+   "receiptUrl": "https://pacta.wtf/protocols/yearn-v3/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
    "priority": 57
   },
   {
@@ -3983,9 +3984,9 @@
     {
      "key": "parity",
      "label": "Docs-vs-chain parity",
-     "state": "a",
-     "cue": "W",
-     "value": "Documentation differs from the chain (parameter delta)"
+     "state": "n",
+     "cue": "—",
+     "value": "Changed on chain within 48h of pin; re-checked after 72 hours before counting as a documentation gap"
     }
    ],
    "docsSay": "Yearn V3 — 8 new strategies added to 6 vaults with max-debt caps",
@@ -4615,9 +4616,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Not upgradeable: the target contract is not a proxy"
     },
     {
      "key": "timelock",
@@ -4735,9 +4736,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Not upgradeable: the target contract is not a proxy"
     },
     {
      "key": "timelock",
@@ -4795,9 +4796,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Not upgradeable: the target contract is not a proxy"
     },
     {
      "key": "timelock",
@@ -4855,9 +4856,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Not upgradeable: the target contract is not a proxy"
     },
     {
      "key": "timelock",
@@ -5035,16 +5036,16 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "a",
-     "cue": "W",
-     "value": "Upgradeable with no enforced delay: no timelock in front of upgrades"
+     "state": "g",
+     "cue": "S",
+     "value": "Not upgradeable: the target contract is not a proxy"
     },
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "a",
-     "cue": "W",
-     "value": "No enforced delay on at least one sampled control surface (0s)"
+     "state": "n",
+     "cue": "—",
+     "value": "No enforced admin delay in the published records"
     },
     {
      "key": "quorum",
@@ -5155,9 +5156,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Not upgradeable: the target contract is not a proxy"
     },
     {
      "key": "timelock",
@@ -5215,9 +5216,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Not upgradeable: the target contract is not a proxy"
     },
     {
      "key": "timelock",
@@ -5275,9 +5276,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Not upgradeable: the target contract is not a proxy"
     },
     {
      "key": "timelock",
@@ -5335,9 +5336,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Not upgradeable: the target contract is not a proxy"
     },
     {
      "key": "timelock",
@@ -5395,9 +5396,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Not upgradeable: the target contract is not a proxy"
     },
     {
      "key": "timelock",
@@ -5455,9 +5456,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Not upgradeable: the target contract is not a proxy"
     },
     {
      "key": "timelock",
@@ -5515,9 +5516,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Not upgradeable: the target contract is not a proxy"
     },
     {
      "key": "timelock",
@@ -5575,9 +5576,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Not upgradeable: the target contract is not a proxy"
     },
     {
      "key": "timelock",
@@ -5635,9 +5636,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Not upgradeable: the target contract is not a proxy"
     },
     {
      "key": "timelock",
@@ -5695,9 +5696,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Not upgradeable: the target contract is not a proxy"
     },
     {
      "key": "timelock",
