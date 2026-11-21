@@ -1,0 +1,13 @@
+{
+  "protocol_slug": "tori-finance",
+  "chain": "ethereum",
+  "surface": "trUSD TIMELOCK_ADMIN_ROLE: current documentation names the same 24-hour controller (0xcd3c…667b) as the retained observation",
+  "prior_documented_reference": "Prior snapshot: 'It holds the Timelock Admin role on the core contracts' (docs.tori.finance/security/roles.md, captured 19 November 2026, naming 0xA952453E39F77108Ee37C1b92de593F1C59A6ef4). Tori Finance's roles page retrieved 21 November 2026 names 0xcd3c66e73abF927EAAF1238aEB5F251b4f2f667b (86,400 seconds), the controller Pacta observed; pending a fresh finalized-block chain read.",
+  "current_official_docs_url": "https://docs.tori.finance/security/roles.md",
+  "current_verbatim_quote": "The timelock is [`0xcd3c66e73abF927EAAF1238aEB5F251b4f2f667b`](https://etherscan.io/address/0xcd3c66e73abF927EAAF1238aEB5F251b4f2f667b)\nand its minimum delay is 86,400 seconds. It holds the Timelock Admin role on the core contracts,",
+  "what_changed": "Official documentation updated the trUSD Timelock Admin controller address from 0xA952453E39F77108Ee37C1b92de593F1C59A6ef4 to 0xcd3c66e73abF927EAAF1238aEB5F251b4f2f667b (86,400 seconds minimum delay).",
+  "archive_url": "https://web.archive.org/web/20260926234633/https://docs.tori.finance/security/roles",
+  "payment_tx_hash": "0x8481905e8b8ce9c61d4f515c826d6187dc960bde95ff30a977ed020f9e2af9b1",
+  "contributor_github": "techstone001",
+  "base_payout_address": "0xA93ccE41173aa8CB545bE922C943726E65a8DAca"
+}
