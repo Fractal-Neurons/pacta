@@ -2892,7 +2892,7 @@ EAS_SCHEMA_VIEW = "https://base.easscan.org/schema/view/0x7ff485bc1159dff3c70eef
 EDITORIAL_FIREWALL = "Pacta never sells grades."
 
 
-HERO_PLACEHOLDER = "Protocol or 0x address…"   # v7 F6: never clips beside the chain selector at 1200 px or 390 px
+HERO_PLACEHOLDER = "Protocol or 0x…"   # v8 G3: 15 characters; never clips at 1200 px or 390 px
 
 
 def hero_checker(examples="", prefix="", cap=None, label="Protocol, token or contract address", cta_variant="default", cta_label="Check protocol",

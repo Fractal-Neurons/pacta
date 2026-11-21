@@ -6,7 +6,7 @@
  },
  "description": "One canonical grade per published protocol (DELTA / CHANGED RECENTLY / UNRESOLVED / PROTECTIVE / ALIGNED / OBSERVED) and a 5-factor control-plane rosette derived deterministically from Pacta's published records (index.json, rpc-pinned.json) and controller facts. A factor the published evidence does not decide is 'n' (not determined); docs-vs-chain parity is 'u' (uncompared) for every RPC-observed protocol. States: g strong, b moderate, a weak, n not determined, u uncompared.",
  "factorCoverage": {
-  "emergency": 25,
+  "emergency": 22,
   "parity": 176,
   "quorum": 177,
   "timelock": 101,
@@ -3419,13 +3419,13 @@
      "value": "Lowest controlling quorum: 3-of-5"
     },
     {
-     "evidence": "bedrock-unibtc-secure-mint-precondition-s30: separate per-asset caps and collateral-transfer checks in _mint() still apply, and uniBTC.mint() (0x004E9C3EF86bc1ca1f0bB5C7662861Ee93350568) performs no PoR …",
+     "evidence": "bedrock-unibtc-secure-mint-precondition-s30: MANAGER_ROLE (setAdequacyRatio / setPoRFeeder) and PAUSER_ROLE are held by 0x9251fd3D79522bB2243a58FFf1dB43E25A495aaB, an account carrying 23-byte EIP-7702 …",
      "evidenceCaption": "Secure Mint precondition: adequacyRatio() 900 (existing supply x 0.9 vs reserves) — Ethereum block #26,449,594",
      "evidenceRecordId": "bedrock-unibtc-secure-mint-precondition-s30",
      "key": "emergency",
      "label": "Emergency / freeze scope",
-     "state": "g",
-     "value": "Pause / freeze authority scoped behind a multi-signer controller (3-of-5)"
+     "state": "n",
+     "value": "PAUSER_ROLE held by 0x9251…5aaB (EIP-7702 delegated account; delegation authority not in the published records)"
     },
     {
      "evidence": null,
@@ -3459,7 +3459,7 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "Bedrock (uniBTC) control-plane rosette: Upgradeability not determined; Timelock floor not determined; Signer quorum strong; Emergency / freeze scope strong; Docs-vs-chain parity weak",
+   "rosetteAria": "Bedrock (uniBTC) control-plane rosette: Upgradeability not determined; Timelock floor not determined; Signer quorum strong; Emergency / freeze scope not determined; Docs-vs-chain parity weak",
    "search": "bedrock (unibtc) bedrock-unibtc liquid restaking bitcoin vault and token (unibtc) with a proof-of-reserve mint check bedrock(unibtc) 0x004e9c3ef86bc1ca1f0bb5c7662861ee93350568 0x029e4fbdaa31de075dd74b2238222a08233978f6 0x047d41f2544b7f63a8e991af2068a363d210d6da 0x9251fd3d79522bb2243a58fff1db43e25a495aab 0xc590d9fb8ee78a0909dff341ccf717000b7b7ff2 0xc9da980ffabbe2bbe15d4734fdae5761b86b5fc3 0xe542919e4b281f10b437f947c8ba224ddfabc716",
    "slug": "bedrock-unibtc",
    "summary_short": "uniBTC mints test 90% of existing supply vs reserves; docs say short reserves revert",
@@ -8201,7 +8201,7 @@
      "value": "DAO Governor (token vote)"
     },
     {
-     "evidence": "ekubo-core-immutable-starknet-owner-s32: it executes only calls consumed as L2 messages from that Governor. The docs mark the V2 EVM deployment deprecated.",
+     "evidence": "ekubo-core-immutable-starknet-owner-s32: The docs mark the V2 EVM deployment deprecated.",
      "evidenceCaption": "Core: not a proxy; owner() is the StarknetOwnerProxy driven by the Starknet Governor — Ethereum block #26,451,608",
      "evidenceRecordId": "ekubo-core-immutable-starknet-owner-s32",
      "key": "emergency",
@@ -9026,13 +9026,13 @@
      "value": "Lowest controlling quorum: 2-of-3"
     },
     {
-     "evidence": "euler-v2-evk-factorygovernor-4d-timelock-s18: its only DEFAULT_ADMIN_ROLE member is TimelockController 0xfb034c1C6c7F42171b2d1Cb8486E0f43ED07A968 (getMinDelay() = 345600s, 4d; PROPOSER_ROLE: 4-of-8 Safe …",
+     "evidence": "euler-v2-evk-factorygovernor-4d-timelock-s18: PAUSE_GUARDIAN_ROLE has 3 members (2-of-6 Safe 0xB1345E7A4D35FB3E6bF22A32B3741Ae74E5Fba27, 0xff217004BdD3A6A592162380dc0E6BbF143291eB …",
      "evidenceCaption": "EVK factory upgradeAdmin = FactoryGovernor behind a 4d TimelockController (DAO 4-of-8 proposes) — Ethereum block #26,421,541",
      "evidenceRecordId": "euler-v2-evk-factorygovernor-4d-timelock-s18",
      "key": "emergency",
      "label": "Emergency / freeze scope",
      "state": "g",
-     "value": "Pause / freeze authority scoped behind a multi-signer controller (2-of-3)"
+     "value": "Pause / freeze authority scoped behind a multi-signer controller (2-of-6)"
     },
     {
      "evidence": null,
@@ -12292,13 +12292,13 @@
      "value": "Lowest controlling quorum: 3-of-5"
     },
     {
-     "evidence": "inception-vault-upgrades-timelock-3d-s32: inLBTCVault_S 0xD496417a50DB34279631e0aF459493Cf9685F529 (implementation 0xb83ad67814BeD3478BB4239a5961391d836fCe4d): ProxyAdmin …",
+     "evidence": "inception-vault-upgrades-timelock-3d-s32: The README lists InstEthVault under deprecated LSTs",
      "evidenceCaption": "Vault upgrades: ProxyAdmins owned by InceptionTimeLock, getMinDelay() 259,200 s — Ethereum block #26,451,608",
      "evidenceRecordId": "inception-vault-upgrades-timelock-3d-s32",
      "key": "emergency",
      "label": "Emergency / freeze scope",
-     "state": "g",
-     "value": "Pause / freeze authority scoped behind a multi-signer controller (3-of-5)"
+     "state": "n",
+     "value": "Pause / freeze authority present; its holder is not determined"
     },
     {
      "evidence": null,
@@ -12332,7 +12332,7 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "InceptionLRT (Isolated Restaking) control-plane rosette: Upgradeability not determined; Timelock floor strong; Signer quorum strong; Emergency / freeze scope strong; Docs-vs-chain parity strong",
+   "rosetteAria": "InceptionLRT (Isolated Restaking) control-plane rosette: Upgradeability not determined; Timelock floor strong; Signer quorum strong; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
    "search": "inceptionlrt (isolated restaking) inceptionlrt-isolated-restaking isolated liquid restaking vaults over eigenlayer (ethereum) inceptionlrt 0x177bff0ad93b8132012f05081a10a0e574fa5f97 0x650bd9dee50e3ee15cbb49749ff6abcf55a8fb1e 0x814cc6b8fd2555845541fb843f37418b05977d8d 0x8e6c8799b542e507bfddca1a424867e885d96e79 0x9bb0f64c5a5e9120f55cde6b15683ff11abc0ed4 0xb81e55e7ee6b286af6abfea4efad83f7ba4d1f1e 0xb83ad67814bed3478bb4239a5961391d836fce4d 0xd496417a50db34279631e0af459493cf9685f529",
    "slug": "inceptionlrt-isolated-restaking",
    "summary_short": "Inception vault upgrades go through its TimelockController (3-day delay), as documented",
@@ -12459,7 +12459,7 @@
      "value": "Upgrade path not in the published records"
     },
     {
-     "evidence": "infinifi-long-timelock-7d-s20: Long Timelock 0x3D18…48a9 getMinDelay() = 604,800 s (7d); Short Timelock 0x4B17…e88c getMinDelay() = 86,400 s (1d)",
+     "evidence": "infinifi-long-timelock-7d-s20: Long Timelock 0x3D18…48a9 getMinDelay() = 604,800 s (7d); Short Timelock 0x4B17…7c32 getMinDelay() = 86,400 s (1d)",
      "evidenceCaption": "Long governance timelock delay: 7 days (Short timelock: 1 day) — Ethereum block #26,425,374",
      "evidenceRecordId": "infinifi-long-timelock-7d-s20",
      "key": "timelock",
@@ -14661,7 +14661,7 @@
      "value": "Lowest controlling quorum: 2-of-3"
     },
     {
-     "evidence": "liquid-collective-lseth-admin-multisig-4of7-s19: the Firewall executor Safe 0xDE55C9dc78f985fE1502484Cb98EBfAB66A56B62 (2-of-3) may call pause() but not unpause() or upgradeTo(address). Implementation RiverV1 …",
+     "evidence": "liquid-collective-lseth-admin-multisig-4of7-s19: the Firewall executor Safe 0xDE55C9dc78f985fE1502484Cb98EBfAB66A56B62 (2-of-3) may call pause() but not unpause() or upgradeTo(address)",
      "evidenceCaption": "River (LsETH) upgrade and admin Firewalls are administered by 4-of-7 Safes — Ethereum block #26,422,243",
      "evidenceRecordId": "liquid-collective-lseth-admin-multisig-4of7-s19",
      "key": "emergency",
@@ -17129,13 +17129,13 @@
      "value": "Lowest controlling quorum: 3-of-5"
     },
     {
-     "evidence": "nexus-mutual-governor-24h-timelock-s18: isEmergencyAdmin() is true for 6 EOAs (the 5 Advisory Board seat holders and 0x6fe2c2643cb5064951fb7dd87fbce4777fb146e3), and a pause needs one admin to propose …",
+     "evidence": "nexus-mutual-governor-24h-timelock-s18: Pause: getPauseConfig() = 0",
      "evidenceCaption": "Governor: 3 Advisory Board votes + 24h timelock; Registry upgrades every module — Ethereum block #26,421,541",
      "evidenceRecordId": "nexus-mutual-governor-24h-timelock-s18",
      "key": "emergency",
      "label": "Emergency / freeze scope",
-     "state": "g",
-     "value": "Pause / freeze authority scoped behind a multi-signer controller (3-of-5)"
+     "state": "n",
+     "value": "Pause / freeze authority present; its holder is not determined"
     },
     {
      "evidence": null,
@@ -17169,7 +17169,7 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "Nexus Mutual control-plane rosette: Upgradeability not determined; Timelock floor moderate; Signer quorum strong; Emergency / freeze scope strong; Docs-vs-chain parity strong",
+   "rosetteAria": "Nexus Mutual control-plane rosette: Upgradeability not determined; Timelock floor moderate; Signer quorum strong; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
    "search": "nexus mutual nexus-mutual discretionary mutual / cover nxm wnxm nexus mutual 0x01bfd82675dbcc7762c84019ca518e701c0cd07e 0x4a5c681ddc32acc6cca51ac17e9d461e6be87900 0x51ad1265c8702c9e96ea61fe4088c2e22ed4418e 0x6fe2c2643cb5064951fb7dd87fbce4777fb146e3 0xcafea2c575550512582090aa06d0a069e7236b9e 0xcafea466bf6defe480cdd54056c020c63b7da830 0xcafea6063d4ec6b045d9676e58897c1f0882ca32",
    "slug": "nexus-mutual",
    "summary_short": "Governance needs 3 Advisory Board votes plus a 24-hour timelock, as documented",
@@ -23618,7 +23618,7 @@
      "value": "Lowest controlling quorum: a single key"
     },
     {
-     "evidence": "steakhouse-usdc-base-timelock-7d-s17: totalAssets() = 102,512,832.83 USDC. Context, not compared with documentation: guardian() = 0x9e0FdDDa790651E6a05CD2dE69e624B94C04eAf5 has no contract code …",
+     "evidence": "steakhouse-usdc-base-timelock-7d-s17: Context, not compared with documentation: guardian() = 0x9e0FdDDa790651E6a05CD2dE69e624B94C04eAf5 has no contract code (eth_getCode = 0x on Base and on Ethereum …",
      "evidenceCaption": "MetaMorpho timelock() = 7d (604800s) — Base block #57,635,450",
      "evidenceRecordId": "steakhouse-usdc-base-timelock-7d-s17",
      "key": "emergency",

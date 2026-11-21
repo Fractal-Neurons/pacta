@@ -3,7 +3,7 @@
  "description": "Pacta findings ready to post on X: one item per published protocol (docs-vs-chain delta, changed recently, docs updated, unresolved scope, protective delta, aligned baseline or RPC-observed) plus active timelock operations from the radar. mainPostText has no links; replyPostText carries the receipt page and the Base EAS attestation. feedId is stable: post each id once.",
  "generatedFrom": {
   "site": {
-   "scorecards.json": "4dc68bcd8bd1580eedd2d2c0f5989bf3f7a71593e40a453723ebe444ce4526f0",
+   "scorecards.json": "ee1212372471479270bf607766f4a387fd34737aef4130c3a3fda93d32596023",
    "index.json": "470978540607242efcac2c69f42e8357d7d6a3334c9da28f347c97867aa9c39a",
    "rpc-pinned.json": "108919b7ce46d2c3e09943bbd5dad4344ee375a275c6056f4b391a57ee11a418",
    "radar.json": "16d9637777dc1df9babb767d0ac31c4e1fe8c339332ea815cc32db745d097e1d",
@@ -843,9 +843,9 @@
     {
      "key": "emergency",
      "label": "Emergency / freeze scope",
-     "state": "g",
-     "cue": "S",
-     "value": "Pause / freeze authority scoped behind a multi-signer controller (3-of-5)"
+     "state": "n",
+     "cue": "—",
+     "value": "PAUSER_ROLE held by 0x9251…5aaB (EIP-7702 delegated account; delegation authority not in the published records)"
     },
     {
      "key": "parity",
@@ -5958,9 +5958,9 @@
     {
      "key": "emergency",
      "label": "Emergency / freeze scope",
-     "state": "g",
-     "cue": "S",
-     "value": "Pause / freeze authority scoped behind a multi-signer controller (3-of-5)"
+     "state": "n",
+     "cue": "—",
+     "value": "Pause / freeze authority present; its holder is not determined"
     },
     {
      "key": "parity",
@@ -10580,7 +10580,7 @@
      "label": "Emergency / freeze scope",
      "state": "g",
      "cue": "S",
-     "value": "Pause / freeze authority scoped behind a multi-signer controller (2-of-3)"
+     "value": "Pause / freeze authority scoped behind a multi-signer controller (2-of-6)"
     },
     {
      "key": "parity",
@@ -10638,9 +10638,9 @@
     {
      "key": "emergency",
      "label": "Emergency / freeze scope",
-     "state": "g",
-     "cue": "S",
-     "value": "Pause / freeze authority scoped behind a multi-signer controller (3-of-5)"
+     "state": "n",
+     "cue": "—",
+     "value": "Pause / freeze authority present; its holder is not determined"
     },
     {
      "key": "parity",

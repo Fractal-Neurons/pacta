@@ -373,7 +373,7 @@
     "timelock": {
      "state": "b",
      "value": "Long governance timelock: 7d; Short timelock: 1d (per-surface wiring unverified)",
-     "evidence": "infinifi-long-timelock-7d-s20: Long Timelock 0x3D18…48a9 getMinDelay() = 604,800 s (7d); Short Timelock 0x4B17…e88c getMinDelay() = 86,400 s (1d)",
+     "evidence": "infinifi-long-timelock-7d-s20: Long Timelock 0x3D18…48a9 getMinDelay() = 604,800 s (7d); Short Timelock 0x4B17…7c32 getMinDelay() = 86,400 s (1d)",
      "evidenceCaption": "Long governance timelock delay: 7 days (Short timelock: 1 day) — Ethereum block #26,425,374"
     }
    }
@@ -461,6 +461,21 @@
     "timelock": {
      "state": "a",
      "value": "No timelock in the sampled MasterChef path (2-of-6 Safe direct; listed 24h Timelock does not own MasterChef)"
+    }
+   }
+  },
+  "bedrock-unibtc": {
+   "status": "delta",
+   "chain": "ethereum",
+   "pinnedBlock": 26449594,
+   "leadRecord": "bedrock-unibtc-secure-mint-precondition-s30",
+   "headline": null,
+   "explanatorySentence": null,
+   "summaryShort": null,
+   "factorOverrides": {
+    "emergency": {
+     "state": "n",
+     "value": "PAUSER_ROLE held by 0x9251…5aaB (EIP-7702 delegated account; delegation authority not in the published records)"
     }
    }
   }

@@ -189,7 +189,7 @@ class V4(unittest.TestCase):
         idx = {e["id"]: e for e in j("api", "v1", "index.json")["entries"]}
         feed = {i["slug"]: i for i in j("api", "v1", "x-feed.json")["items"] if i["kind"] != "radar_timelock"}
         reg = CORR.data()["protocols"]
-        self.assertEqual(len(reg), 27)   # v7: cian-yield-layer and pickle carry scoped timelock rows
+        self.assertEqual(len(reg), 28)   # v7: cian-yield-layer and pickle carry scoped timelock rows; v8: bedrock-unibtc emergency
         for s, c in reg.items():
             r = idx[c["leadRecord"]]
             ev = CARDS[s]["evidence"]
@@ -468,7 +468,7 @@ class V6(unittest.TestCase):
         import glob
         css = open(os.path.join(ROOT, "docs", "styles.css"), encoding="utf-8").read()
         home = open(os.path.join(ROOT, "docs", "index.html"), encoding="utf-8").read()
-        self.assertIn('placeholder="Protocol or 0x address…"', home)       # v7 F6 supersedes the v6 wording
+        self.assertIn('placeholder="Protocol or 0x…"', home)       # v8 G3 supersedes the v6 / v7 wording
         self.assertIn('.js #how-it-works [data-tabs-stable] > [data-slot="tabs-content"][data-inactive] { display: none; }', css)
         self.assertIn("overflow-wrap: break-word; word-break: normal;", css)
         self.assertNotIn("table.radar .meta { overflow-wrap: anywhere", css)
@@ -582,10 +582,64 @@ class V7(unittest.TestCase):
 
     def test_f6_placeholder_and_radar_wrap(self):
         home = open(os.path.join(ROOT, "docs", "index.html"), encoding="utf-8").read()
-        self.assertIn('placeholder="Protocol or 0x address…"', home)
+        self.assertIn('placeholder="Protocol or 0x…"', home)            # v8 G3 supersedes the v7 wording
         radar = open(os.path.join(ROOT, "docs", "radar", "index.html"), encoding="utf-8").read()
         self.assertIn("EtherfiL1SyncPoolETH.<wbr>setDelegate(<wbr>EtherFiTimelock)", radar)
         self.assertNotIn("EtherFiTimelo<wbr>", radar)
+
+
+class V8(unittest.TestCase):
+    def _rec(self, rid):
+        return next(e for e in j("api", "v1", "index.json")["entries"] if e["id"] == rid)
+
+    def test_g1_seamless_record_alone_never_rates_freeze(self):
+        import scorecard as SC
+        f = next(x for x in SC.factors([self._rec("seamless-community-guardian-safe-2-of-3-s35")], True, "unresolved") if x["key"] == "emergency")
+        self.assertEqual(f["state"], "n")                         # no controller facts, no post-hoc override
+        e = next(x for x in CARDS["seamless-protocol-base"]["factors"] if x["key"] == "emergency")
+        self.assertEqual((e["state"], e["value"]), ("n", "2-of-3 Safe holds timelock CANCELLER_ROLE; pause / freeze binding not in the published records"))
+
+    def test_g2_infinifi_short_timelock_suffix(self):
+        import glob
+        rec = self._rec("infinifi-long-timelock-7d-s20")["onchain_observed"]
+        self.assertIn("0x4B174afbeD7b98BA01F50E36109EEE5e6d327c32", rec)
+        ev = next(x for x in CARDS["infinifi"]["factors"] if x["key"] == "timelock")["evidence"]
+        self.assertIn("0x4B17…7c32", ev)
+        self.assertTrue("0x4B174afbeD7b98BA01F50E36109EEE5e6d327c32".endswith("7c32"))
+        hits = [f for f in glob.glob(os.path.join(ROOT, "docs", "**", "*"), recursive=True)
+                if os.path.isfile(f) and f.endswith((".html", ".json", ".txt")) and "0x4B17…e88c" in open(f, encoding="utf-8", errors="ignore").read()]
+        self.assertEqual(hits, [])
+
+    def test_g3_hero_input_room(self):
+        css = open(os.path.join(ROOT, "docs", "styles.css"), encoding="utf-8").read()
+        home = open(os.path.join(ROOT, "docs", "index.html"), encoding="utf-8").read()
+        self.assertIn('placeholder="Protocol or 0x…"', home)
+        self.assertIn(".hero .pf-toggle-lbl, .pd-sec-scan .pf-toggle-lbl { display: none; }", css)
+        self.assertIn(".hero .pf-combo > input { padding-right: 46px; }", css)
+        self.assertIn(".pd-sec-scan .pf-combo > input { padding-right: 40px; }", css)
+        self.assertIn('aria-label="Browse', home)                 # the chevron button keeps its accessible name
+
+    def test_g4_bedrock_pause_never_borrows_a_later_safe(self):
+        import scorecard as SC
+        f = next(x for x in SC.factors([self._rec("bedrock-unibtc-secure-mint-precondition-s30")], True, "delta") if x["key"] == "emergency")
+        self.assertEqual(f["state"], "n")
+        self.assertNotIn("3-of-5", f["value"])
+        e = next(x for x in CARDS["bedrock-unibtc"]["factors"] if x["key"] == "emergency")
+        self.assertEqual((e["state"], e["value"], e["evidenceRecordId"]),
+                         ("n", "PAUSER_ROLE held by 0x9251…5aaB (EIP-7702 delegated account; delegation authority not in the published records)",
+                          "bedrock-unibtc-secure-mint-precondition-s30"))
+        self.assertIn("PAUSER_ROLE held by 0x9251…5aaB", page("bedrock-unibtc"))
+
+    def test_g4_no_cross_sentence_pause_quorum_in_reviewed(self):
+        # every Strong freeze rating among the 56 reviewed protocols cites one sentence (or a named-holder continuation) that names
+        # both the pause / freeze power and the quorum it rates
+        import scorecard as SC
+        for s in RULINGS["partition"]:
+            e = next(x for x in CARDS[s]["factors"] if x["key"] == "emergency")
+            if e["state"] != "g":
+                continue
+            ev = e["evidence"].split(": ", 1)[1]
+            self.assertTrue(SC._EMERGENCY.search(ev) and (SC._nofs(ev) or "-of-N Safe" in e["value"]), s)
 
 class Wording(unittest.TestCase):
     def test_no_aggregate_overstatement(self):

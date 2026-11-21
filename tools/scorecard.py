@@ -38,7 +38,10 @@ _DOC_NOF = re.compile(r"\b(\d{1,2})\s*(?:-of-|/|\s+of\s+)\s*(\d{1,2})\b")
 _UNATTACHED = re.compile(r"\bowns neither\b|\bdoes not own\b|\bis not the [\w' ()-]*?owner\b|\bnot in the (?:\w+ )*path\b|\bnot wired\b", re.I)
 _ZERO_GUARDIAN = re.compile(r"guardian\(\)\s*=\s*0x0{40}\b")
 _CANCEL_ONLY = re.compile(r"CANCELLER_ROLE")
-_FREEZE_WORDS = re.compile(r"\bpause|\bfreez|\bblacklist|PAUSE_ROLE|pauseGuardian|EMERGENCY_ROLE", re.I)
+_FREEZE_WORDS = re.compile(r"\bpause|\bunpause|\bfreez|\bblacklist|PAUSE_ROLE|PAUSER_ROLE|pauseGuardian|EMERGENCY_ROLE|circuit breaker|emergency[- ]stop", re.I)
+_NAMED_SAFE = re.compile(r"The ([A-Z][\w-]*) is a (?:\d{1,2}-of-\d{1,2} )?Safe\b")
+# a sentence boundary inside a clause: ". " before a capital letter (never a decimal such as 111.1% or a version such as v1.3.0)
+_SENTENCE = re.compile(r"(?<=[A-Za-z0-9)\]%])\.\s+(?=[A-Z0-9(])")
 
 
 def _nofs(text):
@@ -367,17 +370,28 @@ def factors(records, easattested, g, facts=(), parity_text=None):
     safes = {f["address"].lower(): f["safe_threshold"] for f in facts if f.get("safe_threshold") and f.get("address")}
     held, em = [], None
     for rid, t, _r in texts:
-        cs = clauses(t)
+        # v8 G1: a record that only establishes a timelock CANCELLER_ROLE (no pause / unpause / freeze / circuit-breaker binding anywhere
+        # in it) establishes no pause / freeze holder, whichever of its clauses names a "Guardian"
+        cancel_only = bool(_CANCEL_ONLY.search(t)) and not _FREEZE_WORDS.search(t)
+        # v8 G4: the holder is bound within one sentence: clauses are split again on sentence boundaries, so a Safe quorum named in
+        # a later sentence (e.g. a ProxyAdmin owner) is never borrowed by the pause / freeze holder of an earlier one
+        cs = [u for c0 in clauses(t) for u in _SENTENCE.split(c0) if u.strip()]
         for i, c in enumerate(cs):
             if not _EMERGENCY.search(c):
                 continue
             # an unset guardian (guardian() = 0x0) or a timelock CANCELLER_ROLE alone establishes no pause / freeze holder (v7 F3)
-            if _ZERO_GUARDIAN.search(c) or (_CANCEL_ONLY.search(c) and not _FREEZE_WORDS.search(c)):
+            if cancel_only or _ZERO_GUARDIAN.search(c) or (_CANCEL_ONLY.search(c) and not _FREEZE_WORDS.search(c)):
                 em = em or (rid, c)
                 continue
             em = em or (rid, c)
             if i + 1 < len(cs) and _THAT.match(cs[i + 1]):   # "…hasRole(FREEZER, 0x…) = true; that Safe is 2-of-5"
                 c = f"{c}; {cs[i + 1]}"
+            elif i + 1 < len(cs):
+                # "owner() = Admin … Pauser Proxy …. The Admin is a Safe: getThreshold() = 3 of …": the next sentence describes the
+                # same named holder, so its quorum binds; any other later sentence (e.g. a ProxyAdmin owner) never does
+                nm = _NAMED_SAFE.match(cs[i + 1].strip())
+                if nm and re.search(r"\b" + re.escape(nm.group(1)) + r"\b", c):
+                    c = f"{c}; {cs[i + 1]}"
             ks = [(int(m.group(1)), f"{m.group(1)}-of-{m.group(2)}") for m in _nofs(c) if 1 <= int(m.group(1)) <= int(m.group(2))]
             ks += [(1, "a single key") for _ in _SINGLE.finditer(c)]
             ks += [(safes[a.lower()], f"{safes[a.lower()]}-of-N Safe") for a in _ADDR.findall(c) if a.lower() in safes]

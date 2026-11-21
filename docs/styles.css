@@ -1645,3 +1645,13 @@ html:not(.js) [data-scan-upgrade], html:not(.js) [data-co-card] { display: grid 
 }
 /* v6 E18 (i): the hero search keeps room for its button / kbd hint, so the placeholder never clips */
 .hero-pf .checker input { padding-right: 12px; text-overflow: ellipsis; min-width: 0; }   /* v7 F6: shrinks beside the chain selector */
+
+/* v8 G3: in the two-column Home hero and the /scan/ box the combobox keeps only its chevron (aria-label "Browse …"), so the input
+   has room for its whole placeholder at 1200 px and at 390 px (the same compact layout the phone rule uses) */
+.hero .pf-toggle-lbl, .pd-sec-scan .pf-toggle-lbl { display: none; }
+.hero .pf-combo > input { padding-right: 46px; }
+.pd-sec-scan .pf-combo > input { padding-right: 40px; }
+.hero .pf-combo[data-has-clear="1"] > input { padding-right: 76px; }
+.pd-sec-scan .pf-combo[data-has-clear="1"] > input { padding-right: 68px; }
+.hero .pf-sel-overlay, .pd-sec-scan .pf-sel-overlay { right: 72px; }
+.hero .pf-clear-btn { right: 44px; }
