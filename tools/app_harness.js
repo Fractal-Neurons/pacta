@@ -519,9 +519,10 @@ async function beaconScenario() {
       res.b_cta_clearance_brief = same(br.kinds, ["free_notify", "clearance", "clearance_invoice"]) && same(br.events, ["cta_click", "cta_click", "cta_click"]);
     }
     const hp = ctaClicks(input.index, "/");
-    res.b_cta_pricing = same(hp.kinds, ["pricing_scan_free", "pricing_mcp", "pricing_sponsor_pool", "pricing_wholesale", "pricing_watch_pilot",
-                                        "pricing_radar", "pricing_clearance", "pricing_wholesale_150", "pricing_continuous", "pricing_community", "pricing_api_sla"])
-      && hp.events.length === 11 && hp.events.every((e) => e === "cta_click");
+    res.b_cta_pricing = same(hp.kinds, ["pricing_free", "pricing_mcp", "pricing_scan_9", "pricing_watch_free", "pricing_seal_99",
+                                        "pricing_x402_verdict", "pricing_x402_dossier", "pricing_x402_wallet_exposure", "pricing_x402_calldata_sim", "pricing_x402_deep_scan",
+                                        "pricing_clearance", "pricing_continuous", "pricing_community", "pricing_api_sla"])
+      && hp.events.length === 14 && hp.events.every((e) => e === "cta_click");
   }
   // 404: not_found_404 instead of page_load; paths are redacted to a closed canonical set BEFORE transmission
   // (Phase C.1): only /protocols/<safe-slug>/ keeps its slug (and t); anything else is "/404"; IP / local referrers are dropped
@@ -1346,10 +1347,10 @@ async function checkoutScenario() {
       && d.querySelector("[data-co-eip681]").getAttribute("href") === eip(C.skus[sku])
       && d.getElementById("co-wallet").hidden === false && !m.hasAttribute("open") && d.getElementById("co-result").hidden === true;
   };
-  const scanDoc0 = page(input.scan, "/scan/").document, sealDoc0 = page(input.seal, "/seal/").document;
-  res.co_single_sku_pages = shape(page(input.webhook, "/webhook/").document, "radar-webhook-49")
-    && !scanDoc0.getElementById("co-form") && !sealDoc0.getElementById("co-form");
-  // no browser wallet (/webhook/): the primary action checks the order first, then opens the manual transfer drawer (never a dead button)
+  const webDoc = page(input.webhook, "/webhook/").document;   // /webhook/ sells nothing: no checkout form, no pay button
+  res.co_single_sku_pages = shape(page(input.scan, "/scan/").document, "wallet-report-9") && shape(page(input.seal, "/seal/").document, "reverify-seal-99")
+    && !webDoc.getElementById("co-form") && !webDoc.querySelector("[data-co-pay]") && !!webDoc.getElementById("watch-free-form");
+  // no browser wallet: the primary action checks the order first, then opens the manual transfer drawer (never a dead button)
   calls = [];
   let p = page(input.webhook, "/webhook/", { fetch: okFetch(200, {}) }), d = p.document;
   click(d.getElementById("co-wallet"));
@@ -1459,43 +1460,45 @@ async function checkoutScenario() {
     && wc3.filter((m) => m === "eth_sendTransaction").length === 1 && posts3.length === 1
     && ids3.every((id) => d.getElementById(id).disabled === false) && d.getElementById("co-result").hidden === false;
   res.co_snapshot_and_inputs_locked = locked3 && posts3.length === 1
-    && same(b3, { sku: "radar-webhook-49", tx_hash: TXH, chain: "base", target_chain: "ethereum", target_address: ADDR, protocol_or_docs: "https://docs.example.invalid/a", webhook_or_contact: "https://hooks.example.invalid/once" });
-  // /webhook/: quick picks fill the timelock / Safe and the protocol; the destination is required and must be https; empty fields stay out
+    && same(b3, { sku: "wallet-report-9", tx_hash: TXH, chain: "base", target_chain: "ethereum", target_address: ADDR, protocol_or_docs: "https://docs.example.invalid/a", webhook_or_contact: "@harness" });
+  // /webhook/: the free watchlist ($0). A pick fills the slug and chain; a webhook URL is refused as a contact (the API keeps email,
+  // @telegram or GitHub handles); the one request is exactly the free-queue body; an address becomes <chain>:0x<lowercase hex>
+  const wfSubmit = (d) => { const ev = new Event_("submit"); d.getElementById("watch-free-form").dispatchEvent(ev); return ev; };
   calls = [];
-  p = page(input.webhook, "/webhook/", { fetch: okFetch(200, { order_id: "ord_w49" }) }); d = p.document;
-  const picks = d.querySelectorAll("[data-co-pick]");
-  const ethena = picks.find((b) => b.textContent === "Ethena"), aave = picks.find((b) => b.textContent === "Aave v3");
-  click(ethena);
-  const ethOk = /^0x[0-9a-fA-F]{40}$/.test(ethena.getAttribute("data-address")) && d.getElementById("co-target").value === ethena.getAttribute("data-address")
-    && d.getElementById("co-docs").value === ethena.getAttribute("data-protocol") && ethena.getAttribute("aria-pressed") === "true";
-  const watchEl = d.getElementById("co-watch"), hintEl = d.querySelector("[data-co-watch-hint]");
-  const watchPick = !!watchEl && watchEl.value === ethena.getAttribute("data-protocol") && !/0x[0-9a-fA-F]{40}/.test(watchEl.value)
-    && hintEl.textContent.indexOf(ethena.getAttribute("data-address").slice(0, 6) + "…") !== -1;
-  setField(d, "co-watch", ADDR);
-  const typedAddr = d.getElementById("co-target").value === ADDR && d.getElementById("co-docs").value === "" && ethena.getAttribute("aria-pressed") === "false";
-  setField(d, "co-watch", "Morpho");
-  const typedName = d.getElementById("co-target").value === "" && d.getElementById("co-docs").value === "Morpho";
-  setField(d, "co-watch", "0x12"); setv(d, "co-contact", "https://hooks.example.invalid/x"); setv(d, "co-tx", TXH); submit(d); await flush();
-  const badAddr = calls.length === 0 && d.getElementById("co-target-err").hidden === false && watchEl.getAttribute("aria-invalid") === "true";
-  res.co_webhook_single_target = watchPick && typedAddr && typedName && badAddr
-    && d.getElementById("co-target").getAttribute("type") === "hidden" && d.getElementById("co-docs").getAttribute("type") === "hidden";
-  click(aave);
-  const aaveOk = d.getElementById("co-target").value === "" && d.getElementById("co-docs").value === aave.getAttribute("data-protocol") && ethena.getAttribute("aria-pressed") === "false";
-  setv(d, "co-contact", "http://hooks.example.invalid/x"); setv(d, "co-tx", TXH); submit(d); await flush();
-  const httpRefused = calls.length === 0 && d.getElementById("co-contact-err").hidden === false;
-  setv(d, "co-contact", ""); submit(d); await flush();
-  const contactNeeded = calls.length === 0 && /alerts should go/.test(d.getElementById("co-contact-err").textContent);
-  setv(d, "co-contact", "https://hooks.example.invalid/x"); submit(d); await flush(); await flush();
-  res.co_webhook_picks_and_rules = ethOk && aaveOk && httpRefused && contactNeeded && calls.length === 1
-    && same(JSON.parse(calls[0][1].body), { sku: "radar-webhook-49", tx_hash: TXH, chain: "base", target_chain: "ethereum", protocol_or_docs: aave.getAttribute("data-protocol"),
-                                             webhook_or_contact: "https://hooks.example.invalid/x" });
-  // /seal/?protocol=<slug>: reframed 3-path Base-EAS attestation page syncs protocol query into community & dossier links
-  p = page(input.seal, "/seal/", { search: "?protocol=stader-labs-ethx" }); d = p.document;
-  for (let i = 0; i < 3; i++) await flush();
-  const sealComm = d.querySelector("[data-seal-community-link]"), sealDos = d.querySelector("[data-seal-dossier-link]");
-  res.co_seal_protocol_prefill = !!sealComm && sealComm.getAttribute("href") === "../request/?tier=community&protocol=stader-labs-ethx"
-    && !!sealDos && sealDos.getAttribute("href") === "../request/?tier=clearance&protocol=stader-labs-ethx";
-  // /request/?tier=seal-99 | wallet-9 | webhook-49 forward cleanly; enterprise tiers stay on /request/
+  p = page(input.webhook, "/webhook/", { fetch: okFetch(200, { ok: true, request_id: "req_watch1" }) }); d = p.document;
+  const wfApi = d.getElementById("watch-free-form").getAttribute("data-watch-api");
+  const wfEth = d.querySelectorAll("[data-wf-pick]").find((b) => b.textContent === "Ethena");
+  click(wfEth);
+  const wfPick = d.getElementById("wf-target").value === wfEth.getAttribute("data-slug") && wfEth.getAttribute("aria-pressed") === "true";
+  setv(d, "wf-contact", "https://hooks.example.invalid/x"); wfSubmit(d); await flush();
+  const wfHookRefused = calls.length === 0 && d.getElementById("wf-contact-err").hidden === false;
+  setv(d, "wf-contact", ""); wfSubmit(d); await flush();
+  const wfContactNeeded = calls.length === 0 && d.getElementById("wf-contact-err").hidden === false;
+  setv(d, "wf-contact", "@pactaqa"); wfSubmit(d); await flush(); await flush();
+  res.watch_free_posts_exact_body = wfPick && wfHookRefused && wfContactNeeded && calls.length === 1 && calls[0][0] === wfApi
+    && /^https:\/\/pacta-x402\.pacta\.workers\.dev\/v1\/requests$/.test(wfApi) && calls[0][1].method === "POST"
+    && same(JSON.parse(calls[0][1].body), { request_type: "mcp_or_api_feature", target_subject: wfEth.getAttribute("data-slug"),
+                                            requested_capability: "Pilot timelock and signer watchlist request", urgency_track: "community_queue_free",
+                                            contact_handle: "@pactaqa" })
+    && d.querySelector("[data-wf-done]").hidden === false && /req_watch1/.test(d.querySelector("[data-wf-done-msg]").textContent);
+  calls = [];
+  p = page(input.webhook, "/webhook/", { fetch: okFetch(200, { ok: true, request_id: "req_watch2" }) }); d = p.document;
+  setv(d, "wf-chain", "base"); setv(d, "wf-target", "0x12"); setv(d, "wf-contact", "ops@example.invalid"); wfSubmit(d); await flush();
+  const wfBadAddr = calls.length === 0 && d.getElementById("wf-target-err").hidden === false;
+  setv(d, "wf-target", ADDR); wfSubmit(d); await flush(); await flush();
+  res.watch_free_address_subject = wfBadAddr && calls.length === 1 && JSON.parse(calls[0][1].body).target_subject === "base:" + ADDR.toLowerCase();
+  // /seal/?protocol=<slug> (the protocol pages' seal link): the indexed contract and name come from the public catalog
+  const lkFetch = (url) => {
+    const u = String(url);
+    if (/api\/v1\/lookup\.json$/.test(u)) return Promise.resolve({ status: 200, ok: true, json: () => Promise.resolve(input.lookupJson) });
+    if (/api\/v1\/scorecards\.json$/.test(u)) return Promise.resolve({ status: 200, ok: true, json: () => Promise.resolve(input.scorecardsJson) });
+    return Promise.reject(new Error("not needed"));
+  };
+  p = page(input.seal, "/seal/", { search: "?protocol=stader-labs-ethx", fetch: lkFetch }); d = p.document;
+  for (let i = 0; i < 4; i++) await flush();
+  const stx = input.lookupJson.items.find((i) => i.slug === "stader-labs-ethx");
+  res.co_seal_protocol_prefill = d.getElementById("co-target").value === stx.preflightArgs.address && d.getElementById("co-docs").value === stx.name;
+  // /request/?tier=seal-99 forwards to the seal page (keeping the protocol); an enterprise tier stays on /request/
   const lr = run(input.request, input.app, { path: "/request/", search: "?tier=seal-99&protocol=stader-labs-ethx" });
   const lrScan = run(input.request, input.app, { path: "/request/", search: "?tier=wallet-9&protocol=stader-labs-ethx" });
   const lrWeb = run(input.request, input.app, { path: "/request/", search: "?tier=webhook-49&protocol=stader-labs-ethx" });
@@ -1627,7 +1630,7 @@ async function xPixelScenario() {
   await flush();
   const pfLeadOnce = same(pfPage.window.__pactaTwqEvents, [["config", "rjbqn"], ["event", "tw-rjbqn-rjhie", {}]]);
 
-  const ctaWallet = run(input.webhook, input.app, { path: "/webhook/", hostname: "127.0.0.1" });
+  const ctaWallet = run(input.seal, input.app, { path: "/seal/", hostname: "127.0.0.1" });
   click(ctaWallet.document.getElementById("co-wallet"));
   click(ctaWallet.document.getElementById("co-wallet"));
   const walletLeadOnce = same(ctaWallet.window.__pactaTwqEvents, [["config", "rjbqn"], ["event", "tw-rjbqn-rjhie", {}]]);

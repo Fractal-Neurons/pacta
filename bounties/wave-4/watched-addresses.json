@@ -1,0 +1,5116 @@
+{
+  "schema": "pacta.wave4.watched_addresses.v1",
+  "generated_at": "2026-11-21T16:05:00Z",
+  "chains_allowed": [
+    "ethereum",
+    "base"
+  ],
+  "count": 567,
+  "ethereum_count": 501,
+  "base_count": 66,
+  "addresses": [
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x87f18b377e625b62c708D5f6EA96EC193558EFD0",
+      "protocol_slug": "40-acres-base",
+      "protocol_name": "40 Acres (Base)",
+      "role_or_surface": "40 Acres AERO USDC Loan proxy (UUPS)",
+      "pinned_block_number": 59025642
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x2DC219E716793fb4b21548C0f009Ba3Af753ab01",
+      "protocol_slug": "aave-v3-base",
+      "protocol_name": "Aave V3 (Base)",
+      "role_or_surface": "Aave Governance V3 PayloadsController (Base)",
+      "pinned_block_number": 57886975
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x56C1a4b54921DEA9A344967a8693C7E661D72968",
+      "protocol_slug": "aave-v3-base",
+      "protocol_name": "Aave V3 (Base)",
+      "role_or_surface": "Aave Protocol Guardian Safe (Base)",
+      "pinned_block_number": 57886975
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x16613524e02ad97eDfeF371bC883F2F5d6C480A5",
+      "protocol_slug": "aerodrome-finance-base",
+      "protocol_name": "Aerodrome Finance (Base)",
+      "role_or_surface": "controller (contract_controller)",
+      "pinned_block_number": 58203774
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x420DD381b31aEf6683db6B902084cB0FFECe40Da",
+      "protocol_slug": "aerodrome-finance-base",
+      "protocol_name": "Aerodrome Finance (Base)",
+      "role_or_surface": "AerodromePoolFactory",
+      "pinned_block_number": 58203774
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x42255e3C2d0b71a0b006243148fdF1a71d054cE0",
+      "protocol_slug": "aerodrome-finance-base",
+      "protocol_name": "Aerodrome Finance (Base)",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 58203774
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x5e7BB104d84c7CB9B682AaC2F3d509f5F406809A",
+      "protocol_slug": "aerodrome-slipstream-base",
+      "protocol_name": "Aerodrome Slipstream (Base)",
+      "role_or_surface": "Slipstream CLFactory",
+      "pinned_block_number": 57842915
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0xE6A41fE61E7a1996B59d508661e3f524d6A32075",
+      "protocol_slug": "aerodrome-slipstream-base",
+      "protocol_name": "Aerodrome Slipstream (Base)",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 57842915
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x03f6AFbcbf398E2362c93DDC846619f1b1b860d2",
+      "protocol_slug": "beefy-finance-base",
+      "protocol_name": "Beefy Finance (Base)",
+      "role_or_surface": "Beefy CLM strategy cowAeroBaseUSDC-VVV",
+      "pinned_block_number": 58885628
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x09D19184F46A32213DF06b981122e06882B61309",
+      "protocol_slug": "beefy-finance-base",
+      "protocol_name": "Beefy Finance (Base)",
+      "role_or_surface": "BeefyVaultOwnerTimelock_Base",
+      "pinned_block_number": 58315414
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x2b0C9702A4724f2BFe7922DB92c4082098533c62",
+      "protocol_slug": "beefy-finance-base",
+      "protocol_name": "Beefy Finance (Base)",
+      "role_or_surface": "ProxyAdmin controller",
+      "pinned_block_number": 58315414
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x3B60F7f25b09E71356cdFFC6475c222A466a2AC9",
+      "protocol_slug": "beefy-finance-base",
+      "protocol_name": "Beefy Finance (Base)",
+      "role_or_surface": "BeefyStrategyOwnerTimelock_Base",
+      "pinned_block_number": 58315414
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x6FfaCA7C3B38Ec2d631D86e15f328ee6eF6C6226",
+      "protocol_slug": "beefy-finance-base",
+      "protocol_name": "Beefy Finance (Base)",
+      "role_or_surface": "controller (multisig_safe)",
+      "pinned_block_number": 58885628
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0xfc69704cC3cAac545cC7577009Ea4AA04F1a61Eb",
+      "protocol_slug": "beefy-finance-base",
+      "protocol_name": "Beefy Finance (Base)",
+      "role_or_surface": "BeefyFeeConfig_Base",
+      "pinned_block_number": 58885628
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x5db3C638235b14520Ebd617267cAC0b108Be3157",
+      "protocol_slug": "bmx-freestyle",
+      "protocol_name": "BMX Freestyle",
+      "role_or_surface": "controller (contract_controller)",
+      "pinned_block_number": 60070202
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x6D63921D8203044f6AbaD8F346d3AEa9A2719dDD",
+      "protocol_slug": "bmx-freestyle",
+      "protocol_name": "BMX Freestyle",
+      "role_or_surface": "MultiAccount",
+      "pinned_block_number": 60070202
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x7Ed48C31f2fdC40d37407cBaBf0870B2b688368f",
+      "protocol_slug": "centrifuge-liquidity-pools-base",
+      "protocol_name": "Centrifuge V3 Root (Base)",
+      "role_or_surface": "CentrifugeRoot_Base",
+      "pinned_block_number": 58534152
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x9711730060C73Ee7Fcfe1890e8A0993858a7D225",
+      "protocol_slug": "centrifuge-liquidity-pools-base",
+      "protocol_name": "Centrifuge V3 Root (Base)",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 58534152
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0xd21413291444C5c104F1b5918cA0D2f6EC91Ad16",
+      "protocol_slug": "centrifuge-liquidity-pools-base",
+      "protocol_name": "Centrifuge V3 Root (Base)",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 58534152
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "protocol_slug": "circle-usdc",
+      "protocol_name": "Circle USDC",
+      "role_or_surface": "USDC FiatTokenProxy (Base)",
+      "pinned_block_number": 58422815
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x18281dfC4d00905DA1aaA6731414EABa843c468A",
+      "protocol_slug": "compound-v3-base",
+      "protocol_name": "Compound V3 (Base)",
+      "role_or_surface": "Compound BridgeReceiver (Base)",
+      "pinned_block_number": 57886975
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x3cb4653F3B45F448D9100b118B75a1503281d2ee",
+      "protocol_slug": "compound-v3-base",
+      "protocol_name": "Compound V3 (Base)",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 57886975
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x6d903f6003cca6255D85CcA4D3B5E5146dC33925",
+      "protocol_slug": "compound-v3-base",
+      "protocol_name": "Compound V3 (Base)",
+      "role_or_surface": "Timelock controller",
+      "pinned_block_number": 57886975
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x9c4ec768c28520B50860ea7a15bd7213a9fF58bf",
+      "protocol_slug": "compound-v3-base",
+      "protocol_name": "Compound V3 (Base)",
+      "role_or_surface": "Compound III cUSDbCv3 (Base)",
+      "pinned_block_number": 57886975
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0xCC3E7c85Bb0EE4f09380e041fee95a0caeDD4a02",
+      "protocol_slug": "compound-v3-base",
+      "protocol_name": "Compound V3 (Base)",
+      "role_or_surface": "controller (timelock)",
+      "pinned_block_number": 57886975
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x01Ea790410D9863A57771D992D2A72ea326DD7C9",
+      "protocol_slug": "diem-relay",
+      "protocol_name": "DIEM Relay",
+      "role_or_surface": "DIEM Relay Safe",
+      "pinned_block_number": 59025642
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x1a0554f4832a0901709b9C13BBE459f72f7b9ACb",
+      "protocol_slug": "elfomofi",
+      "protocol_name": "ElfomoFi",
+      "role_or_surface": "controller (multisig_safe)",
+      "pinned_block_number": 60070202
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x64f8bE47A011DF0fAB47319d5De258D18E93f4ef",
+      "protocol_slug": "elfomofi",
+      "protocol_name": "ElfomoFi",
+      "role_or_surface": "VaultsManager",
+      "pinned_block_number": 60070202
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x5a70429e0e5c7BE9E5F83B497C18F5AC82345113",
+      "protocol_slug": "extra-finance-base",
+      "protocol_name": "Extra Finance (Base)",
+      "role_or_surface": "controller (contract_controller)",
+      "pinned_block_number": 60070202
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0xBB505c54D71E9e599cB8435b4F0cEEc05fC71cbD",
+      "protocol_slug": "extra-finance-base",
+      "protocol_name": "Extra Finance (Base)",
+      "role_or_surface": "ExtraLendingPool_Base",
+      "pinned_block_number": 60070202
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x0bD4887f7D41B35CD75DFF9FfeE2856106f86670",
+      "protocol_slug": "friend-tech-v1",
+      "protocol_name": "friend.tech V1",
+      "role_or_surface": "FRIEND (Points)",
+      "pinned_block_number": 60070202
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x5CC0FC29C893Bba884D3E073997C97Bf776dA9F3",
+      "protocol_slug": "glif",
+      "protocol_name": "GLIF",
+      "role_or_surface": "controller (multisig_safe)",
+      "pinned_block_number": 60070202
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0xAeD7C2eD7Bb84396AfCB55fF72c8F8E87FFb68f3",
+      "protocol_slug": "glif",
+      "protocol_name": "GLIF",
+      "role_or_surface": "Staked ICNT (PoolV2)",
+      "pinned_block_number": 60070202
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x1039CB48254a3150fC604d4B9ea08F66f4739D37",
+      "protocol_slug": "iaero-protocol",
+      "protocol_name": "iAero Protocol",
+      "role_or_surface": "iAero Protocol Safe",
+      "pinned_block_number": 59532664
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x1455717668fA96534f675856347A973fA907e922",
+      "protocol_slug": "ipor-fusion",
+      "protocol_name": "IPOR Fusion",
+      "role_or_surface": "IPOR Fusion ERC1967Proxy",
+      "pinned_block_number": 58885628
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x08eDEbFFaE68970DCf751baa826182b3a4aCFC05",
+      "protocol_slug": "moonwell-lending-base",
+      "protocol_name": "Moonwell Lending (Base)",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 57842915
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x446342AF4F3bCD374276891C6bb3411bf2F8779E",
+      "protocol_slug": "moonwell-lending-base",
+      "protocol_name": "Moonwell Lending (Base)",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 57842915
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x5B710010586C1b728B047c3E42473c700eeA4026",
+      "protocol_slug": "moonwell-lending-base",
+      "protocol_name": "Moonwell Lending (Base)",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 57842915
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0xfBb21d0380beE3312B33c4353c8936a0F13EF26C",
+      "protocol_slug": "moonwell-lending-base",
+      "protocol_name": "Moonwell Lending (Base)",
+      "role_or_surface": "Moonwell Unitroller (Comptroller proxy)",
+      "pinned_block_number": 57842915
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x1bE87D273d47C3832Ab7853812E9A995A4DE9EEA",
+      "protocol_slug": "mortgagefi",
+      "protocol_name": "MortgageFi",
+      "role_or_surface": "mortgagefi-earn-usdc-weth (mortgagefipoolusdcweth)",
+      "pinned_block_number": 60070202
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x92A19381444A001d62cE67BaFF066fA1111d7202",
+      "protocol_slug": "origin-superoeth-base",
+      "protocol_name": "Origin Protocol (SuperOETHb Base)",
+      "role_or_surface": "Origin Base Admin Safe",
+      "pinned_block_number": 59594105
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0xC5396866754799B9720125B104AE01d935Ab9C7b",
+      "protocol_slug": "quickswap-v4",
+      "protocol_name": "Quickswap V4",
+      "role_or_surface": "AlgebraFactory",
+      "pinned_block_number": 60070202
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0xDA1077c4b0dd6da1BDF166F30aa4BDbF517d637b",
+      "protocol_slug": "quickswap-v4",
+      "protocol_name": "Quickswap V4",
+      "role_or_surface": "controller (multisig_safe)",
+      "pinned_block_number": 60070202
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0xA1b5f2cc9B407177CD8a4ACF1699fa0b99955A22",
+      "protocol_slug": "seamless-protocol-base",
+      "protocol_name": "Seamless Protocol (Base)",
+      "role_or_surface": "Seamless Community Guardian Safe (Base)",
+      "pinned_block_number": 59847352
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x624e2e7fDc8903165F64891672267AB0FCB98831",
+      "protocol_slug": "sosovalue-basis",
+      "protocol_name": "SoSoValue Basis",
+      "role_or_surface": "SOSO token (Base)",
+      "pinned_block_number": 59699598
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x3128a0F7f0ea68E7B7c9B00AFa7E41045828e858",
+      "protocol_slug": "spark-sky",
+      "protocol_name": "Spark / Sky",
+      "role_or_surface": "Spark USDC Vault (sUSDC, Base)",
+      "pinned_block_number": 59903224
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x16EE7ecAc70d1028E7712751E2Ee6BA808a7dd92",
+      "protocol_slug": "sport-fun",
+      "protocol_name": "Sport.fun",
+      "role_or_surface": "Sport.fun",
+      "pinned_block_number": 60070202
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0xBEEFE94c8aD530842bfE7d8B397938fFc1cb83b2",
+      "protocol_slug": "steakhouse-prime-usdc-base",
+      "protocol_name": "Steakhouse Prime USDC (Base)",
+      "role_or_surface": "Steakhouse Prime USDC (Base) MetaMorphoV1_1",
+      "pinned_block_number": 59025642
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x0A0e559bc3b0950a7e448F0d4894db195b9cf8DD",
+      "protocol_slug": "steakhouse-usdc-metamorpho-base",
+      "protocol_name": "Steakhouse USDC MetaMorpho (Base)",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 57635450
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x827e86072B06674a077f592A531dcE4590aDeCdB",
+      "protocol_slug": "steakhouse-usdc-metamorpho-base",
+      "protocol_name": "Steakhouse USDC MetaMorpho (Base)",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 57635450
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0xbeeF010f9cb27031ad51e3333f9aF9C6B1228183",
+      "protocol_slug": "steakhouse-usdc-metamorpho-base",
+      "protocol_name": "Steakhouse USDC MetaMorpho (Base)",
+      "role_or_surface": "Steakhouse USDC (steakUSDC) vault on Base",
+      "pinned_block_number": 57635450
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x10AC0b33e1C4501CF3ec1cB1AE51ebfdbd2d4698",
+      "protocol_slug": "superform-v2-base",
+      "protocol_name": "Superform Core v2 (Base)",
+      "role_or_surface": "Superform SuperVaultAggregator (Base)",
+      "pinned_block_number": 59653624
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x8175b0A1e803aC4205aE35F614315Ba801275baA",
+      "protocol_slug": "trueo",
+      "protocol_name": "Trueo",
+      "role_or_surface": "Trueo contract",
+      "pinned_block_number": 59594105
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x55975E430Cc54C63dff03B1E6d27Be574Ce229F6",
+      "protocol_slug": "umia",
+      "protocol_name": "Umia",
+      "role_or_surface": "UmiaMarketCore proxy",
+      "pinned_block_number": 58956515
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0xD0193fFAF565B6E530C1a6bbBb2FB13243f29177",
+      "protocol_slug": "umia",
+      "protocol_name": "Umia",
+      "role_or_surface": "Umia timelock",
+      "pinned_block_number": 58956515
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x1a9C8182C09F50C8318d769245beA52c32BE35BC",
+      "protocol_slug": "uniswap-v4",
+      "protocol_name": "Uniswap V4",
+      "role_or_surface": "Timelock controller",
+      "pinned_block_number": 58534152
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x498581fF718922c3f8e6A244956aF099B2652b2b",
+      "protocol_slug": "uniswap-v4",
+      "protocol_name": "Uniswap V4",
+      "role_or_surface": "Uniswap V4 PoolManager (Base)",
+      "pinned_block_number": 58534152
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0xbebdb6C8ddC678FfA9f8748f85C815C556Dd8ac6",
+      "protocol_slug": "wormhole-core-ntt",
+      "protocol_name": "Wormhole Core (NTT)",
+      "role_or_surface": "Wormhole Core (Base)",
+      "pinned_block_number": 58641783
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0xB237EB3c71a0f351BD121b0C467248473fbC2ccA",
+      "protocol_slug": "xsy",
+      "protocol_name": "XSY",
+      "role_or_surface": "controller (multisig_safe)",
+      "pinned_block_number": 60070202
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0xBA515304d8153c4b162dC79f867E152DF9c127eb",
+      "protocol_slug": "xsy",
+      "protocol_name": "XSY",
+      "role_or_surface": "Unity (UTY)",
+      "pinned_block_number": 60070202
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x12E81209d180fF0b3FBFbfe8fA9fFdb5990e1073",
+      "protocol_slug": "yo-protocol",
+      "protocol_name": "YO Protocol",
+      "role_or_surface": "ProxyAdmin controller",
+      "pinned_block_number": 58315414
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x38cE5e45D0f5d03E83863bb19B3b1A272C186F48",
+      "protocol_slug": "yo-protocol",
+      "protocol_name": "YO Protocol",
+      "role_or_surface": "YO Timelock",
+      "pinned_block_number": 58315414
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x67b6F699F1c8040414032a3C2C88a54db144FCd2",
+      "protocol_slug": "yo-protocol",
+      "protocol_name": "YO Protocol",
+      "role_or_surface": "Multisig controller",
+      "pinned_block_number": 58315414
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0xB4b3F5C964A360bBd7201f72a55D0c48B8aD7021",
+      "protocol_slug": "yo-protocol",
+      "protocol_name": "YO Protocol",
+      "role_or_surface": "YoApprovalRegistry",
+      "pinned_block_number": 58315414
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0xd460CF1f5D764acAD1c3276c549EE5f1BB671473",
+      "protocol_slug": "yo-protocol",
+      "protocol_name": "YO Protocol",
+      "role_or_surface": "yoETH ProxyAdmin",
+      "pinned_block_number": 58315414
+    },
+    {
+      "chain": "base",
+      "chain_id": 8453,
+      "address": "0x1111111111166b7FE7bd91427724B487980aFc69",
+      "protocol_slug": "zora-bridge",
+      "protocol_name": "Zora Bridge",
+      "role_or_surface": "Zora",
+      "pinned_block_number": 60070202
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x54F862fa0612A8709F6Dec4A7B39AF015CD4E82E",
+      "protocol_slug": "3f",
+      "protocol_name": "3F",
+      "role_or_surface": "ERC1967Factory",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x3D3C41419Ab401cd25055E8f9421D7D96d887885",
+      "protocol_slug": "3jane-lending",
+      "protocol_name": "3Jane Lending",
+      "role_or_surface": "Upgrades admin timelock",
+      "pinned_block_number": 26438867
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xc2aaCf6553D20d1e9d78E365AAba8032af9c85b0",
+      "protocol_slug": "aave-v3-gho",
+      "protocol_name": "Aave V3 / GHO",
+      "role_or_surface": "ACLManager",
+      "pinned_block_number": 26402160
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x5f0DeE98360d8200b20812e174d139A1a633EDd2",
+      "protocol_slug": "abracadabra-spell",
+      "protocol_name": "Abracadabra Spell",
+      "role_or_surface": "Abracadabra Spell Safe",
+      "pinned_block_number": 26449594
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xB524735356985D2f267FA010D681f061DfF03715",
+      "protocol_slug": "across-protocol-hubpool",
+      "protocol_name": "Across Protocol (HubPool)",
+      "role_or_surface": "controller (multisig_safe)",
+      "pinned_block_number": 26429396
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xc186fA914353c44b2E33eBE05f21846F1048bEda",
+      "protocol_slug": "across-protocol-hubpool",
+      "protocol_name": "Across Protocol (HubPool)",
+      "role_or_surface": "AcrossHubPool",
+      "pinned_block_number": 26429396
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xee1DC6BCF1Ee967a350e9aC6CaaAA236109002ea",
+      "protocol_slug": "across-protocol-hubpool",
+      "protocol_name": "Across Protocol (HubPool)",
+      "role_or_surface": "Across Bond Token (ABT)",
+      "pinned_block_number": 26429396
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x8B1484d57abBE239bB280661377363b03c89CaEa",
+      "protocol_slug": "adi-bridge",
+      "protocol_name": "ADI Bridge",
+      "role_or_surface": "ADI",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x4274cD7277C7bb0806Bd5FE84b9aDAE466a8DA0a",
+      "protocol_slug": "aegis-yusd",
+      "protocol_name": "Aegis YUSD",
+      "role_or_surface": "YUSD",
+      "pinned_block_number": 26453551
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x4Fe78eF65BD8EDDED480efaB030BA680646503c8",
+      "protocol_slug": "aegis-yusd",
+      "protocol_name": "Aegis YUSD",
+      "role_or_surface": "Multisig controller",
+      "pinned_block_number": 26453551
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x29722cC9a1cACff4a15914F9bC274B46F3b90B4F",
+      "protocol_slug": "aera-v3",
+      "protocol_name": "Aera V3",
+      "role_or_surface": "MultiDepositorVaultFactory",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xce75E223E6DbB0503D2B6f55bC5907d1A0372E2B",
+      "protocol_slug": "aera-v3",
+      "protocol_name": "Aera V3",
+      "role_or_surface": "controller (timelock)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xF56D660138815fC5d7a06cd0E1630225E788293D",
+      "protocol_slug": "alchemix-v3",
+      "protocol_name": "Alchemix V3",
+      "role_or_surface": "Alchemix V3 Safe",
+      "pinned_block_number": 26450616
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x8c213ee79581Ff4984583C6a801e5263418C4b86",
+      "protocol_slug": "anemoy-capital",
+      "protocol_name": "Anemoy Capital",
+      "role_or_surface": "Janus Henderson Treasury Fund (Tranche)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x31429d1856aD1377A8A0079410B297e1a9e214c2",
+      "protocol_slug": "angle",
+      "protocol_name": "Angle",
+      "role_or_surface": "ANGLE",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x0000000aa232009084Bd71A5797d089AA4Edfad4",
+      "protocol_slug": "angstrom",
+      "protocol_name": "Angstrom",
+      "role_or_surface": "Angstrom Hook",
+      "pinned_block_number": 26453551
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x60D41d9708BBEfd29000d1486C6406Ef23526c01",
+      "protocol_slug": "angstrom",
+      "protocol_name": "Angstrom",
+      "role_or_surface": "controller (timelock)",
+      "pinned_block_number": 26453551
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x8290333ceF9e6D528dD5618Fb97a76f268f3EDD4",
+      "protocol_slug": "ankr",
+      "protocol_name": "Ankr",
+      "role_or_surface": "Ankr Network",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x12225bB169b38EF8849DD4F5Cc466ae5996e341D",
+      "protocol_slug": "anvil",
+      "protocol_name": "Anvil",
+      "role_or_surface": "ProxyAdmin controller",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x1f00D6f7C18a8edf4f8Bb4Ead8a898aBDd9c9E14",
+      "protocol_slug": "anvil",
+      "protocol_name": "Anvil",
+      "role_or_surface": "beacon controller",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x4eeB7c5BB75Fc0DBEa4826BF568FD577f62cad21",
+      "protocol_slug": "anvil",
+      "protocol_name": "Anvil",
+      "role_or_surface": "AnvilTimelock (OpenZeppelin TimelockController)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xfE08D40Eee53d64936D3128838867c867602665c",
+      "protocol_slug": "ao-bridge",
+      "protocol_name": "AO Bridge",
+      "role_or_surface": "Distribution",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x52A8845DF664D76C69d2EEa607CD793565aF42B8",
+      "protocol_slug": "apex-pro",
+      "protocol_name": "ApeX Pro",
+      "role_or_surface": "ApeX Token",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xe18b0365D5D09F394f84eE56ed29DD2d8D6Fba5f",
+      "protocol_slug": "apy-finance",
+      "protocol_name": "APY Finance",
+      "role_or_surface": "APY Finance APYPoolTokenProxy",
+      "pinned_block_number": 26441165
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x324adD185708E4Cc85546085849a27b9Ba75f0Bb",
+      "protocol_slug": "arkis",
+      "protocol_name": "Arkis",
+      "role_or_surface": "controller (contract_controller)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xEA623eebd9c5bFd56067e36C89Db0C13e6c70ba8",
+      "protocol_slug": "arkis",
+      "protocol_name": "Arkis",
+      "role_or_surface": "AgreementFactory",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xAf6f9640092cB1236E5DB6E517576355b6C40b7f",
+      "protocol_slug": "arrakis-modular",
+      "protocol_name": "Arrakis Modular",
+      "role_or_surface": "Arrakis TimelockController (manager proxy admin, module beacon owner)",
+      "pinned_block_number": 26449594
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x1FE3Fe2Ddd19AB58B0c56054a5AF217Afb27eCEA",
+      "protocol_slug": "aster-bridge",
+      "protocol_name": "Aster Bridge",
+      "role_or_surface": "controller (multisig_safe)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x604DD02d620633Ae427888d41bfd15e38483736E",
+      "protocol_slug": "aster-bridge",
+      "protocol_name": "Aster Bridge",
+      "role_or_surface": "AstherusVault",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x00000069aBbB0B1Ad6975bcF753eEe15D318A0BF",
+      "protocol_slug": "asymmetry-finance",
+      "protocol_name": "Asymmetry Finance",
+      "role_or_surface": "Asymmetry Finance SimpleProxy",
+      "pinned_block_number": 26441165
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x221657776846890989a759BA2973e427DfF5C9bB",
+      "protocol_slug": "augur",
+      "protocol_name": "Augur",
+      "role_or_surface": "Reputation",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x3Fa73f1E5d8A792C80F426fc8F84FBF7Ce9bBCAC",
+      "protocol_slug": "aura",
+      "protocol_name": "Aura",
+      "role_or_surface": "AuraLocker (vlAURA)",
+      "pinned_block_number": 26455787
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x2218F90A98b0C070676f249EF44834686dAa4285",
+      "protocol_slug": "autofinance",
+      "protocol_name": "AUTOfinance",
+      "role_or_surface": "SystemRegistry",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x8b4334d4812C530574Bd4F2763FcD22dE94A969B",
+      "protocol_slug": "autofinance",
+      "protocol_name": "AUTOfinance",
+      "role_or_surface": "controller (multisig_safe)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x1792f73b586F3e931B51826195Ff015a23C86009",
+      "protocol_slug": "avalon-superearn",
+      "protocol_name": "Avalon Superearn",
+      "role_or_surface": "controller (contract_controller)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x5c8D0C48810FD37A0A824D074ee290E64f7A8Fa2",
+      "protocol_slug": "avalon-superearn",
+      "protocol_name": "Avalon Superearn",
+      "role_or_surface": "AVL (AvalonMintable)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x9469470C9878bf3d6d0604831d9A3A366156f7EE",
+      "protocol_slug": "avant-aveth",
+      "protocol_name": "Avant avETH",
+      "role_or_surface": "avETH (AvantCoin)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xd4d23209aaE8630bf386b7393763a5b7865e57cb",
+      "protocol_slug": "avant-aveth",
+      "protocol_name": "Avant avETH",
+      "role_or_surface": "controller (eoa)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x4F4495243837681061C4743b74B3eEdf548D56A5",
+      "protocol_slug": "axelar-network",
+      "protocol_name": "Axelar Network",
+      "role_or_surface": "AxelarGateway (proxy)",
+      "pinned_block_number": 26434786
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x7Acbae6CBa67d78AAf69e47000884aE00F9B2525",
+      "protocol_slug": "axelar-network",
+      "protocol_name": "Axelar Network",
+      "role_or_surface": "AxelarServiceGovernance",
+      "pinned_block_number": 26434786
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xB5FB4BE02232B1bBA4dC8f81dc24C26980dE9e3C",
+      "protocol_slug": "axelar-network",
+      "protocol_name": "Axelar Network",
+      "role_or_surface": "InterchainTokenService (proxy)",
+      "pinned_block_number": 26434786
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xCC940AE49C78F20E3F13F3cF37e996b98Ac3EC68",
+      "protocol_slug": "axelar-network",
+      "protocol_name": "Axelar Network",
+      "role_or_surface": "Axelar Multisig (gateway mintLimiter)",
+      "pinned_block_number": 26434786
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
+      "protocol_slug": "badger-dao",
+      "protocol_name": "Badger DAO",
+      "role_or_surface": "Badger (MiniMeToken)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x6048A8c631Fb7e77EcA533Cf9C29784e482391e7",
+      "protocol_slug": "balancer-v2-vault-timelock",
+      "protocol_name": "Balancer V2 Vault & TimelockAuthorizer",
+      "role_or_surface": "controller (contract_controller)",
+      "pinned_block_number": 26427612
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xA331D84eC860Bf466b4CdCcFb4aC09a1B43F3aE6",
+      "protocol_slug": "balancer-v2-vault-timelock",
+      "protocol_name": "Balancer V2 Vault & TimelockAuthorizer",
+      "role_or_surface": "Balancer V2 Authorizer",
+      "pinned_block_number": 26427612
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xBA12222222228d8Ba445958a75a0704d566BF2C8",
+      "protocol_slug": "balancer-v2-vault-timelock",
+      "protocol_name": "Balancer V2 Vault & TimelockAuthorizer",
+      "role_or_surface": "BalancerV2Vault",
+      "pinned_block_number": 26427612
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x7E3692A6D8c34a762079Fa9057AeD87be7e67cb8",
+      "protocol_slug": "bancor-v3",
+      "protocol_name": "Bancor V3",
+      "role_or_surface": "MSIG Safe",
+      "pinned_block_number": 26450616
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x0475cBCAebd9CE8AfA5025828d5b98DFb67E059E",
+      "protocol_slug": "base-bridge",
+      "protocol_name": "Base Bridge",
+      "role_or_surface": "Base L1 ProxyAdmin",
+      "pinned_block_number": 26448221
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x7bB41C3008B3f03FE483B28b8DB90e19Cf07595c",
+      "protocol_slug": "base-bridge",
+      "protocol_name": "Base Bridge",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 26448221
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x9fDbDE76236998Dc2836FE67A9954eDE456A1D63",
+      "protocol_slug": "baseline-protocol",
+      "protocol_name": "Baseline Protocol",
+      "role_or_surface": "Baseline (BToken)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x029E4FbDAa31DE075dD74B2238222A08233978f6",
+      "protocol_slug": "bedrock-unibtc",
+      "protocol_name": "Bedrock (uniBTC)",
+      "role_or_surface": "ProxyAdmin controller",
+      "pinned_block_number": 26449594
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x047D41F2544B7F63A8e991aF2068a363d210d6Da",
+      "protocol_slug": "bedrock-unibtc",
+      "protocol_name": "Bedrock (uniBTC)",
+      "role_or_surface": "Bedrock uniBTC VaultWithoutNative",
+      "pinned_block_number": 26449594
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xC9dA980fFABbE2bbe15d4734FDae5761B86b5Fc3",
+      "protocol_slug": "bedrock-unibtc",
+      "protocol_name": "Bedrock (uniBTC)",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 26449594
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x3050620423f4dB43E1904815E898C466526387b8",
+      "protocol_slug": "bedrock-unieth",
+      "protocol_name": "Bedrock (uniETH)",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 26434786
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x3F4eaCeb930b0Edfa78a1DFCbaE5c5494E6e9850",
+      "protocol_slug": "bedrock-unieth",
+      "protocol_name": "Bedrock (uniETH)",
+      "role_or_surface": "Bedrock Restaking (proxy)",
+      "pinned_block_number": 26434786
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x4beFa2aA9c305238AA3E0b5D17eB20C045269E9d",
+      "protocol_slug": "bedrock-unieth",
+      "protocol_name": "Bedrock (uniETH)",
+      "role_or_surface": "Bedrock Staking (proxy)",
+      "pinned_block_number": 26434786
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x926720Ae39114D0e2043b79570A1e08f00D01cCE",
+      "protocol_slug": "bedrock-unieth",
+      "protocol_name": "Bedrock (uniETH)",
+      "role_or_surface": "Bedrock EigenPod (pod 0)",
+      "pinned_block_number": 26434786
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xa5F2B6AB5B38b88Ba221741b3A189999b4c889C6",
+      "protocol_slug": "bedrock-unieth",
+      "protocol_name": "Bedrock (uniETH)",
+      "role_or_surface": "ProxyAdmin controller",
+      "pinned_block_number": 26434786
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xAeE017052DF6Ac002647229D58B786E380B9721A",
+      "protocol_slug": "bedrock-unieth",
+      "protocol_name": "Bedrock (uniETH)",
+      "role_or_surface": "controller (multisig_safe)",
+      "pinned_block_number": 26434786
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xF1376bceF0f78459C0Ed0ba5ddce976F1ddF51F4",
+      "protocol_slug": "bedrock-unieth",
+      "protocol_name": "Bedrock (uniETH)",
+      "role_or_surface": "uniETH token proxy (Universal ETH)",
+      "pinned_block_number": 26434786
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x4e4C314E2391A58775be6a15d7A05419ba7D2B6e",
+      "protocol_slug": "benddao-ape-staking",
+      "protocol_name": "BendDAO APE Staking",
+      "role_or_surface": "BendDAO Timelock 7D (owner of the Incentive ProxyAdmin)",
+      "pinned_block_number": 26451608
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x859f6e05410893fe64BC84d92BdA773fF798cf66",
+      "protocol_slug": "benddao-ape-staking",
+      "protocol_name": "BendDAO APE Staking",
+      "role_or_surface": "ProxyAdmin controller",
+      "pinned_block_number": 26451608
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xcb1592591996765Ec0eFc1f92599A19767ee5ffA",
+      "protocol_slug": "bio-protocol",
+      "protocol_name": "Bio Protocol",
+      "role_or_surface": "BIO token (BioToken)",
+      "pinned_block_number": 26451608
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xCdFb58c8C859Cb3F62ebe9Cf2767F9e036C7fb15",
+      "protocol_slug": "bitfi-basis",
+      "protocol_name": "BitFi Basis",
+      "role_or_surface": "bfBTC (ERC-1967 UUPS proxy, Ethereum)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x5F6AE08B8AeB7078cf2F96AFb089D7c9f51DA47d",
+      "protocol_slug": "blast-pre-launch-farm",
+      "protocol_name": "Blast pre-launch Farm",
+      "role_or_surface": "LaunchBridge",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x67CA7Ca75b69711cfd48B44eC3F64E469BaF608C",
+      "protocol_slug": "blast-pre-launch-farm",
+      "protocol_name": "Blast pre-launch Farm",
+      "role_or_surface": "controller (multisig_safe)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x5283D291DBCF85356A21bA090E6db59121208b44",
+      "protocol_slug": "blur-bids",
+      "protocol_name": "Blur Bids",
+      "role_or_surface": "Blur",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x6e596823A8c9c48Eb6Fa4aB2208F34B97453A327",
+      "protocol_slug": "blur-bids",
+      "protocol_name": "Blur Bids",
+      "role_or_surface": "controller (multisig_safe)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x0A638F07ACc6969abF392bB009f216D22aDEa36d",
+      "protocol_slug": "brickken",
+      "protocol_name": "Brickken",
+      "role_or_surface": "Brickken",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x7731129a10d51e18cDE607C5C115F26503D2c683",
+      "protocol_slug": "cap",
+      "protocol_name": "Cap",
+      "role_or_surface": "Cap AccessControl registry",
+      "pinned_block_number": 26425374
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xb8FC49402dF3ee4f8587268FB89fda4d621a8793",
+      "protocol_slug": "cap",
+      "protocol_name": "Cap",
+      "role_or_surface": "multisig controller",
+      "pinned_block_number": 26425374
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xD8236031d8279d82E615aF2BFab5FC0127A329ab",
+      "protocol_slug": "cap",
+      "protocol_name": "Cap",
+      "role_or_surface": "Cap TimelockController (Developer multisig proposer)",
+      "pinned_block_number": 26451608
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x5427FEFA711Eff984124bFBB1AB6fbf5E3DA1820",
+      "protocol_slug": "cbridge",
+      "protocol_name": "cBridge",
+      "role_or_surface": "cBridge pool-based Bridge (Ethereum)",
+      "pinned_block_number": 26452373
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x0B047953451A207743fB62541B21199b95190602",
+      "protocol_slug": "chainlink-ccip",
+      "protocol_name": "Chainlink CCIP",
+      "role_or_surface": "CCIP RMN (Ethereum)",
+      "pinned_block_number": 26433001
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x44835bBBA9D40DEDa9b64858095EcFB2693c9449",
+      "protocol_slug": "chainlink-ccip",
+      "protocol_name": "Chainlink CCIP",
+      "role_or_surface": "controller (timelock)",
+      "pinned_block_number": 26451608
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x80226fc0Ee2b096224EeAc085Bb9a8cba1146f7D",
+      "protocol_slug": "chainlink-ccip",
+      "protocol_name": "Chainlink CCIP",
+      "role_or_surface": "CCIP Router (Ethereum)",
+      "pinned_block_number": 26451608
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xb22764f98dD05c789929716D677382Df22C05Cb6",
+      "protocol_slug": "chainlink-ccip",
+      "protocol_name": "Chainlink CCIP",
+      "role_or_surface": "CCIP TokenAdminRegistry (Ethereum)",
+      "pinned_block_number": 26433001
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x5a76f841bFe5182f04bf511fC0Ecf88C27189FCB",
+      "protocol_slug": "chamber-vaults",
+      "protocol_name": "Chamber Vaults",
+      "role_or_surface": "controller (multisig_safe)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xca1207647Ff814039530D7d35df0e1Dd2e91Fa84",
+      "protocol_slug": "chamber-vaults",
+      "protocol_name": "Chamber Vaults",
+      "role_or_surface": "dHedge DAO Token (DHedgeTokenProxy)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xB13aa2d0345b0439b064f26B82D8dCf3f508775d",
+      "protocol_slug": "cian-yield-layer",
+      "protocol_name": "CIAN Yield Layer",
+      "role_or_surface": "CIAN stETH Yield Layer vault",
+      "pinned_block_number": 26450616
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xf24955E9D0a05222373d4555f8831f7A05e83F62",
+      "protocol_slug": "cian-yield-layer",
+      "protocol_name": "CIAN Yield Layer",
+      "role_or_surface": "ProxyAdmin controller",
+      "pinned_block_number": 26450616
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x77777777Dcc4d5A8B6E418Fd04D8997ef11000eE",
+      "protocol_slug": "circle-gateway",
+      "protocol_name": "Circle Gateway",
+      "role_or_surface": "Circle GatewayWallet",
+      "pinned_block_number": 26451608
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "protocol_slug": "circle-usdc",
+      "protocol_name": "Circle USDC",
+      "role_or_surface": "USDC FiatTokenProxy (Ethereum)",
+      "pinned_block_number": 26431152
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xD8Cc0304de58fCE5147796606Db14500d94b5EF2",
+      "protocol_slug": "clipper",
+      "protocol_name": "Clipper",
+      "role_or_surface": "controller (multisig_safe)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xd8F1460044925d2D5c723C7054cd9247027415B7",
+      "protocol_slug": "clipper",
+      "protocol_name": "Clipper",
+      "role_or_surface": "SAIL Token",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xBe9895146f7AF43049ca1c1AE358B0541Ea49704",
+      "protocol_slug": "coinbase-wrapped-staked-eth",
+      "protocol_name": "Coinbase Wrapped Staked ETH",
+      "role_or_surface": "Coinbase Wrapped Staked ETH (cbETH) FiatTokenProxy",
+      "pinned_block_number": 26427612
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x6d903f6003cca6255D85CcA4D3B5E5146dC33925",
+      "protocol_slug": "compound-v3-comet",
+      "protocol_name": "Compound V3 (Comet)",
+      "role_or_surface": "controller (timelock)",
+      "pinned_block_number": 26402160
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xc3d688B66703497DAA19211EEdff47f25384cdc3",
+      "protocol_slug": "compound-v3-comet",
+      "protocol_name": "Compound V3 (Comet)",
+      "role_or_surface": "cUSDCv3",
+      "pinned_block_number": 26402160
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xA0FB1b11ccA5871fb0225B64308e249B97804E99",
+      "protocol_slug": "concentrator",
+      "protocol_name": "Concentrator",
+      "role_or_surface": "controller (multisig_safe)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xb3Ad645dB386D7F6D753B2b9C3F4B853DA6890B8",
+      "protocol_slug": "concentrator",
+      "protocol_name": "Concentrator",
+      "role_or_surface": "Concentrator Token (Vyper_contract)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x70EBF87bA7a1517c204979e51979cfbf693364F9",
+      "protocol_slug": "concrete",
+      "protocol_name": "Concrete",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 26425374
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x8F5f1d40243b259cEB7aB44bA421Ff191bCD3381",
+      "protocol_slug": "concrete",
+      "protocol_name": "Concrete",
+      "role_or_surface": "Concrete Delta WeETH owner multisig",
+      "pinned_block_number": 26425374
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xB9DC54c8261745CB97070CeFBE3D3d815aee8f20",
+      "protocol_slug": "concrete",
+      "protocol_name": "Concrete",
+      "role_or_surface": "Concrete ctDeltaWeETH vault (Concrete Delta WeETH)",
+      "pinned_block_number": 26425374
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xB0Afc8363b8F36E0ccE5D54251e20720FfaeaeE7",
+      "protocol_slug": "convergence-fi",
+      "protocol_name": "Convergence Fi",
+      "role_or_surface": "CvgControlTowerV2",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xF16d93ACF337de38ee55dfb2F2A276883FF59e89",
+      "protocol_slug": "convergence-fi",
+      "protocol_name": "Convergence Fi",
+      "role_or_surface": "controller (contract_controller)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xF403C135812408BFbE8713b5A23a04b3D48AAE31",
+      "protocol_slug": "convex-finance",
+      "protocol_name": "Convex Finance",
+      "role_or_surface": "Convex Booster",
+      "pinned_block_number": 26401312
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x245cc372C84B3645Bf0Ffe6538620B04a217988B",
+      "protocol_slug": "cooler-loans",
+      "protocol_name": "Cooler Loans",
+      "role_or_surface": "Cooler Loans Safe",
+      "pinned_block_number": 26438867
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x2ba592F78dB6436527729929AAf6c908497cB200",
+      "protocol_slug": "creth2",
+      "protocol_name": "CRETH2",
+      "role_or_surface": "Cream (Comp)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x28Ff2E4dD1B58efEB0fC138602A28D5aE81e44e2",
+      "protocol_slug": "cronos-zkevm-bridge",
+      "protocol_name": "Cronos zkEVM Bridge",
+      "role_or_surface": "Cronos zkEVM CRO (ZkCro)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x65b5cFaad25c39063A248684DA546cAB1Cc46cf5",
+      "protocol_slug": "cronos-zkevm-bridge",
+      "protocol_name": "Cronos zkEVM Bridge",
+      "role_or_surface": "controller (eoa)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x467947EE34aF926cF1DCac093870f613C96B1E0c",
+      "protocol_slug": "curve-dex-ethereum",
+      "protocol_name": "Curve DEX (Ethereum)",
+      "role_or_surface": "Curve DEX (Ethereum) Safe",
+      "pinned_block_number": 26438867
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC",
+      "protocol_slug": "curve-finance-crvusd",
+      "protocol_name": "Curve Finance (crvUSD)",
+      "role_or_surface": "crvUSD ControllerFactory",
+      "pinned_block_number": 26403523
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x62359Ed7505Efc61FF1D56fEF82158CcaffA23D7",
+      "protocol_slug": "cvault-finance",
+      "protocol_name": "cVault Finance",
+      "role_or_surface": "CORE token",
+      "pinned_block_number": 26452373
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x07Dff4087b43c4A759f4Fc69511c26d51929dAF4",
+      "protocol_slug": "d2-finance",
+      "protocol_name": "D2 Finance",
+      "role_or_surface": "DRV++ (VaultV3)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xBB856548bCD0EBa1749c2336244139F1dbE93498",
+      "protocol_slug": "d2-finance",
+      "protocol_name": "D2 Finance",
+      "role_or_surface": "controller (multisig_safe)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x949b3B3c098348b879C9e4F15cecc8046d9C8A8c",
+      "protocol_slug": "debridge",
+      "protocol_name": "deBridge",
+      "role_or_surface": "deBridge SignatureVerifier (Ethereum)",
+      "pinned_block_number": 26452373
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x760233b90e45d186A9A98E911B115F7F4B90d3D9",
+      "protocol_slug": "decentralized-euro",
+      "protocol_name": "Decentralized Euro",
+      "role_or_surface": "dEURO Savings V3 (Leadrate)",
+      "pinned_block_number": 26450616
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xBc841B0dE0b93205e912CFBBd1D0c160A1ec6F00",
+      "protocol_slug": "defi-saver",
+      "protocol_name": "DeFi Saver",
+      "role_or_surface": "DeFi Saver Owner Safe",
+      "pinned_block_number": 26441165
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x09ce2B746C32528B7d864A1e3979Bd97d2f095AB",
+      "protocol_slug": "defil",
+      "protocol_name": "DeFIL",
+      "role_or_surface": "DeFIL-V2 (DFL)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x6B4F20B2259Eebb97945b6EF549a1c44FcA6Cd81",
+      "protocol_slug": "defil",
+      "protocol_name": "DeFIL",
+      "role_or_surface": "controller (contract_controller)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x62F161BF3692E4015BefB05A03a94A40f520d1c0",
+      "protocol_slug": "delv-yield",
+      "protocol_name": "DELV Yield",
+      "role_or_surface": "TrancheFactory",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x3A880652F47bFaa771908C07Dd8673A787dAEd3A",
+      "protocol_slug": "derivadex",
+      "protocol_name": "DerivaDEX",
+      "role_or_surface": "DerivaDAO (DDX)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xaA7b17C2539437Efa236FED262A5815358Ae2CC3",
+      "protocol_slug": "derive-v3-options",
+      "protocol_name": "Derive V3 Options",
+      "role_or_surface": "controller (contract_controller)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xB1D1eae60EEA9525032a6DCb4c1CE336a1dE71BE",
+      "protocol_slug": "derive-v3-options",
+      "protocol_name": "Derive V3 Options",
+      "role_or_surface": "Derive",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x4C1a8a04577286Ce58d0723b1a90160F380E550A",
+      "protocol_slug": "dexfi-aggregator",
+      "protocol_name": "DexFi Aggregator",
+      "role_or_surface": "DexFiVaultFactory",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x76e1736ea8Cda4d0Ed4923B8E119586716C5725f",
+      "protocol_slug": "dexfi-aggregator",
+      "protocol_name": "DexFi Aggregator",
+      "role_or_surface": "controller (multisig_safe)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x43Dfc4159D86F3A37A5A4B3D4580b888ad7d4DDd",
+      "protocol_slug": "dodo-amm",
+      "protocol_name": "DODO AMM",
+      "role_or_surface": "DODO bird",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xa75c21C5BE284122a87A37a76cc6C4DD3E55a1D4",
+      "protocol_slug": "dolomite",
+      "protocol_name": "Dolomite",
+      "role_or_surface": "Dolomite Safe",
+      "pinned_block_number": 26450616
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x2B5895b716311A1eaC8f93fB88C56aF9eC8C1A69",
+      "protocol_slug": "drakewell-usddw",
+      "protocol_name": "Drakewell USDdw",
+      "role_or_surface": "JUSD Credit Vault (AccountableAsyncRedeemVault)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xF063fE1aB7a291c5d06a86e14730b00BF24cB589",
+      "protocol_slug": "dxsale",
+      "protocol_name": "DxSale",
+      "role_or_surface": "DxSale.Network (MainToken)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x64c7d40c07EFAbec2AafdC243bF59eaF2195c6dc",
+      "protocol_slug": "dydx-v3",
+      "protocol_name": "dYdX V3",
+      "role_or_surface": "dYdX Short Timelock Executor",
+      "pinned_block_number": 26451608
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xEa5eDef1287AfDF9Eb8A46f9773AbFc10820c61c",
+      "protocol_slug": "easedefi-org",
+      "protocol_name": "Easedefi.org",
+      "role_or_surface": "Ease Token",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x7B2c1CbB33c53c3C6a695e36096AD2cfCE1c0efC",
+      "protocol_slug": "eclipse-bridge",
+      "protocol_name": "Eclipse Bridge",
+      "role_or_surface": "Eclipse Bridge Safe",
+      "pinned_block_number": 26440048
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xB0076DE78Dc50581770BBa1D211dDc0aD4F2a241",
+      "protocol_slug": "edgex-bridge",
+      "protocol_name": "edgeX Bridge",
+      "role_or_surface": "Edge",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xC06Fd4F821eaC1fF1ae8067b36342899b57BAa2d",
+      "protocol_slug": "eigenlayer-core",
+      "protocol_name": "EigenLayer Core",
+      "role_or_surface": "EigenLayerTimelockController",
+      "pinned_block_number": 26402160
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x20b70E4A1883b81429533FeD944d7957121c7CAB",
+      "protocol_slug": "eigenpie",
+      "protocol_name": "Eigenpie",
+      "role_or_surface": "EigenpieConfig",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xaF69B55b083AB19893D5Ff18213b3E67875E01F3",
+      "protocol_slug": "eigenpie",
+      "protocol_name": "Eigenpie",
+      "role_or_surface": "controller (contract_controller)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xe0e0e08A6A4b9Dc7bD67BCB7aadE5cF48157d444",
+      "protocol_slug": "ekubo",
+      "protocol_name": "Ekubo",
+      "role_or_surface": "Ekubo Core (EVM V2)",
+      "pinned_block_number": 26451608
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xb270FE91e8E4b80452fBF1b4704208792A350f53",
+      "protocol_slug": "enzyme-finance",
+      "protocol_name": "Enzyme Finance",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 26421541
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xC3DC853dD716bd5754f421ef94fdCbac3902ab32",
+      "protocol_slug": "enzyme-finance",
+      "protocol_name": "Enzyme Finance",
+      "role_or_surface": "Enzyme Dispatcher",
+      "pinned_block_number": 26421541
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xe2A63438747D2c71E14BdC2Cc222be89B1C11D03",
+      "protocol_slug": "equilibria",
+      "protocol_name": "Equilibria",
+      "role_or_surface": "Equilibria TimelockController",
+      "pinned_block_number": 26440048
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xC53CCed6332D06972A7eaEDc64FDF6d4aF5220b8",
+      "protocol_slug": "eth-strategy",
+      "protocol_name": "ETH Strategy",
+      "role_or_surface": "ETH Strategy Safe",
+      "pinned_block_number": 26440048
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94",
+      "protocol_slug": "ethena-usde-susde",
+      "protocol_name": "Ethena (USDe / sUSDe)",
+      "role_or_surface": "EthenaTimelockController",
+      "pinned_block_number": 26406106
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x3B0AAf6e6fCd4a7cEEf8c92C32DFeA9E64dC1862",
+      "protocol_slug": "ethena-usdtb",
+      "protocol_name": "Ethena USDtb",
+      "role_or_surface": "multisig controller",
+      "pinned_block_number": 26422243
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x3C405F68d5C6eCE868e5646cAC926679839aCd68",
+      "protocol_slug": "ethena-usdtb",
+      "protocol_name": "Ethena USDtb",
+      "role_or_surface": "ProxyAdmin controller",
+      "pinned_block_number": 26422243
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x73E35C5c35A274E34AdE6EB13cC7f62aEE323728",
+      "protocol_slug": "ethena-usdtb",
+      "protocol_name": "Ethena USDtb",
+      "role_or_surface": "USDtb PSM",
+      "pinned_block_number": 26422243
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xC139190F447e929f090Edeb554D95AbB8b18aC1C",
+      "protocol_slug": "ethena-usdtb",
+      "protocol_name": "Ethena USDtb",
+      "role_or_surface": "USDtb token proxy",
+      "pinned_block_number": 26422243
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xe897D8620D5EbA2C8ecAAF0aDa191a23230aB8Ec",
+      "protocol_slug": "ethena-usdtb",
+      "protocol_name": "Ethena USDtb",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 26422243
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x9f26d4C958fD811A1F59B01B86Be7dFFc9d20761",
+      "protocol_slug": "ether-fi-core-eeth-weeth",
+      "protocol_name": "ether.fi Core (eETH / weETH)",
+      "role_or_surface": "ether.fi Upgrade Timelock",
+      "pinned_block_number": 26405302
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x485Bde66Bb668a51f2372E34e45B1c6226798122",
+      "protocol_slug": "ether-fi-liquid-veda-boringvault",
+      "protocol_name": "ether.fi Liquid / Veda BoringVault",
+      "role_or_surface": "Liquid RolesAuthority",
+      "pinned_block_number": 26401070
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xD829F278016b90FEc735F9A12Bf8b75E06102C89",
+      "protocol_slug": "ether-fi-liquid-veda-boringvault",
+      "protocol_name": "ether.fi Liquid / Veda BoringVault",
+      "role_or_surface": "controller (timelock)",
+      "pinned_block_number": 26401070
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x29a56a1b8214D9Cf7c5561811750D5cBDb45CC8e",
+      "protocol_slug": "euler-v2-evk",
+      "protocol_name": "Euler V2 (EVK)",
+      "role_or_surface": "EulerEVaultFactory (GenericFactory)",
+      "pinned_block_number": 26421541
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xB1345E7A4D35FB3E6bF22A32B3741Ae74E5Fba27",
+      "protocol_slug": "euler-v2-evk",
+      "protocol_name": "Euler V2 (EVK)",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 26421541
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xb3b84e8320250Afe7a5fb313Ee32B52982b73c53",
+      "protocol_slug": "euler-v2-evk",
+      "protocol_name": "Euler V2 (EVK)",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 26421541
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xcAD001c30E96765aC90307669d578219D4fb1DCe",
+      "protocol_slug": "euler-v2-evk",
+      "protocol_name": "Euler V2 (EVK)",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 26421541
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xfb034c1C6c7F42171b2d1Cb8486E0f43ED07A968",
+      "protocol_slug": "euler-v2-evk",
+      "protocol_name": "Euler V2 (EVK)",
+      "role_or_surface": "controller (timelock)",
+      "pinned_block_number": 26421541
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x3866eA62494597A5EDeA4A97f9429f82b9d7Ca34",
+      "protocol_slug": "exactly",
+      "protocol_name": "Exactly",
+      "role_or_surface": "ProxyAdmin controller",
+      "pinned_block_number": 26449594
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x92024C4bDa9DA602b711B9AbB610d072018eb58b",
+      "protocol_slug": "exactly",
+      "protocol_name": "Exactly",
+      "role_or_surface": "Exactly TimelockController (owner of the Auditor's ProxyAdmin)",
+      "pinned_block_number": 26449594
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x26B2ec4E02ebe2F54583af25b647b1D619e67BbF",
+      "protocol_slug": "f-x-protocol-v2",
+      "protocol_name": "f(x) Protocol v2",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 26448221
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x32356FE312Eba9B7D6A157ad28D1ca91b571CdA6",
+      "protocol_slug": "f-x-protocol-v2",
+      "protocol_name": "f(x) Protocol v2",
+      "role_or_surface": "ProtocolTreasury (wstETH)",
+      "pinned_block_number": 26448221
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x33636D49FbefBE798e15e7F356E8DBef543CC708",
+      "protocol_slug": "f-x-protocol-v2",
+      "protocol_name": "f(x) Protocol v2",
+      "role_or_surface": "f(x) V2 Router (Diamond)",
+      "pinned_block_number": 26448221
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x019817aD02a31B990433542097bE29D97613E8Cb",
+      "protocol_slug": "fake-world-assets-v2",
+      "protocol_name": "Fake World Assets V2",
+      "role_or_surface": "controller (eoa)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xa0Df17B5aC76ABaBA36E1450E2cbCd18A620C845",
+      "protocol_slug": "fake-world-assets-v2",
+      "protocol_name": "Fake World Assets V2",
+      "role_or_surface": "Fake World Assets (FWAToken)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x1E482B60bf19Cb1cc859389e0eA3DED153f16Bd7",
+      "protocol_slug": "falcon-finance-usdf-susdf",
+      "protocol_name": "Falcon Finance (USDf / sUSDf)",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 26418060
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xc8CF6D7991f15525488b2A83Df53468D682Ba4B0",
+      "protocol_slug": "falcon-finance-usdf-susdf",
+      "protocol_name": "Falcon Finance (USDf / sUSDf)",
+      "role_or_surface": "Falcon sUSDf vault",
+      "pinned_block_number": 26418060
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xb1076fE3AB5e28005C7c323Bac5AC06a680d452e",
+      "protocol_slug": "fermiswap",
+      "protocol_name": "FermiSwap",
+      "role_or_surface": "FermiSwapper",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x6c4c0CD7E0E5eeFfbd77AAfe1820d3b9B1ef27b0",
+      "protocol_slug": "flaunch",
+      "protocol_name": "flaunch",
+      "role_or_surface": "flaunch TimelockController",
+      "pinned_block_number": 26448221
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x533a36b5e56C1f0361a53d4395F4F0c5f1AD63f8",
+      "protocol_slug": "flexa",
+      "protocol_name": "Flexa",
+      "role_or_surface": "controller (contract_controller)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xfF20817765cB7f73d4bde2e66e067E58D11095C2",
+      "protocol_slug": "flexa",
+      "protocol_name": "Flexa",
+      "role_or_surface": "Amp",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xcf0C122c6b73ff809C693DB761e7BaeBe62b6a2E",
+      "protocol_slug": "flokifi-locker",
+      "protocol_name": "FlokiFi Locker",
+      "role_or_surface": "FLOKI",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x324c5Dc1fC42c7a4D43d92df1eBA58a54d13Bf2d",
+      "protocol_slug": "fluid-instadapp",
+      "protocol_name": "Fluid / Instadapp",
+      "role_or_surface": "VaultFactory",
+      "pinned_block_number": 26401405
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x1118e1c057211306a40A4d7006C040dbfE1370Cb",
+      "protocol_slug": "flying-tulip-lend",
+      "protocol_name": "Flying Tulip Lend",
+      "role_or_surface": "Flying Tulip treasury Safe",
+      "pinned_block_number": 26449594
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xDb861830D9Ae2d1fCF99fA0cfd3973de382B0B5b",
+      "protocol_slug": "frankencoin",
+      "protocol_name": "Frankencoin",
+      "role_or_surface": "Frankencoin Shares (FCS)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x223a681fc5c5522c85C96157c0efA18cd6c5405c",
+      "protocol_slug": "frax-ether-sfrxeth",
+      "protocol_name": "Frax Ether (frxETH / sfrxETH)",
+      "role_or_surface": "ProxyAdmin controller",
+      "pinned_block_number": 26425374
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x8306300ffd616049FD7e4b0354a64Da835c1A81C",
+      "protocol_slug": "frax-ether-sfrxeth",
+      "protocol_name": "Frax Ether (frxETH / sfrxETH)",
+      "role_or_surface": "controller (multisig_safe)",
+      "pinned_block_number": 26425374
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xB1748C79709f4Ba2Dd82834B8c82D4a505003f27",
+      "protocol_slug": "frax-ether-sfrxeth",
+      "protocol_name": "Frax Ether (frxETH / sfrxETH)",
+      "role_or_surface": "Frax Ethereum lockbox multisig (LayerZero delegate)",
+      "pinned_block_number": 26425374
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xb898Ad2976b4d8f2E21521C9db16b7497825E503",
+      "protocol_slug": "frax-ether-sfrxeth",
+      "protocol_name": "Frax Ether (frxETH / sfrxETH)",
+      "role_or_surface": "Frax Ethereum Admin Timelock (ProxyAdmin owner)",
+      "pinned_block_number": 26425374
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xbAFA44EFE7901E04E39Dad13167D089C559c1138",
+      "protocol_slug": "frax-ether-sfrxeth",
+      "protocol_name": "Frax Ether (frxETH / sfrxETH)",
+      "role_or_surface": "frxETHMinter",
+      "pinned_block_number": 26425374
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xfFFffF4F3baC444b2C0ecf2A1840d018bE783937",
+      "protocol_slug": "frax-ether-sfrxeth",
+      "protocol_name": "Frax Ether (frxETH / sfrxETH)",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 26425374
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x0b2C3dF006b2bd43cBCC60075e7a0bf314474eD6",
+      "protocol_slug": "frax-usd-frxusd",
+      "protocol_name": "Frax USD (frxUSD)",
+      "role_or_surface": "ProxyAdmin controller",
+      "pinned_block_number": 26431152
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x4b45D73b83686e69d08E61105FdB7F7b51f41Bc1",
+      "protocol_slug": "frax-usd-frxusd",
+      "protocol_name": "Frax USD (frxUSD)",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 26431152
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x831822660572bd54ebaa065C2acef662a6277D40",
+      "protocol_slug": "frax-usd-frxusd",
+      "protocol_name": "Frax USD (frxUSD)",
+      "role_or_surface": "Frax AMO Timelock (msig) Safe",
+      "pinned_block_number": 26431152
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xCAcd6fd266aF91b8AeD52aCCc382b4e165586E29",
+      "protocol_slug": "frax-usd-frxusd",
+      "protocol_name": "Frax USD (frxUSD)",
+      "role_or_surface": "frxUSD (TransparentUpgradeableProxy)",
+      "pinned_block_number": 26431152
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xcf62F905562626CfcDD2261162a51fd02Fc9c5b6",
+      "protocol_slug": "frax-usd-frxusd",
+      "protocol_name": "Frax USD (frxUSD)",
+      "role_or_surface": "sfrxUSD (TransparentUpgradeableProxy)",
+      "pinned_block_number": 26431152
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xeA0a6EC8114a0Af6Cf74Ca0036Ab31d892Df13cB",
+      "protocol_slug": "frax-usd-frxusd",
+      "protocol_name": "Frax USD (frxUSD)",
+      "role_or_surface": "ProxyAdmin controller",
+      "pinned_block_number": 26431152
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x6BeA7CFEF803D1e3d5f7C0103f7ded065644e197",
+      "protocol_slug": "gamma",
+      "protocol_name": "Gamma",
+      "role_or_surface": "GAMMA token",
+      "pinned_block_number": 26453551
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xa133C9A92Fb8dDB962Af1cbae58b2723A0bdf23b",
+      "protocol_slug": "gearbox-v3-v3-1",
+      "protocol_name": "Gearbox V3 / V3.1",
+      "role_or_surface": "Gearbox LegacyTimelock",
+      "pinned_block_number": 26403523
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x3802c218221390025BCEABBaD5D8C59F40eB74B8",
+      "protocol_slug": "geth",
+      "protocol_name": "GETH",
+      "role_or_surface": "Guarded Ether (StakeToken)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xBEb28978B2c755155f20fd3d09Cb37e300A6981f",
+      "protocol_slug": "goldfinch",
+      "protocol_name": "Goldfinch",
+      "role_or_surface": "Goldfinch Council multisig (governance signers of the protocol)",
+      "pinned_block_number": 26449594
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xE9c9Ef882f534a21d74b084845348044d03aca85",
+      "protocol_slug": "gondi-v3",
+      "protocol_name": "Gondi V3",
+      "role_or_surface": "controller (eoa)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xf65B99CE6DC5F6c556172BCC0Ff27D3665a7d9A8",
+      "protocol_slug": "gondi-v3",
+      "protocol_name": "Gondi V3",
+      "role_or_surface": "GONDI_MULTI_SOURCE_LOAN (MultiSourceLoan)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xbD6e434dB90FD8AD4E28d85C133AD34cA6fbfB6D",
+      "protocol_slug": "gravity-by-galxe-bridge",
+      "protocol_name": "Gravity by Galxe Bridge",
+      "role_or_surface": "Gravity by Galxe Bridge Safe",
+      "pinned_block_number": 26440048
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x359F4fe841f246a095a82cb26F5819E10a91fe0d",
+      "protocol_slug": "gro",
+      "protocol_name": "Gro",
+      "role_or_surface": "controller (multisig_safe)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x3Ec8798B81485A254928B70CDA1cf0A2BB0B74D7",
+      "protocol_slug": "gro",
+      "protocol_name": "Gro",
+      "role_or_surface": "Gro DAO Token",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x491EDFB0B8b608044e227225C715981a30F3A44E",
+      "protocol_slug": "grove-finance",
+      "protocol_name": "Grove Finance",
+      "role_or_surface": "Grove ALMProxy (custody of allocator funds)",
+      "pinned_block_number": 26427612
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xfd9dEA9a8D5B955649579Af482DB7198A392A9F5",
+      "protocol_slug": "grove-finance",
+      "protocol_name": "Grove Finance",
+      "role_or_surface": "Grove MainnetController (rate-limited relayer operations)",
+      "pinned_block_number": 26427612
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xAD29F2723fcdBcF665F210F25E06f97477e417cF",
+      "protocol_slug": "grvt-bridge",
+      "protocol_name": "Grvt Bridge",
+      "role_or_surface": "GRVT (GRVTToken)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xF2B8f214Dc81b849ed3BDCAEdA6c8c39625c500A",
+      "protocol_slug": "hakka-finance",
+      "protocol_name": "Hakka Finance",
+      "role_or_surface": "Hakka Finance multi-sig (Safe)",
+      "pinned_block_number": 26453551
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xa0246c9032bC3A600820415aE600c6388619A14D",
+      "protocol_slug": "harvest-finance",
+      "protocol_name": "Harvest Finance",
+      "role_or_surface": "FARM Reward Token",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x367e59b559283C8506207d75B0c5D8C66c4Cd4B7",
+      "protocol_slug": "hashport",
+      "protocol_name": "Hashport",
+      "role_or_surface": "Hashport Router (Diamond)",
+      "pinned_block_number": 26451608
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x584bC13c7D411c00c01A62e8019472dE68768430",
+      "protocol_slug": "hegic",
+      "protocol_name": "Hegic",
+      "role_or_surface": "Hegic",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x1ec078551A5ac8F0f51fAc57Ffc48Ea7d9A86E9d",
+      "protocol_slug": "hop-protocol",
+      "protocol_name": "Hop Protocol",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 26453551
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x22e3F828b3f47dAcFACd875D20bd5cc0879C96e7",
+      "protocol_slug": "hop-protocol",
+      "protocol_name": "Hop Protocol",
+      "role_or_surface": "controller (timelock)",
+      "pinned_block_number": 26453551
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xb8901acB165ed027E32754E0FFe830802919727f",
+      "protocol_slug": "hop-protocol",
+      "protocol_name": "Hop Protocol",
+      "role_or_surface": "Hop L1_ETH_Bridge (Ethereum)",
+      "pinned_block_number": 26453551
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xed8Bdb5895B8B7f9Fdb3C087628FD8410E853D48",
+      "protocol_slug": "hop-protocol",
+      "protocol_name": "Hop Protocol",
+      "role_or_surface": "Governor controller",
+      "pinned_block_number": 26453551
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xeeA8422a08258e73c139Fc32a25e10410c14bd7a",
+      "protocol_slug": "hop-protocol",
+      "protocol_name": "Hop Protocol",
+      "role_or_surface": "Timelock controller",
+      "pinned_block_number": 26453551
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x6D265C7dD8d76F25155F1a7687C693FDC1220D12",
+      "protocol_slug": "hyperlane",
+      "protocol_name": "Hyperlane",
+      "role_or_surface": "XERC20Lockbox",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x111111517e4929D3dcbdfa7CCe55d30d4B6BC4d6",
+      "protocol_slug": "ichi",
+      "protocol_name": "ICHI",
+      "role_or_surface": "ICHI (IchiV2)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xB705268213D593B8FD88d3FDEFF93AFF5CbDcfAE",
+      "protocol_slug": "idex-v1",
+      "protocol_name": "IDEX V1",
+      "role_or_surface": "IDEX Token (IDEX)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xD6dABBc2b275114a2366555d6C481EF08FDC2556",
+      "protocol_slug": "idle",
+      "protocol_name": "Idle",
+      "role_or_surface": "Idle governance Timelock (Compound-style)",
+      "pinned_block_number": 26450616
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x177bFf0AD93B8132012F05081A10a0e574fa5F97",
+      "protocol_slug": "inceptionlrt-isolated-restaking",
+      "protocol_name": "InceptionLRT (Isolated Restaking)",
+      "role_or_surface": "ProxyAdmin controller",
+      "pinned_block_number": 26451608
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x650bD9Dee50E3eE15cbb49749ff6ABcf55A8FB1e",
+      "protocol_slug": "inceptionlrt-isolated-restaking",
+      "protocol_name": "InceptionLRT (Isolated Restaking)",
+      "role_or_surface": "InceptionTimeLock (owner of the vault ProxyAdmins)",
+      "pinned_block_number": 26451608
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xB81e55e7Ee6B286aF6abFEa4eFad83f7BA4D1f1e",
+      "protocol_slug": "inceptionlrt-isolated-restaking",
+      "protocol_name": "InceptionLRT (Isolated Restaking)",
+      "role_or_surface": "ProxyAdmin controller",
+      "pinned_block_number": 26451608
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x0954906da0Bf32d5479e25f46056d22f08464cab",
+      "protocol_slug": "index-coop",
+      "protocol_name": "Index Coop",
+      "role_or_surface": "INDEX token",
+      "pinned_block_number": 26452373
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x3D18480CC32B6AB3B833dCabD80E76CfD41c48a9",
+      "protocol_slug": "infinifi",
+      "protocol_name": "infiniFi",
+      "role_or_surface": "infiniFi Long Timelock (GOVERNOR)",
+      "pinned_block_number": 26449594
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x4B174afbeD7b98BA01F50E36109EEE5e6d327c32",
+      "protocol_slug": "infinifi",
+      "protocol_name": "infiniFi",
+      "role_or_surface": "Timelock controller",
+      "pinned_block_number": 26425374
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x80608f852D152024c0a2087b16939235fEc2400c",
+      "protocol_slug": "infinifi",
+      "protocol_name": "infiniFi",
+      "role_or_surface": "infiniFi Team Multisig (timelock proposer)",
+      "pinned_block_number": 26425374
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xF6d48735EcCf12bDC1DF2674b1ce3fcb3bD25490",
+      "protocol_slug": "infinifi",
+      "protocol_name": "infiniFi",
+      "role_or_surface": "InfiniFiCore role registry",
+      "pinned_block_number": 26425374
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xe28b3B32B6c345A34Ff64674606124Dd5Aceca30",
+      "protocol_slug": "injective-bridge",
+      "protocol_name": "Injective Bridge",
+      "role_or_surface": "Injective Token",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x2A54bA2964C8Cd459Dc568853F79813a60761B58",
+      "protocol_slug": "interest-protocol",
+      "protocol_name": "Interest Protocol",
+      "role_or_surface": "USDI Token",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x3D9d8c08dC16Aa104b5B24aBDd1aD857e2c0D8C5",
+      "protocol_slug": "interest-protocol",
+      "protocol_name": "Interest Protocol",
+      "role_or_surface": "controller (contract_controller)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x01ECA33e20a4c379Bd8A5361f896A7dd2bAE4ce8",
+      "protocol_slug": "inverse-finance-firm",
+      "protocol_name": "Inverse Finance (FiRM)",
+      "role_or_surface": "FiRM BorrowController",
+      "pinned_block_number": 26406106
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7",
+      "protocol_slug": "inverse-finance-firm",
+      "protocol_name": "Inverse Finance (FiRM)",
+      "role_or_surface": "Policy Committee Safe",
+      "pinned_block_number": 26449594
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x926dF14a23BE491164dCF93f4c468A50ef659D5B",
+      "protocol_slug": "inverse-finance-firm",
+      "protocol_name": "Inverse Finance (FiRM)",
+      "role_or_surface": "controller (timelock)",
+      "pinned_block_number": 26449594
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xf27de84F11E089B838769EDFcFf9872BC45c84Fe",
+      "protocol_slug": "jpy-defi",
+      "protocol_name": "JPY DeFi",
+      "role_or_surface": "Governance TimelockController queueing upgrades of the dToken and Strategy layers",
+      "pinned_block_number": 26449594
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x3abF2A4f8452cCC2CF7b4C1e4663147600646f66",
+      "protocol_slug": "juicebox-v1",
+      "protocol_name": "Juicebox V1",
+      "role_or_surface": "Juicebox (Tickets)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xee2eBCcB7CDb34a8A822b589F9E8427C24351bfc",
+      "protocol_slug": "juicebox-v1",
+      "protocol_name": "Juicebox V1",
+      "role_or_surface": "controller (contract_controller)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xAEb6bdd95c502390db8f52c8909F703E9Af6a346",
+      "protocol_slug": "k3-capital",
+      "protocol_name": "K3 Capital",
+      "role_or_surface": "controller (contract_controller)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xdC47953c816531a8CA9E1D461AB53687d48EEA26",
+      "protocol_slug": "k3-capital",
+      "protocol_name": "K3 Capital",
+      "role_or_surface": "MigratableEntityProxy",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xd512543315c95506E4209805b888414EEF15C8C4",
+      "protocol_slug": "katana",
+      "protocol_name": "Katana",
+      "role_or_surface": "Katana Admin multisig (Ethereum Safe)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x49bD9989E31aD35B0A62c20BE86335196A3135B1",
+      "protocol_slug": "kelp-dao-rseth",
+      "protocol_name": "Kelp DAO (rsETH)",
+      "role_or_surface": "KelpTimelockController",
+      "pinned_block_number": 26451608
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x85d456B2DfF1fd8245387C0BfB64Dfb700e98Ef3",
+      "protocol_slug": "kelp-dao-rseth",
+      "protocol_name": "Kelp DAO (rsETH)",
+      "role_or_surface": "Kelp RSETH_OFTAdapter (Ethereum)",
+      "pinned_block_number": 26451608
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x947Cb49334e6571ccBFEF1f1f1178d8469D65ec7",
+      "protocol_slug": "kelp-dao-rseth",
+      "protocol_name": "Kelp DAO (rsETH)",
+      "role_or_surface": "Kelp LRTConfig",
+      "pinned_block_number": 26449594
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xA1290d69c65A6Fe4DF752f95823fae25cB99e5A7",
+      "protocol_slug": "kelp-dao-rseth",
+      "protocol_name": "Kelp DAO (rsETH)",
+      "role_or_surface": "rsETH proxy (EIP-1967 admin slot)",
+      "pinned_block_number": 26406106
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x9E8e622e0bA0deE491Fbc42d1Bb12Ab947e2D03B",
+      "protocol_slug": "kine-finance",
+      "protocol_name": "Kine Finance",
+      "role_or_surface": "controller (timelock)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xbB7D94a423f4978545ecf73161f0678e8AfD1a92",
+      "protocol_slug": "kine-finance",
+      "protocol_name": "Kine Finance",
+      "role_or_surface": "Unitroller",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x8F08B70456eb22f6109F57b8fafE862ED28E6040",
+      "protocol_slug": "king-protocol",
+      "protocol_name": "King Protocol",
+      "role_or_surface": "King Protocol (UUPSProxy)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x8b884f80B3B839F52b6cE168f133e7a5D1f0A537",
+      "protocol_slug": "kpk",
+      "protocol_name": "KPK",
+      "role_or_surface": "KPK Security Council Safe",
+      "pinned_block_number": 26449594
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xB5502747AABDCa21E832951b4caaF739dA33f450",
+      "protocol_slug": "kuma-protocol",
+      "protocol_name": "KUMA Protocol",
+      "role_or_surface": "KUMA Protocol Safe",
+      "pinned_block_number": 26440048
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202",
+      "protocol_slug": "kyberswap-classic",
+      "protocol_name": "KyberSwap Classic",
+      "role_or_surface": "KyberSwap Classic KyberNetworkTokenV2 proxy",
+      "pinned_block_number": 26441165
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x6D46e28aB34622d9A39d0F306a37a8dC270951aF",
+      "protocol_slug": "lagoon",
+      "protocol_name": "Lagoon",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 26448221
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x707D622cdA4b5459e7DcEe8Ba8E429F154f96A27",
+      "protocol_slug": "lagoon",
+      "protocol_name": "Lagoon",
+      "role_or_surface": "Lagoon cbBTC vault UpgradeableBeacon",
+      "pinned_block_number": 26448221
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x08A1C30BBB26425c1031ee9E43FA0B9960742539",
+      "protocol_slug": "landx-finance",
+      "protocol_name": "LandX Finance",
+      "role_or_surface": "LandX Governance Token (LNDX)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xf44Bc45368Fb7f6ffC74C5545326Aa0F068b6d4c",
+      "protocol_slug": "landx-finance",
+      "protocol_name": "LandX Finance",
+      "role_or_surface": "controller (multisig_safe)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x1a44076050125825900e736c501f859c50fE728c",
+      "protocol_slug": "layerzero-v2",
+      "protocol_name": "LayerZero V2",
+      "role_or_surface": "LayerZero EndpointV2 (Ethereum)",
+      "pinned_block_number": 26434786
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xbB2Ea70C9E858123480642Cf96acbcCE1372dCe1",
+      "protocol_slug": "layerzero-v2",
+      "protocol_name": "LayerZero V2",
+      "role_or_surface": "LayerZero SendUln302 (Ethereum)",
+      "pinned_block_number": 26434786
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xd53B68fB4eb907c3c1E348CD7d7bEDE34f763805",
+      "protocol_slug": "lazy",
+      "protocol_name": "Lazy",
+      "role_or_surface": "LazyUSD (LazyUSDVault)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x30Fa557608017afB6E8e4ABe8027787C00473FF0",
+      "protocol_slug": "ledgity-yield",
+      "protocol_name": "Ledgity Yield",
+      "role_or_surface": "controller (multisig_safe)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x482dF7483a52496F4C65AB499966dfcdf4DDFDbc",
+      "protocol_slug": "ledgity-yield",
+      "protocol_name": "Ledgity Yield",
+      "role_or_surface": "Ledgity Token (LDY)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x4a7aCA57A685c9E893F60a716415E5e588500533",
+      "protocol_slug": "legion",
+      "protocol_name": "Legion",
+      "role_or_surface": "controller (contract_controller)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xa0BeB0A8C765482c128a2986c063AF5C3171ff2F",
+      "protocol_slug": "legion",
+      "protocol_name": "Legion",
+      "role_or_surface": "LegionPreLiquidSaleV2Factory",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xB620Be8a1949AA9532e6a3510132864EF9Bc3F82",
+      "protocol_slug": "lendflare",
+      "protocol_name": "LendFlare",
+      "role_or_surface": "LendFlare DAO Token (LendFlareProxy)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xc413AcBb126fa228d7E3d1943bA506b507C91aF7",
+      "protocol_slug": "lendflare",
+      "protocol_name": "LendFlare",
+      "role_or_surface": "controller (eoa)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x8B7854488Fde088d686Ea672B6ba1A5242515f45",
+      "protocol_slug": "lido-steth-dual-governance",
+      "protocol_name": "Lido (stETH / Dual Governance)",
+      "role_or_surface": "Lido Dual Governance Emergency Activation Committee Safe",
+      "pinned_block_number": 26448221
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xC7792b3F2B399bB0EdF53fECDceCeB97FBEB18AF",
+      "protocol_slug": "lido-steth-dual-governance",
+      "protocol_name": "Lido (stETH / Dual Governance)",
+      "role_or_surface": "Lido Dual Governance Emergency Execution Committee Safe",
+      "pinned_block_number": 26448221
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xCE0425301C85c5Ea2A0873A2dEe44d78E02D2316",
+      "protocol_slug": "lido-steth-dual-governance",
+      "protocol_name": "Lido (stETH / Dual Governance)",
+      "role_or_surface": "EmergencyProtectedTimelock",
+      "pinned_block_number": 26448221
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x232CE3bd40fCd6f80f3d55A522d03f25Df784Ee2",
+      "protocol_slug": "lighter-bridge",
+      "protocol_name": "Lighter Bridge",
+      "role_or_surface": "Lighter",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x8c1BEd5b9a0928467c9B1341Da1D7BD5e10b6549",
+      "protocol_slug": "liquid-collective-lseth",
+      "protocol_name": "Liquid Collective (LsETH)",
+      "role_or_surface": "River (LsETH) proxy",
+      "pinned_block_number": 26422243
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x8EE3fC0Bcd7B57429203751C5bE5fdf1AB8409f3",
+      "protocol_slug": "liquid-collective-lseth",
+      "protocol_name": "Liquid Collective (LsETH)",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 26422243
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xDE55C9dc78f985fE1502484Cb98EBfAB66A56B62",
+      "protocol_slug": "liquid-collective-lseth",
+      "protocol_name": "Liquid Collective (LsETH)",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 26422243
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xE3208Aa9d1186c1D1C8A5b76E794b2B68E6cb3a5",
+      "protocol_slug": "liquid-collective-lseth",
+      "protocol_name": "Liquid Collective (LsETH)",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 26422243
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xA39739EF8b0231DbFA0DcdA07d7e29faAbCf4bb2",
+      "protocol_slug": "liquity-v1-lusd",
+      "protocol_name": "Liquity V1 (LUSD)",
+      "role_or_surface": "Liquity V1 TroveManager",
+      "pinned_block_number": 26429396
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x6440f144b7e50D6a8439336510312d2F54beB01D",
+      "protocol_slug": "liquity-v2-bold",
+      "protocol_name": "Liquity V2 (BOLD)",
+      "role_or_surface": "BOLD Token",
+      "pinned_block_number": 26401540
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xa18ae79AEDA3e711E0CD64cfe1Cd06402d400D61",
+      "protocol_slug": "lista-lending",
+      "protocol_name": "Lista Lending",
+      "role_or_surface": "controller (timelock)",
+      "pinned_block_number": 26451608
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xf820fB4680712CD7263a0D3D024D5b5aEA82Fd70",
+      "protocol_slug": "lista-lending",
+      "protocol_name": "Lista Lending",
+      "role_or_surface": "Lista Moolah (Ethereum)",
+      "pinned_block_number": 26451608
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x055E84e7FE8955E2781010B866f10Ef6E1E77e59",
+      "protocol_slug": "lombard-lbtc",
+      "protocol_name": "Lombard (LBTC)",
+      "role_or_surface": "Lombard TimelockController",
+      "pinned_block_number": 26407707
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x251a604E8E8f6906d60f8dedC5aAeb8CD38F4892",
+      "protocol_slug": "lombard-lbtc",
+      "protocol_name": "Lombard (LBTC)",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 26403523
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xC3ecFE771564e3f28CFB7a9b203F4d10279338eD",
+      "protocol_slug": "lombard-lbtc",
+      "protocol_name": "Lombard (LBTC)",
+      "role_or_surface": "Lombard GMPBascule",
+      "pinned_block_number": 26407707
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xB9D7DdDca9a4AC480991865EfEf82E01273F79C3",
+      "protocol_slug": "lusd-chickenbonds",
+      "protocol_name": "LUSD ChickenBonds",
+      "role_or_surface": "bLUSD",
+      "pinned_block_number": 26453551
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x119FbeeDD4F4f4298Fb59B720d5654442b81ae2c",
+      "protocol_slug": "m0-protocol-m",
+      "protocol_name": "M0 Protocol ($M)",
+      "role_or_surface": "M0 TTG Registrar",
+      "pinned_block_number": 26418060
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x866A2BF4E572CbcF37D5071A7a58503Bfb36be1b",
+      "protocol_slug": "m0-protocol-m",
+      "protocol_name": "M0 Protocol ($M)",
+      "role_or_surface": "M0 MToken ($M)",
+      "pinned_block_number": 26418060
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x0fCEfa3f1047F35521A49cD8B06faBd588665d7F",
+      "protocol_slug": "makina",
+      "protocol_name": "Makina",
+      "role_or_surface": "Makina AccessManager",
+      "pinned_block_number": 26449594
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x62244C74e1d09b3D86EF7342d354b5D7770bDE10",
+      "protocol_slug": "makina",
+      "protocol_name": "Makina",
+      "role_or_surface": "multisig controller",
+      "pinned_block_number": 26449594
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xEb78836D3aa3A0518A96fd7C9c549d0FFB7D6dA9",
+      "protocol_slug": "makina",
+      "protocol_name": "Makina",
+      "role_or_surface": "ProxyAdmin controller",
+      "pinned_block_number": 26449594
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xc26016f1166bE7b6c5611AAB104122E0f6c2aCE2",
+      "protocol_slug": "mantle-liquid-staking-meth-cmeth",
+      "protocol_name": "Mantle Liquid Staking (mETH / cmETH)",
+      "role_or_surface": "Mantle UpgradeTimelock",
+      "pinned_block_number": 26403121
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xBe10aDcE8B6E3E02Db384E7FaDA5395DD113D8b3",
+      "protocol_slug": "maple-finance-v2-syrup",
+      "protocol_name": "Maple Finance V2 / Syrup",
+      "role_or_surface": "PoolPermissionManager",
+      "pinned_block_number": 26401540
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x38ca50c6E3391A5bf73c2504bd9Cd9c0b9D89053",
+      "protocol_slug": "mcdex",
+      "protocol_name": "MCDEX",
+      "role_or_surface": "DAO Safe",
+      "pinned_block_number": 26441165
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x363Ba8843d06BA5968f55C26aB055162eDd62189",
+      "protocol_slug": "mellow-protocol-lido-earn",
+      "protocol_name": "Mellow Protocol / Lido Earn",
+      "role_or_surface": "controller (timelock)",
+      "pinned_block_number": 26401312
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xe5abcc40196174Ae0d12153dE286F0D8E401769d",
+      "protocol_slug": "mellow-protocol-lido-earn",
+      "protocol_name": "Mellow Protocol / Lido Earn",
+      "role_or_surface": "Mellow Curator Safe",
+      "pinned_block_number": 26401312
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x806F870ee04A2CC8bf2aD053BAa5ed9999A1f182",
+      "protocol_slug": "meta-pool-eth",
+      "protocol_name": "Meta Pool ETH",
+      "role_or_surface": "Meta Pool ProxyAdmin (spETH, Liquid Unstake Pool, MetaPoolETH)",
+      "pinned_block_number": 26449594
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x78Fc2c2eD1A4cDb5402365934aE5648aDAd094d0",
+      "protocol_slug": "metamorpho-re7-weth-vs-re7-usdt",
+      "protocol_name": "MetaMorpho (Re7 WETH vs. Re7 USDT)",
+      "role_or_surface": "MetaMorpho Re7 WETH",
+      "pinned_block_number": 26401405
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x9E32b13ce7f2E80A01932B42553652E053D6ed8e",
+      "protocol_slug": "metis-bridge",
+      "protocol_name": "Metis Bridge",
+      "role_or_surface": "Metis Token (MToken)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x2a53833cc95548cf52c7b159110e22D3a9018f32",
+      "protocol_slug": "metric-v1",
+      "protocol_name": "Metric V1",
+      "role_or_surface": "MetricOmmPoolFactory",
+      "pinned_block_number": 26451608
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x2Ebd53d035150f328bd754D6DC66B99B0eDB89aa",
+      "protocol_slug": "metronome-synth",
+      "protocol_name": "Metronome Synth",
+      "role_or_surface": "Metronome2",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xd1DE3F9CD4AE2F23DA941a67cA4C739f8dD9Af33",
+      "protocol_slug": "metronome-synth",
+      "protocol_name": "Metronome Synth",
+      "role_or_surface": "controller (multisig_safe)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x9a8bC3B04b7f3D87cfC09ba407dCED575f2d61D8",
+      "protocol_slug": "mev-capital-weth-metamorpho",
+      "protocol_name": "MEV Capital wETH (MetaMorpho)",
+      "role_or_surface": "MEV Capital wETH (MCwETH, MetaMorpho)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x6D961c9DCF1AD73566822BA4B087892e3839B849",
+      "protocol_slug": "monolith-market",
+      "protocol_name": "Monolith Market",
+      "role_or_surface": "Factory",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x31110622D6CA24c9FF307d6ae1715F16E47F16A0",
+      "protocol_slug": "morph-bridge",
+      "protocol_name": "Morph Bridge",
+      "role_or_surface": "controller (contract_controller)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xDc71366EFFA760804DCFC3EDF87fa2A6f1623304",
+      "protocol_slug": "morph-bridge",
+      "protocol_name": "Morph Bridge",
+      "role_or_surface": "L1CrossDomainMessenger",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x1FE04BC15Cf2c5A2d41a0b3a96725596676eBa1E",
+      "protocol_slug": "morpheusai",
+      "protocol_name": "MorpheusAI",
+      "role_or_surface": "Morpheus Ethereum multisig (Safe)",
+      "pinned_block_number": 26451608
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb",
+      "protocol_slug": "morpho-blue-core",
+      "protocol_name": "Morpho Blue Core",
+      "role_or_surface": "Morpho Blue Singleton",
+      "pinned_block_number": 26401070
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x9Fb9a33956351cf4fa040f65A13b835A3C8764E3",
+      "protocol_slug": "multichain",
+      "protocol_name": "Multichain",
+      "role_or_surface": "Multichain (AnyswapV5ERC20)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xe95fD76CF16008c12FF3b3a937CB16Cd9Cc20284",
+      "protocol_slug": "multichain",
+      "protocol_name": "Multichain",
+      "role_or_surface": "controller (contract_controller)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x0100000002935Dce071f4AFA607b961575672b4C",
+      "protocol_slug": "nami",
+      "protocol_name": "Nami",
+      "role_or_surface": "BatcherAccountProxyFactory",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x892081a87803B32559afC0Ad7b28a39E657fD844",
+      "protocol_slug": "nami",
+      "protocol_name": "Nami",
+      "role_or_surface": "controller (multisig_safe)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x9b9Dc7c56e18cfdA57D402CA7Ded491b1544DC56",
+      "protocol_slug": "native-credit-pool",
+      "protocol_name": "Native Credit Pool",
+      "role_or_surface": "controller (contract_controller)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xe3D41d19564922C9952f692C5Dd0563030f5f2EF",
+      "protocol_slug": "native-credit-pool",
+      "protocol_name": "Native Credit Pool",
+      "role_or_surface": "CreditVault",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xcafea466bF6dEFe480cdd54056C020c63b7DA830",
+      "protocol_slug": "nexus-mutual",
+      "protocol_name": "Nexus Mutual",
+      "role_or_surface": "Governor controller",
+      "pinned_block_number": 26421541
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xcafea6063d4Ec6b045d9676e58897C1f0882Ca32",
+      "protocol_slug": "nexus-mutual",
+      "protocol_name": "Nexus Mutual",
+      "role_or_surface": "Nexus Mutual Governor",
+      "pinned_block_number": 26421541
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x87d73E916D7057945c9BcD8cdd94e42A6F47f776",
+      "protocol_slug": "nftx",
+      "protocol_name": "NFTX",
+      "role_or_surface": "NFTX (MiniMeToken)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x16F692525f3b8c8a96F8c945D365Da958Fb5735B",
+      "protocol_slug": "nodedao",
+      "protocol_name": "NodeDAO",
+      "role_or_surface": "controller (timelock)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xd7C049CD4ba216679ecC04Eb2767cC5E39812121",
+      "protocol_slug": "nodedao",
+      "protocol_name": "NodeDAO",
+      "role_or_surface": "NodeDAOView",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x55f39512cb43111A13E8440ee3e3602e72628239",
+      "protocol_slug": "noon",
+      "protocol_name": "Noon",
+      "role_or_surface": "ProxyAdmin controller",
+      "pinned_block_number": 26450616
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xE5e412C212B4FBbF550A94e7BD5e83dB0B315A7F",
+      "protocol_slug": "noon",
+      "protocol_name": "Noon",
+      "role_or_surface": "Noon Upgrade Timelock (owner of the USN ProxyAdmin)",
+      "pinned_block_number": 26450616
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x0000000000417626Ef34D62C4DC189b021603f2F",
+      "protocol_slug": "nucleus",
+      "protocol_name": "Nucleus",
+      "role_or_surface": "controller (multisig_safe)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x52E4d8989fa8b3E1C06696e7b16DEf5d7707A0d1",
+      "protocol_slug": "nucleus",
+      "protocol_name": "Nucleus",
+      "role_or_surface": "Boba Native Yield Nucleus Token (BoringVault)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xDEa75A312b2F99b5A7558c4636897b39C195E241",
+      "protocol_slug": "nuva",
+      "protocol_name": "NUVA",
+      "role_or_surface": "NUVA TimelockController (owner of the DedicatedVaultRouter)",
+      "pinned_block_number": 26449594
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x0B010000b7624eb9B3DfBC279673C76E9D29D5F7",
+      "protocol_slug": "obol-network",
+      "protocol_name": "Obol Network",
+      "role_or_surface": "ObolToken",
+      "pinned_block_number": 26433001
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x4094C8D36e40795Ca25BFe9451f158D30614666A",
+      "protocol_slug": "obol-network",
+      "protocol_name": "Obol Network",
+      "role_or_surface": "stOBOL WithdrawGate",
+      "pinned_block_number": 26433001
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x42D201CC4d9C1e31c032397F54caCE2f48C1FA72",
+      "protocol_slug": "obol-network",
+      "protocol_name": "Obol Network",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 26433001
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x7E90E03654732ABedF89Faf87f05BcD03ACEeFdC",
+      "protocol_slug": "obol-network",
+      "protocol_name": "Obol Network",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 26433001
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xcB1622185A0c62A80494bEde05Ba95ef29Fbf85c",
+      "protocol_slug": "obol-network",
+      "protocol_name": "Obol Network",
+      "role_or_surface": "ObolGovernor",
+      "pinned_block_number": 26433001
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xCdBf527842Ab04Da548d33EB09d03DB831381Fb0",
+      "protocol_slug": "obol-network",
+      "protocol_name": "Obol Network",
+      "role_or_surface": "Obol TimelockController",
+      "pinned_block_number": 26433001
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x3F6da0A118B3A0ddfdbaB4690cC96b2cF73B488D",
+      "protocol_slug": "odyssey-finance",
+      "protocol_name": "Odyssey Finance",
+      "role_or_surface": "PositionRegistry ProxyAdmin (Ethereum)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x2c5898da4DF1d45EAb2B7B192a361C3b9EB18d9c",
+      "protocol_slug": "ondo-finance-ousg-flux-finance",
+      "protocol_name": "Ondo Finance (OUSG & Flux Finance)",
+      "role_or_surface": "controller (timelock)",
+      "pinned_block_number": 26403121
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x98Db502215Da1ad9F626D4a0090A8A2f4971003c",
+      "protocol_slug": "ondo-finance-ousg-flux-finance",
+      "protocol_name": "Ondo Finance (OUSG & Flux Finance)",
+      "role_or_surface": "Ondo RateLimiter",
+      "pinned_block_number": 26403121
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x275ac9C64eF372f528F7c87D3a987D1e3d76Ca65",
+      "protocol_slug": "opengdp-shared-security",
+      "protocol_name": "OpenGDP Shared Security",
+      "role_or_surface": "controller (timelock)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x54e44DbB92dBA848ACe27F44c0CB4268981eF1CC",
+      "protocol_slug": "opengdp-shared-security",
+      "protocol_name": "OpenGDP Shared Security",
+      "role_or_surface": "VaultSupervisor",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xABD4C63d2616A5201454168269031355f4764337",
+      "protocol_slug": "orderly-bridge",
+      "protocol_name": "Orderly Bridge",
+      "role_or_surface": "ORDER token",
+      "pinned_block_number": 26452373
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x07c5500359161b81eb0DfFF83097d5025D3cF5A2",
+      "protocol_slug": "origami-finance",
+      "protocol_name": "Origami Finance",
+      "role_or_surface": "Origami SKY+ Auto-Compounder (OrigamiDelegated4626Vault)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x781B4c57100738095222bd92D37B07ed034AB696",
+      "protocol_slug": "origami-finance",
+      "protocol_name": "Origami Finance",
+      "role_or_surface": "controller (multisig_safe)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x0b8de441B26E36f461b2748919ed71f50593A67b",
+      "protocol_slug": "outcome-finance",
+      "protocol_name": "Outcome Finance",
+      "role_or_surface": "LongShortPairCreator",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x4dA7493C2CE2BEce36e75AaDdF39D5c041B6d468",
+      "protocol_slug": "overtime",
+      "protocol_name": "Overtime",
+      "role_or_surface": "controller (eoa)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x90cE5720c17587D28E4Af120ae2d313B3BAD1722",
+      "protocol_slug": "overtime",
+      "protocol_name": "Overtime",
+      "role_or_surface": "Overtime DAO Token (OverToken)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865",
+      "protocol_slug": "pancakeswap-amm-v3",
+      "protocol_name": "PancakeSwap AMM V3",
+      "role_or_surface": "PlunderV3Factory",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x0f6f9A6dd9f065DC4455bb2B8e3F0CFFB6F2410c",
+      "protocol_slug": "pancakeswap-amm-v3",
+      "protocol_name": "PancakeSwap AMM V3",
+      "role_or_surface": "controller (contract_controller)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x000000000000ffE5eFdB5AE76b9200263C58b4c0",
+      "protocol_slug": "panoptic-v2",
+      "protocol_name": "Panoptic V2",
+      "role_or_surface": "Panoptic V2 RiskEngineProxy",
+      "pinned_block_number": 26449594
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xb32E10022FFBeDfE10bc818a1C7e67D9d87e0fa7",
+      "protocol_slug": "paradex-bridge",
+      "protocol_name": "Paradex Bridge",
+      "role_or_surface": "DIME",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x6c0aeceeDc55c9d55d8B99216a670D85330941c3",
+      "protocol_slug": "parallel-protocol-v3",
+      "protocol_name": "Parallel Protocol V3",
+      "role_or_surface": "PRL token",
+      "pinned_block_number": 26452373
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x6c3ea9036406852006290770BEdFcAbA0e23A0e8",
+      "protocol_slug": "paypal-usd-pyusd",
+      "protocol_name": "PayPal USD (PYUSD)",
+      "role_or_surface": "PayPal USD (PYUSD) AdminUpgradeabilityProxy",
+      "pinned_block_number": 26431152
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x02f92800F57BCD74066F5709F1Daa1A4302Df875",
+      "protocol_slug": "peapods-finance",
+      "protocol_name": "Peapods Finance",
+      "role_or_surface": "PEAS token",
+      "pinned_block_number": 26452373
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x3E6EBa46AbC5ab18ED95F6667d8B2fd4020E4637",
+      "protocol_slug": "pendle-finance-v2",
+      "protocol_name": "Pendle Finance V2",
+      "role_or_surface": "PendleYieldContractFactory",
+      "pinned_block_number": 26422243
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x6d247b1c044fA1E22e6B04fA9F71Baf99EB29A9f",
+      "protocol_slug": "pendle-finance-v2",
+      "protocol_name": "Pendle Finance V2",
+      "role_or_surface": "PendleMarketFactory (V7Upg)",
+      "pinned_block_number": 26422243
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x8119EC16F0573B7dAc7C0CB94EB504FB32456ee1",
+      "protocol_slug": "pendle-finance-v2",
+      "protocol_name": "Pendle Finance V2",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 26422243
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xA28c08f165116587D4F3E708743B4dEe155c5E64",
+      "protocol_slug": "pendle-finance-v2",
+      "protocol_name": "Pendle Finance V2",
+      "role_or_surface": "ProxyAdmin controller",
+      "pinned_block_number": 26422243
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xbD17B1ce622d73bD438b9E658acA5996dc394b0d",
+      "protocol_slug": "pickle",
+      "protocol_name": "Pickle",
+      "role_or_surface": "Pickle MasterChef",
+      "pinned_block_number": 26451608
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x2E4039E8E31475d65DC00293C366FDBfBBC02DC3",
+      "protocol_slug": "piku-finance",
+      "protocol_name": "Piku Finance",
+      "role_or_surface": "PIKU token",
+      "pinned_block_number": 26453551
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xc55126051B22eBb829D00368f4B12Bde432de5Da",
+      "protocol_slug": "pirex",
+      "protocol_name": "Pirex",
+      "role_or_surface": "BTRFLY (BTRFLYV2)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x424bDE99FCfB68c5a1218fd3215caFfD031f19C4",
+      "protocol_slug": "polygon-bridge",
+      "protocol_name": "Polygon Bridge",
+      "role_or_surface": "Polygon commitchain token-mapping multisig",
+      "pinned_block_number": 26449594
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xA0c68C638235ee32657e8f720a23ceC1bFc77C77",
+      "protocol_slug": "polygon-bridge",
+      "protocol_name": "Polygon Bridge",
+      "role_or_surface": "Polygon RootChainManagerProxy",
+      "pinned_block_number": 26449594
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xCaf0aa768A3AE1297DF20072419Db8Bb8b5C8cEf",
+      "protocol_slug": "polygon-bridge",
+      "protocol_name": "Polygon Bridge",
+      "role_or_surface": "TimelockController controller",
+      "pinned_block_number": 26449594
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xFa7D2a996aC6350f4b56C043112Da0366a59b74c",
+      "protocol_slug": "polygon-bridge",
+      "protocol_name": "Polygon Bridge",
+      "role_or_surface": "Polygon Bridge Safe",
+      "pinned_block_number": 26449594
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x0cEC1A9154Ff802e7934Fc916Ed7Ca50bDE6844e",
+      "protocol_slug": "pooltogether-v3",
+      "protocol_name": "PoolTogether V3",
+      "role_or_surface": "POOL token",
+      "pinned_block_number": 26452373
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x0Eb42804BF897662aF851370eaeAdcDBEC1b97ed",
+      "protocol_slug": "privacy-pools-v1",
+      "protocol_name": "Privacy Pools V1",
+      "role_or_surface": "Privacy Pools V1 PoolVault proxy",
+      "pinned_block_number": 26440048
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x3C28B7c7Ba1A1f55c9Ce66b263B33B204f2126eA",
+      "protocol_slug": "puffer-finance-pufeth",
+      "protocol_name": "Puffer Finance (pufETH)",
+      "role_or_surface": "Puffer Timelock (AccessManager admin role)",
+      "pinned_block_number": 26425374
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x446d4d6b26815f9bA78B5D454E303315D586Cb2a",
+      "protocol_slug": "puffer-finance-pufeth",
+      "protocol_name": "Puffer Finance (pufETH)",
+      "role_or_surface": "Puffer Community Multisig (upgrader role)",
+      "pinned_block_number": 26425374
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x8c1686069474410E6243425f4a10177a94EBEE11",
+      "protocol_slug": "puffer-finance-pufeth",
+      "protocol_name": "Puffer Finance (pufETH)",
+      "role_or_surface": "controller (contract_controller)",
+      "pinned_block_number": 26425374
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xC0896ab1A8cae8c2C1d27d011eb955Cca955580d",
+      "protocol_slug": "puffer-finance-pufeth",
+      "protocol_name": "Puffer Finance (pufETH)",
+      "role_or_surface": "Puffer Operations Multisig (OPS / DAO roles)",
+      "pinned_block_number": 26425374
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xD9A442856C234a39a81a089C06451EBAa4306a72",
+      "protocol_slug": "puffer-finance-pufeth",
+      "protocol_name": "Puffer Finance (pufETH)",
+      "role_or_surface": "PufferVault (pufETH)",
+      "pinned_block_number": 26425374
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x000000000000A6fA31F5fC51c1640aAc76866750",
+      "protocol_slug": "punks-terminal",
+      "protocol_name": "Punks Terminal",
+      "role_or_surface": "StashFactory",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xb07603da6B63C936566F0A29856FbD52829b4605",
+      "protocol_slug": "punks-terminal",
+      "protocol_name": "Punks Terminal",
+      "role_or_surface": "controller (contract_controller)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x4F8E20f55f879beE7Bc010Bd6bD2138B34aC65c8",
+      "protocol_slug": "railgun",
+      "protocol_name": "RAILGUN",
+      "role_or_surface": "RAILGUN ProxyAdmin",
+      "pinned_block_number": 26434786
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xB6d513f6222Ee92Fff975E901bd792E2513fB53B",
+      "protocol_slug": "railgun",
+      "protocol_name": "RAILGUN",
+      "role_or_surface": "RAILGUN Delegator",
+      "pinned_block_number": 26434786
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xc480F68A3dcC3EdD82134FAB45C14A0FcF1dA3CC",
+      "protocol_slug": "railgun",
+      "protocol_name": "RAILGUN",
+      "role_or_surface": "RAILGUN Voting",
+      "pinned_block_number": 26434786
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xFA7093CDD9EE6932B4eb2c9e1cde7CE00B1FA4b9",
+      "protocol_slug": "railgun",
+      "protocol_name": "RAILGUN",
+      "role_or_surface": "RailgunSmartWallet (proxy)",
+      "pinned_block_number": 26434786
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x4691C475bE804Fa85f91c2D6D0aDf03114de3093",
+      "protocol_slug": "re",
+      "protocol_name": "Re Protocol (reUSD / reUSDe)",
+      "role_or_surface": "Insurance Capital Layer deposit vault",
+      "pinned_block_number": 26427612
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x5086bf358635B81D8C47C66d1C8b9E567Db70c72",
+      "protocol_slug": "re",
+      "protocol_name": "Re Protocol (reUSD / reUSDe)",
+      "role_or_surface": "reUSD senior-tranche stablecoin token",
+      "pinned_block_number": 26427612
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x69dDEa332723cF5407151aAF68B9b076557FCA93",
+      "protocol_slug": "re",
+      "protocol_name": "Re Protocol (reUSD / reUSDe)",
+      "role_or_surface": "controller (timelock)",
+      "pinned_block_number": 26427612
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x8eec10616802Ef639CA55c98ac856553fAdEfBaD",
+      "protocol_slug": "re",
+      "protocol_name": "Re Protocol (reUSD / reUSDe)",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 26427612
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x6243d8CEA23066d098a15582d81a598b4e8391F4",
+      "protocol_slug": "reflexer",
+      "protocol_name": "Reflexer",
+      "role_or_surface": "Flex Ungovernance Token (DSDelegateToken)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xcb8479840A5576B1cafBb3FA7276e04Df122FDc7",
+      "protocol_slug": "reflexer",
+      "protocol_name": "Reflexer",
+      "role_or_surface": "controller (contract_controller)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xf2F305D14DCD8aaef887E0428B3c9534795D0d60",
+      "protocol_slug": "renzo-protocol-ezeth",
+      "protocol_name": "Renzo Protocol (ezETH)",
+      "role_or_surface": "DepositQueue",
+      "pinned_block_number": 26448221
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x18ba6e33ceb80f077DEb9260c9111e62f21aE7B8",
+      "protocol_slug": "reserve-protocol-rtoken",
+      "protocol_name": "Reserve Protocol (eUSD RToken)",
+      "role_or_surface": "Reserve eUSD StRSR",
+      "pinned_block_number": 26431152
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x7697aE4dEf3C3Cd52493Ba3a6F57fc6d8c59108a",
+      "protocol_slug": "reserve-protocol-rtoken",
+      "protocol_name": "Reserve Protocol (eUSD RToken)",
+      "role_or_surface": "Reserve eUSD Main",
+      "pinned_block_number": 26431152
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xA0d69E286B938e21CBf7E51D71F6A4c8918f482F",
+      "protocol_slug": "reserve-protocol-rtoken",
+      "protocol_name": "Reserve Protocol (eUSD RToken)",
+      "role_or_surface": "ReserveRToken_eUSD",
+      "pinned_block_number": 26431152
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x66a1E37c9b0eAddca17d3662D6c05F4DECf3e110",
+      "protocol_slug": "resolv-usr-rlp",
+      "protocol_name": "Resolv (USR / RLP)",
+      "role_or_surface": "Resolv USR Token",
+      "pinned_block_number": 26449594
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xa27a69Ae180e202fDe5D38189a3F24Fe24E55861",
+      "protocol_slug": "resolv-usr-rlp",
+      "protocol_name": "Resolv (USR / RLP)",
+      "role_or_surface": "Resolv USR Counter",
+      "pinned_block_number": 26449594
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x10101010E0C3171D894B71B3400668aF311e7D94",
+      "protocol_slug": "resupply",
+      "protocol_name": "Resupply",
+      "role_or_surface": "Resupply Registry",
+      "pinned_block_number": 26429396
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x11111111063874cE8dC6232cb5C1C849359476E6",
+      "protocol_slug": "resupply",
+      "protocol_name": "Resupply",
+      "role_or_surface": "controller (timelock)",
+      "pinned_block_number": 26429396
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xA4745e0B1F40ab3DCFD98F381835De591a8974E3",
+      "protocol_slug": "resupply",
+      "protocol_name": "Resupply",
+      "role_or_surface": "Resupply Guardian (operator proxy)",
+      "pinned_block_number": 26429396
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xc07e000044F95655c11fda4cD37F70A94d7e0a7d",
+      "protocol_slug": "resupply",
+      "protocol_name": "Resupply",
+      "role_or_surface": "Resupply Core",
+      "pinned_block_number": 26429396
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xFE11a5009f2121622271e7dd0FD470264e076af6",
+      "protocol_slug": "resupply",
+      "protocol_name": "Resupply",
+      "role_or_surface": "Resupply Main Multisig (Safe)",
+      "pinned_block_number": 26429396
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x6123B0049F904d730dB3C36a31167D9d4121fA6B",
+      "protocol_slug": "ribbon",
+      "protocol_name": "Ribbon",
+      "role_or_surface": "Ribbon",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x7D86394139bf1122E82FDF45Bb4e3b038A4464DD",
+      "protocol_slug": "ring-few",
+      "protocol_name": "Ring Few",
+      "role_or_surface": "FewFactory",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x12917E06b55995e7a5D73681cE491774C73b7C6a",
+      "protocol_slug": "rockawayx",
+      "protocol_name": "RockawayX",
+      "role_or_surface": "controller (timelock)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x953972ea0C1703c58F09FB6fD2477Fdcf0FEe074",
+      "protocol_slug": "rockawayx",
+      "protocol_name": "RockawayX",
+      "role_or_surface": "Ember Y10K (EmberVault)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x6C565aF34f15dE064b56afEdF7B0F59C15bB20FE",
+      "protocol_slug": "rocket-pool-reth",
+      "protocol_name": "Rocket Pool (rETH)",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 26422243
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xC9D771AaF504F33bB3C8a7E67eA9f1881F837cFf",
+      "protocol_slug": "rocket-pool-reth",
+      "protocol_name": "Rocket Pool (rETH)",
+      "role_or_surface": "RocketDAOProtocolSettingsSecurity",
+      "pinned_block_number": 26422243
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xdA1AB39e62E0A5297AF44C7064E501b0613f0D01",
+      "protocol_slug": "rocket-pool-reth",
+      "protocol_name": "Rocket Pool (rETH)",
+      "role_or_surface": "RocketDAONodeTrustedSettingsMembers",
+      "pinned_block_number": 26422243
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x7cC6fB28eC7b5e7afC3cB3986141797ffc27253C",
+      "protocol_slug": "royco-v2",
+      "protocol_name": "Royco V2",
+      "role_or_surface": "RoycoFactory",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x29fcB43b46531BcA003ddC8FCB67FFE91900C762",
+      "protocol_slug": "safe-singleton-core",
+      "protocol_name": "Safe Smart Account (v1.4.1 Singleton)",
+      "role_or_surface": "SafeL2 v1.4.1 singleton",
+      "pinned_block_number": 26434786
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x41675C099F32341bf84BFc5382aF534df5C7461a",
+      "protocol_slug": "safe-singleton-core",
+      "protocol_name": "Safe Smart Account (v1.4.1 Singleton)",
+      "role_or_surface": "SafeSingleton_v1_4_1",
+      "pinned_block_number": 26434786
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x4e1DCf7AD4e460CfD30791CCC4F9c8a4f820ec67",
+      "protocol_slug": "safe-singleton-core",
+      "protocol_name": "Safe Smart Account (v1.4.1 Singleton)",
+      "role_or_surface": "SafeProxyFactory v1.4.1",
+      "pinned_block_number": 26434786
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xb753428af26E81097e7fD17f40c88aaA3E04902c",
+      "protocol_slug": "saffron-vaults",
+      "protocol_name": "Saffron Vaults",
+      "role_or_surface": "Spice (SFI)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x0000f07d2B5F1Ddf3244b8780F972f306EFd2888",
+      "protocol_slug": "sato",
+      "protocol_name": "SATO",
+      "role_or_surface": "SatoHook",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x23238f20b894f29041f48D88eE91131C395Aaa71",
+      "protocol_slug": "saturn",
+      "protocol_name": "Saturn",
+      "role_or_surface": "USDat",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xcf1072DA5f0D127AEf99136489BAd08bFa3D1A7D",
+      "protocol_slug": "saturn",
+      "protocol_name": "Saturn",
+      "role_or_surface": "controller (contract_controller)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x4cC8D45644eCCD8cA77DBF3A8E3eE2dBf4596983",
+      "protocol_slug": "shift-defi",
+      "protocol_name": "Shift DeFi",
+      "role_or_surface": "Shift DeFi Safe",
+      "pinned_block_number": 26449594
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xbd0Ca95C5A104E14E60d0868667AF174D146C9FD",
+      "protocol_slug": "sierra-protocol",
+      "protocol_name": "Sierra Protocol",
+      "role_or_surface": "controller (eoa)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xe1b1252652A2FF0CC3A4214eE73d9FeD1FEa5b4f",
+      "protocol_slug": "sierra-protocol",
+      "protocol_name": "Sierra Protocol",
+      "role_or_surface": "SOL Staking Yield Vault",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x1E3e1128F6bC2264a19D7a065982696d356879c5",
+      "protocol_slug": "smardex-usdn",
+      "protocol_name": "SMARDEX USDN",
+      "role_or_surface": "controller (multisig_safe)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x656cB8C6d154Aad29d8771384089be5B5141f01a",
+      "protocol_slug": "smardex-usdn",
+      "protocol_name": "SMARDEX USDN",
+      "role_or_surface": "UsdnProtocolImpl",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x57B96D4aF698605563A4653D882635da59Bf11AF",
+      "protocol_slug": "sofa-org",
+      "protocol_name": "SOFA.org",
+      "role_or_surface": "RCH token",
+      "pinned_block_number": 26453551
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x0c2Bc4d2698820e12E6eBe863E7b9E2650CD5b7D",
+      "protocol_slug": "solv-protocol-solvbtc",
+      "protocol_name": "Solv Protocol (SolvBTC)",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 26418060
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x7A56E1C57C7475CCf742a1832B028F0456652F97",
+      "protocol_slug": "solv-protocol-solvbtc",
+      "protocol_name": "Solv Protocol (SolvBTC)",
+      "role_or_surface": "Solv SolvBTC",
+      "pinned_block_number": 26418060
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xfd4B809AD88db6Ca9dbB295A4B9d23bB0093f497",
+      "protocol_slug": "solv-protocol-solvbtc",
+      "protocol_name": "Solv Protocol (SolvBTC)",
+      "role_or_surface": "Solv TimelockController",
+      "pinned_block_number": 26418060
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x2Cbd27E034FEE53f79b607430dA7771B22050741",
+      "protocol_slug": "sommelier",
+      "protocol_name": "Sommelier",
+      "role_or_surface": "Sommelier Registry (Cellars V2)",
+      "pinned_block_number": 26455787
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x7340D1FeCD4B64A4ac34f826B21c945d44d7407F",
+      "protocol_slug": "sommelier",
+      "protocol_name": "Sommelier",
+      "role_or_surface": "Multisig controller",
+      "pinned_block_number": 26455787
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xaDa78a5E01325B91Bc7879a63c309F7D54d42950",
+      "protocol_slug": "sommelier",
+      "protocol_name": "Sommelier",
+      "role_or_surface": "controller (timelock)",
+      "pinned_block_number": 26455787
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xa1E2481a9CD0Cb0447EeB1cbc26F1b3fff3bec20",
+      "protocol_slug": "sonic-gateway",
+      "protocol_name": "Sonic Gateway",
+      "role_or_surface": "Sonic Gateway TokenDeposit (Ethereum)",
+      "pinned_block_number": 26450616
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xbE286431454714F511008713973d3B053A2d38f3",
+      "protocol_slug": "spark-sky",
+      "protocol_name": "Spark / Sky",
+      "role_or_surface": "GSM_PAUSE_PROXY",
+      "pinned_block_number": 26401638
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x16b28223b607B4D90e2eC628fdC1a0AD9Ee1f6B8",
+      "protocol_slug": "spectra-metavaults",
+      "protocol_name": "Spectra MetaVaults",
+      "role_or_surface": "Spectra MetaVaults TransparentUpgradeableProxy",
+      "pinned_block_number": 26449594
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xafE830B6Ee262ba11cce5F32fDCd760FFE6a66e4",
+      "protocol_slug": "ssv-network",
+      "protocol_name": "SSV Network",
+      "role_or_surface": "SSVNetworkViews",
+      "pinned_block_number": 26427612
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xDD9BC35aE942eF0cFa76930954a156B3fF30a4E1",
+      "protocol_slug": "ssv-network",
+      "protocol_name": "SSV Network",
+      "role_or_surface": "SSVNetwork (UUPS proxy)",
+      "pinned_block_number": 26427612
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x109D3042a3c682F94107b3818e93b3aDE2A47544",
+      "protocol_slug": "stablehodl",
+      "protocol_name": "StableHodl",
+      "role_or_surface": "stake_pool",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x1112D5C55670Cb5144BF36114C20a122908068B9",
+      "protocol_slug": "stader-labs-ethx",
+      "protocol_name": "Stader Labs (ETHx)",
+      "role_or_surface": "controller (timelock)",
+      "pinned_block_number": 26403676
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x45B977CeCB9Dfaa17dFcBa88826ef684b8489fF6",
+      "protocol_slug": "stader-labs-ethx",
+      "protocol_name": "Stader Labs (ETHx)",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 26403676
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xAAfb31780e4b9c95Bc920e388f4925A874cd07AF",
+      "protocol_slug": "stader-labs-ethx",
+      "protocol_name": "Stader Labs (ETHx)",
+      "role_or_surface": "Stader Manager Safe",
+      "pinned_block_number": 26403676
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xef3A930e1FfFFAcd2fc13434aC81bD278B0ecC8d",
+      "protocol_slug": "stafi",
+      "protocol_name": "Stafi",
+      "role_or_surface": "StaFi (FISToken)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x2d8BcE1FaE00a959354aCD9eBf9174337A64d4fb",
+      "protocol_slug": "stake-dao",
+      "protocol_name": "Stake DAO",
+      "role_or_surface": "Stake DAO ProtocolController",
+      "pinned_block_number": 26429396
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xB0552b6860CE5C0202976Db056b5e3Cc4f9CC765",
+      "protocol_slug": "stake-dao",
+      "protocol_name": "Stake DAO",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 26429396
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xb27afc7844988948FBd6210AeF4E1362bC2d8E6a",
+      "protocol_slug": "stake-dao",
+      "protocol_name": "Stake DAO",
+      "role_or_surface": "Stake DAO ProtocolTimelock",
+      "pinned_block_number": 26429396
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xF930EBBd05eF8b25B1797b9b2109DDC9B0d43063",
+      "protocol_slug": "stake-dao",
+      "protocol_name": "Stake DAO",
+      "role_or_surface": "Stake DAO Treasury Safe (Ethereum)",
+      "pinned_block_number": 26429396
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x4852e48215A4785eE99B640CACED5378Cc39D2A4",
+      "protocol_slug": "stake-link",
+      "protocol_name": "stake.link",
+      "role_or_surface": "stake.link OperatorVCS (Node Operator Pool strategy)",
+      "pinned_block_number": 26425374
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xB351EC0FEaF4B99FdFD36b484d9EC90D0422493D",
+      "protocol_slug": "stake-link",
+      "protocol_name": "stake.link",
+      "role_or_surface": "stake.link Gnosis Safe (timelock proposer / canceller, treasury)",
+      "pinned_block_number": 26425374
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xb72d8F5213b3E52FAf13Aa074b03C4788e78349F",
+      "protocol_slug": "stake-link",
+      "protocol_name": "stake.link",
+      "role_or_surface": "stake.link GovernanceTimelock (owner of StakingPool, PriorityPool, WithdrawalPool)",
+      "pinned_block_number": 26425374
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x1D88713b483A8E45cfF0e5CD7c2e15E5Fab4534d",
+      "protocol_slug": "stakestone-stone",
+      "protocol_name": "StakeStone STONE",
+      "role_or_surface": "STO token",
+      "pinned_block_number": 26453551
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x144a98cb1CdBb23610501fE6108858D9B7D24934",
+      "protocol_slug": "stakewise-v3-oseth",
+      "protocol_name": "StakeWise V3 (osETH)",
+      "role_or_surface": "StakeWise V3 (osETH) Safe",
+      "pinned_block_number": 26438867
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x6B5815467da09DaA7DC83Db21c9239d98Bb487b5",
+      "protocol_slug": "stakewise-v3-oseth",
+      "protocol_name": "StakeWise V3 (osETH)",
+      "role_or_surface": "StakeWise V3 Keeper",
+      "pinned_block_number": 26438867
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x65bb797c2B9830d891D87288F029ed8dACc19705",
+      "protocol_slug": "stargate-v2",
+      "protocol_name": "Stargate V2",
+      "role_or_surface": "multisig controller",
+      "pinned_block_number": 26421541
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xc026395860Db2d07ee33e05fE50ed7bD583189C7",
+      "protocol_slug": "stargate-v2",
+      "protocol_name": "Stargate V2",
+      "role_or_surface": "StargatePoolUSDC",
+      "pinned_block_number": 26421541
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xCa14007Eff0dB1f8135f4C25B34De49AB0d42766",
+      "protocol_slug": "starknet-bridge",
+      "protocol_name": "Starknet Bridge",
+      "role_or_surface": "StarkNet Token",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x0A0e559bc3b0950a7e448F0d4894db195b9cf8DD",
+      "protocol_slug": "steakhouse-financial-ethereum",
+      "protocol_name": "Steakhouse Financial (Ethereum)",
+      "role_or_surface": "Steakhouse vaults owner Safe",
+      "pinned_block_number": 26433001
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x79864900a4d34fb7907De9fe404758de5a4956dE",
+      "protocol_slug": "steakhouse-financial-ethereum",
+      "protocol_name": "Steakhouse Financial (Ethereum)",
+      "role_or_surface": "steakUSDC guardian token-voting plugin",
+      "pinned_block_number": 26433001
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x827e86072B06674a077f592A531dcE4590aDeCdB",
+      "protocol_slug": "steakhouse-financial-ethereum",
+      "protocol_name": "Steakhouse Financial (Ethereum)",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 26433001
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB",
+      "protocol_slug": "steakhouse-financial-ethereum",
+      "protocol_name": "Steakhouse Financial (Ethereum)",
+      "role_or_surface": "Steakhouse USDC (steakUSDC) MetaMorpho vault",
+      "pinned_block_number": 26433001
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xCEBF1A54A9Ce703FC80967760b5A6cbDb4111099",
+      "protocol_slug": "steer-protocol",
+      "protocol_name": "Steer Protocol",
+      "role_or_surface": "SteerPeriphery",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xEB2D829FFbE494FC6535b0E4EB807EFd4b6BF0Bd",
+      "protocol_slug": "steer-protocol",
+      "protocol_name": "Steer Protocol",
+      "role_or_surface": "controller (contract_controller)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x4be3749a0F6557b8fd98F3967e859DbD7C694eF4",
+      "protocol_slug": "strata-markets",
+      "protocol_name": "Strata Markets",
+      "role_or_surface": "Strata Markets Safe",
+      "pinned_block_number": 26441165
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x44B7fBd4D87149eFa5347c451E74B9FD18E89c55",
+      "protocol_slug": "supernova-cl",
+      "protocol_name": "Supernova CL",
+      "role_or_surface": "AlgebraFactory",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xB73494c3FB46Bf5cFC08f32A704fa180110d9226",
+      "protocol_slug": "supernova-cl",
+      "protocol_name": "Supernova CL",
+      "role_or_surface": "controller (multisig_safe)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x43415eB6ff9DB7E26A15b704e7A3eDCe97d31C4e",
+      "protocol_slug": "superstate-ustb-uscc",
+      "protocol_name": "Superstate (USTB / USCC)",
+      "role_or_surface": "Superstate USTB",
+      "pinned_block_number": 26403676
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xbACEB8eC6b9355Dfc0269C18bac9d6E2Bdc29C4F",
+      "protocol_slug": "sushiswap-v3",
+      "protocol_name": "SushiSwap V3",
+      "role_or_surface": "SushiSwap V3 factory (Ethereum)",
+      "pinned_block_number": 26454861
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x20fDF47509C5eFC0e1101e3CE443691781C17F90",
+      "protocol_slug": "swell-sweth-rsweth",
+      "protocol_name": "Swell (swETH / rswETH)",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 26403676
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xbA829003e6b5dD858fbed3945719939a6DC3073b",
+      "protocol_slug": "swell-sweth-rsweth",
+      "protocol_name": "Swell (swETH / rswETH)",
+      "role_or_surface": "SwellTimelock",
+      "pinned_block_number": 26403676
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xd38BB40815d2B0c2d2c866e0c72c5728ffC76dd9",
+      "protocol_slug": "symbiosis",
+      "protocol_name": "Symbiosis",
+      "role_or_surface": "Symbiosis",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x0f2D719407FdBeFF09D87557AbB7232601FD9F29",
+      "protocol_slug": "synapse-cross-chain-bridge",
+      "protocol_name": "Synapse Cross Chain Bridge",
+      "role_or_surface": "Synapse",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x67F60b0891EBD842Ebe55E4CCcA1098d7Aac1A55",
+      "protocol_slug": "synapse-cross-chain-bridge",
+      "protocol_name": "Synapse Cross Chain Bridge",
+      "role_or_surface": "controller (multisig_safe)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x6e15A54B5EcAc17e58daDedDbe8506a7560252F9",
+      "protocol_slug": "synfutures-v3",
+      "protocol_name": "SynFutures V3",
+      "role_or_surface": "SynFutures $F token",
+      "pinned_block_number": 26452373
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x0aaF300E148378489a8A471DD3e9E53E30cb42e3",
+      "protocol_slug": "synthetix-v3-core",
+      "protocol_name": "Synthetix V3 Core",
+      "role_or_surface": "Synthetix V3 OracleManagerProxy",
+      "pinned_block_number": 26433001
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x0E429603D3Cb1DFae4E6F52Add5fE82d96d77Dac",
+      "protocol_slug": "synthetix-v3-core",
+      "protocol_name": "Synthetix V3 Core",
+      "role_or_surface": "Synthetix V3 AccountProxy",
+      "pinned_block_number": 26433001
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xb2F30A7C980f052f02563fb518dcc39e6bf38175",
+      "protocol_slug": "synthetix-v3-core",
+      "protocol_name": "Synthetix V3 Core",
+      "role_or_surface": "Synthetix V3 USDProxy (snxUSD)",
+      "pinned_block_number": 26433001
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xEb3107117FEAd7de89Cd14D463D340A2E6917769",
+      "protocol_slug": "synthetix-v3-core",
+      "protocol_name": "Synthetix V3 Core",
+      "role_or_surface": "controller (multisig_safe)",
+      "pinned_block_number": 26433001
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xffffffaEff0B96Ea8e4f94b2253f31abdD875847",
+      "protocol_slug": "synthetix-v3-core",
+      "protocol_name": "Synthetix V3 Core",
+      "role_or_surface": "SynthetixCoreProxy",
+      "pinned_block_number": 26433001
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x1b2CB79a4564206f53Ba80b4d780F251b4Ae6765",
+      "protocol_slug": "syntropia",
+      "protocol_name": "Syntropia",
+      "role_or_surface": "Syntropia USDC Core",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x78AC58ED54018F5ccd5F5De2D7c0AE40800f2cf4",
+      "protocol_slug": "syntropia",
+      "protocol_name": "Syntropia",
+      "role_or_surface": "controller (contract_controller)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x2AffADEb2ef5e1F2a7F58964ee191F1e88317ECd",
+      "protocol_slug": "taiko-bridge",
+      "protocol_name": "Taiko Bridge",
+      "role_or_surface": "Taiko DAO Emergency Multisig plugin",
+      "pinned_block_number": 26453551
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xD7dA1C25E915438720692bC55eb3a7170cA90321",
+      "protocol_slug": "taiko-bridge",
+      "protocol_name": "Taiko Bridge",
+      "role_or_surface": "Multisig controller",
+      "pinned_block_number": 26453551
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x214C8A1023B30032a2Eded109146658C6D6F2781",
+      "protocol_slug": "tangent-finance",
+      "protocol_name": "Tangent Finance",
+      "role_or_surface": "Tangent MarketCreator",
+      "pinned_block_number": 26453551
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x088a012BF6d510aa923c814eA83807f75F7061A0",
+      "protocol_slug": "team-finance",
+      "protocol_name": "Team Finance",
+      "role_or_surface": "controller (multisig_safe)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xCC4304A31d09258b0029eA7FE63d032f52e44EFe",
+      "protocol_slug": "team-finance",
+      "protocol_name": "Team Finance",
+      "role_or_surface": "TrustSwap Token (SwapToken)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+      "protocol_slug": "tether-usdt",
+      "protocol_name": "Tether USDT",
+      "role_or_surface": "Tether USD (TetherToken)",
+      "pinned_block_number": 26431152
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x9416bA76e88D873050A06e5956A3EBF10386b863",
+      "protocol_slug": "the-idols",
+      "protocol_name": "The Idols",
+      "role_or_surface": "VIRTUE token",
+      "pinned_block_number": 26452373
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x2bB4b7E6E83FA6b77d0143dad631843cB73DCA02",
+      "protocol_slug": "theo-network-thusd",
+      "protocol_name": "Theo Network thUSD",
+      "role_or_surface": "controller (timelock)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xa3fE5c7596024E6811E14F029937D5bd8Ae485b3",
+      "protocol_slug": "theo-network-thusd",
+      "protocol_name": "Theo Network thUSD",
+      "role_or_surface": "thUSD",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x92f2d8b72a7F6a551Be60b9aa4194248E9B4913D",
+      "protocol_slug": "threshold-network-tbtc",
+      "protocol_name": "Threshold Network (tBTC)",
+      "role_or_surface": "Threshold Council TimelockController",
+      "pinned_block_number": 26449594
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xA1a196b5BE89Be04a2c1dc71643689CE013c22e5",
+      "protocol_slug": "tokenworks",
+      "protocol_name": "TokenWorks",
+      "role_or_surface": "NFTStrategyFactory",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x0C6Bbfd2d5666d44bf28580eDEec0263692C8316",
+      "protocol_slug": "tori-finance",
+      "protocol_name": "Tori Finance",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 26451608
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xcd3c66e73abF927EAAF1238aEB5F251b4f2f667b",
+      "protocol_slug": "tori-finance",
+      "protocol_name": "Tori Finance",
+      "role_or_surface": "controller (timelock)",
+      "pinned_block_number": 26451608
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xd0580192E98eA6CEB9c7b6191Ed2E27560911697",
+      "protocol_slug": "tori-finance",
+      "protocol_name": "Tori Finance",
+      "role_or_surface": "Tori trUSD",
+      "pinned_block_number": 26451608
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x77777FeDdddFfC19Ff86DB637967013e6C6A116C",
+      "protocol_slug": "tornado-cash",
+      "protocol_name": "Tornado Cash",
+      "role_or_surface": "TornadoCash (TORN)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x2225DAbFfC7F862c99477381E971E8B1FDaB467e",
+      "protocol_slug": "treehouse-tree-teth",
+      "protocol_name": "Treehouse (TREE / tETH)",
+      "role_or_surface": "Treehouse TimelockController",
+      "pinned_block_number": 26440048
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x77146784315Ba81904d654466968e3a7c196d1f3",
+      "protocol_slug": "treehouse-tree-teth",
+      "protocol_name": "Treehouse (TREE / tETH)",
+      "role_or_surface": "TreehouseToken (TREE)",
+      "pinned_block_number": 26440048
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xD11c452fc99cF405034ee446803b6F6c1F6d5ED8",
+      "protocol_slug": "treehouse-tree-teth",
+      "protocol_name": "Treehouse (TREE / tETH)",
+      "role_or_surface": "Treehouse tETH",
+      "pinned_block_number": 26407707
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x8ECC0B419dfe3AE197BC96f2a03636b5E1BE91db",
+      "protocol_slug": "ultrayield-vaults",
+      "protocol_name": "UltraYield Vaults",
+      "role_or_surface": "Stable Gain Vault (UUPSProxy)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x60e2E1b2a317EdfC870b6Fc6886F69083FB2099a",
+      "protocol_slug": "uncx-network-v2",
+      "protocol_name": "UNCX Network V2",
+      "role_or_surface": "controller (eoa)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xaDB2437e6F65682B85F814fBc12FeC0508A7B1D0",
+      "protocol_slug": "uncx-network-v2",
+      "protocol_name": "UNCX Network V2",
+      "role_or_surface": "UniCrypt (UNCX)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x1a9C8182C09F50C8318d769245beA52c32BE35BC",
+      "protocol_slug": "uniswap-governance-timelock",
+      "protocol_name": "Uniswap V3 & Governance Timelock",
+      "role_or_surface": "Uniswap Timelock",
+      "pinned_block_number": 26431152
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x1F98431c8aD98523631AE4a59f267346ea31F984",
+      "protocol_slug": "uniswap-governance-timelock",
+      "protocol_name": "Uniswap V3 & Governance Timelock",
+      "role_or_surface": "UniswapV3Factory",
+      "pinned_block_number": 26431152
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x408ED6354d4973f66138C91495F2f2FCbd8724C3",
+      "protocol_slug": "uniswap-governance-timelock",
+      "protocol_name": "Uniswap V3 & Governance Timelock",
+      "role_or_surface": "Uniswap GovernorBravoDelegator",
+      "pinned_block_number": 26431152
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xf2371551Fe3937Db7c750f4DfABe5c2fFFdcBf5A",
+      "protocol_slug": "uniswap-governance-timelock",
+      "protocol_name": "Uniswap V3 & Governance Timelock",
+      "role_or_surface": "controller (contract_controller)",
+      "pinned_block_number": 26431152
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x000000000004444c5dc75cB358380D2e3dE08A90",
+      "protocol_slug": "uniswap-v4",
+      "protocol_name": "Uniswap V4",
+      "role_or_surface": "Uniswap V4 PoolManager (Ethereum)",
+      "pinned_block_number": 26433001
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x89A5D5bF00a27D55c02951E49078a5C5771051dB",
+      "protocol_slug": "uniswap-v4",
+      "protocol_name": "Uniswap V4",
+      "role_or_surface": "Uniswap V4FeeAdapter (Ethereum)",
+      "pinned_block_number": 26433001
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x22C34BdBE18A8bc8Edf7A6C69a03a5B2F2ed45F4",
+      "protocol_slug": "unitus",
+      "protocol_name": "Unitus",
+      "role_or_surface": "controller (contract_controller)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x3B6564b5DA73A41d3A66e6558a98FD0e9E1e77ad",
+      "protocol_slug": "unitus",
+      "protocol_name": "Unitus",
+      "role_or_surface": "Unitus (UnitusCompOFT)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xE0e05c43c097B0982Db6c9d626c4eb9e95C3b9ce",
+      "protocol_slug": "unslashed",
+      "protocol_name": "Unslashed",
+      "role_or_surface": "Unslashed Finance Governance Token (USF)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x17ab7568Cd5386DF6C8E4552438E32794D057cC1",
+      "protocol_slug": "upshift",
+      "protocol_name": "Upshift",
+      "role_or_surface": "Safe controller",
+      "pinned_block_number": 26441165
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x4107557d726933f0BcA591A4218Afc92978457F7",
+      "protocol_slug": "upshift",
+      "protocol_name": "Upshift",
+      "role_or_surface": "Upshift vault ProxyAdmin owner Safe",
+      "pinned_block_number": 26441165
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xB5fBf201A35327Ddd89986FfA60CF5A675B2bDbc",
+      "protocol_slug": "upshift",
+      "protocol_name": "Upshift",
+      "role_or_surface": "ProxyAdmin controller",
+      "pinned_block_number": 26441165
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x4de7096B2131E84Fd6b2042AD8cd9B4E43F728Fc",
+      "protocol_slug": "usdt0",
+      "protocol_name": "USDT0",
+      "role_or_surface": "controller (contract_controller)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x6C96dE32CEa08842dcc4058c14d3aaAD7Fa41dee",
+      "protocol_slug": "usdt0",
+      "protocol_name": "USDT0",
+      "role_or_surface": "OAdapterUpgradeable",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x0D374775E962c3608B8F0A4b8B10567DF739bb56",
+      "protocol_slug": "usual-money-usd0-usd0",
+      "protocol_name": "Usual Money (USD0 / USD0++)",
+      "role_or_surface": "RegistryAccess",
+      "pinned_block_number": 26401725
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x5232bc0F5999f8dA604c42E1748A13a170F94A1B",
+      "protocol_slug": "veda",
+      "protocol_name": "Veda",
+      "role_or_surface": "ArcticArchitectureLens",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x9520b477Aa81180E6DdC006Fc09Fb6d3eb4e807A",
+      "protocol_slug": "vesper-v1",
+      "protocol_name": "Vesper V1",
+      "role_or_surface": "Vesper governor Safe",
+      "pinned_block_number": 26441165
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xDaD503f8B9d42bb7af3AfC588358D30163e4416F",
+      "protocol_slug": "vetro",
+      "protocol_name": "VETRO",
+      "role_or_surface": "VETRO contract",
+      "pinned_block_number": 26449594
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xA1223a59a55eAad135BCe9F513181C388072cC71",
+      "protocol_slug": "wan-bridge",
+      "protocol_name": "Wan Bridge",
+      "role_or_surface": "controller (contract_controller)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xfCeAAaEB8D564a9D0e71Ef36f027b9D162bC334e",
+      "protocol_slug": "wan-bridge",
+      "protocol_name": "Wan Bridge",
+      "role_or_surface": "CrossProxy",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x1eCdB32e59e948C010a189a0798C674a2d0c6603",
+      "protocol_slug": "whales-market",
+      "protocol_name": "Whales Market",
+      "role_or_surface": "Whales Market TransparentUpgradeableProxy",
+      "pinned_block_number": 26441165
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xC15bE5214978d1fc509ECdd4f9D5BC067C94D9Ae",
+      "protocol_slug": "wildcat-protocol",
+      "protocol_name": "Wildcat Protocol",
+      "role_or_surface": "controller (multisig_safe)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xfEB516d9D946dD487A9346F6fee11f40C6945eE4",
+      "protocol_slug": "wildcat-protocol",
+      "protocol_name": "Wildcat Protocol",
+      "role_or_surface": "WildcatArchController",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x4687E45bB5518a995913a24BB2816fe2031d74D8",
+      "protocol_slug": "wintermute-confidential-wbtc-ethereum",
+      "protocol_name": "Wintermute Confidential WBTC (Ethereum)",
+      "role_or_surface": "Wintermute Confidential WBTC (Ethereum) Safe",
+      "pinned_block_number": 26441165
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x4691937a7508860F876c9c0a2a617E7d9E945D4B",
+      "protocol_slug": "woofi-earn",
+      "protocol_name": "WOOFi Earn",
+      "role_or_surface": "Wootrade Network",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x90BB48fe3310499Db36437dCAE642F721e32d094",
+      "protocol_slug": "world-chain-bridge",
+      "protocol_name": "World Chain Bridge",
+      "role_or_surface": "AnchorStateRegistry",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xd7405BE7f3e63b094Af6C7C23D5eE33Fd82F872D",
+      "protocol_slug": "world-chain-bridge",
+      "protocol_name": "World Chain Bridge",
+      "role_or_surface": "controller (contract_controller)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x98f3c9e6E3fAce36bAAd05FE09d375Ef1464288B",
+      "protocol_slug": "wormhole-core-ntt",
+      "protocol_name": "Wormhole Core (NTT)",
+      "role_or_surface": "Wormhole Core (Ethereum)",
+      "pinned_block_number": 26434786
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x42F38ec5A75acCEc50054671233dfAC9C0E7A3F6",
+      "protocol_slug": "xdai-stake-bridge",
+      "protocol_name": "xDAI Stake Bridge",
+      "role_or_surface": "Gnosis Bridge Governor Multisig (Ethereum)",
+      "pinned_block_number": 26453551
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x88Ba032be87d5EF1fbE87336B7090767F367BF73",
+      "protocol_slug": "yearn-v3",
+      "protocol_name": "Yearn V3",
+      "role_or_surface": "controller (timelock)",
+      "pinned_block_number": 26441165
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xb3bd6B2E61753C311EFbCF0111f75D29706D9a41",
+      "protocol_slug": "yearn-v3",
+      "protocol_name": "Yearn V3",
+      "role_or_surface": "RoleManager",
+      "pinned_block_number": 26441165
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xFEB4acf3df3cDEA7399794D0869ef76A6EfAff52",
+      "protocol_slug": "yearn-v3",
+      "protocol_name": "Yearn V3",
+      "role_or_surface": "yChad Governance Safe",
+      "pinned_block_number": 26441165
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x01791F726B4103694969820be083196cC7c045fF",
+      "protocol_slug": "yield-basis",
+      "protocol_name": "Yield Basis",
+      "role_or_surface": "YB token",
+      "pinned_block_number": 26452373
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x19Ebd191f7A24ECE672ba13A302212b5eF7F35cb",
+      "protocol_slug": "yieldfi",
+      "protocol_name": "YieldFi",
+      "role_or_surface": "YieldFi yUSD (YToken)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xE26E1D2ae51dcB89E382CA7400b080e6632117B9",
+      "protocol_slug": "yieldfi",
+      "protocol_name": "YieldFi",
+      "role_or_surface": "controller (contract_controller)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xDF51B7843817F76220C0970eF58Ba726630028eF",
+      "protocol_slug": "yieldnest",
+      "protocol_name": "YieldNest",
+      "role_or_surface": "YNDelegator Safe",
+      "pinned_block_number": 26438867
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xfcad670592a3b24869C0b51a6c6FDED4F95D6975",
+      "protocol_slug": "yieldnest",
+      "protocol_name": "YieldNest",
+      "role_or_surface": "YNSecurityCouncil Safe",
+      "pinned_block_number": 26438867
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x1af1878e8d9E7263236529eCAdAcD345781538d0",
+      "protocol_slug": "yuzu-money",
+      "protocol_name": "Yuzu Money",
+      "role_or_surface": "controller (contract_controller)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x224e90591A2d63fb66E677D0561Ea4A6Ad1F098D",
+      "protocol_slug": "yuzu-money",
+      "protocol_name": "Yuzu Money",
+      "role_or_surface": "Yuzu Cash (YuzuILPV3)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xA12CC123ba206d4031D1c7f6223D1C2Ec249f4f3",
+      "protocol_slug": "zama",
+      "protocol_name": "Zama",
+      "role_or_surface": "ZAMA token",
+      "pinned_block_number": 26452373
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xa14f20130E9a0a27D580FD30FD4bbF035a492AB2",
+      "protocol_slug": "zerobase-cedefi",
+      "protocol_name": "ZEROBASE CeDeFi",
+      "role_or_surface": "controller (multisig_safe)",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xfAB99fCF605fD8f4593EDb70A43bA56542777777",
+      "protocol_slug": "zerobase-cedefi",
+      "protocol_name": "ZEROBASE CeDeFi",
+      "role_or_surface": "ZEROBASE",
+      "pinned_block_number": 26458556
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xC463EaC02572CC964D43D2414023E2c6B62bAF38",
+      "protocol_slug": "zircuit-staking",
+      "protocol_name": "Zircuit Staking",
+      "role_or_surface": "Zircuit Staking Safe",
+      "pinned_block_number": 26441165
+    },
+    {
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xfEd3D6557Dc46A1B25d0A6F666513Cb33835864B",
+      "protocol_slug": "ztln-p",
+      "protocol_name": "ZTLN-P",
+      "role_or_surface": "Zoth Tokenized Liquid Notes Prime (ZTLNPrime)",
+      "pinned_block_number": 26458556
+    }
+  ]
+}

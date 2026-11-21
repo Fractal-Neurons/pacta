@@ -27,8 +27,8 @@ Only targets on the **closed Target List** below are eligible (**Ethereum and Ba
 7. **GitHub (`Fractal-Neurons/pacta`) only:** Never open issues, PRs, or comments in any third-party protocol repository.
 8. **Right to refuse:** We refuse entries that break these rules and state why on the Pull Request.
 
-## What to Submit (Observed Facts Only — Pacta Never Sells Grades)
-Pacta never sells grades. Entries record **pinned on-chain facts only**: no letter grade is accepted or published, and no claims about protocol documentation belong in this track. Accepted entries appear on `pacta.wtf` as **Observed** at the next site update.
+## What to Submit (Observed facts only)
+We do not publish ratings of protocols, and nobody can pay to change a result. Entries record **pinned on-chain facts only**: no letter grade is accepted or published, and no claims about protocol documentation belong in this track. Accepted entries appear on `pacta.wtf` as **Observed** at the next site update.
 
 Open a Pull Request titled `Wave 4 catalogue: <slot_id>` adding one file at `bounties/wave-4/catalogue/<slot_id>.json` with:
 - `slot_id`, `chain` (`"ethereum"` or `"base"`), `protocol_name`, `contract_address`, and `official_source_url` from the closed list.
@@ -80,6 +80,7 @@ Requires `python3` (`>= 3.10`):
 ```bash
 mkdir pacta-catalogue-run && cd pacta-catalogue-run
 curl -fsSLO https://raw.githubusercontent.com/Fractal-Neurons/pacta/main/tools/pacta_x402_call.py
+echo "eb873d21fc64b2c9f3f8f9b8eb057afcbf0e1f89aeb3477aea9b8e68120ab2cf  pacta_x402_call.py" | sha256sum -c -   # macOS: shasum -a 256 -c -
 python3 pacta_x402_call.py --self-test
 ```
 Read `pacta_x402_call.py` before running it with a key, and verify `--self-test` prints `"self_test": "PASS"`.
