@@ -1,0 +1,540 @@
+{
+  "wave": 3,
+  "chain": "ethereum",
+  "chain_id": 1,
+  "protocol_name": "3F",
+  "slug": "3f",
+  "pacta_slug": "3f",
+  "contract_address": "0x54F862fa0612A8709F6Dec4A7B39AF015CD4E82E",
+  "tvl_usd": 38370897,
+  "tvl_source_url": "https://defillama.com/protocol/3f",
+  "dossier_window": "2026-2026",
+  "trajectory_mode": "mutable_transitions",
+  "historical_transitions": [
+    {
+      "block_number": 24841246,
+      "block_date": "2026-04-09",
+      "tx_hash": "0xfef415d86a5367db2a5bf156402fe7b6271c928578f334f46b582309d0b7dd17",
+      "event_kind": "deployment_baseline",
+      "rpc_or_cast_proof": "cast call 0x54F862fa0612A8709F6Dec4A7B39AF015CD4E82E \"adminOf(address)(address)\" 0x86b495e4Cb00AB18Ad94BFD7920479cC79E8eBFE --block 24841246 --rpc-url https://eth.drpc.org",
+      "summary": "Pre-doc bootstrap baseline: Solady ERC1967Factory (0x54F862...) deployed and issued initial proxy wJAAA (0x86b4...) with 0s admin 0xAbff377A... (EIP-7702 EOA), while Pacta preflight reports 0x54F862... as IMMUTABLE_NO_ADMIN."
+    },
+    {
+      "block_number": 24844408,
+      "block_date": "2026-04-09",
+      "tx_hash": "0xb59f622fe1ddefd391ba5db908dbdec1ae760fc04422584121d1082372df7281",
+      "event_kind": "signer_or_threshold_change",
+      "rpc_or_cast_proof": "cast call 0xA9F5262c1aa97C6E519D6f8837658C8f9979bA24 \"getOwners()(address[])\" --block 24844408 --rpc-url https://mainnet.gateway.tenderly.co",
+      "summary": "Facility proxy (0x4e01...) admin transferred to Safe 0xA9F5262c... (3F_ADMIN_PROTECTED), then a 1-of-1 Safe whose sole owner was nested 4-of-7 Safe 3F_OWNER (0xC820...) with 0s upgrade delay."
+    },
+    {
+      "block_number": 25094947,
+      "block_date": "2026-05-14",
+      "tx_hash": "0xbdd003cc1b15b660e1a131614e158e5f61ed377f7a3d0e9a3c3cbdb18b9f4984",
+      "event_kind": "proxy_upgrade",
+      "rpc_or_cast_proof": "cast storage 0xF458Ad24B1dE7c653e8471efB0b87710b316b7D9 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc --block 25094947 --rpc-url https://eth.drpc.org",
+      "summary": "Pre-doc bootstrap exposure: wUSCC proxy (0xF458...) upgraded in 0s via 0x54F862... under 1-of-1 Safe 0xA9F5262c... to SuperstateRestrictedWrappedAsset (0x9Cbf...5e10)."
+    },
+    {
+      "block_number": 25251864,
+      "block_date": "2026-06-05",
+      "tx_hash": "0x78db7edc7f5013fa541f4f59e46c32affb1e5bb9c2b6b179fb2815050bd91783",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast call 0xC1abf27242829D4c8a4dE2704Fa1bC3D29836fA5 \"minDelay()(uint256)\" --block 25251864 --rpc-url https://mainnet.gateway.tenderly.co",
+      "summary": "Solady Timelock (0xC1abf2...) deployed with minDelay = 86400s (24h), granting ADMIN/PROPOSER/EXECUTOR/CANCELLER roles to 1-of-1 Safe 0xA9F5262c... and EXECUTOR_ROLE to nested Safe 3F_OWNER (0xC820...); Blockscout verified_at = 2026-06-21T11:01:29Z."
+    },
+    {
+      "block_number": 25279807,
+      "block_date": "2026-06-09",
+      "tx_hash": "0x49df0618efff337de6c2a81cd5281b4cd44ac937848a40090d3dca84b2a92819",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast call 0x54F862fa0612A8709F6Dec4A7B39AF015CD4E82E \"adminOf(address)(address)\" 0x4e013ca8fF612a58F53C822904cDD0eC538a4A4F --block 25279807 --rpc-url https://eth.drpc.org",
+      "summary": "AdminChanged batch migrated Facility, wJAAA, wUSCC, and wFalconX admins on 0x54F862... to 24h Timelock (0xC1abf2...), ending 61.12 days of pre-documentation zero-delay exposure on core TUP proxies."
+    },
+    {
+      "block_number": 25329795,
+      "block_date": "2026-06-16",
+      "tx_hash": "0x792d2a6ac755c404b8fff0df86dfaf8290cb465c86c01383983f77ad9d67cab7",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast call 0x54F862fa0612A8709F6Dec4A7B39AF015CD4E82E \"adminOf(address)(address)\" 0x9BDcb584a2304e394705932c8b67114E3908241f --block 25329795 --rpc-url https://mainnet.gateway.tenderly.co",
+      "summary": "MorphoAllocator (0x9BDcb584..., granted FACILITATOR_ROLE on Facility and Vault V2 allocator permissions) and CommitDeposit (0x1918...) deployed via 0x54F862... with direct 0s admin 0xA9F5262c..., remaining outside Timelock 0xC1abf2...."
+    },
+    {
+      "block_number": 25538734,
+      "block_date": "2026-07-15",
+      "tx_hash": "0x1e87f51415ecdc01cb45281ee2223cb07d9b97e13e174755f67d1d5a45c050f4",
+      "event_kind": "proxy_upgrade",
+      "rpc_or_cast_proof": "cast receipt 0x1e87f51415ecdc01cb45281ee2223cb07d9b97e13e174755f67d1d5a45c050f4 --rpc-url https://eth.drpc.org",
+      "summary": "3F_OWNER (4-of-7) executed 0s MorphoAllocator upgrade via 1-of-1 Safe 0xA9F5262c... and 0x54F862... pointing 0x9BDc... to 0xb8947d2725D3E9De9b19fC720f053300c50981e5 (an unverified ERC1967 proxy on canonical factory 0x0000...Df24)."
+    },
+    {
+      "block_number": 25545086,
+      "block_date": "2026-07-16",
+      "tx_hash": "0x43b828f82c0a287039fa2c986fba4895b2f34c5b8053bb07bf9e8d7f10fcb3a6",
+      "event_kind": "proxy_upgrade",
+      "rpc_or_cast_proof": "cast receipt 0x43b828f82c0a287039fa2c986fba4895b2f34c5b8053bb07bf9e8d7f10fcb3a6 --rpc-url https://mainnet.gateway.tenderly.co",
+      "summary": "MorphoAllocator (0x9BDc...) upgraded again in 0s (21.25 hours after block 25538734) directly via 0xA9F5262c... to 0x4372540f89Ef3a83eB83365C508C4fb775fA449F (Blockscout verified_at = 2026-07-28T13:43:00Z)."
+    },
+    {
+      "block_number": 25653844,
+      "block_date": "2026-07-31",
+      "tx_hash": "0x484cfa370b971a9887aa1a418956388a035becd86e1d20ab458e6a6fcbbe4d95",
+      "event_kind": "signer_or_threshold_change",
+      "rpc_or_cast_proof": "cast call 0xA9F5262c1aa97C6E519D6f8837658C8f9979bA24 \"getThreshold()(uint256)\" --block 25653844 --rpc-url https://eth.drpc.org",
+      "summary": "At exact timestamp (2026-07-31 15:49:11 UTC) of Verification Council announcement tweet 2083218390647472327, 3F_ADMIN_PROTECTED (0xA9F5262c...) still returned threshold = 1 owned solely by internal Safe 3F_OWNER (opening Gap Window 1)."
+    },
+    {
+      "block_number": 25803870,
+      "block_date": "2026-08-21",
+      "tx_hash": "0x5a3c1e3b25674588edd22ec004f8ec87dd7602d3e7add071f2a02bcc9578efb6",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast receipt 0x5a3c1e3b25674588edd22ec004f8ec87dd7602d3e7add071f2a02bcc9578efb6 --rpc-url https://mainnet.gateway.tenderly.co",
+      "summary": "Timelock.Proposed queued v1.3.0 beacon upgrades for BorrowPositionBeacon and PositionManagerBeacon with readyTimestamp = 1787406059 (+86400s after block timestamp 1787319659)."
+    },
+    {
+      "block_number": 25826158,
+      "block_date": "2026-08-24",
+      "tx_hash": "0x621d369b77cb513e8b12d1e6cfb32db5dffac7b27ce39ad3df78ef3b3de11783",
+      "event_kind": "proxy_upgrade",
+      "rpc_or_cast_proof": "cast receipt 0x621d369b77cb513e8b12d1e6cfb32db5dffac7b27ce39ad3df78ef3b3de11783 --rpc-url https://eth.drpc.org",
+      "summary": "Timelock.Executed completed the queued v1.3.0 beacon upgrades (BorrowPositionBeacon -> 0xC933..., PositionManagerBeacon -> 0x9dA9...) after the full 24h delay."
+    },
+    {
+      "block_number": 25833451,
+      "block_date": "2026-08-25",
+      "tx_hash": "0x6809d74ba07f57d7fe819c123bbc17c93ccf7a099c5f18800c2f2b4d0103e40b",
+      "event_kind": "signer_or_threshold_change",
+      "rpc_or_cast_proof": "cast call 0xA9F5262c1aa97C6E519D6f8837658C8f9979bA24 \"getThreshold()(uint256)\" --block 25833451 --rpc-url https://mainnet.gateway.tenderly.co",
+      "summary": "3F_ADMIN_PROTECTED (0xA9F5262c...) added ChainSecurity (0xe9DB...) and Aragon (0xe8B5...) and raised threshold 1 -> 2 (2-of-3), closing the 25.03-day post-announcement Verification Council Safe lag."
+    },
+    {
+      "block_number": 26076588,
+      "block_date": "2026-09-28",
+      "tx_hash": "0x07379a8e943a1cc9297501c1bb0fac0c40c33c4bd25c7903c5da5c97915e07da",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast call 0x54F862fa0612A8709F6Dec4A7B39AF015CD4E82E \"adminOf(address)(address)\" 0x19189B5c136c25BD2615D369661fc131419e37f6 --block 26076588 --rpc-url https://eth.drpc.org",
+      "summary": "At the September 28, 2026 snapshot block 26,076,588 cited inside live /protocol/ownership/, CommitDeposit (0x1918...) and MorphoAllocator (0x9BDc...) already held direct 0s admin 0xA9F5262c... (on-chain state anchor; earlier docs publication prior to 2026-11-20 is unarchived)."
+    },
+    {
+      "block_number": 26282983,
+      "block_date": "2026-10-27",
+      "tx_hash": "0xd9dc826aa642f51f79e38076fdedcb2003e38b69da8ec68eb91e30cc517477b3",
+      "event_kind": "proxy_upgrade",
+      "rpc_or_cast_proof": "cast storage 0x9BDcb584a2304e394705932c8b67114E3908241f 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc --block 26282983 --rpc-url https://mainnet.gateway.tenderly.co",
+      "summary": "Active FACILITATOR_ROLE proxy MorphoAllocator (0x9BDc...) upgraded again in 0s via 0x54F862... by 2-of-3 0xA9F5262c... to 0x18ddAC7D... after the Sept 28 docs snapshot."
+    },
+    {
+      "block_number": 26452563,
+      "block_date": "2026-11-19",
+      "tx_hash": "0xabe336b8395a476e906dc167698f26d7e7e82c187cdbe580226b58c19fb2b760",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast storage 0xA9F5262c1aa97C6E519D6f8837658C8f9979bA24 0x4a204f620c8c5ccdca3fd54d003badd85ba500436a431f0cbda4f558c93c34c8 --block 26452563 --rpc-url https://eth.drpc.org",
+      "summary": "Finalized check confirms 3F_ADMIN_PROTECTED (0xA9F5262c...) GUARD_STORAGE_SLOT equals 0x0 (no Safe transaction guard)."
+    },
+    {
+      "block_number": 26452564,
+      "block_date": "2026-11-19",
+      "tx_hash": "0x1c68653d157281c69885e887621ac2884412f1541287e0f16d65c712bd89de02",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0xA9F5262c1aa97C6E519D6f8837658C8f9979bA24 \"getModulesPaginated(address,uint256)(address[],address)\" 0x0000000000000000000000000000000000000001 10 --block 26452564 --rpc-url https://mainnet.gateway.tenderly.co",
+      "summary": "Finalized check confirms 3F_ADMIN_PROTECTED (0xA9F5262c...) has zero enabled Safe modules (empty array)."
+    },
+    {
+      "block_number": 26452565,
+      "block_date": "2026-11-19",
+      "tx_hash": "0x192a89cd91775379404bfb5f10d81ee516b81cc7830a8fd40cb29ab737d376e1",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0xA9F5262c1aa97C6E519D6f8837658C8f9979bA24 \"getOwners()(address[])\" --block 26452565 --rpc-url https://eth.drpc.org",
+      "summary": "Finalized check confirms 3F_ADMIN_PROTECTED owners are Aragon (0xe8B5...), ChainSecurity (0xe9DB...), and nested Safe 3F_OWNER (0xC820...)."
+    },
+    {
+      "block_number": 26452566,
+      "block_date": "2026-11-19",
+      "tx_hash": "0x3649a1e554a7ebe59b88e4982ee14240482baf949c7dcebff471e622e3780086",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0xC82003FC812F8eFE93cdA63d9f8Ee8c0A3EF5d60 \"getThreshold()(uint256)\" --block 26452566 --rpc-url https://mainnet.gateway.tenderly.co",
+      "summary": "Finalized check confirms nested Safe 3F_OWNER (0xC820...) requires threshold = 4 across 7 owners."
+    },
+    {
+      "block_number": 26452567,
+      "block_date": "2026-11-19",
+      "tx_hash": "0x2e8632ab3740092f861afd6f8b592c857af9a58a81f091c5a31d9e1a03c06479",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0xC82003FC812F8eFE93cdA63d9f8Ee8c0A3EF5d60 \"getOwners()(address[])\" --block 26452567 --rpc-url https://eth.drpc.org",
+      "summary": "Finalized check enumerates all 7 owners of 3F_OWNER (6 EOAs plus 1-of-2 Safe 3F_FOUNDATION 0xdb15A55b...)."
+    },
+    {
+      "block_number": 26452568,
+      "block_date": "2026-11-19",
+      "tx_hash": "0xf2fda96790c6ab09096fc85f7486e827a018c001cde69be01cee6d3a1aab96a8",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0xC82003FC812F8eFE93cdA63d9f8Ee8c0A3EF5d60 \"getModulesPaginated(address,uint256)(address[],address)\" 0x0000000000000000000000000000000000000001 10 --block 26452568 --rpc-url https://mainnet.gateway.tenderly.co",
+      "summary": "Finalized check confirms Safe module 0xEb4F957AC16A51feeE7A12f6610ad75874F8433c (documented as Zodiac Roles Modifier) is enabled on 3F_OWNER."
+    },
+    {
+      "block_number": 26452569,
+      "block_date": "2026-11-19",
+      "tx_hash": "0x48aea6febddc8feaadda6a1dbfbcff7afae89e402c5ab47f78124cfa551c6ba7",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0xf1C632965888ABA4612EbcD00AB6d2898Cae147b \"getModulesPaginated(address,uint256)(address[],address)\" 0x0000000000000000000000000000000000000001 10 --block 26452569 --rpc-url https://eth.drpc.org",
+      "summary": "Finalized check confirms Safe module 0x0fDE5755D4f36bb321ED93C22aC0857398FB78CD (documented as Zodiac Roles Modifier) is enabled on 2-of-3 FAC_FUND Safe."
+    },
+    {
+      "block_number": 26452570,
+      "block_date": "2026-11-19",
+      "tx_hash": "0x5208e23c296add289142ee89011088be0a2f9cb576f11e9faa4ee51a2a352c08",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0x0fDE5755D4f36bb321ED93C22aC0857398FB78CD \"owner()(address)\" --block 26452570 --rpc-url https://mainnet.gateway.tenderly.co",
+      "summary": "Finalized check confirms FAC_FUND Roles Modifier module 0x0fDE5755... reports owner() = FAC_FUND (0xf1C63296...)."
+    },
+    {
+      "block_number": 26452571,
+      "block_date": "2026-11-19",
+      "tx_hash": "0xe04bfcae9d7ec6c6d4d788144fa9c4406458b960a9d125c9e731e5f786bb1ffd",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0x19189B5c136c25BD2615D369661fc131419e37f6 \"owner()(address)\" --block 26452571 --rpc-url https://eth.drpc.org",
+      "summary": "Finalized check confirms CommitDeposit helper proxy (0x1918...) owner() = 3F_OWNER (0xC820...) while adminOf = 3F_ADMIN_PROTECTED."
+    },
+    {
+      "block_number": 26452572,
+      "block_date": "2026-11-19",
+      "tx_hash": "0xba6e68cf8d3ee4a60dec94e8a013f604103d479706760249a66314c8273d7dd9",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0x54F862fa0612A8709F6Dec4A7B39AF015CD4E82E \"adminOf(address)(address)\" 0x4e013ca8fF612a58F53C822904cDD0eC538a4A4F --block 26452572 --rpc-url https://mainnet.gateway.tenderly.co",
+      "summary": "Inventory proof (1/9 factory proxies): Facility (0x4e01...) adminOf = Timelock (0xC1abf2...)."
+    },
+    {
+      "block_number": 26452573,
+      "block_date": "2026-11-19",
+      "tx_hash": "0x7e08cc72b23484bb2796306d3362bce2d8696780b8066af3874efcc012388734",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0x54F862fa0612A8709F6Dec4A7B39AF015CD4E82E \"adminOf(address)(address)\" 0x86b495e4Cb00AB18Ad94BFD7920479cC79E8eBFE --block 26452573 --rpc-url https://eth.drpc.org",
+      "summary": "Inventory proof (2/9 factory proxies): wJAAA (0x86b4...) adminOf = Timelock (0xC1abf2...)."
+    },
+    {
+      "block_number": 26452574,
+      "block_date": "2026-11-19",
+      "tx_hash": "0x3d67c5bd74eae350aa67b27c214491b1fe194bcf01125944e032886e9ff665e4",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0x54F862fa0612A8709F6Dec4A7B39AF015CD4E82E \"adminOf(address)(address)\" 0xF458Ad24B1dE7c653e8471efB0b87710b316b7D9 --block 26452574 --rpc-url https://mainnet.gateway.tenderly.co",
+      "summary": "Inventory proof (3/9 factory proxies): wUSCC (0xF458...) adminOf = Timelock (0xC1abf2...)."
+    },
+    {
+      "block_number": 26452575,
+      "block_date": "2026-11-19",
+      "tx_hash": "0xb2b2e84ddf39a8f6e9d7e3a4623189cc3fe788bb557756abe191cf800eefa75c",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0x54F862fa0612A8709F6Dec4A7B39AF015CD4E82E \"adminOf(address)(address)\" 0x4614F7A56A3Eb83b2Ff9fA4B4b9575B28Fb68644 --block 26452575 --rpc-url https://eth.drpc.org",
+      "summary": "Inventory proof (4/9 factory proxies): wFalconX (0x4614...) adminOf = Timelock (0xC1abf2...)."
+    },
+    {
+      "block_number": 26452576,
+      "block_date": "2026-11-19",
+      "tx_hash": "0xd447982378ae80eefc57cf0b6a7e10f258a3a2adeeb7c5da2bc16995291cfd07",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0x54F862fa0612A8709F6Dec4A7B39AF015CD4E82E \"adminOf(address)(address)\" 0xB8d692e46D624b3c650282Ed3011Bf6d7B1dB5e8 --block 26452576 --rpc-url https://mainnet.gateway.tenderly.co",
+      "summary": "Inventory proof (5/9 factory proxies): wmGLO (0xB8d6...) adminOf = Timelock (0xC1abf2...)."
+    },
+    {
+      "block_number": 26452577,
+      "block_date": "2026-11-19",
+      "tx_hash": "0xfbac412cc41d68fe9e70c1a3987943e324ef8b508562cd6242b9a13c69f181f4",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0x54F862fa0612A8709F6Dec4A7B39AF015CD4E82E \"adminOf(address)(address)\" 0x07ab1Ac9cBA9d0CAf5dEF80a463B15e72d9b50c3 --block 26452577 --rpc-url https://eth.drpc.org",
+      "summary": "Inventory proof (6/9 factory proxies): BorrowOffersRegistry (0x07ab...) adminOf = Timelock (0xC1abf2...)."
+    },
+    {
+      "block_number": 26452578,
+      "block_date": "2026-11-20",
+      "tx_hash": "0x4c1094a56a625ed988d657a9a581c3368c15b566fc679041bdec387a76743c93",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0x54F862fa0612A8709F6Dec4A7B39AF015CD4E82E \"adminOf(address)(address)\" 0xAd3DF76A70724c94a7e93F000696b50e2728cFd2 --block 26452578 --rpc-url https://mainnet.gateway.tenderly.co",
+      "summary": "Inventory proof (7/9 factory proxies; CommitDeposit 8/9 at 26076588, MorphoAllocator 9/9 at 25329795): unlisted BorrowOffersRegistry (0xAd3D...) adminOf = Timelock (0xC1abf2...)."
+    },
+    {
+      "block_number": 26452579,
+      "block_date": "2026-11-20",
+      "tx_hash": "0xb42c50075d992645fbef4a14ce76d788f829cd7bbe20bd4122b66bda07737148",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0x0000000000006396FF2a80c067f99B3d2Ab4Df24 \"adminOf(address)(address)\" 0xb8947d2725D3E9De9b19fC720f053300c50981e5 --block 26452579 --rpc-url https://eth.drpc.org",
+      "summary": "Canonical ERC1967Factory check confirms July 15 upgrade target 0xb8947d27... is itself an ERC1967 proxy administered by 0xA9F5262c...."
+    },
+    {
+      "block_number": 26452580,
+      "block_date": "2026-11-20",
+      "tx_hash": "0x0976eb6ec2707d7fbc431acb24a94579f67a8b5232a27e2fbab977517e55fbb8",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast storage 0xb8947d2725D3E9De9b19fC720f053300c50981e5 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc --block 26452580 --rpc-url https://mainnet.gateway.tenderly.co",
+      "summary": "ERC-1967 slot check on 0xb8947d27... returns 0x4372540f89Ef3a83eB83365C508C4fb775fA449F, confirming 0xb8947d27... is a duplicate proxy rather than a raw implementation."
+    },
+    {
+      "block_number": 26455691,
+      "block_date": "2026-11-20",
+      "tx_hash": "0x37ab23c72736e9b4456b828766791b378ed877ab73c0894501eb26977c3d158a",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast call 0x54F862fa0612A8709F6Dec4A7B39AF015CD4E82E \"adminOf(address)(address)\" 0x9BDcb584a2304e394705932c8b67114E3908241f --block 26455691 --rpc-url https://eth.drpc.org",
+      "summary": "Finalized re-check at block 26,455,691 (2026-11-20 10:24:11 UTC) confirms MorphoAllocator (0x9BDc...) still has 0s admin 0xA9F5262c... alongside Wayback captures 20261120103700/20261120103715 (0.41d bounded open from 26,452,713)."
+    }
+  ],
+  "docs_and_governance_forensics": {
+    "mttr_status": "partially_repaired",
+    "mttr_days": 25.03,
+    "unrepaired_open_days": 0.41,
+    "evidence_sources": [
+      {
+        "kind": "github_docs_commit",
+        "date": "2026-04-08",
+        "url": "https://github.com/3FLabs/grunt/commit/01065770ffdac14c0d5cc1dc80935a3bb8e09515",
+        "claim_summary": "Pre-launch 3FLabs/grunt Audit 02-2026 Fixes commit immediately prior to April 9 ERC1967Factory deployment; no upgrade timelock promise documented."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2026-06-16",
+        "url": "https://github.com/3FLabs/facilitators/commit/28ad403e7f12d5247caf7fbd411b990d436d1894",
+        "claim_summary": "3FLabs/facilitators DeployAllocators.s.sol deploying CommitDeposit and MorphoAllocator through 0x54F862... with direct admin 3F_ADMIN_PROTECTED (0xA9F5...)."
+      },
+      {
+        "kind": "wayback_snapshot",
+        "date": "2026-07-18",
+        "url": "https://web.archive.org/web/20260718184152/https://docs.3f.xyz/",
+        "claim_summary": "July 18, 2026 Wayback snapshot of docs.3f.xyz landing page (with 2026-09-16 as the only other prior docs capture); neither preserves or links /protocol/verification-council/ or /protocol/ownership/."
+      },
+      {
+        "kind": "official_docs",
+        "date": "2026-07-31",
+        "url": "https://x.com/3f_xyz/status/2083218390647472327",
+        "claim_summary": "July 31, 2026 (15:49:03 UTC) 3F Verification Council launch announcement welcoming Aragon, Steakhouse, and ChainSecurity for external review and co-signatures."
+      },
+      {
+        "kind": "official_docs",
+        "date": "2026-07-31",
+        "url": "https://publish.twitter.com/oembed?url=https://x.com/3f_xyz/status/2083218390647472327",
+        "claim_summary": "Archival oEmbed endpoint preserving July 31, 2026 announcement text embedded on docs.3f.xyz/protocol/verification-council/."
+      },
+      {
+        "kind": "official_docs",
+        "date": "2026-11-20",
+        "url": "https://docs.3f.xyz/protocol/ownership/",
+        "claim_summary": "Live Ownership docs captured 2026-11-20 (printing on-chain state block 26,076,588 from 2026-09-28, carving out 0s 3F_ADMIN_PROTECTED control over CommitDeposit/MorphoAllocator and Zodiac modules; earlier publication unarchived, no Last-Modified header, private docs repo)."
+      },
+      {
+        "kind": "official_docs",
+        "date": "2026-11-20",
+        "url": "https://docs.3f.xyz/protocol/verification-council/",
+        "claim_summary": "Live Verification Council docs captured 2026-11-20 claiming unqualified that nothing about a deployed implementation can change without a 24h public delay and every privileged action needs 2 independent organizations (earlier publication unarchived)."
+      },
+      {
+        "kind": "wayback_snapshot",
+        "date": "2026-11-20",
+        "url": "https://web.archive.org/web/20261120103700/https://docs.3f.xyz/protocol/verification-council/",
+        "claim_summary": "Immutable Nov 20, 2026 (10:37:00 UTC) Wayback capture preserving the universal 24h delay and 2-organization co-signature claims on /protocol/verification-council/; prior captures of this URL do not exist (0 historical snapshots)."
+      },
+      {
+        "kind": "wayback_snapshot",
+        "date": "2026-11-20",
+        "url": "https://web.archive.org/web/20261120103715/https://docs.3f.xyz/protocol/ownership/",
+        "claim_summary": "Immutable Nov 20, 2026 (10:37:15 UTC) Wayback capture preserving direct-admin helper exceptions and Zodiac Roles Modifier disclosures on /protocol/ownership/; prior captures of this URL do not exist (0 historical snapshots)."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2026-11-18",
+        "url": "https://github.com/3FLabs/facilitators/commit/9d83ed7f71bb2631c933f63a80c06ac24f410a3e",
+        "claim_summary": "3FLabs/facilitators commit identifying 0x9BDc... as live proxy on 0x54F862... and 0xb8947d27... as an unused duplicate proxy on canonical factory."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2026-11-18",
+        "url": "https://github.com/3FLabs/grunt/commit/fea207db7da22ec7cdd41f8c80cddde00854af76",
+        "claim_summary": "Latest 3FLabs/grunt Solidity commit confirming 54 trailing-12m commits (48 Solidity, 6 other) across 3 engineers (bus factor = 2)."
+      }
+    ],
+    "gap_windows": [
+      {
+        "opened_block": 25653844,
+        "opened_date": "2026-07-31",
+        "closed_block": 25833451,
+        "closed_date": "2026-08-25",
+        "duration_days": 25.03,
+        "status": "repaired",
+        "summary": "Measured strictly from the July 31, 2026 Verification Council launch announcement (tweet 2083218390647472327, block 25,653,844): 3F_ADMIN_PROTECTED (0xA9F5...) remained a 1-of-1 Safe owned solely by nested 4-of-7 Safe 3F_OWNER (0xC820...) for 25.03 days until ChainSecurity and Aragon were added at block 25,833,451."
+      },
+      {
+        "opened_block": 26452713,
+        "opened_date": "2026-11-20",
+        "closed_block": null,
+        "closed_date": null,
+        "duration_days": 0.41,
+        "status": "unrepaired_open",
+        "summary": "Bounded strictly to verified live-capture dates (2026-11-20 00:27:11 UTC initial PR #130 capture at block 26,452,713 through finalized block 26,455,691 and 2026-11-20 10:37 UTC Wayback captures 20261120103700/20261120103715 = 0.41d open): /protocol/verification-council/ still asserts unqualified 24h upgrade timelocks and 2-org co-signatures while /protocol/ownership/ carves out 0s 3F_ADMIN_PROTECTED control on CommitDeposit/MorphoAllocator and Zodiac modules (earlier publication of either page prior to 2026-11-20 is unarchived: zero prior Wayback captures, no Last-Modified header, private docs repo)."
+      }
+    ]
+  },
+  "repo_audit": {
+    "github_org_repo": "3FLabs/grunt",
+    "commits_12m_contracts": 48,
+    "commits_12m_frontend_or_other": 6,
+    "human_contributors_12m": 3,
+    "bus_factor": 2,
+    "code_before_upgrade_verified": false
+  },
+  "executive_risk_memo": "Across the 2026 observation window ($38,370,897 single-chain Ethereum TVL), Pacta's catalog indexes 3F's Solady ERC1967Factory (0x54F862fa0612A8709F6Dec4A7B39AF015CD4E82E) with controllerAddress = null and preflight verdict IMMUTABLE_NO_ADMIN (riskScore = 0), missing nine ERC-1967 proxies governed via per-proxy adminOf(proxy) storage. Separating pre-documentation bootstrap exposure from dated public commitments clarifies the timeline: during pre-doc bootstrap (April 9 to June 9, 61.12 days), core proxies (Facility, wJAAA, wUSCC, wFalconX) used 0s EOA/nested-Safe admins before migrating at block 25,279,807 to 24h Timelock 0xC1abf2... (minDelay = 86,400s), and 3F_ADMIN_PROTECTED (0xA9F5262c...) acted as a 1-of-1 Safe owned by nested 4-of-7 Safe 3F_OWNER (0xC820..., whose 7 owners include 1-of-2 Safe 3F_FOUNDATION 0xdb15...). Following the July 31, 2026 Verification Council launch announcement (tweet 2083218390647472327, block 25,653,844), 0xA9F5... remained single-entity nested Safe authority for 25.03 days (repaired MTTR = 25.03 days) until block 25,833,451 added ChainSecurity and Aragon (2-of-3; GUARD_STORAGE_SLOT = 0x0, modules = []). Bounded strictly to verified live-capture dates (0.41 days open from initial PR #130 live-docs capture at pinned block 26,452,713 on 2026-11-20 00:27:11 UTC through finalized block 26,455,691 and Wayback captures 20261120103700/20261120103715 at 2026-11-20 10:37 UTC; earlier publication prior to 2026-11-20 is unarchived — zero prior Wayback snapshots of those subpages, no Last-Modified header, and private docs repo, even though /protocol/ownership/ prints state read at block 26,076,588 on 2026-09-28 and MorphoAllocator upgraded in 0s on 2026-10-27 at block 26,282,983): /protocol/ownership/ carves out 0s 3F_ADMIN_PROTECTED control on CommitDeposit (0x1918...) and MorphoAllocator (0x9BDc..., upgraded in 0s at blocks 25,538,734, 25,545,086, and 26,282,983) plus Zodiac Roles Modifier modules (0xEb4F... on 3F_OWNER, 0x0fDE... on FAC_FUND), whereas /protocol/verification-council/ still asserts unqualified 24h timelock and 2-org co-signature guarantees. 3FLabs/grunt logs 54 trailing-12m commits (48 Solidity, 6 other; 3 engineers, bus factor = 2), while explorer source verification lagged on Timelock and 0x437254... and remains unverified on 0xb8947d... and 0xC147a1ef....",
+  "contributor_github": "VB-Blue",
+  "agent_assist_framework": "antigravity",
+  "base_payout_address": "0xe0a3AAe6e7d042f42e82830f4eEbF426cc1270a2",
+  "mcp_tool_receipt": {
+    "tool": "pacta_check_preflight",
+    "arguments": {
+      "chain": "ethereum",
+      "address": "0x54F862fa0612A8709F6Dec4A7B39AF015CD4E82E"
+    },
+    "result": {
+      "schema": "pacta.preflight_check.v1",
+      "chain": "ethereum",
+      "chainId": 1,
+      "address": "0x54F862fa0612A8709F6Dec4A7B39AF015CD4E82E",
+      "pinnedBlock": 26452713,
+      "pinnedBlockHash": "0xa023febdbcc9d301671599abbfbe3d07397366ce28477de6bdc7384591181a6d",
+      "blockTimestamp": 1795134431,
+      "verdict": "IMMUTABLE_NO_ADMIN",
+      "riskScore": 0,
+      "isContract": true,
+      "isProxy": false,
+      "proxyType": null,
+      "implementation": null,
+      "beacon": null,
+      "hasAdminSlot": false,
+      "canUpgradeZeroDelay": false,
+      "capabilities": {
+        "pause": false,
+        "blacklist": false,
+        "upgrade": false
+      },
+      "paused": null,
+      "controller": {
+        "address": null,
+        "kind": "none",
+        "safeThreshold": null,
+        "timelockDelaySec": null,
+        "source": null
+      },
+      "roleAdminMembers": null,
+      "codeBytes": 1887,
+      "method": "Batched JSON-RPC reads pinned to the block hash (EIP-1898); EIP-1967 / EIP-1822 / beacon proxies; capabilities from PUSH4 selectors in proxy + implementation bytecode (heuristic).",
+      "summary": "No proxy (EIP-1967, EIP-1822 or beacon) and no owner(), admin(), authority() or AccessControl admin found: immutable as far as these standard surfaces show.",
+      "activeGovernanceDiscussions": [],
+      "source": "live_rpc",
+      "catalogMatch": {
+        "slug": "3f",
+        "name": "3F",
+        "url": "https://pacta.wtf/protocols/3f/",
+        "matchedAs": "primary_contract",
+        "classification": "rpc_observed",
+        "evidenceBasis": "rpc_observed",
+        "easAttested": false,
+        "baseEasUids": [],
+        "sprints": [],
+        "pinnedBlock": 26451608,
+        "primaryContract": "0x54F862fa0612A8709F6Dec4A7B39AF015CD4E82E",
+        "controller": {
+          "address": null,
+          "kind": null
+        },
+        "observedDelaySeconds": null,
+        "documentedDelaySeconds": null,
+        "surfaces": [
+          {
+            "id": "3f-control-plane",
+            "surface": "ERC1967Factory · Non-Proxy Bytecode & Controller",
+            "classification": "rpc_observed",
+            "targetContract": "0x54F862fa0612A8709F6Dec4A7B39AF015CD4E82E",
+            "blockNumber": 26451608
+          }
+        ],
+        "whatDiffers": null,
+        "alsoMatches": []
+      },
+      "assessment": {
+        "coverage": "indexed_verified",
+        "confidence": "medium",
+        "method": "Live bytecode + storage heuristic at the pinned block, cross-checked with Pacta's RPC-pinned record for 3F (block 26451608).",
+        "limits": [
+          "riskScore (0-100) is a heuristic of the controller type and of pause / blacklist / upgrade capabilities read at one block; it is not an audit.",
+          "The live check reads EIP-1967 slots, owner(), Safe getThreshold() / getOwners() and TimelockController getMinDelay(); custom role systems, bridge or L2 admin paths and off-chain operations are not resolved.",
+          "Documentation is compared only for indexed protocols (catalogMatch), at their pinned block."
+        ]
+      },
+      "meter": {
+        "limit": 50,
+        "remaining": 49,
+        "reset": 1795219200
+      },
+      "upgrade_x402": {
+        "note": "Free tier: 50 pre-flight calls per caller per UTC day (REST and MCP), then $0.01 per call over x402 (HTTP 402, never a dead-end 429). Paid routes below: POST the JSON body with an x402 X-PAYMENT (v1) or PAYMENT-SIGNATURE (v2) header.",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "network": "base (eip155:8453)",
+        "payTo": "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14",
+        "discovery": "https://pacta.fractalneurons.com/.well-known/x402",
+        "overflow": {
+          "method": "GET or POST",
+          "url": "https://pacta.fractalneurons.com/v1/check/preflight",
+          "priceUsd": "0.01",
+          "amountAtomic": "10000",
+          "after": "50 free calls per UTC day"
+        },
+        "endpoints": [
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/verdict",
+            "priceUsd": "0.02",
+            "amountAtomic": "20000",
+            "unlocks": "fast contract / token control-plane verdict: riskScore 0-100, grade A-F, upgrade / owner / pause / blacklist / mint flags and a shareable scan URL",
+            "example": {
+              "chain": "ethereum",
+              "address": "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/dossier",
+            "priceUsd": "0.05",
+            "amountAtomic": "50000",
+            "unlocks": "full control-plane dossier: every controller Safe's signers and threshold, signers shared with other indexed protocols, Base EAS proof",
+            "example": {
+              "slug": "stader-labs-ethx"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/calldata-sim",
+            "priceUsd": "0.25",
+            "amountAtomic": "250000",
+            "unlocks": "pre-signing calldata check: timelock / Safe / multicall calls decoded, each rated against live delays and the authority that governs it",
+            "example": {
+              "chain": "ethereum",
+              "target": "0x2225DAbFfC7F862c99477381E971E8B1FDaB467e",
+              "data": "0x64d623530000000000000000000000000000000000000000000000000000000000015180"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/deep-scan",
+            "priceUsd": "9.00",
+            "amountAtomic": "9000000",
+            "unlocks": "deep control-plane scan cross-checked on two independent RPC operators, auditor receipt and a queued Base EAS ticket",
+            "example": {
+              "chain": "base",
+              "address": "0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "apache2_commercial_grant": true,
+  "rules_accepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
