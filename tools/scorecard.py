@@ -99,6 +99,61 @@ _EMERGENCY = re.compile(r"\bpause|\bblacklist|\bfreez|PAUSE_ROLE|ASSET_PROTECTIO
 _MEMBERS = re.compile(r"\b([A-Z][A-Z0-9_]*_ROLE)\b[^;()]{0,40}?\bhas (\d+) members(?:\s*\(([^)]*)\))?"
                       r"|\b([A-Z][A-Z0-9_]*_ROLE)\b[^;()]{0,40}?getRoleMemberCount\([^)]*\)\s*(?:=|returns)\s*(\d+)")
 _NUMWORD = {1: "one", 2: "two", 3: "three", 4: "four", 5: "five", 6: "six"}
+# v10 H2.1: any pause / freeze role-holder list ("held by A and B", "granted to A, B", "holders: A, B", "pausers are A and B");
+# addresses before the phrase (e.g. "On Vault 0x…, PAUSER_ROLE is held by …") are targets, never holders
+_HOLDER_PHRASE = re.compile(r"\b(?:held by|assigned to|granted to|holders?\s*(?::|are|is)|pausers?\s+(?:are|is)|members?\s*(?::|are))\s+", re.I)
+_LIST_SEP = re.compile(r",\s*(?:and\s+)?|\s+and\s+")
+_ROLE = re.compile(r"\b([A-Z][A-Z0-9_]*_ROLE)\b")
+
+
+def _top_level_split(tail):
+    """Split a holder list on ", " / " and " outside parentheses."""
+    out, depth, start, i = [], 0, 0, 0
+    while i < len(tail):
+        ch = tail[i]
+        if ch in "([":
+            depth += 1
+        elif ch in ")]":
+            depth = max(0, depth - 1)
+        elif depth == 0:
+            m = _LIST_SEP.match(tail, i)
+            if m:
+                out.append(tail[start:i])
+                start = i = m.end()
+                continue
+        i += 1
+    out.append(tail[start:])
+    return [x.strip() for x in out if x.strip()]
+
+
+def _holder_of(item):
+    """The role-holder address of one list item: the first address outside parentheses, else the first inside."""
+    bare = re.sub(r"\([^()]*\)", " ", item)
+    a = _ADDR.findall(bare) or _ADDR.findall(item)
+    return a[0].lower() if a else None
+
+
+def role_holders(c):
+    """(role, declared member count, [holder items]) for a pause / freeze clause naming >= 2 role holders, else None."""
+    mm = _MEMBERS.search(c)
+    if mm and int(mm.group(2) or mm.group(5)) > 1:
+        return (mm.group(1) or mm.group(4), int(mm.group(2) or mm.group(5)),
+                [x.strip() for x in (mm.group(3) or "").split(",") if x.strip()])
+    hp = _HOLDER_PHRASE.search(c)
+    if not hp:
+        return None
+    items, seen = [], []
+    for it in _top_level_split(c[hp.end():]):
+        h = _holder_of(it)
+        if h is None:
+            break                                     # the holder list ends at the first item that names no address
+        if h not in seen:
+            seen.append(h)
+            items.append(it)
+    if len(seen) < 2:
+        return None
+    roles = _ROLE.findall(c[:hp.start()])
+    return (roles[-1] if roles else "Pause / freeze authority", len(seen), items)
 
 
 UNRESOLVED_PARITY = "Observed onchain state pinned; a breach of a documented commitment is not established"
@@ -402,10 +457,10 @@ def factors(records, easattested, g, facts=(), parity_text=None):
                     c = f"{c}; {cs[i + 1]}"
             # v9 H2: a multi-member pause / freeze role is rated on its members only when every member resolves to a >= 2-signer
             # Safe quorum or a timelock; one member's quorum never stands for co-members the published records do not resolve
-            mm = _MEMBERS.search(c)
-            if mm and int(mm.group(2) or mm.group(5)) > 1:
-                role, n_ = mm.group(1) or mm.group(4), int(mm.group(2) or mm.group(5))
-                items = [x.strip() for x in (mm.group(3) or "").split(",") if x.strip()]
+            # (v10 H2.1: the same rule for every role-holder list, each holder bound only to its own list item)
+            rh = role_holders(c)
+            if rh:
+                role, n_, items = rh
                 res = []
                 for it in items:
                     q = [int(a) for a, b in ((x.group(1), x.group(2)) for x in _nofs(it)) if 2 <= int(a) <= int(b)]

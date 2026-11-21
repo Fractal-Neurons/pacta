@@ -25,6 +25,13 @@ import re
 import sys
 import urllib.parse
 
+
+def _json_file(*a, **k):
+    """json.load on a file that is closed straight away (no ResourceWarning)."""
+    with open(*a, **k) as fh:
+        return json.load(fh)
+
+
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import onboarding_render as OR  # noqa: E402
 import build_b2a_feeds as B2A  # noqa: E402
@@ -677,7 +684,7 @@ def xlink(chain, kind, value, text):
 
 
 def load_pinned(path=None):
-    p = json.load(open(path or PINNED_SRC))
+    p = _json_file(path or PINNED_SRC)
     assert p["schema"] == PINNED_SCHEMA and p["attestation"]["eas_attested"] is False and p["attestation"]["base_eas_uid"] is None
     for e in p["entries"]:
         assert e["provenance"] == "rpc_pinned" and e["base_eas_uid"] is None and "sprint" not in e and "summary_doc" not in e, e["id"]
@@ -3516,7 +3523,7 @@ def bounties_page(idx, radar, bounties=None, claims=None, lb=None, claims3=None)
 
 # ---- Wave 3 (2 x $20 USDC 3-Year Dossiers, OPEN) + Wave 2 ($1 micro-bounties, Completed & Retired) + Wave 1 Archive + /leaderboard/ ----
 WAVE3_SRC = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bounty_wave3.json")
-WAVE3 = json.load(open(WAVE3_SRC))
+WAVE3 = _json_file(WAVE3_SRC)
 WAVE3_REWARD_USDC = WAVE3["rewardUsdc"]            # "20.00"
 WAVE3_REWARD_ATOMIC = WAVE3["rewardAtomic"]        # 20_000_000
 WAVE3_OPEN_SLOTS = WAVE3["openSlots"]              # 2
@@ -3538,7 +3545,7 @@ WAVE3_PAYOUT = (f"Paid in USDC on Base Mainnet within {WAVE3['settlement']['wind
                 "committed in the merged bounties/wave-3 dossier. Funds are held on-chain in the EOA treasury and are not pre-escrowed in an automated contract.")
 
 WAVE2_SRC = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bounty_wave2.json")
-WAVE2 = json.load(open(WAVE2_SRC))
+WAVE2 = _json_file(WAVE2_SRC)
 REWARD_USDC = WAVE2["rewardUsdc"]                  # "1.00"
 REWARD_ATOMIC = WAVE2["rewardAtomic"]              # 1_000_000 (USDC has 6 decimals)
 PROGRAM_CAP_SLOTS = WAVE2["programCapSlots"]       # 1,000-gap program (retired after Epoch 1 closeout)
