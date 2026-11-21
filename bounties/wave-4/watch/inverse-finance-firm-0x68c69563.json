@@ -1,0 +1,15 @@
+{
+  "protocol_slug": "inverse-finance-firm",
+  "chain": "ethereum",
+  "watched_address": "0x926dF14a23BE491164dCF93f4c468A50ef659D5B",
+  "prior_pinned_block": 26449594,
+  "event_block_number": 26461811,
+  "event_block_hash": "0xbab491ecb56305dede538ea1daf9f8bc13b5e51f18f69e36bf3293d8ccab0f92",
+  "event_tx_hash": "0x68c695637a15d0b56d278459b387e5f1d552be24bc59499d1c9caf326ab7de02",
+  "change_kind": "timelock_delay_or_queued_op",
+  "before_state": "queuedTransactions = false on Inverse Finance Timelock (0x926dF14a23BE491164dCF93f4c468A50ef659D5B) at block 26461810 for all 15 operations including FiRM BorrowController ops 0x64c48218552f11ac3d15ea16a3a4b56722bf7da2bcc7bda3b0ea0844e23f8c6f, 0xc1a72f9a18ca57b9d637f48d4b09b37f504898a815fca0b750c6157359beac62, and 0xd09136c2466ad4852cfb0ea4005ddd68cd62782237a6faba27c9babe838e0e3d",
+  "after_state": "QueueTransaction emitted at block 26461811 (queuedTransactions = true, eta = 1795416839) queuing 15 operations including 3 ops targeting watched FiRM BorrowController (0x01ECA33e20a4c379Bd8A5361f896A7dd2bAE4ce8): setDailyLimit(address,uint256) (0x64c48218552f11ac3d15ea16a3a4b56722bf7da2bcc7bda3b0ea0844e23f8c6f), setStalenessThreshold(address,uint256) (0xc1a72f9a18ca57b9d637f48d4b09b37f504898a815fca0b750c6157359beac62), and setMinDebt(address,uint256) (0xd09136c2466ad4852cfb0ea4005ddd68cd62782237a6faba27c9babe838e0e3d)",
+  "payment_tx_hash": "0x2a4d12453cb29658802c205bc83c2bb7cff21019f1a5279b20476ff4399cb4b4",
+  "contributor_github": "VB-Blue",
+  "base_payout_address": "0xe0a3AAe6e7d042f42e82830f4eEbF426cc1270a2"
+}
