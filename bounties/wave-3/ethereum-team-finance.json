@@ -1,0 +1,280 @@
+{
+  "wave": 3,
+  "chain": "ethereum",
+  "chain_id": 1,
+  "protocol_name": "Team Finance",
+  "slug": "team-finance",
+  "pacta_slug": "team-finance",
+  "contract_address": "0xE2fE530C047f2d85298b07D9333C05737f1435fB",
+  "tvl_usd": 46836298,
+  "tvl_source_url": "https://api.llama.fi/protocol/team-finance",
+  "dossier_window": "2023-2026",
+  "trajectory_mode": "mutable_transitions",
+  "historical_transitions": [
+    {
+      "block_number": 17131226,
+      "block_date": "2023-04-26",
+      "tx_hash": "0xf44b51e02c784367c4df6acba1f6e98d27d023c8edef1562d65712e8e36c055a",
+      "event_kind": "proxy_upgrade",
+      "rpc_or_cast_proof": "cast receipt 0xf44b51e02c784367c4df6acba1f6e98d27d023c8edef1562d65712e8e36c055a --rpc-url https://ethereum-rpc.publicnode.com",
+      "summary": "Admin Safe 0x088a012BF6d510aa923c814eA83807f75F7061A0 executes upgradeTo on the vault proxy via execTransaction at 2023-04-26 15:14 UTC; the Upgraded log names 0xf0c5215b59704645c5fa8851e8b2e4dc5732c240 as the new implementation, replacing the 2022 baseline 0x48d118c9185e4dbafe7f3813f8f29ec8a6248359. At this block the Safe was still 4-of-5 (archive getThreshold/getOwners); no timelock, no prior on-chain notice."
+    },
+    {
+      "block_number": 17882754,
+      "block_date": "2023-08-10",
+      "tx_hash": "0xf70c1a9196409672b5a54dab735aaa8cb3172c1acba94a5438ad97d18eb65e6a",
+      "event_kind": "proxy_upgrade",
+      "rpc_or_cast_proof": "cast receipt 0xf70c1a9196409672b5a54dab735aaa8cb3172c1acba94a5438ad97d18eb65e6a --rpc-url https://ethereum-rpc.publicnode.com",
+      "summary": "Second implementation swap on the same vault proxy at 2023-08-10 06:38 UTC to 0x240404f15d8a76bdc201e52096406c6e0f6d504b, again executed by the admin Safe 0x088a012BF6d510aa923c814eA83807f75F7061A0; the Safe remained 4-of-5."
+    },
+    {
+      "block_number": 17886122,
+      "block_date": "2023-08-10",
+      "tx_hash": "0x72a0c199a5907ab2a367f23222958755ccc036c883a1a2e49223201b0a2e5d52",
+      "event_kind": "proxy_upgrade",
+      "rpc_or_cast_proof": "cast receipt 0x72a0c199a5907ab2a367f23222958755ccc036c883a1a2e49223201b0a2e5d52 --rpc-url https://ethereum-rpc.publicnode.com",
+      "summary": "A further upgradeTo at 2023-08-10 17:57 UTC to 0xe900e6897db0af429bca77277979f4ea07662a2c: two implementation changes 3368 blocks (11h19m) apart show a rapid, untimelocked iteration loop on live user funds; the Safe remained 4-of-5."
+    },
+    {
+      "block_number": 18715235,
+      "block_date": "2023-12-04",
+      "tx_hash": "0x4271feb2bfb82ab44a404d4f9aab10e3fc9567eafc76a4b6e423c96f4b6a277c",
+      "event_kind": "signer_or_threshold_change",
+      "rpc_or_cast_proof": "cast receipt 0x4271feb2bfb82ab44a404d4f9aab10e3fc9567eafc76a4b6e423c96f4b6a277c --rpc-url https://ethereum-rpc.publicnode.com",
+      "summary": "swapOwner executed by the admin Safe at 2023-12-04 19:58 UTC removes signer 0xe796b48199fcd928f339760f4c889cc090766882 and installs 0x3b3fb33dd9b1a7b31a72f9c5ee02fec5cac52dea (0x4b0106f48829c842fa2f17aa4d633e15a4919ff1 is the linked-list prevOwner pointer, not a new signer); at this block the Safe was still 4-of-5, not 2-of-4, and nothing is published."
+    },
+    {
+      "block_number": 19867284,
+      "block_date": "2024-05-14",
+      "tx_hash": "0x598236aef0b5756a97f45b0e320fe2a63c389a592eec274e0b5b5368b191e33b",
+      "event_kind": "proxy_upgrade",
+      "rpc_or_cast_proof": "cast receipt 0x598236aef0b5756a97f45b0e320fe2a63c389a592eec274e0b5b5368b191e33b --rpc-url https://ethereum-rpc.publicnode.com",
+      "summary": "First of three SWAP-token proxy upgrades on 2024-05-14 (nonce 18, 09:13 UTC): the admin Safe calls upgradeTo on 0xCC4304A31d09258b0029eA7FE63d032f52e44EFe, installing 0x77a4341cb2b43f172a6ab240e588830d217f7422; the EIP-1967 implementation slot at block 19867284 returns that address. No timelock."
+    },
+    {
+      "block_number": 19867349,
+      "block_date": "2024-05-14",
+      "tx_hash": "0x0721262b6d31ee009d121c0dc0540c6ca94a5107d21f0bee9f6421b98e3d04c8",
+      "event_kind": "proxy_upgrade",
+      "rpc_or_cast_proof": "cast receipt 0x0721262b6d31ee009d121c0dc0540c6ca94a5107d21f0bee9f6421b98e3d04c8 --rpc-url https://ethereum-rpc.publicnode.com",
+      "summary": "Second SWAP-token proxy upgrade 13 minutes later (nonce 19, 09:26 UTC): upgradeTo on the same 0xCC4304A31d09258b0029eA7FE63d032f52e44EFe proxy installs 0x2759ad34f74cab5234452df4751c5743e50138bb; the EIP-1967 slot at block 19867349 returns that address."
+    },
+    {
+      "block_number": 19867696,
+      "block_date": "2024-05-14",
+      "tx_hash": "0xca6764aaabf0ec71130be2d15d748c693398380dce70ef08d27477ffb534c5d4",
+      "event_kind": "proxy_upgrade",
+      "rpc_or_cast_proof": "cast receipt 0xca6764aaabf0ec71130be2d15d748c693398380dce70ef08d27477ffb534c5d4 --rpc-url https://ethereum-rpc.publicnode.com",
+      "summary": "Third SWAP-token proxy upgrade of the day (nonce 20, 10:37 UTC): upgradeTo on 0xCC4304A31d09258b0029eA7FE63d032f52e44EFe installs the current token implementation 0xffe273a973c66da5b8ad6772f2476dbd6491034e; the EIP-1967 slot at block 19867696 returns it. Three token pushes in 84 minutes."
+    },
+    {
+      "block_number": 20676325,
+      "block_date": "2024-09-04",
+      "tx_hash": "0xcb9666971f1499298c048bc9a3987e7846c768a0d057f242c933256ce714bb8a",
+      "event_kind": "proxy_upgrade",
+      "rpc_or_cast_proof": "cast receipt 0xcb9666971f1499298c048bc9a3987e7846c768a0d057f242c933256ce714bb8a --rpc-url https://ethereum-rpc.publicnode.com",
+      "summary": "Current vault implementation installed at 2024-09-04 09:29 UTC: Upgraded(0x6dd27f2b82f78dd8a802a9228f340518280359f1) on the vault, and the EIP-1967 implementation slot still returns that address at block 26452849 on 2026-11-20."
+    },
+    {
+      "block_number": 22273221,
+      "block_date": "2025-04-15",
+      "tx_hash": "0x031e4ffb328a1722905093b0ebee15ef3b1993f0a44b31e0fc7f603a638ad69c",
+      "event_kind": "signer_or_threshold_change",
+      "rpc_or_cast_proof": "cast receipt 0x031e4ffb328a1722905093b0ebee15ef3b1993f0a44b31e0fc7f603a638ad69c --rpc-url https://ethereum-rpc.publicnode.com",
+      "summary": "Last executed admin-Safe transaction (nonce 28, next nonce 29): swapOwner at 2025-04-15 08:34 UTC removes 0x3b3fb33dd9b1a7b31a72f9c5ee02fec5cac52dea and installs 0x41a743ee19562c9bf1ac975f3ee761d0e4f28221, keeping the current 2-of-4 threshold (in force since 2024-12-09) with no timelock and no published notice."
+    }
+  ],
+  "docs_and_governance_forensics": {
+    "mttr_status": "unrepaired_open",
+    "mttr_days": null,
+    "unrepaired_open_days": 1304,
+    "evidence_sources": [
+      {
+        "kind": "wayback_snapshot",
+        "date": "2023-03-18",
+        "url": "https://web.archive.org/web/20230318id_/https://www.team.finance/security",
+        "claim_summary": "Archived security page states the platform \"stand[s] by our triple-audited framework\" and \"[o]ur smart contracts are audited by industry leading experts\", with no contract address, implementation version or report link attached."
+      },
+      {
+        "kind": "wayback_snapshot",
+        "date": "2025-08-04",
+        "url": "https://web.archive.org/web/20250804id_/https://www.team.finance/security",
+        "claim_summary": "Snapshot taken after the 2023-04-26, 2023-08-10 (two implementation changes) and 2024-09-04 vault upgrades and the 2024-05-14 token-proxy pushes carries the identical assurance wording, still untied to any deployed implementation."
+      },
+      {
+        "kind": "wayback_snapshot",
+        "date": "2026-10-12",
+        "url": "https://web.archive.org/web/20261012id_/https://www.team.finance/security",
+        "claim_summary": "Latest crawl keeps the same two assurance sentences verbatim (only the marketing counter moved from 35,000+ to 40,000+ projects) and never mentions the 2024-09-04 implementation 0x6dd27f2b82f78dd8a802a9228f340518280359f1 that holds user funds."
+      },
+      {
+        "kind": "wayback_snapshot",
+        "date": "2023-05-21",
+        "url": "https://web.archive.org/web/20230521051100id_/https://docs.team.finance/",
+        "claim_summary": "Product documentation archived three weeks after the first 2023 upgrade describes the lock and vesting flows with no operator, proxy-admin or upgrade-key disclosure anywhere on the page."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2021-07-07",
+        "url": "https://github.com/team-finance/team-finance-interface/commit/b3ad465dbcf5453a9755f0c379f4b0e395dc9d8c",
+        "claim_summary": "Last public commit in the only repository the organisation publishes touches the TypeScript frontend, so no public commit, tag or release documents any of the 2023-2025 on-chain implementations."
+      },
+      {
+        "kind": "audit_report",
+        "date": "2026-05-08",
+        "url": "https://hacken.io/audits/trustswap/sca-trustswap-team-finance-mar2026",
+        "claim_summary": "Hacken published a dated Team Finance audit on 2026-05-08, but its scope is the Stellar/Soroban suite (repo trustswap/teamfinance-stellar-contracts, final commit b4df357), so it does not cover the Ethereum vault implementations tabulated here."
+      }
+    ],
+    "gap_windows": [
+      {
+        "opened_block": 17131226,
+        "opened_date": "2023-04-26",
+        "closed_block": null,
+        "closed_date": null,
+        "duration_days": 1304,
+        "status": "unrepaired_open",
+        "summary": "Public-documentation disclosure gap, not an \"audit gap\": from the first 2023 implementation swap the public security page has kept an unversioned \"triple-audited framework\" claim while four further vault implementation versions and three token-proxy pushes landed without any public, version-scoped report. The sampled pages (security page 2023-03-18 / 2025-08-04 / 2026-10-12, docs 2023-05-21, GitHub org, Hacken public index) show no Ethereum version-to-audit mapping; the only dated report found (Hacken, 2026-05-08) covers the Stellar suite. The gap is defined as open until public assurance is tied to specific implementations; this is not proof that no private or unindexed Ethereum audit existed."
+      }
+    ]
+  },
+  "repo_audit": {
+    "github_org_repo": "team-finance/team-finance-interface",
+    "commits_12m_contracts": 0,
+    "commits_12m_frontend_or_other": 0,
+    "human_contributors_12m": 0,
+    "bus_factor": 0,
+    "code_before_upgrade_verified": false
+  },
+  "executive_risk_memo": "Team Finance's live asset vault 0xE2fE530C047f2d85298b07D9333C05737f1435fB is an EIP-1967 proxy whose implementation can be replaced with zero delay. Live reads at block 26452849 show two independent authorities rather than a nested chain: the EIP-1967 admin slot resolves to Gnosis Safe 0x088a012BF6d510aa923c814eA83807f75F7061A0 (threshold 2 of 4, nonce 29), while the vault's own owner() returns a second, parallel 2-of-4 Safe 0x00d2A4873e7C73fcc3e6EBc9dd17241247a73846 (nonce 35). Neither Safe is listed as an owner of the other; three of the four signers overlap (0x93b8FFEF, 0xba9e6211, 0x41a743EE) and each Safe keeps one distinct seat (0x993991e2 on the admin side, 0xf3188A0F on the owner side), so control is two separate quorums over the same contract, not a hierarchy. \n\nThe on-chain record tabulates nine material admin-Safe transitions between April 2023 and April 2025: four vault upgrades across five implementation versions (the 2022 baseline 0x48d118c9185e4dbafe7f3813f8f29ec8a6248359 plus replacements 0xf0c5215b on 2023-04-26, 0x240404f1 and 0xe900e689 on 2023-08-10 eleven hours apart, and the still-current 0x6dd27f2b on 2024-09-04), three SWAP-token proxy upgrades on 2024-05-14 (0x77a4341c at 09:13 UTC, 0x2759ad34 at 09:26 UTC, 0xffe273a9 at 10:37 UTC; nonces 18-20), and swapOwner rotations on 2023-12-04 and 2025-04-15. This is a curated set of material vault, token and signer transitions, not the complete Safe history: the same Safe executed 22 transactions between nonces 7 and 28, including three upgrade calls on 0x9E155E6D6548B409b324ECA1e2e59f0940C357CD and the 2024-06-12 transferOwnership on 0x56968bB1168b0E9314dCa1Eb3D1e7aAf0d32263e naming the second Safe as owner. The quorum path is traced separately below. \n\nThe 2-of-4 admin quorum is a late-era fact, not a constant across 2023-2026. The Safe was created on 2021-08-24 as 4-of-5; archive reads confirm it was still 4-of-5 at block 17131226 (2023-04-26), the block of the first vault upgrade. The threshold was cut to 2-of-4 on 2023-12-18 by removeOwner at block 18815619 (tx 0x42fa485b00752082a5071fdb26ed56920b5934d1dd859d689b685fa4a011dba0), then to 2-of-3 84 seconds later at block 18815626 (tx 0x3e440845f4b6aa3a930e00f66befae7fdcf70d13caf416afefe3de46d03180a2), and to 1-of-2 on 2024-05-14 at block 19867125 (tx 0x71baa4199716b440c4e3667bafa6ef8d944bb60e3469775e0914b6f51226b459); for the following 29 days a single key could execute. addOwnerWithThreshold restored 2-of-3 on 2024-06-12 at block 20075729 (tx 0xb08d10f62d606dab66040c06801a8dbde44c82f57c3aedf08eb19a1bf9ff28ee) and 2-of-4 on 2024-12-09 at block 21365905 (tx 0xa0120ecf0d3d1cf054427163acc5465994cd6b820a9cb4f3b74c79c610ee0cf0); the April 2025 swapOwner kept 2-of-4. The current two-key quorum therefore describes the 2024-12-09+ era, not the whole window, and the 1-of-2 interval is the weakest point in the record. \n\nOn documentation the distinction matters: the security page sentence about a \"triple-audited framework\" is verbatim identical in the March 2023, August 2025 and October 2026 snapshots, and the sampled public pages (security page 2023-03-18 / 2025-08-04 / 2026-10-12, docs 2023-05-21, GitHub organisation, Hacken public audit index) contain no version-to-audit mapping for any Ethereum implementation of this vault. The only dated report located (Hacken, published 2026-05-08) audits the Stellar/Soroban suite, so it leaves the Ethereum question open. The 1,304-day figure is therefore a public-documentation disclosure gap, not affirmative proof that no private or unindexed Ethereum audit existed at every point in the window; it measures how long the sampled public pages have failed to tie assurance to a specific implementation, and it is bounded to those pages. \n\nRepository forensics are equally narrow and must not be over-read: the 0/0/0 engineering metrics describe the public team-finance/team-finance-interface repository, a TypeScript frontend last pushed on 2021-07-07; the core Solidity contracts are not maintained in an active public GitHub repo, so the metrics say nothing about private headcount or unreleased work. TVL must be read by chain, not as a single number: Team Finance's Ethereum protocol TVL on DefiLlama was ~$21.87M at the reviewer's paired read and ~$21.45M at our 2026-11-20 re-read (a protocol-level metric across the protocol's Ethereum locks, vesting and staking contracts, not an independently valued balance of the single vault 0xE2fE530C047f2d85298b07D9333C05737f1435fB), against a ~$46.8M multi-chain total at submission (2026-11-19: $46.67M; 2026-11-20: $45.26M). Net assessment: two separate 2-of-4 multisigs, no timelock, a documented 1-of-2 interval, no public version-scoped assurance, and no public, reproducible link from deployed bytecode to reviewed code, while the vault examined here remains an EIP-1967 proxy that two keys can repoint in one block.",
+  "contributor_github": "AlexBotlord",
+  "agent_assist_framework": "opencode",
+  "base_payout_address": "0x1659c37bc2f7bcc59EfA836d921585Dc87404aE2",
+  "mcp_tool_receipt": {
+    "tool": "pacta_check_preflight",
+    "arguments": {
+      "chain": "ethereum",
+      "address": "0xE2fE530C047f2d85298b07D9333C05737f1435fB"
+    },
+    "result": {
+      "schema": "pacta.preflight_check.v1",
+      "chain": "ethereum",
+      "chainId": 1,
+      "address": "0xE2fE530C047f2d85298b07D9333C05737f1435fB",
+      "pinnedBlock": 26452164,
+      "pinnedBlockHash": "0x700c8fe6505b4a37e6ebbc2a6a8ff07988c7cd9ce593d2b6310d61a853add466",
+      "blockTimestamp": 1795127807,
+      "verdict": "MULTISIG_NO_TIMELOCK",
+      "riskScore": 60,
+      "isContract": true,
+      "isProxy": true,
+      "proxyType": "eip1967",
+      "implementation": "0x6Dd27F2b82F78dD8A802A9228F340518280359f1",
+      "beacon": null,
+      "hasAdminSlot": true,
+      "canUpgradeZeroDelay": true,
+      "capabilities": {
+        "pause": true,
+        "blacklist": false,
+        "upgrade": true
+      },
+      "paused": false,
+      "controller": {
+        "address": "0x088a012BF6d510aa923c814eA83807f75F7061A0",
+        "kind": "multisig_safe",
+        "safeThreshold": 2,
+        "timelockDelaySec": null,
+        "safeOwnerCount": 4,
+        "source": "eip1967_admin_slot"
+      },
+      "roleAdminMembers": null,
+      "codeBytes": 2240,
+      "method": "Batched JSON-RPC reads pinned to the block hash (EIP-1898); EIP-1967 / EIP-1822 / beacon proxies; capabilities from PUSH4 selectors in proxy + implementation bytecode (heuristic).",
+      "summary": "Controlled by a 2-of-4 Safe with no timelock: changes can land instantly once signers agree. Capabilities seen in bytecode: pause, upgrade.",
+      "source": "live_rpc",
+      "assessment": {
+        "coverage": "unindexed_bytecode_heuristic",
+        "confidence": "medium",
+        "method": "Live bytecode + storage heuristic at the pinned block only: this contract is not in Pacta's indexed catalog (no documentation comparison).",
+        "limits": [
+          "riskScore (0-100) is a heuristic of the controller type and of pause / blacklist / upgrade capabilities read at one block; it is not an audit.",
+          "The live check reads EIP-1967 slots, owner(), Safe getThreshold() / getOwners() and TimelockController getMinDelay(); custom role systems, bridge or L2 admin paths and off-chain operations are not resolved.",
+          "Documentation is compared only for indexed protocols (catalogMatch), at their pinned block."
+        ]
+      },
+      "coverage_gap_hint": "Target is not yet indexed or fully classified. Ask the user if they want you to queue coverage or request this capability via pacta_submit_request (free community queue, or 24h priority clearance for issuers).",
+      "meter": {
+        "limit": 50,
+        "remaining": 49,
+        "reset": 1795132800
+      },
+      "upgrade_x402": {
+        "note": "Free tier: 50 pre-flight calls per caller per UTC day (REST and MCP), then $0.01 per call over x402 (HTTP 402, never a dead-end 429). Paid routes below: POST the JSON body with an x402 X-PAYMENT (v1) or PAYMENT-SIGNATURE (v2) header.",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "network": "base (eip155:8453)",
+        "payTo": "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14",
+        "discovery": "https://pacta.fractalneurons.com/.well-known/x402",
+        "overflow": {
+          "method": "GET or POST",
+          "url": "https://pacta.fractalneurons.com/v1/check/preflight",
+          "priceUsd": "0.01",
+          "amountAtomic": "10000",
+          "after": "50 free calls per UTC day"
+        },
+        "endpoints": [
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/verdict",
+            "priceUsd": "0.02",
+            "amountAtomic": "20000",
+            "unlocks": "fast contract / token control-plane verdict: riskScore 0-100, grade A-F, upgrade / owner / pause / blacklist / mint flags and a shareable scan URL",
+            "example": {
+              "chain": "ethereum",
+              "address": "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/dossier",
+            "priceUsd": "0.05",
+            "amountAtomic": "50000",
+            "unlocks": "full control-plane dossier: every controller Safe's signers and threshold, signers shared with other indexed protocols, Base EAS proof",
+            "example": {
+              "slug": "stader-labs-ethx"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/calldata-sim",
+            "priceUsd": "0.25",
+            "amountAtomic": "250000",
+            "unlocks": "pre-signing calldata check: timelock / Safe / multicall calls decoded, each rated against live delays and the authority that governs it",
+            "example": {
+              "chain": "ethereum",
+              "target": "0x2225DAbFfC7F862c99477381E971E8B1FDaB467e",
+              "data": "0x64d623530000000000000000000000000000000000000000000000000000000000015180"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/deep-scan",
+            "priceUsd": "9.00",
+            "amountAtomic": "9000000",
+            "unlocks": "deep control-plane scan cross-checked on two independent RPC operators, auditor receipt and a queued Base EAS ticket",
+            "example": {
+              "chain": "base",
+              "address": "0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "apache2_commercial_grant": true,
+  "rules_accepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
