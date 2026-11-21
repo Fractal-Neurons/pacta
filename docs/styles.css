@@ -1776,3 +1776,6 @@ p.s > a:only-child, .cur-row-name, .cur-proto-a { min-width: 24px; }
   min-width: 24px;
   padding: 2px 0;
 }
+/* B8 (round 4): a curator chip with its ticker wraps inside the row on phones instead of overflowing it */
+.cur-al-chip { flex-wrap: wrap; min-width: 0; max-width: 100%; }
+.cur-al-chip .pid-tk, .cur-item-id .pid-tk { line-height: 1.4; }

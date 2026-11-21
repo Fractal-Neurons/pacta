@@ -5379,11 +5379,13 @@ def _curator_item_row(it, tone="aligned", idx=None):
                 f'EAS {short(uid, 6, 4)}{EXT}</a>') if uid else '<span class="cur-eas mono muted">RPC-pinned</span>'
     scan_href = f'../scan/?chain={ch}&amp;address={addr}' if HEX40.fullmatch(addr) else '../scan/'
     blk_html = f'<span class="mono">{ch_lbl} #{int(blk):,}</span>' if isinstance(blk, int) else f'<span class="mono">{ch_lbl}</span>'
+    icon, tk = proto_ident(slug)   # B8: the same logo and mapped ticker as Scorecards; no ticker when the mapping is empty
     return (
         f'<li class="cur-item" data-cur-grade="{E(it.get("grade", ""))}">'
         f'<div class="cur-item-top">'
-        f'<span class="cur-item-id"><img class="pid-logo" src="../{proto_icon_rel(slug)}" alt="" width="20" height="20" loading="lazy" decoding="async">'
+        f'<span class="cur-item-id"><img class="pid-logo" src="../{icon}" alt="" width="20" height="20" loading="lazy" decoding="async">'
         f'<a class="cur-proto-a" href="../protocols/{slug}/">{E(it["name"])}</a>'
+        + (f'<span class="pid-tk mono">{E(tk)}</span>' if tk else '') +
         f'<span class="pf-st-pill" data-tone="{pill_tone}">{pill_lbl}</span></span>'
         f'<span class="cur-item-links">{blk_html}{eas_html}'
         f'<a class="cur-scan-a" href="{scan_href}" title="Scan {E(it["name"])} or a wallet holding it">Scan{ARR}</a></span>'
@@ -5460,10 +5462,12 @@ def curators_page(idx):
                       '(see underlying market &amp; collateral exposure alongside).</p>')
 
         gap_items = "".join(_curator_item_row(g, "gap", idx) for g in u_gaps)
-        al_chips = "".join(
+        al_chips = "".join(   # B8: logo, name, then the mapped ticker (never invented), as on Scorecards
             f'<a class="cur-al-chip" href="../protocols/{a["slug"]}/">'
-            f'<img class="pid-logo" src="../{proto_icon_rel(a["slug"])}" alt="" width="20" height="20" loading="lazy" decoding="async">'
-            f'<span>{E(a["name"])}</span><span class="pf-st-pill" data-tone="{_cur_grade(idx, a)}">{_cur_grade(idx, a).capitalize()}</span></a>'
+            f'<img class="pid-logo" src="../{proto_ident(a["slug"])[0]}" alt="" width="20" height="20" loading="lazy" decoding="async">'
+            f'<span>{E(a["name"])}</span>'
+            + (f'<span class="pid-tk mono">{E(proto_ident(a["slug"])[1])}</span>' if proto_ident(a["slug"])[1] else '') +
+            f'<span class="pf-st-pill" data-tone="{_cur_grade(idx, a)}">{_cur_grade(idx, a).capitalize()}</span></a>'
             for a in u_al
         )
         al_block = (f'<div class="cur-al-wrap"><span class="cur-sub-k mono">ALIGNED / PROTECTIVE UNDERLYING BASELINES ({len(u_al)})</span>'
