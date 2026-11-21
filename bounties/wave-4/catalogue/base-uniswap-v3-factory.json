@@ -1,0 +1,21 @@
+{
+  "slot_id": "base-uniswap-v3-factory",
+  "chain": "base",
+  "protocol_name": "Uniswap V3 on Base (UniswapV3Factory)",
+  "contract_address": "0x33128a8fC17869897dcE68Ed026d694621f6FDfD",
+  "official_source_url": "https://docs.uniswap.org/contracts/v3/reference/deployments/base-deployments",
+  "pinned_block_number": 60546244,
+  "pinned_block_hash": "0x97715943fec76a89138d2a688e4da9b508fff64bf9fe4a674e68d928a6f21a1f",
+  "observed_control_plane": {
+    "is_proxy": false,
+    "implementation_address": null,
+    "controller_kind": "contract",
+    "controller_address": "0xaBEA76658b205696d49B5F91b2a03536cB8A3bE1",
+    "safe_threshold": null,
+    "safe_owners_count": null,
+    "timelock_min_delay_seconds": null
+  },
+  "contributor_github": "oppo2357",
+  "payment_tx_hash": "0x1220e14a52fb2471ad8c41eefea213bd9414e360ec78de4f88017724a10e752a",
+  "base_payout_address": "0x979811E3745fF46cbB57066251F1Aee0c1b24055"
+}
