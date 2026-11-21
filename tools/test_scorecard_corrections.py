@@ -235,10 +235,11 @@ class V4(unittest.TestCase):
         self.assertIn("free of charge", BS.CLEARANCE_SELF_CORRECTION)
 
     def test_8_bounties_page_matches_base_apart_from_asset_keys(self):
-        # merged candidate (Item 5): /bounties/ deliberately changes from the base: Wave 3 settled in full, 8 public Base payouts
+        # merged candidate (Item 5): /bounties/ deliberately changes from the base: Wave 3 closed, 8 public Base payouts (2 sign-offs still open)
         now = _read(os.path.join(ROOT, "docs", "bounties", "index.html"), encoding="utf-8")
         self.assertEqual(now.count('<span data-slot="badge" data-variant="neutral">Paid on Base</span>'), 8)
-        self.assertIn("settled in full on 21 Nov 2026 ($70.00 USDC paid on Base across 8 verified dossiers", now)
+        self.assertIn("Wave 3 closed 20 Nov 2026: $70.00 USDC paid on Base across 8 verified dossiers", now)
+        self.assertNotIn("settled in full", now)
         for bad in ("[Wave 3:", "top-up", "in settlement", "verified adverse"):
             self.assertNotIn(bad, now)
 

@@ -405,7 +405,7 @@ def factors(records, easattested, g, facts=(), parity_text=None):
                                 else "No enforced delay on at least one sampled control surface (0s)" if d == 0
                                 else f"{_dur(d)} minimum enforced delay on sampled timelocked surfaces"), ev)
     else:
-        out["timelock"] = ("n", "Admin delay not extracted in structured record", None)
+        out["timelock"] = ("n", "No enforced admin delay in the published records", None)   # v10 5c664b0c wording (Section 5)
     # 3: signer quorum (lowest threshold of any controlling Safe; a key without contract code counts as 1-of-1)
     quorum, wrapped, wrappers = [], set(), set()
     for rid, t, _r in texts:

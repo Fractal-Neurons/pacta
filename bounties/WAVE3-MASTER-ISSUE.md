@@ -1,6 +1,6 @@
 # [Wave 3: 2 × $20 USDC | 3-Year Protocol Trajectory & Integrity Dossiers] Human-Researcher Control-Plane Due-Diligence Pool
 
-> **Settled:** Wave 3 closed 20 Nov 2026 and settled in full on 21 Nov 2026 ($70.00 USDC paid on Base across 8 verified dossiers: 3 × $20.00 USDC + 5 × $2.00 USDC). The rules below are archived; Wave 3 takes no new submissions.
+> **Closed:** Wave 3 closed 20 Nov 2026: $70.00 USDC paid on Base across 8 verified dossiers (3 × $20.00 USDC + 5 × $2.00 USDC: 3 honoraria + 2 sign-offs); up to 2 more $2.00 USDC sign-offs remain open until 22 Nov 2026 20:50 UTC. The rules below are archived; Wave 3 takes no new submissions.
 
 **Wave 3 — 3-Year Protocol Trajectory & Integrity Dossier ($20.00 USDC / Protocol on Base).** **Wave 3 offered 2 human-researcher dossier slots (`2 × $20.00 USDC = $40.00 USDC`).** Settled on Base Mainnet from `0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09` (an externally owned account, chainId 8453, USDC `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`): **$70.00 USDC (8 dossiers)**; unencumbered Wave 3 capacity now: **$0.00 USDC (0 slots)** plus `$0.05` operational buffer. Wave 2 (`$1.00` single-gap micro-bounties) and Wave 1 (`4 × $25.00 = $100.00 USDC` Genesis) are permanently completed and retired. Live board: https://pacta.wtf/bounties/#wave-3 · Researcher credentials & leaderboard: https://pacta.wtf/leaderboard/
 

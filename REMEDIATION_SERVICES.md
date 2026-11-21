@@ -20,11 +20,9 @@ For **protocol teams and collateral issuers** onboarding a new asset to Morpho, 
 
 | Tier | Price | Scope |
 | --- | --- | --- |
-| Free Post-Fix Re-Verification | `$0` (within 7 days) | Free factual re-verification within 7 days whenever a protocol merges a public docs or on-chain fix. |
-| Sponsor Verification Pool | `$50` minimum | One independent protocol check: a `$50` minimum pool with a `$25` fixed verification fee, the rest to the researcher. Opening soon: reservation or invoice only, no sponsor funds collected until the Sponsor Safe is deployed and verified; refunds within 30 days are a signed policy (`pacta.wtf/bounties/#sponsor-pool`). |
-| Wholesale Coverage Sweep — 20 or more protocols | `$150 per protocol` (by arrangement) | Sweeps of 20 or more protocols for L2 ecosystems, grant councils and vault curators; undelivered targets never charged. |
+| Free doc-update queue | `$0` (typically 6–8 weeks) | Free, unscheduled: merged public docs or on-chain fixes join the public re-scan queue (typically 6–8 weeks). |
+| Re-Verification | By arrangement | Maintainer and independent verifier re-check of a fix, with a Safe Transaction Builder JSON, an upstream docs PR and a Base EAS attestation of the observed result (`pacta.wtf/request/?tier=clearance`). |
 | Custom Control-Plane Dossier | By arrangement | Pre-launch or multi-contract suite diligence across proxies, Safes and timelocks, reconciled with your docs and attested on Base; scope and quote agreed by email (pacta@dri.network). |
-| Custom webhook alerts | By arrangement | Alert delivery for the timelocks and Safes you choose, scoped by email; the free timelock radar and live-timelock feed stay $0. |
 
 The Full Protocol Control-Plane Dossier delivers:
 
@@ -33,7 +31,7 @@ The Full Protocol Control-Plane Dossier delivers:
 3. **Base Mainnet EAS `Aligned` attestation** recorded in `PactaCommitmentRegistry` [`0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872`](https://basescan.org/address/0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872).
 4. **Curator Diligence Dossier (PDF + JSON)**, paste-ready for Morpho, Euler, Aave and Sky forum listing proposals.
 
-Delivered within **24 hours** of confirmed scope and settlement. The classification follows the verified onchain and documentation evidence; payment never changes it. Request at [`pacta.wtf/request/?tier=clearance`](https://pacta.wtf/request/?tier=clearance) or [`?tier=continuous`](https://pacta.wtf/request/?tier=continuous).
+Delivered within **24 hours** of confirmed scope and settlement. The classification follows the verified onchain and documentation evidence; payment never changes it. Request at [`pacta.wtf/request/?tier=clearance`](https://pacta.wtf/request/?tier=clearance).
 
 **Settlement, two tracks:**
 
@@ -42,7 +40,7 @@ Delivered within **24 hours** of confirmed scope and settlement. The classificat
 
 **High-throughput API (more than 60 requests / minute or a dedicated SLA):** x402 metered endpoints, or an Enterprise API key priced on scope at [`pacta.wtf/request/?tier=api_sla`](https://pacta.wtf/request/?tier=api_sla).
 
-**Free Post-Fix Re-Verification:** Free factual re-verification within 7 days whenever a protocol merges a public docs or on-chain fix (`pacta.wtf/request/?tier=community`).
+**Free doc-update queue:** free, unscheduled (typically 6–8 weeks) (`pacta.wtf/request/?tier=community`).
 
 ---
 
@@ -50,6 +48,6 @@ Delivered within **24 hours** of confirmed scope and settlement. The classificat
 
 Security-sensitive and unrevoked-authority findings (`disclosure_only`) are never published in public repositories or feeds. They go through the protocol's **Immunefi** or **Cantina** bounty programme. Do not submit vulnerabilities in public GitHub issues.
 
-Under the [Independence Policy](https://pacta.wtf/methodology/#independence), Pacta never sells grades; classifications follow verified on-chain and documentation evidence only.
+Under the [Independence Policy](https://pacta.wtf/methodology/#independence), we do not publish ratings of protocols, and nobody can pay to change a result. Classifications follow verified on-chain and documentation evidence only.
 
 Request a clearance or join the community queue via [`pacta.wtf/request/`](https://pacta.wtf/request/) or the intake template [`.github/ISSUE_TEMPLATE/request-scan.yml`](.github/ISSUE_TEMPLATE/request-scan.yml); contact `pacta@dri.network`.

@@ -132,7 +132,7 @@
     ],
     "scanner_replay": "Dual-RPC deterministic archive eth_call / eth_getStorageAt replay performed by scanner/leader seats at the cited block height and canonical block hash.",
     "independent_verifier_scope": "Offline static ABI 4-byte selector derivation, EIP-55 checksum verification, EIP-1967 slot derivation, arithmetic consistency, and whole-token quarantine review performed by isolated verifier seat (offline verifier container does not execute live network RPC calls).",
-    "quarantine_policy": "Directly callable state mutations, unrevoked legacy EOA authorities, and exploit-sensitive findings are excluded from this public feed and routed through the protocol's Immunefi or Cantina bounty programme, or to a partner audit firm under a 15% referral partnership.",
+    "quarantine_policy": "Directly callable state mutations, unrevoked legacy EOA authorities, and exploit-sensitive findings are excluded from this public feed and routed through the protocol's Immunefi or Cantina bounty programme.",
     "delay_field_semantics": "When observed_delay_seconds is non-null, observed_delay_source specifies the exact contract, 4-byte selector, and getter signature returning that integer delay at the pinned block height; both fields are null where the record evaluates role membership, proxy slots, fee basis points, or non-timelocked ownership.",
     "scope_limitation": "Entries report sampled historical read-only getter/slot returns alongside cited documentation; they do not certify protocol-wide immutability, exhaustive authority coverage, downstream mutation semantics, or exploitability.",
     "archive_rpc_endpoints_by_chain": {

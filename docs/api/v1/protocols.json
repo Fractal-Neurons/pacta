@@ -7,7 +7,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/3f.svg",
+    "live": "https://api.pacta.wtf/v1/badges/3f.svg",
     "svg": "https://pacta.wtf/badges/3f.svg",
     "tier": "rpc_observed"
    },
@@ -53,7 +53,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/3jane-lending.svg",
+    "live": "https://api.pacta.wtf/v1/badges/3jane-lending.svg",
     "svg": "https://pacta.wtf/badges/3jane-lending.svg",
     "tier": "aligned"
    },
@@ -103,7 +103,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/40-acres-base.svg",
+    "live": "https://api.pacta.wtf/v1/badges/40-acres-base.svg",
     "svg": "https://pacta.wtf/badges/40-acres-base.svg",
     "tier": "parameter_delta"
    },
@@ -159,7 +159,7 @@
    ],
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/aave-v3-base.svg",
+    "live": "https://api.pacta.wtf/v1/badges/aave-v3-base.svg",
     "svg": "https://pacta.wtf/badges/aave-v3-base.svg",
     "tier": "aligned"
    },
@@ -234,7 +234,7 @@
    ],
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/aave-v3-gho.svg",
+    "live": "https://api.pacta.wtf/v1/badges/aave-v3-gho.svg",
     "svg": "https://pacta.wtf/badges/aave-v3-gho.svg",
     "tier": "aligned"
    },
@@ -293,7 +293,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/abracadabra-spell.svg",
+    "live": "https://api.pacta.wtf/v1/badges/abracadabra-spell.svg",
     "svg": "https://pacta.wtf/badges/abracadabra-spell.svg",
     "tier": "parameter_delta"
    },
@@ -345,7 +345,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/across-protocol-hubpool.svg",
+    "live": "https://api.pacta.wtf/v1/badges/across-protocol-hubpool.svg",
     "svg": "https://pacta.wtf/badges/across-protocol-hubpool.svg",
     "tier": "aligned"
    },
@@ -409,7 +409,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/adi-bridge.svg",
+    "live": "https://api.pacta.wtf/v1/badges/adi-bridge.svg",
     "svg": "https://pacta.wtf/badges/adi-bridge.svg",
     "tier": "rpc_observed"
    },
@@ -457,7 +457,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/aegis-yusd.svg",
+    "live": "https://api.pacta.wtf/v1/badges/aegis-yusd.svg",
     "svg": "https://pacta.wtf/badges/aegis-yusd.svg",
     "tier": "aligned"
    },
@@ -516,7 +516,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/aera-v3.svg",
+    "live": "https://api.pacta.wtf/v1/badges/aera-v3.svg",
     "svg": "https://pacta.wtf/badges/aera-v3.svg",
     "tier": "rpc_observed"
    },
@@ -562,7 +562,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/aerodrome-finance-base.svg",
+    "live": "https://api.pacta.wtf/v1/badges/aerodrome-finance-base.svg",
     "svg": "https://pacta.wtf/badges/aerodrome-finance-base.svg",
     "tier": "parameter_delta"
    },
@@ -630,7 +630,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/aerodrome-slipstream-base.svg",
+    "live": "https://api.pacta.wtf/v1/badges/aerodrome-slipstream-base.svg",
     "svg": "https://pacta.wtf/badges/aerodrome-slipstream-base.svg",
     "tier": "aligned"
    },
@@ -688,7 +688,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/alchemix-v3.svg",
+    "live": "https://api.pacta.wtf/v1/badges/alchemix-v3.svg",
     "svg": "https://pacta.wtf/badges/alchemix-v3.svg",
     "tier": "aligned"
    },
@@ -738,7 +738,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/anemoy-capital.svg",
+    "live": "https://api.pacta.wtf/v1/badges/anemoy-capital.svg",
     "svg": "https://pacta.wtf/badges/anemoy-capital.svg",
     "tier": "rpc_observed"
    },
@@ -784,7 +784,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/angle.svg",
+    "live": "https://api.pacta.wtf/v1/badges/angle.svg",
     "svg": "https://pacta.wtf/badges/angle.svg",
     "tier": "rpc_observed"
    },
@@ -830,7 +830,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/angstrom.svg",
+    "live": "https://api.pacta.wtf/v1/badges/angstrom.svg",
     "svg": "https://pacta.wtf/badges/angstrom.svg",
     "tier": "aligned"
    },
@@ -882,7 +882,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/ankr.svg",
+    "live": "https://api.pacta.wtf/v1/badges/ankr.svg",
     "svg": "https://pacta.wtf/badges/ankr.svg",
     "tier": "rpc_observed"
    },
@@ -928,7 +928,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/anvil.svg",
+    "live": "https://api.pacta.wtf/v1/badges/anvil.svg",
     "svg": "https://pacta.wtf/badges/anvil.svg",
     "tier": "aligned"
    },
@@ -985,7 +985,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/ao-bridge.svg",
+    "live": "https://api.pacta.wtf/v1/badges/ao-bridge.svg",
     "svg": "https://pacta.wtf/badges/ao-bridge.svg",
     "tier": "rpc_observed"
    },
@@ -1033,7 +1033,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/apex-pro.svg",
+    "live": "https://api.pacta.wtf/v1/badges/apex-pro.svg",
     "svg": "https://pacta.wtf/badges/apex-pro.svg",
     "tier": "rpc_observed"
    },
@@ -1079,7 +1079,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/apy-finance.svg",
+    "live": "https://api.pacta.wtf/v1/badges/apy-finance.svg",
     "svg": "https://pacta.wtf/badges/apy-finance.svg",
     "tier": "aligned"
    },
@@ -1132,7 +1132,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/arkis.svg",
+    "live": "https://api.pacta.wtf/v1/badges/arkis.svg",
     "svg": "https://pacta.wtf/badges/arkis.svg",
     "tier": "rpc_observed"
    },
@@ -1181,7 +1181,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/arrakis-modular.svg",
+    "live": "https://api.pacta.wtf/v1/badges/arrakis-modular.svg",
     "svg": "https://pacta.wtf/badges/arrakis-modular.svg",
     "tier": "aligned"
    },
@@ -1239,7 +1239,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/aster-bridge.svg",
+    "live": "https://api.pacta.wtf/v1/badges/aster-bridge.svg",
     "svg": "https://pacta.wtf/badges/aster-bridge.svg",
     "tier": "rpc_observed"
    },
@@ -1287,7 +1287,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/asymmetry-finance.svg",
+    "live": "https://api.pacta.wtf/v1/badges/asymmetry-finance.svg",
     "svg": "https://pacta.wtf/badges/asymmetry-finance.svg",
     "tier": "aligned"
    },
@@ -1339,7 +1339,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/augur.svg",
+    "live": "https://api.pacta.wtf/v1/badges/augur.svg",
     "svg": "https://pacta.wtf/badges/augur.svg",
     "tier": "rpc_observed"
    },
@@ -1385,7 +1385,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/aura.svg",
+    "live": "https://api.pacta.wtf/v1/badges/aura.svg",
     "svg": "https://pacta.wtf/badges/aura.svg",
     "tier": "aligned"
    },
@@ -1439,7 +1439,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/autofinance.svg",
+    "live": "https://api.pacta.wtf/v1/badges/autofinance.svg",
     "svg": "https://pacta.wtf/badges/autofinance.svg",
     "tier": "rpc_observed"
    },
@@ -1485,7 +1485,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/avalon-superearn.svg",
+    "live": "https://api.pacta.wtf/v1/badges/avalon-superearn.svg",
     "svg": "https://pacta.wtf/badges/avalon-superearn.svg",
     "tier": "rpc_observed"
    },
@@ -1534,7 +1534,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/avant-aveth.svg",
+    "live": "https://api.pacta.wtf/v1/badges/avant-aveth.svg",
     "svg": "https://pacta.wtf/badges/avant-aveth.svg",
     "tier": "rpc_observed"
    },
@@ -1580,7 +1580,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/axelar-network.svg",
+    "live": "https://api.pacta.wtf/v1/badges/axelar-network.svg",
     "svg": "https://pacta.wtf/badges/axelar-network.svg",
     "tier": "parameter_delta"
    },
@@ -1687,7 +1687,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/badger-dao.svg",
+    "live": "https://api.pacta.wtf/v1/badges/badger-dao.svg",
     "svg": "https://pacta.wtf/badges/badger-dao.svg",
     "tier": "rpc_observed"
    },
@@ -1733,7 +1733,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/balancer-v2-vault-timelock.svg",
+    "live": "https://api.pacta.wtf/v1/badges/balancer-v2-vault-timelock.svg",
     "svg": "https://pacta.wtf/badges/balancer-v2-vault-timelock.svg",
     "tier": "aligned"
    },
@@ -1798,7 +1798,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/bancor-v3.svg",
+    "live": "https://api.pacta.wtf/v1/badges/bancor-v3.svg",
     "svg": "https://pacta.wtf/badges/bancor-v3.svg",
     "tier": "aligned"
    },
@@ -1848,7 +1848,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/base-bridge.svg",
+    "live": "https://api.pacta.wtf/v1/badges/base-bridge.svg",
     "svg": "https://pacta.wtf/badges/base-bridge.svg",
     "tier": "parameter_delta"
    },
@@ -1903,7 +1903,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/baseline-protocol.svg",
+    "live": "https://api.pacta.wtf/v1/badges/baseline-protocol.svg",
     "svg": "https://pacta.wtf/badges/baseline-protocol.svg",
     "tier": "rpc_observed"
    },
@@ -1949,7 +1949,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/bedrock-unibtc.svg",
+    "live": "https://api.pacta.wtf/v1/badges/bedrock-unibtc.svg",
     "svg": "https://pacta.wtf/badges/bedrock-unibtc.svg",
     "tier": "parameter_delta"
    },
@@ -2006,7 +2006,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/bedrock-unieth.svg",
+    "live": "https://api.pacta.wtf/v1/badges/bedrock-unieth.svg",
     "svg": "https://pacta.wtf/badges/bedrock-unieth.svg",
     "tier": "parameter_delta"
    },
@@ -2097,7 +2097,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/beefy-finance-base.svg",
+    "live": "https://api.pacta.wtf/v1/badges/beefy-finance-base.svg",
     "svg": "https://pacta.wtf/badges/beefy-finance-base.svg",
     "tier": "parameter_delta"
    },
@@ -2188,7 +2188,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/benddao-ape-staking.svg",
+    "live": "https://api.pacta.wtf/v1/badges/benddao-ape-staking.svg",
     "svg": "https://pacta.wtf/badges/benddao-ape-staking.svg",
     "tier": "parameter_delta"
    },
@@ -2242,7 +2242,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/bio-protocol.svg",
+    "live": "https://api.pacta.wtf/v1/badges/bio-protocol.svg",
     "svg": "https://pacta.wtf/badges/bio-protocol.svg",
     "tier": "parameter_delta"
    },
@@ -2296,7 +2296,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/bitfi-basis.svg",
+    "live": "https://api.pacta.wtf/v1/badges/bitfi-basis.svg",
     "svg": "https://pacta.wtf/badges/bitfi-basis.svg",
     "tier": "aligned"
    },
@@ -2350,7 +2350,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/blast-pre-launch-farm.svg",
+    "live": "https://api.pacta.wtf/v1/badges/blast-pre-launch-farm.svg",
     "svg": "https://pacta.wtf/badges/blast-pre-launch-farm.svg",
     "tier": "rpc_observed"
    },
@@ -2398,7 +2398,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/blur-bids.svg",
+    "live": "https://api.pacta.wtf/v1/badges/blur-bids.svg",
     "svg": "https://pacta.wtf/badges/blur-bids.svg",
     "tier": "rpc_observed"
    },
@@ -2444,7 +2444,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/bmx-freestyle.svg",
+    "live": "https://api.pacta.wtf/v1/badges/bmx-freestyle.svg",
     "svg": "https://pacta.wtf/badges/bmx-freestyle.svg",
     "tier": "rpc_observed"
    },
@@ -2493,7 +2493,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/brickken.svg",
+    "live": "https://api.pacta.wtf/v1/badges/brickken.svg",
     "svg": "https://pacta.wtf/badges/brickken.svg",
     "tier": "rpc_observed"
    },
@@ -2539,7 +2539,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/cap.svg",
+    "live": "https://api.pacta.wtf/v1/badges/cap.svg",
     "svg": "https://pacta.wtf/badges/cap.svg",
     "tier": "parameter_delta"
    },
@@ -2632,7 +2632,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/cbridge.svg",
+    "live": "https://api.pacta.wtf/v1/badges/cbridge.svg",
     "svg": "https://pacta.wtf/badges/cbridge.svg",
     "tier": "parameter_delta"
    },
@@ -2684,7 +2684,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/centrifuge-liquidity-pools-base.svg",
+    "live": "https://api.pacta.wtf/v1/badges/centrifuge-liquidity-pools-base.svg",
     "svg": "https://pacta.wtf/badges/centrifuge-liquidity-pools-base.svg",
     "tier": "aligned"
    },
@@ -2763,7 +2763,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/chainlink-ccip.svg",
+    "live": "https://api.pacta.wtf/v1/badges/chainlink-ccip.svg",
     "svg": "https://pacta.wtf/badges/chainlink-ccip.svg",
     "tier": "parameter_delta"
    },
@@ -2874,7 +2874,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/chamber-vaults.svg",
+    "live": "https://api.pacta.wtf/v1/badges/chamber-vaults.svg",
     "svg": "https://pacta.wtf/badges/chamber-vaults.svg",
     "tier": "rpc_observed"
    },
@@ -2922,7 +2922,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/cian-yield-layer.svg",
+    "live": "https://api.pacta.wtf/v1/badges/cian-yield-layer.svg",
     "svg": "https://pacta.wtf/badges/cian-yield-layer.svg",
     "tier": "parameter_delta"
    },
@@ -2980,7 +2980,7 @@
    ],
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/circle-gateway.svg",
+    "live": "https://api.pacta.wtf/v1/badges/circle-gateway.svg",
     "svg": "https://pacta.wtf/badges/circle-gateway.svg",
     "tier": "parameter_delta"
    },
@@ -3036,7 +3036,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/circle-usdc.svg",
+    "live": "https://api.pacta.wtf/v1/badges/circle-usdc.svg",
     "svg": "https://pacta.wtf/badges/circle-usdc.svg",
     "tier": "aligned"
    },
@@ -3137,7 +3137,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/clipper.svg",
+    "live": "https://api.pacta.wtf/v1/badges/clipper.svg",
     "svg": "https://pacta.wtf/badges/clipper.svg",
     "tier": "rpc_observed"
    },
@@ -3183,7 +3183,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/coinbase-wrapped-staked-eth.svg",
+    "live": "https://api.pacta.wtf/v1/badges/coinbase-wrapped-staked-eth.svg",
     "svg": "https://pacta.wtf/badges/coinbase-wrapped-staked-eth.svg",
     "tier": "aligned"
    },
@@ -3254,7 +3254,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/compound-v3-base.svg",
+    "live": "https://api.pacta.wtf/v1/badges/compound-v3-base.svg",
     "svg": "https://pacta.wtf/badges/compound-v3-base.svg",
     "tier": "aligned"
    },
@@ -3324,7 +3324,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/compound-v3-comet.svg",
+    "live": "https://api.pacta.wtf/v1/badges/compound-v3-comet.svg",
     "svg": "https://pacta.wtf/badges/compound-v3-comet.svg",
     "tier": "aligned"
    },
@@ -3380,7 +3380,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/concentrator.svg",
+    "live": "https://api.pacta.wtf/v1/badges/concentrator.svg",
     "svg": "https://pacta.wtf/badges/concentrator.svg",
     "tier": "rpc_observed"
    },
@@ -3426,7 +3426,7 @@
   {
    "badge": {
     "label": "Unresolved · Unverified Scope",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/concrete.svg",
+    "live": "https://api.pacta.wtf/v1/badges/concrete.svg",
     "svg": "https://pacta.wtf/badges/concrete.svg",
     "tier": "unresolved"
    },
@@ -3506,7 +3506,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/convergence-fi.svg",
+    "live": "https://api.pacta.wtf/v1/badges/convergence-fi.svg",
     "svg": "https://pacta.wtf/badges/convergence-fi.svg",
     "tier": "rpc_observed"
    },
@@ -3555,7 +3555,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/convex-finance.svg",
+    "live": "https://api.pacta.wtf/v1/badges/convex-finance.svg",
     "svg": "https://pacta.wtf/badges/convex-finance.svg",
     "tier": "aligned"
    },
@@ -3610,7 +3610,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/cooler-loans.svg",
+    "live": "https://api.pacta.wtf/v1/badges/cooler-loans.svg",
     "svg": "https://pacta.wtf/badges/cooler-loans.svg",
     "tier": "aligned"
    },
@@ -3660,7 +3660,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/creth2.svg",
+    "live": "https://api.pacta.wtf/v1/badges/creth2.svg",
     "svg": "https://pacta.wtf/badges/creth2.svg",
     "tier": "rpc_observed"
    },
@@ -3706,7 +3706,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/cronos-zkevm-bridge.svg",
+    "live": "https://api.pacta.wtf/v1/badges/cronos-zkevm-bridge.svg",
     "svg": "https://pacta.wtf/badges/cronos-zkevm-bridge.svg",
     "tier": "rpc_observed"
    },
@@ -3754,7 +3754,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/curve-dex-ethereum.svg",
+    "live": "https://api.pacta.wtf/v1/badges/curve-dex-ethereum.svg",
     "svg": "https://pacta.wtf/badges/curve-dex-ethereum.svg",
     "tier": "aligned"
    },
@@ -3804,7 +3804,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/curve-finance-crvusd.svg",
+    "live": "https://api.pacta.wtf/v1/badges/curve-finance-crvusd.svg",
     "svg": "https://pacta.wtf/badges/curve-finance-crvusd.svg",
     "tier": "parameter_delta"
    },
@@ -3862,7 +3862,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/cvault-finance.svg",
+    "live": "https://api.pacta.wtf/v1/badges/cvault-finance.svg",
     "svg": "https://pacta.wtf/badges/cvault-finance.svg",
     "tier": "aligned"
    },
@@ -3912,7 +3912,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/d2-finance.svg",
+    "live": "https://api.pacta.wtf/v1/badges/d2-finance.svg",
     "svg": "https://pacta.wtf/badges/d2-finance.svg",
     "tier": "rpc_observed"
    },
@@ -3958,7 +3958,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/debridge.svg",
+    "live": "https://api.pacta.wtf/v1/badges/debridge.svg",
     "svg": "https://pacta.wtf/badges/debridge.svg",
     "tier": "aligned"
    },
@@ -4012,7 +4012,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/decentralized-euro.svg",
+    "live": "https://api.pacta.wtf/v1/badges/decentralized-euro.svg",
     "svg": "https://pacta.wtf/badges/decentralized-euro.svg",
     "tier": "aligned"
    },
@@ -4062,7 +4062,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/defi-saver.svg",
+    "live": "https://api.pacta.wtf/v1/badges/defi-saver.svg",
     "svg": "https://pacta.wtf/badges/defi-saver.svg",
     "tier": "parameter_delta"
    },
@@ -4115,7 +4115,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/defil.svg",
+    "live": "https://api.pacta.wtf/v1/badges/defil.svg",
     "svg": "https://pacta.wtf/badges/defil.svg",
     "tier": "rpc_observed"
    },
@@ -4163,7 +4163,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/delv-yield.svg",
+    "live": "https://api.pacta.wtf/v1/badges/delv-yield.svg",
     "svg": "https://pacta.wtf/badges/delv-yield.svg",
     "tier": "rpc_observed"
    },
@@ -4209,7 +4209,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/derivadex.svg",
+    "live": "https://api.pacta.wtf/v1/badges/derivadex.svg",
     "svg": "https://pacta.wtf/badges/derivadex.svg",
     "tier": "rpc_observed"
    },
@@ -4255,7 +4255,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/derive-v3-options.svg",
+    "live": "https://api.pacta.wtf/v1/badges/derive-v3-options.svg",
     "svg": "https://pacta.wtf/badges/derive-v3-options.svg",
     "tier": "rpc_observed"
    },
@@ -4303,7 +4303,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/dexfi-aggregator.svg",
+    "live": "https://api.pacta.wtf/v1/badges/dexfi-aggregator.svg",
     "svg": "https://pacta.wtf/badges/dexfi-aggregator.svg",
     "tier": "rpc_observed"
    },
@@ -4349,7 +4349,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/diem-relay.svg",
+    "live": "https://api.pacta.wtf/v1/badges/diem-relay.svg",
     "svg": "https://pacta.wtf/badges/diem-relay.svg",
     "tier": "aligned"
    },
@@ -4399,7 +4399,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/dodo-amm.svg",
+    "live": "https://api.pacta.wtf/v1/badges/dodo-amm.svg",
     "svg": "https://pacta.wtf/badges/dodo-amm.svg",
     "tier": "rpc_observed"
    },
@@ -4445,7 +4445,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/dolomite.svg",
+    "live": "https://api.pacta.wtf/v1/badges/dolomite.svg",
     "svg": "https://pacta.wtf/badges/dolomite.svg",
     "tier": "aligned"
    },
@@ -4495,7 +4495,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/drakewell-usddw.svg",
+    "live": "https://api.pacta.wtf/v1/badges/drakewell-usddw.svg",
     "svg": "https://pacta.wtf/badges/drakewell-usddw.svg",
     "tier": "rpc_observed"
    },
@@ -4541,7 +4541,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/dxsale.svg",
+    "live": "https://api.pacta.wtf/v1/badges/dxsale.svg",
     "svg": "https://pacta.wtf/badges/dxsale.svg",
     "tier": "rpc_observed"
    },
@@ -4587,7 +4587,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/dydx-v3.svg",
+    "live": "https://api.pacta.wtf/v1/badges/dydx-v3.svg",
     "svg": "https://pacta.wtf/badges/dydx-v3.svg",
     "tier": "aligned"
    },
@@ -4639,7 +4639,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/easedefi-org.svg",
+    "live": "https://api.pacta.wtf/v1/badges/easedefi-org.svg",
     "svg": "https://pacta.wtf/badges/easedefi-org.svg",
     "tier": "rpc_observed"
    },
@@ -4685,7 +4685,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/eclipse-bridge.svg",
+    "live": "https://api.pacta.wtf/v1/badges/eclipse-bridge.svg",
     "svg": "https://pacta.wtf/badges/eclipse-bridge.svg",
     "tier": "aligned"
    },
@@ -4737,7 +4737,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/edgex-bridge.svg",
+    "live": "https://api.pacta.wtf/v1/badges/edgex-bridge.svg",
     "svg": "https://pacta.wtf/badges/edgex-bridge.svg",
     "tier": "rpc_observed"
    },
@@ -4785,7 +4785,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/eigenlayer-core.svg",
+    "live": "https://api.pacta.wtf/v1/badges/eigenlayer-core.svg",
     "svg": "https://pacta.wtf/badges/eigenlayer-core.svg",
     "tier": "aligned"
    },
@@ -4841,7 +4841,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/eigenpie.svg",
+    "live": "https://api.pacta.wtf/v1/badges/eigenpie.svg",
     "svg": "https://pacta.wtf/badges/eigenpie.svg",
     "tier": "rpc_observed"
    },
@@ -4890,7 +4890,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/ekubo.svg",
+    "live": "https://api.pacta.wtf/v1/badges/ekubo.svg",
     "svg": "https://pacta.wtf/badges/ekubo.svg",
     "tier": "aligned"
    },
@@ -4943,7 +4943,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/elfomofi.svg",
+    "live": "https://api.pacta.wtf/v1/badges/elfomofi.svg",
     "svg": "https://pacta.wtf/badges/elfomofi.svg",
     "tier": "rpc_observed"
    },
@@ -4989,7 +4989,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/enzyme-finance.svg",
+    "live": "https://api.pacta.wtf/v1/badges/enzyme-finance.svg",
     "svg": "https://pacta.wtf/badges/enzyme-finance.svg",
     "tier": "parameter_delta"
    },
@@ -5043,7 +5043,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/equilibria.svg",
+    "live": "https://api.pacta.wtf/v1/badges/equilibria.svg",
     "svg": "https://pacta.wtf/badges/equilibria.svg",
     "tier": "aligned"
    },
@@ -5093,7 +5093,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/eth-strategy.svg",
+    "live": "https://api.pacta.wtf/v1/badges/eth-strategy.svg",
     "svg": "https://pacta.wtf/badges/eth-strategy.svg",
     "tier": "aligned"
    },
@@ -5148,7 +5148,7 @@
    ],
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/ethena-usde-susde.svg",
+    "live": "https://api.pacta.wtf/v1/badges/ethena-usde-susde.svg",
     "svg": "https://pacta.wtf/badges/ethena-usde-susde.svg",
     "tier": "parameter_delta"
    },
@@ -5220,7 +5220,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/ethena-usdtb.svg",
+    "live": "https://api.pacta.wtf/v1/badges/ethena-usdtb.svg",
     "svg": "https://pacta.wtf/badges/ethena-usdtb.svg",
     "tier": "parameter_delta"
    },
@@ -5294,7 +5294,7 @@
    ],
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/ether-fi-core-eeth-weeth.svg",
+    "live": "https://api.pacta.wtf/v1/badges/ether-fi-core-eeth-weeth.svg",
     "svg": "https://pacta.wtf/badges/ether-fi-core-eeth-weeth.svg",
     "tier": "parameter_delta"
    },
@@ -5367,7 +5367,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/ether-fi-liquid-veda-boringvault.svg",
+    "live": "https://api.pacta.wtf/v1/badges/ether-fi-liquid-veda-boringvault.svg",
     "svg": "https://pacta.wtf/badges/ether-fi-liquid-veda-boringvault.svg",
     "tier": "aligned"
    },
@@ -5421,7 +5421,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/euler-v2-evk.svg",
+    "live": "https://api.pacta.wtf/v1/badges/euler-v2-evk.svg",
     "svg": "https://pacta.wtf/badges/euler-v2-evk.svg",
     "tier": "aligned"
    },
@@ -5481,7 +5481,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/exactly.svg",
+    "live": "https://api.pacta.wtf/v1/badges/exactly.svg",
     "svg": "https://pacta.wtf/badges/exactly.svg",
     "tier": "aligned"
    },
@@ -5534,7 +5534,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/extra-finance-base.svg",
+    "live": "https://api.pacta.wtf/v1/badges/extra-finance-base.svg",
     "svg": "https://pacta.wtf/badges/extra-finance-base.svg",
     "tier": "rpc_observed"
    },
@@ -5580,7 +5580,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/f-x-protocol-v2.svg",
+    "live": "https://api.pacta.wtf/v1/badges/f-x-protocol-v2.svg",
     "svg": "https://pacta.wtf/badges/f-x-protocol-v2.svg",
     "tier": "parameter_delta"
    },
@@ -5653,7 +5653,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/fake-world-assets-v2.svg",
+    "live": "https://api.pacta.wtf/v1/badges/fake-world-assets-v2.svg",
     "svg": "https://pacta.wtf/badges/fake-world-assets-v2.svg",
     "tier": "rpc_observed"
    },
@@ -5699,7 +5699,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/falcon-finance-usdf-susdf.svg",
+    "live": "https://api.pacta.wtf/v1/badges/falcon-finance-usdf-susdf.svg",
     "svg": "https://pacta.wtf/badges/falcon-finance-usdf-susdf.svg",
     "tier": "aligned"
    },
@@ -5755,7 +5755,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/fermiswap.svg",
+    "live": "https://api.pacta.wtf/v1/badges/fermiswap.svg",
     "svg": "https://pacta.wtf/badges/fermiswap.svg",
     "tier": "rpc_observed"
    },
@@ -5801,7 +5801,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/flaunch.svg",
+    "live": "https://api.pacta.wtf/v1/badges/flaunch.svg",
     "svg": "https://pacta.wtf/badges/flaunch.svg",
     "tier": "aligned"
    },
@@ -5851,7 +5851,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/flexa.svg",
+    "live": "https://api.pacta.wtf/v1/badges/flexa.svg",
     "svg": "https://pacta.wtf/badges/flexa.svg",
     "tier": "rpc_observed"
    },
@@ -5897,7 +5897,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/flokifi-locker.svg",
+    "live": "https://api.pacta.wtf/v1/badges/flokifi-locker.svg",
     "svg": "https://pacta.wtf/badges/flokifi-locker.svg",
     "tier": "rpc_observed"
    },
@@ -5943,7 +5943,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/fluid-instadapp.svg",
+    "live": "https://api.pacta.wtf/v1/badges/fluid-instadapp.svg",
     "svg": "https://pacta.wtf/badges/fluid-instadapp.svg",
     "tier": "parameter_delta"
    },
@@ -6000,7 +6000,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/flying-tulip-lend.svg",
+    "live": "https://api.pacta.wtf/v1/badges/flying-tulip-lend.svg",
     "svg": "https://pacta.wtf/badges/flying-tulip-lend.svg",
     "tier": "aligned"
    },
@@ -6052,7 +6052,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/frankencoin.svg",
+    "live": "https://api.pacta.wtf/v1/badges/frankencoin.svg",
     "svg": "https://pacta.wtf/badges/frankencoin.svg",
     "tier": "rpc_observed"
    },
@@ -6098,7 +6098,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/frax-ether-sfrxeth.svg",
+    "live": "https://api.pacta.wtf/v1/badges/frax-ether-sfrxeth.svg",
     "svg": "https://pacta.wtf/badges/frax-ether-sfrxeth.svg",
     "tier": "aligned"
    },
@@ -6179,7 +6179,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/frax-usd-frxusd.svg",
+    "live": "https://api.pacta.wtf/v1/badges/frax-usd-frxusd.svg",
     "svg": "https://pacta.wtf/badges/frax-usd-frxusd.svg",
     "tier": "aligned"
    },
@@ -6260,7 +6260,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/friend-tech-v1.svg",
+    "live": "https://api.pacta.wtf/v1/badges/friend-tech-v1.svg",
     "svg": "https://pacta.wtf/badges/friend-tech-v1.svg",
     "tier": "rpc_observed"
    },
@@ -6306,7 +6306,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/gamma.svg",
+    "live": "https://api.pacta.wtf/v1/badges/gamma.svg",
     "svg": "https://pacta.wtf/badges/gamma.svg",
     "tier": "aligned"
    },
@@ -6356,7 +6356,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/gearbox-v3-v3-1.svg",
+    "live": "https://api.pacta.wtf/v1/badges/gearbox-v3-v3-1.svg",
     "svg": "https://pacta.wtf/badges/gearbox-v3-v3-1.svg",
     "tier": "parameter_delta"
    },
@@ -6414,7 +6414,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/geth.svg",
+    "live": "https://api.pacta.wtf/v1/badges/geth.svg",
     "svg": "https://pacta.wtf/badges/geth.svg",
     "tier": "rpc_observed"
    },
@@ -6460,7 +6460,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/glif.svg",
+    "live": "https://api.pacta.wtf/v1/badges/glif.svg",
     "svg": "https://pacta.wtf/badges/glif.svg",
     "tier": "rpc_observed"
    },
@@ -6508,7 +6508,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/goldfinch.svg",
+    "live": "https://api.pacta.wtf/v1/badges/goldfinch.svg",
     "svg": "https://pacta.wtf/badges/goldfinch.svg",
     "tier": "parameter_delta"
    },
@@ -6558,7 +6558,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/gondi-v3.svg",
+    "live": "https://api.pacta.wtf/v1/badges/gondi-v3.svg",
     "svg": "https://pacta.wtf/badges/gondi-v3.svg",
     "tier": "rpc_observed"
    },
@@ -6604,7 +6604,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/gravity-by-galxe-bridge.svg",
+    "live": "https://api.pacta.wtf/v1/badges/gravity-by-galxe-bridge.svg",
     "svg": "https://pacta.wtf/badges/gravity-by-galxe-bridge.svg",
     "tier": "aligned"
    },
@@ -6654,7 +6654,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/gro.svg",
+    "live": "https://api.pacta.wtf/v1/badges/gro.svg",
     "svg": "https://pacta.wtf/badges/gro.svg",
     "tier": "rpc_observed"
    },
@@ -6700,7 +6700,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/grove-finance.svg",
+    "live": "https://api.pacta.wtf/v1/badges/grove-finance.svg",
     "svg": "https://pacta.wtf/badges/grove-finance.svg",
     "tier": "aligned"
    },
@@ -6780,7 +6780,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/grvt-bridge.svg",
+    "live": "https://api.pacta.wtf/v1/badges/grvt-bridge.svg",
     "svg": "https://pacta.wtf/badges/grvt-bridge.svg",
     "tier": "rpc_observed"
    },
@@ -6826,7 +6826,7 @@
   {
    "badge": {
     "label": "Unresolved · Unverified Scope",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/hakka-finance.svg",
+    "live": "https://api.pacta.wtf/v1/badges/hakka-finance.svg",
     "svg": "https://pacta.wtf/badges/hakka-finance.svg",
     "tier": "unresolved"
    },
@@ -6883,7 +6883,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/harvest-finance.svg",
+    "live": "https://api.pacta.wtf/v1/badges/harvest-finance.svg",
     "svg": "https://pacta.wtf/badges/harvest-finance.svg",
     "tier": "rpc_observed"
    },
@@ -6929,7 +6929,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/hashport.svg",
+    "live": "https://api.pacta.wtf/v1/badges/hashport.svg",
     "svg": "https://pacta.wtf/badges/hashport.svg",
     "tier": "aligned"
    },
@@ -6982,7 +6982,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/hegic.svg",
+    "live": "https://api.pacta.wtf/v1/badges/hegic.svg",
     "svg": "https://pacta.wtf/badges/hegic.svg",
     "tier": "rpc_observed"
    },
@@ -7028,7 +7028,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/hop-protocol.svg",
+    "live": "https://api.pacta.wtf/v1/badges/hop-protocol.svg",
     "svg": "https://pacta.wtf/badges/hop-protocol.svg",
     "tier": "parameter_delta"
    },
@@ -7082,7 +7082,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/hyperlane.svg",
+    "live": "https://api.pacta.wtf/v1/badges/hyperlane.svg",
     "svg": "https://pacta.wtf/badges/hyperlane.svg",
     "tier": "rpc_observed"
    },
@@ -7128,7 +7128,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/iaero-protocol.svg",
+    "live": "https://api.pacta.wtf/v1/badges/iaero-protocol.svg",
     "svg": "https://pacta.wtf/badges/iaero-protocol.svg",
     "tier": "aligned"
    },
@@ -7180,7 +7180,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/ichi.svg",
+    "live": "https://api.pacta.wtf/v1/badges/ichi.svg",
     "svg": "https://pacta.wtf/badges/ichi.svg",
     "tier": "rpc_observed"
    },
@@ -7226,7 +7226,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/idex-v1.svg",
+    "live": "https://api.pacta.wtf/v1/badges/idex-v1.svg",
     "svg": "https://pacta.wtf/badges/idex-v1.svg",
     "tier": "rpc_observed"
    },
@@ -7272,7 +7272,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/idle.svg",
+    "live": "https://api.pacta.wtf/v1/badges/idle.svg",
     "svg": "https://pacta.wtf/badges/idle.svg",
     "tier": "aligned"
    },
@@ -7325,7 +7325,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/inceptionlrt-isolated-restaking.svg",
+    "live": "https://api.pacta.wtf/v1/badges/inceptionlrt-isolated-restaking.svg",
     "svg": "https://pacta.wtf/badges/inceptionlrt-isolated-restaking.svg",
     "tier": "aligned"
    },
@@ -7383,7 +7383,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/index-coop.svg",
+    "live": "https://api.pacta.wtf/v1/badges/index-coop.svg",
     "svg": "https://pacta.wtf/badges/index-coop.svg",
     "tier": "aligned"
    },
@@ -7433,7 +7433,7 @@
   {
    "badge": {
     "label": "Unresolved · Unverified Scope",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/infinifi.svg",
+    "live": "https://api.pacta.wtf/v1/badges/infinifi.svg",
     "svg": "https://pacta.wtf/badges/infinifi.svg",
     "tier": "unresolved"
    },
@@ -7528,7 +7528,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/injective-bridge.svg",
+    "live": "https://api.pacta.wtf/v1/badges/injective-bridge.svg",
     "svg": "https://pacta.wtf/badges/injective-bridge.svg",
     "tier": "rpc_observed"
    },
@@ -7574,7 +7574,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/interest-protocol.svg",
+    "live": "https://api.pacta.wtf/v1/badges/interest-protocol.svg",
     "svg": "https://pacta.wtf/badges/interest-protocol.svg",
     "tier": "rpc_observed"
    },
@@ -7623,7 +7623,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/inverse-finance-firm.svg",
+    "live": "https://api.pacta.wtf/v1/badges/inverse-finance-firm.svg",
     "svg": "https://pacta.wtf/badges/inverse-finance-firm.svg",
     "tier": "parameter_delta"
    },
@@ -7721,7 +7721,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/ipor-fusion.svg",
+    "live": "https://api.pacta.wtf/v1/badges/ipor-fusion.svg",
     "svg": "https://pacta.wtf/badges/ipor-fusion.svg",
     "tier": "aligned"
    },
@@ -7773,7 +7773,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/jpy-defi.svg",
+    "live": "https://api.pacta.wtf/v1/badges/jpy-defi.svg",
     "svg": "https://pacta.wtf/badges/jpy-defi.svg",
     "tier": "aligned"
    },
@@ -7823,7 +7823,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/juicebox-v1.svg",
+    "live": "https://api.pacta.wtf/v1/badges/juicebox-v1.svg",
     "svg": "https://pacta.wtf/badges/juicebox-v1.svg",
     "tier": "rpc_observed"
    },
@@ -7869,7 +7869,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/k3-capital.svg",
+    "live": "https://api.pacta.wtf/v1/badges/k3-capital.svg",
     "svg": "https://pacta.wtf/badges/k3-capital.svg",
     "tier": "rpc_observed"
    },
@@ -7918,7 +7918,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/katana.svg",
+    "live": "https://api.pacta.wtf/v1/badges/katana.svg",
     "svg": "https://pacta.wtf/badges/katana.svg",
     "tier": "aligned"
    },
@@ -7968,7 +7968,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/kelp-dao-rseth.svg",
+    "live": "https://api.pacta.wtf/v1/badges/kelp-dao-rseth.svg",
     "svg": "https://pacta.wtf/badges/kelp-dao-rseth.svg",
     "tier": "aligned"
    },
@@ -8066,7 +8066,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/kine-finance.svg",
+    "live": "https://api.pacta.wtf/v1/badges/kine-finance.svg",
     "svg": "https://pacta.wtf/badges/kine-finance.svg",
     "tier": "rpc_observed"
    },
@@ -8114,7 +8114,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/king-protocol.svg",
+    "live": "https://api.pacta.wtf/v1/badges/king-protocol.svg",
     "svg": "https://pacta.wtf/badges/king-protocol.svg",
     "tier": "rpc_observed"
    },
@@ -8162,7 +8162,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/kpk.svg",
+    "live": "https://api.pacta.wtf/v1/badges/kpk.svg",
     "svg": "https://pacta.wtf/badges/kpk.svg",
     "tier": "aligned"
    },
@@ -8212,7 +8212,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/kuma-protocol.svg",
+    "live": "https://api.pacta.wtf/v1/badges/kuma-protocol.svg",
     "svg": "https://pacta.wtf/badges/kuma-protocol.svg",
     "tier": "aligned"
    },
@@ -8262,7 +8262,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/kyberswap-classic.svg",
+    "live": "https://api.pacta.wtf/v1/badges/kyberswap-classic.svg",
     "svg": "https://pacta.wtf/badges/kyberswap-classic.svg",
     "tier": "aligned"
    },
@@ -8315,7 +8315,7 @@
   {
    "badge": {
     "label": "Unresolved · Unverified Scope",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/lagoon.svg",
+    "live": "https://api.pacta.wtf/v1/badges/lagoon.svg",
     "svg": "https://pacta.wtf/badges/lagoon.svg",
     "tier": "unresolved"
    },
@@ -8370,7 +8370,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/landx-finance.svg",
+    "live": "https://api.pacta.wtf/v1/badges/landx-finance.svg",
     "svg": "https://pacta.wtf/badges/landx-finance.svg",
     "tier": "rpc_observed"
    },
@@ -8416,7 +8416,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/layerzero-v2.svg",
+    "live": "https://api.pacta.wtf/v1/badges/layerzero-v2.svg",
     "svg": "https://pacta.wtf/badges/layerzero-v2.svg",
     "tier": "aligned"
    },
@@ -8504,7 +8504,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/lazy.svg",
+    "live": "https://api.pacta.wtf/v1/badges/lazy.svg",
     "svg": "https://pacta.wtf/badges/lazy.svg",
     "tier": "rpc_observed"
    },
@@ -8550,7 +8550,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/ledgity-yield.svg",
+    "live": "https://api.pacta.wtf/v1/badges/ledgity-yield.svg",
     "svg": "https://pacta.wtf/badges/ledgity-yield.svg",
     "tier": "rpc_observed"
    },
@@ -8596,7 +8596,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/legion.svg",
+    "live": "https://api.pacta.wtf/v1/badges/legion.svg",
     "svg": "https://pacta.wtf/badges/legion.svg",
     "tier": "rpc_observed"
    },
@@ -8644,7 +8644,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/lendflare.svg",
+    "live": "https://api.pacta.wtf/v1/badges/lendflare.svg",
     "svg": "https://pacta.wtf/badges/lendflare.svg",
     "tier": "rpc_observed"
    },
@@ -8697,7 +8697,7 @@
    ],
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/lido-steth-dual-governance.svg",
+    "live": "https://api.pacta.wtf/v1/badges/lido-steth-dual-governance.svg",
     "svg": "https://pacta.wtf/badges/lido-steth-dual-governance.svg",
     "tier": "aligned"
    },
@@ -8784,7 +8784,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/lighter-bridge.svg",
+    "live": "https://api.pacta.wtf/v1/badges/lighter-bridge.svg",
     "svg": "https://pacta.wtf/badges/lighter-bridge.svg",
     "tier": "rpc_observed"
    },
@@ -8830,7 +8830,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/liquid-collective-lseth.svg",
+    "live": "https://api.pacta.wtf/v1/badges/liquid-collective-lseth.svg",
     "svg": "https://pacta.wtf/badges/liquid-collective-lseth.svg",
     "tier": "aligned"
    },
@@ -8900,7 +8900,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/liquity-v1-lusd.svg",
+    "live": "https://api.pacta.wtf/v1/badges/liquity-v1-lusd.svg",
     "svg": "https://pacta.wtf/badges/liquity-v1-lusd.svg",
     "tier": "aligned"
    },
@@ -8979,7 +8979,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/liquity-v2-bold.svg",
+    "live": "https://api.pacta.wtf/v1/badges/liquity-v2-bold.svg",
     "svg": "https://pacta.wtf/badges/liquity-v2-bold.svg",
     "tier": "aligned"
    },
@@ -9033,7 +9033,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/lista-lending.svg",
+    "live": "https://api.pacta.wtf/v1/badges/lista-lending.svg",
     "svg": "https://pacta.wtf/badges/lista-lending.svg",
     "tier": "aligned"
    },
@@ -9085,7 +9085,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/lombard-lbtc.svg",
+    "live": "https://api.pacta.wtf/v1/badges/lombard-lbtc.svg",
     "svg": "https://pacta.wtf/badges/lombard-lbtc.svg",
     "tier": "aligned"
    },
@@ -9156,7 +9156,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/lusd-chickenbonds.svg",
+    "live": "https://api.pacta.wtf/v1/badges/lusd-chickenbonds.svg",
     "svg": "https://pacta.wtf/badges/lusd-chickenbonds.svg",
     "tier": "aligned"
    },
@@ -9210,7 +9210,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/m0-protocol-m.svg",
+    "live": "https://api.pacta.wtf/v1/badges/m0-protocol-m.svg",
     "svg": "https://pacta.wtf/badges/m0-protocol-m.svg",
     "tier": "aligned"
    },
@@ -9279,7 +9279,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/makina.svg",
+    "live": "https://api.pacta.wtf/v1/badges/makina.svg",
     "svg": "https://pacta.wtf/badges/makina.svg",
     "tier": "aligned"
    },
@@ -9333,7 +9333,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/mantle-liquid-staking-meth-cmeth.svg",
+    "live": "https://api.pacta.wtf/v1/badges/mantle-liquid-staking-meth-cmeth.svg",
     "svg": "https://pacta.wtf/badges/mantle-liquid-staking-meth-cmeth.svg",
     "tier": "parameter_delta"
    },
@@ -9388,7 +9388,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/maple-finance-v2-syrup.svg",
+    "live": "https://api.pacta.wtf/v1/badges/maple-finance-v2-syrup.svg",
     "svg": "https://pacta.wtf/badges/maple-finance-v2-syrup.svg",
     "tier": "parameter_delta"
    },
@@ -9445,7 +9445,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/mcdex.svg",
+    "live": "https://api.pacta.wtf/v1/badges/mcdex.svg",
     "svg": "https://pacta.wtf/badges/mcdex.svg",
     "tier": "aligned"
    },
@@ -9497,7 +9497,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/mellow-protocol-lido-earn.svg",
+    "live": "https://api.pacta.wtf/v1/badges/mellow-protocol-lido-earn.svg",
     "svg": "https://pacta.wtf/badges/mellow-protocol-lido-earn.svg",
     "tier": "parameter_delta"
    },
@@ -9552,7 +9552,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/meta-pool-eth.svg",
+    "live": "https://api.pacta.wtf/v1/badges/meta-pool-eth.svg",
     "svg": "https://pacta.wtf/badges/meta-pool-eth.svg",
     "tier": "aligned"
    },
@@ -9608,7 +9608,7 @@
   {
    "badge": {
     "label": "Unresolved · Unverified Scope",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/metamorpho-re7-weth-vs-re7-usdt.svg",
+    "live": "https://api.pacta.wtf/v1/badges/metamorpho-re7-weth-vs-re7-usdt.svg",
     "svg": "https://pacta.wtf/badges/metamorpho-re7-weth-vs-re7-usdt.svg",
     "tier": "unresolved"
    },
@@ -9666,7 +9666,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/metis-bridge.svg",
+    "live": "https://api.pacta.wtf/v1/badges/metis-bridge.svg",
     "svg": "https://pacta.wtf/badges/metis-bridge.svg",
     "tier": "rpc_observed"
    },
@@ -9712,7 +9712,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/metric-v1.svg",
+    "live": "https://api.pacta.wtf/v1/badges/metric-v1.svg",
     "svg": "https://pacta.wtf/badges/metric-v1.svg",
     "tier": "aligned"
    },
@@ -9765,7 +9765,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/metronome-synth.svg",
+    "live": "https://api.pacta.wtf/v1/badges/metronome-synth.svg",
     "svg": "https://pacta.wtf/badges/metronome-synth.svg",
     "tier": "rpc_observed"
    },
@@ -9811,7 +9811,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/mev-capital-weth-metamorpho.svg",
+    "live": "https://api.pacta.wtf/v1/badges/mev-capital-weth-metamorpho.svg",
     "svg": "https://pacta.wtf/badges/mev-capital-weth-metamorpho.svg",
     "tier": "aligned"
    },
@@ -9868,7 +9868,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/monolith-market.svg",
+    "live": "https://api.pacta.wtf/v1/badges/monolith-market.svg",
     "svg": "https://pacta.wtf/badges/monolith-market.svg",
     "tier": "rpc_observed"
    },
@@ -9914,7 +9914,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/moonwell-lending-base.svg",
+    "live": "https://api.pacta.wtf/v1/badges/moonwell-lending-base.svg",
     "svg": "https://pacta.wtf/badges/moonwell-lending-base.svg",
     "tier": "parameter_delta"
    },
@@ -9982,7 +9982,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/morph-bridge.svg",
+    "live": "https://api.pacta.wtf/v1/badges/morph-bridge.svg",
     "svg": "https://pacta.wtf/badges/morph-bridge.svg",
     "tier": "rpc_observed"
    },
@@ -10031,7 +10031,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/morpheusai.svg",
+    "live": "https://api.pacta.wtf/v1/badges/morpheusai.svg",
     "svg": "https://pacta.wtf/badges/morpheusai.svg",
     "tier": "aligned"
    },
@@ -10087,7 +10087,7 @@
    ],
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/morpho-blue-core.svg",
+    "live": "https://api.pacta.wtf/v1/badges/morpho-blue-core.svg",
     "svg": "https://pacta.wtf/badges/morpho-blue-core.svg",
     "tier": "aligned"
    },
@@ -10140,7 +10140,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/mortgagefi.svg",
+    "live": "https://api.pacta.wtf/v1/badges/mortgagefi.svg",
     "svg": "https://pacta.wtf/badges/mortgagefi.svg",
     "tier": "rpc_observed"
    },
@@ -10186,7 +10186,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/multichain.svg",
+    "live": "https://api.pacta.wtf/v1/badges/multichain.svg",
     "svg": "https://pacta.wtf/badges/multichain.svg",
     "tier": "rpc_observed"
    },
@@ -10232,7 +10232,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/nami.svg",
+    "live": "https://api.pacta.wtf/v1/badges/nami.svg",
     "svg": "https://pacta.wtf/badges/nami.svg",
     "tier": "rpc_observed"
    },
@@ -10278,7 +10278,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/native-credit-pool.svg",
+    "live": "https://api.pacta.wtf/v1/badges/native-credit-pool.svg",
     "svg": "https://pacta.wtf/badges/native-credit-pool.svg",
     "tier": "rpc_observed"
    },
@@ -10326,7 +10326,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/nexus-mutual.svg",
+    "live": "https://api.pacta.wtf/v1/badges/nexus-mutual.svg",
     "svg": "https://pacta.wtf/badges/nexus-mutual.svg",
     "tier": "aligned"
    },
@@ -10385,7 +10385,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/nftx.svg",
+    "live": "https://api.pacta.wtf/v1/badges/nftx.svg",
     "svg": "https://pacta.wtf/badges/nftx.svg",
     "tier": "rpc_observed"
    },
@@ -10431,7 +10431,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/nodedao.svg",
+    "live": "https://api.pacta.wtf/v1/badges/nodedao.svg",
     "svg": "https://pacta.wtf/badges/nodedao.svg",
     "tier": "rpc_observed"
    },
@@ -10479,7 +10479,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/noon.svg",
+    "live": "https://api.pacta.wtf/v1/badges/noon.svg",
     "svg": "https://pacta.wtf/badges/noon.svg",
     "tier": "aligned"
    },
@@ -10534,7 +10534,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/nucleus.svg",
+    "live": "https://api.pacta.wtf/v1/badges/nucleus.svg",
     "svg": "https://pacta.wtf/badges/nucleus.svg",
     "tier": "rpc_observed"
    },
@@ -10580,7 +10580,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/nuva.svg",
+    "live": "https://api.pacta.wtf/v1/badges/nuva.svg",
     "svg": "https://pacta.wtf/badges/nuva.svg",
     "tier": "aligned"
    },
@@ -10633,7 +10633,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/obol-network.svg",
+    "live": "https://api.pacta.wtf/v1/badges/obol-network.svg",
     "svg": "https://pacta.wtf/badges/obol-network.svg",
     "tier": "parameter_delta"
    },
@@ -10725,7 +10725,7 @@
   {
    "badge": {
     "label": "Unresolved · Unverified Scope",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/odyssey-finance.svg",
+    "live": "https://api.pacta.wtf/v1/badges/odyssey-finance.svg",
     "svg": "https://pacta.wtf/badges/odyssey-finance.svg",
     "tier": "unresolved"
    },
@@ -10779,7 +10779,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/ondo-finance-ousg-flux-finance.svg",
+    "live": "https://api.pacta.wtf/v1/badges/ondo-finance-ousg-flux-finance.svg",
     "svg": "https://pacta.wtf/badges/ondo-finance-ousg-flux-finance.svg",
     "tier": "parameter_delta"
    },
@@ -10835,7 +10835,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/opengdp-shared-security.svg",
+    "live": "https://api.pacta.wtf/v1/badges/opengdp-shared-security.svg",
     "svg": "https://pacta.wtf/badges/opengdp-shared-security.svg",
     "tier": "rpc_observed"
    },
@@ -10883,7 +10883,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/orderly-bridge.svg",
+    "live": "https://api.pacta.wtf/v1/badges/orderly-bridge.svg",
     "svg": "https://pacta.wtf/badges/orderly-bridge.svg",
     "tier": "aligned"
    },
@@ -10933,7 +10933,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/origami-finance.svg",
+    "live": "https://api.pacta.wtf/v1/badges/origami-finance.svg",
     "svg": "https://pacta.wtf/badges/origami-finance.svg",
     "tier": "rpc_observed"
    },
@@ -10979,7 +10979,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/origin-superoeth-base.svg",
+    "live": "https://api.pacta.wtf/v1/badges/origin-superoeth-base.svg",
     "svg": "https://pacta.wtf/badges/origin-superoeth-base.svg",
     "tier": "aligned"
    },
@@ -11035,7 +11035,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/outcome-finance.svg",
+    "live": "https://api.pacta.wtf/v1/badges/outcome-finance.svg",
     "svg": "https://pacta.wtf/badges/outcome-finance.svg",
     "tier": "rpc_observed"
    },
@@ -11081,7 +11081,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/overtime.svg",
+    "live": "https://api.pacta.wtf/v1/badges/overtime.svg",
     "svg": "https://pacta.wtf/badges/overtime.svg",
     "tier": "rpc_observed"
    },
@@ -11127,7 +11127,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/pancakeswap-amm-v3.svg",
+    "live": "https://api.pacta.wtf/v1/badges/pancakeswap-amm-v3.svg",
     "svg": "https://pacta.wtf/badges/pancakeswap-amm-v3.svg",
     "tier": "rpc_observed"
    },
@@ -11175,7 +11175,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/panoptic-v2.svg",
+    "live": "https://api.pacta.wtf/v1/badges/panoptic-v2.svg",
     "svg": "https://pacta.wtf/badges/panoptic-v2.svg",
     "tier": "aligned"
    },
@@ -11228,7 +11228,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/paradex-bridge.svg",
+    "live": "https://api.pacta.wtf/v1/badges/paradex-bridge.svg",
     "svg": "https://pacta.wtf/badges/paradex-bridge.svg",
     "tier": "rpc_observed"
    },
@@ -11276,7 +11276,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/parallel-protocol-v3.svg",
+    "live": "https://api.pacta.wtf/v1/badges/parallel-protocol-v3.svg",
     "svg": "https://pacta.wtf/badges/parallel-protocol-v3.svg",
     "tier": "aligned"
    },
@@ -11326,7 +11326,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/paypal-usd-pyusd.svg",
+    "live": "https://api.pacta.wtf/v1/badges/paypal-usd-pyusd.svg",
     "svg": "https://pacta.wtf/badges/paypal-usd-pyusd.svg",
     "tier": "aligned"
    },
@@ -11406,7 +11406,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/peapods-finance.svg",
+    "live": "https://api.pacta.wtf/v1/badges/peapods-finance.svg",
     "svg": "https://pacta.wtf/badges/peapods-finance.svg",
     "tier": "aligned"
    },
@@ -11461,7 +11461,7 @@
    ],
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/pendle-finance-v2.svg",
+    "live": "https://api.pacta.wtf/v1/badges/pendle-finance-v2.svg",
     "svg": "https://pacta.wtf/badges/pendle-finance-v2.svg",
     "tier": "aligned"
    },
@@ -11532,7 +11532,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/pickle.svg",
+    "live": "https://api.pacta.wtf/v1/badges/pickle.svg",
     "svg": "https://pacta.wtf/badges/pickle.svg",
     "tier": "parameter_delta"
    },
@@ -11586,7 +11586,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/piku-finance.svg",
+    "live": "https://api.pacta.wtf/v1/badges/piku-finance.svg",
     "svg": "https://pacta.wtf/badges/piku-finance.svg",
     "tier": "aligned"
    },
@@ -11636,7 +11636,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/pirex.svg",
+    "live": "https://api.pacta.wtf/v1/badges/pirex.svg",
     "svg": "https://pacta.wtf/badges/pirex.svg",
     "tier": "rpc_observed"
    },
@@ -11682,7 +11682,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/polygon-bridge.svg",
+    "live": "https://api.pacta.wtf/v1/badges/polygon-bridge.svg",
     "svg": "https://pacta.wtf/badges/polygon-bridge.svg",
     "tier": "parameter_delta"
    },
@@ -11762,7 +11762,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/pooltogether-v3.svg",
+    "live": "https://api.pacta.wtf/v1/badges/pooltogether-v3.svg",
     "svg": "https://pacta.wtf/badges/pooltogether-v3.svg",
     "tier": "aligned"
    },
@@ -11812,7 +11812,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/privacy-pools-v1.svg",
+    "live": "https://api.pacta.wtf/v1/badges/privacy-pools-v1.svg",
     "svg": "https://pacta.wtf/badges/privacy-pools-v1.svg",
     "tier": "aligned"
    },
@@ -11864,7 +11864,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/puffer-finance-pufeth.svg",
+    "live": "https://api.pacta.wtf/v1/badges/puffer-finance-pufeth.svg",
     "svg": "https://pacta.wtf/badges/puffer-finance-pufeth.svg",
     "tier": "parameter_delta"
    },
@@ -11939,7 +11939,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/punks-terminal.svg",
+    "live": "https://api.pacta.wtf/v1/badges/punks-terminal.svg",
     "svg": "https://pacta.wtf/badges/punks-terminal.svg",
     "tier": "rpc_observed"
    },
@@ -11987,7 +11987,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/quickswap-v4.svg",
+    "live": "https://api.pacta.wtf/v1/badges/quickswap-v4.svg",
     "svg": "https://pacta.wtf/badges/quickswap-v4.svg",
     "tier": "rpc_observed"
    },
@@ -12033,7 +12033,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/railgun.svg",
+    "live": "https://api.pacta.wtf/v1/badges/railgun.svg",
     "svg": "https://pacta.wtf/badges/railgun.svg",
     "tier": "aligned"
    },
@@ -12122,7 +12122,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/re.svg",
+    "live": "https://api.pacta.wtf/v1/badges/re.svg",
     "svg": "https://pacta.wtf/badges/re.svg",
     "tier": "parameter_delta"
    },
@@ -12201,7 +12201,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/reflexer.svg",
+    "live": "https://api.pacta.wtf/v1/badges/reflexer.svg",
     "svg": "https://pacta.wtf/badges/reflexer.svg",
     "tier": "rpc_observed"
    },
@@ -12247,7 +12247,7 @@
   {
    "badge": {
     "label": "Unresolved · Unverified Scope",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/renzo-protocol-ezeth.svg",
+    "live": "https://api.pacta.wtf/v1/badges/renzo-protocol-ezeth.svg",
     "svg": "https://pacta.wtf/badges/renzo-protocol-ezeth.svg",
     "tier": "unresolved"
    },
@@ -12318,7 +12318,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/reserve-protocol-rtoken.svg",
+    "live": "https://api.pacta.wtf/v1/badges/reserve-protocol-rtoken.svg",
     "svg": "https://pacta.wtf/badges/reserve-protocol-rtoken.svg",
     "tier": "aligned"
    },
@@ -12393,7 +12393,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/resolv-usr-rlp.svg",
+    "live": "https://api.pacta.wtf/v1/badges/resolv-usr-rlp.svg",
     "svg": "https://pacta.wtf/badges/resolv-usr-rlp.svg",
     "tier": "aligned"
    },
@@ -12465,7 +12465,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/resupply.svg",
+    "live": "https://api.pacta.wtf/v1/badges/resupply.svg",
     "svg": "https://pacta.wtf/badges/resupply.svg",
     "tier": "parameter_delta"
    },
@@ -12555,7 +12555,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/ribbon.svg",
+    "live": "https://api.pacta.wtf/v1/badges/ribbon.svg",
     "svg": "https://pacta.wtf/badges/ribbon.svg",
     "tier": "rpc_observed"
    },
@@ -12601,7 +12601,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/ring-few.svg",
+    "live": "https://api.pacta.wtf/v1/badges/ring-few.svg",
     "svg": "https://pacta.wtf/badges/ring-few.svg",
     "tier": "rpc_observed"
    },
@@ -12647,7 +12647,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/rockawayx.svg",
+    "live": "https://api.pacta.wtf/v1/badges/rockawayx.svg",
     "svg": "https://pacta.wtf/badges/rockawayx.svg",
     "tier": "rpc_observed"
    },
@@ -12695,7 +12695,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/rocket-pool-reth.svg",
+    "live": "https://api.pacta.wtf/v1/badges/rocket-pool-reth.svg",
     "svg": "https://pacta.wtf/badges/rocket-pool-reth.svg",
     "tier": "parameter_delta"
    },
@@ -12772,7 +12772,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/royco-v2.svg",
+    "live": "https://api.pacta.wtf/v1/badges/royco-v2.svg",
     "svg": "https://pacta.wtf/badges/royco-v2.svg",
     "tier": "rpc_observed"
    },
@@ -12820,7 +12820,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/safe-singleton-core.svg",
+    "live": "https://api.pacta.wtf/v1/badges/safe-singleton-core.svg",
     "svg": "https://pacta.wtf/badges/safe-singleton-core.svg",
     "tier": "aligned"
    },
@@ -12909,7 +12909,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/saffron-vaults.svg",
+    "live": "https://api.pacta.wtf/v1/badges/saffron-vaults.svg",
     "svg": "https://pacta.wtf/badges/saffron-vaults.svg",
     "tier": "rpc_observed"
    },
@@ -12955,7 +12955,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/sato.svg",
+    "live": "https://api.pacta.wtf/v1/badges/sato.svg",
     "svg": "https://pacta.wtf/badges/sato.svg",
     "tier": "rpc_observed"
    },
@@ -13001,7 +13001,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/saturn.svg",
+    "live": "https://api.pacta.wtf/v1/badges/saturn.svg",
     "svg": "https://pacta.wtf/badges/saturn.svg",
     "tier": "rpc_observed"
    },
@@ -13050,7 +13050,7 @@
   {
    "badge": {
     "label": "Unresolved · Unverified Scope",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/seamless-protocol-base.svg",
+    "live": "https://api.pacta.wtf/v1/badges/seamless-protocol-base.svg",
     "svg": "https://pacta.wtf/badges/seamless-protocol-base.svg",
     "tier": "unresolved"
    },
@@ -13103,7 +13103,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/shift-defi.svg",
+    "live": "https://api.pacta.wtf/v1/badges/shift-defi.svg",
     "svg": "https://pacta.wtf/badges/shift-defi.svg",
     "tier": "aligned"
    },
@@ -13153,7 +13153,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/sierra-protocol.svg",
+    "live": "https://api.pacta.wtf/v1/badges/sierra-protocol.svg",
     "svg": "https://pacta.wtf/badges/sierra-protocol.svg",
     "tier": "rpc_observed"
    },
@@ -13199,7 +13199,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/smardex-usdn.svg",
+    "live": "https://api.pacta.wtf/v1/badges/smardex-usdn.svg",
     "svg": "https://pacta.wtf/badges/smardex-usdn.svg",
     "tier": "rpc_observed"
    },
@@ -13247,7 +13247,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/sofa-org.svg",
+    "live": "https://api.pacta.wtf/v1/badges/sofa-org.svg",
     "svg": "https://pacta.wtf/badges/sofa-org.svg",
     "tier": "aligned"
    },
@@ -13299,7 +13299,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/solv-protocol-solvbtc.svg",
+    "live": "https://api.pacta.wtf/v1/badges/solv-protocol-solvbtc.svg",
     "svg": "https://pacta.wtf/badges/solv-protocol-solvbtc.svg",
     "tier": "parameter_delta"
    },
@@ -13367,7 +13367,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/sommelier.svg",
+    "live": "https://api.pacta.wtf/v1/badges/sommelier.svg",
     "svg": "https://pacta.wtf/badges/sommelier.svg",
     "tier": "aligned"
    },
@@ -13420,7 +13420,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/sonic-gateway.svg",
+    "live": "https://api.pacta.wtf/v1/badges/sonic-gateway.svg",
     "svg": "https://pacta.wtf/badges/sonic-gateway.svg",
     "tier": "parameter_delta"
    },
@@ -13475,7 +13475,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/sosovalue-basis.svg",
+    "live": "https://api.pacta.wtf/v1/badges/sosovalue-basis.svg",
     "svg": "https://pacta.wtf/badges/sosovalue-basis.svg",
     "tier": "aligned"
    },
@@ -13535,7 +13535,7 @@
    ],
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/spark-sky.svg",
+    "live": "https://api.pacta.wtf/v1/badges/spark-sky.svg",
     "svg": "https://pacta.wtf/badges/spark-sky.svg",
     "tier": "aligned"
    },
@@ -13614,7 +13614,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/spectra-metavaults.svg",
+    "live": "https://api.pacta.wtf/v1/badges/spectra-metavaults.svg",
     "svg": "https://pacta.wtf/badges/spectra-metavaults.svg",
     "tier": "aligned"
    },
@@ -13667,7 +13667,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/sport-fun.svg",
+    "live": "https://api.pacta.wtf/v1/badges/sport-fun.svg",
     "svg": "https://pacta.wtf/badges/sport-fun.svg",
     "tier": "rpc_observed"
    },
@@ -13715,7 +13715,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/ssv-network.svg",
+    "live": "https://api.pacta.wtf/v1/badges/ssv-network.svg",
     "svg": "https://pacta.wtf/badges/ssv-network.svg",
     "tier": "aligned"
    },
@@ -13779,7 +13779,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/stablehodl.svg",
+    "live": "https://api.pacta.wtf/v1/badges/stablehodl.svg",
     "svg": "https://pacta.wtf/badges/stablehodl.svg",
     "tier": "rpc_observed"
    },
@@ -13830,7 +13830,7 @@
    ],
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/stader-labs-ethx.svg",
+    "live": "https://api.pacta.wtf/v1/badges/stader-labs-ethx.svg",
     "svg": "https://pacta.wtf/badges/stader-labs-ethx.svg",
     "tier": "parameter_delta"
    },
@@ -13887,7 +13887,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/stafi.svg",
+    "live": "https://api.pacta.wtf/v1/badges/stafi.svg",
     "svg": "https://pacta.wtf/badges/stafi.svg",
     "tier": "rpc_observed"
    },
@@ -13933,7 +13933,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/stake-dao.svg",
+    "live": "https://api.pacta.wtf/v1/badges/stake-dao.svg",
     "svg": "https://pacta.wtf/badges/stake-dao.svg",
     "tier": "parameter_delta"
    },
@@ -14022,7 +14022,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/stake-link.svg",
+    "live": "https://api.pacta.wtf/v1/badges/stake-link.svg",
     "svg": "https://pacta.wtf/badges/stake-link.svg",
     "tier": "aligned"
    },
@@ -14101,7 +14101,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/stakestone-stone.svg",
+    "live": "https://api.pacta.wtf/v1/badges/stakestone-stone.svg",
     "svg": "https://pacta.wtf/badges/stakestone-stone.svg",
     "tier": "aligned"
    },
@@ -14151,7 +14151,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/stakewise-v3-oseth.svg",
+    "live": "https://api.pacta.wtf/v1/badges/stakewise-v3-oseth.svg",
     "svg": "https://pacta.wtf/badges/stakewise-v3-oseth.svg",
     "tier": "aligned"
    },
@@ -14221,7 +14221,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/stargate-v2.svg",
+    "live": "https://api.pacta.wtf/v1/badges/stargate-v2.svg",
     "svg": "https://pacta.wtf/badges/stargate-v2.svg",
     "tier": "aligned"
    },
@@ -14279,7 +14279,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/starknet-bridge.svg",
+    "live": "https://api.pacta.wtf/v1/badges/starknet-bridge.svg",
     "svg": "https://pacta.wtf/badges/starknet-bridge.svg",
     "tier": "rpc_observed"
    },
@@ -14325,7 +14325,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/steakhouse-financial-ethereum.svg",
+    "live": "https://api.pacta.wtf/v1/badges/steakhouse-financial-ethereum.svg",
     "svg": "https://pacta.wtf/badges/steakhouse-financial-ethereum.svg",
     "tier": "aligned"
    },
@@ -14421,7 +14421,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/steakhouse-prime-usdc-base.svg",
+    "live": "https://api.pacta.wtf/v1/badges/steakhouse-prime-usdc-base.svg",
     "svg": "https://pacta.wtf/badges/steakhouse-prime-usdc-base.svg",
     "tier": "aligned"
    },
@@ -14485,7 +14485,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/steakhouse-usdc-metamorpho-base.svg",
+    "live": "https://api.pacta.wtf/v1/badges/steakhouse-usdc-metamorpho-base.svg",
     "svg": "https://pacta.wtf/badges/steakhouse-usdc-metamorpho-base.svg",
     "tier": "aligned"
    },
@@ -14543,7 +14543,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/steer-protocol.svg",
+    "live": "https://api.pacta.wtf/v1/badges/steer-protocol.svg",
     "svg": "https://pacta.wtf/badges/steer-protocol.svg",
     "tier": "rpc_observed"
    },
@@ -14592,7 +14592,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/strata-markets.svg",
+    "live": "https://api.pacta.wtf/v1/badges/strata-markets.svg",
     "svg": "https://pacta.wtf/badges/strata-markets.svg",
     "tier": "aligned"
    },
@@ -14642,7 +14642,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/superform-v2-base.svg",
+    "live": "https://api.pacta.wtf/v1/badges/superform-v2-base.svg",
     "svg": "https://pacta.wtf/badges/superform-v2-base.svg",
     "tier": "aligned"
    },
@@ -14695,7 +14695,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/supernova-cl.svg",
+    "live": "https://api.pacta.wtf/v1/badges/supernova-cl.svg",
     "svg": "https://pacta.wtf/badges/supernova-cl.svg",
     "tier": "rpc_observed"
    },
@@ -14741,7 +14741,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/superstate-ustb-uscc.svg",
+    "live": "https://api.pacta.wtf/v1/badges/superstate-ustb-uscc.svg",
     "svg": "https://pacta.wtf/badges/superstate-ustb-uscc.svg",
     "tier": "aligned"
    },
@@ -14796,7 +14796,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/sushiswap-v3.svg",
+    "live": "https://api.pacta.wtf/v1/badges/sushiswap-v3.svg",
     "svg": "https://pacta.wtf/badges/sushiswap-v3.svg",
     "tier": "aligned"
    },
@@ -14849,7 +14849,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/swell-sweth-rsweth.svg",
+    "live": "https://api.pacta.wtf/v1/badges/swell-sweth-rsweth.svg",
     "svg": "https://pacta.wtf/badges/swell-sweth-rsweth.svg",
     "tier": "aligned"
    },
@@ -14909,7 +14909,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/symbiosis.svg",
+    "live": "https://api.pacta.wtf/v1/badges/symbiosis.svg",
     "svg": "https://pacta.wtf/badges/symbiosis.svg",
     "tier": "rpc_observed"
    },
@@ -14955,7 +14955,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/symbiotic-core.svg",
+    "live": "https://api.pacta.wtf/v1/badges/symbiotic-core.svg",
     "svg": "https://pacta.wtf/badges/symbiotic-core.svg",
     "tier": "aligned"
    },
@@ -15011,7 +15011,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/synapse-cross-chain-bridge.svg",
+    "live": "https://api.pacta.wtf/v1/badges/synapse-cross-chain-bridge.svg",
     "svg": "https://pacta.wtf/badges/synapse-cross-chain-bridge.svg",
     "tier": "rpc_observed"
    },
@@ -15057,7 +15057,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/synfutures-v3.svg",
+    "live": "https://api.pacta.wtf/v1/badges/synfutures-v3.svg",
     "svg": "https://pacta.wtf/badges/synfutures-v3.svg",
     "tier": "aligned"
    },
@@ -15107,7 +15107,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/synthetix-v3-core.svg",
+    "live": "https://api.pacta.wtf/v1/badges/synthetix-v3-core.svg",
     "svg": "https://pacta.wtf/badges/synthetix-v3-core.svg",
     "tier": "aligned"
    },
@@ -15196,7 +15196,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/syntropia.svg",
+    "live": "https://api.pacta.wtf/v1/badges/syntropia.svg",
     "svg": "https://pacta.wtf/badges/syntropia.svg",
     "tier": "rpc_observed"
    },
@@ -15245,7 +15245,7 @@
   {
    "badge": {
     "label": "Unresolved · Unverified Scope",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/taiko-bridge.svg",
+    "live": "https://api.pacta.wtf/v1/badges/taiko-bridge.svg",
     "svg": "https://pacta.wtf/badges/taiko-bridge.svg",
     "tier": "unresolved"
    },
@@ -15304,7 +15304,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/tangent-finance.svg",
+    "live": "https://api.pacta.wtf/v1/badges/tangent-finance.svg",
     "svg": "https://pacta.wtf/badges/tangent-finance.svg",
     "tier": "aligned"
    },
@@ -15361,7 +15361,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/team-finance.svg",
+    "live": "https://api.pacta.wtf/v1/badges/team-finance.svg",
     "svg": "https://pacta.wtf/badges/team-finance.svg",
     "tier": "rpc_observed"
    },
@@ -15409,7 +15409,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/tether-usdt.svg",
+    "live": "https://api.pacta.wtf/v1/badges/tether-usdt.svg",
     "svg": "https://pacta.wtf/badges/tether-usdt.svg",
     "tier": "aligned"
    },
@@ -15473,7 +15473,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/the-idols.svg",
+    "live": "https://api.pacta.wtf/v1/badges/the-idols.svg",
     "svg": "https://pacta.wtf/badges/the-idols.svg",
     "tier": "aligned"
    },
@@ -15523,7 +15523,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/theo-network-thusd.svg",
+    "live": "https://api.pacta.wtf/v1/badges/theo-network-thusd.svg",
     "svg": "https://pacta.wtf/badges/theo-network-thusd.svg",
     "tier": "rpc_observed"
    },
@@ -15571,7 +15571,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/threshold-network-tbtc.svg",
+    "live": "https://api.pacta.wtf/v1/badges/threshold-network-tbtc.svg",
     "svg": "https://pacta.wtf/badges/threshold-network-tbtc.svg",
     "tier": "aligned"
    },
@@ -15640,7 +15640,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/tokenworks.svg",
+    "live": "https://api.pacta.wtf/v1/badges/tokenworks.svg",
     "svg": "https://pacta.wtf/badges/tokenworks.svg",
     "tier": "rpc_observed"
    },
@@ -15686,7 +15686,7 @@
   {
    "badge": {
     "label": "Docs Updated · Pending Re-Read",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/tori-finance.svg",
+    "live": "https://api.pacta.wtf/v1/badges/tori-finance.svg",
     "svg": "https://pacta.wtf/badges/tori-finance.svg",
     "tier": "docs_updated"
    },
@@ -15741,7 +15741,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/tornado-cash.svg",
+    "live": "https://api.pacta.wtf/v1/badges/tornado-cash.svg",
     "svg": "https://pacta.wtf/badges/tornado-cash.svg",
     "tier": "rpc_observed"
    },
@@ -15787,7 +15787,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/treehouse-tree-teth.svg",
+    "live": "https://api.pacta.wtf/v1/badges/treehouse-tree-teth.svg",
     "svg": "https://pacta.wtf/badges/treehouse-tree-teth.svg",
     "tier": "parameter_delta"
    },
@@ -15869,7 +15869,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/trueo.svg",
+    "live": "https://api.pacta.wtf/v1/badges/trueo.svg",
     "svg": "https://pacta.wtf/badges/trueo.svg",
     "tier": "aligned"
    },
@@ -15921,7 +15921,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/ultrayield-vaults.svg",
+    "live": "https://api.pacta.wtf/v1/badges/ultrayield-vaults.svg",
     "svg": "https://pacta.wtf/badges/ultrayield-vaults.svg",
     "tier": "rpc_observed"
    },
@@ -15969,7 +15969,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/umia.svg",
+    "live": "https://api.pacta.wtf/v1/badges/umia.svg",
     "svg": "https://pacta.wtf/badges/umia.svg",
     "tier": "aligned"
    },
@@ -16033,7 +16033,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/uncx-network-v2.svg",
+    "live": "https://api.pacta.wtf/v1/badges/uncx-network-v2.svg",
     "svg": "https://pacta.wtf/badges/uncx-network-v2.svg",
     "tier": "rpc_observed"
    },
@@ -16079,7 +16079,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/uniswap-governance-timelock.svg",
+    "live": "https://api.pacta.wtf/v1/badges/uniswap-governance-timelock.svg",
     "svg": "https://pacta.wtf/badges/uniswap-governance-timelock.svg",
     "tier": "parameter_delta"
    },
@@ -16165,7 +16165,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/uniswap-v4.svg",
+    "live": "https://api.pacta.wtf/v1/badges/uniswap-v4.svg",
     "svg": "https://pacta.wtf/badges/uniswap-v4.svg",
     "tier": "aligned"
    },
@@ -16260,7 +16260,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/unitus.svg",
+    "live": "https://api.pacta.wtf/v1/badges/unitus.svg",
     "svg": "https://pacta.wtf/badges/unitus.svg",
     "tier": "rpc_observed"
    },
@@ -16309,7 +16309,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/unslashed.svg",
+    "live": "https://api.pacta.wtf/v1/badges/unslashed.svg",
     "svg": "https://pacta.wtf/badges/unslashed.svg",
     "tier": "rpc_observed"
    },
@@ -16355,7 +16355,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/upshift.svg",
+    "live": "https://api.pacta.wtf/v1/badges/upshift.svg",
     "svg": "https://pacta.wtf/badges/upshift.svg",
     "tier": "parameter_delta"
    },
@@ -16409,7 +16409,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/usdt0.svg",
+    "live": "https://api.pacta.wtf/v1/badges/usdt0.svg",
     "svg": "https://pacta.wtf/badges/usdt0.svg",
     "tier": "rpc_observed"
    },
@@ -16458,7 +16458,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/usual-money-usd0-usd0.svg",
+    "live": "https://api.pacta.wtf/v1/badges/usual-money-usd0-usd0.svg",
     "svg": "https://pacta.wtf/badges/usual-money-usd0-usd0.svg",
     "tier": "parameter_delta"
    },
@@ -16512,7 +16512,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/veda.svg",
+    "live": "https://api.pacta.wtf/v1/badges/veda.svg",
     "svg": "https://pacta.wtf/badges/veda.svg",
     "tier": "rpc_observed"
    },
@@ -16558,7 +16558,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/vesper-v1.svg",
+    "live": "https://api.pacta.wtf/v1/badges/vesper-v1.svg",
     "svg": "https://pacta.wtf/badges/vesper-v1.svg",
     "tier": "parameter_delta"
    },
@@ -16612,7 +16612,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/vetro.svg",
+    "live": "https://api.pacta.wtf/v1/badges/vetro.svg",
     "svg": "https://pacta.wtf/badges/vetro.svg",
     "tier": "aligned"
    },
@@ -16665,7 +16665,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/wan-bridge.svg",
+    "live": "https://api.pacta.wtf/v1/badges/wan-bridge.svg",
     "svg": "https://pacta.wtf/badges/wan-bridge.svg",
     "tier": "rpc_observed"
    },
@@ -16711,7 +16711,7 @@
   {
    "badge": {
     "label": "Unresolved · Unverified Scope",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/whales-market.svg",
+    "live": "https://api.pacta.wtf/v1/badges/whales-market.svg",
     "svg": "https://pacta.wtf/badges/whales-market.svg",
     "tier": "unresolved"
    },
@@ -16765,7 +16765,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/wildcat-protocol.svg",
+    "live": "https://api.pacta.wtf/v1/badges/wildcat-protocol.svg",
     "svg": "https://pacta.wtf/badges/wildcat-protocol.svg",
     "tier": "rpc_observed"
    },
@@ -16811,7 +16811,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/wintermute-confidential-wbtc-ethereum.svg",
+    "live": "https://api.pacta.wtf/v1/badges/wintermute-confidential-wbtc-ethereum.svg",
     "svg": "https://pacta.wtf/badges/wintermute-confidential-wbtc-ethereum.svg",
     "tier": "aligned"
    },
@@ -16863,7 +16863,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/woofi-earn.svg",
+    "live": "https://api.pacta.wtf/v1/badges/woofi-earn.svg",
     "svg": "https://pacta.wtf/badges/woofi-earn.svg",
     "tier": "rpc_observed"
    },
@@ -16909,7 +16909,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/world-chain-bridge.svg",
+    "live": "https://api.pacta.wtf/v1/badges/world-chain-bridge.svg",
     "svg": "https://pacta.wtf/badges/world-chain-bridge.svg",
     "tier": "rpc_observed"
    },
@@ -16958,7 +16958,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/wormhole-core-ntt.svg",
+    "live": "https://api.pacta.wtf/v1/badges/wormhole-core-ntt.svg",
     "svg": "https://pacta.wtf/badges/wormhole-core-ntt.svg",
     "tier": "aligned"
    },
@@ -17049,7 +17049,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/xdai-stake-bridge.svg",
+    "live": "https://api.pacta.wtf/v1/badges/xdai-stake-bridge.svg",
     "svg": "https://pacta.wtf/badges/xdai-stake-bridge.svg",
     "tier": "aligned"
    },
@@ -17102,7 +17102,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/xsy.svg",
+    "live": "https://api.pacta.wtf/v1/badges/xsy.svg",
     "svg": "https://pacta.wtf/badges/xsy.svg",
     "tier": "rpc_observed"
    },
@@ -17150,7 +17150,7 @@
   {
    "badge": {
     "label": "Changed Recently · Re-Check Pending",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/yearn-v3.svg",
+    "live": "https://api.pacta.wtf/v1/badges/yearn-v3.svg",
     "svg": "https://pacta.wtf/badges/yearn-v3.svg",
     "tier": "recent_change"
    },
@@ -17218,7 +17218,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/yield-basis.svg",
+    "live": "https://api.pacta.wtf/v1/badges/yield-basis.svg",
     "svg": "https://pacta.wtf/badges/yield-basis.svg",
     "tier": "aligned"
    },
@@ -17268,7 +17268,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/yieldfi.svg",
+    "live": "https://api.pacta.wtf/v1/badges/yieldfi.svg",
     "svg": "https://pacta.wtf/badges/yieldfi.svg",
     "tier": "rpc_observed"
    },
@@ -17317,7 +17317,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/yieldnest.svg",
+    "live": "https://api.pacta.wtf/v1/badges/yieldnest.svg",
     "svg": "https://pacta.wtf/badges/yieldnest.svg",
     "tier": "parameter_delta"
    },
@@ -17379,7 +17379,7 @@
   {
    "badge": {
     "label": "Unresolved · Unverified Scope",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/yo-protocol.svg",
+    "live": "https://api.pacta.wtf/v1/badges/yo-protocol.svg",
     "svg": "https://pacta.wtf/badges/yo-protocol.svg",
     "tier": "unresolved"
    },
@@ -17462,7 +17462,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/yuzu-money.svg",
+    "live": "https://api.pacta.wtf/v1/badges/yuzu-money.svg",
     "svg": "https://pacta.wtf/badges/yuzu-money.svg",
     "tier": "rpc_observed"
    },
@@ -17511,7 +17511,7 @@
   {
    "badge": {
     "label": "Aligned · Base EAS",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/zama.svg",
+    "live": "https://api.pacta.wtf/v1/badges/zama.svg",
     "svg": "https://pacta.wtf/badges/zama.svg",
     "tier": "aligned"
    },
@@ -17561,7 +17561,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/zerobase-cedefi.svg",
+    "live": "https://api.pacta.wtf/v1/badges/zerobase-cedefi.svg",
     "svg": "https://pacta.wtf/badges/zerobase-cedefi.svg",
     "tier": "rpc_observed"
    },
@@ -17607,7 +17607,7 @@
   {
    "badge": {
     "label": "Delta",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/zircuit-staking.svg",
+    "live": "https://api.pacta.wtf/v1/badges/zircuit-staking.svg",
     "svg": "https://pacta.wtf/badges/zircuit-staking.svg",
     "tier": "parameter_delta"
    },
@@ -17657,7 +17657,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/zora-bridge.svg",
+    "live": "https://api.pacta.wtf/v1/badges/zora-bridge.svg",
     "svg": "https://pacta.wtf/badges/zora-bridge.svg",
     "tier": "rpc_observed"
    },
@@ -17703,7 +17703,7 @@
   {
    "badge": {
     "label": "Observed",
-    "live": "https://pacta-x402.pacta.workers.dev/v1/badges/ztln-p.svg",
+    "live": "https://api.pacta.wtf/v1/badges/ztln-p.svg",
     "svg": "https://pacta.wtf/badges/ztln-p.svg",
     "tier": "rpc_observed"
    },

@@ -17562,7 +17562,7 @@
  ],
  "schema": "pacta.protocol_lookup_catalog.v1",
  "search": {
-  "http": "https://pacta-x402.pacta.workers.dev/v1/protocols/lookup?q=<name, token or 0x address>",
+  "http": "https://api.pacta.wtf/v1/protocols/lookup?q=<name, token or 0x address>",
   "mcp": "pacta_lookup_protocol",
   "note": "Free discovery in every pricing mode; preflightArgs feed pacta_check_preflight directly."
  },

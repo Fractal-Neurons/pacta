@@ -328,7 +328,7 @@ def totals(items):
 
 def catalog_json(items):
     doc = {"schema": CATALOG_SCHEMA, "sources": [BASE + s for s in SOURCES], "totals": totals(items), "items": items,
-           "search": {"http": "https://pacta-x402.pacta.workers.dev/v1/protocols/lookup?q=<name, token or 0x address>",
+           "search": {"http": "https://api.pacta.wtf/v1/protocols/lookup?q=<name, token or 0x address>",
                       "mcp": "pacta_lookup_protocol", "note": "Free discovery in every pricing mode; preflightArgs feed pacta_check_preflight directly."}}
     return json.dumps(doc, indent=1, sort_keys=True, ensure_ascii=False) + "\n"
 
@@ -433,7 +433,7 @@ def write_badges(docs, items):
 # ---- docs/api/v1/protocols.json: one record per /protocols/<slug>/ page with its badge tier, evidence basis and pinned
 # surfaces (block number + hash). The same truthful split as the catalog: 33 eas_attested vs 20 rpc_observed.
 PROTOCOLS_SCHEMA = "pacta.protocols.v1"
-API = "https://pacta-x402.pacta.workers.dev"
+API = "https://api.pacta.wtf"
 REGISTRY = "0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872"
 EAS_BASE = "0x4200000000000000000000000000000000000021"
 EAS_SCHEMA_UID = "0x7ff485bc1159dff3c70eefcb9dff2d65be990301760c2d53799e5a45e3badf83"

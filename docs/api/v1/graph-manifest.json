@@ -14,8 +14,8 @@
  ],
  "sources": {
   "sha256": {
-   "protocols.json": "e8da581936e92e5c88bbd4ad2bca817ab430f246e8799540a7a274eb05985925",
-   "index.json": "0e3504864e5eec7f29c327fbe072e92b9c8be4ea9e90f366d659183caef54b30",
+   "protocols.json": "fe3fff2e9fe73963d5cd8ae2c0eb55e6151b13d459de5cb487de816ab3955dab",
+   "index.json": "44e8a79e8bc725e380bdcfbb512522c0ccd1dee7672ec86b16d198661cd95444",
    "rpc-pinned.json": "108919b7ce46d2c3e09943bbd5dad4344ee375a275c6056f4b391a57ee11a418",
    "graph_dependencies.json": "c32f718b692f497f33bd8e50e300b883ae1ce3316215fb5e2d01f2c235bff4fa",
    "graph_controller_facts.json": "8bf0299b9aaf52211fccdc5ced9e9b60603b877b7942b19c9e0afe82d10a9ddf"
@@ -3543,7 +3543,7 @@
   {
    "id": "pacta-gap-f-x-protocol-v2-router-owner-safe-s29",
    "kind": "control_plane_gap",
-   "text": "Control-plane gap f-x-protocol-v2-router-owner-safe-s29: f(x) Protocol v2 — V2 Router (Diamond) owner: docs put every transaction behind a 3-day timelock; owner() is the 6-of-9 Safe. Observed: f(x) V2 Router 0x3363..C708 (Ethereum, an EIP-2535 Diamond): owner() = Safe 0x26B2..7BbF with getThreshold() = 6 of getOwners() = 9 owners (Safe v1.3.0), no Safe guard; facetAddress(diamondCut 0x1f931c1c) = 0x221f..fA63. The timelock the docs name, 0x6886..E61a, reads getMinDelay() = 259,200 s and is not the Router's owner. Documented: 'Once queued, every transaction enter a mandatory 3-day public timelock before execution giving the community time to review, question, or flag concerns.' (fxprotocol.gitbook.io/fx-docs/more/resources/multisig) Sprint 29, Ethereum block 26448221."
+   "text": "Control-plane gap f-x-protocol-v2-router-owner-safe-s29: f(x) Protocol v2 — V2 Router (Diamond) owner: docs put queued transactions behind a 3-day timelock (oracle updates excepted); owner() is the 6-of-9 Safe. Observed: f(x) V2 Router 0x3363..C708 (Ethereum, an EIP-2535 Diamond): owner() = Safe 0x26B2..7BbF with getThreshold() = 6 of getOwners() = 9 owners (Safe v1.3.0), no Safe guard; facetAddress(diamondCut 0x1f931c1c) = 0x221f..fA63. The timelock the docs name, 0x6886..E61a, reads getMinDelay() = 259,200 s and is not the Router's owner. Documented: 'Once queued, every transaction enter a mandatory 3-day public timelock before execution giving the community time to review, question, or flag concerns.' (fxprotocol.gitbook.io/fx-docs/more/resources/multisig) Sprint 29, Ethereum block 26448221."
   },
   {
    "id": "pacta-gap-fluid-instadapp-vault-factory-auth",
@@ -14093,12 +14093,12 @@
     "target_contract_hex": "33636d49fbefbe798e15e7f356e8dbef543cc708",
     "block_number": 26448221,
     "block_hash_hex": "a7818c0e1b8807aac0c999c2dc9aeeea40b91b4f19b1b76a62ad02d8d17607c8",
-    "surface": "V2 Router (Diamond) owner: docs put every transaction behind a 3-day timelock; owner() is the 6-of-9 Safe",
+    "surface": "V2 Router (Diamond) owner: docs put queued transactions behind a 3-day timelock (oracle updates excepted); owner() is the 6-of-9 Safe",
     "observed_delay_seconds": 0,
     "documented_delay_seconds": 259200,
     "summary_sha256_hex": "ba61b61feb65e1b23d10c998f70bcabce22a8b27203581542ef1cc3b68a4507f"
    },
-   "content_hash": "765681b1354c96bbb9395836af80623cbdd6faa4b0973814c1c80baee68215ab"
+   "content_hash": "9b5997c7c14a627ad8512b23f5caaee413f82f04d005e101b30b76961d7e56d6"
   },
   {
    "edge_key": "exhibits_control_plane_gap:pacta-proto-f-x-protocol-v2->pacta-gap-fx-protocol-v2-treasury-admin",
@@ -41193,5 +41193,5 @@
    "content_hash": "05ef371295b62fdb44d9ca5283d2bb88c8b04b97efbd3cd97341b187a3797141"
   }
  ],
- "manifest_sha256": "b4ca6e2b8758b757deb70f0d936fe4a16f406c602e6652d0af67c9afabe4603e"
+ "manifest_sha256": "a5fc82eaa0101bfaf581847dc8c6053e556523160b9eabe7ea28284f8bb441de"
 }

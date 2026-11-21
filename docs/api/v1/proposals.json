@@ -112,7 +112,7 @@
    "chain": "ethereum",
    "chain_id": 1,
    "control_plane_summary": [
-    "Maple Finance V2 / Syrup — EIP-1967 Proxy Admin Slot vs. GovernorTimelock [parameter_delta, Sprint 6, block 26401540]: EIP-1967 admin slot holds 4-of-7 Maple DAO Safe (0xd6d4Bcde6c816F17889f1Dd3000aF0261B03a196); Globals.governor() (0x804a6F5F667170F545Bf14e5DDB48C70B788390C) points to GovernorTimelock (0x2eFFf88747EB5a3FF00d4d8d0f0800E306C0426b, defaultTimelockParameters() = 259200s / 3d); syrupUSDC (0x80ac24aA929eaF5013f6436cdA2a7ba190f5Cc0b) totalAssets = 898,551,580.57 units (6 dec). Documented: Maple's Governor documentation places PoolPermissionManager implementation changes behind the Governor's delay; GovernorTimelock documentation specifies configurable delays with a 1-day minimum and discloses Security Admin exceptions; Maple's Token Transparency filing on Blockworks, section 3(b), states a 3-day GovernorTimelock for listed governance changes."
+    "Maple Finance V2 / Syrup — EIP-1967 Proxy Admin Slot vs. GovernorTimelock [parameter_delta, batch 6, block 26401540]: EIP-1967 admin slot holds 4-of-7 Maple DAO Safe (0xd6d4Bcde6c816F17889f1Dd3000aF0261B03a196); Globals.governor() (0x804a6F5F667170F545Bf14e5DDB48C70B788390C) points to GovernorTimelock (0x2eFFf88747EB5a3FF00d4d8d0f0800E306C0426b, defaultTimelockParameters() = 259200s / 3d); syrupUSDC (0x80ac24aA929eaF5013f6436cdA2a7ba190f5Cc0b) totalAssets = 898,551,580.57 units (6 dec). Documented: Maple's Governor documentation places PoolPermissionManager implementation changes behind the Governor's delay; GovernorTimelock documentation specifies configurable delays with a 1-day minimum and discloses Security Admin exceptions; Maple's Token Transparency filing on Blockworks, section 3(b), states a 3-day GovernorTimelock for listed governance changes."
    ],
    "forum": "aave",
    "forum_url": "https://governance.aave.com/t/arfc-onboard-syrupusdc-to-aave-v4-on-arc/25721",
@@ -143,7 +143,7 @@
    "chain": "ethereum",
    "chain_id": 1,
    "control_plane_summary": [
-    "Ethena (USDe / sUSDe) — EthenaTimelockController 1d delay — queued RLUSD & USAT collateral onboarding [parameter_delta, Sprint 14, block 26406106]: getMinDelay() = 86400s (1d). Operations 0x1fe5e3e892708310bbfcf50efc03a1b8e21e0d0042035d7e8315e0cd5f26d85b (ETA 1794651635, 2026-11-14 10:20:35 UTC) and 0x0ca0fcc4856b87f3df9a74532bd60db58d1310c27c17e7d9bfa8a56846f57a90 (ETA 1794651743, 2026-11-14 10:22:23 UTC) are pending. Both call EthenaMinting (0xe3490297a08d6fC8Da46Edb7B6142E4F461b62D3).addSupportedAsset (0x7cfbc42f) for RLUSD and USAT as STABLE with 200M / 20M USDe-per-block mint / redeem caps, the same as the USDC / USDT configuration. EthenaMinting.stablesDeltaLimit() = 0. Documented: key-trust-assumptions.md lists 7-day time-locks (see the Sprint 7 record); public brief https://pacta.wtf/briefs/ethena-ops-0x0ca0-0x1fe5/."
+    "Ethena (USDe / sUSDe) — EthenaTimelockController 1d delay — queued RLUSD & USAT collateral onboarding [parameter_delta, batch 14, block 26406106]: getMinDelay() = 86400s (1d). Operations 0x1fe5e3e892708310bbfcf50efc03a1b8e21e0d0042035d7e8315e0cd5f26d85b (ETA 1794651635, 2026-11-14 10:20:35 UTC) and 0x0ca0fcc4856b87f3df9a74532bd60db58d1310c27c17e7d9bfa8a56846f57a90 (ETA 1794651743, 2026-11-14 10:22:23 UTC) are pending. Both call EthenaMinting (0xe3490297a08d6fC8Da46Edb7B6142E4F461b62D3).addSupportedAsset (0x7cfbc42f) for RLUSD and USAT as STABLE with 200M / 20M USDe-per-block mint / redeem caps, the same as the USDC / USDT configuration. EthenaMinting.stablesDeltaLimit() = 0. Documented: key-trust-assumptions.md lists 7-day time-locks (see the Sprint 7 record); public brief https://pacta.wtf/briefs/ethena-ops-0x0ca0-0x1fe5/."
    ],
    "forum": "aave",
    "forum_url": "https://governance.aave.com/t/direct-to-aip-onboard-pt-susde-28jan2027-to-aave-v3-plasma-instance/25902",
@@ -217,7 +217,7 @@
    "chain": "ethereum",
    "chain_id": 1,
    "control_plane_summary": [
-    "Ethena (USDe / sUSDe) — TimelockController MinDelay & Dev Multisig Quorum [parameter_delta, Sprint 7, block 26401638]: getMinDelay() = 86400s (1 day); Dev Multisig (0x3B0AAf6e6fCd4a7cEEf8c92C32DFeA9E64dC1862) getThreshold() = 5, getOwners().length = 10 (5-of-10 Gnosis Safe). Documented: key-trust-assumptions.md lists 7-day time-locks and 7 signatures (key-addresses.md lists 5/11); Risk Committee forum topic 810 (Jul 2026) notes 1-day delay."
+    "Ethena (USDe / sUSDe) — TimelockController MinDelay & Dev Multisig Quorum [parameter_delta, batch 7, block 26401638]: getMinDelay() = 86400s (1 day); Dev Multisig (0x3B0AAf6e6fCd4a7cEEf8c92C32DFeA9E64dC1862) getThreshold() = 5, getOwners().length = 10 (5-of-10 Gnosis Safe). Documented: key-trust-assumptions.md lists 7-day time-locks and 7 signatures (key-addresses.md lists 5/11); Risk Committee forum topic 810 (Jul 2026) notes 1-day delay."
    ],
    "forum": "aave",
    "forum_url": "https://governance.aave.com/t/direct-to-aip-ethena-e-mode-consolidation-on-aave-v3/26304",
@@ -370,8 +370,8 @@
    "chain": "ethereum",
    "chain_id": 1,
    "control_plane_summary": [
-    "Morpho Blue Core — Sampled Singleton Owner & Fee/LLTV Bounds [aligned_baseline, Sprint 3, block 26401070]: Morpho Blue owner() = 0xcBa28b38103307Ec8dA98377ffF9816C164f9AFa and sampled fee/LLTV bounds match documentation at block 26401070. Documented: Morpho Blue core singleton ownership and immutable fee/LLTV bound specification.",
-    "MetaMorpho (Re7 WETH vs. Re7 USDT) — Re7 WETH has no guardian; Re7 USDT has an Aragon guardian — no promise of matching configurations was verified [parameter_delta, Sprint 5, block 26401405]: Re7 WETH owner() = 0xE86399fE6d7007FdEcb08A2ee1434Ee677a04433 (2-of-4 Safe), timelock() = 259200s (3d), guardian() = 0x0000000000000000000000000000000000000000, pendingGuardian() = (0x0, 0); peer Re7 USDT (0x95EeF579155cd2C5510F312c8fA39208c3Be01a8) sets guardian() = 0x2F80ba89362f86a9acC71BFfE5EcF4997F52BDd4 (Aragon Guardian). Documented: Re7 USDT (0x95EeF579155cd2C5510F312c8fA39208c3Be01a8) sets an Aragon guardian; no Re7 documentation promising matching vault configurations was verified, so this is a peer-vault configuration comparison, not a broken documentation promise."
+    "Morpho Blue Core — Sampled Singleton Owner & Fee/LLTV Bounds [aligned_baseline, batch 3, block 26401070]: Morpho Blue owner() = 0xcBa28b38103307Ec8dA98377ffF9816C164f9AFa and sampled fee/LLTV bounds match documentation at block 26401070. Documented: Morpho Blue core singleton ownership and immutable fee/LLTV bound specification.",
+    "MetaMorpho (Re7 WETH vs. Re7 USDT) — Re7 WETH has no guardian; Re7 USDT has an Aragon guardian — no promise of matching configurations was verified [parameter_delta, batch 5, block 26401405]: Re7 WETH owner() = 0xE86399fE6d7007FdEcb08A2ee1434Ee677a04433 (2-of-4 Safe), timelock() = 259200s (3d), guardian() = 0x0000000000000000000000000000000000000000, pendingGuardian() = (0x0, 0); peer Re7 USDT (0x95EeF579155cd2C5510F312c8fA39208c3Be01a8) sets guardian() = 0x2F80ba89362f86a9acC71BFfE5EcF4997F52BDd4 (Aragon Guardian). Documented: Re7 USDT (0x95EeF579155cd2C5510F312c8fA39208c3Be01a8) sets an Aragon guardian; no Re7 documentation promising matching vault configurations was verified, so this is a peer-vault configuration comparison, not a broken documentation promise."
    ],
    "forum": "morpho",
    "forum_url": "https://forum.morpho.org/t/rfc-a-user-centric-defi-collateral-transparency-framework-phase-1/2301",
@@ -407,7 +407,7 @@
    "chain": "ethereum",
    "chain_id": 1,
    "control_plane_summary": [
-    "Spark / Sky — Sampled PoolAddressesProvider Owner & GSM Delay [aligned_baseline, Sprint 7, block 26401638]: GSM_PAUSE_PROXY.delay() = 172800s (48 hours); Spark PoolAddressesProvider (0x02C3eA4e34C0cBd694D2adFa2c690EECbC1793eE) owner() = 0x3300f198988e4C9C63F75dF86De36421f06af8c4 (SPARK_PROXY). Documented: Sky 48-hour Governance Security Module (GSM) delay and Spark SubDAO proxy ownership."
+    "Spark / Sky — Sampled PoolAddressesProvider Owner & GSM Delay [aligned_baseline, batch 7, block 26401638]: GSM_PAUSE_PROXY.delay() = 172800s (48 hours); Spark PoolAddressesProvider (0x02C3eA4e34C0cBd694D2adFa2c690EECbC1793eE) owner() = 0x3300f198988e4C9C63F75dF86De36421f06af8c4 (SPARK_PROXY). Documented: Sky 48-hour Governance Security Module (GSM) delay and Spark SubDAO proxy ownership."
    ],
    "forum": "sky",
    "forum_url": "https://forum.skyeco.com/t/november-19-2026-proposed-changes-to-spark-for-upcoming-spell/28390",

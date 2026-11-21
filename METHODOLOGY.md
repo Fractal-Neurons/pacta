@@ -8,13 +8,13 @@ Production DeFi protocols evolve across proxy upgrades, role migrations, and mul
 - **Role-Based Access Interfaces**: Querying standard OpenZeppelin `AccessControl` (`hasRole`, `getRoleAdmin`), `AccessControlDefaultAdminRules` (`defaultAdminDelay`, `pendingDefaultAdminDelay`), or Solmate `RolesAuthority` (`authority`, `owner`, `getUserRoles`) getters supported by the target contract version.
 - **Multisig & Timelock Parameters**: Reading Gnosis Safe `getThreshold()` and `getOwners()` quorums and `TimelockController` delay getters (`getMinDelay()`, `delay()`, `timelock()`).
 
-## 2. Two-Seat Separation & Evidence Limits
+## 2. Two Independent Checks & Evidence Limits
 
-1. **Scanner Archive Replay (`pacta-claude` / `pacta-gemini`)**:
+1. **Scanner Archive Replay**:
    - Executes read-only `eth_call` and `eth_getStorageAt` queries pinned to an Ethereum Mainnet block height and canonical block hash across `gateway.tenderly.co/public/mainnet` and `rpc.mevblocker.io`.
-2. **Offline Static Verification (`pacta-codex`)**:
+2. **Independent Offline Verification**:
    - Independently checks 4-byte ABI selector derivations, EIP-55 address checksums, standard storage slot constants, decode arithmetic, and quarantine hygiene in an offline environment (without issuing live network RPC calls).
 3. **Observation vs. Policy Inference**:
    - Public records in [`docs/api/v1/index.json`](docs/api/v1/index.json) and `audits/sprint-*` report sampled historical getter/slot observations alongside cited documentation references. Sampled alignment does **not** certify protocol-wide immutability or exhaustive governance coverage, and parameter deltas do **not** imply unprivileged exploitability.
 4. **Exploit-Sensitive Findings Quarantine**:
-   - Callable state-mutation exposures, unrevoked legacy EOA authorities, and target-specific Safe Transaction Builder remediation batches (`grantRole`, `revokeRole`, `scheduleBatch`, `transferOwnership`) are strictly excluded from public commits. Vulnerabilities go through the protocol's Immunefi or Cantina bounty programme, or to a partner audit firm under a 15% referral partnership.
+   - Callable state-mutation exposures, unrevoked legacy EOA authorities, and target-specific Safe Transaction Builder remediation batches (`grantRole`, `revokeRole`, `scheduleBatch`, `transferOwnership`) are strictly excluded from public commits. Vulnerabilities go through the protocol's Immunefi or Cantina bounty programme.

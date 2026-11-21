@@ -6,7 +6,7 @@
  },
  "description": "One canonical grade per published protocol (DELTA / CHANGED RECENTLY / UNRESOLVED / PROTECTIVE / ALIGNED / OBSERVED) and a 5-factor control-plane rosette derived deterministically from Pacta's published records (index.json, rpc-pinned.json) and controller facts. A factor the published evidence does not decide is 'n' (not determined); docs-vs-chain parity is 'u' (uncompared) for every RPC-observed protocol. States: g strong, b moderate, a weak, n not determined, u uncompared.",
  "factorCoverage": {
-  "emergency": 27,
+  "emergency": 21,
   "parity": 176,
   "quorum": 177,
   "timelock": 102,
@@ -117,7 +117,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -304,7 +304,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "40-acres-base-upgradeability-s28: … 0xfF16fd3D147220E6CC002a8e4a1f942ac41DBD23, a Safe 2-of-3.",
@@ -591,7 +591,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "abracadabra-spell-safe-threshold-s30: … 0x5f0DeE98360d8200b20812e174d139A1a633EDd2 (Ethereum): getThreshold() = 5 of getOwners() = 11 owners (Safe v1.3.0); it controls MagicInternetMoneyV1 …",
@@ -683,7 +683,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "across-protocol-hubpool-bond-045-abt-s22: … 0xB524735356985D2f267FA010D681f061DfF03715 (3-of-5, v1.3.0); not a proxy (Sourcify match).",
@@ -779,7 +779,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -869,7 +869,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "aegis-yusd-owner-multisig-s34: … owners.csv lists. The Multisig is a Safe: getThreshold() = 3 of getOwners() = 5; guard slot empty; getModulesPaginated() …",
@@ -1052,7 +1052,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "aerodrome-finance-base-emergency-council-migration-s21: … 0x42255e3C2d0b71a0b006243148fdF1a71d054cE0 (3-of-7, v1.5.0, the same 7 signers as the …",
@@ -1146,7 +1146,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "aerodrome-slipstream-clfactory-team-3of7-s18: … swapFeeManager() = unstakedFeeManager() = 3-of-7 Safe 0xE6A41fE61E7a1996B59d508661e3f524d6A32075; …",
@@ -1236,7 +1236,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "alchemix-v3-safe-threshold-f56d66-s31: … 0xF56D660138815fC5d7a06cd0E1630225E788293D (Ethereum): getThreshold() = 3 of getOwners() = 7 owners (Safe v1.3.0).",
@@ -1326,7 +1326,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -1416,7 +1416,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -1598,7 +1598,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -1782,7 +1782,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -1870,7 +1870,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -1962,7 +1962,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -2242,7 +2242,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "aster-bridge-control-plane: … zero. DEFAULT_ADMIN_ROLE member is Safe 4-of-7 0x1FE3Fe2Ddd19AB58B0c56054a5AF217Afb27eCEA.",
@@ -2337,7 +2337,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -2427,7 +2427,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -2519,7 +2519,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "aura-protocol-multisig-4-of-7-s36: … 0x5feA4413E3Cc5Cf3A29a49dB41ac0c24850417a0, a Safe: getThreshold() = 4 of getOwners() = 7; guard slot empty. Its two enabled …",
@@ -2609,7 +2609,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "autofinance-control-plane: … contract). Direct owner() returns Safe 6-of-11 0x8b4334d4812C530574Bd4F2763FcD22dE94A969B.",
@@ -2703,7 +2703,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "avalon-superearn-control-plane: … controller is in turn controlled by Safe 4-of-5 0xbA7468D7ACcd1Bb2E346a003ab1713C3d8C4Da6d.",
@@ -2796,7 +2796,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "avant-aveth-control-plane: … (non-EIP-1967 contract). Direct owner() returns externally owned account (no code) 0xd4d23209aaE8630bf386b7393763a5b7865e57cb.",
@@ -2981,7 +2981,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -3071,7 +3071,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "balancer-v2-vault-timelock-authorizer-admin-dao-multisig-s21: … 0x10A19e7eE7d7F8a52822f6817de8ea18204F2e4f, a 6-of-11 Safe (v1.1.1, no modules).",
@@ -3166,7 +3166,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "bancor-v3-safe-threshold-7e3692-s31: … 0x7E3692A6D8c34a762079Fa9057AeD87be7e67cb8 (Ethereum): getThreshold() = 5 of getOwners() = 7 owners (Safe v1.1.1).",
@@ -3351,7 +3351,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -3445,7 +3445,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "bedrock-unibtc-secure-mint-precondition-s30: … 0x029E4FbDAa31DE075dD74B2238222A08233978f6, owned by the 3-of-5 Safe 0xC9dA980fFABbE2bbe15d4734FDae5761B86b5Fc3, …",
@@ -3457,13 +3457,13 @@
      "value": "Lowest controlling quorum: 3-of-5"
     },
     {
-     "evidence": "bedrock-unibtc-secure-mint-precondition-s30: separate per-asset caps and collateral-transfer checks in _mint() still apply, and uniBTC.mint() (0x004E9C3EF86bc1ca1f0bB5C7662861Ee93350568) performs no PoR …",
+     "evidence": "bedrock-unibtc-secure-mint-precondition-s30: MANAGER_ROLE (setAdequacyRatio / setPoRFeeder) and PAUSER_ROLE are held by 0x9251fd3D79522bB2243a58FFf1dB43E25A495aaB, an account carrying 23-byte EIP-7702 …",
      "evidenceCaption": "Secure Mint precondition: adequacyRatio() 900 (existing supply x 0.9 vs reserves) — Ethereum block #26,449,594",
      "evidenceRecordId": "bedrock-unibtc-secure-mint-precondition-s30",
      "key": "emergency",
      "label": "Emergency / freeze scope",
-     "state": "g",
-     "value": "Pause / freeze authority scoped behind a multi-signer controller (3-of-5)"
+     "state": "n",
+     "value": "PAUSER_ROLE held by 0x9251…5aaB (EIP-7702 delegated account; delegation authority not in the published records)"
     },
     {
      "evidence": null,
@@ -3497,7 +3497,7 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "Bedrock (uniBTC) control-strength graphic: Upgradeability not determined; Timelock floor not determined; Signer quorum strong; Emergency / freeze scope strong; Docs-vs-chain parity weak",
+   "rosetteAria": "Bedrock (uniBTC) control-strength graphic: Upgradeability not determined; Timelock floor not determined; Signer quorum strong; Emergency / freeze scope not determined; Docs-vs-chain parity weak",
    "search": "bedrock (unibtc) bedrock-unibtc liquid restaking bitcoin vault and token (unibtc) with a proof-of-reserve mint check bedrock(unibtc) 0x004e9c3ef86bc1ca1f0bb5c7662861ee93350568 0x029e4fbdaa31de075dd74b2238222a08233978f6 0x047d41f2544b7f63a8e991af2068a363d210d6da 0x9251fd3d79522bb2243a58fff1db43e25a495aab 0xc590d9fb8ee78a0909dff341ccf717000b7b7ff2 0xc9da980ffabbe2bbe15d4734fdae5761b86b5fc3 0xe542919e4b281f10b437f947c8ba224ddfabc716",
    "slug": "bedrock-unibtc",
    "summary_short": "uniBTC mints test 90% of existing supply vs reserves; docs say short reserves revert",
@@ -3831,7 +3831,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "bio-token-mint-role-safe-no-new-contract-s32: … 0xd9C6Ee1547Fd6d48F8872dD866473893Bbe8A1Ab, a 5-of-11 Safe, and 0x1783E7d1F498321D7E15044d769621E1beDc7F4C, …",
@@ -4026,7 +4026,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "blast-pre-launch-farm-control-plane: … slot zero. Direct owner() returns Safe 5-of-5 0x67CA7Ca75b69711cfd48B44eC3F64E469BaF608C.",
@@ -4118,7 +4118,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "blur-bids-control-plane: … contract). Direct owner() returns Safe 5-of-5 0x6e596823A8c9c48Eb6Fa4aB2208F34B97453A327.",
@@ -4212,7 +4212,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "bmx-freestyle-control-plane: … controller is in turn controlled by Safe 3-of-7 0x5146C35725d9b8F11A84ebD4a3abe9845698Ada9.",
@@ -4302,7 +4302,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -4777,7 +4777,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "chamber-vaults-control-plane: … The EIP-1967 admin slot holds Safe 3-of-5 0x5a76f841bFe5182f04bf511fC0Ecf88C27189FCB.",
@@ -4869,13 +4869,13 @@
      "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
     },
     {
-     "evidence": "cian-yield-layer-allocation-no-timelock-s31: … 0x0CBee811C47C3A5cb4637f1E58d98B0Abbb4c54f (delay() = 86,400 s, admin() = 0x261090afE1E7305474F4e3eEFCAca9964eBffFf5), …",
+     "evidence": "cian-yield-layer-allocation-no-timelock-s31: The TimeLock its contract table lists, 0x0CBee811C47C3A5cb4637f1E58d98B0Abbb4c54f (delay() = 86,400 s, admin() = 0x261090afE1E7305474F4e3eEFCAca9964eBffFf5) …",
      "evidenceCaption": "Fund allocation setters: owner is a 3-of-4 Safe, the documented TimeLock is not in the path — Ethereum block #26,450,616",
      "evidenceRecordId": "cian-yield-layer-allocation-no-timelock-s31",
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "b",
-     "value": "1d minimum enforced delay on sampled timelocked surfaces"
+     "state": "a",
+     "value": "No timelock in the sampled ownership path (3-of-4 Safe direct; listed 1d TimeLock not wired)"
     },
     {
      "evidence": "cian-yield-layer-allocation-no-timelock-s31: … 0x261090afE1E7305474F4e3eEFCAca9964eBffFf5, a 3-of-4 Safe; the vault's ProxyAdmin 0xf24955E9D0a05222373d4555f8831f7A05e83F62 …",
@@ -4925,7 +4925,7 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "CIAN Yield Layer control-strength graphic: Upgradeability not determined; Timelock floor moderate; Signer quorum strong; Emergency / freeze scope not determined; Docs-vs-chain parity weak",
+   "rosetteAria": "CIAN Yield Layer control-strength graphic: Upgradeability not determined; Timelock floor weak; Signer quorum strong; Emergency / freeze scope not determined; Docs-vs-chain parity weak",
    "search": "cian yield layer cian-yield-layer leveraged staking vault (recursive eth) (ethereum) ylsteth 0x0cbee811c47c3a5cb4637f1e58d98b0abbb4c54f 0x261090afe1e7305474f4e3eefcaca9964ebffff5 0xa1dc0b6a02ab091580dc57bdd5fe8a9e577e0842 0xb13aa2d0345b0439b064f26b82d8dcf3f508775d 0xf24955e9d0a05222373d4555f8831f7a05e83f62",
    "slug": "cian-yield-layer",
    "summary_short": "CIAN's stETH vault settings change via a Safe directly; the docs say they are time-locked",
@@ -5162,7 +5162,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "clipper-control-plane: … contract). Direct owner() returns Safe 3-of-9 0xD8Cc0304de58fCE5147796606Db14500d94b5EF2.",
@@ -5254,7 +5254,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "coinbase-wrapped-staked-eth-oracle-exchange-rate-updater-s21: … (Sourcify exact match), whose owner() is an externally owned account 0xA57aFe0Ba93f6854ed1DCd58dCE301E10B15D1D6.",
@@ -5541,7 +5541,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "concentrator-control-plane: … contract). Direct admin() returns Safe 6-of-9 0xA0FB1b11ccA5871fb0225B64308e249B97804E99.",
@@ -5635,7 +5635,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "controller fact: Safe getThreshold()",
@@ -5728,7 +5728,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "convergence-fi-control-plane: … controller is in turn controlled by Safe 3-of-6 0x0af815364BD9e9E60f3d2D3bAc1320B77d3E35F7.",
@@ -5818,7 +5818,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "convex-booster-governance-chain: … 0x256e1bbA846611C37CF89844a02435E6C098b86D -> 3-of-5 DAO Multisig (0xa3C5A1e09150B75ff251c1a7815A07182c3de2FB) …",
@@ -5908,7 +5908,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "cooler-loans-safe-threshold-s26: … 0x245cc372C84B3645Bf0Ffe6538620B04a217988B (Ethereum): getThreshold() = 4 of getOwners() = 8 owners (Safe v1.3.0).",
@@ -6001,7 +6001,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -6091,7 +6091,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "cronos-zkevm-bridge-control-plane: … zero. DEFAULT_ADMIN_ROLE member is externally owned account (no code) 0x65b5cFaad25c39063A248684DA546cAB1Cc46cf5.",
@@ -6183,7 +6183,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "curve-dex-ethereum-safe-threshold-s26: … 0x467947EE34aF926cF1DCac093870f613C96B1E0c (Ethereum): getThreshold() = 5 of getOwners() = 9 owners (Safe v1.3.0).",
@@ -6277,7 +6277,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "curve-crvusd-factory-lending-owner-proxy: … 0xE478de485ad2fe566d49342Cbd03E49ed7DB3356) and emergency_dao() = 5-of-9 EmergencyDAO Safe (0x467947EE34aF926cF1DCac093870f613C96B1E0c); …",
@@ -6369,7 +6369,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "cvault-core-no-new-tokens-s33: … one at construction. The owner (an externally owned account) can still set the transfer …",
@@ -6459,7 +6459,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "d2-finance-control-plane: … contract). Direct owner() returns Safe 2-of-3 0xBB856548bCD0EBa1749c2336244139F1dbE93498.",
@@ -6549,7 +6549,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -6732,7 +6732,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "defi-saver-adminvault-owner-safe-s28: … 0xBc841B0dE0b93205e912CFBBd1D0c160A1ec6F00 (Ethereum) with getThreshold() = 3 of getOwners() = 6 owners (Safe v1.3.0).",
@@ -6825,7 +6825,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "defil-control-plane: … controller is in turn controlled by externally owned account (no code) 0x557EdaaFD875569F0bd6AbaE1185c17fD5A30Ba0.",
@@ -6917,7 +6917,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -7005,7 +7005,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -7095,7 +7095,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -7183,7 +7183,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "dexfi-aggregator-control-plane: … contract). Direct owner() returns Safe 2-of-3 0x76e1736ea8Cda4d0Ed4923B8E119586716C5725f.",
@@ -7276,7 +7276,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "diem-relay-safe-threshold-s28: … 0x01Ea790410D9863A57771D992D2A72ea326DD7C9 (Base): getThreshold() = 2 of getOwners() = 2 owners (Safe v1.4.1).",
@@ -7368,7 +7368,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -7458,7 +7458,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "dolomite-safe-threshold-a75c21-s31: … 0xa75c21C5BE284122a87A37a76cc6C4DD3E55a1D4 (Ethereum): getThreshold() = 2 of getOwners() = 3 owners (Safe v1.4.1).",
@@ -7551,7 +7551,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -7639,7 +7639,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -7817,7 +7817,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -7905,7 +7905,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "eclipse-bridge-safe-threshold-s27: … 0x7B2c1CbB33c53c3C6a695e36096AD2cfCE1c0efC (Ethereum): getThreshold() = 3 of getOwners() = 5 owners (Safe v1.3.0); it controls ERC1967Proxy …",
@@ -7997,7 +7997,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -8187,7 +8187,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "eigenpie-control-plane: … controller is in turn controlled by Safe 3-of-7 0xf433c2A2D6FACeCDd9Edd7B8cE9cEaaB96F41866.",
@@ -8279,7 +8279,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "ekubo-core-immutable-starknet-owner-s32: … 0x053499f7aa2706395060fe72d00388803fb2dcc111429891ad7b2d9dcea29acd (the Ekubo DAO Governor on Starknet), l2MessageBridge() = 0xc662c410C0ECf747543f5bA90660f6ABeBD9C8c4; …",
@@ -8291,13 +8291,11 @@
      "value": "DAO Governor (token vote)"
     },
     {
-     "evidence": "ekubo-core-immutable-starknet-owner-s32: it executes only calls consumed as L2 messages from that Governor. The docs mark the V2 EVM deployment deprecated.",
-     "evidenceCaption": "Core: not a proxy; owner() is the StarknetOwnerProxy driven by the Starknet Governor — Ethereum block #26,451,608",
-     "evidenceRecordId": "ekubo-core-immutable-starknet-owner-s32",
+     "evidence": null,
      "key": "emergency",
      "label": "Emergency / freeze scope",
      "state": "n",
-     "value": "Pause / freeze authority present; its holder is not determined"
+     "value": "No pause / freeze authority in the published records"
     },
     {
      "evidence": null,
@@ -8374,7 +8372,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "elfomofi-control-plane: … contract). Direct owner() returns Safe 3-of-5 0x1a0554f4832a0901709b9C13BBE459f72f7b9ACb.",
@@ -8646,7 +8644,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "eth-strategy-safe-threshold-s27: … 0xC53CCed6332D06972A7eaEDc64FDF6d4aF5220b8 (Ethereum): getThreshold() = 3 of getOwners() = 5 owners (Safe v1.4.1).",
@@ -9125,13 +9123,13 @@
      "value": "Lowest controlling quorum: 2-of-3"
     },
     {
-     "evidence": "euler-v2-evk-factorygovernor-4d-timelock-s18: its only DEFAULT_ADMIN_ROLE member is TimelockController 0xfb034c1C6c7F42171b2d1Cb8486E0f43ED07A968 (getMinDelay() = 345600s, 4d; PROPOSER_ROLE: 4-of-8 Safe …",
+     "evidence": "euler-v2-evk-factorygovernor-4d-timelock-s18: PAUSE_GUARDIAN_ROLE has 3 members (2-of-6 Safe 0xB1345E7A4D35FB3E6bF22A32B3741Ae74E5Fba27, 0xff217004BdD3A6A592162380dc0E6BbF143291eB …",
      "evidenceCaption": "EVK factory upgradeAdmin = FactoryGovernor behind a 4d TimelockController (DAO 4-of-8 proposes) — Ethereum block #26,421,541",
      "evidenceRecordId": "euler-v2-evk-factorygovernor-4d-timelock-s18",
      "key": "emergency",
      "label": "Emergency / freeze scope",
-     "state": "g",
-     "value": "Pause / freeze authority scoped behind a multi-signer controller (2-of-3)"
+     "state": "n",
+     "value": "PAUSE_GUARDIAN_ROLE held by 3 addresses (one 2-of-6 Safe; 2 other role members not resolved in the published records)"
     },
     {
      "evidence": null,
@@ -9165,7 +9163,7 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "Euler V2 (EVK) control-strength graphic: Upgradeability not determined; Timelock floor strong; Signer quorum moderate; Emergency / freeze scope strong; Docs-vs-chain parity strong",
+   "rosetteAria": "Euler V2 (EVK) control-strength graphic: Upgradeability not determined; Timelock floor strong; Signer quorum moderate; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
    "search": "euler v2 (evk) euler-v2-evk modular lending vault kit eul evk evc 0x0c9a3dd6b8f28529d72d7f9ce918d493519ee383 0x29a56a1b8214d9cf7c5561811750d5cbdb45cc8e 0x2f13256e04022d6356d8ce8c53c7364e13dc1f3d 0xb1345e7a4d35fb3e6bf22a32b3741ae74e5fba27 0xb3b84e8320250afe7a5fb313ee32b52982b73c53 0xcad001c30e96765ac90307669d578219d4fb1dce 0xcc6451385685721778e7bd80b54f8c92b484f601 0xfb034c1c6c7f42171b2d1cb8486e0f43ed07a968 0xff217004bdd3a6a592162380dc0e6bbf143291eb",
    "slug": "euler-v2-evk",
    "summary_short": "Factory upgrades wait 4 days in a timelock (DAO 4-of-8 proposes), as documented",
@@ -9301,7 +9299,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -9376,7 +9374,7 @@
     "observed": "f(x) V2 Router 0x33636D49FbefBE798e15e7F356E8DBef543CC708 (Ethereum, an EIP-2535 Diamond): owner() = Safe 0x26B2ec4E02ebe2F54583af25b647b1D619e67BbF with getThreshold() = 6 of getOwners() = 9 owners (Safe v1.3.0), no Safe guard; facetAddress(diamondCut 0x1f931c1c) = 0x221ffB180AD01213FF882ab7DE9c75E23F9efA63. The timelock the docs name, 0x68863fb8855b04509a835082478D6E3D0bE4E61a, reads getMinDelay() = 259,200 s and is not the Router's owner.",
     "recordId": "f-x-protocol-v2-router-owner-safe-s29",
     "sprint": 29,
-    "surface": "V2 Router (Diamond) owner: docs put every transaction behind a 3-day timelock; owner() is the 6-of-9 Safe",
+    "surface": "V2 Router (Diamond) owner: docs put queued transactions behind a 3-day timelock (oracle updates excepted); owner() is the 6-of-9 Safe",
     "target": "0x33636D49FbefBE798e15e7F356E8DBef543CC708"
    },
    "factors": [
@@ -9388,8 +9386,8 @@
      "value": "Upgrade path not in the published records"
     },
     {
-     "evidence": "f-x-protocol-v2-router-owner-safe-s29: observed_delay_seconds = 0",
-     "evidenceCaption": "V2 Router (Diamond) owner: docs put every transaction behind a 3-day timelock; owner() is the 6-of-9 Safe — Ethereum block #26,448,221",
+     "evidence": "f-x-protocol-v2-router-owner-safe-s29: The timelock the docs name, 0x68863fb8855b04509a835082478D6E3D0bE4E61a, reads getMinDelay() = 259,200 s and is not the Router's owner.",
+     "evidenceCaption": "V2 Router (Diamond) owner: docs put queued transactions behind a 3-day timelock (oracle updates excepted); owner() is the 6-of-9 Safe — Ethereum block #26,448,221",
      "evidenceRecordId": "f-x-protocol-v2-router-owner-safe-s29",
      "key": "timelock",
      "label": "Timelock floor",
@@ -9487,7 +9485,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "fake-world-assets-v2-control-plane: … (non-EIP-1967 contract). Direct owner() returns externally owned account (no code) 0x019817aD02a31B990433542097bE29D97613E8Cb.",
@@ -9579,7 +9577,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "falcon-susdf-zero-cooldown-instant-unstake-s17: … 0x16a2605C026BFe4f4B7f4471933714D9b2149AcE) both return owner() = 4-of-6 Safe 0x1E482B60bf19Cb1cc859389e0eA3DED153f16Bd7.",
@@ -9671,7 +9669,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -9847,7 +9845,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -9935,7 +9933,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "flokifi-locker-control-plane: … (non-EIP-1967 contract). Direct owner() returns externally owned account (no code) 0x000000000000000000000000000000000000dEaD.",
@@ -10028,7 +10026,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -10121,7 +10119,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "controller fact: Safe getThreshold()",
@@ -10211,7 +10209,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -10492,7 +10490,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -10584,7 +10582,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -10771,7 +10769,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -10865,7 +10863,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "glif-control-plane: … slot zero. Direct owner() returns Safe 3-of-6 0x5CC0FC29C893Bba884D3E073997C97Bf776dA9F3.",
@@ -10958,7 +10956,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "goldfinch-safe-threshold-s30: … 0xBEb28978B2c755155f20fd3d09Cb37e300A6981f (Ethereum): getThreshold() = 6 of getOwners() = 12 owners (Safe v1.1.1).",
@@ -11048,7 +11046,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "gondi-v3-control-plane: … (non-EIP-1967 contract). Direct owner() returns externally owned account (no code) 0xE9c9Ef882f534a21d74b084845348044d03aca85.",
@@ -11138,7 +11136,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "gravity-by-galxe-bridge-safe-threshold-s27: … 0xbD6e434dB90FD8AD4E28d85C133AD34cA6fbfB6D (Ethereum): getThreshold() = 3 of getOwners() = 6 owners (Safe v1.3.0).",
@@ -11231,7 +11229,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "gro-control-plane: … contract). Direct owner() returns Safe 3-of-7 0x359F4fe841f246a095a82cb26F5819E10a91fe0d.",
@@ -11323,7 +11321,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "grove-finance-freezer-safe-2of5-s21: … 0xB0113804960345fd0a245788b3423319c86940e5) = true; that Safe is 2-of-5 (v1.4.1, no modules).",
@@ -11418,7 +11416,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -11506,7 +11504,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "hakka-multisig-undocumented-signer-s34: … Safe, the address the page gives): getThreshold() = 2 of getOwners() = 4; guard slot empty; getModulesPaginated() …",
@@ -11599,7 +11597,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -11687,7 +11685,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "hashport-diamond-cut-owner-safe-s32: … 0x10AB2d9C085c816f43ccB0FB1b27d024224E36f1, a 5-of-9 Safe.",
@@ -11777,7 +11775,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -11960,7 +11958,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -12050,7 +12048,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "iaero-protocol-safe-threshold-44d817-s30: … 0x1039CB48254a3150fC604d4B9ea08F66f4739D37 (Base): getThreshold() = 3 of getOwners() = 4 owners (Safe v1.4.1); it controls StakedIAERO …",
@@ -12140,7 +12138,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -12228,7 +12226,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -12427,13 +12425,11 @@
      "value": "Lowest controlling quorum: 3-of-5"
     },
     {
-     "evidence": "inception-vault-upgrades-timelock-3d-s32: inLBTCVault_S 0xD496417a50DB34279631e0aF459493Cf9685F529 (implementation 0xb83ad67814BeD3478BB4239a5961391d836fCe4d): ProxyAdmin …",
-     "evidenceCaption": "Vault upgrades: ProxyAdmins owned by InceptionTimeLock, getMinDelay() 259,200 s — Ethereum block #26,451,608",
-     "evidenceRecordId": "inception-vault-upgrades-timelock-3d-s32",
+     "evidence": null,
      "key": "emergency",
      "label": "Emergency / freeze scope",
-     "state": "g",
-     "value": "Pause / freeze authority scoped behind a multi-signer controller (3-of-5)"
+     "state": "n",
+     "value": "No pause / freeze authority in the published records"
     },
     {
      "evidence": null,
@@ -12467,7 +12463,7 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "InceptionLRT (Isolated Restaking) control-strength graphic: Upgradeability not determined; Timelock floor strong; Signer quorum strong; Emergency / freeze scope strong; Docs-vs-chain parity strong",
+   "rosetteAria": "InceptionLRT (Isolated Restaking) control-strength graphic: Upgradeability not determined; Timelock floor strong; Signer quorum strong; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
    "search": "inceptionlrt (isolated restaking) inceptionlrt-isolated-restaking isolated liquid restaking vaults over eigenlayer (ethereum) inceptionlrt 0x177bff0ad93b8132012f05081a10a0e574fa5f97 0x650bd9dee50e3ee15cbb49749ff6abcf55a8fb1e 0x814cc6b8fd2555845541fb843f37418b05977d8d 0x8e6c8799b542e507bfddca1a424867e885d96e79 0x9bb0f64c5a5e9120f55cde6b15683ff11abc0ed4 0xb81e55e7ee6b286af6abfea4efad83f7ba4d1f1e 0xb83ad67814bed3478bb4239a5961391d836fce4d 0xd496417a50db34279631e0af459493cf9685f529",
    "slug": "inceptionlrt-isolated-restaking",
    "summary_short": "Inception vault upgrades go through its TimelockController (3-day delay), as documented",
@@ -12509,7 +12505,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -12596,11 +12592,13 @@
      "value": "Upgrade path not in the published records"
     },
     {
-     "evidence": "controller fact: getMinDelay() = 604800s",
+     "evidence": "infinifi-long-timelock-7d-s20: Long Timelock 0x3D18…48a9 getMinDelay() = 604,800 s (7d); Short Timelock 0x4B17…7c32 getMinDelay() = 86,400 s (1d)",
+     "evidenceCaption": "Long governance timelock delay: 7 days (Short timelock: 1 day) — Ethereum block #26,425,374",
+     "evidenceRecordId": "infinifi-long-timelock-7d-s20",
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "g",
-     "value": "7d minimum enforced delay on sampled timelocked surfaces"
+     "state": "b",
+     "value": "Long governance timelock: 7d; Short timelock: 1d (per-surface wiring unverified)"
     },
     {
      "evidence": "controller fact: Safe getThreshold()",
@@ -12652,7 +12650,7 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 4,
-   "rosetteAria": "infiniFi control-strength graphic: Upgradeability not determined; Timelock floor strong; Signer quorum strong; Emergency / freeze scope strong; Docs-vs-chain parity not determined",
+   "rosetteAria": "infiniFi control-strength graphic: Upgradeability not determined; Timelock floor moderate; Signer quorum strong; Emergency / freeze scope strong; Docs-vs-chain parity not determined",
    "scopeNote": "At Ethereum block 26,425,374, MINOR_ROLES_MANAGER administered PAUSE and UNPAUSE, with the Team Multisig and Long Timelock as members; the retained roles-page excerpt names GOVERNOR, but the current page could not be retrieved, so this comparison does not establish a current document breach or a bypass of all governance.",
    "search": "infinifi infinifi yield-bearing stablecoin iusd siusd liusd 0x3d18480cc32b6ab3b833dcabd80e76cfd41c48a9 0x4b174afbed7b98ba01f50e36109eee5e6d327c32 0x579b18e60d0245c0f66fa9463610b15e226ae8fd 0x80608f852d152024c0a2087b16939235fec2400c 0xee529a21cea25efdf527e85bb4c597603e14ccfc 0xf6d48735eccf12bdc1df2674b1ce3fcb3bd25490",
    "slug": "infinifi",
@@ -12693,7 +12691,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -12980,7 +12978,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -13160,7 +13158,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -13253,7 +13251,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "k3-capital-control-plane: … controller is in turn controlled by Safe 2-of-3 0x5721ce64Ee0D772Ce613b62D411350091C544cD0.",
@@ -13343,7 +13341,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "katana-admin-multisig-3-of-5-s37: … Admin multisig address, next to the 3-of-5 statement): a Safe, getThreshold() …",
@@ -13527,7 +13525,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -13620,7 +13618,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -13711,7 +13709,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "controller fact: Safe getThreshold()",
@@ -13799,7 +13797,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "kuma-protocol-safe-threshold-s27: … 0xB5502747AABDCa21E832951b4caaF739dA33f450 (Ethereum): getThreshold() = 4 of getOwners() = 7 owners (Safe v1.3.0).",
@@ -13891,7 +13889,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -14076,7 +14074,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "landx-finance-control-plane: … contract). Direct owner() returns Safe 2-of-3 0xf44Bc45368Fb7f6ffC74C5545326Aa0F068b6d4c.",
@@ -14168,7 +14166,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -14258,7 +14256,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -14348,7 +14346,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "ledgity-yield-control-plane: … contract). Direct owner() returns Safe 2-of-3 0x30Fa557608017afB6E8e4ABe8027787C00473FF0.",
@@ -14438,7 +14436,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "legion-control-plane: … controller is in turn controlled by Safe 2-of-3 0x17C61f4a7f41b96eb9c0D8805255b8411387c63b.",
@@ -14530,7 +14528,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "lendflare-control-plane: … 0xc413AcBb126fa228d7E3d1943bA506b507C91aF7. The EIP-1967 admin slot holds externally owned account (no code) 0xc413AcBb126fa228d7E3d1943bA506b507C91aF7.",
@@ -14714,7 +14712,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -14820,7 +14818,7 @@
      "value": "Lowest controlling quorum: 2-of-3"
     },
     {
-     "evidence": "liquid-collective-lseth-admin-multisig-4of7-s19: the Firewall executor Safe 0xDE55C9dc78f985fE1502484Cb98EBfAB66A56B62 (2-of-3) may call pause() but not unpause() or upgradeTo(address). Implementation RiverV1 …",
+     "evidence": "liquid-collective-lseth-admin-multisig-4of7-s19: the Firewall executor Safe 0xDE55C9dc78f985fE1502484Cb98EBfAB66A56B62 (2-of-3) may call pause() but not unpause() or upgradeTo(address)",
      "evidenceCaption": "River (LsETH) upgrade and admin Firewalls are administered by 4-of-7 Safes — Ethereum block #26,422,243",
      "evidenceRecordId": "liquid-collective-lseth-admin-multisig-4of7-s19",
      "key": "emergency",
@@ -14904,7 +14902,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -14996,7 +14994,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -15271,7 +15269,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -15363,7 +15361,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -15641,7 +15639,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "maple-v2-syrup-ppm-admin: EIP-1967 admin slot holds 4-of-7 Maple DAO Safe (0xd6d4Bcde6c816F17889f1Dd3000aF0261B03a196); …",
@@ -15734,7 +15732,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "mcdex-safe-threshold-s28: … 0x38ca50c6E3391A5bf73c2504bd9Cd9c0b9D89053 (Ethereum): getThreshold() = 4 of getOwners() = 8 owners (Safe v1.1.1); it controls AdminUpgradeabilityProxy …",
@@ -15922,7 +15920,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "meta-pool-eth-proxy-admin-dao-safe-s30: … 0x24D9664Ba8384D94499d6698ab285b69E879D971, a 3-of-6 Safe: the contract list names both …",
@@ -16033,8 +16031,8 @@
      "evidenceRecordId": "metamorpho-re7-weth-guardian-parity",
      "key": "emergency",
      "label": "Emergency / freeze scope",
-     "state": "g",
-     "value": "Pause / freeze authority scoped behind a multi-signer controller (2-of-4)"
+     "state": "n",
+     "value": "Re7 WETH has no guardian set (0x0); Re7 USDT assigns an Aragon guardian"
     },
     {
      "evidence": null,
@@ -16068,7 +16066,7 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "MetaMorpho (Re7 WETH vs. Re7 USDT) control-strength graphic: Upgradeability not determined; Timelock floor strong; Signer quorum moderate; Emergency / freeze scope strong; Docs-vs-chain parity not determined",
+   "rosetteAria": "MetaMorpho (Re7 WETH vs. Re7 USDT) control-strength graphic: Upgradeability not determined; Timelock floor strong; Signer quorum moderate; Emergency / freeze scope not determined; Docs-vs-chain parity not determined",
    "scopeNote": "At Ethereum block 26,401,405 MetaMorpho Re7 WETH sets guardian() to the zero address under a 2-of-4 owner Safe and 3-day timelock, whereas peer vault Re7 USDT configures an Aragon guardian; Morpho's vault architecture explicitly supports vaults without a guardian and no Re7 documentation promising matching guardian configurations was verified.",
    "search": "metamorpho (re7 weth vs. re7 usdt) metamorpho-re7-weth-vs-re7-usdt curated lending vaults re7weth re7usdt metamorpho 0x0000000000000000000000000000000000000000 0x2f80ba89362f86a9acc71bffe5ecf4997f52bdd4 0x78fc2c2ed1a4cdb5402365934ae5648adad094d0 0x95eef579155cd2c5510f312c8fa39208c3be01a8 0xe86399fe6d7007fdecb08a2ee1434ee677a04433",
    "slug": "metamorpho-re7-weth-vs-re7-usdt",
@@ -16110,7 +16108,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -16294,7 +16292,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "metronome-synth-control-plane: … contract). Direct owner() returns Safe 3-of-5 0xd1DE3F9CD4AE2F23DA941a67cA4C739f8dD9Af33.",
@@ -16483,7 +16481,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -16763,7 +16761,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "controller fact: Safe getThreshold()",
@@ -16853,7 +16851,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -16943,7 +16941,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -17031,7 +17029,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -17119,7 +17117,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "nami-control-plane: … contract). Direct owner() returns Safe 4-of-7 0x892081a87803B32559afC0Ad7b28a39E657fD844.",
@@ -17211,7 +17209,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "native-credit-pool-control-plane: … controller is in turn controlled by Safe 3-of-5 0x83fc28e6962E41e38F7854308eFF827E3f6b906B.",
@@ -17315,13 +17313,13 @@
      "value": "Lowest controlling quorum: 3-of-5"
     },
     {
-     "evidence": "nexus-mutual-governor-24h-timelock-s18: isEmergencyAdmin() is true for 6 EOAs (the 5 Advisory Board seat holders and 0x6fe2c2643cb5064951fb7dd87fbce4777fb146e3), and a pause needs one admin to propose …",
+     "evidence": "nexus-mutual-governor-24h-timelock-s18: Pause: getPauseConfig() = 0",
      "evidenceCaption": "Governor: 3 Advisory Board votes + 24h timelock; Registry upgrades every module — Ethereum block #26,421,541",
      "evidenceRecordId": "nexus-mutual-governor-24h-timelock-s18",
      "key": "emergency",
      "label": "Emergency / freeze scope",
-     "state": "g",
-     "value": "Pause / freeze authority scoped behind a multi-signer controller (3-of-5)"
+     "state": "n",
+     "value": "Pause / freeze authority present; its holder is not determined"
     },
     {
      "evidence": null,
@@ -17355,7 +17353,7 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "Nexus Mutual control-strength graphic: Upgradeability not determined; Timelock floor moderate; Signer quorum strong; Emergency / freeze scope strong; Docs-vs-chain parity strong",
+   "rosetteAria": "Nexus Mutual control-strength graphic: Upgradeability not determined; Timelock floor moderate; Signer quorum strong; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
    "search": "nexus mutual nexus-mutual discretionary mutual / cover nxm wnxm nexus mutual 0x01bfd82675dbcc7762c84019ca518e701c0cd07e 0x4a5c681ddc32acc6cca51ac17e9d461e6be87900 0x51ad1265c8702c9e96ea61fe4088c2e22ed4418e 0x6fe2c2643cb5064951fb7dd87fbce4777fb146e3 0xcafea2c575550512582090aa06d0a069e7236b9e 0xcafea466bf6defe480cdd54056c020c63b7da830 0xcafea6063d4ec6b045d9676e58897c1f0882ca32",
    "slug": "nexus-mutual",
    "summary_short": "Governance needs 3 Advisory Board votes plus a 24-hour timelock, as documented",
@@ -17397,7 +17395,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -17676,7 +17674,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "nucleus-control-plane: … contract). Direct owner() returns Safe 3-of-5 0x0000000000417626Ef34D62C4DC189b021603f2F.",
@@ -17952,7 +17950,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "odyssey-finance-governor-safe-2-of-4-vs-3-of-5-s37: … read for this record is that one Safe: getThreshold() = 2 of getOwners() = 4; guard slot empty; getModulesPaginated() …",
@@ -18232,7 +18230,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -18322,7 +18320,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "origami-finance-control-plane: … contract). Direct owner() returns Safe 2-of-4 0x781B4c57100738095222bd92D37B07ed034AB696.",
@@ -18505,7 +18503,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -18593,7 +18591,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "overtime-control-plane: … (non-EIP-1967 contract). Direct owner() returns externally owned account (no code) 0x4dA7493C2CE2BEce36e75AaDdF39D5c041B6d468.",
@@ -18683,7 +18681,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "pancakeswap-amm-v3-control-plane: … controller is in turn controlled by Safe 3-of-7 0x21835332cBDf1b3530fAE9f6Cd66FEB9477dFC02.",
@@ -18775,7 +18773,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -18865,7 +18863,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -18958,7 +18956,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -19148,7 +19146,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -19334,13 +19332,13 @@
      "value": "Immutable or ownership renounced"
     },
     {
-     "evidence": "pickle-masterchef-owner-safe-no-timelock-s32: … 0x0040E05CE9A5fc9C0aBF89889f7b60c2fC278416 (delay() = 86,400 s, admin() = the same Safe), does not …",
+     "evidence": "pickle-masterchef-owner-safe-no-timelock-s32: The 24-hour Timelock the page links, 0x0040E05CE9A5fc9C0aBF89889f7b60c2fC278416 (delay() = 86,400 s, admin() = the same Safe), does not own MasterChef.",
      "evidenceCaption": "MasterChef admin: owner is a 2-of-6 Safe, the documented 24 h timelock is not in the path — Ethereum block #26,451,608",
      "evidenceRecordId": "pickle-masterchef-owner-safe-no-timelock-s32",
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "b",
-     "value": "1d minimum enforced delay on sampled timelocked surfaces"
+     "state": "a",
+     "value": "No timelock in the sampled MasterChef path (2-of-6 Safe direct; listed 24h Timelock does not own MasterChef)"
     },
     {
      "evidence": "pickle-masterchef-owner-safe-no-timelock-s32: … 0x9d074E37d408542FD38be78848e8814AFB38db17, a 2-of-6 Safe (the page calls it a 2/5 multisig). …",
@@ -19390,7 +19388,7 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "Pickle control-strength graphic: Upgradeability strong; Timelock floor moderate; Signer quorum moderate; Emergency / freeze scope not determined; Docs-vs-chain parity weak",
+   "rosetteAria": "Pickle control-strength graphic: Upgradeability strong; Timelock floor weak; Signer quorum moderate; Emergency / freeze scope not determined; Docs-vs-chain parity weak",
    "search": "pickle pickle auto-compounding lp yield aggregator with dill staking (ethereum) pickle 0x0040e05ce9a5fc9c0abf89889f7b60c2fc278416 0x429881672b9ae42b8eba0e26cd9c73711b891ca5 0x9d074e37d408542fd38be78848e8814afb38db17 0xbd17b1ce622d73bd438b9e658aca5996dc394b0d",
    "slug": "pickle",
    "summary_short": "Pickle's MasterChef admin functions run from a Safe directly; docs: a 24-hour timelock",
@@ -19435,7 +19433,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -19525,7 +19523,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -19614,7 +19612,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "controller fact: Safe getThreshold()",
@@ -19704,7 +19702,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -19794,7 +19792,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -19977,7 +19975,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "punks-terminal-control-plane: … controller is in turn controlled by externally owned account (no code) 0x83Ea85356358411Ce320e1909Cc75DBd216d6182.",
@@ -20069,7 +20067,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "quickswap-v4-control-plane: … contract). Direct owner() returns Safe 3-of-5 0xDA1077c4b0dd6da1BDF166F30aa4BDbF517d637b.",
@@ -20161,7 +20159,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -20346,7 +20344,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -20436,7 +20434,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "renzo-ezeth-deposit-queue-fee: … (0xD1e6626310fD54Eceb5b9a51dA2eC329D6D4B68A) is 3-of-5 Gnosis Safe; ezETH (0xbf5495Efe5DB9ce00f80364C8B423567e58d2110) …",
@@ -20527,7 +20525,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -20813,7 +20811,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -20901,7 +20899,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -21180,7 +21178,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -21270,7 +21268,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -21360,7 +21358,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -21448,7 +21446,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -21631,7 +21629,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "seamless-community-guardian-safe-2-of-3-s35: … address the smart-contracts page lists): getThreshold() = 2 of getOwners() = 3; guard slot empty; getModulesPaginated() …",
@@ -21648,8 +21646,8 @@
      "evidenceRecordId": "seamless-community-guardian-safe-2-of-3-s35",
      "key": "emergency",
      "label": "Emergency / freeze scope",
-     "state": "g",
-     "value": "Pause / freeze authority scoped behind a multi-signer controller (2-of-3)"
+     "state": "n",
+     "value": "2-of-3 Safe holds timelock CANCELLER_ROLE; pause / freeze binding not in the published records"
     },
     {
      "evidence": null,
@@ -21683,7 +21681,7 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "Seamless Protocol (Base) control-strength graphic: Upgradeability not determined; Timelock floor not determined; Signer quorum moderate; Emergency / freeze scope strong; Docs-vs-chain parity not determined",
+   "rosetteAria": "Seamless Protocol (Base) control-strength graphic: Upgradeability not determined; Timelock floor not determined; Signer quorum moderate; Emergency / freeze scope not determined; Docs-vs-chain parity not determined",
    "scopeNote": "At Base block 59,847,352, the Community Guardian Safe required 2 of 3 owners and held the short governance timelock cancellation role; the retained documentation describes 3-of-6, but the current guardian page could not be verified, so a current document breach is not established.",
    "search": "seamless protocol (base) seamless-protocol-base base lending & integrated liquidity seam 0x639d2dd24304ac2e6a691d8c1cff4a2665925fee 0xa1b5f2cc9b407177cd8a4acf1699fa0b99955a22",
    "slug": "seamless-protocol-base",
@@ -21726,7 +21724,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "shift-defi-safe-threshold-4cc8d4-s30: … 0x4cC8D45644eCCD8cA77DBF3A8E3eE2dBf4596983 (Ethereum): getThreshold() = 2 of getOwners() = 6 owners (Safe v1.4.1).",
@@ -21818,7 +21816,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "sierra-protocol-control-plane: … (non-EIP-1967 contract). Direct admin() returns externally owned account (no code) 0xbd0Ca95C5A104E14E60d0868667AF174D146C9FD.",
@@ -21912,7 +21910,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "smardex-usdn-control-plane: … slot zero. Direct owner() returns Safe 2-of-3 0x1E3e1128F6bC2264a19D7a065982696d356879c5.",
@@ -22004,7 +22002,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -22281,7 +22279,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "sonic-gateway-fail-safe-200-days-s31: … 0x9Fe65a5418850015a9D8ad3Ca50d6a0B9769FbE0, a 3-of-4 Safe, so the period can be changed …",
@@ -22376,7 +22374,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -22564,7 +22562,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -22656,7 +22654,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -22748,7 +22746,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "ssv-network-dao-multisig-owns-network-s21: … 0xb35096b074fdb9bBac63E3AdaE0Bbde512B2E6b6, a 5-of-9 Safe (v1.3.0, no modules); pendingOwner() …",
@@ -22843,7 +22841,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -23028,7 +23026,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -23309,7 +23307,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -23399,7 +23397,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "stakewise-v3-oseth-safe-threshold-s26: … 0x144a98cb1CdBb23610501fE6108858D9B7D24934 (Ethereum): getThreshold() = 4 of getOwners() = 7 owners (Safe v1.3.0).",
@@ -23489,7 +23487,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "stargate-v2-onesig-5of7-owner-planner-fees-s18: … 0xe37f7c80ceD04c4F243C0Fd04A5510D663CB88b5 (an EOA) = TokenMessaging.planner() = FeeLibV1USDC …",
@@ -23579,7 +23577,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -23875,7 +23873,7 @@
      "value": "Lowest controlling quorum: a single key"
     },
     {
-     "evidence": "steakhouse-usdc-base-timelock-7d-s17: totalAssets() = 102,512,832.83 USDC. Context, not compared with documentation: guardian() = 0x9e0FdDDa790651E6a05CD2dE69e624B94C04eAf5 has no contract code …",
+     "evidence": "steakhouse-usdc-base-timelock-7d-s17: Context, not compared with documentation: guardian() = 0x9e0FdDDa790651E6a05CD2dE69e624B94C04eAf5 has no contract code (eth_getCode = 0x on Base and on Ethereum …",
      "evidenceCaption": "MetaMorpho timelock() = 7d (604800s) — Base block #57,635,450",
      "evidenceRecordId": "steakhouse-usdc-base-timelock-7d-s17",
      "key": "emergency",
@@ -23957,7 +23955,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "steer-protocol-control-plane: … controller is in turn controlled by Safe 2-of-5 0x570cE31D1309bb145DD3736B48c7328cc13f7e85.",
@@ -24049,7 +24047,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "strata-markets-safe-threshold-s28: … 0x4be3749a0F6557b8fd98F3967e859DbD7C694eF4 (Ethereum): getThreshold() = 2 of getOwners() = 3 owners (Safe v1.4.1).",
@@ -24236,7 +24234,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "supernova-cl-control-plane: … contract). Direct owner() returns Safe 4-of-8 0xB73494c3FB46Bf5cFC08f32A704fa180110d9226.",
@@ -24328,7 +24326,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -24420,7 +24418,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "sushiswap-v3-factory-operations-multisig-s35: … the official SDK lists. That Safe: getThreshold() = 3 of getOwners() = 5; guard slot empty; getModulesPaginated() …",
@@ -24606,7 +24604,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -24696,7 +24694,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "symbiotic-core-immutable-registries-and-safes: … (0x00...00); VaultFactory.owner() = 2-of-3 Gnosis Safe (0x5721ce64Ee0D772Ce613b62D411350091C544cD0); …",
@@ -24788,7 +24786,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "synapse-cross-chain-bridge-control-plane: … contract). DEFAULT_ADMIN_ROLE member is Safe 2-of-3 0x67F60b0891EBD842Ebe55E4CCcA1098d7Aac1A55.",
@@ -24882,7 +24880,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -24970,7 +24968,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "synthetix-v3-core-oracle-owner-s24: … 0xEb3107117FEAd7de89Cd14D463D340A2E6917769 (4-of-7); nominatedOwner() = 0x0.",
@@ -25065,7 +25063,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "syntropia-control-plane: … controller is in turn controlled by externally owned account (no code) 0x3daB62f33E7032bD33C532808092D033887EB456.",
@@ -25157,7 +25155,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -25248,7 +25246,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "tangent-admin-safe-owns-core-s34: … contracts page). The Admin is a Safe: getThreshold() = 3 of getOwners() = 5; guard slot empty; getModulesPaginated() …",
@@ -25342,7 +25340,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "team-finance-control-plane: … The EIP-1967 admin slot holds Safe 2-of-4 0x088a012BF6d510aa923c814eA83807f75F7061A0.",
@@ -25434,7 +25432,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "tether-usdt-token-live-blacklist-under-owner-s23: … pause and deprecate are onlyOwner (the 3-of-6 MultiSigWallet 0xC6CDE7C39eB2f0F0095F41570af89eFC2C1Ea828; …",
@@ -25530,7 +25528,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -25801,7 +25799,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "tokenworks-control-plane: … (non-EIP-1967 contract). Direct owner() returns externally owned account (no code) 0x019817aD02a31B990433542097bE29D97613E8Cb.",
@@ -25989,7 +25987,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -26180,7 +26178,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -26273,7 +26271,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -26453,7 +26451,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "uncx-network-v2-control-plane: … (non-EIP-1967 contract). Direct owner() returns externally owned account (no code) 0x60e2E1b2a317EdfC870b6Fc6886F69083FB2099a.",
@@ -26732,7 +26730,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "unitus-control-plane: … controller is in turn controlled by Safe 3-of-5 0xd6F77422cF2825Cfa241CeaDD85d905D38255e58.",
@@ -26822,7 +26820,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -27012,7 +27010,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "usdt0-control-plane: … controller is in turn controlled by Safe 3-of-5 0x4DFF9b5b0143E642a3F63a5bcf2d1C328e600bf8.",
@@ -27200,7 +27198,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -27291,7 +27289,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "vesper-v1-governor-safe-s28: … 0x9520b477Aa81180E6DdC006Fc09Fb6d3eb4e807A (Ethereum): getThreshold() = 3 of getOwners() = 6 owners (Safe v1.3.0); governor() of …",
@@ -27386,7 +27384,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -27474,7 +27472,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -27566,7 +27564,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -27657,7 +27655,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "wildcat-protocol-control-plane: … contract). Direct owner() returns Safe 3-of-5 0xC15bE5214978d1fc509ECdd4f9D5BC067C94D9Ae.",
@@ -27749,7 +27747,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "wintermute-confidential-wbtc-ethereum-safe-threshold-3d5ecc-s28: … 0x4687E45bB5518a995913a24BB2816fe2031d74D8 (Ethereum): getThreshold() = 3 of getOwners() = 6 owners (Safe v1.4.1); it controls VaultV2 …",
@@ -27841,7 +27839,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -27931,7 +27929,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "world-chain-bridge-control-plane: … controller is in turn controlled by Safe 3-of-6 0xA4fB12D15Eb85dc9284a7df0AdBC8B696EdbbF1d.",
@@ -28026,7 +28024,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -28120,7 +28118,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "gnosis-bridge-governor-safe-8-of-15-s34: … Safe, the address the page gives): getThreshold() = 8 of getOwners() = 15; guard slot empty; getModulesPaginated() …",
@@ -28215,7 +28213,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "xsy-control-plane: … slot zero. Direct owner() returns Safe 3-of-4 0xB237EB3c71a0f351BD121b0C467248473fbC2ccA.",
@@ -28426,7 +28424,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -28611,7 +28609,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "yieldnest-safe-threshold-df51b7-s26: … 0xDF51B7843817F76220C0970eF58Ba726630028eF (Ethereum): getThreshold() = 2 of getOwners() = 4 owners (Safe v1.3.0).",
@@ -28894,7 +28892,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -28985,7 +28983,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "zerobase-cedefi-control-plane: … contract). Direct owner() returns Safe 2-of-3 0xa14f20130E9a0a27D580FD30FD4bbF035a492AB2.",
@@ -29076,7 +29074,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": "zircuit-staking-safe-threshold-s28: … 0xC463EaC02572CC964D43D2414023E2c6B62bAF38 (Ethereum): getThreshold() = 4 of getOwners() = 6 owners (Safe v1.3.0).",
@@ -29168,7 +29166,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,
@@ -29260,7 +29258,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "n",
-     "value": "Admin delay not extracted in structured record"
+     "value": "No enforced admin delay in the published records"
     },
     {
      "evidence": null,

@@ -31,30 +31,38 @@ import onboarding_render as OR  # noqa: E402
 BASE = "https://pacta.wtf"
 REGISTRY = "0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872"
 EAS_SCHEMA = "0x7ff485bc1159dff3c70eefcb9dff2d65be990301760c2d53799e5a45e3badf83"
-PAY_TO = "0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09"            # attester EOA pacta.base.eth, owner-approved x402 payTo
+PAY_TO = "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14"            # Pacta treasury: payTo of every /v1/x402/* route and the $0.01 overflow (live Worker 0b30d80c routePayTo)
+TREASURY_PAY = PAY_TO
 TREASURY = "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14"          # Pacta Treasury (an EOA; never call it a Safe)
 USDC_BASE = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"
-X402_URL = "https://pacta-x402.pacta.workers.dev"              # canonical live x402 edge Worker (Cloudflare; owner-deployed)
+X402_URL = "https://api.pacta.wtf"              # canonical live x402 edge Worker (Cloudflare; owner-deployed)
 X402_FREE = ["/health", "/.well-known/x402", "/v1/sample/control-plane"]
 MCP_REMOTE_URL = X402_URL + "/mcp"                               # remote MCP (Streamable HTTP), zero install
 OPENAPI_URL = X402_URL + "/openapi.json"
-PRICING_MODE = "free_launch"                                     # live Worker default: $0, no key, no wallet; x402 behind a switch
+PRICING_MODE = "free_read"                                       # catalogue, feeds, lookups, scans and MCP read tools: $0, no key, no wallet
+METERED_MODE = "metered_50_per_day_then_x402_0.01"                # /v1/check/preflight + /v1/check/wallet-exposure (REST and MCP)
+PAID_MODE = "x402_paid"                                           # the five /v1/x402/* routes ($0.02 to $9.00 USDC on Base)
+METERED_PATHS = ("/v1/check/preflight", "/v1/check/wallet-exposure")
+METERED_TOOLS = ("pacta_check_preflight", "pacta_scan_wallet_exposure")
+PRICING_MODES = {"reads": PRICING_MODE, "/v1/check/preflight": METERED_MODE, "/v1/check/wallet-exposure": METERED_MODE, "/v1/x402/*": PAID_MODE}
 RATE_LIMIT_PER_MIN = 60
 REMOTE_READ_ONLY_TOOLS = ["pacta_lookup_protocol", "pacta_check_preflight", "pacta_scan_wallet_exposure", "pacta_scan_control_plane", "pacta_scan_timelock_op", "pacta_scan_proposal_diff", "pacta_get_live_timelocks"]
 REQUEST_TOOL = "pacta_submit_request"                              # the one opt-in write tool (remote + stdio): queue / upvote a request
 REMOTE_TOOLS = REMOTE_READ_ONLY_TOOLS + [REQUEST_TOOL]
-REQUESTS_URL = "https://pacta-x402.pacta.workers.dev/v1/requests"
+REQUESTS_URL = "https://api.pacta.wtf/v1/requests"
 REMOTE_TOOLS_DOC = "7 read-only inspection tools + 1 opt-in coverage/feature request tool (pacta_submit_request)"
 STDIO_TOOLS_DOC = "11 read-only inspection tools + 1 opt-in request tool"
 BRAND = "Pacta by Fractal Neurons (https://pacta.wtf · pacta.base.eth)"
 # Brand / RAG disambiguation (receipt/1817): never call this project by the two-word name of the dormant escrow project.
-DISAMBIGUATION = ("Disambiguation: Pacta by Fractal Neurons (https://pacta.wtf, pacta.base.eth, io.github.Fractal-Neurons/pacta) is the EVM DeFi "
+DISAMBIGUATION = ("Disambiguation: Pacta, by Fractal Neurons (https://pacta.wtf, pacta.base.eth, io.github.Fractal-Neurons/pacta) is the EVM DeFi "
                   "control-plane, Safe multisig, and timelock verification registry — unrelated to pactaprotocol.org (commercial escrow) or RMI PACTA "
                   "(climate assessment).")
 BOUNTIES_URL = "https://pacta.wtf/bounties/"
-BOUNTIES_DOC = ("Bounties ($100): Pacta Chain-Feed Mismatch Challenge, 4 × $25 USDC = $100 USDC hard cap, 7-day sprint Nov 15 – Nov 22, 2026: "
-                "a verified on-chain control-plane parameter_delta on an unindexed protocol, or live drift on an indexed one, submitted as a PR to "
-                "Fractal-Neurons/pacta. Paid in USDC on Base Mainnet after maintainer merge (not pre-escrowed): " + BOUNTIES_URL)
+BOUNTIES_DOC = ("Bounties Wave 4 (OPEN through Sunday 29 November 2026, 23:59 UTC): issue #158 Observed Catalogue, 24 awards of $1.00 USDC; "
+                "issue #159 Control-Plane Watch, 10 awards of $2.00 USDC; issue #161 Documents Changed, 5 awards of $2.00 USDC; each paid on Base "
+                "within 48 hours of the merged, checked entry. Paid-call rule: every entry needs one settled x402 call on https://api.pacta.wtf "
+                "($0.02 POST /v1/x402/verdict for #158 and #159, $0.05 POST /v1/x402/dossier for #161; helper tools/pacta_x402_call.py) and "
+                "its Base USDC payment_tx_hash; the call fee is never returned: " + BOUNTIES_URL + "#wave-4")
 _W2 = _json_file(os.path.join(os.path.dirname(os.path.abspath(__file__)), "bounty_wave2.json"))
 _W3 = _json_file(os.path.join(os.path.dirname(os.path.abspath(__file__)), "bounty_wave3.json"))
 _W2_TVL = {k: f"${v['minTvlUsd'] // 1_000_000}M" for k, v in _W2["categories"].items() if v["minTvlUsd"]}
@@ -63,10 +71,10 @@ COMMUNITY_URL, COMMUNITY_QA_URL = _W3["communityUrl"], _W3["communityQaUrl"]
 COMMUNITY_DOC = (f"Community hub (GitHub Discussions): announcements and builder / bounty Q&A at {COMMUNITY_URL}; questions about targets, "
                  f"dossiers or the MCP tools go to the Q&A thread {COMMUNITY_QA_URL}. Historical Wave 2 issue: {_W2['wave2IssueUrl']}")
 _W3C = _W3["closeout"]
-WAVE3_DOC = (f"Bounties Wave 3 (CLOSED, in settlement since {_W3C['closedOn']}): {_W3['program']}; "
+WAVE3_DOC = (f"Bounties Wave 3 (CLOSED): {_W3['program']}. Wave 3 closed 20 Nov 2026: $70.00 USDC paid on Base across 8 verified dossiers (3 × $20.00 USDC + 5 × $2.00 USDC: 3 honoraria + 2 sign-offs); up to 2 more $2.00 USDC sign-offs remain open until 22 Nov 2026 20:50 UTC. "
              f"{len(_W3C['awards'])} × ${_W3C['awards'][0]['usdc']} USDC awarded (" + ", ".join(f"#{a['pr']} {a['protocol']}" for a in _W3C["awards"]) + "), "
              f"{len(_W3C['honoraria'])} × ${_W3C['honoraria'][0]['usdc']} USDC honoraria (" + ", ".join(f"#{h['pr']} {h['protocol']}" for h in _W3C["honoraria"]) + "), "
-             f"up to {len(_W3C['signoff']['prs'])} × ${_W3C['signoff']['usdc']} USDC on a human sign-off within {_W3C['signoff']['windowHours']} hours; "
+             f"sign-offs paid on #{', #'.join(str(p['pr']) for p in _W3C['signoff']['paid'])}; "
              f"payments count as paid only with a public Base transaction; no new submissions: {BOUNTIES_URL}#wave-3")
 WAVE2_DOC = (f"Bounties Wave 2 (Completed & Retired Archive): {_W2['program']}, retired after Epoch {_W2['currentEpoch']} ({_W2['activeEpochSlots']} × ${_W2['rewardUsdc']} USDC "
              f"= ${_W2['activeEpochCapUsdc']} USDC settled on Base; active human-researcher bounties moved to Wave 3): {BOUNTIES_URL}#wave-2")
@@ -77,19 +85,19 @@ UA_DOC = ('HTTP clients: curl and python-requests work with their default User-A
 REQUEST_DOC = ("Opt-in demand intake: when a result carries coverage_gap_hint (lookup miss, unindexed or unclassified pre-flight target, unsupported chain), "
                "ask the user, then call pacta_submit_request (or POST " + REQUESTS_URL + ") with request_type "
                "(missing_protocol | unsupported_chain | missing_check_surface | doc_or_data_discrepancy | mcp_or_api_feature), target_subject, "
-               "requested_capability and urgency_track (community_queue_free | active_due_diligence | issuer_24h_clearance_5k | api_high_volume_sla), plus optional caller_agent / requester_role / caller_purpose. "
+               "requested_capability and urgency_track (community_queue_free | active_due_diligence | issuer_24h_clearance_5k (issuer clearance, by arrangement) | api_high_volume_sla), plus optional caller_agent / requester_role / caller_purpose. "
                "It returns request_id (REQ-2026-xxxxxxxx), status (queued | upvoted_existing), demand_votes and fast_track_url; an identical request "
                "upvotes the existing one. Free in every pricing mode, 5 per hour; never opens a GitHub issue. contact_handle only when the user "
                "explicitly asks for follow-up or an invoice: it is stored privately and never published.")
 # Copy-paste MCP recipes (receipt/1818): Claude Code, OpenAI Agents SDK, LangChain (each <= 10 lines).
 MCP_RECIPES = [
-    ("Claude Code", "bash", "claude mcp add --transport http pacta https://pacta-x402.pacta.workers.dev/mcp"),
+    ("Claude Code", "bash", "claude mcp add --transport http pacta https://api.pacta.wtf/mcp"),
     ("OpenAI Agents SDK (Python)", "python", "\n".join([
         "from agents import Agent, Runner",
         "from agents.mcp import MCPServerStreamableHttp",
         "",
         "async def main():",
-        "    async with MCPServerStreamableHttp(params={\"url\": \"https://pacta-x402.pacta.workers.dev/mcp\"}) as pacta:",
+        "    async with MCPServerStreamableHttp(params={\"url\": \"https://api.pacta.wtf/mcp\"}) as pacta:",
         "        agent = Agent(name=\"risk-agent\", mcp_servers=[pacta],",
         "                      instructions=\"Call pacta_lookup_protocol, then pacta_check_preflight, before any deposit.\")",
         "        print((await Runner.run(agent, \"Is it safe to deposit into Ethena sUSDe?\")).final_output)"])),
@@ -98,14 +106,16 @@ MCP_RECIPES = [
         "from langgraph.prebuilt import create_react_agent",
         "",
         "async def main(model):",
-        "    client = MultiServerMCPClient({\"pacta\": {\"url\": \"https://pacta-x402.pacta.workers.dev/mcp\", \"transport\": \"streamable_http\"}})",
+        "    client = MultiServerMCPClient({\"pacta\": {\"url\": \"https://api.pacta.wtf/mcp\", \"transport\": \"streamable_http\"}})",
         "    agent = create_react_agent(model, await client.get_tools())",
         "    out = await agent.ainvoke({\"messages\": \"Who can upgrade the Ethena timelock, and how fast?\"})",
         "    print(out[\"messages\"][-1].content)"])),
 ]
 STDIO_FROM_SOURCE = "node packages/mcp-server/bin/pacta-mcp.mjs"  # from a clone of the repository (npm publication pending)
-FREE_LAUNCH_NOTE = (f"Free launch: every route answers HTTP 200 at $0 with no API key and no wallet ({RATE_LIMIT_PER_MIN} requests / minute per caller). "
-                    "The x402 prices below apply only if the operator switches pricingMode to x402_paid.")
+FREE_LAUNCH_NOTE = (f"No API key. Paid today: only the five /v1/x402/* routes ($0.02 to $9.00 USDC on Base, paid to the Pacta Treasury EOA {PAY_TO}; "
+                    "x402 v1 X-PAYMENT or v2 PAYMENT-SIGNATURE). /v1/check/preflight and /v1/check/wallet-exposure are free for 50 calls per caller "
+                    "per UTC day, then $0.01 USDC per call via x402 to the same treasury. Every other route (protocol lookup, control-plane, timelock-op "
+                    f"and proposal-diff scans, live-timelocks briefs, samples and the remote MCP read tools) is free at $0.00 ({RATE_LIMIT_PER_MIN} requests / minute per caller).")
 X402_NETWORK_V2 = "eip155:8453"                                  # CAIP-2 Base mainnet (x402 v2); v1 uses "base"
 X402_MAX_TIMEOUT_S = 60                                          # live Worker MAX_TIMEOUT_S (v1 and v2 requirements)
 JSON_SCHEMA_2020_12 = "https://json-schema.org/draft/2020-12/schema"
@@ -126,21 +136,20 @@ X402_RECEIPT_NOTE = ("A settled call returns 200 with both PAYMENT-RESPONSE and 
 X402_GATEWAY_GUARD = {
     "onchainReceiptVerification": True, "appliesTo": "x402_paid settlements only", "chainId": 8453, "rpcMethod": "eth_getTransactionReceipt",
     "requires": "receipt status 0x1 and canonical USDC (Base) Transfer(payer -> payTo) logs summing to at least the route price",
-    "asset": USDC_BASE, "payTo": PAY_TO, "replay": ("best-effort replay rejection: synchronous same-isolate in-flight + FIFO (4,096) sets block same-isolate "
-               "concurrent/serial replays, and non-atomic eventually-consistent KV used_tx:<txHash> (30-day TTL) blocks "
-               "post-propagation serial cross-isolate replays (402 replay_settlement_tx); concurrent cross-isolate races before "
-               "KV write/propagation are not globally atomic without Durable Objects"),
+    "asset": USDC_BASE, "payTo": PAY_TO, "replay": ("every credited Base USDC transfer is owned by one PactaLedgerDO Durable Object (tx:<txHash>, "
+               "SQLite-backed, single-threaded), so a settlement transaction is credited once; any other claim on it is refused "
+               "(402 replay_settlement_tx / 409 tx_already_used)"),
     "failures": {"402": ["unconfirmed_or_reverted_settlement_tx", "insufficient_onchain_usdc_transfer", "replay_settlement_tx"],
                  "502": ["settlement_rpc_unavailable"]}}
-X402_GATEWAY_GUARD_NOTE = (f"In x402_paid mode the gateway verifies every settlement on Base before releasing the product: eth_getTransactionReceipt "
+X402_GATEWAY_GUARD_NOTE = (f"The gateway verifies every paid settlement on Base before releasing the product: eth_getTransactionReceipt "
                            f"must show status 0x1 and canonical USDC Transfer(payer -> payTo {PAY_TO}) logs summing to at least the route price, "
-                           "and replays are rejected on a best-effort basis (402 replay_settlement_tx) via synchronous same-isolate state and "
-                           "non-atomic eventually-consistent KV used_tx:<txHash>; concurrent cross-isolate races are not globally atomic "
-                           "without Durable Objects. Otherwise the product is withheld: "
+                           "and each credited transaction is owned by one PactaLedgerDO Durable Object (tx:<txHash>), so it is never credited "
+                           "twice (402 replay_settlement_tx). Otherwise the product is withheld: "
                            "402 unconfirmed_or_reverted_settlement_tx / insufficient_onchain_usdc_transfer, or 502 settlement_rpc_unavailable "
                            "when no Base RPC answers.")
-TREASURY_USE = ("Pacta treasury (direct settlement EOA): Option B direct on-chain USDC settlement of commercial issuer clearance "
-                "(Option A is a formal commercial invoice). An externally owned account, not a smart-contract wallet; not the x402 payTo.")
+TREASURY_USE = ("Pacta treasury (an externally owned account, not a smart-contract wallet): the payTo of every /v1/x402/* route and of the "
+                "$0.01 overflow, the $9 Full Wallet & Safe Exposure Report checkout (https://pacta.wtf/scan/#checkout), and Option B direct "
+                "on-chain settlement of engagements by arrangement (Option A is a formal commercial invoice).")
 MCP_NAME = "io.github.Fractal-Neurons/pacta"
 MCP_PACKAGE = "@pacta/mcp-server"
 MCP_VERSION = "0.1.5"
@@ -235,7 +244,7 @@ def proposals(idx, onb):
         assert len(chains) == 1, (x["records"], chains)                 # a cross-reference stays on one chain
         pin = max(recs, key=lambda e: e["block_number"])
         chain = chains.pop()
-        summ = [f'{e["protocol"]} — {e["surface"]} [{e["classification"]}, Sprint {e["sprint"]}, block {e["block_number"]}]: {e["onchain_observed"]} '
+        summ = [f'{e["protocol"]} — {e["surface"]} [{e["classification"]}, batch {e["sprint"]}, block {e["block_number"]}]: {e["onchain_observed"]} '
                 f'Documented: {e["documented_reference"]}' for e in recs]
         out.append({"proposal_id": f'{x["forum"]}-{x["topic_id"]}', "forum": x["forum"], "topic_id": x["topic_id"], "title": x["title"],
                     "forum_url": x["forum_url"], "relation": x["relation"], "chain": chain, "chain_id": {"ethereum": 1, "base": 8453}[chain],
@@ -265,7 +274,7 @@ def _catalog_counts():
 CAT = _catalog_counts()
 FEEDS = [("/api/v1/index.json", "Block-pinned control-plane index (every record: target, call, block, block hash, classification, Base EAS UID)"),
          ("/api/v1/lookup.json", f"Protocol / token lookup catalog: {CAT['protocols']} protocols + {CAT['briefs']} briefs with slug, aliases, checksummed contracts, evidence basis and preflightArgs"),
-         ("/api/v1/protocols.json", f"Every published protocol: badge tier + URLs, evidence basis ({CAT['eas']} EAS-attested / {CAT['rpc']} RPC-observed), Sprint ids, EAS UIDs, controller, pinned surfaces"),
+         ("/api/v1/protocols.json", f"Every published protocol: badge tier + URLs, evidence basis ({CAT['eas']} EAS-attested / {CAT['rpc']} RPC-observed), batch attestation IDs, EAS UIDs, controller, pinned surfaces"),
          ("/api/v1/onboarding.json", "Onboarding verification scans: every check with call, calldata, raw result, decoded value; role maps"),
          ("/api/v1/proposals.json", "Live governance proposals (Aave, Euler, Morpho, Sky) mapped to block-pinned observations"),
          ("/api/v1/radar.json", "Queued timelock operations with on-chain ETAs at a finalized block"),
@@ -280,7 +289,7 @@ LOOKUP_DOC = (f"Name lookup first: if you only have a protocol or token name (e.
               f"Catalog: {BASE}/api/v1/lookup.json.")
 MCP_TOOLS = [("pacta_lookup_protocol", "free", "Resolve a protocol or token name, symbol, slug or 0x address to its verified record and preflightArgs {chain, address} (query, chain, kind, limit; no RPC)"),
              ("pacta_list_commitments", "free", "Filter indexed records (protocol, classification, sprint, limit)"),
-             ("pacta_get_anchoring", "free", "Base EAS anchoring: PactaCommitmentRegistry, schema, sprint attestation UIDs"),
+             ("pacta_get_anchoring", "free", "Base EAS anchoring: PactaCommitmentRegistry, schema, batch attestation UIDs"),
              ("pacta_list_proposals", "free", "Governance proposals feed (forum, topic_id, chain, limit, include_repro)"),
              ("pacta_x402_discover", "free", "x402 gateway status and discovery manifest (only when PACTA_X402_URL is set)"),
              ("pacta_check_preflight", "x402 $0.01", "Pre-execution check of a contract: verdict, 0-100 risk score, proxy / admin / timelock, capabilities (chain, address, block)"),
@@ -310,8 +319,8 @@ def protocols_line(idx, pinned):
     """The single protocol count sentence (homepage ledger, llms.txt, llms-full.txt): EAS-attested + RPC-pinned = indexed."""
     eas = len({e["protocol"] for e in idx["entries"]})
     rpc = len({e["protocol"] for e in (pinned or {}).get("entries", [])})
-    return (f"{eas + rpc} indexed protocols: {eas} Base-EAS-attested protocols ({idx['summary_metrics']['records_indexed']} Sprint records across "
-            f"{idx['summary_metrics']['sprints_completed']} Sprints) + {rpc} RPC-pinned protocols (not EAS-attested).")
+    return (f"{eas + rpc} indexed protocols: {eas} Base-EAS-attested protocols ({idx['summary_metrics']['records_indexed']} attested checks across "
+            f"{idx['summary_metrics']['sprints_completed']} Base EAS batch attestations) + {rpc} RPC-pinned protocols (not EAS-attested).")
 
 
 def llms_full(idx, radar, prop, onb, pinned=None):
@@ -352,10 +361,10 @@ def llms_full(idx, radar, prop, onb, pinned=None):
          f"- Paid tools are disabled unless PACTA_X402_URL is set (opt-in: PACTA_X402_URL={X402_URL}); the client refuses any 402 challenge (v1 body or v2 "
          "PAYMENT-REQUIRED header) whose payTo, asset or network differ from the values below, or whose amount exceeds $1.00 by default. Pay with "
          "xPaymentHeader (x402 v1) or paymentSignatureHeader (x402 v2).", "",
-         "## x402 micropayments (optional; only for live scans of unindexed contracts)",
-         f"- Network: Base (chain id 8453) · scheme exact · asset USDC {USDC_BASE} · payTo {PAY_TO} (attester EOA, pacta.base.eth).",
+         "## x402 micropayments (Base USDC: the five /v1/x402/* routes, and preflight / wallet-exposure calls over the free daily tier)",
+         f"- Network: Base (chain id 8453) · scheme exact · asset USDC {USDC_BASE} · payTo {PAY_TO} (Pacta treasury).",
          f"- Pacta Treasury: {TREASURY} (an externally owned account; the PactaCommitmentRegistry treasury slot). {TREASURY_USE}",
-         f"- Live gateway: {X402_URL} (Cloudflare Worker; pricingMode {PRICING_MODE}; x402Versions [1, 2]; PayAI facilitator; maxTimeoutSeconds {X402_MAX_TIMEOUT_S}).",
+         f"- Live gateway: {X402_URL} (Cloudflare Worker; x402Versions [1, 2]; PayAI facilitator; maxTimeoutSeconds {X402_MAX_TIMEOUT_S}).",
          f"- {FREE_LAUNCH_NOTE}",
          "- x402 v1: network base · amount field maxAmountRequired · challenge in the 402 JSON body · pay with X-PAYMENT · receipt X-PAYMENT-RESPONSE.",
          f"- x402 v2: network {X402_NETWORK_V2} · amount field amount · challenge in the PAYMENT-REQUIRED header (base64 JSON) · pay with PAYMENT-SIGNATURE · "
@@ -368,7 +377,7 @@ def llms_full(idx, radar, prop, onb, pinned=None):
          "## On-chain anchoring (Base, chain id 8453)",
          f"- PactaCommitmentRegistry {REGISTRY} (Sourcify verified); attester pacta.base.eth {a['attester_eoa']}.",
          f"- EAS schema {EAS_SCHEMA}: uint16 sprintId,uint64 chainId,uint64 blockNumber,bytes32 blockHash,uint8 verifiedCount,uint8 driftCount,bytes32 summarySha256,string prURI (as registered on Base).",
-         ] + [f"- Sprint {k} attestation UID {v}" for k, v in sorted(a["sprint_eas_attestations"].items(), key=lambda kv: int(kv[0]))] + [
+         ] + [f"- Batch {k} attestation UID {v}" for k, v in sorted(a["sprint_eas_attestations"].items(), key=lambda kv: int(kv[0]))] + [
          "", "## Sentinel (Phase 2)", f"- {SENTINEL}", "",
          "## Governance proposals (from /api/v1/proposals.json)"]
     for p in prop["proposals"]:
@@ -386,7 +395,7 @@ def llms_full(idx, radar, prop, onb, pinned=None):
         L.append(f"- {it['protocol']}: {it['title']}{on} · timelock {it['timelock']} ({it['min_delay_seconds']}s) · {ops}")
     L += ["", "## Indexed records (from /api/v1/index.json)"]
     for e in sorted(idx["entries"], key=lambda e: (-e["sprint"], e["id"])):
-        L.append(f"- {e['id']} [{e['classification']}] {e['protocol']} — {e['surface']} · Sprint {e['sprint']} · block {e['block_number']} "
+        L.append(f"- {e['id']} [{e['classification']}] {e['protocol']} — {e['surface']} · Batch {e['sprint']} · block {e['block_number']} "
                  f"({e['block_hash']}) · target {e['target_contract']} · {e['onchain_observed']}")
     if pinned:
         L += ["", "## RPC-pinned records (from /api/v1/rpc-pinned.json; NOT EAS-attested)",
@@ -407,7 +416,7 @@ def agent_card(prop, onb, idx):
     return {
         "protocolVersion": "0.3.0",
         "name": "Pacta",
-        "description": ("Free pre-execution contract and governance safety API for AI agents (launch: $0, no API key, no wallet): who can "
+        "description": ("Free pre-execution contract and governance safety API for AI agents (free daily tier, no API key; deep x402 routes paid in Base USDC): who can "
                         "upgrade, pause or blacklist a contract, how fast, pinned to a block hash. Plus block-pinned DeFi control-plane "
                         "records, live governance proposals and a timelock radar. Remote MCP and OpenAPI 3.1; x402 v1 + v2 ready."),
         "url": f"{BASE}/",
@@ -418,7 +427,7 @@ def agent_card(prop, onb, idx):
         "capabilities": {"streaming": False, "pushNotifications": False, "stateTransitionHistory": False},
         "defaultInputModes": ["application/json", "text/plain"],
         "defaultOutputModes": ["application/json", "text/markdown"],
-        "authentication": {"schemes": ["none"], "notes": "No API key, no account, no wallet during the free launch. If metered mode is switched on later, live scans use x402 instead of keys: v1 (HTTP 402 + X-PAYMENT) or v2 (PAYMENT-REQUIRED + PAYMENT-SIGNATURE)."},
+        "authentication": {"schemes": ["none"], "notes": "No API key and no account. The free daily tier needs no wallet; the five /v1/x402/* routes and calls over the daily quota are paid in Base USDC via x402 (v1 X-PAYMENT or v2 PAYMENT-SIGNATURE)."},
         "skills": [
             {"id": "protocol-lookup", "name": "Protocol / token name lookup",
              "description": "Resolve a protocol or token name (Aave, Ethena, USDe, Moonwell, kUSD, ...) to Pacta's verified record and the checksummed contract to check next. Free, in memory, every pricing mode.",
@@ -457,10 +466,10 @@ def agent_card(prop, onb, idx):
                       "wallet_exposure": f"{X402_URL}/v1/check/wallet-exposure",
                       "lookup": LOOKUP_URL, "lookup_catalog": f"{BASE}/api/v1/lookup.json", "requests": REQUESTS_URL, "bounties": BOUNTIES_URL,
                       "curators": f"{BASE}/curators/", "protocols": f"{BASE}/protocols/"},
-        "pricing": {"mode": PRICING_MODE, "priceUsd": "0.00", "apiKey": False, "wallet": False, "rateLimitPerMinute": RATE_LIMIT_PER_MIN,
+        "pricing": {"mode": PRICING_MODE, "modes": PRICING_MODES, "priceUsd": "0.00", "apiKey": False, "wallet": False, "rateLimitPerMinute": RATE_LIMIT_PER_MIN,
                     "note": FREE_LAUNCH_NOTE},
         "x402": {"x402Version": 1, "x402Versions": [1, 2], "scheme": "exact", "network": "base", "networks": ["base", X402_NETWORK_V2],
-                 "chainId": 8453, "asset": USDC_BASE, "payTo": PAY_TO, "maxTimeoutSeconds": X402_MAX_TIMEOUT_S, "pricingMode": PRICING_MODE,
+                 "chainId": 8453, "asset": USDC_BASE, "payTo": PAY_TO, "maxTimeoutSeconds": X402_MAX_TIMEOUT_S, "pricingMode": "per_route", "pricingModes": PRICING_MODES,
                  "status": "live", "gatewayUrl": X402_URL, "discovery": f"{X402_URL}/.well-known/x402", "wire": X402_WIRE,
                  "bareProbe": X402_BARE_PROBE, "settlement": {"receiptHeaders": ["PAYMENT-RESPONSE", "X-PAYMENT-RESPONSE"],
                                                               "onchainReceiptVerified": False, "note": X402_RECEIPT_NOTE},
@@ -468,7 +477,8 @@ def agent_card(prop, onb, idx):
                  "free": [f"{X402_URL}{p}" for p in X402_FREE],
                  "routes": [{"path": r.split("?")[0], "url": X402_URL + r.split("?")[0], "methods": ["GET", "POST"],
                              "query": (r.split("?")[1] if "?" in r else ""), "maxAmountRequired": atomic, "amount": atomic, "priceUsd": usd,
-                             "effectivePriceUsd": "0.00" if PRICING_MODE == "free_launch" else usd[1:]}
+                             "pricingMode": METERED_MODE if r.split("?")[0] in METERED_PATHS else PRICING_MODE, "effectivePriceUsd": "0.00",
+                             **({"freeDailyQuota": FREE_DAILY_QUOTA, "afterFreeQuotaUsd": usd[1:]} if r.split("?")[0] in METERED_PATHS else {})}
                             for r, atomic, usd in X402_ROUTES]},
         "anchoring": {"chainId": 8453, "registry": REGISTRY, "easSchema": EAS_SCHEMA, "attester": idx["onchain_anchoring"]["attester_eoa"],
                       "treasury": {"address": TREASURY, "label": "Pacta Treasury", "kind": "externally owned account", "use": TREASURY_USE}},
@@ -481,14 +491,14 @@ def mcp_manifest(idx, onb):
         "description": "Block-pinned DeFi control-plane commitments, Base EAS attestations and governance proposals for agents.",
         "version": max(idx["generated_at"], onb["generated_at"])[:10].replace("-", "."), "homepage": f"{BASE}/", "documentation": f"{BASE}/llms-full.txt",
         "status": MCP_STATUS,
-        "transport": {"type": "streamable-http", "url": MCP_REMOTE_URL, "tools": REMOTE_TOOLS, "auth": "none", "pricingMode": PRICING_MODE},
+        "transport": {"type": "streamable-http", "url": MCP_REMOTE_URL, "tools": REMOTE_TOOLS, "auth": "none", "pricingMode": PRICING_MODE, "pricingModes": PRICING_MODES},
         "transports": [{"type": "streamable-http", "url": MCP_REMOTE_URL, "tools": REMOTE_TOOLS, "install": "none"},
                        {"type": "stdio", "command": "node", "args": ["packages/mcp-server/bin/pacta-mcp.mjs"],
                         "install": "from a clone of the repository (npm publication pending)"}],
         "openapi": OPENAPI_URL,
         "lookup": {"tool": "pacta_lookup_protocol", "http": LOOKUP_URL, "catalog": f"{BASE}/api/v1/lookup.json", "free": True, "note": LOOKUP_DOC},
         "environment": [{"name": n, "required": False, "secret": False, "description": d} for n, d in MCP_ENV],
-        "tools": [{"name": n, "access": "free" if p == "free" else PRICING_MODE, "price": None if p == "free" else p.split(" ")[1],
+        "tools": [{"name": n, "access": "free" if p == "free" else (METERED_MODE if n in METERED_TOOLS else PRICING_MODE), "price": None if p == "free" else p.split(" ")[1],
                    "effectivePriceUsd": "0.00", "readOnly": n != REQUEST_TOOL, "description": d} for n, p, d in MCP_TOOLS],
         "toolSummary": {"remote": REMOTE_TOOLS_DOC, "stdio": STDIO_TOOLS_DOC, "requestTool": REQUEST_TOOL, "requestsEndpoint": REQUESTS_URL},
         "disambiguation": DISAMBIGUATION,
@@ -532,11 +542,11 @@ homepage: {BASE}/
 {DISAMBIGUATION}
 
 Use this skill when a task involves DeFi collateral risk, governance or upgrade authority, timelocks, Safe quorums or roles,
-or a live collateral onboarding proposal. Pacta publishes {m['records_indexed']} block-pinned records ({m['sprints_completed']} sprints) and
+or a live collateral onboarding proposal. Pacta publishes {m['records_indexed']} attested checks across {m['sprints_completed']} Base EAS batch attestations and
 {len(prop['proposals'])} governance proposals mapped to on-chain state. Every inspection tool is read-only and free; one opt-in tool,
 `pacta_submit_request`, queues a coverage / feature request with the user's consent.
 
-## Free pre-execution API (launch: $0, no API key, no wallet)
+## Pre-execution API (free daily tier, no API key; deep routes paid in Base USDC)
 - Remote MCP, zero install: `{MCP_REMOTE_URL}` (Streamable HTTP). Claude Code: `claude mcp add --transport http pacta {MCP_REMOTE_URL}`.
   Tools ({REMOTE_TOOLS_DOC}): {", ".join(f"`{t}`" for t in REMOTE_TOOLS)}.
 - {LOOKUP_DOC}
@@ -578,11 +588,11 @@ Use EIP-1898 `{{"blockHash": "<hash>", "requireCanonical": true}}` when calling 
 Environment (all optional, none secret):
 """ + "\n".join(f"- `{n}`: {d}" for n, d in MCP_ENV) + f"""
 
-## x402 (wired in; free during the launch)
+## x402 (Base USDC; the five /v1/x402/* routes and calls over the free daily tier)
 - Live gateway: `{X402_URL}` (discovery `{X402_URL}/.well-known/x402`; free `/health`, `/v1/sample/control-plane`, `/v1/sample/preflight`).
 - {FREE_LAUNCH_NOTE}
 - The local stdio MCP server's scan tools are opt-in: set `PACTA_X402_URL={X402_URL}` to enable them.
-- Base (8453), scheme `exact`, USDC `{USDC_BASE}`, payTo `{PAY_TO}`, `maxTimeoutSeconds` {X402_MAX_TIMEOUT_S}. Never sign for any other `payTo`.
+- Base (8453), scheme `exact`, USDC `{USDC_BASE}`, payTo `{PAY_TO}` (the Pacta Treasury EOA), `maxTimeoutSeconds` {X402_MAX_TIMEOUT_S}. Never sign for any other `payTo`.
 - Routes and their x402_paid prices (GET query or POST JSON body with the same names; default client cap $1.00):
 """ + "\n".join(f"  - `{X402_URL}{r.split('?')[0]}` ({usd}, `{atomic}` atomic USDC)" + (f": `?{r.split('?')[1]}`" if "?" in r else "")
                 for r, atomic, usd in X402_ROUTES) + f"""
@@ -592,10 +602,10 @@ Environment (all optional, none secret):
 - Bare probe: a bare `GET` (no query) or zero-byte `POST` with no payment header returns HTTP 402 with both challenges.
 - MCP tools take `xPaymentHeader` (v1) or `paymentSignatureHeader` (v2); `x402Version` picks the challenge to answer.
 - {X402_RECEIPT_NOTE}
-- Pacta Treasury `{TREASURY}` is an EOA (externally owned account) that receives issuer clearance payments; it is not an x402 payTo.
+- Pacta Treasury `{TREASURY}` is an EOA (externally owned account): the x402 payTo of the /v1/x402/* routes and the $0.01 overflow, and the address of the $9 report checkout and engagement settlement.
 
 ## Anchoring (Base, chain id 8453)
-- PactaCommitmentRegistry `{REGISTRY}`; EAS schema `{EAS_SCHEMA}`. Per-sprint attestation UIDs are in `/api/v1/index.json`.
+- PactaCommitmentRegistry `{REGISTRY}`; EAS schema `{EAS_SCHEMA}`; attester `pacta.base.eth` `{idx['onchain_anchoring']['attester_eoa']}`. Per-batch attestation UIDs are in `/api/v1/index.json`.
 
 ## Sentinel
 {SENTINEL}

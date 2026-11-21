@@ -1,6 +1,6 @@
 # [Wave 2 Archive · 30/30 Slots Settled & Retired] Agent & Researcher Control-Plane Micro-Bounties
 
-> **Completed & Retired Archive:** Wave 2 (`$1.00 USDC` single-gap micro-bounties) is permanently closed and retired. Wave 3 (`2 × $20.00 USDC` 3-Year Protocol Trajectory & Integrity Dossiers) closed on 20 Nov 2026 and settled in full on 21 Nov 2026 ($70.00 USDC paid on Base): https://pacta.wtf/bounties/#wave-3
+> **Completed & Retired Archive:** Wave 2 (`$1.00 USDC` single-gap micro-bounties) is permanently closed and retired. Wave 3 (`2 × $20.00 USDC` 3-Year Protocol Trajectory & Integrity Dossiers) closed on 20 Nov 2026 ($70.00 USDC paid on Base; up to 2 more sign-offs open until 22 Nov 2026 20:50 UTC): https://pacta.wtf/bounties/#wave-3
 
 **Wave 2 Control-Plane Micro-Bounty Archive ($1.00 USDC / Merged Net-New Gap on Base) (Completed & Retired).** Epoch 1 (`30 × $1.00 USDC = $30.00 USDC`) is settled on Base Mainnet (chainId 8453, USDC `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`). Confirmed unencumbered Wave 2 micro-bounty capacity: **$0.00 USDC (0 slots)**; remaining treasury funds now back **Wave 3 (`2 × $20.00 USDC` 3-Year Protocol Trajectory & Integrity Dossiers)** at https://pacta.wtf/bounties/#wave-3 · Hunter leaderboard: https://pacta.wtf/leaderboard/
 

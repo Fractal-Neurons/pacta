@@ -1,5 +1,5 @@
-name: "Request a Pacta Dossier, Wholesale Sweep, Custom Webhook Alerts, API SLA or Free 7-Day Fix Re-Verification"
-description: "Submit non-sensitive public scope for a custom control-plane dossier (by arrangement), a Wholesale Coverage Sweep of 20 or more protocols ($150 / protocol, by arrangement), custom webhook alerts (by arrangement; the result can still be Delta), an enterprise API SLA, or free factual re-verification within 7 days of a merged docs or on-chain fix."
+name: "Request a Pacta Dossier, API SLA or the Free Doc-Update Queue"
+description: "Submit non-sensitive public scope for a custom control-plane dossier (by arrangement; the result can still be Delta), an enterprise API SLA, or the free doc-update queue (typically 6–8 weeks) for a merged docs or on-chain fix."
 title: "[Pacta Scope] <Organization / Protocol Name>"
 labels: ["pacta-intake"]
 body:
@@ -30,10 +30,8 @@ body:
       label: "3. Track"
       options:
         - "Custom Control-Plane Dossier (by arrangement)"
-        - "Wholesale Coverage Sweep — 20 or more protocols ($150 / protocol, by arrangement)"
-        - "Custom webhook alerts (by arrangement)"
         - "Enterprise / High-Throughput API SLA (priced on scope)"
-        - "Free factual re-verification within 7 days (merged docs or on-chain fix)"
+        - "Free doc-update & post-fix queue (typically 6–8 weeks)"
     validations:
       required: true
   - type: dropdown
