@@ -177,6 +177,64 @@
       "payoutTxHash": "0x0d03facb59cdf2e1e42edd32f74787f228131d57425643529164a1c560b4186d"
     }
   ],
+  "wave3Settlements": [
+    {
+      "fixture": "ethereum-usdt0.json",
+      "pr": 121,
+      "hunter": "pythonyx135793",
+      "usdc": "20.00",
+      "payoutTxHash": "0xb048e80e36dec5568f38425a4d07f743d236599d2fa1e9bd9cbd8b25dc4dd94c"
+    },
+    {
+      "fixture": "ethereum-concentrator.json",
+      "pr": 125,
+      "hunter": "IVANLI2412",
+      "usdc": "20.00",
+      "payoutTxHash": "0xac75904b2010d3897bcb21d762b5d0b44972aaede06f8086707af4cbca345a49"
+    },
+    {
+      "fixture": "ethereum-autofinance.json",
+      "pr": 127,
+      "hunter": "VB-Blue",
+      "usdc": "20.00",
+      "payoutTxHash": "0x01802630d06ec0390e94ce6812354cb5e9c7e42ae3e1f1810224cd960cf09323"
+    },
+    {
+      "fixture": "ethereum-team-finance.json",
+      "pr": 126,
+      "hunter": "AlexBotlord",
+      "usdc": "2.00",
+      "payoutTxHash": "0x3c2ea61b769cdfc0371638dce77e4f89f5a947a3dc3c033ef847003e54455e92"
+    },
+    {
+      "fixture": "ethereum-3f.json",
+      "pr": 130,
+      "hunter": "VB-Blue",
+      "usdc": "2.00",
+      "payoutTxHash": "0x8cff23f8ed24d6771c6e02a92ca2a8a796b411c3b661fc045cfa62a394104b55"
+    },
+    {
+      "fixture": "ethereum-origami-finance.json",
+      "pr": 135,
+      "hunter": "dankezo",
+      "usdc": "2.00",
+      "payoutTxHash": "0xbb1f46f000ed44ba1dc8fe29c24a978aeefa35a74479a880d5e9eb5dca227912"
+    },
+    {
+      "fixture": "ethereum-harvest-finance.json",
+      "pr": 138,
+      "hunter": "xiaogui917",
+      "usdc": "2.00",
+      "payoutTxHash": "0xa3096dd7158e8e83447471ada32001ab7460241ec8d1a6aa5c085a653b2cdd44"
+    },
+    {
+      "fixture": "arbitrum-gmx-governor-trajectory.json",
+      "pr": 139,
+      "hunter": "startupcompliancekit",
+      "usdc": "2.00",
+      "payoutTxHash": "0xb860381288c60e6622b5704516a9b259eb50f5ba5c616b2f06c23869533c26b6"
+    }
+  ],
   "easAttestations": {
     "VB-Blue": 8,
     "dankezo": 1,

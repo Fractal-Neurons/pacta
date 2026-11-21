@@ -1,16 +1,118 @@
 {
   "schema": "pacta.bounty_wave3.v1",
   "wave": 3,
-  "status": "open",
+  "status": "closed_in_settlement",
+  "closeout": {
+    "closedOn": "20 Nov 2026",
+    "heldUsdc": "40.05",
+    "awards": [
+      {
+        "pr": 121,
+        "protocol": "USDT0",
+        "usdc": "20.00",
+        "state": "paid",
+        "receipt": "https://github.com/Fractal-Neurons/pacta/pull/121#issuecomment-7050288344"
+      },
+      {
+        "pr": 125,
+        "protocol": "Concentrator",
+        "usdc": "20.00",
+        "state": "paid",
+        "receipt": "https://github.com/Fractal-Neurons/pacta/pull/125#issuecomment-7050288294"
+      },
+      {
+        "pr": 127,
+        "protocol": "AUTOfinance",
+        "usdc": "20.00",
+        "state": "paid",
+        "receipt": "https://github.com/Fractal-Neurons/pacta/pull/127#issuecomment-7050288653"
+      }
+    ],
+    "honoraria": [
+      {
+        "pr": 130,
+        "protocol": "3F",
+        "usdc": "2.00",
+        "state": "paid",
+        "receipt": "https://github.com/Fractal-Neurons/pacta/pull/130#issuecomment-7050288685"
+      },
+      {
+        "pr": 135,
+        "protocol": "Origami Finance",
+        "usdc": "2.00",
+        "state": "paid",
+        "receipt": "https://github.com/Fractal-Neurons/pacta/pull/135#issuecomment-7050288993"
+      },
+      {
+        "pr": 126,
+        "protocol": "Team Finance",
+        "usdc": "2.00",
+        "state": "paid",
+        "receipt": "https://github.com/Fractal-Neurons/pacta/pull/126#issuecomment-7050288336"
+      }
+    ],
+    "signoff": {
+      "prs": [
+        122,
+        139,
+        138,
+        133
+      ],
+      "usdc": "2.00",
+      "windowHours": 48,
+      "receipts": {
+        "122": "https://github.com/Fractal-Neurons/pacta/pull/122#issuecomment-7050288354",
+        "139": "https://github.com/Fractal-Neurons/pacta/pull/139#issuecomment-7050289132",
+        "138": "https://github.com/Fractal-Neurons/pacta/pull/138#issuecomment-7050289164",
+        "133": "https://github.com/Fractal-Neurons/pacta/pull/133#issuecomment-7050288930"
+      },
+      "paid": [
+        {
+          "pr": 138,
+          "protocol": "Harvest Finance"
+        },
+        {
+          "pr": 139,
+          "protocol": "GMX"
+        }
+      ]
+    },
+    "closeoutUrl": "https://github.com/Fractal-Neurons/pacta/issues/118#issuecomment-7050291092",
+    "closedUnpaid": [
+      119,
+      120,
+      123,
+      124,
+      131,
+      132,
+      136,
+      137,
+      140,
+      141,
+      142,
+      143,
+      144,
+      145,
+      146,
+      147,
+      148,
+      150,
+      151,
+      152,
+      153,
+      154
+    ],
+    "settledOn": "21 Nov 2026"
+  },
   "title": "[Wave 3: 2 × $20 USDC | 3-Year Protocol Trajectory & Integrity Dossiers] Human-Researcher Control-Plane Due-Diligence Pool",
   "program": "Wave 3 — 3-Year Protocol Trajectory & Integrity Dossier ($20.00 USDC / Protocol on Base)",
   "rewardUsdc": "20.00",
   "rewardAtomic": 20000000,
   "openSlots": 2,
   "poolCapUsdc": "40.00",
-  "settledSlots": 0,
-  "fundedUnencumberedSlots": 2,
-  "fundedUnencumberedUsdc": "40.00",
+  "settledSlots": 8,
+  "fundedUnencumberedSlots": 0,
+  "fundedUnencumberedUsdc": "0.00",
   "ringFencedReserveUsdc": "0.05",
   "dossierWindow": "2023-2026",
   "minTvlUsd": 10000000,

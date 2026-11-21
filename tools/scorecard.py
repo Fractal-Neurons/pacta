@@ -38,8 +38,13 @@ _DOC_NOF = re.compile(r"\b(\d{1,2})\s*(?:-of-|/|\s+of\s+)\s*(\d{1,2})\b")
 def _nofs(text):
     """Every K-of-N quorum in the text, written either as "3-of-6" or as "getThreshold() = 3 of getOwners() = 6"."""
     return sorted(list(_NOF.finditer(text)) + list(_NOF_READS.finditer(text)), key=lambda m: m.start())
-_DELAY = re.compile(r"\b(?:getMinDelay\(\)|delay\(\)|MINIMUM_DELAY\(\)|MIN_DELAY\(\)|minDelay\(\)|executionDelay\(\)|TIMELOCK_PERIOD\(\)|"
-                    r"timelockDelay\(\)|getMinimumDelay\(\))\s*(?:returns\s*|=\s*)([\d,]+)\s*s\b")
+_DELAY = re.compile(
+    r"\b(?:(?:getMinDelay|delay|MINIMUM_DELAY|MIN_DELAY|minDelay|executionDelay|MIN_EXECUTION_DELAY|"
+    r"TIMELOCK_PERIOD|timelockPeriod|timelockDelay|getMinimumDelay)(?:\(\))?\s*(?:returns\s*|=\s*|:\s*)"
+    r"|getExecutorSettingsByAccessControl\(\d+\)\s*=\s*\([^;)]*?,\s*(?:delay\s*(?:=|:)\s*)?"
+    r"|(?:Executor\s*Lvl?\s*\d+|Timelock(?:Controller)?|GovernorTimelock)\s*\([^;)]*?(?:,\s*|\bdelay\s*(?:=|:)\s*))"
+    r"([\d,]+)\s*s\b"
+)
 _SINGLE = re.compile(r"no contract code|externally owned|\bEOA\b|\(no code\)|without code")
 _GOVERNOR = re.compile(r"\bGovernor(?:Bravo|Alpha|Omega)?\b|\bDAO governance\b")
 _PROXY = re.compile(r"EIP-1967 (?:admin|implementation) (?:slot )?(?:=|resolves|is)|ProxyAdmin|AdminUpgradeabilityProxy|BeaconProxy|UpgradeableBeacon|"
@@ -73,7 +78,11 @@ _SAFE_DIRECT = re.compile(r"(?:owner\(\)|getAdmin\(\))\s*(?:=|is)\s*(?:the\s+)?(
 _ADDR = re.compile(r"0x[0-9a-fA-F]{40}")
 _PROXY_ADMIN = re.compile(r"ProxyAdmin\s*\(?(0x[0-9a-fA-F]{40})")
 _THAT = re.compile(r"(?:that|this|the same) (?:Safe|multisig|address)\b", re.I)
-_ADDR_DELAY = re.compile(r"(0x[0-9a-fA-F]{40})[^;0-9]{0,40}?(?:(?:getMinDelay\(\)|delay\(\))\s*(?:returns\s*|=\s*)|minimum delay\s+)([\d,]+)\s*s?\b")
+_ADDR_DELAY = re.compile(
+    r"(?:(0x[0-9a-fA-F]{40})[^;0-9]{0,45}?(?:(?:getMinDelay|delay|minDelay|executionDelay|MIN_EXECUTION_DELAY)(?:\(\))?\s*(?:returns\s*|=\s*|:\s*)|minimum delay\s+)([\d,]+)\s*s?\b)"
+    r"|(?:getExecutorSettingsByAccessControl\(\d+\)\s*=\s*\((?:[\w-]+\s+)?(0x[0-9a-fA-F]{40})\s*,\s*(?:delay\s*(?:=|:)\s*)?([\d,]+)\s*s\b)"
+    r"|(?:(?:Executor\s*Lvl?\s*\d+|Timelock(?:Controller)?|GovernorTimelock)\s*\(\s*(0x[0-9a-fA-F]{40})\s*,\s*(?:delay\s*(?:=|:)\s*)?([\d,]+)\s*s\b)"
+)
 _W = r"(?:(?!0x[0-9a-fA-F]{40})[\w-]+\s+){0,3}?"   # up to 3 label words, never an address
 # an address bound as the owner / admin / controller in the clause itself (never a context address)
 _BOUND = re.compile(r"(?:owner\(\)|admin\(\)|getAdmin\(\)|governance\(\)|EIP-1967 admin(?: slot)?|admin slot[^=;]{0,60}?)\s*(?:=|is|returns|resolves? to|to)\s*"
@@ -223,9 +232,16 @@ def factors(records, easattested, g, facts=(), parity_text=None):
         if src and d is not None:
             known[src.lower()] = min(d, known.get(src.lower(), d))
     for _, t, _r in texts:
-        for m in _ADDR_DELAY.finditer(t):
-            a, d = m.group(1).lower(), int(m.group(2).replace(",", ""))
-            known[a] = min(d, known.get(a, d))
+        if _COOLDOWN.search(str(_r.get("surface") or "")):
+            continue
+        for c in clauses(t):
+            if _COOLDOWN.search(c):
+                continue
+            for m in _ADDR_DELAY.finditer(c):
+                addr_s = m.group(1) or m.group(3) or m.group(5)
+                sec_s = m.group(2) or m.group(4) or m.group(6)
+                a, d = addr_s.lower(), int(sec_s.replace(",", ""))
+                known[a] = min(d, known.get(a, d))
     for f in facts:
         if isinstance(f.get("timelock_min_delay"), int) and f.get("address"):
             known[f["address"].lower()] = f["timelock_min_delay"]
@@ -291,8 +307,11 @@ def factors(records, easattested, g, facts=(), parity_text=None):
     for rid, t, _r in texts:
         if _COOLDOWN.search(str(_r.get("surface") or "")):        # a user withdrawal / unstaking delay is not an admin timelock
             continue
-        for m in _DELAY.finditer(t):
-            delays.append((int(m.group(1).replace(",", "")), f"{rid}: {_snip(t, m)}"))
+        for c in clauses(t):
+            if _COOLDOWN.search(c):
+                continue
+            for m in _DELAY.finditer(c):
+                delays.append((int(m.group(1).replace(",", "")), f"{rid}: {_snip(c, m)}"))
         for c in clauses(t):                                      # a role that executes without the delay (e.g. RBACTimelock bypasser)
             if _BYPASS_EXEC.search(c):
                 delays.append((0, f"{rid}: {_clip(c)}"))
@@ -301,14 +320,14 @@ def factors(records, easattested, g, facts=(), parity_text=None):
             delays.append((f["timelock_min_delay"], f'controller fact: getMinDelay() = {f["timelock_min_delay"]}s'))
     if delays:
         d, ev = min(delays)
-        st = "g" if d >= 2 * DAY else "b" if d >= 3600 else "a"
+        st = "g" if d >= 2 * DAY else "b" if d >= 3600 else "a"   # Strong = a multi-day (>= 48h) floor, as on the upgrade factor
         out["timelock"] = (st, ("0s: an operator can execute approved proposals without waiting the timelock delay"
                                 if d == 0 and "executeOperatorProposal" in ev and _BYPASS_EXEC.search(ev) else
                                 "0s: a bypasser role can execute without waiting the timelock delay" if d == 0 and _BYPASS_EXEC.search(ev)
                                 else "No enforced delay on at least one sampled control surface (0s)" if d == 0
                                 else f"{_dur(d)} minimum enforced delay on sampled timelocked surfaces"), ev)
     else:
-        out["timelock"] = ("n", "No enforced admin delay in the published records", None)
+        out["timelock"] = ("n", "Admin delay not extracted in structured record", None)
     # 3: signer quorum (lowest threshold of any controlling Safe; a key without contract code counts as 1-of-1)
     quorum, wrapped, wrappers = [], set(), set()
     for rid, t, _r in texts:
@@ -384,7 +403,7 @@ def factors(records, easattested, g, facts=(), parity_text=None):
         out["emergency"] = ("n", "No pause / freeze authority in the published records", None)
     # 5: docs-vs-chain parity (the grade; never colored without a Base-EAS-attested documentation comparison)
     # an unresolved protocol is never coloured: the comparison does not establish a breach (hollow "n"), never weak, never strong
-    out["parity"] = (("u", "Uncompared: documentation not assessed (RPC-observed)", None) if not easattested else
+    out["parity"] = (("u", "Uncompared: documentation not assessed (Observed)", None) if not easattested else
                      ("n", parity_text or UNRESOLVED_PARITY, None) if g == "unresolved" else
                      ("n", parity_text or RECENT_CHANGE_PARITY, None) if g == "recent_change" else
                      ("n", parity_text or DOCS_UPDATED_PARITY, None) if g == "docs_updated" else
@@ -413,7 +432,7 @@ def _dur(s):
 
 
 def aria(fs, name=None):
-    return ((f"{name} control-plane rosette: " if name else "Control-plane rosette: ")
+    return ((f"{name} control-strength graphic: " if name else "Control-strength graphic: ")
             + "; ".join(f'{f["label"]} {STATE_LABEL[f["state"]].lower()}' for f in fs))
 
 

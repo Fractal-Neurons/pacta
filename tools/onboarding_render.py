@@ -299,7 +299,7 @@ def content(b, term_html, price="$5,000 USDC"):
 
 <h2>{5 if roles else 4}. Scope</h2>
 <div class="card"><ul><li>Observations of on-chain state only. They do not assess code correctness, reserves, legal structure or off-chain key custody, and they are not investment advice.</li>
-<li>Issuers can clear or document these findings with a <a href="../../request/?tier=clearance">24h Collateral Onboarding &amp; Delta Clearance Attestation</a> ({E(price)} flat): block-pinned audit, docs / config reconciliation PR, Base EAS <i>Aligned</i> attestation and a Curator Diligence Dossier for the forum thread.</li></ul></div>
+<li>Issuers can clear or document these findings with a <a href="../../request/?tier=clearance">collateral onboarding &amp; Delta re-verification (by arrangement)</a>: block-pinned audit, docs / config reconciliation PR, Base EAS <i>Aligned</i> attestation and a Curator Diligence Dossier for the forum thread.</li></ul></div>
 """
 
 

@@ -141,9 +141,9 @@ if (!eta) return;
 n.textContent = eta > now ? "Execution window opens in " + fmt(eta - now) : "Window open — verify execution state";
 });
 }
-var OP_LABEL = { executed: "EXECUTED", ready: "READY · EXECUTABLE NOW", pending: "PENDING", unknown: "CANCELLED OR UNKNOWN", mixed: "MIXED" };
+var OP_LABEL = { executed: "EXECUTED", ready: "WINDOW OPEN", pending: "WAITING", unknown: "CANCELLED OR UNKNOWN", mixed: "MIXED" };
 var OP_STATES = ["executed", "ready", "pending", "unknown", "mixed"];
-var LIVE_TL_RE = /^https:\/\/pacta-x402\.pacta\.workers\.dev\/v1\/briefs\/live-timelocks(\?[a-z_=&.-]*)?$/;
+var LIVE_TL_RE = /^https:\/\/(?:api\.pacta\.wtf|pacta\.fractalneurons\.com|pacta-x402\.pacta\.workers\.dev)\/v1\/briefs\/live-timelocks(\?[a-z_=&.-]*)?$/;
 function liveOpState(op) {
 var l = op && typeof op.live === "object" && op.live ? op.live : {};
 if (l.isOperationDone === true || l.status === "done") return "executed";
@@ -164,7 +164,7 @@ function blkLine(b) {
 return b.ethereum && b.base ? "blocks Ethereum " + blkFmt(b.ethereum) + " and Base " + blkFmt(b.base)
 : "block " + (b.base ? "Base " + blkFmt(b.base) : blkFmt(b.ethereum));
 }
-function applyLiveTimelocks(j) {
+function applyLiveTimelocks(j, viaSource) {
 if (!j || typeof j !== "object" || !Array.isArray(j.operations)) return null;
 var by = {}, chainOf = {}, blk = {};
 j.operations.forEach(function (op) {
@@ -193,13 +193,13 @@ if (updated) radarCounts();
 var any = !!(blk.ethereum || blk.base);
 if (updated && any) {
 $$("[data-live-line]").forEach(function (n) {
-n.textContent = "Live re-check at the latest " + blkLine(blk) + " via the free /v1/briefs/live-timelocks.";
+n.textContent = "Live re-check at the latest " + blkLine(blk) + " via " + (viaSource || "the free /v1/briefs/live-timelocks") + ".";
 });
 }
 return any ? blk : null;
 }
 var RADAR_ORDER = ["ready", "pending", "mixed", "unknown", "executed"];
-var RADAR_WORD = { ready: "ready", pending: "pending", mixed: "mixed", unknown: "cancelled or unknown", executed: "executed" };
+var RADAR_WORD = { ready: "window open", pending: "waiting", mixed: "mixed", unknown: "cancelled or unknown", executed: "executed" };
 function opsWord(n) { return n + (n === 1 ? " op" : " ops"); }
 function radarPart(s, rows, ops) {
 if (s === "executed") return "Executed (" + opsWord(ops) + ")";
@@ -216,8 +216,97 @@ tr.setAttribute("data-radar-row", st); tr.classList.toggle("is-executed", st ===
 by[st] = (by[st] || 0) + 1; ops[st] = (ops[st] || 0) + n;
 });
 out.textContent = RADAR_ORDER.filter(function (s) { return by[s]; }).map(function (s) { return radarPart(s, by[s], ops[s]); }).join(" · ");
+$$("[data-radar-counts-mirror]").forEach(function (m) { m.textContent = out.textContent; });
+}
+function radarClockPass() {
+var now = Date.now() / 1000, changed = 0;
+$$("[data-opstate=\"pending\"][data-ops]").forEach(function (b) {
+var row = b.closest("tr, li, article, .poststatus") || b.parentNode, cd = row ? $(".countdown[data-eta]", row) : null;
+var eta = cd ? parseInt(cd.getAttribute("data-eta"), 10) : 0;
+if (eta > 1 && eta <= now) { b.textContent = OP_LABEL.ready; OP_STATES.forEach(function (c) { b.classList.toggle(c, c === "ready"); }); b.setAttribute("data-opstate", "ready"); changed++; }
+});
+if (changed) radarCounts();
+}
+function radarMulticallFallback() {
+var trs = $$("#radar tr[data-timelock]");
+if (!trs.length) return Promise.resolve(null);
+var byChain = {};
+trs.forEach(function (tr) {
+var ch = tr.getAttribute("data-chain") === "base" ? "base" : "ethereum";
+var tl = tr.getAttribute("data-timelock") || "", kind = tr.getAttribute("data-tl-kind") || "oz";
+var etas = (tr.getAttribute("data-op-etas") || "").split(",").map(function (x) { return parseInt(x, 10) || 0; });
+var b = $("[data-ops]", tr);
+if (!ADDR_RE.test(tl) || !b) return;
+var ids = (b.getAttribute("data-ops") || "").toLowerCase().split(/\s+/).filter(function (x) { return /^0x[0-9a-f]{64}$/.test(x); });
+if (!byChain[ch]) byChain[ch] = [];
+ids.forEach(function (opId, idx) {
+byChain[ch].push({ timelock: tl, kind: kind, opId: opId, eta: etas[idx] || 0 });
+});
+});
+var chains = Object.keys(byChain);
+if (!chains.length) return Promise.resolve(null);
+return Promise.all(chains.map(function (ch) {
+var list = byChain[ch];
+return rpcCall(ch, "eth_getBlockByNumber", ["latest", false]).then(function (blkRes) {
+var blkObj = blkRes && blkRes.result;
+if (!blkObj || typeof blkObj.number !== "string") return [];
+var bHex = blkObj.number, bNum = parseInt(bHex, 16), bTs = parseInt(blkObj.timestamp || "0x0", 16);
+if (!(bNum > 0)) return [];
+var calls = [], meta = [];
+list.forEach(function (item) {
+var arg = item.opId.slice(2);
+if (item.kind === "compound") {
+meta.push({ item: item, idx: calls.length, kind: "compound" });
+calls.push({ target: item.timelock, allowFailure: true, callData: "0xf2b06537" + arg });
+} else {
+meta.push({ item: item, idx: calls.length, kind: "oz" });
+calls.push({ target: item.timelock, allowFailure: true, callData: "0x2ab0f529" + arg });
+calls.push({ target: item.timelock, allowFailure: true, callData: "0x584b153e" + arg });
+calls.push({ target: item.timelock, allowFailure: true, callData: "0xd45c4435" + arg });
+}
+});
+return rpcCall(ch, "eth_call", [{ to: MULTICALL3_ADDR, data: encodeAggregate3(calls) }, bHex]).then(function (mcRes) {
+var dec = decodeAggregate3(mcRes && mcRes.result);
+if (!dec || dec.length !== calls.length) return [];
+var out = [];
+meta.forEach(function (m) {
+var live = null;
+if (m.kind === "compound") {
+var rQ = dec[m.idx];
+if (rQ && rQ.success && rQ.returnData.length >= 66) {
+var queued = !/^0+$/.test(rQ.returnData.slice(-64));
+var eta = m.item.eta;
+if (queued) {
+var rdy = eta > 0 && bTs >= eta && bTs <= eta + 1209600;
+live = { status: rdy ? "ready" : "pending", isOperationPending: true, isOperationDone: false };
+} else {
+live = eta > 0 && bTs >= eta ? { status: "done", isOperationDone: true } : { status: "unset", isOperationPending: false, isOperationDone: false };
+}
+}
+} else {
+var rD = dec[m.idx], rP = dec[m.idx + 1], rT = dec[m.idx + 2];
+if (rD && rD.success && rP && rP.success && rD.returnData.length >= 66 && rP.returnData.length >= 66) {
+var isDone = !/^0+$/.test(rD.returnData.slice(-64));
+var isPend = !/^0+$/.test(rP.returnData.slice(-64));
+var ts = rT && rT.success && rT.returnData.length >= 66 ? parseInt(rT.returnData.slice(-64), 16) : 0;
+if (isDone) live = { status: "done", isOperationDone: true };
+else if (isPend) live = { status: ts > 1 && bTs >= ts ? "ready" : "pending", isOperationPending: true, isOperationDone: false };
+else live = { status: "unset", isOperationPending: false, isOperationDone: false };
+}
+}
+if (live) out.push({ opId: m.item.opId, chain: ch, live: live, block: { number: bNum } });
+});
+return out;
+});
+});
+})).then(function (arrs) {
+var allOps = [];
+arrs.forEach(function (a) { a.forEach(function (x) { allOps.push(x); }); });
+return allOps.length ? { operations: allOps } : null;
+}).catch(function () { return null; });
 }
 function initLiveTimelocks() {
+radarClockPass();
 var host = $("[data-live-timelocks]");
 if (!host || typeof fetch !== "function" || !$("[data-ops]")) { liveSettled(false, null); return; }
 var url = host.getAttribute("data-live-timelocks") || "";
@@ -232,6 +321,15 @@ if (ctl) { try { ctl.abort(); } catch (e) {  } }
 liveSettled(false, null); freshness();
 }, 9000);
 function settle(ok, blk) { if (done) return; done = true; clearTimeout(guard); liveSettled(ok, blk); freshness(); }
+function tryBrowserMulticall() {
+radarMulticallFallback().then(function (mc) {
+if (done) return;
+if (mc && Array.isArray(mc.operations) && mc.operations.length) {
+var blk = applyLiveTimelocks(mc, "Multicall3 RPC in your browser");
+LIVE_OK_AT = Math.floor(Date.now() / 1000); LIVE_FAILED = false; settle(true, blk);
+} else { LIVE_FAILED = true; settle(false, null); }
+});
+}
 var init = { cache: "no-store", headers: { Accept: "application/json" } };
 if (ctl) init.signal = ctl.signal;
 fetch(url, init)
@@ -240,9 +338,9 @@ fetch(url, init)
 if (done) return;
 if (j && typeof j === "object" && Array.isArray(j.operations)) {
 var blk = applyLiveTimelocks(j); LIVE_OK_AT = Math.floor(Date.now() / 1000); LIVE_FAILED = false; settle(true, blk);
-} else { LIVE_FAILED = true; settle(false, null); }
-}, function () { LIVE_FAILED = true; settle(false, null);  })
-.catch(function () { LIVE_FAILED = true; settle(false, null);  });
+} else { tryBrowserMulticall(); }
+}, function () { tryBrowserMulticall();  })
+.catch(function () { tryBrowserMulticall(); });
 }
 function initBadgeWidget() {
 var w = $("[data-badge-widget]"); if (!w) return;
@@ -273,7 +371,7 @@ if (interactive) {
 svg.setAttribute("tabindex", "0");
 svg.setAttribute("data-tip", fs.map(function (f) { return String(f.label) + ": " + SC_STATE[/^[gbanu]$/.test(f.state) ? f.state : "n"]; }).join("\n"));
 }
-svg.setAttribute("aria-label", (name ? name + " control-plane rosette: " : "Control-plane rosette: ")
+svg.setAttribute("aria-label", (name ? name + " control-strength graphic: " : "Control-strength graphic: ")
 + fs.map(function (f) { return f.label + " " + String(SC_STATE[f.state] || "").toLowerCase(); }).join("; "));
 var ring = document.createElementNS(SVG_NS, "circle");
 ring.setAttribute("class", "r-ring"); ring.setAttribute("cx", c.toFixed(1)); ring.setAttribute("cy", c.toFixed(1)); ring.setAttribute("r", r.toFixed(1));
@@ -327,17 +425,34 @@ return ["Live at block #" + b.n + " (" + b.hex + "): " + (slot ? "slot " + sos :
 });
 }));
 }
-function scRows(card, prefix) {
+function fmtTvlUsd(v) {
+if (typeof v !== "number" || !isFinite(v) || v <= 0) return "";
+if (v >= 1e9) return "$" + (v < 10e9 ? (v / 1e9).toFixed(2) : (v / 1e9).toFixed(1)) + "B TVL";
+if (v >= 1e6) return "$" + (v < 100e6 ? (v / 1e6).toFixed(1) : Math.round(v / 1e6).toLocaleString("en-US")) + "M TVL";
+if (v >= 1e3) return "$" + Math.round(v / 1e3).toLocaleString("en-US") + "K TVL";
+return "$" + Math.round(v).toLocaleString("en-US") + " TVL";
+}
+var SC_RANK = { delta: 0, protective: 1, aligned: 2, observed: 3 };
+function scRows(card, prefix, ident) {
 var nets = (card.chains || []).map(function (c) { return SC_CHAIN[c] || c; }).join(" · ");
+var tvlVal = typeof card.tvlUsd === "number" && card.tvlUsd > 0 ? Math.round(card.tvlUsd) : -1;
+var tvlTxt = fmtTvlUsd(tvlVal);
+var subMeta = tvlTxt ? nets + " · " + tvlTxt : nets;
 var slug = String(card.slug), did = "sc-d-" + slug, pre = /^(\.\.\/)*$/.test(prefix || "") ? (prefix || "") : "";
 var tog = el("button", { "class": "sc-toggle", type: "button", "aria-expanded": "false", "aria-controls": did, text: String(card.name) });
+var idn = ident && own(ident, slug) ? ident[slug] : null;
+var pidKids = [el("img", { "class": "pid-logo", src: idn ? pre + String(idn[0]) : protoIconSrc(slug), alt: "", width: "22", height: "22",
+loading: "lazy", decoding: "async" }), tog];
+if (idn && idn[1]) pidKids.push(el("span", { "class": "pid-tk mono", text: String(idn[1]) }));
 var ros = rosette(card.factors || [], 32, card.name, false);
-var row = el("tr", { "class": "sc-row", "data-slug": slug, "data-grade": String(card.grade), "data-baskets": (card.baskets || []).join(" "),
-"data-search": String(card.search || "") }, [
-el("td", {}, [tog, el("span", { "class": "sc-chain", text: nets })]), el("td", {}, [gradePill(card)]),
+var eas = card.easAttested !== false;
+var row = el("tr", { "class": "sc-row", "data-slug": slug, "data-name": String(card.name || "").toLowerCase(),
+"data-grade": String(card.grade), "data-tvl": String(tvlVal), "data-eas": eas ? "1" : "0",
+"data-baskets": (card.baskets || []).join(" "), "data-search": String(card.search || "") }, [
+el("td", {}, [el("span", { "class": "pid" }, pidKids), el("span", { "class": "sc-chain", text: subMeta })]), el("td", {}, [gradePill(card)]),
 el("td", {}, ros ? [ros] : [String(SC_GRADE[card.grade] || "")]), el("td", { "class": "sc-find", text: String(card.summary_short || card.finding || "") }),
 el("td", { "class": "sc-chev" }, [el("span", { "class": "chev", "aria-hidden": "true" }, [svgIcon("m6 9 6 6 6-6")])])]);
-var p = card.probe || {}, n = card.records, eas = card.easAttested !== false;
+var p = card.probe || {}, n = card.records;
 var noun = eas ? (n === 1 ? "attested check" : "attested checks") : (n === 1 ? "block-pinned check" : "block-pinned checks");
 var live = el("div", { "class": "sc-live", "data-probe-chain": String(p.chain || ""), "data-probe-target": String(p.target_contract || ""),
 "data-probe-kind": String(p.check_type || ""), "data-probe-sos": String(p.selector_or_slot || ""), "data-probe-data": String(p.repro_calldata || ""),
@@ -346,7 +461,7 @@ var big = rosette(card.factors || [], 72, card.name, true);
 var dr = el("div", { "class": "sc-dr" }, [
 el("div", { "class": "sc-ros" }, [big, el("span", { "class": "sc-meta", text: "Hover or focus a slice" })]),
 el("div", {}, [scEvidence(card), factorList(card)]),
-el("p", { "class": "sc-meta", text: (eas ? "Base EAS attested" : "RPC-observed, not EAS-attested") + " · " + n + " " + noun + " · pinned block #" + num(card.pinnedBlock) }),
+el("p", { "class": "sc-meta", text: (eas ? "Base EAS attested" : "Observed, not EAS-attested") + " · " + n + " " + noun + " · pinned block #" + num(card.pinnedBlock) }),
 live]);
 if (p.target_contract) dr.appendChild(term(castCmd(p), "Reproduce on any archive node", "Copy the cast reproduction for " + String(card.name)));
 dr.appendChild(el("p", { "class": "links" }, [arrowLink({ href: pre + "protocols/" + slug + "/" }, "Full scorecard for " + String(card.name))]));
@@ -358,7 +473,7 @@ var root = $("#scorecards"); if (!root) return;
 var body = $("[data-sc-body]", root), q = $("#sc-q", root), qclr = $("[data-sc-qclear]", root), bsel = $("[data-sc-basket]", root);
 var empty = $("[data-sc-empty]", root), more = $("[data-sc-all]", root);
 if (!body) return;
-var prefix = body.getAttribute("data-prefix") || "", filt = "all", bkt = "all", hydrated = body.hasAttribute("data-full"), loading = null;
+var prefix = body.getAttribute("data-prefix") || "", filt = "all", bkt = "all", easOnly = false, sortMode = "tvl", hydrated = body.hasAttribute("data-full"), loading = null;
 function rows() { return $$("tr.sc-row", body); }
 function drawerOf(r) { return $("#" + "sc-d-" + r.getAttribute("data-slug")); }
 function setOpen(r, open) {
@@ -368,11 +483,31 @@ if (t) t.setAttribute("aria-expanded", String(open));
 if (open) scLive($(".sc-live", d));
 }
 function closeAll() { rows().forEach(function (r) { setOpen(r, false); }); }
+function sortDomRows() {
+var rs = rows().slice();
+rs.sort(function (a, b) {
+var na = a.getAttribute("data-name") || "", nb = b.getAttribute("data-name") || "";
+if (sortMode === "az") return na < nb ? -1 : na > nb ? 1 : 0;
+var ga = SC_RANK[a.getAttribute("data-grade")] !== undefined ? SC_RANK[a.getAttribute("data-grade")] : 9;
+var gb = SC_RANK[b.getAttribute("data-grade")] !== undefined ? SC_RANK[b.getAttribute("data-grade")] : 9;
+if (ga !== gb) return ga - gb;
+var ta = parseInt(a.getAttribute("data-tvl") || "-1", 10), tb = parseInt(b.getAttribute("data-tvl") || "-1", 10);
+if (ta !== tb) return tb - ta;
+return na < nb ? -1 : na > nb ? 1 : 0;
+});
+rs.forEach(function (r) {
+var d = drawerOf(r);
+r.remove();
+body.appendChild(r);
+if (d) { d.remove(); body.appendChild(d); }
+});
+}
 function apply() {
 var t = q ? String(q.value || "").trim().toLowerCase() : "", shown = 0;
 rows().forEach(function (r) {
 var g = r.getAttribute("data-grade"), bs = (r.getAttribute("data-baskets") || "").split(" ");
-var ok = (filt === "all" || g === filt) && (bkt === "all" || bs.indexOf(bkt) >= 0) && (!t || (r.getAttribute("data-search") || "").indexOf(t) >= 0);
+var easOk = !easOnly || r.getAttribute("data-eas") === "1";
+var ok = easOk && (filt === "all" || g === filt) && (bkt === "all" || bs.indexOf(bkt) >= 0) && (!t || (r.getAttribute("data-search") || "").indexOf(t) >= 0);
 r.hidden = !ok; if (ok) shown++;
 if (!ok) setOpen(r, false);
 });
@@ -386,10 +521,20 @@ if (hydrated) return Promise.resolve(true);
 if (loading) return loading;
 if (typeof fetch !== "function") return Promise.resolve(false);
 loading = fetch(body.getAttribute("data-src") || "api/v1/scorecards.json").then(function (res) { return res.json(); }).then(function (d) {
-var cards = d && Array.isArray(d.protocols) ? d.protocols : [];
+var cards = d && Array.isArray(d.protocols) ? d.protocols.slice() : [];
 if (!cards.length) return false;
+cards.sort(function (a, b) {
+var ga = SC_RANK[a.grade] !== undefined ? SC_RANK[a.grade] : 9, gb = SC_RANK[b.grade] !== undefined ? SC_RANK[b.grade] : 9;
+if (ga !== gb) return ga - gb;
+var ta = typeof a.tvlUsd === "number" && a.tvlUsd > 0 ? a.tvlUsd : -1, tb = typeof b.tvlUsd === "number" && b.tvlUsd > 0 ? b.tvlUsd : -1;
+if (ta !== tb) return tb - ta;
+var na = String(a.name || "").toLowerCase(), nb = String(b.name || "").toLowerCase();
+return na < nb ? -1 : na > nb ? 1 : 0;
+});
 body.textContent = "";
-cards.forEach(function (c) { scRows(c, prefix).forEach(function (n) { body.appendChild(n); }); });
+var ident = {};
+try { ident = JSON.parse(body.getAttribute("data-ident") || "{}") || {}; } catch (e) { ident = {}; }
+cards.forEach(function (c) { scRows(c, prefix, ident).forEach(function (n) { body.appendChild(n); }); });
 hydrated = true;
 if (more) more.hidden = true;
 return true;
@@ -412,7 +557,29 @@ if (bsel) bsel.addEventListener("change", then(function () { bkt = String(bsel.v
 $$("[data-sc-f]", root).forEach(function (b) {
 b.addEventListener("click", then(function () {
 filt = b.getAttribute("data-sc-f") || "all";
+easOnly = false;
 $$("[data-sc-f]", root).forEach(function (o) { o.setAttribute("aria-pressed", String(o === b)); });
+apply();
+}));
+});
+$$("[data-sc-sort]", root).forEach(function (b) {
+b.addEventListener("click", then(function () {
+var sm = b.getAttribute("data-sc-sort") || "tvl";
+$$("[data-sc-sort]", root).forEach(function (o) { o.setAttribute("aria-pressed", String(o === b)); });
+if (sm === "gaps") {
+sortMode = "tvl"; filt = "delta"; easOnly = false;
+$$("[data-sc-f]", root).forEach(function (o) { o.setAttribute("aria-pressed", String(o.getAttribute("data-sc-f") === "delta")); });
+} else if (sm === "eas") {
+sortMode = "tvl"; filt = "all"; easOnly = true;
+$$("[data-sc-f]", root).forEach(function (o) { o.setAttribute("aria-pressed", String(o.getAttribute("data-sc-f") === "all")); });
+} else {
+sortMode = sm === "az" ? "az" : "tvl"; easOnly = false;
+if (filt === "delta" && sm === "tvl") {
+filt = "all";
+$$("[data-sc-f]", root).forEach(function (o) { o.setAttribute("aria-pressed", String(o.getAttribute("data-sc-f") === "all")); });
+}
+}
+sortDomRows();
 apply();
 }));
 });
@@ -434,8 +601,10 @@ apply();
 }
 var clr = empty && $("[data-sc-clear]", empty);
 if (clr) clr.addEventListener("click", function () {
-filt = "all"; bkt = "all"; if (q) q.value = ""; if (bsel) bsel.value = "all";
+filt = "all"; bkt = "all"; easOnly = false; sortMode = "tvl"; if (q) q.value = ""; if (bsel) bsel.value = "all";
 $$("[data-sc-f]", root).forEach(function (o) { o.setAttribute("aria-pressed", String(o.getAttribute("data-sc-f") === "all")); });
+$$("[data-sc-sort]", root).forEach(function (o) { o.setAttribute("aria-pressed", String(o.getAttribute("data-sc-sort") === "tvl")); });
+sortDomRows();
 apply();
 });
 }
@@ -638,7 +807,7 @@ var repo = "https://github.com/Fractal-Neurons/pacta/blob/main/";
 var kv = el("dl", { "class": "kv" }, [
 el("dt", { text: "Pinned block" }), el("dd", {}, [CHAIN_LABEL[chainOf(e)] + " ", el("span", { "class": "num", text: "#" + num(e.block_number) }), " · ", explorerLink(e), " · "].concat(hexref(e.block_hash, 8, 6))),
 el("dt", { text: "Delay" }), el("dd", {}, [delayCmp(e)]),
-el("dt", { text: "Summary" }), el("dd", {}, [arrowLink({ href: repo + e.summary_doc, target: "_blank", rel: "noopener" }, "Sprint " + e.sprint + " summary", "up-right")]),
+el("dt", { text: "Summary" }), el("dd", {}, [arrowLink({ href: repo + e.summary_doc, target: "_blank", rel: "noopener" }, "Attested summary document", "up-right")]),
 el("dt", { text: "SHA-256" }), el("dd", {}, hexref(e.summary_sha256, 10, 6)),
 el("dt", { text: "Proof" }), el("dd", {}, [proof(e)])]);
 var drawer = el("tr", { "class": "drawer", id: "r-" + e.id }, [el("td", { colspan: "6" }, [el("div", { "class": "drawer-in" }, [
@@ -802,7 +971,7 @@ var rows = [
 ["Timelock delay", [delayCmp(e)]]];
 if (ms) rows.push(["Safe quorum", [el("span", { "class": "mono", text: ms })]]);
 if (pa) rows.push(["EIP-1967 ProxyAdmin", hexref(pa)]);
-rows.push(["Pinned block", [chainOf(e) === "base" ? "Base " : "", el("span", { "class": "num", text: "#" + num(e.block_number) }), " · Sprint " + e.sprint + " ",
+rows.push(["Pinned block", [chainOf(e) === "base" ? "Base " : "", el("span", { "class": "num", text: "#" + num(e.block_number) }), " ",
 badge(null, "Scanner-pinned (L1 finalized)", "final")]]);
 rows.push(["Canonical block hash", hexref(e.block_hash, 8, 6)]);
 rows.push(["Proof", [proof(e)]]);
@@ -1008,17 +1177,18 @@ openFromHash();
 apply();
 }
 var REQ_TO = "pacta@dri.network";
+var SPONSOR_POOL_ADDRESS = "";
 var TRACK = {
-community: ["Community queue (free; unscheduled, typically 6–8 weeks)", "Community queue (free; unscheduled, typically 6–8 weeks)",
-"Pacta community queue request", ""],
-"rapid-500": ["Rapid Single-Gap Re-Verification ($500 USDC, 24h SLA)", "Rapid Single-Gap Re-Verification ($500 USDC, 24h SLA)",
-"Pacta rapid single-gap re-verification request", "$500 USDC (24h SLA)"],
-clearance: ["Full Protocol Control-Plane Dossier ($2,500–$5,000 USDC, 24h SLA)",
-"Full Protocol Control-Plane Dossier ($2,500–$5,000 USDC, 24h SLA)",
-"Pacta 24h dossier request", "$2,500–$5,000 USDC (24h SLA)"],
-continuous: ["Continuous Control-Plane Monitoring ($1,500 USDC per month)",
-"Continuous Control-Plane Monitoring ($1,500 USDC per month)",
-"Pacta Continuous Control-Plane Monitoring request", "$1,500 USDC per month"],
+community: ["Free factual re-verification within 7 days (merged docs or on-chain fix)", "Free factual re-verification within 7 days (merged docs or on-chain fix)",
+"Pacta free 7-day fix re-verification request", ""],
+"wholesale-150": ["Wholesale Coverage Sweep — 20 or more protocols ($150 / protocol, by arrangement)", "Wholesale Coverage Sweep — 20 or more protocols ($150 / protocol, by arrangement)",
+"Pacta wholesale sweep request", "$150 per protocol"],
+clearance: ["Custom Control-Plane Dossier (by arrangement)",
+"Custom Control-Plane Dossier (by arrangement)",
+"Pacta custom dossier request", "by arrangement"],
+continuous: ["Custom webhook alerts (by arrangement)",
+"Custom webhook alerts (by arrangement)",
+"Pacta custom webhook alerts request", "by arrangement"],
 api_sla: ["Enterprise / High-Throughput API SLA (priced on scope)",
 "Enterprise / High-Throughput API SLA (priced on scope)",
 "Pacta enterprise API SLA request", "the scoped amount (quoted on the invoice)"]
@@ -1042,6 +1212,7 @@ function readPrefill(search) {
 var q, out = {};
 try { q = new URLSearchParams(search || ""); } catch (e) { return out; }
 var t = q.get("tier"), st = q.get("settlement"), p = cleanText(q.get("protocol"), 80), f = cleanForum(q.get("forum"));
+if (t === "rapid-500") t = "community";
 if (own(TRACK, t)) out.tier = t;
 if (own(SETTLE, st)) out.settlement = st;
 if (p) out.protocol = p;
@@ -1085,7 +1256,7 @@ lines.push("Payment: " + (tx ? tx + (txOk ? "" : "  (check: not a 0x-prefixed 32
 }
 }
 lines.push("Contact: " + (contact || "(not given)"));
-lines.push("", "Sent from " + location.href.split("#")[0]);
+lines.push("", "Source: https://pacta.wtf/request/");
 out.textContent = lines.join("\n");
 if (pay) pay.hidden = !paid;
 if (sum) sum.textContent = paid ? TRACK[t][0].replace(/ \((.*)\)$/, " · $1") : "";
@@ -1219,7 +1390,7 @@ contactMissing: "Enter where the alerts should go." },
 "reverify-seal-99": { atomic: 99000000, amount: "99.00", route: "seal", label: "24h Mainnet Control-Plane Seal", needTarget: true, needContact: true,
 contactMissing: "Enter a team contact so the verifiers can reach you." }
 };
-var CO_TIER = { "wallet-9": "wallet-report-9", "wallet-guard-49": "radar-webhook-49", "instant-19": "instant-scan-19", "webhook-49": "radar-webhook-49", "seal-99": "reverify-seal-99" };
+var CO_TIER = { "wallet-9": "wallet-report-9", "wallet-guard-49": "watch-pilot", "instant-19": "instant-scan-19", "webhook-49": "watch-pilot", "seal-99": "reverify-seal-99" };
 var CO_ERR = {
 tx_already_used: "This transaction hash already unlocked another order.",
 insufficient_amount: "The transfer is below the price. Send the exact amount shown, to the treasury shown.",
@@ -1261,7 +1432,7 @@ var p = String(pathname || "");
 if (BASE && p.indexOf(BASE + "/") === 0) p = p.slice(BASE.length);
 p = p.replace(/^\/website-test(?=\/)/, "");
 if (p && p.slice(-1) !== "/") p += "/";
-return /^\/(?:scan|seal)\/$/.test(p) ? p : "/" + route + "/";
+return /^\/(?:scan|seal|webhook)\/$/.test(p) ? p : "/" + route + "/";
 }
 function coDeepLinkPair(pathname, route, rawSearch, chainVal, addrVal) {
 var s0 = String(rawSearch || "").replace(BAD_CHARS, ""), qs = "";
@@ -1471,7 +1642,8 @@ if (dlCb) dlCb.addEventListener("click", xTrackLead);
 var tCh = fld("target_chain"), tAd = fld("target_address");
 if (tCh) tCh.addEventListener("change", syncDeepLinks);
 if (tAd) { tAd.addEventListener("input", syncDeepLinks); tAd.addEventListener("change", syncDeepLinks); }
-$$("[data-receipt]", document).forEach(function (b) { b.addEventListener("click", function () { setTimeout(syncDeepLinks, 0); }); });
+if (watch) { watch.addEventListener("input", syncDeepLinks); watch.addEventListener("change", syncDeepLinks); }
+$$("[data-receipt], [data-co-pick]", document).forEach(function (b) { b.addEventListener("click", function () { setTimeout(syncDeepLinks, 0); }); });
 }
 var pf = readPrefill(location.search);
 if (pf.protocol && !pfF) {
@@ -1503,9 +1675,13 @@ try { window.print(); } finally { h.classList.remove("co-print"); }
 }
 function initLauncher() {
 var bar = $("[data-launcher]"), k = coSkuFrom(location.search); if (!bar || !k) return;
-var a = $('a[data-sku="' + k + '"]', bar); if (!a) return;
-var p = readPrefill(location.search), href = a.getAttribute("href") + (p.protocol ? "?protocol=" + encodeURIComponent(p.protocol) : "");
-a.setAttribute("aria-current", "true");
+var p = readPrefill(location.search), qs = p.protocol ? "?protocol=" + encodeURIComponent(p.protocol) : "";
+var a = $('a[data-sku="' + k + '"]', bar);
+var href = a ? a.getAttribute("href") + qs
+: (k === "wallet-report-9" || k === "instant-scan-19") ? "../scan/" + qs
+: k === "reverify-seal-99" ? "../seal/" + qs : "";
+if (!href) return;
+if (a) a.setAttribute("aria-current", "true");
 try { location.replace(href); } catch (e) {  }
 }
 function initMiniApp() {
@@ -2167,33 +2343,44 @@ var head = total === 0
 : "Found " + total + " active DeFi position" + (total === 1 ? "" : "s") + " in " + short(wallet, 6, 4)
 + " \u2014 " + (alignedCount + protectiveCount) + " ALIGNED, " + adverseGapCount + " FLAGGED"
 + (observedCount > 0 ? ", " + observedCount + " OBSERVED" : "");
-var deltas = allPos.filter(function (p) { return p.status === "DELTA"; });
-var topGap = null;
-if (deltas.length > 0) {
-var top = deltas[0], pr = (protosMap && protosMap[top.slug]) || {};
-var uid0 = (top.baseEasUids && top.baseEasUids[0]) || null;
-topGap = {
-slug: top.slug,
-protocolName: top.protocolName,
-chain: top.chain,
-tokenAddress: top.tokenAddress,
-symbol: top.symbol,
-formattedBalance: top.formattedBalance,
-pinnedBlock: top.pinnedBlock,
-documentedDelaySeconds: top.documentedDelaySeconds,
-observedDelaySeconds: top.observedDelaySeconds,
+var flagged = allPos.filter(function (p) { return p.status === "DELTA" || p.status === "OBSERVED"; });
+var allBreakdowns = flagged.map(function (item) {
+var pr = (protosMap && protosMap[item.slug]) || {};
+var uid0 = (item.baseEasUids && item.baseEasUids[0]) || null;
+return {
+slug: item.slug,
+protocolName: item.protocolName,
+status: item.status,
+chain: item.chain,
+tokenAddress: item.tokenAddress,
+symbol: item.symbol,
+formattedBalance: item.formattedBalance,
+pinnedBlock: item.pinnedBlock,
+documentedDelaySeconds: item.documentedDelaySeconds,
+observedDelaySeconds: item.observedDelaySeconds,
 controllerAddress: pr.controllerAddress || null,
 controllerKind: pr.controllerKind || null,
-baseEasUids: top.baseEasUids || [],
+baseEasUids: item.baseEasUids || [],
 easScanUrl: uid0 ? "https://base.easscan.org/attestation/view/" + uid0 : null,
-scorecardUrl: top.scorecardUrl,
+scorecardUrl: item.scorecardUrl,
 summaryShort: pr.summary_short || "",
 whatDiffers: pr.whatDiffers || { changed: [], matched: [] }
 };
-}
+});
+var deltas = allBreakdowns.filter(function (b) { return b.status === "DELTA"; });
+var topGap = deltas.length > 0 ? deltas[0] : null;
+var byCtrl = {}, sharedCtrls = [];
+allPos.forEach(function (p) {
+var pr = (protosMap && protosMap[p.slug]) || {};
+var ca = pr.controllerAddress ? String(pr.controllerAddress).toLowerCase() : "";
+if (!ca) return;
+if (!byCtrl[ca]) byCtrl[ca] = { address: pr.controllerAddress, kind: pr.controllerKind || "controller", protocols: [] };
+if (byCtrl[ca].protocols.indexOf(p.protocolName) < 0) byCtrl[ca].protocols.push(p.protocolName);
+});
+Object.keys(byCtrl).forEach(function (k) { if (byCtrl[k].protocols.length >= 2) sharedCtrls.push(byCtrl[k]); });
 var out = {
 schema: "pacta.wallet_exposure.v1",
-tier: "free_summary",
+tier: "free_full",
 wallet: wallet,
 address: wallet,
 custody: custody || { isSafe: false, chains: [], threshold: null, ownerCount: null },
@@ -2211,7 +2398,9 @@ headline: head
 },
 positions: allPos,
 topAdverseGapPreview: topGap,
-lockedFlaggedPositionsCount: Math.max(0, adverseGapCount + observedCount - (topGap ? 1 : 0))
+allGapBreakdowns: allBreakdowns,
+sharedControllers: sharedCtrls,
+lockedFlaggedPositionsCount: 0
 };
 if (extra) { Object.keys(extra).forEach(function (k) { out[k] = extra[k]; }); }
 return out;
@@ -2435,11 +2624,34 @@ if (dChip) dChip.click();
 emptyRow.appendChild(tryDemo);
 card.appendChild(emptyRow);
 }
-var tg = r.topAdverseGapPreview;
-if (tg) {
-var gapBox = el("div", { "class": "wl-top-gap", "data-wallet-top-gap": tg.slug });
+var allGaps = Array.isArray(r.allGapBreakdowns) ? r.allGapBreakdowns.slice() : [];
+if (!allGaps.length) {
+if (r.topAdverseGapPreview) allGaps.push(r.topAdverseGapPreview);
+pos.forEach(function (p) {
+if ((p.status === "DELTA" || p.status === "OBSERVED") && (!r.topAdverseGapPreview || p.slug !== r.topAdverseGapPreview.slug)) {
+var uid0 = (p.baseEasUids && p.baseEasUids[0]) || null;
+allGaps.push({
+slug: p.slug, protocolName: p.protocolName, status: p.status, chain: p.chain,
+symbol: p.symbol, formattedBalance: p.formattedBalance, pinnedBlock: p.pinnedBlock,
+documentedDelaySeconds: p.documentedDelaySeconds, observedDelaySeconds: p.observedDelaySeconds,
+easScanUrl: uid0 ? "https://base.easscan.org/attestation/view/" + uid0 : null,
+scorecardUrl: p.scorecardUrl, summaryShort: "", whatDiffers: { changed: [], matched: [] }
+});
+}
+});
+}
+if (allGaps.length > 0) {
+var gapWrap = el("div", { "class": "wl-gaps-stack", "data-wallet-all-gaps": String(allGaps.length) });
+allGaps.forEach(function (tg, idxGap) {
+var isObs = tg.status === "OBSERVED";
+var boxAttrs = { "class": isObs ? "wl-top-gap wl-obs-gap" : "wl-top-gap", "data-wallet-gap-item": tg.slug };
+if (idxGap === 0 && !isObs) boxAttrs["data-wallet-top-gap"] = tg.slug;
+var gapBox = el("div", boxAttrs);
+var kLbl = isObs
+? "HELD RPC-OBSERVED POSITION #" + (idxGap + 1) + " \u00b7 DOCS NOT YET ASSESSED"
+: "#" + (idxGap + 1) + " HELD DELTA \u00b7 100% FREE FULL BREAKDOWN";
 var gapHead = el("div", { "class": "wl-gap-head" }, [
-el("span", { "class": "wl-gap-k mono", text: "#1 HIGHEST-URGENCY HELD GAP \u00b7 FREE FULL BREAKDOWN" }),
+el("span", { "class": "wl-gap-k mono", text: kLbl }),
 el("span", { "class": "wl-gap-links" }, [
 tg.pinnedBlock ? el("span", { "class": "mono", text: (tg.chain === "base" ? "Base" : "Ethereum") + " #" + num(tg.pinnedBlock) }) : "",
 tg.easScanUrl ? arrowLink({ href: tg.easScanUrl, target: "_blank", rel: "noopener" }, "Base EAS", "up-right") : "",
@@ -2457,33 +2669,35 @@ wd.changed.slice(0, 2).forEach(function (c) {
 gapBox.appendChild(el("p", { "class": "wl-gap-line wl-gap-changed", "data-pf-changed": "", text: wdLine("Changed", c, wd) }));
 });
 } else if (typeof tg.documentedDelaySeconds === "number" || typeof tg.observedDelaySeconds === "number") {
-gapBox.appendChild(el("p", { "class": "wl-gap-line wl-gap-changed", text: "Changed: Timelock delay " + (tg.observedDelaySeconds !== null ? secs(tg.observedDelaySeconds) : "unverified") + " observed vs " + (tg.documentedDelaySeconds !== null ? secs(tg.documentedDelaySeconds) : "documented") + " documented" }));
+gapBox.appendChild(el("p", { "class": "wl-gap-line wl-gap-changed", text: "Observed delay: " + (tg.observedDelaySeconds !== null ? secs(tg.observedDelaySeconds) : "unverified") + (tg.documentedDelaySeconds !== null ? " vs " + secs(tg.documentedDelaySeconds) + " documented" : "") }));
 }
 if (Array.isArray(wd.matched) && wd.matched.length) {
 gapBox.appendChild(el("p", { "class": "wl-gap-line wl-gap-matched", text: wdLine("Matched", wd.matched[0], wd) }));
 }
-card.appendChild(gapBox);
-}
-var lockedN = Number(r.lockedFlaggedPositionsCount || 0);
-if (lockedN > 0 || pos.length >= 2) {
-var lockTxt = lockedN > 0
-? "+ " + lockedN + " additional held position gap" + (lockedN === 1 ? "" : "s") + ", Cross-Position Signer Contagion Matrix & Signed SHA-256 Committee Receipt"
-: "Cross-Position Signer Contagion Matrix, Safe Signing Latency vs. Timelock Exit Check & Signed SHA-256 Committee Receipt";
-var lockRow = el("div", { "class": "wl-locked-row", "data-wallet-locked": "" }, [
-el("span", { "class": "wl-lock-copy", text: lockTxt })
-]);
-var unlockBtn = el("button", { type: "button", "data-slot": "button", "data-variant": "default", "data-size": "sm", "data-wl-unlock-jump": "", text: "Unlock Full Report ($9 USDC) \u2193" });
-unlockBtn.addEventListener("click", function () {
-var openCo = $("#scan-open-co");
-if (openCo) openCo.click();
+gapWrap.appendChild(gapBox);
 });
-lockRow.appendChild(unlockBtn);
-card.appendChild(lockRow);
+card.appendChild(gapWrap);
 }
-if (Number(sum.adverseGapCount || 0) > 0) {
+if (pos.length > 0) {
+var shared = Array.isArray(r.sharedControllers) ? r.sharedControllers : [];
+var exitNote = cust.isSafe
+? "Custody check: " + cust.threshold + "-of-" + cust.ownerCount + " Gnosis Safe signing coordination vs " + exitTxt + " shortest upstream protocol exit window."
+: "Custody check: single-key / EOA holder vs " + exitTxt + " shortest upstream protocol exit window.";
+var overlapNote = shared.length > 0
+? " Shared controller overlap: " + shared.map(function (sc) { return short(sc.address, 6, 4) + " (" + sc.protocols.join(" + ") + ")"; }).join("; ") + "."
+: " No shared admin controller address detected across these " + pos.length + " held positions.";
+card.appendChild(el("div", { "class": "wl-contagion-row", "data-wallet-contagion": "" }, [
+el("b", { text: "Exit-Window & Signer Overlap: " }),
+el("span", { text: exitNote + overlapNote })
+]));
+}
+card.appendChild(buildInlineWatchWidget(r.wallet));
+if (Number(sum.adverseGapCount || 0) > 0 || Number(sum.observedCount || 0) > 0) {
 var b2b = el("div", { "class": "wl-inline-b2b", "data-wallet-b2b": "" }, [
-el("span", { text: "Manage one of these protocols or vaults? " }),
-arrowLink({ href: siteUrl("https://pacta.wtf/seal/") }, "Request a 24h Re-Verification Seal"),
+el("span", { text: "Curate or maintain one of these vaults? " }),
+arrowLink({ href: siteUrl("https://pacta.wtf/bounties/#sponsor-pool") }, "Fund a Verification Pool"),
+el("span", { text: " \u00b7 " }),
+arrowLink({ href: siteUrl("https://pacta.wtf/request/?tier=community") }, "Free 7-Day Fix Re-Check"),
 el("span", { text: " \u00b7 " }),
 arrowLink({ href: siteUrl("https://pacta.wtf/curators/") }, "Curator Exposure Matrix")
 ]);
@@ -2494,6 +2708,8 @@ var prefChain = (cust.chains && cust.chains.indexOf("base") >= 0) ? "base" : (po
 notifyScanCheckComplete(prefChain, r.wallet);
 }
 var PROTO_SVG_SLUGS = { "drakewell-usddw": 1, "wintermute-confidential-wbtc-ethereum": 1 };
+var PROTO_TICKER_FIXED = { "lista-lending": "LISTA", "ether-fi-liquid-veda-boringvault": "ETHFI", "usdt0": "USDT0", "concentrator": "CTR",
+"autofinance": "TOKE", "team-finance": "TEAM", "harvest-finance": "FARM", "gmx-governor-trajectory": "GMX", "stake-dao": "SDT" };
 var PROTO_EXTRA_SYMS = {
 "augur": "REP", "autofinance": "TOKE", "baseline-protocol": "B", "bedrock-unibtc": "BR", "bedrock-unieth": "BR",
 "concrete": "CT", "curve-dex-ethereum": "CRV", "debridge": "DBR", "defi-saver": "DFS", "dexfi-aggregator": "GDEX",
@@ -2546,6 +2762,7 @@ s.appendChild(pe);
 return s;
 }
 function protoTickerText(x) {
+if (PROTO_TICKER_FIXED[x.slug]) return PROTO_TICKER_FIXED[x.slug];
 var it = x.it || {}, raw = (it.tokens || []).slice(), ex = PROTO_EXTRA_SYMS[x.slug];
 if (ex) raw.unshift(ex);
 var seen = {}, clean = [], nmLow = String(it.name || "").toLowerCase();
@@ -2563,7 +2780,7 @@ var g = x.card && x.card.grade ? x.card.grade : "", cl = (x.it && x.it.classific
 var ns = (g === "unresolved" || g === "recent_change" || g === "docs_updated") ? g : (x.it && x.it.scorecardStatus) || "";
 if (ns === "unresolved" || ns === "recent_change" || ns === "docs_updated")
 return { label: ({ unresolved: "UNRESOLVED", recent_change: "CHANGED RECENTLY", docs_updated: "DOCS UPDATED" })[ns], tone: "observed", rank: 3 };
-if (g === "delta" || cl === "parameter_delta" || cl === "mixed") return { label: "GAP", tone: "gap", rank: 0 };
+if (g === "delta" || cl === "parameter_delta" || cl === "mixed") return { label: "DELTA", tone: "gap", rank: 0 };
 if (g === "protective" || cl === "protective_delta") return { label: "PROTECTIVE", tone: "protective", rank: 1 };
 if (g === "aligned" || cl === "aligned_baseline") return { label: "ALIGNED", tone: "aligned", rank: 2 };
 return { label: "PINNED", tone: "observed", rank: 3 };
@@ -2768,7 +2985,7 @@ addr.setAttribute("aria-expanded", "true");
 if (combo) combo.setAttribute("data-open", "1");
 if (LK) { renderCombo(LK, queryOverride); return; }
 listbox.textContent = "";
-listbox.appendChild(el("p", { "class": "pf-dd-empty", text: "Loading 313+ indexed protocols\u2026" }));
+listbox.appendChild(el("p", { "class": "pf-dd-empty", text: "Loading indexed protocols\u2026" }));
 lookupData().then(function (d) { if (!listbox.hidden) renderCombo(d, queryOverride); });
 }
 var sampleCard = $("[data-pf-sample]", out);
@@ -2875,8 +3092,9 @@ ev.preventDefault();
 selectComboItem(comboHits[activeOpt >= 0 ? activeOpt : 0]);
 }
 });
+if (btn) btn.addEventListener("mousedown", function (ev) { ev.preventDefault(); });
 document.addEventListener("mousedown", function (ev) {
-if (listbox && !listbox.hidden && combo && !combo.contains(ev.target)) closeCombo();
+if (listbox && !listbox.hidden && combo && !combo.contains(ev.target) && !(btn && btn.contains(ev.target))) closeCombo();
 });
 addr.addEventListener("input", function () {
 var a = val();
@@ -2894,6 +3112,7 @@ function lookupNames(a) {
 var my = ++seq;
 if (ctl) { try { ctl.abort(); } catch (e) {  } ctl = null; }
 busy(false); invalid("");
+out.textContent = "";
 lookupData().then(function (d) {
 if (my !== seq) return;
 out.textContent = ""; out.setAttribute("data-pf-names", "");
@@ -3058,7 +3277,7 @@ var a = val(), ch = chainSel.value === "base" ? "base" : "ethereum", p = problem
 if (isName(a)) {
 if (listbox && !listbox.hidden && comboHits.length) { selectComboItem(comboHits[activeOpt >= 0 ? activeOpt : 0]); return; }
 if (a.length >= 2) lookupNames(a);
-else { invalid("Type a protocol or token name, pick from the dropdown, or paste a 0x\u2026 contract address."); addr.focus(); }
+else { invalid("Type a protocol or token name, pick from the dropdown, or paste a 0x\u2026 contract address."); busy(false); out.textContent = ""; out.removeAttribute("data-pf-names"); addr.focus(); }
 return;
 }
 closeCombo();
@@ -3228,7 +3447,8 @@ var LIVE_OK_AT = 0, LIVE_FAILED = false, STALE_S = 15 * 60;
 function freshness() {
 var now = Math.floor(Date.now() / 1000), stale = LIVE_FAILED || !LIVE_OK_AT || now - LIVE_OK_AT > STALE_S;
 $$("[data-last-recheck]").forEach(function (n) {
-n.textContent = LIVE_OK_AT ? "Last live re-check: " + fmt(Math.max(0, now - LIVE_OK_AT)) + " ago" : (LIVE_FAILED ? "Last live re-check: failed" : "Last live re-check: not yet");
+var utcHm = LIVE_OK_AT ? new Date(LIVE_OK_AT * 1000).toISOString().slice(11, 16) + " UTC" : "";
+n.textContent = LIVE_OK_AT ? "Last live re-check: " + utcHm + " (" + fmt(Math.max(0, now - LIVE_OK_AT)) + " ago)" : (LIVE_FAILED ? "Last live re-check: failed" : "Last live re-check: not yet");
 });
 $$("[data-snapshot-fallback]").forEach(function (n) { n.hidden = !stale; });
 }
@@ -3504,9 +3724,10 @@ requester_role: ["protocol_team", "risk_curator_analyst", "institutional_allocat
 caller_purpose: ["collateral_due_diligence", "governance_monitoring", "security_audit", "pre_trade_safety", "yield_allocation", "integration_testing", "general_research"],
 request_type: ["doc_or_data_discrepancy", "missing_protocol", "missing_check_surface", "unsupported_chain", "mcp_or_api_feature"]
 };
-var URGENCY = { community: "community_queue_free", "rapid-500": "active_due_diligence", clearance: "issuer_24h_clearance_5k",
+var URGENCY = { community: "community_queue_free", "wholesale-150": "active_due_diligence", clearance: "issuer_24h_clearance_5k",
 continuous: "active_due_diligence", api_sla: "api_high_volume_sla" };
-var REQ_API_RE = /^https:\/\/pacta-x402\.pacta\.workers\.dev\/v1\/requests$/;
+var REQ_API_RE = /^https:\/\/(?:api\.pacta\.wtf|pacta\.fractalneurons\.com|pacta-x402\.pacta\.workers\.dev)\/v1\/requests$/;
+var PILOT_API_RE = /^https:\/\/(?:api\.pacta\.wtf|pacta\.fractalneurons\.com|pacta-x402\.pacta\.workers\.dev)\/v1\/(?:pilot\/(?:watch|sponsor-pool)|requests)$/;
 var EMAIL_RE = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/, TG_RE = /^@[A-Za-z0-9_]{3,32}$/, GH_RE = /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$/;
 var PII_RE = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}|(^|[\s(])@[A-Za-z0-9_]{2,}|\b\d{1,3}(?:\.\d{1,3}){3}\b|<[^>]*>/;
 var JUNK_CONTACT = /^(none|n\/?a|na|-+|null|user@example\.com|test@test\.com|email@example\.com)$/i;
@@ -3591,83 +3812,263 @@ return !!it;
 }
 };
 }
+function postPilotEndpoint(url, payload) {
+if (!PILOT_API_RE.test(url) || typeof fetch !== "function") return Promise.reject(new Error("unavailable"));
+var init = { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(payload) };
+try { if (typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function") init.signal = AbortSignal.timeout(15000); } catch (e) {  }
+return fetch(url, init).then(function (r) {
+return r.json().then(function (j) { return { status: r.status, j: j }; }, function () { return { status: r.status, j: {} }; });
+});
+}
+function validWatchDestination(raw) {
+var d = String(raw || "").trim();
+if (!d || d.length > 240 || JUNK_CONTACT.test(d) || /^@handle$|^@telegram$/i.test(d)) return "";
+if (/^https?:\/\//i.test(d)) {
+try {
+var u = new URL(d);
+if (u.protocol !== "https:" || u.username || u.password || !u.hostname || /^(?:localhost|127\.|10\.|192\.168\.)/i.test(u.hostname)) return "";
+return "webhook";
+} catch (e) { return ""; }
+}
+if (d.charAt(0) === "@" || /^https?:\/\/t\.me\//i.test(d)) {
+var tg = d.replace(/^https?:\/\/t\.me\//i, "@");
+if (tg.charAt(0) !== "@") tg = "@" + tg;
+return TG_RE.test(tg) ? "telegram" : "";
+}
+if (EMAIL_RE.test(d) && !/@(?:example\.com|test\.com)$/i.test(d)) return "email";
+return "";
+}
+function bindWatchPilotRoot(root) {
+if (!root || root.getAttribute("data-wp-bound") === "1") return;
+root.setAttribute("data-wp-bound", "1");
+var form = $("[data-watch-pilot-form]", root), tIn = $("[data-wp-target]", root), dIn = $("[data-wp-dest]", root);
+var btn = $("[data-wp-submit]", root), spin = btn ? $(".spinner", btn) : null, lbl = btn ? $("[data-wp-btn-lbl]", btn) : null;
+var errEl = $("[data-wp-err]", root), stEl = $("[data-wp-status]", root), doneEl = $("[data-wp-done]", root), doneMsg = $("[data-wp-done-msg]", root);
+var api = root.getAttribute("data-api") || "https://api.pacta.wtf/v1/pilot/watch";
+var fbApi = root.getAttribute("data-fallback-api") || "https://api.pacta.wtf/v1/requests";
+if (!form || !tIn || !dIn) return;
+function setErr(inp, msg) {
+if (errEl) { errEl.textContent = msg || ""; errEl.hidden = !msg; }
+[tIn, dIn].forEach(function (x) { x.removeAttribute("aria-invalid"); });
+if (inp && msg) { inp.setAttribute("aria-invalid", "true"); if (inp.focus) inp.focus(); }
+}
+function setBusy(on) {
+if (btn) { btn.disabled = on; btn.setAttribute("aria-busy", String(on)); }
+if (spin) spin.hidden = !on;
+if (lbl) lbl.textContent = on ? "Enabling\u2026" : "Enable free alerts";
+}
+form.addEventListener("submit", function (ev) {
+ev.preventDefault();
+if (stEl) { stEl.textContent = ""; stEl.hidden = true; }
+var tVal = cleanText(tIn.value, 120), dVal = String(dIn.value || "").trim();
+var validTarget = ADDR_RE.test(tVal) || /^(?:ethereum|base):0x[0-9a-fA-F]{40}$/.test(tVal)
+|| (tVal.length >= 2 && /^[A-Za-z0-9][A-Za-z0-9._()/ -]{1,119}$/.test(tVal) && !PII_RE.test(tVal));
+if (!validTarget) { setErr(tIn, "Enter a valid 0x Safe/wallet address or protocol name/slug."); return; }
+var ch = validWatchDestination(dVal);
+if (!ch) { setErr(dIn, "Enter a real email address, @Telegram handle, or https:// webhook URL."); return; }
+setErr(null, "");
+xTrackLead();
+setBusy(true);
+var payload = { target: tVal, channel: ch, destination: dVal };
+if (isInternalQa()) payload.internal = true;
+postPilotEndpoint(api, payload).then(function (res) {
+if (res.status === 404 && fbApi && ch !== "webhook") {
+return postPilotEndpoint(fbApi, {
+caller_agent: isInternalQa() ? "pacta-founder-qa" : "pacta-web",
+requester_role: "risk_curator_analyst",
+caller_purpose: "governance_monitoring",
+request_type: "mcp_or_api_feature",
+target_subject: cleanSubject(tVal).slice(0, 120) || "wallet-watch",
+requested_capability: "30-day free control-plane drift alert pilot (" + ch + ")",
+urgency_track: "active_due_diligence",
+contact_handle: dVal.slice(0, 120)
+});
+}
+return res;
+}).then(function (res) {
+setBusy(false);
+var j = res.j || {};
+if (res.status === 200 && (j.ok || j.request_id)) {
+var wid = j.watch_id || j.request_id || "WCH-2026";
+if (doneMsg) doneMsg.textContent = "30-day free alert pilot active (" + wid + ") for " + tVal + " via " + ch + ". Watch setup replies come from pacta@dri.network.";
+form.hidden = true;
+if (doneEl) { doneEl.hidden = false; if (doneEl.focus) { try { doneEl.focus(); } catch (e) {  } } }
+return;
+}
+if (stEl) {
+stEl.hidden = false;
+stEl.textContent = res.status === 429 ? "Rate limit reached — please wait a few minutes." : ("Could not enable alerts (HTTP " + res.status + (j.detail ? ": " + j.detail : "") + ").");
+}
+}).catch(function () {
+setBusy(false);
+if (stEl) { stEl.hidden = false; stEl.textContent = "Network error reaching Pacta API — please retry or write to pacta@dri.network."; }
+});
+});
+}
+function buildInlineWatchWidget(targetAddr) {
+var boxApi = ($(".pf") && $(".pf").getAttribute("data-api")) || "https://api.pacta.wtf";
+var sec = el("div", {
+"class": "watch-pilot-box wp-inline",
+"data-watch-pilot": "",
+"data-wallet-watch-inline": "",
+"data-api": boxApi + "/v1/pilot/watch",
+"data-fallback-api": boxApi + "/v1/requests"
+});
+sec.appendChild(el("div", { "class": "wp-head" }, [
+el("span", { "class": "step-k mono", text: "WATCH THIS SAFE / WALLET FREE \u00b7 30-DAY PILOT" }),
+el("h4", { text: "Get pre-execution alerts before held protocols upgrade or rotate Safe signers" })
+]));
+var f = el("form", { "class": "wp-form", "data-watch-pilot-form": "", novalidate: "", autocomplete: "off" });
+var tInput = el("input", { type: "hidden", name: "target", value: String(targetAddr || ""), "data-wp-target": "" });
+var dInput = el("input", {
+type: "text", name: "destination", maxlength: "240", spellcheck: "false", autocapitalize: "off",
+placeholder: "Email, Telegram or webhook", "aria-label": "Email, Telegram or HTTPS webhook", "data-wp-dest": ""
+});
+var subBtn = el("button", {
+type: "submit", "data-slot": "button", "data-variant": "default", "data-size": "default", "data-wp-submit": ""
+}, [
+el("span", { "class": "spinner", "aria-hidden": "true", hidden: "" }),
+el("span", { "data-wp-btn-lbl": "", text: "Enable free alerts" })
+]);
+f.appendChild(tInput);
+f.appendChild(el("div", { "class": "wp-inline-row" }, [dInput, subBtn]));
+var priv = el("p", { "class": "wp-privacy", "data-wp-privacy": "" }, [
+"Used only to deliver the alerts you ask for and opted-in setup replies from Pacta (",
+el("code", { text: "pacta@dri.network" }),
+"); never sold or used for cold marketing \u2014 see ",
+el("a", { href: siteUrl("https://pacta.wtf/privacy/#watch-pilot"), text: "Privacy" }),
+"."
+]);
+f.appendChild(priv);
+f.appendChild(el("p", { "class": "form-message", "data-slot": "form-message", "data-wp-err": "", hidden: "" }));
+f.appendChild(el("p", { "class": "wp-status", role: "status", "aria-live": "polite", "data-wp-status": "", hidden: "" }));
+sec.appendChild(f);
+sec.appendChild(el("div", { "class": "wp-done", "data-wp-done": "", hidden: "", tabindex: "-1" }, [
+el("span", { "data-slot": "badge", "data-variant": "success", text: "30-Day Free Pilot Active" }),
+el("p", { "data-wp-done-msg": "", text: "Alert pilot enabled." })
+]));
+bindWatchPilotRoot(sec);
+return sec;
+}
+function initWatchPilot() {
+$$("[data-watch-pilot]").forEach(function (r) { bindWatchPilotRoot(r); });
+}
+function initSponsorPool() {
+var form = $("[data-sponsor-pool-form]");
+if (!form) return;
+var sec = form.closest("[data-sponsor-pool]");
+if (sec && SPONSOR_POOL_ADDRESS === "") sec.setAttribute("data-sponsor-address", "");
+var tIn = $("[data-sp-target]", form), tierSel = $("[data-sp-tier-select]", form), setSel = $("[data-sp-settlement]", form);
+var attrIn = $("[data-sp-attr]", form), cIn = $("[data-sp-contact]", form);
+var btn = $("[data-sp-submit]", form), spin = btn ? $(".spinner", btn) : null, lbl = btn ? $("[data-sp-btn-lbl]", btn) : null;
+var errEl = $("[data-sp-err]", form), stEl = $("[data-sp-status]", form);
+var doneEl = sec ? $("[data-sp-done]", sec) : null, doneMsg = sec ? $("[data-sp-done-msg]", sec) : null;
+var api = form.getAttribute("data-api") || "https://api.pacta.wtf/v1/pilot/sponsor-pool";
+var fbApi = form.getAttribute("data-fallback-api") || "https://api.pacta.wtf/v1/requests";
+var pf = readPrefill(location.search);
+if (pf.protocol && tIn && !tIn.value) tIn.value = pf.protocol;
+function setErr(inp, msg) {
+if (errEl) { errEl.textContent = msg || ""; errEl.hidden = !msg; }
+[tIn, cIn].forEach(function (x) { if (x) x.removeAttribute("aria-invalid"); });
+if (inp && msg) { inp.setAttribute("aria-invalid", "true"); if (inp.focus) inp.focus(); }
+}
+function setBusy(on) {
+if (btn) { btn.disabled = on; btn.setAttribute("aria-busy", String(on)); }
+if (spin) spin.hidden = !on;
+if (lbl) lbl.textContent = on ? "Reserving\u2026" : "Reserve Verification Pool";
+}
+form.addEventListener("submit", function (ev) {
+ev.preventDefault();
+if (stEl) { stEl.textContent = ""; stEl.hidden = true; }
+var tVal = cleanText(tIn ? tIn.value : "", 160);
+var cVal = String(cIn ? cIn.value : "").trim();
+var tierVal = (tierSel && tierSel.value) ? tierSel.value : "pool-50";
+var setVal = (setSel && setSel.value) ? setSel.value : "safe_reserve";
+var attrVal = cleanText(attrIn ? attrIn.value : "", 80);
+if (tVal.length < 2 || PII_RE.test(tVal)) { setErr(tIn, "Enter the target protocol name/slug or 0x contract address (keep contact details in Contact)."); return; }
+var cClean = cVal.replace(/^github:/i, "");
+if (!cVal || JUNK_CONTACT.test(cVal) || cVal.length > 160 || !(EMAIL_RE.test(cClean) || TG_RE.test(cClean) || GH_RE.test(cClean))) {
+setErr(cIn, "Enter a valid work email, @Telegram handle, or GitHub username."); return;
+}
+setErr(null, "");
+xTrackLead();
+setBusy(true);
+var payload = { target: tVal, tier: tierVal, settlement: setVal, contact: cVal };
+if (attrVal) payload.attribution = attrVal;
+if (isInternalQa()) payload.internal = true;
+postPilotEndpoint(api, payload).then(function (res) {
+if (res.status === 404 && fbApi) {
+return postPilotEndpoint(fbApi, {
+caller_agent: isInternalQa() ? "pacta-founder-qa" : "pacta-web",
+requester_role: "risk_curator_analyst",
+caller_purpose: "collateral_due_diligence",
+request_type: "missing_protocol",
+target_subject: cleanSubject(tVal).slice(0, 120) || "sponsor-pool",
+requested_capability: "Sponsor Verification Pool (" + tierVal + ", " + setVal + (attrVal ? ", attribution: " + attrVal : "") + ")",
+urgency_track: "active_due_diligence",
+contact_handle: cVal.slice(0, 120)
+});
+}
+return res;
+}).then(function (res) {
+setBusy(false);
+var j = res.j || {};
+if (res.status === 200 && (j.ok || j.request_id)) {
+var pid = j.pool_id || j.request_id || "POOL-2026";
+var tierLbl = tierVal === "wholesale-150" ? "sweep, $150 per protocol for 20 or more" : "$50 minimum pool, $25 fixed verification fee";
+if (doneMsg) doneMsg.textContent = "Verification pool reserved (" + pid + ") for " + tVal + " (" + tierLbl + "). No payment now: we reply from Pacta (pacta@dri.network), and deposit instructions come only after the Sponsor Safe is deployed and verified.";
+form.hidden = true;
+if (doneEl) { doneEl.hidden = false; if (doneEl.focus) { try { doneEl.focus(); } catch (e) {  } } }
+return;
+}
+if (stEl) {
+stEl.hidden = false;
+stEl.textContent = res.status === 429 ? "Rate limit reached — please wait a few minutes." : ("Could not reserve pool (HTTP " + res.status + (j.detail ? ": " + j.detail : "") + ").");
+}
+}).catch(function () {
+setBusy(false);
+if (stEl) { stEl.hidden = false; stEl.textContent = "Network error reaching Pacta API — please retry or write to pacta@dri.network."; }
+});
+});
+}
 function syncScanUpgradeTarget(chOverride, addrOverride) {
-var pfChain = $("#pf-chain"), pfAddr = $("#pf-address"), pill = $("#co-sync-pill"), sealLink = $("#scan-to-seal");
-var guardLink = $("#scan-to-guard"), x402Cmd = $("#scan-x402-cmd");
+var pfChain = $("#pf-chain"), pfAddr = $("#pf-address");
 var ch = (chOverride || (pfChain && pfChain.value) || "ethereum") === "base" ? "base" : "ethereum";
 var a = String(addrOverride || (pfAddr && pfAddr.value) || "").trim();
-if (pill) {
-var pName = pfSelectedMeta && String(pfSelectedMeta.address || "").toLowerCase() === a.toLowerCase() ? pfSelectedMeta.name + " · " : "";
-pill.textContent = ADDR_RE.test(a)
-? "Target synced: " + pName + (ch === "base" ? "Base" : "Ethereum") + " · " + short(a, 6, 4)
-: "Target: paste any 0x… wallet, Safe or contract in the scanner above";
-}
-if (sealLink) {
-sealLink.setAttribute("href", ADDR_RE.test(a) ? "../seal/?chain=" + ch + "&address=" + a : "../seal/");
-}
-if (guardLink) {
-guardLink.setAttribute("href", ADDR_RE.test(a) ? "../webhook/?chain=" + ch + "&address=" + a : "../webhook/");
-}
-if (x402Cmd) {
-var box = $(".pf"), apiBase = (box && box.getAttribute("data-api")) || "https://pacta-x402.pacta.workers.dev";
-var targetStr = ADDR_RE.test(a) ? a : "0x\u2026";
-x402Cmd.textContent = 'curl -s -X POST ' + apiBase + '/v1/x402/wallet-exposure -H "Content-Type: application/json" -d \'{"address":"' + targetStr + '","chain":"all"}\'';
+var wpTarget = $("#watch-pilot-target");
+if (wpTarget && ADDR_RE.test(a)) {
+var pSlug = pfSelectedMeta && String(pfSelectedMeta.address || "").toLowerCase() === a.toLowerCase() ? pfSelectedMeta.slug : "";
+wpTarget.value = pSlug || (ch + ":" + a);
 }
 }
 function notifyScanCheckComplete(chain, address) {
-var up = $("#scan-upgrade"), revBtn = $("#scan-reveal-btn");
-if (!up) return;
-up.hidden = false;
-up.setAttribute("data-scan-revealed", "after-check");
-if (revBtn) revBtn.setAttribute("aria-expanded", "true");
 syncScanUpgradeTarget(chain, address);
 }
 function initScanFunnel() {
-var up = $("#scan-upgrade"), coCard = $("#co-card"), revBtn = $("#scan-reveal-btn"), openBtn = $("#scan-open-co");
 var pfChain = $("#pf-chain"), pfAddr = $("#pf-address");
 var q = {};
 try {
 var sp = new URLSearchParams(window.location.search || "");
 sp.forEach(function (v, k) { q[k] = v; });
 } catch (e) {  }
-if (!up && !q.protocol && ADDR_RE.test(String(q.address || ""))) {
-var sealCh = $("#co-chain"), sealT = $("#co-target");
-if (sealCh && (q.chain === "base" || q.chain === "ethereum")) sealCh.value = q.chain;
-if (sealT && !sealT.value) { sealT.value = q.address; sealT.setAttribute("value", q.address); }
-return;
+var pf = readPrefill(window.location.search || "");
+if (pf.protocol) {
+var freeBtn = $("[data-seal-community-link]"), poolBtn = $("[data-seal-pool-link]"), dosBtn = $("[data-seal-dossier-link]");
+if (freeBtn) freeBtn.setAttribute("href", "../request/?tier=community&protocol=" + encodeURIComponent(pf.protocol));
+if (poolBtn) poolBtn.setAttribute("href", "../bounties/?protocol=" + encodeURIComponent(pf.protocol) + "#sponsor-pool");
+if (dosBtn) dosBtn.setAttribute("href", "../request/?tier=clearance&protocol=" + encodeURIComponent(pf.protocol));
 }
-if (!up) return;
 if (pfChain) pfChain.addEventListener("change", function () { syncScanUpgradeTarget(); });
 if (pfAddr) pfAddr.addEventListener("input", function () { syncScanUpgradeTarget(); });
-syncScanUpgradeTarget();
-function openCheckout() {
-up.hidden = false;
-if (coCard) coCard.hidden = false;
-if (revBtn) revBtn.setAttribute("aria-expanded", "true");
-if (openBtn) openBtn.setAttribute("aria-expanded", "true");
-syncScanUpgradeTarget();
-}
-if (revBtn) {
-revBtn.addEventListener("click", function () {
-up.hidden = false;
-up.setAttribute("data-scan-revealed", "manual-toggle");
-revBtn.setAttribute("aria-expanded", "true");
-syncScanUpgradeTarget();
-if (up.scrollIntoView) { try { up.scrollIntoView({ behavior: "smooth", block: "start" }); } catch (e) {  } }
-});
-}
-if (openBtn) {
-openBtn.addEventListener("click", function () {
-openCheckout();
-if (coCard && coCard.scrollIntoView) { try { coCard.scrollIntoView({ behavior: "smooth", block: "nearest" }); } catch (e) {  } }
-});
-}
-if (q.unlock === "1" || q.unlock === "true" || q.tier === "wallet-9") {
-openCheckout();
+if (ADDR_RE.test(String(q.address || "")) && pfAddr && !pfAddr.value) {
+if (pfChain && (q.chain === "base" || q.chain === "ethereum")) pfChain.value = q.chain;
+pfAddr.value = q.address;
+pfAddr.setAttribute("value", q.address);
+syncScanUpgradeTarget(q.chain, q.address);
 }
 }
 document.addEventListener("DOMContentLoaded", function () {
-[initTheme, initInternalQaBadge, initXPixel, initSheet, initTabs, initTabLinks, initDetailsHash, initCmdk, initTooltips, initCopy, initBeaconHooks, tick, initIndex, initRequest, initLauncher, initCheckout, initScanFunnel, initSealCombo, initMiniApp, initInspector, initPreflight,
+[initTheme, initInternalQaBadge, initXPixel, initSheet, initTabs, initTabLinks, initDetailsHash, initCmdk, initTooltips, initCopy, initBeaconHooks, tick, initIndex, initRequest, initLauncher, initCheckout, initScanFunnel, initWatchPilot, initSponsorPool, initSealCombo, initMiniApp, initInspector, initPreflight,
 initLiveTimelocks, initProtocolFilter, initAges, initRefresh, initHeroCheck, initBadgeWidget, initScorecards, initReceipts].forEach(function (f) {
 try { f(); } catch (e) { setTimeout(function () { throw e; }, 0); }
 });

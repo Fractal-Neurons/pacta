@@ -522,8 +522,8 @@ export function lookupProtocols(raw = {}) {
 // chain within 48h of the pin, documents not yet updated; re-checked after 72h before any Delta). Byte-identical to tools/build_lookup.py badge_svg() (the site build checks).
 export const BADGE_TIERS = Object.freeze({
   aligned: Object.freeze({ label: "Aligned · Base EAS", color: "#374151" }),   // neutral, never safety-green
-  parameter_delta: Object.freeze({ label: "Parameter Delta", color: "#b45309" }),
-  rpc_observed: Object.freeze({ label: "RPC-Observed", color: "#475569" }),
+  parameter_delta: Object.freeze({ label: "Delta", color: "#b45309" }),
+  rpc_observed: Object.freeze({ label: "Observed", color: "#475569" }),
   // neutral slate: a protocol whose comparison does not establish a documented breach (scorecardStatus "unresolved")
   unresolved: Object.freeze({ label: "Unresolved · Unverified Scope", color: "#475569" }),
   docs_updated: Object.freeze({ label: "Docs Updated · Pending Re-Read", color: "#475569" }),
@@ -542,8 +542,8 @@ export function badgeTier(item) {
 }
 /**
  * Deterministic flat shield for a published protocol slug (the badge URL /v1/badges/<slug>.svg, docs/badges/<slug>.svg); null for
- * anything else. Six tiers (BADGE_TIERS): "aligned" (Aligned · Base EAS), "parameter_delta" (Parameter Delta), "rpc_observed"
- * (RPC-Observed), "unresolved" (Unresolved · Unverified Scope), "docs_updated" (Docs Updated · Pending Re-Read) and "recent_change"
+ * anything else. Six tiers (BADGE_TIERS): "aligned" (Aligned · Base EAS), "parameter_delta" (Delta), "rpc_observed"
+ * (Observed), "unresolved" (Unresolved · Unverified Scope), "docs_updated" (Docs Updated · Pending Re-Read) and "recent_change"
  * (Changed Recently · Re-Check Pending).
  * @param {string} slug published protocol slug
  * @returns {string|null} image/svg+xml text

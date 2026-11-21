@@ -1,8 +1,8 @@
 {
   "schema": "pacta.bounty_wave2.v1",
   "wave": 2,
-  "title": "[Wave 2 · Epoch 1: 25 × $1 USDC | 1,000-Slot Program] Continuous Agent & Researcher Control-Plane Mismatch Pool",
-  "program": "1,000-Gap Perpetual Open-Discovery Program ($1.00 USDC / Merged Net-New Gap on Base)",
+  "title": "[Wave 2 Archive · 30/30 Slots Settled & Retired] Agent & Researcher Control-Plane Micro-Bounties",
+  "program": "Wave 2 Control-Plane Micro-Bounty Archive ($1.00 USDC / Merged Net-New Gap on Base)",
   "rewardUsdc": "1.00",
   "rewardAtomic": 1000000,
   "programCapSlots": 1000,

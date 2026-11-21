@@ -2,6 +2,7 @@
 calls). Run after tools/build_site.py:  python3 tools/test_scorecard_corrections.py"""
 import json
 import os
+import re
 import subprocess
 import sys
 import unittest
@@ -224,11 +225,12 @@ class V4(unittest.TestCase):
         self.assertIn("free of charge", BS.CLEARANCE_SELF_CORRECTION)
 
     def test_8_bounties_page_matches_base_apart_from_asset_keys(self):
-        import re
-        base = subprocess.check_output(["git", "-C", ROOT, "show", "d8a1d9d050aeecd055cc05b6bfedf2bab4b35a83:docs/bounties/index.html"], text=True)
+        # merged candidate (Item 5): /bounties/ deliberately changes from the base: Wave 3 settled in full, 8 public Base payouts
         now = open(os.path.join(ROOT, "docs", "bounties", "index.html"), encoding="utf-8").read()
-        strip = lambda t: re.sub(r'\?v=[0-9a-f]+', "?v=", t)
-        self.assertEqual(strip(base), strip(now))
+        self.assertEqual(now.count('<span data-slot="badge" data-variant="neutral">Paid on Base</span>'), 8)
+        self.assertIn("settled in full on 21 Nov 2026 ($70.00 USDC paid on Base across 8 verified dossiers", now)
+        for bad in ("[Wave 3:", "top-up", "in settlement", "verified adverse"):
+            self.assertNotIn(bad, now)
 
 
 class V5(unittest.TestCase):
@@ -468,7 +470,10 @@ class V6(unittest.TestCase):
         import glob
         css = open(os.path.join(ROOT, "docs", "styles.css"), encoding="utf-8").read()
         home = open(os.path.join(ROOT, "docs", "index.html"), encoding="utf-8").read()
-        self.assertIn('placeholder="Search 316 protocols or 0x address…"', home)
+        # merged candidate: Phase A B1 (a closed item to preserve) keeps the hero placeholder at 30 characters or fewer
+        ph = re.search(r'id="hero-q"[^>]*placeholder="([^"]*)"|placeholder="([^"]*)"[^>]*id="hero-q"', home)
+        ph_ = (ph.group(1) or ph.group(2)) if ph else re.search(r'placeholder="(Aave, Lido or 0x address)"', home).group(1)
+        self.assertLessEqual(len(ph_), 30)
         self.assertIn('.js #how-it-works [data-tabs-stable] > [data-slot="tabs-content"][data-inactive] { display: none; }', css)
         self.assertIn("overflow-wrap: break-word; word-break: normal;", css)
         self.assertNotIn("table.radar .meta { overflow-wrap: anywhere", css)
@@ -477,7 +482,7 @@ class V6(unittest.TestCase):
         n_rated = 0
         for f in glob.glob(os.path.join(ROOT, "docs", "protocols", "*", "index.html")):
             s = f.split(os.sep)[-2]
-            has = "parity is <i>uncompared</i> for RPC-observed protocols" in open(f, encoding="utf-8").read()
+            has = "parity is <i>uncompared</i> for Observed protocols" in open(f, encoding="utf-8").read()   # merged candidate (Item 11): Observed
             self.assertEqual(has, CARDS[s]["grade"] == "observed", s)
             n_rated += CARDS[s]["grade"] != "observed"
         self.assertEqual(n_rated, 189)

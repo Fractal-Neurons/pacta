@@ -198,10 +198,11 @@ const SCOPE = "HARNESS-SCOPE-7c1e https://example.invalid/docs 0x111111111111111
 const TX = "0x" + "ab".repeat(32);
 const FORUM = "https://forum.example.invalid/t/harness-listing/1";
 const OPT = {
-  clearance: "Full Protocol Control-Plane Dossier ($2,500–$5,000 USDC, 24h SLA)",
-  continuous: "Continuous Control-Plane Monitoring ($1,500 USDC per month)",
+  clearance: "Custom Control-Plane Dossier (by arrangement)",
+  wholesale: "Wholesale Coverage Sweep — 20 or more protocols ($150 / protocol, by arrangement)",
+  continuous: "Custom webhook alerts (by arrangement)",
   api_sla: "Enterprise / High-Throughput API SLA (priced on scope)",
-  community: "Community queue (free; unscheduled, typically 6–8 weeks)"
+  community: "Free factual re-verification within 7 days (merged docs or on-chain fix)"
 };
 const SET = { invoice: "Option A: formal commercial invoice (PDF) and counterparty settlement", direct: "Option B: direct on-chain USDC settlement" };
 function ghParams(doc) {
@@ -241,9 +242,9 @@ try {
   let q = ghParams(d);
   res.clearance_github_href = q !== null;
   res.clearance_github_tier_exact = !!q && q.get("package_tier") === OPT.clearance && q.get("settlement_preference") === SET.invoice;
-  res.clearance_brief_has_price_and_invoice = /\$5,000 USDC/.test(brief(d)) && brief(d).includes("Settlement: Option A") && !brief(d).includes("Payment:")
+  res.clearance_brief_has_price_and_invoice = /by arrangement/.test(brief(d)) && !/\$5,000|\$2,500/.test(brief(d)) && brief(d).includes("Settlement: Option A") && !brief(d).includes("Payment:")
     && /^0x[0-9a-fA-F]{40}$/.test(treasury || "") && !brief(d).includes(treasury);
-  res.pay_summary_tracks_tier = d.getElementById("req-pay-sum").textContent === "Full Protocol Control-Plane Dossier · $2,500–$5,000 USDC, 24h SLA";
+  res.pay_summary_tracks_tier = d.getElementById("req-pay-sum").textContent === "Custom Control-Plane Dossier · by arrangement";
   // (b) Option B (direct on-chain USDC): tx field + treasury shown; a valid tx hash + forum URL flow into the brief and the GitHub prefill
   settle(d, "direct");
   res.direct_shows_tx_and_treasury = d.getElementById("req-tx-field").hidden === false && d.getElementById("req-direct").hidden === false
@@ -281,20 +282,23 @@ try {
   // (e2) continuous and API SLA tracks: own dropdown option, own amount in the summary and the Option B payment line
   pick(d, "continuous");
   q = ghParams(d);
-  res.continuous_track = q.get("package_tier") === OPT.continuous && brief(d).includes("$1,500 USDC per month in USDC to the Pacta treasury")
-    && d.getElementById("req-pay-sum").textContent === "Continuous Control-Plane Monitoring · $1,500 USDC per month";
+  res.continuous_track = q.get("package_tier") === OPT.continuous && brief(d).includes("by arrangement in USDC to the Pacta treasury")
+    && d.getElementById("req-pay-sum").textContent === "Custom webhook alerts · by arrangement";
   pick(d, "api_sla");
   q = ghParams(d);
   res.api_sla_track = q.get("package_tier") === OPT.api_sla && d.getElementById("req-pay").hidden === false
     && d.getElementById("req-pay-sum").textContent === "Enterprise / High-Throughput API SLA · priced on scope";
-  // (f) ?tier=community prefill; unknown tiers fall back to the default
+  // (f) ?tier=community prefill; ?tier=wholesale-150 prefill; legacy ?tier=rapid-500 forwards to free 7-day community track; unknown tiers fall back to default
   p = run(input.request, input.app, { path: "/request/", search: "?tier=community" });
   res.prefill_selects_community = checked(p.document) === "community" && p.document.getElementById("req-pay").hidden === true;
   p = run(input.request, input.app, { path: "/request/", search: "?tier=disclosure" });
   res.prefill_unknown_tier_keeps_clearance = checked(p.document) === "clearance";
+  const pw = run(input.request, input.app, { path: "/request/", search: "?tier=wholesale-150" });
   p = run(input.request, input.app, { path: "/request/", search: "?tier=rapid-500" });
-  res.prefill_rapid_500 = checked(p.document) === "rapid-500" && p.document.getElementById("req-pay").hidden === false
-    && ghParams(p.document) !== null && ghParams(p.document).get("package_tier") === "Rapid Single-Gap Re-Verification ($500 USDC, 24h SLA)";
+  res.prefill_rapid_500 = checked(pw.document) === "wholesale-150" && pw.document.getElementById("req-pay").hidden === false
+    && ghParams(pw.document) !== null && ghParams(pw.document).get("package_tier") === OPT.wholesale
+    && checked(p.document) === "community" && p.document.getElementById("req-pay").hidden === true
+    && ghParams(p.document) !== null && ghParams(p.document).get("package_tier") === OPT.community;
   // (f2) /request/?tier=…&protocol=…&forum=…&settlement=… prefill (the conversion-card links)
   {
     const PF = "https://forum.example.invalid/t/listing-proposal/42";
@@ -507,7 +511,7 @@ async function beaconScenario() {
     res.b_cta_aligned_maintenance = same(al.kinds, ["continuous", "continuous_invoice"]) && same(al.events, ["cta_click", "cta_click"]);
     if (input.clearanceProtocol) {
       const cl = ctaClicks(input.clearanceProtocol, "/protocols/" + input.clearanceSlug + "/");
-      res.b_cta_clearance_protocol = same(cl.kinds, ["seal_99", "scan_19", "free_notify", "clearance", "clearance_invoice"])
+      res.b_cta_clearance_protocol = same(cl.kinds, ["sponsor_pool", "scan_free", "free_notify", "clearance", "clearance_invoice"])
         && same(cl.events, ["cta_click", "cta_click", "cta_click", "cta_click", "cta_click"]);
     }
     if (input.brief) {
@@ -515,10 +519,9 @@ async function beaconScenario() {
       res.b_cta_clearance_brief = same(br.kinds, ["free_notify", "clearance", "clearance_invoice"]) && same(br.events, ["cta_click", "cta_click", "cta_click"]);
     }
     const hp = ctaClicks(input.index, "/");
-    res.b_cta_pricing = same(hp.kinds, ["pricing_free", "pricing_mcp", "pricing_scan_9", "pricing_webhook_49", "pricing_seal_99",
-                                        "pricing_x402_verdict", "pricing_x402_dossier", "pricing_x402_wallet_exposure", "pricing_x402_calldata_sim", "pricing_x402_deep_scan",
-                                        "pricing_clearance", "pricing_continuous", "pricing_community", "pricing_api_sla"])
-      && hp.events.length === 14 && hp.events.every((e) => e === "cta_click");
+    res.b_cta_pricing = same(hp.kinds, ["pricing_scan_free", "pricing_mcp", "pricing_sponsor_pool", "pricing_wholesale", "pricing_watch_pilot",
+                                        "pricing_radar", "pricing_clearance", "pricing_wholesale_150", "pricing_continuous", "pricing_community", "pricing_api_sla"])
+      && hp.events.length === 11 && hp.events.every((e) => e === "cta_click");
   }
   // 404: not_found_404 instead of page_load; paths are redacted to a closed canonical set BEFORE transmission
   // (Phase C.1): only /protocols/<safe-slug>/ keeps its slug (and t); anything else is "/404"; IP / local referrers are dropped
@@ -630,7 +633,7 @@ function rescueScenario() {
 // state badges with textContent + class only; failures and malformed payloads keep the static block-pinned state.
 async function liveTimelockScenario() {
   if (!input.timelockBrief) { res.live_error = "no timelock brief page"; return; }
-  const LIVE = "https://pacta-x402.pacta.workers.dev/v1/briefs/live-timelocks?caller_agent=pacta-wtf-radar&requester_role=individual_user&caller_purpose=governance_monitoring";
+  const LIVE = "https://api.pacta.wtf/v1/briefs/live-timelocks?caller_agent=pacta-wtf-radar&requester_role=individual_user&caller_purpose=governance_monitoring";
   const opsOf = (doc) => (doc.querySelector("#post-eta-status [data-ops]").getAttribute("data-ops") || "").split(/\s+/).filter(Boolean);
   const op = (opId, live, block = 26420000) => ({ protocol: "Ethena", opId, live, block: { number: block, hash: "0x" + "ab".repeat(32), timestamp: 1794700000 } });
   const runWith = async (tree, path, reply) => {
@@ -648,7 +651,7 @@ async function liveTimelockScenario() {
   // static state before any network: READY, never EXECUTED
   let x = await runWith(input.timelockBrief, "/briefs/ethena-ops-0x0ca0-0x1fe5/", new Error("offline"));
   const ids = opsOf(x.d);
-  res.live_static_ready = ids.length === 2 && badge(x.d).textContent === "READY · EXECUTABLE NOW" && badge(x.d).classList.contains("ready")
+  res.live_static_ready = ids.length === 2 && badge(x.d).textContent === "WINDOW OPEN" && badge(x.d).classList.contains("ready")
     && x.calls.length === 1 && x.calls[0].url === LIVE && x.d.querySelector("[data-live-line]").textContent === "";
   // live: both executed -> EXECUTED, banner flips, clause says superseded, latest block named
   x = await runWith(input.timelockBrief, "/briefs/ethena-ops-0x0ca0-0x1fe5/", { status: 200, body: { operations: ids.map((i) => op(i, { status: "done", isOperationDone: true, isOperationPending: false })) } });
@@ -660,14 +663,14 @@ async function liveTimelockScenario() {
   x = await runWith(input.timelockBrief, "/briefs/ethena-ops-0x0ca0-0x1fe5/", { status: 200, body: { operations: [op(ids[0], { status: "ready", isOperationPending: true, isOperationDone: false }), op(ids[1], { status: "done", isOperationDone: true })] } });
   res.live_mixed = badge(x.d).textContent === "MIXED" && badge(x.d).classList.contains("mixed");
   x = await runWith(input.timelockBrief, "/briefs/ethena-ops-0x0ca0-0x1fe5/", { status: 200, body: { operations: ids.map((i) => op(i, { status: "ready", isOperationPending: true, isOperationDone: false })) } });
-  res.live_ready_kept = badge(x.d).textContent === "READY · EXECUTABLE NOW" && badge(x.d).getAttribute("data-live") === "1";
+  res.live_ready_kept = badge(x.d).textContent === "WINDOW OPEN" && badge(x.d).getAttribute("data-live") === "1";
   // failures keep the static state: HTTP 502, malformed JSON, missing / partial operations, markup in the payload stays text
   let keep = true;
   for (const reply of [{ status: 502, body: {} }, { status: 200, bad: true }, { status: 200, body: { operations: "nope" } },
     { status: 200, body: { operations: [op(ids[0], { status: "done", isOperationDone: true })] } },
     { status: 200, body: { operations: ids.map((i) => op(i, { status: "<img src=x onerror=alert(1)>" })) } }]) {
     x = await runWith(input.timelockBrief, "/briefs/ethena-ops-0x0ca0-0x1fe5/", reply);
-    keep = keep && badge(x.d).textContent === "READY · EXECUTABLE NOW" && !x.d.querySelectorAll("img").some((i) => i.getAttribute("onerror") !== null);
+    keep = keep && badge(x.d).textContent === "WINDOW OPEN" && !x.d.querySelectorAll("img").some((i) => i.getAttribute("onerror") !== null);
   }
   res.live_failures_keep_static = keep;
   // homepage #radar: the Ethena row badge updates; pages without data-live-timelocks never fetch
@@ -918,8 +921,8 @@ async function visitorScenario() {
   res.e3_search = visible().some((r) => r.getAttribute("data-slug") === "circle-usdc") && visible().length < cards.length;
   const rc = d.querySelector("[data-radar-counts]");
   // M4 (v4): the header counts the rows by state; N5 (v4.3): executed rows are counted by operations, e.g.
-  // "1 ready · 1 pending · Executed (2 ops)", so the line never reads as a total
-  const OPS = "( \\(\\d+ ops?\\))?", PART = "(\\d+ (ready|pending|mixed|cancelled or unknown)" + OPS + "|Executed \\(\\d+ ops?\\))";
+  // "1 window open · 1 waiting · Executed (2 ops)", so the line never reads as a total
+  const OPS = "( \\(\\d+ ops?\\))?", PART = "(\\d+ (window open|waiting|mixed|cancelled or unknown)" + OPS + "|Executed \\(\\d+ ops?\\))";
   const parts = rc ? rc.textContent.split(" · ") : [], execRows = d.querySelectorAll('#radar tr[data-radar-row="executed"]').length;
   res.pp2_radar_counts = !!rc && new RegExp("^" + PART + "( · " + PART + ")*$").test(rc.textContent)
     && d.querySelectorAll("#radar tr[data-radar-row]").length === parts.reduce((s, x) => s + (/^Executed/.test(x) ? 0 : parseInt(x, 10)), 0) + execRows
@@ -1073,8 +1076,8 @@ async function v47Scenario() {
   res.v471_tabs_inert = a11y0 && a11y1 && d.querySelector("#how-it-works [data-tabs-stable]") !== null;
   res.v47_w2_tabs = s0 === "true,false,false,true" && s1 === "false,true,true,false" && s2 === s0 && s3 === s1 && s4 === s0 && s5 === s1
     && d.querySelector('#how-it-works [role="tablist"]') !== null && tRisk.textContent === "For risk & diligence teams" && tAg.textContent === "For AI agents & builders"
-    && /claude mcp add --transport http pacta https:\/\/pacta-x402\.pacta\.workers\.dev\/mcp/.test(pAg.textContent) && /cast call /.test(pAg.textContent)
-    && pRisk.querySelectorAll('a[data-slot="button"]').map((a) => a.getAttribute("href")).join() === "scorecards/?grade=delta,radar/,request/";
+    && /claude mcp add --transport http pacta https:\/\/(?:api\.pacta\.wtf|pacta\.fractalneurons\.com|pacta-x402\.pacta\.workers\.dev)\/mcp/.test(pAg.textContent) && /cast call /.test(pAg.textContent)
+    && pRisk.querySelectorAll('a[data-slot="button"]').map((a) => a.getAttribute("href")).join() === "scorecards/?grade=delta,radar/,scan/";
   // W3: Ctrl+K opens the command dialog; a ticker finds the protocol and its brief; arrows move; Enter would open; Escape closes; "/" reopens
   key(d.body, "k", { ctrlKey: true });
   const dlg = d.querySelector("[data-cmdk]"), qi = d.getElementById("cmdk-q");
@@ -1338,40 +1341,45 @@ async function checkoutScenario() {
   };
   const shape = (d, sku) => {
     const f = d.getElementById("co-form"), m = d.getElementById("co-manual");
-    return f.getAttribute("data-sku") === sku && d.querySelectorAll('input[name="sku"]').length === 0
+    return !!f && f.getAttribute("data-sku") === sku && d.querySelectorAll('input[name="sku"]').length === 0
       && d.querySelector("[data-co-amount]").textContent === C.amounts[sku] + " USDC"
       && d.querySelector("[data-co-eip681]").getAttribute("href") === eip(C.skus[sku])
       && d.getElementById("co-wallet").hidden === false && !m.hasAttribute("open") && d.getElementById("co-result").hidden === true;
   };
-  res.co_single_sku_pages = shape(page(input.scan, "/scan/").document, "wallet-report-9") && shape(page(input.webhook, "/webhook/").document, "radar-webhook-49")
-    && shape(page(input.seal, "/seal/").document, "reverify-seal-99");
-  // no browser wallet: the primary action checks the order first, then opens the manual transfer drawer (never a dead button)
+  const scanDoc0 = page(input.scan, "/scan/").document, sealDoc0 = page(input.seal, "/seal/").document;
+  res.co_single_sku_pages = shape(page(input.webhook, "/webhook/").document, "radar-webhook-49")
+    && !scanDoc0.getElementById("co-form") && !sealDoc0.getElementById("co-form");
+  // no browser wallet (/webhook/): the primary action checks the order first, then opens the manual transfer drawer (never a dead button)
   calls = [];
-  let p = page(input.scan, "/scan/", { fetch: okFetch(200, {}) }), d = p.document;
+  let p = page(input.webhook, "/webhook/", { fetch: okFetch(200, {}) }), d = p.document;
   click(d.getElementById("co-wallet"));
   const blocked = !d.getElementById("co-manual").hasAttribute("open") && d.getElementById("co-target-err").hidden === false;
-  setv(d, "pf-address", ADDR); click(d.getElementById("co-wallet"));
+  setField(d, "co-watch", ADDR); setv(d, "co-contact", "https://hooks.example.invalid/w"); click(d.getElementById("co-wallet"));
   res.co_no_wallet_opens_drawer = blocked && d.getElementById("co-manual").hasAttribute("open")
     && /No browser wallet/.test(d.getElementById("co-status").textContent) && calls.length === 0;
-  // /scan/: an example chip fills the scanner and runs the free live check; the order then uses that target
+  // /scan/ free chip + /webhook/ quick-pick order flow
   calls = [];
-  p = page(input.scan, "/scan/", { fetch: okFetch(200, { order_id: "ord_chip" }) }); d = p.document;
+  p = page(input.scan, "/scan/", { fetch: okFetch(200, { verdict: "IMMUTABLE_NO_ADMIN", chain: "ethereum", address: ADDR, pinnedBlock: 1, riskScore: 0 }) }); d = p.document;
   const chip = d.querySelectorAll("[data-receipt]")[0], chipAddr = chip.getAttribute("data-pf-address");
   click(chip); await flush(); await flush();
   const pfCall = calls.find((c) => /\/v1\/check\/preflight\?/.test(String(c[0])));
-  setv(d, "co-tx", TXH); submit(d); await flush(); await flush();
+  const scanChipOk = d.getElementById("pf-address").value === chipAddr && !!pfCall && String(pfCall[0]).includes(chipAddr);
+  calls = [];
+  p = page(input.webhook, "/webhook/", { fetch: okFetch(200, { order_id: "ord_chip" }) }); d = p.document;
+  const wPick = d.querySelectorAll("[data-co-pick]")[0], wPickAddr = wPick.getAttribute("data-address");
+  click(wPick); setv(d, "co-contact", "https://hooks.example.invalid/pick"); setv(d, "co-tx", TXH);
+  submit(d); await flush(); await flush();
   const post = calls.find((c) => c[0] === C.api);
-  res.co_scan_chip_previews_and_orders = d.getElementById("pf-address").value === chipAddr && !!pfCall && String(pfCall[0]).includes(chipAddr)
-    && !!post && JSON.parse(post[1].body).target_address === chipAddr && JSON.parse(post[1].body).sku === "wallet-report-9";
+  res.co_scan_chip_previews_and_orders = scanChipOk && !!post && JSON.parse(post[1].body).target_address === wPickAddr && JSON.parse(post[1].body).sku === "radar-webhook-49";
   // the exact contract body; the result is text only
   calls = [];
   const okBody = { order_id: "ord_harness_1", status: "verified <img src=x onerror=alert(1)>", report: { proxy_admin: "0x" + "ef".repeat(20) } };
-  p = page(input.scan, "/scan/", { fetch: okFetch(200, okBody) }); d = p.document;
-  setv(d, "pf-chain", "base"); setv(d, "pf-address", ADDR); setv(d, "co-docs", "https://docs.example.invalid"); setv(d, "co-contact", "@harness"); setv(d, "co-tx", TXH);
+  p = page(input.webhook, "/webhook/", { fetch: okFetch(200, okBody) }); d = p.document;
+  setv(d, "co-chain", "base"); setField(d, "co-watch", ADDR); setv(d, "co-docs", "https://docs.example.invalid"); setv(d, "co-contact", "https://hooks.example.invalid/a"); setv(d, "co-tx", TXH);
   submit(d); await flush(); await flush();
   const b0 = calls[0] ? JSON.parse(calls[0][1].body) : null;
   res.co_verify_posts_exact_body = calls.length === 1 && calls[0][0] === C.api && calls[0][1].method === "POST"
-    && same(b0, { sku: "wallet-report-9", tx_hash: TXH, chain: "base", target_chain: "base", target_address: ADDR, protocol_or_docs: "https://docs.example.invalid", webhook_or_contact: "@harness" });
+    && same(b0, { sku: "radar-webhook-49", tx_hash: TXH, chain: "base", target_chain: "base", target_address: ADDR, protocol_or_docs: "https://docs.example.invalid", webhook_or_contact: "https://hooks.example.invalid/a" });
   const out = d.getElementById("co-result"), payA = out.querySelector("[data-co-r-pay] a");
   res.co_result_text_only = out.hidden === false && d.querySelector("[data-co-r-order]").textContent === "ord_harness_1"
     && d.querySelector("[data-co-r-status]").textContent.includes("<img src=x") && out.querySelectorAll("img").length === 0
@@ -1379,8 +1387,8 @@ async function checkoutScenario() {
   // the Worker's order codes: poll codes keep the order locked and waiting; final codes unlock with a specific message
   const codeRun = async (status, error) => {
     calls = [];
-    const q = page(input.scan, "/scan/", { fetch: okFetch(status, error === null ? "Not Found" : { error }) }), qd = q.document;
-    setv(qd, "pf-address", ADDR); setv(qd, "co-tx", TXH); submit(qd); await flush(); await flush();
+    const q = page(input.webhook, "/webhook/", { fetch: okFetch(status, error === null ? "Not Found" : { error }) }), qd = q.document;
+    setField(qd, "co-watch", ADDR); setv(qd, "co-contact", "https://hooks.example.invalid/c"); setv(qd, "co-tx", TXH); submit(qd); await flush(); await flush();
     return { st: qd.getElementById("co-status").textContent, locked: qd.getElementById("co-verify").disabled === true, shown: qd.getElementById("co-result").hidden === false, n: calls.length };
   };
   const polls = [[425, "tx_not_confirmed"], [404, "tx_not_found"], [502, "order_rpc_unavailable"], [503, "order_not_recorded"], [503, "report_unavailable"], [409, "payment_in_progress"]];
@@ -1391,10 +1399,10 @@ async function checkoutScenario() {
   for (const [st_, er_] of polls) { const r_ = await codeRun(st_, er_); pollsOk = pollsOk && r_.n === 1 && r_.locked && !r_.shown && /Waiting for Base/.test(r_.st); }
   for (const [st_, er_, re_] of finals) { const r_ = await codeRun(st_, er_); finalsOk = finalsOk && r_.n === 1 && !r_.locked && !r_.shown && re_.test(r_.st); }
   res.co_contract_codes = pollsOk && finalsOk;
-  p = page(input.scan, "/scan/", { fetch: () => Promise.reject(new Error("offline")) }); d = p.document;
-  setv(d, "pf-address", ADDR); setv(d, "co-tx", TXH); submit(d); await flush(); await flush();
+  p = page(input.webhook, "/webhook/", { fetch: () => Promise.reject(new Error("offline")) }); d = p.document;
+  setField(d, "co-watch", ADDR); setv(d, "co-contact", "https://hooks.example.invalid/o"); setv(d, "co-tx", TXH); submit(d); await flush(); await flush();
   res.co_errors_reported = /Could not reach the verifier/.test(d.getElementById("co-status").textContent) && d.getElementById("co-result").hidden === true;
-  // wallet (/seal/): switch to Base, ONE eth_sendTransaction = USDC.transfer(treasury, exact amount), then the frozen order is verified
+  // wallet (/webhook/): switch to Base, ONE eth_sendTransaction = USDC.transfer(treasury, exact amount), then the frozen order is verified
   const wcalls = [];
   let chain = "0x1";
   const eth = { request: (a) => {
@@ -1406,25 +1414,25 @@ async function checkoutScenario() {
     return Promise.reject(Object.assign(new Error("unexpected"), { code: -1 }));
   } };
   calls = [];
-  p = page(input.seal, "/seal/", { win: { ethereum: eth }, fetch: okFetch(200, { order_id: "ord_w" }) }); d = p.document;
-  setv(d, "co-target", ADDR); setv(d, "co-contact", "@team"); click(d.getElementById("co-wallet"));
+  p = page(input.webhook, "/webhook/", { win: { ethereum: eth }, fetch: okFetch(200, { order_id: "ord_w" }) }); d = p.document;
+  setField(d, "co-watch", ADDR); setv(d, "co-contact", "https://hooks.example.invalid/team"); click(d.getElementById("co-wallet"));
   for (let i = 0; i < 8; i++) await flush();
   const send = wcalls.find((a) => a.method === "eth_sendTransaction");
-  const want = "0xa9059cbb" + pad(C.treasury.slice(2).toLowerCase()) + pad(C.skus["reverify-seal-99"].toString(16));
+  const want = "0xa9059cbb" + pad(C.treasury.slice(2).toLowerCase()) + pad(C.skus["radar-webhook-49"].toString(16));
   const body1 = calls[0] ? JSON.parse(calls[0][1].body) : {};
   res.co_wallet_transfer_only = wcalls.some((a) => a.method === "wallet_switchEthereumChain" && a.params[0].chainId === "0x2105")
     && !!send && same(send.params, [{ from: "0x" + "ab".repeat(20), to: C.usdc, value: "0x0", data: want }])
     && wcalls.filter((a) => a.method === "eth_sendTransaction").length === 1 && !wcalls.some((a) => /approve|allowance|sign/i.test(a.method))
-    && d.getElementById("co-tx").value === TXH && calls.length === 1 && body1.tx_hash === TXH && body1.sku === "reverify-seal-99"
-    && body1.target_address === ADDR && body1.webhook_or_contact === "@team";
+    && d.getElementById("co-tx").value === TXH && calls.length === 1 && body1.tx_hash === TXH && body1.sku === "radar-webhook-49"
+    && body1.target_address === ADDR && body1.webhook_or_contact === "https://hooks.example.invalid/team";
   const eth2 = { request: (a) => a.method === "eth_sendTransaction" ? Promise.reject(Object.assign(new Error("denied"), { code: 4001 })) : eth.request(a) };
   chain = "0x2105"; calls = [];
-  p = page(input.scan, "/scan/", { win: { ethereum: eth2 }, fetch: okFetch(200, {}) }); d = p.document;
-  setv(d, "pf-address", ADDR); click(d.getElementById("co-wallet")); for (let i = 0; i < 8; i++) await flush();
+  p = page(input.webhook, "/webhook/", { win: { ethereum: eth2 }, fetch: okFetch(200, {}) }); d = p.document;
+  setField(d, "co-watch", ADDR); setv(d, "co-contact", "https://hooks.example.invalid/cancel"); click(d.getElementById("co-wallet")); for (let i = 0; i < 8; i++) await flush();
   res.co_wallet_cancel_sends_nothing = calls.filter((c) => c[0] === C.api).length === 0 && /Cancelled in the wallet/.test(d.getElementById("co-status").textContent)
-    && d.getElementById("co-wallet").disabled === false && d.getElementById("pf-address").disabled === false;
-  // one payment at a time, and the order frozen at Pay: while the prompt is open every control is locked (the scanner, the chips and
-  // the order fields too); a forced change during the prompt never reaches the POST; everything unlocks once it settles
+    && d.getElementById("co-wallet").disabled === false && d.getElementById("co-watch").disabled === false;
+  // one payment at a time, and the order frozen at Pay: while the prompt is open every control is locked;
+  // a forced change during the prompt never reaches the POST; everything unlocks once it settles
   let release;
   const gate = new Promise((r) => { release = r; });
   const wc3 = [];
@@ -1436,13 +1444,13 @@ async function checkoutScenario() {
     return Promise.reject(new Error("unexpected"));
   } };
   calls = [];
-  p = page(input.scan, "/scan/", { win: { ethereum: eth3 }, fetch: okFetch(200, { order_id: "ord_once" }) }); d = p.document;
-  setv(d, "pf-address", ADDR); setv(d, "co-docs", "https://docs.example.invalid/a"); setv(d, "co-contact", "@harness");
+  p = page(input.webhook, "/webhook/", { win: { ethereum: eth3 }, fetch: okFetch(200, { order_id: "ord_once" }) }); d = p.document;
+  setField(d, "co-watch", ADDR); setv(d, "co-docs", "https://docs.example.invalid/a"); setv(d, "co-contact", "https://hooks.example.invalid/once");
   const w3 = d.getElementById("co-wallet");
   click(w3); await flush(); click(w3); click(w3); await flush();
-  const ids3 = ["co-wallet", "co-verify", "pf-address", "pf-chain", "pf-submit", "co-docs", "co-contact", "co-tx"];
-  const locked3 = ids3.every((id) => d.getElementById(id).disabled === true) && d.querySelectorAll("[data-receipt]").every((b) => b.disabled === true);
-  setv(d, "pf-address", "0x" + "99".repeat(20)); setv(d, "co-docs", "https://evil.example.invalid"); setv(d, "co-contact", "@other");
+  const ids3 = ["co-wallet", "co-verify", "co-watch", "co-contact", "co-tx"];
+  const locked3 = ids3.every((id) => d.getElementById(id).disabled === true) && d.querySelectorAll("[data-co-pick]").every((b) => b.disabled === true);
+  setv(d, "co-target", "0x" + "99".repeat(20)); setv(d, "co-docs", "https://evil.example.invalid"); setv(d, "co-contact", "https://hooks.example.invalid/other");
   setv(d, "co-tx", TXH); submit(d); await flush();
   const noVerifyDuring = calls.filter((c) => c[0] === C.api).length === 0;
   release(); for (let i = 0; i < 8; i++) await flush();
@@ -1451,7 +1459,7 @@ async function checkoutScenario() {
     && wc3.filter((m) => m === "eth_sendTransaction").length === 1 && posts3.length === 1
     && ids3.every((id) => d.getElementById(id).disabled === false) && d.getElementById("co-result").hidden === false;
   res.co_snapshot_and_inputs_locked = locked3 && posts3.length === 1
-    && same(b3, { sku: "wallet-report-9", tx_hash: TXH, chain: "base", target_chain: "ethereum", target_address: ADDR, protocol_or_docs: "https://docs.example.invalid/a", webhook_or_contact: "@harness" });
+    && same(b3, { sku: "radar-webhook-49", tx_hash: TXH, chain: "base", target_chain: "ethereum", target_address: ADDR, protocol_or_docs: "https://docs.example.invalid/a", webhook_or_contact: "https://hooks.example.invalid/once" });
   // /webhook/: quick picks fill the timelock / Safe and the protocol; the destination is required and must be https; empty fields stay out
   calls = [];
   p = page(input.webhook, "/webhook/", { fetch: okFetch(200, { order_id: "ord_w49" }) }); d = p.document;
@@ -1460,8 +1468,6 @@ async function checkoutScenario() {
   click(ethena);
   const ethOk = /^0x[0-9a-fA-F]{40}$/.test(ethena.getAttribute("data-address")) && d.getElementById("co-target").value === ethena.getAttribute("data-address")
     && d.getElementById("co-docs").value === ethena.getAttribute("data-protocol") && ethena.getAttribute("aria-pressed") === "true";
-  // one visible target field: the pick shows the protocol name (never a hex) and the short controller in the hint; typing an
-  // address or a name fills exactly one of the two hidden order fields; a bad address is reported on the visible field
   const watchEl = d.getElementById("co-watch"), hintEl = d.querySelector("[data-co-watch-hint]");
   const watchPick = !!watchEl && watchEl.value === ethena.getAttribute("data-protocol") && !/0x[0-9a-fA-F]{40}/.test(watchEl.value)
     && hintEl.textContent.indexOf(ethena.getAttribute("data-address").slice(0, 6) + "…") !== -1;
@@ -1483,80 +1489,107 @@ async function checkoutScenario() {
   res.co_webhook_picks_and_rules = ethOk && aaveOk && httpRefused && contactNeeded && calls.length === 1
     && same(JSON.parse(calls[0][1].body), { sku: "radar-webhook-49", tx_hash: TXH, chain: "base", target_chain: "ethereum", protocol_or_docs: aave.getAttribute("data-protocol"),
                                              webhook_or_contact: "https://hooks.example.invalid/x" });
-  // /seal/?protocol=<slug> (the protocol pages' seal link): the indexed contract and name come from the public catalog
-  const lkFetch = (url) => {
-    const u = String(url);
-    if (/api\/v1\/lookup\.json$/.test(u)) return Promise.resolve({ status: 200, ok: true, json: () => Promise.resolve(input.lookupJson) });
-    if (/api\/v1\/scorecards\.json$/.test(u)) return Promise.resolve({ status: 200, ok: true, json: () => Promise.resolve(input.scorecardsJson) });
-    return Promise.reject(new Error("not needed"));
-  };
-  p = page(input.seal, "/seal/", { search: "?protocol=stader-labs-ethx", fetch: lkFetch }); d = p.document;
-  for (let i = 0; i < 4; i++) await flush();
-  const stx = input.lookupJson.items.find((i) => i.slug === "stader-labs-ethx");
-  res.co_seal_protocol_prefill = d.getElementById("co-target").value === stx.preflightArgs.address && d.getElementById("co-docs").value === stx.name;
-  // /request/?tier=seal-99 forwards to the seal page (keeping the protocol); an enterprise tier stays on /request/
+  // /seal/?protocol=<slug>: reframed 3-path Base-EAS attestation page syncs protocol query into community & dossier links
+  p = page(input.seal, "/seal/", { search: "?protocol=stader-labs-ethx" }); d = p.document;
+  for (let i = 0; i < 3; i++) await flush();
+  const sealComm = d.querySelector("[data-seal-community-link]"), sealDos = d.querySelector("[data-seal-dossier-link]");
+  res.co_seal_protocol_prefill = !!sealComm && sealComm.getAttribute("href") === "../request/?tier=community&protocol=stader-labs-ethx"
+    && !!sealDos && sealDos.getAttribute("href") === "../request/?tier=clearance&protocol=stader-labs-ethx";
+  // /request/?tier=seal-99 | wallet-9 | webhook-49 forward cleanly; enterprise tiers stay on /request/
   const lr = run(input.request, input.app, { path: "/request/", search: "?tier=seal-99&protocol=stader-labs-ethx" });
+  const lrScan = run(input.request, input.app, { path: "/request/", search: "?tier=wallet-9&protocol=stader-labs-ethx" });
+  const lrWeb = run(input.request, input.app, { path: "/request/", search: "?tier=webhook-49&protocol=stader-labs-ethx" });
   const lr2 = run(input.request, input.app, { path: "/request/", search: "?tier=clearance" });
-  res.co_request_launcher_forward = lr.location.replaced === "../seal/?protocol=stader-labs-ethx" && !lr2.location.replaced
+  res.co_request_launcher_forward = lr.location.replaced === "../seal/?protocol=stader-labs-ethx"
+    && lrScan.location.replaced === "../scan/?protocol=stader-labs-ethx"
+    && lrWeb.location.replaced === "../webhook/?protocol=stader-labs-ethx"
+    && !lr2.location.replaced
     && lr.document.querySelectorAll("[data-launcher] a").length === 3;
-  // Mobile WebView 1-tap wallet deep-links (/scan/ and /seal/): shown ONLY when !window.ethereum and mobile UA;
+  // Mobile WebView 1-tap wallet deep-links (/webhook/): shown ONLY when !window.ethereum and mobile UA;
   // strips staging /website-test prefix from target pacta.wtf dApp URL, preserves ?chain=...&address=..., syncs edits, and fires cta_click
   const mobileUa = "Mozilla/5.0 (Linux; Android 14; Pixel 8 Build/UQ1A; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/128.0.0.0 Mobile Safari/537.36";
-  const scanStage = JSON.parse(JSON.stringify(input.scan));
-  scanStage[1]["data-base-path"] = "/website-test";
+  const webStage = JSON.parse(JSON.stringify(input.webhook));
+  webStage[1]["data-base-path"] = "/website-test";
   const qsInit = "?chain=base&address=" + C.usdc;
-  const mwScan = run(scanStage, input.app, { path: "/website-test/scan/", search: qsInit, nav: { userAgent: mobileUa }, beacon: input.beacon });
-  const mwDoc = mwScan.document, dlScan = mwDoc.getElementById("co-deeplinks");
+  const mwWeb = run(webStage, input.app, { path: "/website-test/webhook/", search: qsInit, nav: { userAgent: mobileUa }, beacon: input.beacon });
+  const mwDoc = mwWeb.document, dlWeb = mwDoc.getElementById("co-deeplinks");
   const mmA = mwDoc.querySelector("[data-co-metamask]"), cbA = mwDoc.querySelector("[data-co-coinbase]");
-  const wantCanon = "/scan/" + qsInit;
-  const scanInitOk = !!dlScan && dlScan.hidden === false && mwDoc.getElementById("co-form").getAttribute("data-mobile-webview") === "true"
-    && mwDoc.getElementById("pf-chain").value === "base" && mwDoc.getElementById("pf-address").value === C.usdc
+  const wantCanon = "/webhook/" + qsInit;
+  const webInitOk = !!dlWeb && dlWeb.hidden === false && mwDoc.getElementById("co-form").getAttribute("data-mobile-webview") === "true"
+    && mwDoc.getElementById("co-target").value === C.usdc
     && mmA.getAttribute("href") === "https://metamask.app.link/dapp/pacta.wtf" + wantCanon
     && cbA.getAttribute("href") === "https://go.cb-wallet.com/dapp?cb_url=" + encodeURIComponent("https://pacta.wtf" + wantCanon)
     && !mwDoc.getElementById("co-manual").hasAttribute("open");
-  const bBefore = mwScan.beacons.length;
+  const bBefore = mwWeb.beacons.length;
   click(mmA); click(cbA);
-  const ctaEvents = mwScan.events().slice(bBefore).map((e) => e.e);
-  setField(mwDoc, "pf-address", ADDR);
-  const wantEdited = "/scan/?chain=base&address=" + ADDR;
-  const scanEditOk = mmA.getAttribute("href") === "https://metamask.app.link/dapp/pacta.wtf" + wantEdited
+  const ctaEvents = mwWeb.events().slice(bBefore).map((e) => e.e);
+  setField(mwDoc, "co-watch", ADDR);
+  const wantEdited = "/webhook/?chain=base&address=" + ADDR;
+  const webEditOk = mmA.getAttribute("href") === "https://metamask.app.link/dapp/pacta.wtf" + wantEdited
     && cbA.getAttribute("href") === "https://go.cb-wallet.com/dapp?cb_url=" + encodeURIComponent("https://pacta.wtf" + wantEdited);
-  const sealStage = JSON.parse(JSON.stringify(input.seal));
-  sealStage[1]["data-base-path"] = "/website-test";
-  const mwSeal = run(sealStage, input.app, { path: "/website-test/seal/", search: "?chain=ethereum&address=" + ADDR, nav: { userAgent: mobileUa } });
-  const sealOk = mwSeal.document.getElementById("co-deeplinks").hidden === false
-    && mwSeal.document.getElementById("co-target").value === ADDR
-    && mwSeal.document.querySelector("[data-co-metamask]").getAttribute("href") === "https://metamask.app.link/dapp/pacta.wtf/seal/?chain=ethereum&address=" + ADDR
-    && mwSeal.document.querySelector("[data-co-coinbase]").getAttribute("href") === "https://go.cb-wallet.com/dapp?cb_url=" + encodeURIComponent("https://pacta.wtf/seal/?chain=ethereum&address=" + ADDR);
-  // Desktop without wallet OR mobile inside MetaMask/Coinbase (window.ethereum present): deep-link block stays hidden
-  const deskScan = run(input.scan, input.app, { path: "/scan/", nav: { userAgent: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/128.0.0.0 Safari/537.36" } });
-  const injectedMobile = run(input.scan, input.app, { path: "/scan/", search: qsInit, nav: { userAgent: mobileUa }, win: { ethereum: eth } });
-  res.co_mobile_webview_deeplinks = scanInitOk && scanEditOk && sealOk && same(ctaEvents, ["cta_click", "cta_click"])
-    && deskScan.document.getElementById("co-deeplinks").hidden === true
+  const deskWeb = run(input.webhook, input.app, { path: "/webhook/", nav: { userAgent: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/128.0.0.0 Safari/537.36" } });
+  const injectedMobile = run(input.webhook, input.app, { path: "/webhook/", search: qsInit, nav: { userAgent: mobileUa }, win: { ethereum: eth } });
+  res.co_mobile_webview_deeplinks = webInitOk && webEditOk && same(ctaEvents, ["cta_click", "cta_click"])
+    && deskWeb.document.getElementById("co-deeplinks").hidden === true
     && injectedMobile.document.getElementById("co-deeplinks").hidden === true
-    && injectedMobile.document.getElementById("pf-address").value === C.usdc;
+    && injectedMobile.document.getElementById("co-target").value === C.usdc;
 
-  // Progressive cold-traffic funnel on /scan/: cold load hides #scan-upgrade & #co-card; running a free check reveals #scan-upgrade
-  // and syncs target + /seal/ link; clicking #scan-open-co expands #co-card; ?unlock=1 opens both immediately.
-  const pfOkFetch = (url) => Promise.resolve({
-    status: 200, ok: true,
-    json: () => Promise.resolve({ verdict: "ZERO_DELAY_ADMIN_UPGRADE", chain: "base", address: C.usdc, pinnedBlock: 22000000, riskScore: 65 })
-  });
-  const coldScan = page(input.scan, "/scan/", { search: "?utm_source=x&utm_medium=paid", fetch: pfOkFetch }), cd = coldScan.document;
-  const coldHidden = cd.getElementById("scan-upgrade").hidden === true && cd.getElementById("co-card").hidden === true;
+  // 3-Door Free Scan + Free 30-Day Watch Pilot (/scan/) + Self-Serve Verification Pool Reservation (/bounties/#sponsor-pool):
+  const pilotCalls = [];
+  const pilotFetch = (url, opts) => {
+    const u = String(url);
+    pilotCalls.push([u, opts]);
+    if (u.includes("/v1/check/preflight")) {
+      const mCh = /[?&]chain=(ethereum|base)/.exec(u), mAd = /[?&]address=(0x[0-9a-fA-F]{40})/.exec(u);
+      return Promise.resolve({ status: 200, ok: true, json: () => Promise.resolve({
+        verdict: "ZERO_DELAY_ADMIN_UPGRADE",
+        chain: mCh ? mCh[1] : "ethereum",
+        address: mAd ? mAd[1] : C.usdc,
+        pinnedBlock: 22000000,
+        riskScore: 65
+      }) });
+    }
+    if (u.includes("/v1/pilot/watch")) {
+      const wRes = { ok: true, watch_id: "WCH-2026-test01" };
+      return Promise.resolve({ status: 200, ok: true, json: () => Promise.resolve(wRes), text: () => Promise.resolve(JSON.stringify(wRes)) });
+    }
+    if (u.includes("/v1/pilot/sponsor-pool")) {
+      const pRes = { ok: true, pool_id: "POOL-2026-test01" };
+      return Promise.resolve({ status: 200, ok: true, json: () => Promise.resolve(pRes), text: () => Promise.resolve(JSON.stringify(pRes)) });
+    }
+    return Promise.resolve({ status: 200, ok: true, text: () => Promise.resolve("{}"), json: () => Promise.resolve({}) });
+  };
+  const coldScan = page(input.scan, "/scan/", { search: "?internal=1&utm_source=x", fetch: pilotFetch }), cd = coldScan.document;
+  const wpBox = cd.getElementById("watch-pilot"), wpTarget = cd.getElementById("watch-pilot-target"), wpDest = cd.getElementById("watch-pilot-dest");
+  const privTxt = (cd.querySelector("[data-wp-privacy]") || {}).textContent || "";
+  const coldClean = !cd.getElementById("co-form") && !!wpBox && privTxt.includes("from Pacta (") && !privTxt.includes("Strategy desk") && privTxt.includes("pacta@dri.network");
   const usdcChip = cd.querySelectorAll("[data-receipt]").find((b) => b.getAttribute("data-pf-address") === C.usdc) || cd.querySelectorAll("[data-receipt]")[0];
   const chipA = usdcChip.getAttribute("data-pf-address"), chipCh = usdcChip.getAttribute("data-pf-chain");
+  const wantTarget = usdcChip.getAttribute("data-pf-slug") || (chipCh + ":" + chipA);
   click(usdcChip); for (let i = 0; i < 5; i++) await flush();
-  const revealedAfterCheck = cd.getElementById("scan-upgrade").hidden === false && cd.getElementById("co-card").hidden === true
-    && cd.getElementById("co-sync-pill").textContent.includes(chipA.slice(0, 6))
-    && cd.getElementById("scan-to-seal").getAttribute("href") === "../seal/?chain=" + chipCh + "&address=" + chipA;
-  click(cd.getElementById("scan-open-co"));
-  const openedCo = cd.getElementById("co-card").hidden === false && cd.getElementById("scan-open-co").getAttribute("aria-expanded") === "true";
-  const manualScan = page(input.scan, "/scan/"); click(manualScan.document.getElementById("scan-reveal-btn"));
-  const manualRevOk = manualScan.document.getElementById("scan-upgrade").hidden === false;
-  const directUnlock = page(input.scan, "/scan/", { search: "?unlock=1" });
-  const unlockParamOk = directUnlock.document.getElementById("scan-upgrade").hidden === false && directUnlock.document.getElementById("co-card").hidden === false;
-  res.co_progressive_scan_funnel = coldHidden && revealedAfterCheck && openedCo && manualRevOk && unlockParamOk;
+  const syncedWatch = wpTarget.value === wantTarget;
+  wpDest.value = "risk@example.org";
+  cd.querySelector("[data-watch-pilot-form]").dispatchEvent(new Event_("submit"));
+  for (let i = 0; i < 5; i++) await flush();
+  const wpPost = pilotCalls.find((c) => c[0].includes("/v1/pilot/watch"));
+  const wpBody = wpPost ? JSON.parse(wpPost[1].body) : {};
+  const wpDoneOk = !!wpPost && wpBody.target === wantTarget && wpBody.channel === "email" && wpBody.internal === true
+    && cd.querySelector("[data-wp-done]").hidden === false && cd.querySelector("[data-wp-done-msg]").textContent.includes("WCH-2026-test01");
+  let spDoneOk = true;
+  if (input.bounties) {
+    const bPg = run(input.bounties, input.app, { path: "/bounties/", search: "?internal=1", fetch: pilotFetch }), bd = bPg.document;
+    const spSec = bd.getElementById("sponsor-pool");
+    bd.getElementById("sp-target").value = "maple-finance-v2-syrup";
+    bd.getElementById("sp-contact").value = "@curator_ops";
+    bd.getElementById("sponsor-pool-form").dispatchEvent(new Event_("submit"));
+    for (let i = 0; i < 5; i++) await flush();
+    const spPost = pilotCalls.find((c) => c[0].includes("/v1/pilot/sponsor-pool"));
+    const spBody = spPost ? JSON.parse(spPost[1].body) : {};
+    spDoneOk = !!spSec && spSec.getAttribute("data-sponsor-address") === ""
+      && !!spPost && spBody.target === "maple-finance-v2-syrup" && spBody.tier === "pool-50" && spBody.internal === true
+      && bd.querySelector("[data-sp-done]").hidden === false && bd.querySelector("[data-sp-done-msg]").textContent.includes("POOL-2026-test01");
+  }
+  res.co_progressive_scan_funnel = coldClean && syncedWatch && wpDoneOk && spDoneOk;
 }
 
 async function xPixelScenario() {
@@ -1599,17 +1632,24 @@ async function xPixelScenario() {
   click(ctaWallet.document.getElementById("co-wallet"));
   const walletLeadOnce = same(ctaWallet.window.__pactaTwqEvents, [["config", "rjbqn"], ["event", "tw-rjbqn-rjhie", {}]]);
 
-  const ctaDl = run(input.scan, input.app, { path: "/scan/", hostname: "127.0.0.1", nav: { userAgent: mobileUa } });
+  const ctaDl = run(input.webhook, input.app, { path: "/webhook/", hostname: "127.0.0.1", nav: { userAgent: mobileUa } });
   click(ctaDl.document.querySelector("[data-co-metamask]"));
   click(ctaDl.document.querySelector("[data-co-coinbase]"));
   const dlLeadOnce = same(ctaDl.window.__pactaTwqEvents, [["config", "rjbqn"], ["event", "tw-rjbqn-rjhie", {}]]);
 
-  const ctaDrawer = run(input.seal, input.app, { path: "/seal/", hostname: "127.0.0.1" });
+  const ctaDrawer = run(input.webhook, input.app, { path: "/webhook/", hostname: "127.0.0.1" });
   click(ctaDrawer.document.querySelector("#co-manual summary"));
   click(ctaDrawer.document.querySelector("#co-manual summary"));
   const drawerLeadOnce = same(ctaDrawer.window.__pactaTwqEvents, [["config", "rjbqn"], ["event", "tw-rjbqn-rjhie", {}]]);
 
-  res.x_pixel_lead_dedup = invalidNoLead && pfLeadOnce && walletLeadOnce && dlLeadOnce && drawerLeadOnce;
+  const ctaWatch = run(input.scan, input.app, { path: "/scan/", hostname: "127.0.0.1", fetch: () => Promise.resolve({ status: 200, ok: true, text: () => Promise.resolve('{"ok":true,"watch_id":"WCH-1"}') }) });
+  ctaWatch.document.getElementById("watch-pilot-target").value = ADDR;
+  ctaWatch.document.getElementById("watch-pilot-dest").value = "ops@example.org";
+  ctaWatch.document.querySelector("[data-watch-pilot-form]").dispatchEvent(new Event_("submit"));
+  await flush();
+  const watchLeadOnce = same(ctaWatch.window.__pactaTwqEvents, [["config", "rjbqn"], ["event", "tw-rjbqn-rjhie", {}]]);
+
+  res.x_pixel_lead_dedup = invalidNoLead && pfLeadOnce && walletLeadOnce && dlLeadOnce && drawerLeadOnce && watchLeadOnce;
 
   // 3. Purchase (tw-rjbqn-rjhif): fires ONLY on /v1/orders/verify HTTP 200 when !internalCanary, Pacta-Idempotent-Replay !== "true",
   //    and orderId not yet in localStorage; sends { value: Number(usdPrice), currency: "USD", conversion_id: String(orderId) }.
@@ -1626,35 +1666,27 @@ async function xPixelScenario() {
     text: () => Promise.resolve(JSON.stringify(body)),
     json: () => Promise.resolve(body)
   });
-  const submitScan = async (fetchFn, txHash) => {
-    const pg = run(input.scan, input.app, { path: "/scan/", hostname: "127.0.0.1", storage: sharedStorage, fetch: fetchFn });
-    pg.document.getElementById("pf-address").value = ADDR;
+  const submitWebhook = async (fetchFn, txHash) => {
+    const pg = run(input.webhook, input.app, { path: "/webhook/", hostname: "127.0.0.1", storage: sharedStorage, fetch: fetchFn });
+    setField(pg.document, "co-watch", ADDR);
+    pg.document.getElementById("co-contact").value = "https://hooks.example.invalid/x";
     pg.document.getElementById("co-tx").value = txHash || TXH;
     pg.document.getElementById("co-form").dispatchEvent(new Event_("submit"));
     await flush(); await flush();
     return pg.window.__pactaTwqEvents;
   };
-  const evReal19 = await submitScan(makeVerifyFetch(200, { orderId: "ord_real_19", status: "verified", internalCanary: false }), TXH);
-  const evReloadSameOrder = await submitScan(makeVerifyFetch(200, { orderId: "ord_real_19", status: "verified", internalCanary: false }), TXH);
-  const evCanary = await submitScan(makeVerifyFetch(200, { orderId: "ord_canary_1", status: "verified", internalCanary: true }), "0x" + "aa".repeat(32));
-  const evReplay = await submitScan(makeVerifyFetch(200, { orderId: "ord_replay_1", status: "verified", internalCanary: false }, "true"), "0x" + "bb".repeat(32));
+  const evReal49 = await submitWebhook(makeVerifyFetch(200, { orderId: "ord_real_49", status: "verified", internalCanary: false }), TXH);
+  const evReloadSameOrder = await submitWebhook(makeVerifyFetch(200, { orderId: "ord_real_49", status: "verified", internalCanary: false }), TXH);
+  const evCanary = await submitWebhook(makeVerifyFetch(200, { orderId: "ord_canary_1", status: "verified", internalCanary: true }), "0x" + "aa".repeat(32));
+  const evReplay = await submitWebhook(makeVerifyFetch(200, { orderId: "ord_replay_1", status: "verified", internalCanary: false }, "true"), "0x" + "bb".repeat(32));
+  const evSecond49 = await submitWebhook(makeVerifyFetch(200, { orderId: "ord_real_49b", status: "verified", internalCanary: false }), "0x" + "cc".repeat(32));
 
-  const sealPg = run(input.seal, input.app, {
-    path: "/seal/", hostname: "127.0.0.1", storage: sharedStorage,
-    fetch: makeVerifyFetch(200, { orderId: "ord_real_99", status: "verified", internalCanary: false })
-  });
-  sealPg.document.getElementById("co-target").value = ADDR;
-  sealPg.document.getElementById("co-contact").value = "@founder";
-  sealPg.document.getElementById("co-tx").value = "0x" + "cc".repeat(32);
-  sealPg.document.getElementById("co-form").dispatchEvent(new Event_("submit"));
-  await flush(); await flush();
-
-  res.x_pixel_purchase_rules = same(evReal19, [["config", "rjbqn"], ["event", "tw-rjbqn-rjhif", { value: 9, currency: "USD", conversion_id: "ord_real_19" }]])
+  res.x_pixel_purchase_rules = same(evReal49, [["config", "rjbqn"], ["event", "tw-rjbqn-rjhif", { value: 49, currency: "USD", conversion_id: "ord_real_49" }]])
     && same(evReloadSameOrder, [["config", "rjbqn"]])
     && same(evCanary, [["config", "rjbqn"]])
     && same(evReplay, [["config", "rjbqn"]])
-    && same(sealPg.window.__pactaTwqEvents, [["config", "rjbqn"], ["event", "tw-rjbqn-rjhif", { value: 99, currency: "USD", conversion_id: "ord_real_99" }]])
-    && same(JSON.parse(storeMap["pacta-x-purchased"]), ["ord_real_19", "ord_real_99"]);
+    && same(evSecond49, [["config", "rjbqn"], ["event", "tw-rjbqn-rjhif", { value: 49, currency: "USD", conversion_id: "ord_real_49b" }]])
+    && same(JSON.parse(storeMap["pacta-x-purchased"]), ["ord_real_49", "ord_real_49b"]);
 }
 
 async function miniAppScenario() {
@@ -1806,8 +1838,7 @@ async function pfComboboxScenario() {
     && d.getElementById("pf-chain").value === "base" && inp.value === mw.address
     && selChip.hidden === false && selChip.textContent.includes("Moonwell") && selChip.textContent.includes("WELL")
     && pfCalls.length === 1 && pfCalls[0].includes("chain=base&address=" + mw.address)
-    && d.getElementById("scan-upgrade").hidden === false
-    && d.getElementById("co-sync-pill").textContent.includes("Moonwell");
+    && d.getElementById("watch-pilot-target").value === "moonwell-lending-base";
   clr.dispatchEvent(new Event_("click"));
   for (let i = 0; i < 3; i++) await flush();
   const clearedOk = inp.value === "" && selChip.hidden === true && lb.hidden === false;
@@ -1961,23 +1992,26 @@ async function walletExposureScenario() {
     return Promise.reject(new Error("unexpected url: " + u));
   };
 
-  // 1. Demo Treasury Safe chip: zero-shift instant render + progressive $9 / $49/mo / $0.05 x402 unlock
+  // 1. Demo Treasury Safe chip: 100% free full multi-position render (zero $9 lock) + inline 30-day Free Watch Pilot w/ privacy line
   const p = run(input.scan, input.app, { path: "/scan/", fetch: mockFetch });
   const d = p.document;
-  const coldOk = d.getElementById("scan-upgrade").hidden === true && d.getElementById("co-card").hidden === true;
+  const coldOk = !d.getElementById("co-form") && !d.querySelector("[data-wallet-locked]");
   const demoSafeBtn = d.querySelector('[data-wallet-demo="demo_safe_eth_base"]');
   click(demoSafeBtn);
   for (let i = 0; i < 6; i++) await flush();
   const hl = d.querySelector("[data-wallet-headline]");
   const safeBadge = d.querySelector("[data-wallet-safe-badge]");
   const topGap = d.querySelector("[data-wallet-top-gap]");
+  const gapItems = d.querySelectorAll("[data-wallet-gap-item]").map((x) => x.getAttribute("data-wallet-gap-item"));
+  const contagion = d.querySelector("[data-wallet-contagion]");
+  const inlineWatch = d.querySelector("[data-wallet-watch-inline]");
   const b2bBar = d.querySelector("[data-wallet-b2b]");
   const demoOk = coldOk && !!hl && hl.textContent.includes("Found 4 active DeFi positions") && hl.textContent.includes("2 ALIGNED, 2 FLAGGED")
     && !!safeBadge && safeBadge.textContent.includes("Gnosis Safe 3-of-5")
     && !!topGap && topGap.getAttribute("data-wallet-top-gap") === "stader-labs-ethx"
-    && !!b2bBar && d.getElementById("scan-upgrade").hidden === false
-    && d.getElementById("scan-to-guard").getAttribute("href").includes("../webhook/?")
-    && d.getElementById("scan-x402-cmd").textContent.includes(demoSafeBtn.getAttribute("data-demo-addr"));
+    && !!contagion && contagion.textContent.includes("Exit-Window & Signer Overlap")
+    && !!inlineWatch && inlineWatch.textContent.includes("pacta@dri.network")
+    && !d.querySelector("[data-wallet-locked]") && !!b2bBar;
 
   // 2. Dispatch Rule 2: known protocol 0x contract -> single-protocol preflight + 1-click wallet deposit prompt
   const staderAddr = "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b";

@@ -1,0 +1,133 @@
+{
+  "schema": "pacta.wave4.catalogue_targets.v1",
+  "batch": 1,
+  "total_pool_slots": 24,
+  "batch_1_open_slots": 12,
+  "chains_allowed": [
+    "ethereum",
+    "base"
+  ],
+  "verification_method": "Every contract_address below was fetched directly from the protocol's own official documentation or official GitHub repository (HTTP 200 literal match), verified to hold live deployed bytecode via eth_getCode, and verified uncovered on that (chain, address) in Pacta's 316-protocol catalogue.",
+  "targets": [
+    {
+      "slot_id": "base-morpho-blue-singleton",
+      "chain": "base",
+      "chain_id": 8453,
+      "protocol_name": "Morpho Blue on Base (Morpho Singleton)",
+      "contract_address": "0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb",
+      "defillama_tvl_usd": 3385000000,
+      "official_source_url": "https://docs.morpho.org/addresses/",
+      "award_usdc": "1.00"
+    },
+    {
+      "slot_id": "ethereum-arbitrum-delayed-bridge",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "protocol_name": "Arbitrum One Canonical Bridge (Delayed Bridge)",
+      "contract_address": "0x8315177aB297bA92A06054cE80a67Ed4DBd7ed3a",
+      "defillama_tvl_usd": 2776700000,
+      "official_source_url": "https://docs.arbitrum.io/build-decentralized-apps/reference/contract-addresses",
+      "award_usdc": "1.00"
+    },
+    {
+      "slot_id": "ethereum-op-mainnet-portal",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "protocol_name": "OP Mainnet Canonical Bridge (OptimismPortalProxy)",
+      "contract_address": "0xbEb5Fc579115071764c7423A4f12eDde41f106Ed",
+      "defillama_tvl_usd": 750600000,
+      "official_source_url": "https://raw.githubusercontent.com/ethereum-optimism/superchain-registry/main/superchain/configs/mainnet/op.toml",
+      "award_usdc": "1.00"
+    },
+    {
+      "slot_id": "ethereum-mantle-l1-bridge",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "protocol_name": "Mantle Canonical Bridge (L1StandardBridge)",
+      "contract_address": "0x95fC37A27a2f68e3A647CDc081F0A89bb47c3012",
+      "defillama_tvl_usd": 316600000,
+      "official_source_url": "https://raw.githubusercontent.com/mantlenetworkio/networks/main/mainnet/addresses.json",
+      "award_usdc": "1.00"
+    },
+    {
+      "slot_id": "base-uniswap-v3-factory",
+      "chain": "base",
+      "chain_id": 8453,
+      "protocol_name": "Uniswap V3 on Base (UniswapV3Factory)",
+      "contract_address": "0x33128a8fC17869897dcE68Ed026d694621f6FDfD",
+      "defillama_tvl_usd": 251000000,
+      "official_source_url": "https://docs.uniswap.org/contracts/v3/reference/deployments/base-deployments",
+      "award_usdc": "1.00"
+    },
+    {
+      "slot_id": "ethereum-compound-v2-unitroller",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "protocol_name": "Compound V2 (Unitroller / Comptroller)",
+      "contract_address": "0x3d9819210A31b4961b30EF54bE2aeD79B9c9Cd3B",
+      "defillama_tvl_usd": 77000000,
+      "official_source_url": "https://raw.githubusercontent.com/compound-finance/compound-protocol/master/networks/mainnet.json",
+      "award_usdc": "1.00"
+    },
+    {
+      "slot_id": "base-uniswap-v2-factory",
+      "chain": "base",
+      "chain_id": 8453,
+      "protocol_name": "Uniswap V2 on Base (UniswapV2Factory)",
+      "contract_address": "0x8909Dc15e40173Ff4699343b6eB8132c65e18eC6",
+      "defillama_tvl_usd": 56600000,
+      "official_source_url": "https://docs.uniswap.org/contracts/v2/reference/smart-contracts/v2-deployments",
+      "award_usdc": "1.00"
+    },
+    {
+      "slot_id": "ethereum-linea-rollup",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "protocol_name": "Linea Canonical Bridge (LineaRollup)",
+      "contract_address": "0xd19d4B5d358258f05D7B411E21A1460D11B0876F",
+      "defillama_tvl_usd": 43600000,
+      "official_source_url": "https://raw.githubusercontent.com/Consensys/doc.linea/main/docs/network/build/contracts.mdx",
+      "award_usdc": "1.00"
+    },
+    {
+      "slot_id": "ethereum-ink-optimism-portal",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "protocol_name": "Ink Canonical Bridge (OptimismPortalProxy)",
+      "contract_address": "0x5d66C1782664115999C47c9fA5cd031f495D3e4F",
+      "defillama_tvl_usd": 39300000,
+      "official_source_url": "https://raw.githubusercontent.com/ethereum-optimism/superchain-registry/main/superchain/configs/mainnet/ink.toml",
+      "award_usdc": "1.00"
+    },
+    {
+      "slot_id": "ethereum-unichain-optimism-portal",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "protocol_name": "Unichain Canonical Bridge (OptimismPortalProxy)",
+      "contract_address": "0x0bd48f6B86a26D3a217d0Fa6FfE2B491B956A7a2",
+      "defillama_tvl_usd": 33100000,
+      "official_source_url": "https://raw.githubusercontent.com/ethereum-optimism/superchain-registry/main/superchain/configs/mainnet/unichain.toml",
+      "award_usdc": "1.00"
+    },
+    {
+      "slot_id": "ethereum-scroll-l1-messenger",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "protocol_name": "Scroll Canonical Bridge (L1ScrollMessengerProxy)",
+      "contract_address": "0x6774Bcbd5ceCeF1336b5300fb5186a12DDD8b367",
+      "defillama_tvl_usd": 24200000,
+      "official_source_url": "https://docs.scroll.io/en/developers/scroll-contracts/",
+      "award_usdc": "1.00"
+    },
+    {
+      "slot_id": "ethereum-sui-bridge",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "protocol_name": "Sui Canonical Bridge (SuiBridge)",
+      "contract_address": "0xda3bD1fE1973470312db04551B65f401Bc8a92fD",
+      "defillama_tvl_usd": 22800000,
+      "official_source_url": "https://docs.sui.io/concepts/tokenomics/sui-bridging",
+      "award_usdc": "1.00"
+    }
+  ]
+}
