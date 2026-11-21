@@ -178,14 +178,6 @@ CHECKOUT = {   # sku -> product page; "tier" is the /request/?tier= alias that f
         "cta": "Pay $9 USDC on Base & Unlock Full Report",
         "title": "Free Wallet, Safe & Protocol Control-Plane Exposure Scanner · Pacta", "card": "x-card-scan19-1200x628.png",
         "desc": "Paste any Ethereum or Base wallet, Gnosis Safe, or protocol to scan live DeFi control-plane exposure in 3 seconds — free, read-only, no wallet or signup."},
-    "radar-webhook-49": {
-        "tier": "webhook-49", "route": "webhook", "amount": "49.00", "atomic": 49_000_000, "price": "$49 USDC", "unit": "per month · Base mainnet",
-        "badge": "Live alerts · Slack, Telegram, Discord, HTTPS", "h1": "Live Timelock & Signer Alerts", "label": "Live Timelock & Signer Webhook",
-        "lede": "Pacta polls the timelocks and Safes you choose every 30 minutes on Ethereum and Base, and alerts you when an operation "
-                "is queued or a signer set changes, before it can execute.",
-        "cta": "Pay $49 USDC on Base & Activate Webhook",
-        "title": "Live timelock & signer alerts · $49 USDC / month · Pacta", "card": None,
-        "desc": "Slack, Telegram, Discord or HTTPS alerts when a watched timelock queues an operation or a Safe changes signers. 49 USDC a month on Base."},
     "reverify-seal-99": {
         "tier": "seal-99", "route": "seal", "amount": "99.00", "atomic": 99_000_000, "price": "$99 USDC", "unit": "vs $500 regular · Base mainnet",
         "badge": "For DeFi Protocols, Vault Curators & Institutional LPs",
@@ -570,7 +562,7 @@ def footer(count_line, reg, home=""):
                       for l, h, ext in links)
         return f'<div><h2>{title}</h2><ul>{lis}</ul></div>'
     product = [("Scorecards", f"{home}scorecards/", 0), ("Curator matrix", f"{home}curators/", 0), ("Protocols", f"{home}protocols/", 0), ("Timelock radar", f"{home}radar/", 0),
-               ("Pricing", nav_href(home, "#pricing"), 0), ("Instant scan", f"{home}scan/", 0), ("Timelock webhooks", f"{home}webhook/", 0),
+               ("Pricing", nav_href(home, "#pricing"), 0), ("Instant scan", f"{home}scan/", 0), ("Timelock watchlist", f"{home}webhook/", 0),
                ("24h mainnet seal", f"{home}seal/", 0), ("Base Mini-App", f"{home}miniapp/", 0), ("For protocols", f"{home}for-protocols/", 0),
                ("Bounties", f"{home}bounties/", 0), ("Leaderboard", f"{home}leaderboard/", 0)]
     agents = [("MCP server", f"{home}mcp/", 0), ("llms.txt", f"{home}llms.txt", 0), ("llms.txt (HTML)", f"{home}llms/", 0),
@@ -1378,12 +1370,13 @@ def request_builder(idx, home=""):
 
 
 def launcher_links(home):
-    """/request/: the three self-serve products above the dossier builder (?tier=wallet-9 | webhook-49 | seal-99 forwards there)."""
-    sub = {"wallet-report-9": "multi-position", "radar-webhook-49": "Slack, Telegram, HTTPS", "reverify-seal-99": "first 5 teams"}
-    price = {"wallet-report-9": "$9", "radar-webhook-49": "$49 / mo", "reverify-seal-99": "$99"}
-    name = {"wallet-report-9": "Instant scan", "radar-webhook-49": "Live webhook", "reverify-seal-99": "24h mainnet seal"}
-    return "".join(f'<a class="launch" href="{home}{v["route"]}/" data-sku="{k}" data-cta="launch_{v["route"]}"><span class="l-n">{name[k]}{ARR}</span>'
-                   f'<span class="l-p"><b>{price[k]}</b><small>{sub[k]}</small></span></a>' for k, v in CHECKOUT.items())
+    """/request/: the three self-serve doors above the dossier builder (?tier=wallet-9 | webhook-49 | seal-99 forwards there; webhook-49
+    now lands on the free watchlist, since automated paid webhook delivery is not active)."""
+    doors = (("wallet-report-9", "scan", "Instant scan", "$9", "multi-position"),
+             ("radar-watch-free", "webhook", "Pilot watchlist", "$0", "RSS + free sign-up"),
+             ("reverify-seal-99", "seal", "24h mainnet seal", "$99", "first 5 teams"))
+    return "".join(f'<a class="launch" href="{home}{route}/" data-sku="{k}" data-cta="launch_{route}"><span class="l-n">{name}{ARR}</span>'
+                   f'<span class="l-p"><b>{price}</b><small>{sub}</small></span></a>' for k, route, name, price, sub in doors)
 
 
 def eip681(atomic):
@@ -1672,24 +1665,6 @@ def product_page(idx, sku):
                                          + field("co-contact", "webhook_or_contact", "Delivery email or @telegram", "you@team.xyz or @handle", True)
                                          + '</div>')
         preview = scan_preview(idx, lk)
-    elif sku == "radar-webhook-49":
-        picks = "".join(U.button(E(label), variant="outline", size="sm", cls="pick",
-                                 attrs=(f'data-co-pick data-chain="{lk[s]["chain"]}" data-address="{lk[s].get("controllerAddress") or ""}" '
-                                        f'data-protocol="{E(lk[s]["name"])}" aria-pressed="false"'))
-                        for label, s in WEBHOOK_PICKS)
-        pre = ""
-        fields = (f'<div class="try"><div class="try-row" role="group" aria-label="Quick picks"><span class="try-l">Watch:</span>{picks}</div></div>'
-                  + '<div class="co-row"><div class="field co-chain-f"><label for="co-chain">Chain</label><select id="co-chain" name="target_chain">'
-                    '<option value="ethereum" selected>Ethereum</option><option value="base">Base</option></select></div>'
-                    '<div class="field"><label for="co-watch">Timelock, Safe or protocol</label>'
-                    '<input id="co-watch" type="text" maxlength="80" spellcheck="false" autocapitalize="off" '
-                    'placeholder="0x… address, or a protocol (Lombard)" aria-describedby="co-watch-hint co-target-err">'
-                    '<p class="hint" id="co-watch-hint" data-co-watch-hint>Pick a protocol above or paste a timelock or Safe address.</p>'
-                    '<p class="form-message" id="co-target-err" data-slot="form-message" hidden></p></div></div>'
-                    '<input type="hidden" id="co-target" name="target_address"><input type="hidden" id="co-docs" name="protocol_or_docs">'
-                  + field("co-contact", "webhook_or_contact", "Alert destination", "Webhook URL or @telegram",
-                          help_="Kept private for delivery, never published."))
-        preview = webhook_preview()
     else:
         pre = ""
         fields = (chain_target("Contract, vault or Safe address")
@@ -1726,22 +1701,22 @@ def product_page(idx, sku):
         upgrade_scan = (
             f'<section class="scan-upgrade" id="scan-upgrade" data-scan-upgrade hidden>'
             f'<div class="scan-up-head"><span class="step-k mono">PROGRESSIVE PORTFOLIO &amp; AGENT UNLOCK</span>'
-            f'<h2>Unlock multi-position contagion, exit-window guards &amp; committee receipts</h2>'
-            f'<p class="pd-lede">Every individual protocol scorecard stays 100% free. Upgrade only when you want full cross-position signer overlap, Safe signing latency vs. timelock exit math, signed committee receipts, or continuous exit-window alerts.</p></div>'
+            f'<h2>Unlock multi-position contagion, exit-window checks &amp; SHA-256 report digest</h2>'
+            f'<p class="pd-lede">Every individual protocol scorecard stays 100% free. Upgrade only when you want full cross-position signer overlap, Safe signing latency vs. timelock exit math, an SHA-256 digest of the report, or join the free pilot watchlist.</p></div>'
             f'<div class="wl-ladder" data-wallet-ladder>'
             f'<article class="wl-tier wl-tier-primary" data-wl-tier="wallet-9">'
             f'<div class="wl-tier-top"><span class="wl-tier-k mono">ONE-TIME · BASE USDC</span><b class="wl-tier-p">$9 USDC</b></div>'
             f'<h3>Full Wallet &amp; Safe Exposure Report</h3>'
-            f'<p>Remaining held DELTA &amp; OBSERVED breakdowns, Cross-Position Signer Contagion Matrix, Safe latency vs. timelock exit check &amp; signed SHA-256 Committee Receipt.</p>'
+            f'<p>Remaining held DELTA &amp; OBSERVED breakdowns, Cross-Position Signer Contagion Matrix, Safe latency vs. timelock exit check &amp; SHA-256 digest of the report.</p>'
             + U.button("Unlock Full Report ($9 USDC) ↓", variant="default", size="lg",
                        attrs='id="scan-open-co" data-open-co-card aria-expanded="false"')
             + '</article>'
-            f'<article class="wl-tier" data-wl-tier="wallet-guard-49">'
-            f'<div class="wl-tier-top"><span class="wl-tier-k mono">CONTINUOUS MONITORING</span><b class="wl-tier-p">$49 / mo</b></div>'
-            f'<h3>Live Wallet &amp; Safe Exit-Window Guard</h3>'
-            f'<p>30-minute Telegram, Slack, Discord &amp; HTTPS webhook alerts whenever held protocols queue a timelock op or rotate Safe signers, plus Safe Emergency Exit JSON.</p>'
-            + U.button(f"Activate Guard{ARR}", href="../webhook/", variant="outline", size="lg",
-                       attrs='id="scan-to-guard" data-scan-to-guard data-cta="scan_guard_49"')
+            f'<article class="wl-tier" data-wl-tier="watch-free">'
+            f'<div class="wl-tier-top"><span class="wl-tier-k mono">PILOT WATCHLIST · NO PAYMENT</span><b class="wl-tier-p">$0</b></div>'
+            f'<h3>Timelock &amp; Signer Watchlist</h3>'
+            f'<p>Subscribe to the free timelock RSS / Atom feed or leave a work email, @telegram, or GitHub handle for pilot watchlist updates on held protocols.</p>'
+            + U.button(f"Join Free Watchlist{ARR}", href="../webhook/", variant="outline", size="lg",
+                       attrs='id="scan-to-guard" data-scan-to-guard data-cta="scan_watch_free"')
             + '</article>'
             f'<article class="wl-tier wl-tier-agent" data-wl-tier="agent-x402">'
             f'<div class="wl-tier-top"><span class="wl-tier-k mono">AI AGENTS · HTTP 402 &amp; MCP</span><b class="wl-tier-p">$0.05 USDC / call</b></div>'
@@ -1827,6 +1802,70 @@ def product_page(idx, sku):
     extra_meta = fc_miniapp_meta() if sku == "wallet-report-9" else ""
     return head(c["title"], c["desc"], f"{BASE_URL}/{c['route']}/", prefix="../", og_title=c["title"].rsplit(" · Pacta", 1)[0], image=img,
                 image_size=SOCIAL_SIZE, extra=extra_meta) + "\n" + body
+
+
+WATCH_FREE_LEDE = ("Automated paid webhook polling is not active yet. Subscribe free to the live timelock RSS / Atom feed today, or leave a "
+                   "protocol, timelock, or Safe below to join the free pilot watchlist ($0 — no payment collected).")
+WATCH_FREE_CAPABILITY = "Pilot timelock and signer watchlist request"
+
+
+def watchlist_page(idx):
+    """/webhook/: the free timelock & signer watchlist. Automated paid webhook delivery is not active, so nothing is sold here: the
+    live RSS / Atom feed, plus a pilot watchlist sign-up that files a free request (POST /v1/requests; no payment, never published)."""
+    lk = lookup_items()
+    count_line = coverage_line(idx)
+    reg = idx["onchain_anchoring"]["commitment_registry"]
+    crumbs = ('<nav class="crumbs" aria-label="Breadcrumb"><a href="../">Pacta</a><span aria-hidden="true">/</span>'
+              '<a href="../#pricing">Pricing</a><span aria-hidden="true">/</span><span>Timelock &amp; Signer Watchlist</span></nav>')
+    picks = "".join(U.button(E(label), variant="outline", size="sm", cls="pick",
+                             attrs=f'data-wf-pick data-slug="{s}" data-chain="{lk[s]["chain"]}" aria-pressed="false"')
+                    for label, s in WEBHOOK_PICKS)
+    head_ = ('<div class="pd-head"><span data-slot="badge" data-variant="info">Free RSS / Atom feed · Pilot watchlist ($0)</span>'
+             '<h1 id="co-title">Timelock &amp; Signer Watchlist</h1>'
+             f'<p class="pd-lede">{E(WATCH_FREE_LEDE)}</p></div>')
+    form = (f'<form class="co" id="watch-free-form" data-watch-api="{E(REQUEST_API)}" novalidate autocomplete="off">'
+            f'<div class="try"><div class="try-row" role="group" aria-label="Quick picks"><span class="try-l">Watch:</span>{picks}</div></div>'
+            '<div class="co-row"><div class="field co-chain-f"><label for="wf-chain">Chain</label><select id="wf-chain" name="chain">'
+            '<option value="ethereum" selected>Ethereum</option><option value="base">Base</option></select></div>'
+            '<div class="field"><label for="wf-target">Timelock, Safe or protocol</label>'
+            '<input id="wf-target" name="target" type="text" maxlength="80" spellcheck="false" autocapitalize="off" '
+            'placeholder="0x… address or protocol" aria-describedby="wf-target-err">'
+            '<p class="form-message" id="wf-target-err" data-slot="form-message" hidden></p></div></div>'
+            '<div class="field"><label for="wf-contact">Contact for pilot alerts</label>'
+            '<input id="wf-contact" name="contact" type="text" maxlength="120" spellcheck="false" autocapitalize="off" '
+            'placeholder="you@org.com, @telegram, or github-handle" aria-describedby="wf-contact-hint wf-contact-err">'
+            '<p class="hint" id="wf-contact-hint">Stored privately in Pacta&#x27;s lead queue, never published.</p>'
+            '<p class="form-message" id="wf-contact-err" data-slot="form-message" hidden></p></div>'
+            '<div class="co-cta">'
+            + U.button('<span class="spinner" aria-hidden="true" hidden></span><span data-wf-lbl>Join Free Watchlist ($0)</span>',
+                       variant="default", size="lg", type_="submit", attrs="data-wf-submit")
+            + f'<a class="wf-feed" href="../feed.xml" data-cta="watch_feed">Subscribe via RSS / Atom (feed.xml){ARR}</a></div>'
+            '<p class="req-status" role="status" aria-live="polite" data-wf-status hidden></p>'
+            '<p class="co-assure">No payment is collected. The request joins Pacta&#x27;s free queue; nothing you enter is published.</p>'
+            f'<noscript><p class="note">The sign-up needs JavaScript. Without it, subscribe to the <a href="../feed.xml">RSS / Atom feed</a> '
+            f'or write to {CONTACT}.</p></noscript></form>'
+            '<div class="wp-done" data-wf-done hidden tabindex="-1"><span data-slot="badge" data-variant="success">On the pilot watchlist</span>'
+            '<p data-wf-done-msg>Request recorded.</p></div>')
+    aside = ('<div class="pv-card" data-slot="card" data-preview="watch"><div class="pv-head"><span class="pv-k">What you can watch today</span>'
+             '<span class="pv-t">Free, live, no account</span></div><ol class="pv-rows">'
+             f'<li><b>Timelock radar</b><span>Queued operations on Ethereum and Base, re-checked live in your browser. <a href="../radar/">Open the radar{ARR}</a></span></li>'
+             f'<li><b>RSS / Atom feed</b><span>Every new decoded timelock brief, in any feed reader. <a href="../feed.xml">feed.xml{ARR}</a></span></li>'
+             '<li><b>Pilot watchlist</b><span>Leave a protocol, timelock or Safe and a contact; we reply as the pilot opens. No payment.</span></li></ol></div>')
+    body = f"""<body>
+{topbar("../", "webhook/")}
+<main id="main">
+<section class="sec pd-sec" id="watch"><div class="wrap">{crumbs}
+<div class="pd"><div class="pd-main">{head_}{form}</div><aside class="pd-preview" aria-label="What you can watch today">{aside}</aside></div>
+</div></section>
+<section class="sec pd-how" id="how"><div class="wrap"><p class="note">{E(EDITORIAL_FIREWALL)} {E(EDITORIAL_SHORT)} Need multi-contract scope or SLA monitoring? <a href="../request/">Enterprise &amp; protocol diligence{ARR}</a></p></div></section>
+</main>
+{footer(count_line, reg, "../")}
+</body></html>
+"""
+    return head("Timelock & signer watchlist (free) · Pacta",
+                "Free live timelock RSS / Atom feed and a $0 pilot watchlist for queued timelock operations and Safe signer changes on "
+                "Ethereum and Base. No payment collected.", f"{BASE_URL}/webhook/", prefix="../", og_title="Timelock & signer watchlist (free)",
+                image=f"{BASE_URL}/og-preview.png", image_size=SOCIAL_SIZE) + "\n" + body
 
 
 MINIAPP_PRESETS = [
@@ -4464,11 +4503,11 @@ SELF_SERVE_PLANS = [   # key, title, price, note, bullets, (cta, href, kind), ba
     ("wallet-report-9", "Full Wallet & Safe Exposure Report", "$9", "USDC · one-time", [
         "Read-only Multicall3 scan across Ethereum & Base holdings",
         "Cross-position signer overlap, Safe exit-window check & all held gaps",
-        "Signed SHA-256 Committee Receipt + printable report"], ("Start a scan", "scan/", "pricing_scan_9"), "Most popular"),
-    ("radar-webhook-49", "Live Timelock & Signer Webhook", "$49", "USDC / month", [
-        "Timelocks and Safes polled every 30 minutes on Ethereum and Base",
-        "Alerts before queued upgrades or signer rotations execute",
-        "Slack, Telegram, Discord or any HTTPS webhook"], ("Set up alerts", "webhook/", "pricing_webhook_49"), None),
+        "SHA-256 digest of the report + printable report"], ("Start a scan", "scan/", "pricing_scan_9"), "Most popular"),
+    ("radar-watch-free", "Timelock & Signer Watchlist", "$0", "RSS / Atom + pilot sign-up", [
+        "Queued timelock RSS / Atom feed (feed.xml), free",
+        "Live browser re-check via /v1/briefs/live-timelocks",
+        "Leave an email or @telegram to join the pilot watchlist"], ("Join free watchlist", "webhook/", "pricing_watch_free"), None),
     ("reverify-seal-99", "24h Mainnet Control-Plane Seal", "$99", "USDC · regular $500", [
         "Maintainer and independent verifier re-check within 24h",
         "Safe Transaction Builder JSON and an upstream docs PR",
@@ -4792,13 +4831,13 @@ def radar_page(idx, radar):
 
 
 def webhook_banner(home):
-    return (f'<div class="radar-cta" data-webhook-cta>{U.icon("info")}<span>Want real-time alerts before a timelock executes? Slack, Telegram, '
-            f'Discord or HTTPS webhooks, $49 / month. <a href="{home}webhook/" data-cta="radar_webhook_49">Set up alerts{ARR}</a></span></div>')
+    return (f'<div class="radar-cta" data-webhook-cta>{U.icon("info")}<span>Track queued timelock operations free via the RSS / Atom feed '
+            f'or join the pilot watchlist ($0). <a href="{home}webhook/" data-cta="radar_watch_free">Join free watchlist{ARR}</a></span></div>')
 
 
 def pricing_redirect_page():
     """T5: /pricing/ lands on the pricing section of the homepage (static meta refresh; a link for no-refresh clients)."""
-    t, d, img = "Pricing · Pacta", "Pacta pricing: free data and API, a $19 instant scan, $49 / month webhook alerts, a $99 24h seal, dossiers and SLA monitoring.", f"{BASE_URL}/og-preview.png"
+    t, d, img = "Pricing · Pacta", "Pacta pricing: free data and API, a free timelock watchlist, a $99 24h seal, dossiers and SLA monitoring.", f"{BASE_URL}/og-preview.png"
     return ('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
             f'<title>{E(t)}</title><meta name="description" content="{E(d)}">'
             f'<meta property="og:type" content="website"><meta property="og:site_name" content="Pacta by Fractal Neurons">'
@@ -5122,8 +5161,9 @@ def build_all():
     w("llms/index.html", llms_html(idx, llms_text))
     sp = site_protocols(idx, pinned)
     LK.write_all(ROOT, DOCS, sp, onb, radar, BRIEF_PROTOCOL)   # api/v1/lookup.json + packages/mcp-server/src/lookup.mjs catalog
-    for sku_ in CHECKOUT:                          # v2: /scan/, /webhook/, /seal/ (they read the fresh lookup.json for real example targets)
+    for sku_ in CHECKOUT:                          # v2: /scan/ and /seal/ (they read the fresh lookup.json for real example targets)
         w(f"{CHECKOUT[sku_]['route']}/index.html", product_page(idx, sku_))
+    w("webhook/index.html", watchlist_page(idx))   # the free timelock & signer watchlist ($0); no paid webhook is sold
     w("miniapp/index.html", miniapp_page(idx))
     w(".well-known/farcaster.json", farcaster_manifest_json())
     ads_src = os.path.join(ROOT, "tools", "ads")

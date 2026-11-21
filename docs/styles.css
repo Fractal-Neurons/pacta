@@ -1622,3 +1622,19 @@ html:not(.js) [data-scan-upgrade], html:not(.js) [data-co-card] { display: grid 
   .topbar, .copy, .ftr, .toaster, [data-slot="sheet"] { display: none !important; }
   body { background: #fff; color: #000; }
 }
+/* /webhook/ free watchlist: a long base:0x… target or request ID wraps inside the column on phones instead of widening it */
+#watch .pd-main { min-width: 0; }
+#watch [data-wf-done],
+#watch [data-wf-done-msg] {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+/* /webhook/: the standalone links in the "What you can watch today" card and the feed link get a 24 x 24 target */
+#watch aside a,
+#watch .wf-feed {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  min-width: 24px;
+  padding: 2px 0;
+}

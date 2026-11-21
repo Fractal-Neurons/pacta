@@ -1264,12 +1264,11 @@
   var CO_SKU = {
     "wallet-report-9": { atomic: 9000000, amount: "9.00", route: "scan", label: "Full Wallet & Safe Exposure Report", needTarget: true, needContact: false },
     "instant-scan-19": { atomic: 19000000, amount: "19.00", route: "scan", label: "Instant Contract & Safe Deep-Scan", needTarget: true, needContact: false },
-    "radar-webhook-49": { atomic: 49000000, amount: "49.00", route: "webhook", label: "Live Timelock & Signer Webhook", needTarget: false, needContact: true,
-                          contactMissing: "Enter where the alerts should go." },
     "reverify-seal-99": { atomic: 99000000, amount: "99.00", route: "seal", label: "24h Mainnet Control-Plane Seal", needTarget: true, needContact: true,
                           contactMissing: "Enter a team contact so the verifiers can reach you." }
   };
-  var CO_TIER = { "wallet-9": "wallet-report-9", "wallet-guard-49": "radar-webhook-49", "instant-19": "instant-scan-19", "webhook-49": "radar-webhook-49", "seal-99": "reverify-seal-99" };
+  // webhook-49 / wallet-guard-49 now forward to the free watchlist door (no paid webhook is sold)
+  var CO_TIER = { "wallet-9": "wallet-report-9", "wallet-guard-49": "radar-watch-free", "instant-19": "instant-scan-19", "webhook-49": "radar-watch-free", "seal-99": "reverify-seal-99" };
   // the Worker's order codes (POST /v1/orders/verify, OpenAPI): CO_RETRY are polled with the same frozen order; the rest are final
   var CO_ERR = {
     tx_already_used: "This transaction hash already unlocked another order.",
@@ -1556,6 +1555,74 @@
     if (pr) pr.addEventListener("click", function () {
       var h = document.documentElement; h.classList.add("co-print");
       try { window.print(); } finally { h.classList.remove("co-print"); }
+    });
+  }
+  // /webhook/: the free timelock & signer watchlist ($0). One request to POST /v1/requests: a protocol slug or <chain>:0x<40 hex>, a fixed
+  // capability, the free queue and a private contact (email, @telegram or GitHub handle; never an https:// webhook URL). No payment.
+  function initWatchFree() {
+    var form = $("#watch-free-form"); if (!form) return;
+    var api = form.getAttribute("data-watch-api") || "";
+    if (!REQ_API_RE.test(api)) return;
+    var tIn = $("#wf-target", form), cIn = $("#wf-contact", form), chSel = $("#wf-chain", form), btn = $("[data-wf-submit]", form);
+    var spin = btn ? $(".spinner", btn) : null, lbl = $("[data-wf-lbl]", form), st = $("[data-wf-status]", form);
+    var tErr = $("#wf-target-err", form), cErr = $("#wf-contact-err", form), doneEl = $("[data-wf-done]"), doneMsg = $("[data-wf-done-msg]");
+    function err(inp, m, text) {
+      if (m) { m.textContent = text || ""; m.hidden = !text; }
+      if (inp) { if (text) inp.setAttribute("aria-invalid", "true"); else inp.removeAttribute("aria-invalid"); }
+    }
+    function busy(on) {
+      if (btn) { btn.disabled = on; if (on) btn.setAttribute("aria-busy", "true"); else btn.removeAttribute("aria-busy"); }
+      if (spin) spin.hidden = !on;
+      if (lbl) lbl.textContent = on ? "Joining\u2026" : "Join Free Watchlist ($0)";
+    }
+    function subject() {   // an indexed protocol slug, or <chain>:0x<40 lowercase hex>
+      var raw = String(tIn ? tIn.value : "").trim(), ch = chSel && chSel.value === "base" ? "base" : "ethereum";
+      if (CO_ADDR.test(raw)) return ch + ":" + raw.toLowerCase();
+      return raw.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 80);
+    }
+    $$("[data-wf-pick]", form).forEach(function (b) {
+      b.addEventListener("click", function () {
+        if (tIn) tIn.value = b.getAttribute("data-slug") || "";
+        if (chSel) chSel.value = b.getAttribute("data-chain") === "base" ? "base" : "ethereum";
+        $$("[data-wf-pick]", form).forEach(function (o) { o.setAttribute("aria-pressed", String(o === b)); });
+        err(tIn, tErr, "");
+      });
+    });
+    form.addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      if (st) { st.textContent = ""; st.hidden = true; }
+      var raw = String(tIn ? tIn.value : "").trim(), subj = subject(), c = String(cIn ? cIn.value : "").trim(), cBare = c.replace(/^github:/i, "");
+      var tBad = !raw ? "Pick a protocol above, or enter a timelock, Safe or protocol."
+        : (/^0x/i.test(raw) && !CO_ADDR.test(raw)) ? "Enter a 0x address: 0x followed by 40 hexadecimal characters."
+        : (subj.length < 2 || PII_RE.test(raw)) ? "Enter a protocol name or a 0x address (keep contact details in the contact field)." : "";
+      var cBad = !c ? "Enter a work email, @telegram handle or GitHub handle for pilot updates."
+        : (/^https?:/i.test(c) || JUNK_CONTACT.test(c) || !(EMAIL_RE.test(cBare) || TG_RE.test(cBare) || GH_RE.test(cBare)))
+          ? "Use a work email, a @telegram handle or a GitHub handle (not a webhook URL)." : "";
+      err(tIn, tErr, tBad); err(cIn, cErr, cBad);
+      if (tBad || cBad) { var f = tBad ? tIn : cIn; if (f && f.focus) f.focus(); return; }
+      var body = { request_type: "mcp_or_api_feature", target_subject: subj, requested_capability: "Pilot timelock and signer watchlist request",
+                   urgency_track: "community_queue_free", contact_handle: c.slice(0, 120) };
+      busy(true);
+      fetch(api, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }).then(function (res) {
+        return res.json().catch(function () { return {}; }).then(function (j) { return { status: res.status, j: j || {} }; });
+      }).then(function (r) {
+        busy(false);
+        var rid = r.j && typeof r.j.request_id === "string" ? r.j.request_id.slice(0, 80) : "";
+        if (r.status >= 200 && r.status < 300 && rid) {
+          if (doneMsg) doneMsg.textContent = "You are on the free pilot watchlist for " + subj + " (request " + rid + "). No payment was collected; replies come from pacta@dri.network.";
+          form.hidden = true;
+          if (doneEl) { doneEl.hidden = false; if (doneEl.focus) { try { doneEl.focus(); } catch (e) { /* ignore */ } } }
+          return;
+        }
+        if (st) {
+          st.hidden = false;
+          st.textContent = r.status === 429 ? "Too many requests. Wait a few minutes, then try again."
+            : "Could not join the watchlist (HTTP " + r.status + (r.j && typeof r.j.detail === "string" ? ": " + r.j.detail.slice(0, 160) : "") + ").";
+        }
+      }).catch(function () {
+        busy(false);
+        if (st) { st.hidden = false; st.textContent = "Network error. Try again, or subscribe to the RSS / Atom feed meanwhile."; }
+      });
     });
   }
   // /request/: ?tier=instant-19 | webhook-49 | seal-99 forwards to the product page (keeping a valid protocol=)
@@ -2564,8 +2631,8 @@
     var lockedN = Number(r.lockedFlaggedPositionsCount || 0);
     if (lockedN > 0 || pos.length >= 2) {
       var lockTxt = lockedN > 0
-        ? "+ " + lockedN + " additional held position gap" + (lockedN === 1 ? "" : "s") + ", Cross-Position Signer Contagion Matrix & Signed SHA-256 Committee Receipt"
-        : "Cross-Position Signer Contagion Matrix, Safe Signing Latency vs. Timelock Exit Check & Signed SHA-256 Committee Receipt";
+        ? "+ " + lockedN + " additional held position gap" + (lockedN === 1 ? "" : "s") + ", Cross-Position Signer Contagion Matrix & SHA-256 digest of the report"
+        : "Cross-Position Signer Contagion Matrix, Safe Signing Latency vs. Timelock Exit Check & SHA-256 digest of the report";
       var lockRow = el("div", { "class": "wl-locked-row", "data-wallet-locked": "" }, [
         el("span", { "class": "wl-lock-copy", text: lockTxt })
       ]);
@@ -3822,7 +3889,7 @@
   document.addEventListener("DOMContentLoaded", function () {
     // v4.3: every feature starts on its own, so one that throws can never leave a later one (the "Try:" examples, the
     // checker, the radar) unbound; the error is re-thrown asynchronously, so it still reaches the console
-    [initTheme, initInternalQaBadge, initXPixel, initSheet, initTabs, initTabLinks, initDetailsHash, initCmdk, initTooltips, initCopy, initBeaconHooks, tick, initIndex, initRequest, initLauncher, initCheckout, initScanFunnel, initSealCombo, initMiniApp, initInspector, initPreflight,
+    [initTheme, initInternalQaBadge, initXPixel, initSheet, initTabs, initTabLinks, initDetailsHash, initCmdk, initTooltips, initCopy, initBeaconHooks, tick, initIndex, initRequest, initLauncher, initWatchFree, initCheckout, initScanFunnel, initSealCombo, initMiniApp, initInspector, initPreflight,
      initLiveTimelocks, initProtocolFilter, initAges, initRefresh, initHeroCheck, initBadgeWidget, initScorecards, initReceipts].forEach(function (f) {
       try { f(); } catch (e) { setTimeout(function () { throw e; }, 0); }
     });
