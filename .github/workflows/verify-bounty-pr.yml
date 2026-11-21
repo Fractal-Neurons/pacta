@@ -51,14 +51,16 @@ jobs:
           if [ "$STATUS" != "A" ]; then
             echo "::error::the bounty fixture must be a newly added file (git status $STATUS)"; exit 1
           fi
-          if [[ "$FILE" =~ ^bounties/wave-3/(ethereum|base|arbitrum|optimism|polygon|bnb|avalanche)-[a-z0-9]+(-[a-z0-9]+)*\.json$ ]]; then
+          if [[ "$FILE" =~ ^bounties/wave-4/(catalogue|watch|docs-changed)/[a-z0-9]+(-[a-z0-9]+)*\.json$ ]]; then
+            :
+          elif [[ "$FILE" =~ ^bounties/wave-3/(ethereum|base|arbitrum|optimism|polygon|bnb|avalanche)-[a-z0-9]+(-[a-z0-9]+)*\.json$ ]]; then
             :
           elif [[ "$FILE" =~ ^bounties/wave-2/(ethereum|base|arbitrum)-[a-z0-9]+(-[a-z0-9]+)*\.json$ ]]; then
             :
           elif [[ "$FILE" =~ ^bounties/submissions/slot-[1-4]-[a-z0-9]+(-[a-z0-9]+)*\.json$ ]]; then
             :
           else
-            echo "::error::unexpected path; Wave 3 dossiers go to bounties/wave-3/<chain>-<slug>.json"; exit 1
+            echo "::error::unexpected path; Wave 4 entries go to bounties/wave-4/<track>/<slot_id>.json"; exit 1
           fi
           MODE="$(git ls-tree "$HEAD_SHA" -- "$FILE" | cut -d' ' -f1)"
           TYPE="$(git ls-tree "$HEAD_SHA" -- "$FILE" | cut -d' ' -f2)"
@@ -86,4 +88,8 @@ jobs:
           mkdir -p "$TRUSTED/$(dirname "$FILE")"
           git show "$HEAD_SHA:$FILE" > "$TRUSTED/$FILE"       # the PR's only contribution: one JSON data file
           cd "$TRUSTED"
-          python3 -I tools/verify_bounty_submission.py --json "$FILE"
+          if [[ "$FILE" =~ ^bounties/wave-4/ ]]; then
+            python3 -I tools/verify_wave4_structural.py --json "$FILE"
+          else
+            python3 -I tools/verify_bounty_submission.py --json "$FILE"
+          fi
