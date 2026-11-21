@@ -2555,7 +2555,7 @@
         "lagoon (0x707D...6A27, ETH #26,448,221): Vault beacon owned directly by 3-of-6 Safe despite documented 24h upgrade wait",
         "concrete (0xB9DC...8f20, ETH #26,425,374): Vault & factory manager Safe runs at 1-of-2 despite documented role separation"
       ],
-      "curator_exposure_insight": "Both emerging institutional vault factories exhibit high-severity upgrade/quorum DELTAs (Lagoon 0s beacon upgrade path vs 24h docs; Concrete 1-of-2 manager Safe). Any wallet holding ctDeltaWeETH or Lagoon vault shares inherits immediate factory-level control-plane exposure regardless of underlying weETH/USDC alignment.",
+      "curator_exposure_insight": "Both emerging institutional vault factories exhibit high-severity upgrade/quorum DELTAs (Lagoon 0s beacon upgrade path vs 24h docs; Concrete 1-of-2 manager Safe). Any wallet holding ctDeltaWeETH or Lagoon vault shares is immediately exposed to whoever can change the factory contracts, regardless of underlying weETH/USDC alignment.",
       "wrapper_counts": {
         "total": 2,
         "aligned_or_protective": 0,

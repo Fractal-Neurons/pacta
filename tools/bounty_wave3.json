@@ -10,7 +10,7 @@
         "pr": 121,
         "protocol": "USDT0",
         "usdc": "20.00",
-        "state": "paying",
+        "state": "paid",
         "receipt": "https://github.com/Fractal-Neurons/pacta/pull/121#issuecomment-7050288344"
       },
       {
@@ -24,7 +24,7 @@
         "pr": 127,
         "protocol": "AUTOfinance",
         "usdc": "20.00",
-        "state": "paying",
+        "state": "paid",
         "receipt": "https://github.com/Fractal-Neurons/pacta/pull/127#issuecomment-7050288653"
       }
     ],
@@ -99,9 +99,9 @@
   "rewardAtomic": 20000000,
   "openSlots": 2,
   "poolCapUsdc": "40.00",
-  "settledSlots": 0,
-  "fundedUnencumberedSlots": 2,
-  "fundedUnencumberedUsdc": "40.00",
+  "settledSlots": 2,
+  "fundedUnencumberedSlots": 0,
+  "fundedUnencumberedUsdc": "0.00",
   "ringFencedReserveUsdc": "0.05",
   "dossierWindow": "2023-2026",
   "minTvlUsd": 10000000,

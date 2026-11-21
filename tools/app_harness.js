@@ -759,7 +759,7 @@ function protocolFilterScenario() {
   const n = rows.length, want = (pred) => rows.filter(pred).length, empty = d.getElementById("proto-empty"), clear = d.getElementById("proto-clear");
   res.pfilter_initial_all = n === input.expectProtocols && shown().length === n && count() === n + " of " + n + " protocols shown" && empty.hidden && clear.hidden;
   let ok = true;
-  // v4: one vocabulary (M3) and the scorecard counts (M4): Deltas / Protective / Aligned / Observed, labels "(n)"
+  // v4: one vocabulary (M3) and the scorecard counts (M4): Docs differ / Protective / Aligned / Observed, labels "(n)"
   for (const [kind, k, pred] of [["status", "aligned", tierIs("aligned")], ["status", "delta", tierIs("delta")], ["status", "protective", tierIs("protective")],
     ["status", "observed", tierIs("observed")],
     ["chain", "ethereum", chainHas("ethereum")], ["chain", "base", chainHas("base")]]) {
@@ -774,7 +774,7 @@ function protocolFilterScenario() {
   const both = (r) => tierIs("delta")(r) && chainHas("base")(r);
   res.pfilter_status_x_chain = pressed("status").join() === "delta" && pressed("chain").join() === "base" && shown().length === want(both)
     && shown().every(both) && want(both) < want(tierIs("delta"))
-    && d.getElementById("proto-active").textContent.includes("Docs vs chain: Deltas") && d.getElementById("proto-active").textContent.includes("Chain: Base") && !clear.hidden;
+    && d.getElementById("proto-active").textContent.includes("Docs vs chain: Docs differ") && d.getElementById("proto-active").textContent.includes("Chain: Base") && !clear.hidden;
   click("status", "all"); click("chain", "all"); type("ethena");
   res.pfilter_text_search = shown().length >= 1 && shown().every((r) => (r.getAttribute("data-psearch") || "").includes("ethena")) && shown().length < n;
   // 0 matches: recovery prompt names the active filters and offers one-click fixes
@@ -1220,7 +1220,7 @@ async function liveCardScenario() {
   const visibleText = card ? kids.filter((k) => !is(k, '[data-slot="accordion"]') && !is(k, ".live-verify")).map((k) => k.textContent).join(" ") : "";
   const dvc = card ? card.querySelector("[data-pf-dvc]") : null, scope = card ? card.querySelector("[data-pf-scope]") : null;
   res.v44_live_card_verdict_first = !!card && iVerdict === 1 && iMetrics === iVerdict + 1 && iMatch === iMetrics + 1 && iScope === iMatch + 1
-    && !!dvc && dvc.textContent === "Docs vs chain: Delta" && dvc.getAttribute("data-variant") === "warning"
+    && !!dvc && dvc.textContent === "Docs vs chain: Docs differ" && dvc.getAttribute("data-variant") === "warning"
     && scope.textContent === "The verdict and heuristic score cover only this one contract address (" + reply.address.slice(0, 6) + "…"
        + reply.address.slice(-4) + "), not the whole protocol."
     && !!lim && lim.getAttribute("open") === null && lim.querySelector("summary").textContent === "Methodology & single-address scope limits"
@@ -1313,7 +1313,7 @@ async function v45Scenario() {
   const ch = lines("[data-pf-changed]"), mt = lines("[data-pf-matched]");
   res.v45_catalog_lines = ch.length === 1 && ch[0] === "Changed: Comptroller pauseGuardian = 2-of-4 Safe (Constitution: pause = Security Council 3-of-5)"
     && mt[0] === "Matched: Security Council Safe threshold 3-of-5" && mt.length === 2 && ch.concat(mt).every((x) => x.length <= 140)
-    && !!out.querySelector("[data-pf-dvc]") && out.querySelector("[data-pf-dvc]").textContent === "Docs vs chain: Delta";
+    && !!out.querySelector("[data-pf-dvc]") && out.querySelector("[data-pf-dvc]").textContent === "Docs vs chain: Docs differ";
   const ml = out.querySelectorAll("details[data-pf-limits] a").find((a) => a.textContent === "How the heuristic score differs from Docs vs chain");
   res.v45_live_checker_link = !!ml && ml.getAttribute("href") === "https://pacta.wtf/methodology/#live-checker"
     && out.textContent.includes("Heuristic score") && !out.textContent.includes("Risk score");

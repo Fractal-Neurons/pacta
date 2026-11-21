@@ -345,7 +345,7 @@ if (pres[1]) pres[1].textContent = '<a href="' + base + "/protocols/" + slug + '
 });
 }
 var SC_STATE = { g: "Strong", b: "Moderate", a: "Weak", n: "Not determined", u: "Uncompared" };
-var SC_GRADE = { delta: "Delta", protective: "Protective", aligned: "Aligned", observed: "Observed" };
+var SC_GRADE = { delta: "Docs differ", protective: "Protective", aligned: "Aligned", observed: "Observed" };
 var SC_VARIANT = { delta: "warning", protective: "info", aligned: "neutral", observed: "outline" };
 var SC_LETTER = { g: "S", b: "M", a: "W", n: "—", u: "—" };
 var SC_RADIUS = { g: 1, b: 0.78, a: 0.56, n: 1, u: 1 };
@@ -360,7 +360,7 @@ if (interactive) {
 svg.setAttribute("tabindex", "0");
 svg.setAttribute("data-tip", fs.map(function (f) { return String(f.label) + ": " + SC_STATE[/^[gbanu]$/.test(f.state) ? f.state : "n"]; }).join("\n"));
 }
-svg.setAttribute("aria-label", (name ? name + " control-plane rosette: " : "Control-plane rosette: ")
+svg.setAttribute("aria-label", (name ? name + " control-strength graphic: " : "Control-strength graphic: ")
 + fs.map(function (f) { return f.label + " " + String(SC_STATE[f.state] || "").toLowerCase(); }).join("; "));
 var ring = document.createElementNS(SVG_NS, "circle");
 ring.setAttribute("class", "r-ring"); ring.setAttribute("cx", c.toFixed(1)); ring.setAttribute("cy", c.toFixed(1)); ring.setAttribute("r", r.toFixed(1));
@@ -2011,7 +2011,7 @@ out.appendChild(el("p", { "class": "pf-assess", "data-pf-assess": "" }, [el("b",
 " · " + cov + (a.method ? " · " + String(a.method) : "")]));
 if (Array.isArray(a.limits) && a.limits.length) out.appendChild(el("p", { "class": "pf-assess", text: "Limits: " + a.limits.map(String).join(" ") }));
 }
-var DVC = { parameter_delta: ["Delta", "warning"], protective_delta: ["Protective", "info"], aligned_baseline: ["Aligned", "neutral"],
+var DVC = { parameter_delta: ["Docs differ", "warning"], protective_delta: ["Protective", "info"], aligned_baseline: ["Aligned", "neutral"],
 rpc_observed: ["Observed", "outline"] };
 function docsVsChain(m) {
 var c = String(m.classification || ""), wd = m.whatDiffers || {};
@@ -2116,7 +2116,7 @@ pfRow("Pinned block hash", /^0x[0-9a-f]{64}$/.test(String(r.pinnedBlockHash || "
 pfRow("Checked at (UTC)", typeof r.checkedAt === "string" ? r.checkedAt : (typeof r.blockTimestamp === "number" ? new Date(r.blockTimestamp * 1000).toISOString() : "n/a"))]));
 var acc = el("div", { "data-slot": "accordion" }), lim = el("div", { "data-slot": "accordion-content" });
 pfAssess(lim, r);
-lim.appendChild(el("p", { "class": "pf-assess", text: "A protocol's Docs-vs-chain status is on its scorecard: a protocol can be Delta while one of its "
+lim.appendChild(el("p", { "class": "pf-assess", text: "A protocol's Docs-vs-chain status is on its scorecard: a protocol can read Docs differ while one of its "
 + "contracts has no admin, and an Aligned protocol can still have a contract a multisig can change." }));
 lim.appendChild(el("p", { "class": "pf-assess" }, [arrowLink({ href: siteUrl("https://pacta.wtf/methodology/#live-checker") },
 "How the heuristic score differs from Docs vs chain")]));
@@ -2930,7 +2930,7 @@ addr.setAttribute("aria-expanded", "true");
 if (combo) combo.setAttribute("data-open", "1");
 if (LK) { renderCombo(LK, queryOverride); return; }
 listbox.textContent = "";
-listbox.appendChild(el("p", { "class": "pf-dd-empty", text: "Loading 313+ indexed protocols\u2026" }));
+listbox.appendChild(el("p", { "class": "pf-dd-empty", text: "Loading indexed protocols\u2026" }));
 lookupData().then(function (d) { if (!listbox.hidden) renderCombo(d, queryOverride); });
 }
 var sampleCard = $("[data-pf-sample]", out);
@@ -3037,8 +3037,9 @@ ev.preventDefault();
 selectComboItem(comboHits[activeOpt >= 0 ? activeOpt : 0]);
 }
 });
+if (btn) btn.addEventListener("mousedown", function (ev) { ev.preventDefault(); });
 document.addEventListener("mousedown", function (ev) {
-if (listbox && !listbox.hidden && combo && !combo.contains(ev.target)) closeCombo();
+if (listbox && !listbox.hidden && combo && !combo.contains(ev.target) && !(btn && btn.contains(ev.target))) closeCombo();
 });
 addr.addEventListener("input", function () {
 var a = val();
@@ -3056,6 +3057,7 @@ function lookupNames(a) {
 var my = ++seq;
 if (ctl) { try { ctl.abort(); } catch (e) {  } ctl = null; }
 busy(false); invalid("");
+out.textContent = "";
 lookupData().then(function (d) {
 if (my !== seq) return;
 out.textContent = ""; out.setAttribute("data-pf-names", "");
@@ -3220,7 +3222,7 @@ var a = val(), ch = chainSel.value === "base" ? "base" : "ethereum", p = problem
 if (isName(a)) {
 if (listbox && !listbox.hidden && comboHits.length) { selectComboItem(comboHits[activeOpt >= 0 ? activeOpt : 0]); return; }
 if (a.length >= 2) lookupNames(a);
-else { invalid("Type a protocol or token name, pick from the dropdown, or paste a 0x\u2026 contract address."); addr.focus(); }
+else { invalid("Type a protocol or token name, pick from the dropdown, or paste a 0x\u2026 contract address."); busy(false); out.textContent = ""; out.removeAttribute("data-pf-names"); addr.focus(); }
 return;
 }
 closeCombo();
@@ -3524,7 +3526,7 @@ return (data || []).map(function (x) { return { x: x, r: lkRank(x, q) }; }).filt
 .sort(function (a, b) { return a.r - b.r || (a.x.it.kind === "brief") - (b.x.it.kind === "brief") || (a.x.name < b.x.name ? -1 : a.x.name > b.x.name ? 1 : 0); })
 .slice(0, n).map(function (m) { return m.x; });
 }
-var GRADE_WORD = { delta: "Delta", protective: "Protective", aligned: "Aligned", observed: "Observed" };
+var GRADE_WORD = { delta: "Docs differ", protective: "Protective", aligned: "Aligned", observed: "Observed" };
 function lkSub(x) {
 var it = x.it, ch = it.chain === "base" ? "Base" : "Ethereum";
 if (it.kind === "brief") return "Brief · " + ch + " · " + String(it.category || "");

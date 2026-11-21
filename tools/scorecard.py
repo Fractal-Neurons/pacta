@@ -354,7 +354,7 @@ def _dur(s):
 
 
 def aria(fs, name=None):
-    return ((f"{name} control-plane rosette: " if name else "Control-plane rosette: ")
+    return ((f"{name} control-strength graphic: " if name else "Control-strength graphic: ")
             + "; ".join(f'{f["label"]} {STATE_LABEL[f["state"]].lower()}' for f in fs))
 
 

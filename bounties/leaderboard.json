@@ -177,6 +177,20 @@
       "payoutTxHash": "0x0d03facb59cdf2e1e42edd32f74787f228131d57425643529164a1c560b4186d"
     }
   ],
+  "wave3Settlements": [
+    {
+      "fixture": "ethereum-usdt0.json",
+      "pr": 121,
+      "hunter": "pythonyx135793",
+      "payoutTxHash": "0xb048e80e36dec5568f38425a4d07f743d236599d2fa1e9bd9cbd8b25dc4dd94c"
+    },
+    {
+      "fixture": "ethereum-autofinance.json",
+      "pr": 127,
+      "hunter": "VB-Blue",
+      "payoutTxHash": "0x01802630d06ec0390e94ce6812354cb5e9c7e42ae3e1f1810224cd960cf09323"
+    }
+  ],
   "easAttestations": {
     "VB-Blue": 8,
     "dankezo": 1,

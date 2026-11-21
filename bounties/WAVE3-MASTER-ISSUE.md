@@ -2,13 +2,13 @@
 
 > **Closed / in settlement:** Wave 3 closed on 20 Nov 2026 and is in settlement: 3 dossiers awarded $20.00 USDC each (#121 USDT0, #125 Concentrator, #127 AUTOfinance), 3 honoraria of $2.00 USDC with published credit and first call on the first sponsored pool (#130 3F, #135 Origami Finance, #126 Team Finance), and up to 4 × $2.00 USDC for a human sign-off comment on the already-audited PR head within 48 hours (#122, #139, #138, #133). A payment counts as paid only once its Base transaction is public. The rules below are archived; Wave 3 takes no new submissions.
 
-**Wave 3 — 3-Year Protocol Trajectory & Integrity Dossier ($20.00 USDC / Protocol on Base).** **Wave 3 offered 2 human-researcher dossier slots (`2 × $20.00 USDC = $40.00 USDC`).** Confirmed unencumbered on-chain now in `0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09` (an externally owned account on Base Mainnet, chainId 8453, USDC `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`): **$40.00 USDC (2 slots)** plus `$0.05` operational buffer. Wave 2 (`$1.00` single-gap micro-bounties) and Wave 1 (`4 × $25.00 = $100.00 USDC` Genesis) are permanently completed and retired. Live board: https://pacta.wtf/bounties/#wave-3 · Researcher credentials & leaderboard: https://pacta.wtf/leaderboard/
+**Wave 3 — 3-Year Protocol Trajectory & Integrity Dossier ($20.00 USDC / Protocol on Base).** **Wave 3 offered 2 human-researcher dossier slots (`2 × $20.00 USDC = $40.00 USDC`).** Settled on Base Mainnet from `0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09` (an externally owned account, chainId 8453, USDC `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`): **$40.00 USDC (2 slots)**; unencumbered Wave 3 capacity now: **$0.00 USDC (0 slots)** plus `$0.05` operational buffer. Wave 2 (`$1.00` single-gap micro-bounties) and Wave 1 (`4 × $25.00 = $100.00 USDC` Genesis) are permanently completed and retired. Live board: https://pacta.wtf/bounties/#wave-3 · Researcher credentials & leaderboard: https://pacta.wtf/leaderboard/
 
 ## Eligible Targets (`>= USD 10M` TVL Across 7 EVM Chains + `127` Unassessed On-Chain Records Unlocked)
 
 - **Chains:** `ethereum` (1), `base` (8453), `arbitrum` (42161), `optimism` (10), `polygon` (137), `bnb` (56), `avalanche` (43114)
 - **TVL Floor:** `tvl_usd >= 10,000,000` (USD 10M+ verified on DefiLlama or official analytics)
-- **Unassessed on-chain records unlocked:** All **127 unassessed on-chain records (`rpc_observed`, `easAttested: false`)** in https://pacta.wtf/api/v1/protocols.json are eligible alongside unindexed USD 10M+ protocols (only the 189 already Base-EAS attested protocols are excluded as duplicates).
+- **Unassessed on-chain records unlocked:** All **127 unassessed on-chain records (`rpc_observed`, `easAttested: false`)** in the [protocol data](https://pacta.wtf/api/v1/protocols.json) are eligible alongside unindexed USD 10M+ protocols (only the 189 already Base-EAS attested protocols are excluded as duplicates).
 
 ## Mandatory 3-Part Human-Researcher Dossier (`2023–2026`)
 

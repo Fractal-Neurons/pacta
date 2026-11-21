@@ -1559,12 +1559,12 @@ def main(argv=None):
         tier_ok[rel] = (re.findall(r'data-plan="([\w-]+)"', sec) == ["scan-free", "sponsor-pool", "watch-positions"]
                         and all(f'href="{pre_}{h_}" data-cta="{k_}"' in sec for _, _, _, _, _, (_, h_, k_), _, _ in BS.SELF_SERVE_PLANS)
                         and all(f'href="{req_}?tier={k}" data-tier="{k}"' in sec for k, _, _ in BS.ENTERPRISE_STRIP)
-                        and "can still read Delta" in sec and "free, with live re-check on demand" in sec
+                        and "can still read Docs differ" in sec and "can still read Delta" not in sec and "free, with live re-check on demand" in sec
                         and sec.find("data-editorial") < sec.find('data-pricing') and html.escape(BS.EDITORIAL_FIREWALL, quote=False) in sec)
     stale_m5 = sorted(f for f in [os.path.relpath(x, ROOT) for x in glob.glob(os.path.join(DOCS, "**", "*.html"), recursive=True)]
                       + ["docs/llms.txt", "docs/llms-full.txt", ".github/ISSUE_TEMPLATE/request-scan.yml", "tools/build_site.py", "tools/app.src.js", "README.md"]
                       if re.search(r"Aligned Maintenance|Aligned Status|continuous Aligned", read(f), re.I))
-    check("M4 + M5 pricing: four self-serve cards linking their own product page and the enterprise strip with its own tier= links on / and /request/; paid work can still read Delta, "
+    check("M4 + M5 pricing: four self-serve cards linking their own product page and the enterprise strip with its own tier= links on / and /request/; paid work can still read Docs differ, "
           "0 'Aligned Maintenance' / 'Aligned Status' strings on the site, feeds, issue template, generator, app.js or README",
           all(tier_ok.values()) and not stale_m5, f"{tier_ok}; stale {stale_m5[:4]}")
 
@@ -1587,7 +1587,7 @@ def main(argv=None):
         return (f"<h2>Operating {_html.escape(name)}? {MNT_H}</h2>" in pg and "issuer-clearance" not in pg and CLR_H not in pg
                 and "Request 24h Clearance" not in pg and "Clear findings" not in pg
                 and f'<a data-slot="button" data-variant="outline" href="../../request/?{q}" data-cta="continuous">Start monitoring</a>' in pg
-                and "the result can still be Delta" in pg and "Aligned Maintenance" not in pg
+                and "the result can still read Docs differ" in pg and "can still be Delta" not in pg and "Aligned Maintenance" not in pg
                 and f'<a href="../../request/?{q}&amp;settlement=invoice" data-cta="continuous_invoice">Invoice option</a>' in pg)
     brief_bad = []
     radar_items = {it["brief"].rstrip("/").split("/")[-1]: it for it in json.loads(read("docs/api/v1/radar.json"))["items"]}
@@ -1619,7 +1619,7 @@ def main(argv=None):
     every_delta = all(not ({e["classification"] for e in v["entries"]} & {"parameter_delta", "rpc_observed"})
                       or 'id="issuer-clearance"' in pages.get(os.path.join("protocols", v["slug"], "index.html"), "") for v in sp_.values())
     check(f"{X['protocols']} protocol pages: every parameter_delta / rpc_observed page carries the 24h clearance callout (RPC-pinned pages pass their governance URL as &forum=); "
-          "only all-aligned_baseline EAS-attested pages get the quiet $1,500/mo Continuous Control-Plane Monitoring callout (the result can still be Delta) and never a delta-remediation pitch",
+          "only all-aligned_baseline EAS-attested pages get the quiet $1,500/mo Continuous Control-Plane Monitoring callout (the result can still read Docs differ) and never a delta-remediation pitch",
           len(sp_) == X["protocols"] and not proto_bad and every_delta and n_al + n_cl == X["protocols"] and n_al == X["badge_tiers"]["aligned"], f"aligned {n_al}, clearance {n_cl}; bad {proto_bad[:5]}")
 
     # ---- #req-pay: Option A (invoice) first and default, Option B direct USDC to the treasury EOA, never called a Safe
@@ -2459,7 +2459,7 @@ def main(argv=None):
             "free, with live re-check on demand" in pricing43(home43) and "stays free, with live re-check on demand" in req43,
         "G-P2-2: 'Heuristic score' in the checker, limits link to /methodology/#live-checker, which explains the heuristic and the delta counts (+ harness)":
             '"Heuristic score"' in app43 and "Risk score" not in app43 and '<section class="memo-sec" id="live-checker">' in meth43
-            and f'{nums45["delta"]} of the {nums45["protocols"]} protocols carry at least one adverse docs-vs-chain delta' in meth43
+            and f'{nums45["delta"]} of the {nums45["protocols"]} protocols carry at least one adverse docs-vs-chain difference' in meth43
             and res.get("v45_live_checker_link") is True,
         "G-P2-3: combobox ranks prefix matches first, matches 0x addresses, a mouse pick closes it (aria-expanded=false) and clears the query (harness)":
             res.get("v45_combobox_prefix_address_click") is True,
@@ -2511,7 +2511,7 @@ def main(argv=None):
             ".live-receipt a { display:inline-flex; align-items:center; min-height:24px;" in demo_css,
         "'N of M protocols differ from their docs: D adverse, P protective.' under the homepage tiles and the /scorecards/ intro (from the data)":
             line451 in home43 and line451 in pages[os.path.join("scorecards", "index.html")]
-            and home43.find('data-proof>') < home43.find(line451) and "<span>Deltas</span><small>Adverse: chain looser than docs</small>" in home43,
+            and home43.find('data-proof>') < home43.find(line451) and "<span>Docs differ</span><small>Adverse: chain looser than docs</small>" in home43 and "<span>Deltas</span>" not in home43,
     }
     check("v4.5.1 polish (R3-01 neutral Aligned badges, R3-02 demo receipt link target, '36 of 90' reconciliation line)", all(v451.values()),
           str([k for k, x in v451.items() if not x]))
@@ -2609,10 +2609,10 @@ def main(argv=None):
             len(re.findall(r'<tr class="sc-row"', home47)) == 8 and order47[0] == "delta" and order47 == sorted(order47, key=rank47.get)
             and len(re.findall(r'<tr class="sc-row"', pages[os.path.join("scorecards", "index.html")])) == X["protocols"]
             and 'data-tl-strip' in home47 and '<a href="#radar">See the queue' in home47 and res.get("v47_w1_preview") is True,
-        "W2: #how-it-works = 2 shadcn Tabs (risk & diligence default, AI agents & builders): steps + rosette legend + Deltas / radar / dossier CTAs; "
+        "W2: #how-it-works = 2 shadcn Tabs (risk & diligence default, AI agents & builders): steps + control-strength legend + Docs differ / radar / dossier CTAs; "
         "MCP config, SKILL.md / llms.txt / OpenAPI pills, curl + cast (arrow keys, Home / End, link-to-tab: harness)":
             'role="tablist" aria-label="Choose your audience"' in home47 and 'id="hiw-t-risk" aria-controls="hiw-p-risk" aria-selected="true"' in home47
-            and f'href="scorecards/?grade=delta">Deltas ({BS.site_numbers(idx47)["delta"]})</a>' in home47
+            and f'href="scorecards/?grade=delta">Docs differ ({BS.site_numbers(idx47)["delta"]})</a>' in home47
             and all(f'href="{h}"' in home47 for h in ("SKILL.md", "llms.txt", "openapi.json")) and 'id="hiw-legend"' in home47
             and res.get("v47_w2_tabs") is True,
         "W3: a search trigger (Ctrl/Cmd+K, /) in the top bar of every page; Command dialog over lookup.json + scorecards.json (protocol, token, brief, 0x); "
@@ -3201,9 +3201,9 @@ def main(argv=None):
     w2_rows_ = dict(re.findall(r'<tr data-wave2-claim="([^"]+)">(.*?)</tr>', w2_tab_, re.S))
     w2_set_ = sum(1 for c_ in claims_ if c_["_file"] in w2_paid_)
     w2 = {
-        "Wave 3 single-sourced config (2 x $20.00 USDC = $40.00 USDC open on Base, 7 EVM chains, >= $10M TVL, >= 400-char memo, rpc_observed unlocked)":
+        "Wave 3 single-sourced config (2 x $20.00 USDC = $40.00 USDC pool, both slots settled on Base so 0 unencumbered, 7 EVM chains, >= $10M TVL, >= 400-char memo, rpc_observed unlocked)":
             (BS.WAVE3_REWARD_USDC, BS.WAVE3_REWARD_ATOMIC, BS.WAVE3_OPEN_SLOTS, BS.WAVE3_POOL_CAP_USDC, BS.WAVE3_FUNDED_SLOTS, BS.WAVE3_FUNDED_USDC)
-            == ("20.00", 20_000_000, 2, "40.00", 2, "40.00")
+            == ("20.00", 20_000_000, 2, "40.00", 0, "0.00") and BS.WAVE3_SETTLED_SLOTS == 2
             and set(w3cfg["chains"].values()) == {"ethereum", "base", "arbitrum", "optimism", "polygon", "bnb", "avalanche"}
             and w3cfg["minTvlUsd"] == 10_000_000 and w3cfg["minMemoChars"] == 400
             and w3cfg["settlement"]["chainId"] == 8453 and w3cfg["settlement"]["treasuryKind"] == "EOA" and VBS.checksummed(treas)
@@ -3300,7 +3300,9 @@ def main(argv=None):
         and all(f'href="https://basescan.org/tx/{tx_}"' in w2_rows_[f_] and "data-basescan-tx" in w2_rows_[f_]
                 and f'<b data-settled="{BS.REWARD_ATOMIC}">$1.00 USDC</b>' in w2_rows_[f_] for f_, tx_ in w2_paid_.items())
         and all('data-settled="pending"' in r_ and "$0.00 (pending settlement)" in r_ for f_, r_ in w2_rows_.items() if f_ not in w2_paid_)
-        and w2_tab_.count("data-basescan-tx") == len(w2_paid_) and bounty.count("data-basescan-tx") == len(w2_paid_) + w1_led_.count("data-basescan-tx")
+        and w2_tab_.count("data-basescan-tx") == len(w2_paid_)
+        and bounty.count("data-basescan-tx") == len(w2_paid_) + w1_led_.count("data-basescan-tx") + len(lb_.get("wave3Settlements", []))
+        and (re.search(r'<table class="ix w2-table" data-wave3-claims>.*?</table>', bounty, re.S) or [""])[0].count("data-basescan-tx") == len(lb_.get("wave3Settlements", [])) == 2
         and w2u_drop_ is not None and len(w2u_rows_) == len(claims_)
         and 'data-settled="pending"' in w2u_rows_[w2u_drop_] and "data-basescan-tx" not in w2u_rows_[w2u_drop_]
         and sec_w2u_.count("data-basescan-tx") == len(w2_paid_) - 1 and w2u_set_ == w2_set_ - 1
@@ -3478,11 +3480,16 @@ def main(argv=None):
             and all('bounties/">Bounties</a>' in t for r, t in pages.items() if 'class="topbar"' in t),
         "Wave 1 archive labelled 'Historical Snapshot (Pinned at 53 Protocols on Nov 15)'": "<b>Historical Snapshot (Pinned at 53 Protocols on Nov 15)</b>" in bounty
             and bounty.index("data-wave1-snapshot") > bounty.index('id="wave-1"'),
-        "funded capacity = confirmed unencumbered USDC only (Wave 3: 2 slots / $40.00 USDC unencumbered in Base EOA; Wave 2 retired; Wave 1 4/4 settled)":
-            (w3cfg["settledSlots"], w3cfg["fundedUnencumberedSlots"], w3cfg["fundedUnencumberedUsdc"], w3cfg["ringFencedReserveUsdc"]) == (0, 2, "40.00", "0.05")
+        "funded capacity = confirmed unencumbered USDC only (Wave 3: #121 and #127 paid on Base with public txs, 0 slots unencumbered; Wave 2 retired; Wave 1 4/4 settled)":
+            (w3cfg["settledSlots"], w3cfg["fundedUnencumberedSlots"], w3cfg["fundedUnencumberedUsdc"], w3cfg["ringFencedReserveUsdc"]) == (2, 0, "0.00", "0.05")
+            and sorted((p_["pr"], p_["fixture"]) for p_ in lb_.get("wave3Settlements", [])) == [(121, "ethereum-usdt0.json"), (127, "ethereum-autofinance.json")]
+            and all(BS.tx_ok(p_["payoutTxHash"]) and f'href="https://basescan.org/tx/{p_["payoutTxHash"]}"' in bounty for p_ in lb_["wave3Settlements"])
+            and bounty.count('<span data-slot="badge" data-variant="neutral">Paid on Base</span>') == 2 and 'data-wave3-paid="2">2 paid on Base so far' in bounty
+            and all(f'data-wave3-award="{n_}"' in bounty and "Paid on Base" not in bounty.split(f'data-wave3-award="{n_}"', 1)[1].split("</tr>", 1)[0] for n_ in (125,))
+            and all("Paid on Base" not in bounty.split(f'data-wave3-honorarium="{n_}"', 1)[1].split("</tr>", 1)[0] for n_ in (126, 130, 135))
             and 25 <= len(lb_["wave2Settlements"]) <= 30 and all(BS.tx_ok(p_["payoutTxHash"]) for p_ in lb_["wave2Settlements"])
-            and "data-wave3-capacity" in bounty and f'Held for these payouts: <b>${BS.W3_CLOSE["heldUsdc"]} USDC</b>' in bounty
-            and "**$40.00 USDC (2 slots)**" in master3
+            and "data-wave3-capacity" in bounty and "Paid on Base from the Wave 3 treasury" in bounty and "Held for these payouts" not in bounty
+            and "**$40.00 USDC (2 slots)**; unencumbered Wave 3 capacity now: **$0.00 USDC (0 slots)**" in master3
             and "Confirmed unencumbered Wave 2 micro-bounty capacity: **$0.00 USDC (0 slots)**" in master
             and "funded this epoch" not in bounty + master + master3 + read("docs/llms.txt")
             and not re.search(r"\bfunded epochs?\b|pays out in funded", bounty + master + master3 + read("docs/llms.txt") + read("docs/llms-full.txt") + rd_ + rd3_)
@@ -3733,16 +3740,16 @@ def main(argv=None):
         and re.findall(r'<section class="(?:sec|hero hero-v3)" id="([a-z]+)"|<section class="hero hero-v3">', hv_) is not None
         and [m_ for m_ in re.findall(r'<section class="[^"]+"(?: id="([a-z-]+)")?[^>]*>', hv_)] == ["", "how-it-works", "scorecards", "radar", "audiences", "pricing"]
         and '<h1><span class="l">Protocol docs drift.</span><br><span class="l">The chain doesn’t.</span></h1>' in hv_ and 'class="ftr"' in hv_
-        and f'class="stat" data-slot="card"><b>{sum(c_["grade"] == "delta" for c_ in cards_.values())}</b><span>Deltas</span>' in hv_
+        and f'class="stat" data-slot="card"><b>{sum(c_["grade"] == "delta" for c_ in cards_.values())}</b><span>Docs differ</span>' in hv_
         and f'class="stat" data-slot="card"><b>{sum(c_["grade"] == "protective" for c_ in cards_.values())}</b><span>Protective</span>' in hv_
-        and f'Deltas <span class="num">({sum(c_["grade"] == "delta" for c_ in cards_.values())})</span>' in hv_
+        and f'Docs differ <span class="num">({sum(c_["grade"] == "delta" for c_ in cards_.values())})</span>' in hv_
         and f'All <span class="num">({X["protocols"]})</span>' in hv_)
     e3["every page: /for-protocols/ in the nav and the footer; the grouped footer (M9) links /protocols/, /mcp/, /bounties/, /leaderboard/, /llms/, /feed.xml, /api/v1/openapi.json, GitHub, the Q&A #44, About, Methodology, Privacy, Terms, security.txt"] = all(
         'for-protocols/">For protocols</a>' in t_ and all(x_ in t_ for x_ in ('protocols/">Protocols</a', 'mcp/">MCP</a', 'leaderboard/">Leaderboard</a',
                                                                                   'feed.xml">Atom feed</a', 'api/v1/openapi.json">OpenAPI 3.1</a', 'security.txt">security.txt</a',
                                                                                   'about/">About</a', 'methodology/">Methodology</a', 'privacy/">Privacy</a', 'terms/">Terms</a'))
         and f'href="{BS.COMMUNITY_QA_URL}"' in t_ for t_ in pages.values() if 'class="ftr"' in t_)
-    check("E3: Website Edge v3 (scorecards + 5-factor rosette, /for-protocols/, root discovery files, theme label, no npx / star counts)",
+    check("E3: Website Edge v3 (scorecards + 5-factor control-strength graphic, /for-protocols/, root discovery files, theme label, no npx / star counts)",
           all(e3.values()), str([k_[:70] for k_, v_ in e3.items() if not v_]) + f" rosette bad {ro_bad[:4]}")
 
     # ================= Website Edge v3.1 (D1): every rosette factor bound to its own control surface; recon_trail provenance =================

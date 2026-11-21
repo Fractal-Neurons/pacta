@@ -599,7 +599,8 @@ code { overflow-wrap: break-word; }
 .agents-card p.s > a { display: inline-flex; align-items: center; min-height: 24px; }
 .hiw-cta, .hiw-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
 #how-it-works .hiw-cta + .links { margin-top: 14px; }
-#how-it-works .hiw-agents .term pre { max-height: 132px; overflow: auto; }
+#how-it-works .hiw-agents .term { margin-top: 0; }   /* B4: the grid gap already separates the code blocks */
+#how-it-works .hiw-agents .term pre { max-height: 120px; overflow: auto; }   /* B4: the agents tab sets the shared tab height; keep the risk tab's tail short */
 .hiw-pills { margin: 12px 0; }
 .hiw-agents { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
 .hiw-agents > div { display: grid; gap: 12px; align-content: start; min-width: 0; }
@@ -675,7 +676,7 @@ details.archive-details > .memo-sec { padding: 0 16px 8px; }
 .legend svg { width: 16px; height: 16px; }
 .aligned-note { margin-bottom: 16px; }
 table.sc { table-layout: fixed; }
-table.sc th:nth-child(1) { width: 30%; } table.sc th:nth-child(2) { width: 15%; } table.sc th:nth-child(3) { width: 9%; } table.sc th:nth-child(5) { width: 48px; }
+table.sc th:nth-child(1) { width: 30%; } table.sc th:nth-child(2) { width: max(15%, 136px); } table.sc th:nth-child(3) { width: 172px; } table.sc th:nth-child(5) { width: 48px; }   /* PA-R2-01: the uppercase headings fit their columns (CONTROL STRENGTH is ~140px + 24px padding) */
 table.sc td { vertical-align: middle; overflow-wrap: anywhere; }
 tr.sc-row { cursor: pointer; }
 tr.sc-row > td { height: 56px; }
@@ -1529,7 +1530,7 @@ p.s > a:only-child { display: inline-flex; align-items: center; min-height: 24px
 .cur-list > .cur-item:first-child { border-top: 0; padding-top: 0; }
 .cur-item-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; }
 .cur-item-id { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; min-width: 0; }
-.cur-proto-a { display: inline-flex; align-items: center; min-height: 24px; font-size: 0.875rem; font-weight: 600; color: var(--foreground); text-decoration: none; }
+.cur-proto-a { display: inline-flex; align-items: center; min-width: 24px; min-height: 24px; font-size: 0.875rem; font-weight: 600; color: var(--foreground); text-decoration: none; }
 .cur-proto-a:hover { text-decoration: underline; }
 .cur-item-links { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 0.75rem; color: var(--muted-foreground); }
 .cur-eas, .cur-scan-a { display: inline-flex; align-items: center; min-height: 24px; font-size: 0.75rem; text-decoration: none; white-space: nowrap; }
@@ -1741,4 +1742,29 @@ a[href^="https://base.easscan.org/attestation/view/"] { display: inline-flex; al
   .watch-pilot-box, .sponsor-sec { padding: 14px 16px; }
   .wp-inline-row { grid-template-columns: minmax(0, 1fr); }
   .wp-inline-row [data-slot="button"] { width: 100%; }
+}
+
+/* ---- Phase A round 2 -------------------------------------------------------------------------------------------------------- */
+/* PA-R2-02: a long base:0x… target or request ID in a watch-pilot confirmation wraps inside the card on phones instead of
+   widening the card and its parents (the card and /scan/'s next-steps grid size their single column to the content otherwise) */
+.watch-pilot-box, .scan-next-doors, .pd-main { grid-template-columns: minmax(0, 1fr); }
+.watch-pilot-box, .watch-pilot-box > *, .scan-next-doors > *, .pd-main > *, .wp-form, .wp-done { min-width: 0; }
+.wp-done > *, [data-wp-done-msg], .wp-status, .wp-head h3, .wp-head h4, .wp-sub { min-width: 0; overflow-wrap: anywhere; }
+.wp-done p { flex: 1 1 auto; }
+/* R5 + H49-02: every standalone link already gets a 24px-tall box; give each a 24px-wide box too, so short labels (3F, a feed
+   or radar link) still meet the 24 x 24 target floor */
+.crumbs a, .hero-routes a, .pc-foot a, .tl-strip a, .agents-card p.s > a, .trust a, .sc-more a, .aud-links a, .links a, .radar-tls li a,
+.plan-alt, .memo-foot a, .deflist dt a, .whatdiffers .wd-cta a, .convert-cta a:not([data-slot="button"]):not(.btn), table.ix td:first-child a,
+.memo .lb-catches a, td > a:only-child, dd > a:only-child, li > a:only-child, .pc-rows a, .radar td a, table.ix td > a, table.tbl td > a,
+p.s > a:only-child, .cur-row-name, .cur-proto-a { min-width: 24px; }
+.pv-rows a { display: inline-flex; align-items: center; min-height: 24px; min-width: 24px; }
+@media (max-width: 767px) {
+  /* B11: wallet demos on phones: the group label on its own row; each demo is a full-width button whose name keeps the first
+     line and whose two badges wrap onto a second line, so no word is squeezed or covered */
+  .try-row.try-demos { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  .try-demos .try-chips { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .try-demos .wl-demo-chip { flex-wrap: wrap; align-items: center; row-gap: 4px; }
+  .try-demos .wl-demo-chip .rc-name { flex: 1 1 calc(100% - 24px); min-width: 0; white-space: normal; overflow-wrap: break-word; }
+  .try-demos .wl-demo-chip .rc-sym { margin-left: 21px; }
+  .try-demos .wl-demo-chip .rc-sym, .try-demos .wl-demo-chip .rc-st { flex: none; }
 }
