@@ -93,7 +93,12 @@ _SUBJECT_OWNS = re.compile(r"^(?:it owns|owner of)\b|\bit owns\b")   # the recor
 _DEFINITE = re.compile(r"\b(?:held by|are|is|owned by|=)\s+the ((?:[A-Za-z]+ )?(?:Timelock|timelock)(?:Controller)?)\b")
 _NAMED = re.compile(r"\b([A-Za-z]\w*)(?:\(\))?\s*(?:=\s*)?\(?(0x[0-9a-fA-F]{40})")
 _WRAPPER = re.compile(r"\b1-of-(\d{1,2})\b([^;]*?)\b(?:shared between|co-owned by|jointly owned by)\b([^;]*)")
-_EMERGENCY = re.compile(r"\bpause|\bblacklist|\bfreez|PAUSE_ROLE|ASSET_PROTECTION|\bdeprecate|\bguardian\b|pauseGuardian", re.I)
+# v9 H1: "deprecated" (a README / docs status word) is not a pause / freeze surface and no longer matches
+_EMERGENCY = re.compile(r"\bpause|\bblacklist|\bfreez|PAUSE_ROLE|ASSET_PROTECTION|\bguardian\b|pauseGuardian", re.I)
+# v9 H2: a pause / freeze role with several members, e.g. "PAUSE_GUARDIAN_ROLE has 3 members (2-of-6 Safe 0x…, 0x…, 0x…)"
+_MEMBERS = re.compile(r"\b([A-Z][A-Z0-9_]*_ROLE)\b[^;()]{0,40}?\bhas (\d+) members(?:\s*\(([^)]*)\))?"
+                      r"|\b([A-Z][A-Z0-9_]*_ROLE)\b[^;()]{0,40}?getRoleMemberCount\([^)]*\)\s*(?:=|returns)\s*(\d+)")
+_NUMWORD = {1: "one", 2: "two", 3: "three", 4: "four", 5: "five", 6: "six"}
 
 
 UNRESOLVED_PARITY = "Observed onchain state pinned; a breach of a documented commitment is not established"
@@ -368,7 +373,7 @@ def factors(records, easattested, g, facts=(), parity_text=None):
                          else ("n", "No signer quorum in the published records", None))
     # 4: emergency / freeze scope: the holder named in the pause / freeze clause itself (a Safe fact by address counts)
     safes = {f["address"].lower(): f["safe_threshold"] for f in facts if f.get("safe_threshold") and f.get("address")}
-    held, em = [], None
+    held, em, multi = [], None, []
     for rid, t, _r in texts:
         # v8 G1: a record that only establishes a timelock CANCELLER_ROLE (no pause / unpause / freeze / circuit-breaker binding anywhere
         # in it) establishes no pause / freeze holder, whichever of its clauses names a "Guardian"
@@ -379,8 +384,11 @@ def factors(records, easattested, g, facts=(), parity_text=None):
         for i, c in enumerate(cs):
             if not _EMERGENCY.search(c):
                 continue
-            # an unset guardian (guardian() = 0x0) or a timelock CANCELLER_ROLE alone establishes no pause / freeze holder (v7 F3)
-            if cancel_only or _ZERO_GUARDIAN.search(c) or (_CANCEL_ONLY.search(c) and not _FREEZE_WORDS.search(c)):
+            # a timelock CANCELLER_ROLE alone establishes neither a pause / freeze holder (v7 F3) nor pause / freeze presence (v9 H1)
+            if cancel_only or (_CANCEL_ONLY.search(c) and not _FREEZE_WORDS.search(c)):
+                continue
+            # an unset guardian (guardian() = 0x0) establishes no pause / freeze holder (v7 F3)
+            if _ZERO_GUARDIAN.search(c):
                 em = em or (rid, c)
                 continue
             em = em or (rid, c)
@@ -392,6 +400,26 @@ def factors(records, easattested, g, facts=(), parity_text=None):
                 nm = _NAMED_SAFE.match(cs[i + 1].strip())
                 if nm and re.search(r"\b" + re.escape(nm.group(1)) + r"\b", c):
                     c = f"{c}; {cs[i + 1]}"
+            # v9 H2: a multi-member pause / freeze role is rated on its members only when every member resolves to a >= 2-signer
+            # Safe quorum or a timelock; one member's quorum never stands for co-members the published records do not resolve
+            mm = _MEMBERS.search(c)
+            if mm and int(mm.group(2) or mm.group(5)) > 1:
+                role, n_ = mm.group(1) or mm.group(4), int(mm.group(2) or mm.group(5))
+                items = [x.strip() for x in (mm.group(3) or "").split(",") if x.strip()]
+                res = []
+                for it in items:
+                    q = [int(a) for a, b in ((x.group(1), x.group(2)) for x in _nofs(it)) if 2 <= int(a) <= int(b)]
+                    q += [safes[a.lower()] for a in _ADDR.findall(it) if safes.get(a.lower(), 0) >= 2]
+                    if q:
+                        res.append(next(f"{x.group(1)}-of-{x.group(2)} Safe" for x in _nofs(it)) if _nofs(it) else f"{min(q)}-of-N Safe")
+                    elif re.search(r"[Tt]imelock", it):
+                        res.append("timelock")
+                if len(res) < n_:
+                    u = n_ - len(res)
+                    parts = [f"{_NUMWORD.get(res.count(x), res.count(x))} {x}" for x in dict.fromkeys(res)]
+                    rest = f"{u} {'other ' if res else ''}role member{'s' if u > 1 else ''} not resolved in the published records"
+                    multi.append((f"{role} held by {n_} addresses ({'; '.join(parts + [rest])})", f"{rid}: {_clip(c)}"))
+                    continue
             ks = [(int(m.group(1)), f"{m.group(1)}-of-{m.group(2)}") for m in _nofs(c) if 1 <= int(m.group(1)) <= int(m.group(2))]
             ks += [(1, "a single key") for _ in _SINGLE.finditer(c)]
             ks += [(safes[a.lower()], f"{safes[a.lower()]}-of-N Safe") for a in _ADDR.findall(c) if a.lower() in safes]
@@ -408,7 +436,10 @@ def factors(records, easattested, g, facts=(), parity_text=None):
         else:
             k, lbl, ev, _z = min(held)
             out["emergency"] = (("a", f"Pause / freeze authority held by {lbl}", ev) if k == 1 else
+                                ("n", multi[0][0], multi[0][1]) if multi else
                                 ("g", f"Pause / freeze authority scoped behind a multi-signer controller ({lbl})", ev))
+    elif multi:
+        out["emergency"] = ("n", multi[0][0], multi[0][1])
     elif em:
         out["emergency"] = ("n", "Pause / freeze authority present; its holder is not determined", f"{em[0]}: {_clip(em[1])}")
     else:

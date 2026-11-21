@@ -641,6 +641,69 @@ class V8(unittest.TestCase):
             ev = e["evidence"].split(": ", 1)[1]
             self.assertTrue(SC._EMERGENCY.search(ev) and (SC._nofs(ev) or "-of-N Safe" in e["value"]), s)
 
+class V9(unittest.TestCase):
+    INDEX = None
+
+    def _rec(self, rid):
+        if V9.INDEX is None:
+            V9.INDEX = {e["id"]: e for e in j("api", "v1", "index.json")["entries"]}
+        return V9.INDEX[rid]
+
+    def _em(self, rid, g):
+        import scorecard as SC
+        return next(x for x in SC.factors([self._rec(rid)], True, g) if x["key"] == "emergency")
+
+    def test_h1_deprecated_is_not_a_pause_surface(self):
+        # "deprecated" README / docs sentences establish no pause / freeze authority (record-level and on the emitted card)
+        for slug, rid in (("ekubo", "ekubo-core-immutable-starknet-owner-s32"),
+                          ("inceptionlrt-isolated-restaking", "inception-vault-upgrades-timelock-3d-s32")):
+            self.assertIn("deprecated", self._rec(rid)["onchain_observed"])
+            for f in (self._em(rid, "aligned"), next(x for x in CARDS[slug]["factors"] if x["key"] == "emergency")):
+                self.assertEqual((f["state"], f["value"]), ("n", "No pause / freeze authority in the published records"), slug)
+                self.assertNotIn("Pause / freeze authority present", f["value"])
+        # Tether's deprecated() getter sits beside its real pause / blacklist surface, which is kept
+        import scorecard as SC
+        self.assertTrue(SC._EMERGENCY.search("paused() = false") and SC._EMERGENCY.search("blacklist"))
+        self.assertFalse(SC._EMERGENCY.search("The docs mark the V2 EVM deployment deprecated."))
+
+    def test_h1_bare_seamless_canceller_role_establishes_no_presence(self):
+        f = self._em("seamless-community-guardian-safe-2-of-3-s35", "unresolved")
+        self.assertEqual((f["state"], f["value"], f["evidence"]), ("n", "No pause / freeze authority in the published records", None))
+        e = next(x for x in CARDS["seamless-protocol-base"]["factors"] if x["key"] == "emergency")   # emitted override unchanged
+        self.assertEqual((e["state"], e["value"], e["evidenceRecordId"]),
+                         ("n", "2-of-3 Safe holds timelock CANCELLER_ROLE; pause / freeze binding not in the published records",
+                          "seamless-community-guardian-safe-2-of-3-s35"))
+
+    def test_h2_euler_multi_member_pause_role_is_not_strong(self):
+        want = ("n", "PAUSE_GUARDIAN_ROLE held by 3 addresses (one 2-of-6 Safe; 2 other role members not resolved in the published records)")
+        f = self._em("euler-v2-evk-factorygovernor-4d-timelock-s18", "aligned")
+        self.assertEqual((f["state"], f["value"]), want)
+        e = next(x for x in CARDS["euler-v2-evk"]["factors"] if x["key"] == "emergency")
+        self.assertEqual((e["state"], e["value"]), want)
+        for word in ("EOA", "single key", "single-key", "exploit"):
+            self.assertNotIn(word, e["value"])
+
+    def test_h2_no_strong_freeze_rests_on_unresolved_co_holders(self):
+        # every Strong emergency row across all scorecards: no multi-member pause / freeze role in its cited record leaves a member
+        # without a >= 2-signer Safe quorum or a timelock
+        import re
+        import scorecard as SC
+        members = re.compile(r"\b[A-Z][A-Z0-9_]*_ROLE\b[^;()]{0,40}?\bhas (\d+) members(?:\s*\(([^)]*)\))?"
+                             r"|getRoleMemberCount\([^)]*\)\s*(?:=|returns)\s*(\d+)")
+        strong = [(s, x) for s, c in CARDS.items() for x in c["factors"] if x["key"] == "emergency" and x["state"] == "g"]
+        self.assertEqual(len(CARDS), 316)
+        self.assertGreater(len(strong), 0)
+        for s, x in strong:
+            t = self._rec(x["evidenceRecordId"])["onchain_observed"]
+            for m in members.finditer(t):
+                n = int(m.group(1) or m.group(3))
+                if n < 2 or not SC._FREEZE_WORDS.search(t[max(0, m.start() - 40): m.end()]):
+                    continue
+                items = [i for i in (m.group(2) or "").split(",") if i.strip()]
+                ok = [i for i in items if re.search(r"\b([2-9]|1\d)-of-\d{1,2}\b|[Tt]imelock", i)]
+                self.assertEqual(len(ok), n, f"{s}: Strong freeze rests on a {n}-member role with unresolved co-holders")
+
+
 class Wording(unittest.TestCase):
     def test_no_aggregate_overstatement(self):
         self.assertNotIn("across control surfaces", json.dumps(j("api", "v1", "scorecards.json")))

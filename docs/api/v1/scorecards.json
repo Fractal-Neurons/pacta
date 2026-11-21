@@ -6,7 +6,7 @@
  },
  "description": "One canonical grade per published protocol (DELTA / CHANGED RECENTLY / UNRESOLVED / PROTECTIVE / ALIGNED / OBSERVED) and a 5-factor control-plane rosette derived deterministically from Pacta's published records (index.json, rpc-pinned.json) and controller facts. A factor the published evidence does not decide is 'n' (not determined); docs-vs-chain parity is 'u' (uncompared) for every RPC-observed protocol. States: g strong, b moderate, a weak, n not determined, u uncompared.",
  "factorCoverage": {
-  "emergency": 22,
+  "emergency": 21,
   "parity": 176,
   "quorum": 177,
   "timelock": 101,
@@ -8201,13 +8201,11 @@
      "value": "DAO Governor (token vote)"
     },
     {
-     "evidence": "ekubo-core-immutable-starknet-owner-s32: The docs mark the V2 EVM deployment deprecated.",
-     "evidenceCaption": "Core: not a proxy; owner() is the StarknetOwnerProxy driven by the Starknet Governor — Ethereum block #26,451,608",
-     "evidenceRecordId": "ekubo-core-immutable-starknet-owner-s32",
+     "evidence": null,
      "key": "emergency",
      "label": "Emergency / freeze scope",
      "state": "n",
-     "value": "Pause / freeze authority present; its holder is not determined"
+     "value": "No pause / freeze authority in the published records"
     },
     {
      "evidence": null,
@@ -9031,8 +9029,8 @@
      "evidenceRecordId": "euler-v2-evk-factorygovernor-4d-timelock-s18",
      "key": "emergency",
      "label": "Emergency / freeze scope",
-     "state": "g",
-     "value": "Pause / freeze authority scoped behind a multi-signer controller (2-of-6)"
+     "state": "n",
+     "value": "PAUSE_GUARDIAN_ROLE held by 3 addresses (one 2-of-6 Safe; 2 other role members not resolved in the published records)"
     },
     {
      "evidence": null,
@@ -9066,7 +9064,7 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "Euler V2 (EVK) control-plane rosette: Upgradeability not determined; Timelock floor strong; Signer quorum moderate; Emergency / freeze scope strong; Docs-vs-chain parity strong",
+   "rosetteAria": "Euler V2 (EVK) control-plane rosette: Upgradeability not determined; Timelock floor strong; Signer quorum moderate; Emergency / freeze scope not determined; Docs-vs-chain parity strong",
    "search": "euler v2 (evk) euler-v2-evk modular lending vault kit eul evk evc 0x0c9a3dd6b8f28529d72d7f9ce918d493519ee383 0x29a56a1b8214d9cf7c5561811750d5cbdb45cc8e 0x2f13256e04022d6356d8ce8c53c7364e13dc1f3d 0xb1345e7a4d35fb3e6bf22a32b3741ae74e5fba27 0xb3b84e8320250afe7a5fb313ee32b52982b73c53 0xcad001c30e96765ac90307669d578219d4fb1dce 0xcc6451385685721778e7bd80b54f8c92b484f601 0xfb034c1c6c7f42171b2d1cb8486e0f43ed07a968 0xff217004bdd3a6a592162380dc0e6bbf143291eb",
    "slug": "euler-v2-evk",
    "summary_short": "Factory upgrades wait 4 days in a timelock (DAO 4-of-8 proposes), as documented",
@@ -12292,13 +12290,11 @@
      "value": "Lowest controlling quorum: 3-of-5"
     },
     {
-     "evidence": "inception-vault-upgrades-timelock-3d-s32: The README lists InstEthVault under deprecated LSTs",
-     "evidenceCaption": "Vault upgrades: ProxyAdmins owned by InceptionTimeLock, getMinDelay() 259,200 s — Ethereum block #26,451,608",
-     "evidenceRecordId": "inception-vault-upgrades-timelock-3d-s32",
+     "evidence": null,
      "key": "emergency",
      "label": "Emergency / freeze scope",
      "state": "n",
-     "value": "Pause / freeze authority present; its holder is not determined"
+     "value": "No pause / freeze authority in the published records"
     },
     {
      "evidence": null,

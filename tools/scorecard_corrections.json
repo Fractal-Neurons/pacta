@@ -420,7 +420,8 @@
    "factorOverrides": {
     "emergency": {
      "state": "n",
-     "value": "2-of-3 Safe holds timelock CANCELLER_ROLE; pause / freeze binding not in the published records"
+     "value": "2-of-3 Safe holds timelock CANCELLER_ROLE; pause / freeze binding not in the published records",
+     "evidence": "seamless-community-guardian-safe-2-of-3-s35: Guardian 0xA1b5f2cc9B407177CD8a4ACF1699fa0b99955A22 (Base Safe, the address the smart-contracts page lists): getThreshold() = 2 of getOwners() = 3"
     }
    }
   },

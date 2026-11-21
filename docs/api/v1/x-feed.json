@@ -3,7 +3,7 @@
  "description": "Pacta findings ready to post on X: one item per published protocol (docs-vs-chain delta, changed recently, docs updated, unresolved scope, protective delta, aligned baseline or RPC-observed) plus active timelock operations from the radar. mainPostText has no links; replyPostText carries the receipt page and the Base EAS attestation. feedId is stable: post each id once.",
  "generatedFrom": {
   "site": {
-   "scorecards.json": "ee1212372471479270bf607766f4a387fd34737aef4130c3a3fda93d32596023",
+   "scorecards.json": "602e07235b9a6ee773ece4b77d10951c66958555c061712c746ca7368ea06983",
    "index.json": "470978540607242efcac2c69f42e8357d7d6a3334c9da28f347c97867aa9c39a",
    "rpc-pinned.json": "108919b7ce46d2c3e09943bbd5dad4344ee375a275c6056f4b391a57ee11a418",
    "radar.json": "16d9637777dc1df9babb767d0ac31c4e1fe8c339332ea815cc32db745d097e1d",
@@ -5840,7 +5840,7 @@
      "label": "Emergency / freeze scope",
      "state": "n",
      "cue": "—",
-     "value": "Pause / freeze authority present; its holder is not determined"
+     "value": "No pause / freeze authority in the published records"
     },
     {
      "key": "parity",
@@ -5960,7 +5960,7 @@
      "label": "Emergency / freeze scope",
      "state": "n",
      "cue": "—",
-     "value": "Pause / freeze authority present; its holder is not determined"
+     "value": "No pause / freeze authority in the published records"
     },
     {
      "key": "parity",
@@ -10578,9 +10578,9 @@
     {
      "key": "emergency",
      "label": "Emergency / freeze scope",
-     "state": "g",
-     "cue": "S",
-     "value": "Pause / freeze authority scoped behind a multi-signer controller (2-of-6)"
+     "state": "n",
+     "cue": "—",
+     "value": "PAUSE_GUARDIAN_ROLE held by 3 addresses (one 2-of-6 Safe; 2 other role members not resolved in the published records)"
     },
     {
      "key": "parity",
