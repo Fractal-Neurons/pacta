@@ -5,7 +5,7 @@
 ## Read First — Key Safety, Paid Call & Payout
 - **Key safety:** Use a fresh wallet holding only cents, never your main wallet. Our helper script reads your key on your own machine and never sends or prints it. Pacta will never ask for a private key or seed phrase.
 - **One $0.02 paid call per entry:** Every entry needs one paid x402 `verdict` call of **$0.02 USDC** on Base to **`POST https://api.pacta.wtf/v1/x402/verdict`** (`https://pacta.fractalneurons.com` is the second official host; our checker verifies the payment on-chain). Payment goes to Pacta's treasury wallet **`0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14`** on Base and must come **from the same Base wallet address that will receive your $1.00 USDC award**.
-- **The $0.02 is not returned:** Your 2 cents pay for the API call and are never returned, even if someone else wins the slot first or your entry fails our check. If the call returns an error or times out, check your wallet on BaseScan before retrying: if 2 cents already left your wallet to `0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14`, do not pay again — that Base transaction hash is valid for your entry and our checker accepts it.
+- **The $0.02 is not returned:** Your 2 cents pay for the API call and are never returned, even if someone else wins the slot first or your entry fails our check. **If the script ends with HTTP 503 and the answer says settled: true, your payment went through. Do not run it again. Use that transaction.** If the call returns any other error or times out, check your wallet on BaseScan before retrying: if 2 cents already left your wallet to `0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14`, do not pay again — that Base transaction hash is valid for your entry and our checker accepts it.
 - **Getting 2 cents of USDC on Base:** If your fresh wallet has no USDC on Base, withdraw a small amount of USDC on the Base network from an exchange that supports Base (fees vary by exchange), or swap a few cents of Base ETH into Base USDC (`0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`). Signing the x402 payment itself needs zero Base ETH gas.
 - **Payout within 48 hours:** Each winning entry is paid **$1.00 USDC on Base** within **48 hours** after our check passes and the Pull Request merges.
 
@@ -122,7 +122,8 @@ python3 pacta_x402_call.py \
   --address <0xTargetContractAddress> \
   --out receipt.json
 ```
-- **If the call returns an error or times out after signing:** Before retrying, check your wallet's Token Transfers on BaseScan (`https://basescan.org/address/<your_address>#tokentxns`). If **$0.02 USDC** already left your wallet to `0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14`, **do not pay again** — that Base transaction hash is valid for your entry and our checker accepts it.
+- **If the script ends with HTTP 503 and the answer says settled: true, your payment went through. Do not run it again. Use that transaction.**
+- **If the call returns any other error or times out after signing:** Before retrying, check your wallet's Token Transfers on BaseScan (`https://basescan.org/address/<your_address>#tokentxns`). If **$0.02 USDC** already left your wallet to `0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14`, **do not pay again** — that Base transaction hash is valid for your entry and our checker accepts it.
 - On `HTTP 200`, `receipt.json` contains `payment_tx_hash` (`0x...` settled Base USDC transaction) and `observed_response` (`block`, `capabilities`, `controllerSummary`).
 
 Open your Pull Request titled **`Wave 4 catalogue: <slot_id>`** adding `bounties/wave-4/catalogue/<slot_id>.json`, and leave your confirmation comment:
