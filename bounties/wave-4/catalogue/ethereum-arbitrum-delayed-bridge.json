@@ -1,0 +1,21 @@
+{
+  "slot_id": "ethereum-arbitrum-delayed-bridge",
+  "chain": "ethereum",
+  "protocol_name": "Arbitrum One Canonical Bridge (Delayed Bridge)",
+  "contract_address": "0x8315177aB297bA92A06054cE80a67Ed4DBd7ed3a",
+  "official_source_url": "https://docs.arbitrum.io/build-decentralized-apps/reference/contract-addresses",
+  "pinned_block_number": 26466431,
+  "pinned_block_hash": "0x715f02216732752dc6a7558c4830d51c73d8021a6ec9ad0bb0456a27e4298d21",
+  "observed_control_plane": {
+    "is_proxy": true,
+    "implementation_address": "0xfE4749061Fb052c354aaC65b9Fb0cCD7e20D2418",
+    "controller_kind": "contract",
+    "controller_address": "0x3ffFbAdAF827559da092217e474760E2b2c3CeDd",
+    "safe_threshold": null,
+    "safe_owners_count": null,
+    "timelock_min_delay_seconds": null
+  },
+  "payment_tx_hash": "0x9705b4895b8c139602d935b00b15abb052d7d87b41ab86b95b37dc545bb04619",
+  "contributor_github": "VB-Blue",
+  "base_payout_address": "0xe0a3AAe6e7d042f42e82830f4eEbF426cc1270a2"
+}
