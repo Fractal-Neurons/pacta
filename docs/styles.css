@@ -1107,11 +1107,12 @@ html:not(.js) [data-theme-menu], html:not(.js) .menu-btn, html:not(.js) [data-li
 }
 /* v4.7: below 1024 px the NavigationMenu, GitHub and X move into the hamburger Sheet (with the Theme row and the CTA) */
 @media (max-width: 1023px) {
-  /* PA-R4-01: without JavaScript the primary links sit in normal flow as a second header row (scrolling sideways when needed), so the
-     header reserves their height and nothing below (the breadcrumb, its focus ring) is covered; the JS Sheet is untouched */
+  /* PA-R4-01: without JavaScript the primary links sit in normal flow below the brand row and wrap into as many visible rows as they
+     need, so the header reserves their height, nothing below (the breadcrumb) is covered and no link or focus ring is ever clipped
+     sideways (there is no scroller to pan); the JS Sheet is untouched */
   html:not(.js) { scroll-padding-top: 128px; }
   html:not(.js) .topbar .wrap { flex-wrap: wrap; height: auto; min-height: 64px; padding-top: 8px; padding-bottom: 4px; row-gap: 4px; }
-  html:not(.js) [data-slot="navigation-menu"] { display: flex !important; position: static; order: 3; flex: 0 0 100%; max-width: 100%; min-width: 0; margin: 0; padding: 4px; overflow-x: auto; background: var(--background); border-top: 1px solid var(--border); border-bottom: 0; }
+  html:not(.js) [data-slot="navigation-menu"] { display: flex !important; position: static; order: 3; flex: 0 0 100%; flex-wrap: wrap; row-gap: 4px; column-gap: 4px; max-width: 100%; min-width: 0; margin: 0; padding: 4px; overflow: visible; background: var(--background); border-top: 1px solid var(--border); border-bottom: 0; }
   [data-slot="navigation-menu"], .tools .gh, .tools .xl { display: none; }
   .menu-btn { display: inline-flex; }
   .search-btn kbd { display: none; }
@@ -1145,7 +1146,10 @@ html:not(.js) [data-theme-menu], html:not(.js) .menu-btn, html:not(.js) [data-li
   .pd-sec .crumbs > span:nth-last-child(-n+2) { display: none; }
   .co-row, .launcher, .pd-steps { grid-template-columns: minmax(0, 1fr); }
   .pd-head h1 { font-size: 1.75rem; }
-  html:not(.js) .topbar .wrap { min-height: 56px; }   /* PA-R4-01: the in-flow no-JS link row from the 1023px block keeps working here */
+  html:not(.js) .topbar .wrap { min-height: 56px; }   /* PA-R4-01: the in-flow no-JS link rows from the 1023px block keep working here */
+  /* the wrapped no-JS header is about 142px at 375-390px (8 + 40 brand row + 4 + two 36px link rows with 4px gaps and padding + 4 + borders)
+     and about 182px at 320px (three rows); 216px - the 24px section scroll margin = 192px keeps anchor jumps below it */
+  html:not(.js) { scroll-padding-top: 216px; }
   .wrap, .wrap-prose, .memo-wrap { padding-left: 16px; padding-right: 16px; }
   .topbar .wrap { height: 56px; }
   [data-slot="navigation-menu"], .tools .gh, .tools .xl { display: none; }
