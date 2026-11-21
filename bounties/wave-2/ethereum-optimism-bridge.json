@@ -1,0 +1,85 @@
+{
+  "wave": 2,
+  "category": "protocol_mismatch",
+  "slug": "optimism-bridge",
+  "protocol": "Optimism Bridge",
+  "chainId": 1,
+  "contractAddress": "0x2A82Ae142b2e62Cb7D10b55E323ACB1Cab663a26",
+  "hunter": "alkeke45-cpu",
+  "basePayoutAddress": "0x411fb1627cFcb10074b34844812B26d43aF70c6e",
+  "mcpProof": {
+    "tool": "pacta_scan_control_plane",
+    "arguments": {
+      "chain": "ethereum",
+      "address": "0x2A82Ae142b2e62Cb7D10b55E323ACB1Cab663a26",
+      "caller_agent": "custom-agent",
+      "requester_role": "security_researcher",
+      "caller_purpose": "security_audit"
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\n  \"chain\": \"ethereum\",\n  \"address\": \"0x2A82Ae142b2e62Cb7D10b55E323ACB1Cab663a26\",\n  \"block\": {\n    \"number\": 26431307,\n    \"hash\": \"0x93ea57d892fb0fab2b6540d735c3d980b7255b2367fc8f82ac15e97efb10e263\",\n    \"timestamp\": 1794876827\n  },\n  \"codeBytes\": 171,\n  \"eip1967\": {\n    \"implementation\": null,\n    \"admin\": null,\n    \"beacon\": null\n  },\n  \"owner\": null,\n  \"probedStatus\": {\n    \"eip1967Slots\": \"ok\",\n    \"owner\": \"reverted_or_absent\",\n    \"safeGetters\": \"ok\"\n  },\n  \"safe\": {\n    \"threshold\": 1,\n    \"owners\": [\n      \"0x3F3Cd78Ef9Bd85961C0729E6BbB11E94Ca6f61D2\"\n    ],\n    \"ownerCount\": 1,\n    \"guard\": null\n  },\n  \"upgradeAuthority\": null,\n  \"ownerPrincipal\": null,\n  \"riskFlags\": [\n    \"not_eip1967_upgradeable\"\n  ],\n  \"summary\": \"OBSERVED: No EIP-1967, Ownable, or Safe single-key control detected in probed standard slots/selectors (custom AccessControl/RolesAuthority not excluded)\"\n}"
+        }
+      ],
+      "structuredContent": {
+        "chain": "ethereum",
+        "address": "0x2A82Ae142b2e62Cb7D10b55E323ACB1Cab663a26",
+        "block": {
+          "number": 26431307,
+          "hash": "0x93ea57d892fb0fab2b6540d735c3d980b7255b2367fc8f82ac15e97efb10e263",
+          "timestamp": 1794876827
+        },
+        "codeBytes": 171,
+        "eip1967": {
+          "implementation": null,
+          "admin": null,
+          "beacon": null
+        },
+        "owner": null,
+        "probedStatus": {
+          "eip1967Slots": "ok",
+          "owner": "reverted_or_absent",
+          "safeGetters": "ok"
+        },
+        "safe": {
+          "threshold": 1,
+          "owners": [
+            "0x3F3Cd78Ef9Bd85961C0729E6BbB11E94Ca6f61D2"
+          ],
+          "ownerCount": 1,
+          "guard": null
+        },
+        "upgradeAuthority": null,
+        "ownerPrincipal": null,
+        "riskFlags": [
+          "not_eip1967_upgradeable"
+        ],
+        "summary": "OBSERVED: No EIP-1967, Ownable, or Safe single-key control detected in probed standard slots/selectors (custom AccessControl/RolesAuthority not excluded)"
+      },
+      "isError": false
+    }
+  },
+  "blockNumber": 26428853,
+  "blockHash": "0x3ff48b029c111c7cb0bc776e9693cf6e1ca2f19a929b4d77898b2e53faa38736",
+  "castCommands": [
+    "cast call 0x2A82Ae142b2e62Cb7D10b55E323ACB1Cab663a26 \"getThreshold()(uint256)\" --block 26428853 --rpc-url https://ethereum-rpc.publicnode.com",
+    "cast call 0x2A82Ae142b2e62Cb7D10b55E323ACB1Cab663a26 \"getThreshold()(uint256)\" --block 26428853 --rpc-url https://eth.drpc.org"
+  ],
+  "rpcOutputs": {
+    "a": "1",
+    "b": "1"
+  },
+  "docsUrl": "https://docs.optimism.io/op-stack/protocol/privileged-roles",
+  "docsQuote": "Mint Manager Owner is a 3-of-5 multisig.",
+  "tvlUsd": 439884944,
+  "tvlReference": "https://api.llama.fi/protocol/optimism-bridge",
+  "apache2CommercialGrant": true,
+  "rulesAccepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
