@@ -786,7 +786,7 @@ def scorecards(idx, pinned=None, sp=None):
                     "evidence": {"recordId": ev_e["id"], "surface": ev_e["surface"], "documented": ev_e["documented_reference"],
                                  "observed": ev_e["onchain_observed"], "chain": chain_of(ev_e), "block": int(ev_e["block_number"]),
                                  "blockHash": ev_e["block_hash"], "target": ev_e["target_contract"],
-                                 "baseEasUid": ev_e.get("base_eas_uid")},
+                                 "baseEasUid": ev_e.get("base_eas_uid"), "sprint": ev_e.get("sprint")},
                     "reconciledFrom": [e["reconciledFrom"] for e in recon],
                     "reconciledTo": [{"blockNumber": int(e["block_number"]), "easUid": e.get("base_eas_uid"),
                                       "docsCommit": e.get("docsCommit") or e.get("docs_commit"),

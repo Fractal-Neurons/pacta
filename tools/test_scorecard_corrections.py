@@ -224,6 +224,54 @@ class V4(unittest.TestCase):
         self.assertEqual(strip(base), strip(now))
 
 
+class V5(unittest.TestCase):
+    def test_r1_yearn_feed_and_card_text(self):
+        y = next(i for i in j("api", "v1", "x-feed.json")["items"] if i["slug"] == "yearn-v3")
+        self.assertIn("72-hour window elapsed; fresh chain and docs recheck pending.", y["mainPostText"])
+        self.assertIn("72-hour window elapsed; fresh chain and docs recheck pending", y["docsSay"])
+        self.assertNotIn("Re-checked after 72 hours", y["mainPostText"] + y["docsSay"])
+        self.assertEqual(y["pinnedBlock"], 26441165)
+        self.assertNotIn("RoleManager", y["mainPostText"] + y["chainSays"])      # the #26,401,725 observation is never pinned at #26,441,165
+
+    def test_r2_yearn_provenance_attribution(self):
+        rc = CARDS["yearn-v3"]["recentChange"]
+        self.assertEqual(rc["provenance"], "Gemini supplied raw receipt and block-header captures from Tenderly, PublicNode and dRPC; "
+                                           "Codex independently replayed them offline")
+        self.assertEqual((rc["operators"], rc["envelopeCount"], rc["rawEnvelopesSha256"]),
+                         (["tenderly", "publicnode", "drpc"], 9, "13933bfb57584f0200dc8ededbb842a27a123c5eebe31b7cb1ab72fc54150b6b"))
+        self.assertNotIn("mevblocker", json.dumps(rc))
+
+    def test_r3_no_undocumented_timelock_claim_on_tori(self):
+        import glob
+        hits = [f for f in glob.glob(os.path.join(ROOT, "docs", "**", "*"), recursive=True)
+                if os.path.isfile(f) and f.endswith((".html", ".json", ".txt", ".xml", ".js")) and
+                "timelock the documentation does not name" in open(f, encoding="utf-8", errors="ignore").read()]
+        self.assertEqual(hits, [])
+        self.assertIn("At the retained pin, trUSD used a different 24-hour controller from the 19 November documentation snapshot; "
+                      "the roles page retrieved 21 November now names that controller, pending a fresh chain read.", page("tori-finance"))
+
+    def test_r4_evidence_and_feed_restate_the_cited_record(self):
+        idx = {e["id"]: e for e in j("api", "v1", "index.json")["entries"]}
+        n = 0
+        for s, c in CARDS.items():
+            if not c["easAttested"]:
+                continue
+            ev, r = c["evidence"], idx[c["evidence"]["recordId"]]
+            self.assertEqual((ev["sprint"], ev["block"], ev["blockHash"], ev["baseEasUid"]),
+                             (r["sprint"], int(r["block_number"]), r["block_hash"], r.get("base_eas_uid")), s)
+            n += 1
+        self.assertEqual(n, 189)
+        for i in j("api", "v1", "x-feed.json")["items"]:
+            if i["kind"] in ("radar_timelock", "rpc_observed"):
+                continue
+            r = idx[i["recordId"]]
+            self.assertEqual((i["sprint"], i["pinnedBlock"], i["blockHash"], i["easUid"]),
+                             (r["sprint"], int(r["block_number"]), r["block_hash"], r.get("base_eas_uid")), i["feedId"])
+        beefy = next(i for i in j("api", "v1", "x-feed.json")["items"] if i["slug"] == "beefy-finance-base")
+        self.assertEqual((beefy["sprint"], beefy["pinnedBlock"], beefy["recordId"]),
+                         (22, 58315414, "beefy-finance-base-vault-owner-timelock-zero-delay-s22"))
+
+
 class Wording(unittest.TestCase):
     def test_no_aggregate_overstatement(self):
         self.assertNotIn("across control surfaces", json.dumps(j("api", "v1", "scorecards.json")))

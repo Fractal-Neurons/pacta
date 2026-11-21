@@ -130,8 +130,16 @@
     "recheckWindowHours": 72,
     "recheckDueIso": "2026-11-19T16:39:11Z",
     "recheckStatus": "pending_fresh_read",
-    "provenance": "Rotation transaction receipt and block headers read by the independent verifier over four public RPCs (tenderly, publicnode, drpc, mevblocker); raw envelopes SHA-256 13933bfb57584f0200dc8ededbb842a27a123c5eebe31b7cb1ab72fc54150b6b. Not a fresh Pacta chain read.",
-    "note": "Observed 41h after the on-chain signer rotation; the 72h window has elapsed, so the protocol is due for a fresh chain-and-documentation re-read. Expiry never reinstates Delta without that re-read."
+    "provenance": "Gemini supplied raw receipt and block-header captures from Tenderly, PublicNode and dRPC; Codex independently replayed them offline",
+    "note": "Observed 41h after the on-chain signer rotation; the 72h window has elapsed, so the protocol is due for a fresh chain-and-documentation re-read. Expiry never reinstates Delta without that re-read.",
+    "operators": [
+     "tenderly",
+     "publicnode",
+     "drpc"
+    ],
+    "envelopeCount": 9,
+    "rawEnvelopesSha256": "13933bfb57584f0200dc8ededbb842a27a123c5eebe31b7cb1ab72fc54150b6b",
+    "observation": "the yChad Safe keeps its 6-of-9 threshold; one documented signer was rotated out 41 hours before this pin"
    },
    "leadRecord": "yearn-v3-ychad-safe-signers-s28",
    "recordOverrides": {
@@ -169,6 +177,10 @@
       [
        "is the timelock the roles page names;",
        "is the timelock the roles page named in its 19 November 2026 snapshot (the page retrieved 21 November 2026 names 0xcd3c66e73abF927EAAF1238aEB5F251b4f2f667b);"
+      ],
+      [
+       "the delay is unchanged, but trUSD upgrades are now queued on a timelock the documentation does not name.",
+       "At the retained pin, trUSD used a different 24-hour controller from the 19 November documentation snapshot; the roles page retrieved 21 November now names that controller, pending a fresh chain read."
       ]
      ]
     }

@@ -3,8 +3,8 @@
  "description": "Pacta findings ready to post on X: one item per published protocol (docs-vs-chain delta, changed recently, unresolved scope, protective delta, aligned baseline or RPC-observed) plus active timelock operations from the radar. mainPostText has no links; replyPostText carries the receipt page and the Base EAS attestation. feedId is stable: post each id once.",
  "generatedFrom": {
   "site": {
-   "scorecards.json": "ac1a5a4b8f0adf521ace5476b98494c2050f8875f06ee7802776cba094a1d77a",
-   "index.json": "51b812c514561eee550a9c916537ee9b5ec8594bbab9c8675df837847dc43de9",
+   "scorecards.json": "1b2e606eeb21680a351eeda84464c09e5f21ca5213fcbb3f3ded2889857d05b8",
+   "index.json": "d242472d78a75f73ad689dce8a36930931b5e374dc0e9ebfc354c819d99bbe05",
    "rpc-pinned.json": "108919b7ce46d2c3e09943bbd5dad4344ee375a275c6056f4b391a57ee11a418",
    "radar.json": "16d9637777dc1df9babb767d0ac31c4e1fe8c339332ea815cc32db745d097e1d",
    "protocols.json": "5912b044cfc460fa8b3c691ece5e636f07b6bd26650137bc2672f96cee27b33f"
@@ -214,7 +214,7 @@
    "pinnedBlock": 26425374,
    "blockHash": "0xfa22e277760f1df7134b0af20499d6305ee4e017219a917a61a78aa76e89382d",
    "easUid": "0xe712dd31d79ab492e2e64eb5847396651dee81daa9f895ead45548e97f1a2eb7",
-   "sprint": 32,
+   "sprint": 20,
    "recordId": "cap-access-control-admin-is-timelock-s20",
    "summaryShort": "Access-control admin is a Timelock, not the multisig the docs name",
    "rosette": [
@@ -634,7 +634,7 @@
    "pinnedBlock": 26433001,
    "blockHash": "0xa058ec92ccf0024822a76097f183d8e2d344d56e9539038c857e0cdaaa0ee5a7",
    "easUid": "0x61c2970c176b85ab604e6b565c5f050a7176b62e725d449e8d27d700365283d6",
-   "sprint": 32,
+   "sprint": 24,
    "recordId": "chainlink-ccip-timelock-proposers-s24",
    "summaryShort": "Docs: only the MCMS proposes · chain: a 6-of-12 Safe can also propose",
    "rosette": [
@@ -1294,7 +1294,7 @@
    "pinnedBlock": 26425374,
    "blockHash": "0xfa22e277760f1df7134b0af20499d6305ee4e017219a917a61a78aa76e89382d",
    "easUid": "0xe712dd31d79ab492e2e64eb5847396651dee81daa9f895ead45548e97f1a2eb7",
-   "sprint": 30,
+   "sprint": 20,
    "recordId": "infinifi-pause-role-admin-minor-roles-s20",
    "summaryShort": "Pause roles are administered by MINOR_ROLES_MANAGER; docs say GOVERNOR",
    "rosette": [
@@ -1354,7 +1354,7 @@
    "pinnedBlock": 26399876,
    "blockHash": "0x8bf896b892683ff3267b88b367ab015a70cf5caf53542eb405f4f648f6bcde8a",
    "easUid": "0x34049a2c64fe3355f8e325481234754c8422a48bb4784fed1d028fa40eb93058",
-   "sprint": 30,
+   "sprint": 1,
    "recordId": "inverse-finance-firm-policy-safe",
    "summaryShort": "sDOLA staleness limit reads 86,500 s, was 0 (check off); docs say typically 1-24 hours",
    "rosette": [
@@ -2074,7 +2074,7 @@
    "pinnedBlock": 58315414,
    "blockHash": "0x5092b494a9f8555faecfaa0f49202536e0edcf26f2bdc6e25a563442258119cd",
    "easUid": "0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5",
-   "sprint": 26,
+   "sprint": 22,
    "recordId": "beefy-finance-base-vault-owner-timelock-zero-delay-s22",
    "summaryShort": "Base vault-owner timelock has zero delay; strategy-owner changes keep 6 hours",
    "rosette": [
@@ -2854,7 +2854,7 @@
    "pinnedBlock": 26401638,
    "blockHash": "0xe62ad2969617ad07c23bec298c3d5e197ea7c3084f7f66c90d2eb51d04c6273e",
    "easUid": "0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779",
-   "sprint": 14,
+   "sprint": 7,
    "recordId": "ethena-admin-timelock-and-dev-safe",
    "summaryShort": "Timelock delay: docs 7 days · chain 1 day",
    "rosette": [
@@ -3434,9 +3434,9 @@
      "value": "Changed on chain within 48h of pin; re-checked after 72 hours before counting as a documentation gap"
     }
    ],
-   "docsSay": "not yet updated after a recent on-chain change; re-checked after 72 hours",
-   "chainSays": "Sampled RoleManager uses a 7-day timelock; yChad signer roster differs (6-of-9)",
-   "mainPostText": "Yearn V3 @yearnfi: Sampled RoleManager uses a 7-day timelock; yChad signer roster differs (6-of-9). On-chain at Ethereum block #26,441,165. Changed on chain recently; documents not yet updated. Re-checked after 72 hours. Receipt below.",
+   "docsSay": "not yet updated after a recent on-chain change; 72-hour window elapsed; fresh chain and docs recheck pending",
+   "chainSays": "the yChad Safe keeps its 6-of-9 threshold; one documented signer was rotated out 41 hours before this pin",
+   "mainPostText": "Yearn V3 @yearnfi: The yChad Safe keeps its 6-of-9 threshold; one documented signer was rotated out 41 hours before this pin. On-chain at Ethereum block #26,441,165. Docs not yet updated; 72-hour window elapsed; fresh chain and docs recheck pending. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/yearn-v3/ · Base attestation: https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
    "cardFilename": "yearn-v3.png",
    "receiptUrl": "https://pacta.wtf/protocols/yearn-v3/",
@@ -4369,7 +4369,7 @@
    "pinnedBlock": 26401638,
    "blockHash": "0xe62ad2969617ad07c23bec298c3d5e197ea7c3084f7f66c90d2eb51d04c6273e",
    "easUid": "0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779",
-   "sprint": 36,
+   "sprint": 7,
    "recordId": "spark-sky-gsm-pause-delay",
    "summaryShort": "Addresses provider owner and governance delay match the docs",
    "rosette": [
@@ -5989,7 +5989,7 @@
    "pinnedBlock": 26402160,
    "blockHash": "0xd04a5e8aa3500c5b60d90c25a810ef28eb9d1bfffadf28f1da58a31ed90582dc",
    "easUid": "0x0e017bc4399101f9fef3d98a434dd9f2829b6e386e7733408dfd4b626d186eea",
-   "sprint": 32,
+   "sprint": 9,
    "recordId": "kelp-dao-rseth-proxy-admin-and-timelock",
    "summaryShort": "ProxyAdmin sits behind a 10-day timelock; config admin Safe as documented",
    "rosette": [
@@ -7369,7 +7369,7 @@
    "pinnedBlock": 26403523,
    "blockHash": "0xfc7beaa2338e8054577c0b101b641bc42afca2af39cb85d3fc13cbee32d4681a",
    "easUid": "0x754edd7612258b755ff2e56903243d1f8867bad53c29ce3febb5ed9114005e42",
-   "sprint": 30,
+   "sprint": 11,
    "recordId": "resolv-usr-default-admin-delay-and-safe",
    "summaryShort": "USR admin-rules delay and request counters match the docs",
    "rosette": [
@@ -7549,7 +7549,7 @@
    "pinnedBlock": 26407707,
    "blockHash": "0x9030abf37638c14a5f9c145f298a0f4cd74b247a99f3dddd119b9c6b09f5dced",
    "easUid": "0x967a4935786194575835d5a46e3e39b1d553225deb6a96c7ff4acf52a34dff22",
-   "sprint": 30,
+   "sprint": 15,
    "recordId": "threshold-tbtc-timelock-1d-walletregistry-op-0xb667",
    "summaryShort": "tBTC timelock is 1 day; the WalletRegistry upgrade schedule is public",
    "rosette": [
@@ -7669,7 +7669,7 @@
    "pinnedBlock": 26403121,
    "blockHash": "0x71acee2313a2c8eacd7d2c87667dc505310b3e9224d84eaebb71d5a890ef9d1c",
    "easUid": "0xfdd83c8091ef6e8ffe67e8a55a78892fcfbb1092683b21ff2d85f8cc09750e6c",
-   "sprint": 29,
+   "sprint": 10,
    "recordId": "lido-dual-governance-emergency-timelock",
    "summaryShort": "Dual Governance timelock delays and committee Safes match the docs",
    "rosette": [
@@ -8929,7 +8929,7 @@
    "pinnedBlock": 26403676,
    "blockHash": "0xf4246ca23c4c38d520de16080a11b5186d04c8242b2c85edcb04c455d291c3ae",
    "easUid": "0x7caae9c22c86ae171392def07dce83fa5da6fbf904b1ba9b5ff66a5021b16de9",
-   "sprint": 26,
+   "sprint": 12,
    "recordId": "stakewise-v3-oseth-oracle-quorum-and-ltv",
    "summaryShort": "Keeper oracle quorum, osETH fee and LTV settings match the docs",
    "rosette": [
@@ -10909,7 +10909,7 @@
    "pinnedBlock": 26403523,
    "blockHash": "0xfc7beaa2338e8054577c0b101b641bc42afca2af39cb85d3fc13cbee32d4681a",
    "easUid": "0x754edd7612258b755ff2e56903243d1f8867bad53c29ce3febb5ed9114005e42",
-   "sprint": 16,
+   "sprint": 11,
    "recordId": "lombard-lbtc-core-proxy-upgrade-timelock",
    "summaryShort": "Core ProxyAdmin wiring and 24-hour timelock match the docs",
    "rosette": [
