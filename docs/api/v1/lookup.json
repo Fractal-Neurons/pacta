@@ -91,7 +91,7 @@
    "baseEasUids": [
     "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768"
    ],
-   "category": "veNFT-backed lending vault (UUPS) on Base",
+   "category": "veNFT-backed lending (AERO USDC Loan UUPS proxy on Base)",
    "chain": "base",
    "chainId": 8453,
    "classification": "parameter_delta",
@@ -124,12 +124,12 @@
      "chain": "base",
      "classification": "parameter_delta",
      "id": "40-acres-base-upgradeability-s28",
-     "surface": "Lending vault proxy: docs call the contracts immutable, but it is an upgradeable proxy",
+     "surface": "AERO USDC Loan contract (UUPS proxy): docs call the contracts immutable, but it is an upgradeable proxy",
      "targetContract": "0x87f18b377e625b62c708D5f6EA96EC193558EFD0",
-     "targetLabel": "40 Acres vault proxy (UUPS)"
+     "targetLabel": "40 Acres AERO USDC Loan proxy (UUPS)"
     }
    ],
-   "targetLabel": "40 Acres vault proxy (UUPS)",
+   "targetLabel": "40 Acres AERO USDC Loan proxy (UUPS)",
    "tokens": [
     "40Acres"
    ],
@@ -139,8 +139,8 @@
      {
       "classification": "parameter_delta",
       "documented": "'40 Acres has completed four independent audits with Sherlock.",
-      "observed": "40 Acres proxy 0x87f18b377e625b62c708D5f6EA96EC193558EFD0 (Base): EIP-1967 implementation slot = 0xb43b30c405c61BC330227968635d130994450735;",
-      "parameter": "Lending vault proxy: docs call the contracts immutable, but it is an upgradeable proxy",
+      "observed": "40 Acres AERO USDC Loan proxy 0x87f18b377e625b62c708D5f6EA96EC193558EFD0 (Base): EIP-1967 implementation slot = 0xb43b30c405c61BC330227968635d130994450735;",
+      "parameter": "AERO USDC Loan contract (UUPS proxy): docs call the contracts immutable, but it is an upgradeable proxy",
       "recordId": "40-acres-base-upgradeability-s28"
      }
     ],
@@ -2091,7 +2091,7 @@
       "classification": "parameter_delta",
       "documented": "6 h",
       "observed": "0 s (no delay)",
-      "parameter": "Timelock delay",
+      "parameter": "Vault owner timelock: no delay (0 seconds)",
       "recordId": "beefy-finance-base-vault-owner-timelock-zero-delay-s22"
      }
     ],
@@ -2168,7 +2168,7 @@
       "classification": "parameter_delta",
       "documented": "7 d",
       "observed": "1 d",
-      "parameter": "Timelock delay",
+      "parameter": "BEND ProxyAdmin owner: BendDAO Timelock 7D, getMinDelay() 86,400 s",
       "recordId": "benddao-timelock-7d-reads-1d-s32"
      }
     ],
@@ -3365,6 +3365,7 @@
     "0x0265d73a8E61F698d8EB0dfeb91Ddce55516844C",
     "0xFB65336D4323BA79d07F7024c81B8B69E1781527"
    ],
+   "scorecardStatus": "unresolved",
    "slug": "concrete",
    "sprints": [
     20
@@ -4851,7 +4852,7 @@
       "classification": "protective_delta",
       "documented": "0 s (no delay)",
       "observed": "7 d",
-      "parameter": "Timelock delay",
+      "parameter": "Dispatcher migration timelock = 7 days (specs: 'no longer used and is set to 0')",
       "recordId": "enzyme-dispatcher-7d-migration-timelock-s18"
      }
     ],
@@ -5024,8 +5025,15 @@
       "classification": "parameter_delta",
       "documented": "7 d",
       "observed": "1 d",
-      "parameter": "Timelock delay",
+      "parameter": "TimelockController MinDelay & Dev Multisig Quorum",
       "recordId": "ethena-admin-timelock-and-dev-safe"
+     },
+     {
+      "classification": "parameter_delta",
+      "documented": "7 d",
+      "observed": "1 d",
+      "parameter": "EthenaTimelockController 1d delay — queued RLUSD & USAT collateral onboarding",
+      "recordId": "ethena-minting-rlusd-usat-onboarding-ops"
      }
     ],
     "matched": []
@@ -5471,7 +5479,7 @@
       "classification": "parameter_delta",
       "documented": "3 d",
       "observed": "0 s (no delay)",
-      "parameter": "Timelock delay",
+      "parameter": "V2 Router (Diamond) owner: docs put every transaction behind a 3-day timelock; owner() is the 6-of-9 Safe",
       "recordId": "f-x-protocol-v2-router-owner-safe-s29"
      }
     ],
@@ -6180,13 +6188,13 @@
       "classification": "parameter_delta",
       "documented": "2 d",
       "observed": "36 h",
-      "parameter": "Timelock delay",
+      "parameter": "LegacyTimelock Delay & InstanceManager Safe Quorum",
       "recordId": "gearbox-v3-legacy-timelock-and-instance-safe"
      }
     ],
     "matched": [
      {
-      "parameter": "Safe threshold",
+      "parameter": "LegacyTimelock Delay & InstanceManager Safe Quorum",
       "recordId": "gearbox-v3-legacy-timelock-and-instance-safe",
       "value": "4-of-12"
      }
@@ -7434,6 +7442,13 @@
       "recordId": "inverse-finance-firm-policy-safe"
      },
      {
+      "classification": "parameter_delta",
+      "documented": "'| **Policy Committee** | 5 of 9 | Governance guardian role (can cancel proposals), manages reward rate policies, operates as BondsManager |' (docs.inverse.finance/inverse-finance/inverse-finance/governance/governance-o…",
+      "observed": "Inverse Finance Policy Committee Safe 0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7 (Ethereum): getThreshold() = 3 of 6 owners at this pin.",
+      "parameter": "Policy Committee Safe: 3-of-6 (docs: 5 of 9); 4-of-7 at #26,399,876",
+      "recordId": "inverse-firm-policy-safe-3of6-s30"
+     },
+     {
       "classification": "protective_delta",
       "documented": "Verified BorrowController source (Sourcify exact_match): 'if(marketStalenessThreshold == 0) return false;'.",
       "observed": "Timelock (0x926dF14a23BE491164dCF93f4c468A50ef659D5B) delay() = 172800s (48h), and the Timelock is BorrowController.operator().",
@@ -7446,19 +7461,17 @@
       "observed": "FiRM BorrowController 0x01ECA33e20a4c379Bd8A5361f896A7dd2bAE4ce8 (Ethereum): stalenessThreshold(sDOLA market 0xC45E9c231ab5D9Bd3F1131E7901B100D8D236C4d) = 86500s (24.03 h) at this pin.",
       "parameter": "BorrowController stalenessThreshold (sDOLA market): 86,500 s at the Sprint pin, 0 (check off) at the #26,406,106 pin",
       "recordId": "inverse-finance-firm-borrowcontroller-staleness-s28"
-     },
-     {
-      "classification": "parameter_delta",
-      "documented": "'| **Policy Committee** | 5 of 9 | Governance guardian role (can cancel proposals), manages reward rate policies, operates as BondsManager |' (docs.inverse.finance/inverse-finance/inverse-finance/governance/governance-o…",
-      "observed": "Inverse Finance Policy Committee Safe 0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7 (Ethereum): getThreshold() = 3 of 6 owners at this pin.",
-      "parameter": "Policy Committee Safe: 3-of-6 (docs: 5 of 9); 4-of-7 at #26,399,876",
-      "recordId": "inverse-firm-policy-safe-3of6-s30"
      }
     ],
     "matched": [
      {
-      "parameter": "Timelock delay",
+      "parameter": "Policy Committee Safe Quorum & GovernorMills Timelock",
       "recordId": "inverse-finance-firm-policy-safe",
+      "value": "2 d"
+     },
+     {
+      "parameter": "BorrowController stalenessThreshold 0-sentinel — queued 48h fix for sDOLA market",
+      "recordId": "inverse-firm-borrowcontroller-staleness-sentinel",
       "value": "2 d"
      }
     ]
@@ -8029,6 +8042,7 @@
     "0x6C77c47FB8168E22976C3B0338CB1769c952249f",
     "0x6D46e28aB34622d9A39d0F306a37a8dC270951aF"
    ],
+   "scorecardStatus": "unresolved",
    "slug": "lagoon",
    "sprints": [
     29
@@ -8039,7 +8053,7 @@
      "chain": "ethereum",
      "classification": "parameter_delta",
      "id": "lagoon-vault-beacon-upgrade-delay-s29",
-     "surface": "cbBTC vault upgrades: docs require a 24 h to 30 day wait; the vault's beacon owner is a 3-of-6 Safe with no delay",
+     "surface": "Legacy cbBTC vault beacon upgrades: no enforced delay under a 3-of-6 Safe; coverage by the 24 h Opt-in delay docs is unverified",
      "targetContract": "0x707D622cdA4b5459e7DcEe8Ba8E429F154f96A27",
      "targetLabel": "Lagoon cbBTC vault UpgradeableBeacon"
     }
@@ -8055,7 +8069,7 @@
       "classification": "parameter_delta",
       "documented": "1 d",
       "observed": "0 s (no delay)",
-      "parameter": "Timelock delay",
+      "parameter": "Legacy cbBTC vault beacon upgrades: no enforced delay under a 3-of-6 Safe; coverage by the 24 h Opt-in delay docs is unverified",
       "recordId": "lagoon-vault-beacon-upgrade-delay-s29"
      }
     ],
@@ -8983,7 +8997,7 @@
       "classification": "protective_delta",
       "documented": "0 s (no delay)",
       "observed": "3 d",
-      "parameter": "Timelock delay",
+      "parameter": "Core Proxy EIP-1967 Admin Slot & 3-Day UpgradeTimelock",
       "recordId": "mantle-lsp-meth-upgrade-timelock"
      }
     ],
@@ -9045,7 +9059,7 @@
     "changed": [
      {
       "classification": "parameter_delta",
-      "documented": "Governor admin actions documentation describes GovernorTimelock (3-day delay) governance path.",
+      "documented": "Maple's Governor documentation places PoolPermissionManager implementation changes behind the Governor's delay;",
       "observed": "EIP-1967 admin slot holds 4-of-7 Maple DAO Safe (0xd6d4Bcde6c816F17889f1Dd3000aF0261B03a196);",
       "parameter": "EIP-1967 Proxy Admin Slot vs. GovernorTimelock",
       "recordId": "maple-v2-syrup-ppm-admin"
@@ -9245,6 +9259,7 @@
     "0x95EeF579155cd2C5510F312c8fA39208c3Be01a8",
     "0x2F80ba89362f86a9acC71BFfE5EcF4997F52BDd4"
    ],
+   "scorecardStatus": "unresolved",
    "slug": "metamorpho-re7-weth-vs-re7-usdt",
    "sprints": [
     5
@@ -9271,7 +9286,7 @@
     "changed": [
      {
       "classification": "parameter_delta",
-      "documented": "Peer Re7 curated vault architecture and Aragon guardian integration.",
+      "documented": "Peer-vault configuration comparison (Re7 WETH vs Re7 USDT guardian settings);",
       "observed": "Re7 WETH owner() = 0xE86399fE6d7007FdEcb08A2ee1434Ee677a04433 (2-of-4 Safe), timelock() = 259200s (3d), guardian() = 0x0000000000000000000000000000000000000000, pendingGuardian() = (0x0, 0);",
       "parameter": "Sampled MetaMorpho Vault Guardian Configuration",
       "recordId": "metamorpho-re7-weth-guardian-parity"
@@ -9279,7 +9294,7 @@
     ],
     "matched": [
      {
-      "parameter": "Timelock delay",
+      "parameter": "Sampled MetaMorpho Vault Guardian Configuration",
       "recordId": "metamorpho-re7-weth-guardian-parity",
       "value": "3 d"
      }
@@ -9582,7 +9597,7 @@
     ],
     "matched": [
      {
-      "parameter": "Safe threshold",
+      "parameter": "Comptroller pauseGuardian = 2-of-4 Safe (Constitution: pause = Security Council 3-of-5)",
       "recordId": "moonwell-pause-guardian-2of4-safe-s18",
       "value": "3-of-5"
      },
@@ -10413,7 +10428,7 @@
     ],
     "matched": [
      {
-      "parameter": "Timelock delay",
+      "parameter": "OUSG RateLimiter Global Subscription Limit & Flux 1d Timelock",
       "recordId": "ondo-ousg-rate-limiter-and-flux-timelock",
       "value": "1 d"
      }
@@ -11795,6 +11810,7 @@
     "0x10586b9b7Ff0F842913a57539f8167CE143C3011",
     "0x24Aa958C90b7973DC16c63C9992f69E1767377Ae"
    ],
+   "scorecardStatus": "unresolved",
    "slug": "renzo-protocol-ezeth",
    "sprints": [
     8,
@@ -12057,7 +12073,7 @@
       "classification": "parameter_delta",
       "documented": "3-of-4",
       "observed": "3-of-5",
-      "parameter": "Safe threshold",
+      "parameter": "Main multisig: 3-of-5 signers",
       "recordId": "resupply-main-multisig-3of5-s22"
      }
     ],
@@ -13345,13 +13361,13 @@
       "classification": "parameter_delta",
       "documented": "3-of-5",
       "observed": "3-of-6",
-      "parameter": "Safe threshold",
+      "parameter": "Manager Safe Quorum & 7-Day TimelockController Admin Path",
       "recordId": "stader-ethx-manager-safe-and-timelock"
      }
     ],
     "matched": [
      {
-      "parameter": "Timelock delay",
+      "parameter": "Manager Safe Quorum & 7-Day TimelockController Admin Path",
       "recordId": "stader-ethx-manager-safe-and-timelock",
       "value": "7 d"
      }
@@ -13476,13 +13492,6 @@
    "whatDiffers": {
     "changed": [
      {
-      "classification": "protective_delta",
-      "documented": "2 d",
-      "observed": "5 d",
-      "parameter": "Timelock delay",
-      "recordId": "stake-dao-protocol-timelock-min-delay-5d-s22"
-     },
-     {
       "classification": "parameter_delta",
       "documented": "docs.stakedao.org (timelock, role structure): Executor 'Can execute operations after delay (permissionless)';",
       "observed": "ProtocolTimelock 0xb27afc7844988948FBd6210AeF4E1362bC2d8E6a: hasRole(EXECUTOR_ROLE, address(0)) = false, so execution is permissioned, not permissionless;",
@@ -13495,6 +13504,13 @@
       "observed": "Treasury Safe 0xF930EBBd05eF8b25B1797b9b2109DDC9B0d43063: 3-of-5 (getThreshold() = 3, getOwners() = 5 owners;",
       "parameter": "Treasury wallet (Ethereum): a 3-of-5 multisig",
       "recordId": "stake-dao-treasury-safe-3of5-s22"
+     },
+     {
+      "classification": "protective_delta",
+      "documented": "2 d",
+      "observed": "5 d",
+      "parameter": "Protocol changes wait 5 days, longer than the documented 48 hours",
+      "recordId": "stake-dao-protocol-timelock-min-delay-5d-s22"
      }
     ],
     "matched": [
@@ -15047,6 +15063,8 @@
     "0xA952453E39F77108Ee37C1b92de593F1C59A6ef4",
     "0x0C6Bbfd2d5666d44bf28580eDEec0263692C8316"
    ],
+   "scorecardStatus": "unresolved",
+   "scorecardStatusNote": "Docs updated · pending chain read",
    "slug": "tori-finance",
    "sprints": [
     32
@@ -15079,7 +15097,7 @@
     ],
     "matched": [
      {
-      "parameter": "Timelock delay",
+      "parameter": "trUSD TIMELOCK_ADMIN_ROLE: a second ToriTimelock, not the documented timelock",
       "recordId": "tori-trusd-timelock-admin-undocumented-timelock-s32",
       "value": "1 d"
      }
@@ -15203,7 +15221,7 @@
       "classification": "parameter_delta",
       "documented": "5 d",
       "observed": "0 s (no delay)",
-      "parameter": "Timelock delay",
+      "parameter": "TREE token: a 5-of-7 Safe can blacklist holders with no delay; docs state a 5-day timelock on every contract",
       "recordId": "treehouse-tree-teth-tree-blacklister-safe-s27"
      }
     ],
@@ -15836,7 +15854,7 @@
       "classification": "parameter_delta",
       "documented": "3 d",
       "observed": "1 s",
-      "parameter": "Timelock delay",
+      "parameter": "OpenZeppelin AccessControlDefaultAdminRules Delay",
       "recordId": "usual-money-registry-access-delay"
      }
     ],
@@ -16062,6 +16080,7 @@
     "0x623620b3Eff4e1A30e9f1154f88198Ab26952EeB",
     "0xeB5E772919661F455619A4cABd9B2b64715505E6"
    ],
+   "scorecardStatus": "unresolved",
    "slug": "whales-market",
    "sprints": [
     28
@@ -16072,7 +16091,7 @@
      "chain": "ethereum",
      "classification": "parameter_delta",
      "id": "whales-market-upgradeability-s28",
-     "surface": "Whales Market TransparentUpgradeableProxy: docs describe it as immutable, but it is an upgradeable proxy",
+     "surface": "Whales Market TransparentUpgradeableProxy: upgradeable; coverage by the pre-market escrow immutability statement is unverified",
      "targetContract": "0x1eCdB32e59e948C010a189a0798C674a2d0c6603",
      "targetLabel": "Whales Market TransparentUpgradeableProxy"
     }
@@ -16088,7 +16107,7 @@
       "classification": "parameter_delta",
       "documented": "'Your deposited funds will be sent to and stored in an escrow secured by **an immutable smart contract,**' (docs.whales.market/llms-full.txt)",
       "observed": "Whales Market TransparentUpgradeableProxy 0x1eCdB32e59e948C010a189a0798C674a2d0c6603 (Ethereum): EIP-1967 implementation slot = 0x623620b3Eff4e1A30e9f1154f88198Ab26952EeB, admin slot = 0xeB5E772919661F455619A4cABd9B2b64…",
-      "parameter": "Whales Market TransparentUpgradeableProxy: docs describe it as immutable, but it is an upgradeable proxy",
+      "parameter": "Whales Market TransparentUpgradeableProxy: upgradeable; coverage by the pre-market escrow immutability statement is unverified",
       "recordId": "whales-market-upgradeability-s28"
      }
     ],
@@ -16500,18 +16519,18 @@
    "whatDiffers": {
     "changed": [
      {
-      "classification": "protective_delta",
-      "documented": "0 s (no delay)",
-      "observed": "7 d",
-      "parameter": "Timelock delay",
-      "recordId": "yearn-v3-role-manager-timelock"
-     },
-     {
       "classification": "parameter_delta",
       "documented": "'| [0x6F2A8Ee9452ba7d336b3fba03caC27f7818AeAD6](https://etherscan.io/address/0x6F2A8Ee9452ba7d336b3fba03caC27f7818AeAD6) | Mariano Conti (nanexcool.com, prev.",
       "observed": "yChad Safe 0xFEB4acf3df3cDEA7399794D0869ef76A6EfAff52 (Ethereum): getThreshold() = 6 of getOwners() = 9 owners;",
       "parameter": "yChad governance Safe: documented signer 0x6F2A…eAD6 is no longer an owner",
       "recordId": "yearn-v3-ychad-safe-signers-s28"
+     },
+     {
+      "classification": "protective_delta",
+      "documented": "0 s (no delay)",
+      "observed": "7 d",
+      "parameter": "Sampled RoleManager.governance() Timelock Wiring",
+      "recordId": "yearn-v3-role-manager-timelock"
      }
     ],
     "matched": []
@@ -16755,7 +16774,7 @@
       "classification": "parameter_delta",
       "documented": "2 d",
       "observed": "0 s (no delay)",
-      "parameter": "Timelock delay",
+      "parameter": "Approval Registry owner: the Admin Multisig directly, not the 48-hour timelock",
       "recordId": "yo-protocol-approval-registry-owner-admin-safe-s22"
      }
     ],

@@ -6,12 +6,14 @@ is_eip1967_proxy, safe_quorum), plus tools/graph_controller_facts.json. No value
 evidence does not decide is "Not determined" (a hollow slice), never a guess; slice 5 is "Uncompared" (hollow) for every
 RPC-observed protocol, whose documentation Pacta has not assessed.
 
-Grades (protocol level): DELTA (any parameter_delta record), PROTECTIVE (no parameter delta, at least one protective_delta),
-ALIGNED (every record an aligned baseline), OBSERVED (RPC-pinned only). A protocol whose record carries "reconciledFrom" provenance
+Grades (protocol level): DELTA (any parameter_delta record), UNRESOLVED (a protocol tools/scorecard_corrections.json marks
+"unresolved": the chain state is pinned, but a breach of a documented commitment is not established; neither DELTA nor ALIGNED),
+PROTECTIVE (no parameter delta, at least one protective_delta), ALIGNED (every record an aligned baseline), OBSERVED (RPC-pinned only). A protocol whose record carries "reconciledFrom" provenance
 (a former delta reconciled at a later attested block) is ALIGNED with the "Reconciled" sub-pill and a before / after trail."""
 import re
 
-GRADES = {"delta": ("DELTA", "Docs and chain differ"), "protective": ("PROTECTIVE", "Chain stronger than documented"),
+GRADES = {"delta": ("DELTA", "Docs and chain differ"), "unresolved": ("UNRESOLVED", "Observed on chain; document breach not established"),
+          "protective": ("PROTECTIVE", "Chain stronger than documented"),
           "aligned": ("ALIGNED", "Docs and chain match"), "observed": ("OBSERVED", "Chain pinned; docs not assessed")}
 FACTORS = [("upgrade", "Upgradeability"), ("timelock", "Timelock floor"), ("quorum", "Signer quorum"),
            ("emergency", "Emergency / freeze scope"), ("parity", "Docs-vs-chain parity")]
@@ -68,9 +70,16 @@ _WRAPPER = re.compile(r"\b1-of-(\d{1,2})\b([^;]*?)\b(?:shared between|co-owned b
 _EMERGENCY = re.compile(r"\bpause|\bblacklist|\bfreez|PAUSE_ROLE|ASSET_PROTECTION|\bdeprecate|\bguardian\b|pauseGuardian", re.I)
 
 
-def grade(classifications, easattested, reconciled=False):
+UNRESOLVED_PARITY = "Observed onchain state pinned; a breach of a documented commitment is not established"
+
+
+def grade(classifications, easattested, reconciled=False, slug=None):
     if not easattested:
         return "observed"
+    if slug is not None:
+        import scorecard_corrections as CORR
+        if CORR.unresolved(slug):
+            return "unresolved"
     cl = set(classifications)
     if "parameter_delta" in cl:
         return "delta"
@@ -163,7 +172,7 @@ def _upgrade_path(c, t, known, prev):
     return None
 
 
-def factors(records, easattested, g, facts=()):
+def factors(records, easattested, g, facts=(), parity_text=None):
     """The five factor states (g / b / a / n / u) with the evidence that decided each. records: the protocol's published records
     (index.json or rpc-pinned.json entries); facts: graph_controller_facts entries of its contracts (with "address").
 
@@ -251,7 +260,8 @@ def factors(records, easattested, g, facts=()):
         out["timelock"] = (st, ("0s: an operator can execute approved proposals without waiting the timelock delay"
                                 if d == 0 and "executeOperatorProposal" in ev and _BYPASS_EXEC.search(ev) else
                                 "0s: a bypasser role can execute without waiting the timelock delay" if d == 0 and _BYPASS_EXEC.search(ev)
-                                else f"{_dur(d)} minimum enforced delay across control surfaces"), ev)
+                                else "No enforced delay on at least one sampled control surface (0s)" if d == 0
+                                else f"{_dur(d)} minimum enforced delay on sampled timelocked surfaces"), ev)
     else:
         out["timelock"] = ("n", "No enforced admin delay in the published records", None)
     # 3: signer quorum (lowest threshold of any controlling Safe; a key without contract code counts as 1-of-1)
@@ -309,7 +319,9 @@ def factors(records, easattested, g, facts=()):
     else:
         out["emergency"] = ("n", "No pause / freeze authority in the published records", None)
     # 5: docs-vs-chain parity (the grade; never colored without a Base-EAS-attested documentation comparison)
+    # an unresolved protocol is never coloured: the comparison does not establish a breach (hollow "n"), never weak, never strong
     out["parity"] = (("u", "Uncompared: documentation not assessed (RPC-observed)", None) if not easattested else
+                     ("n", parity_text or UNRESOLVED_PARITY, None) if g == "unresolved" else
                      ("a", "Documentation differs from the chain (parameter delta)", None) if g == "delta" else
                      ("g", "Chain matches or is stronger than the documentation", None))
     return [{"key": k, "label": lbl, "state": out[k][0], "value": out[k][1], "evidence": out[k][2]} for k, lbl in FACTORS]

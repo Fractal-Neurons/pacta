@@ -297,6 +297,8 @@ legend { padding: 0; margin-bottom: 8px; font-size: 0.875rem; font-weight: 600; 
 [data-slot="badge"][data-variant="success"] { background: var(--success-bg); border-color: var(--success-border); color: var(--success); }
 [data-slot="badge"][data-variant="neutral"], .badge.aligned, .grade.g-aligned, .badge-green { background: var(--neutral-bg); border-color: var(--neutral-border); color: var(--foreground); }
 [data-slot="badge"][data-variant="outline"], .badge.observed, .grade.g-observed { background: transparent; border-style: dashed; border-color: var(--input); color: var(--muted-foreground); }
+/* unresolved: observed on chain, a documented breach not established; neutral slate, never the amber delta, never aligned */
+.badge.unresolved, .grade.g-unresolved { background: transparent; border-style: dashed; border-color: var(--input); color: var(--foreground); }
 .badge.final, .badge.ok, .badge-cyan { background: transparent; border-color: var(--input); color: var(--muted-foreground); }
 .badge.final::before, .badge-cyan::before { display: none; }
 [data-slot="badge"][data-variant="destructive"] { background: color-mix(in srgb, var(--destructive) 12%, transparent); border-color: color-mix(in srgb, var(--destructive) 40%, transparent); color: var(--destructive); }
@@ -849,6 +851,10 @@ tr.sc-drawer > td { padding: 4px 16px 24px; background: color-mix(in srgb, var(-
 /* what differs: amber is reserved for real warnings (deltas); protective-only records use the info palette */
 .whatdiffers { margin: 24px 0 0; padding: 16px 20px; border: 1px solid var(--warning-border); border-left-width: 4px; border-radius: var(--radius); background: var(--warning-bg); }
 .whatdiffers.protective { border-color: var(--info-border); background: var(--info-bg); }
+.whatdiffers.unresolved { border-color: var(--input); border-style: dashed; border-left-style: solid; background: transparent; }
+.whatdiffers .wd-lead { margin: 10px 0 0; line-height: 1.45; }
+.whatdiffers .wd-lead .wd-block { margin-left: 4px; font-size: 0.8125rem; color: var(--muted-foreground); white-space: nowrap; }
+.whatdiffers .wd-scope { margin: 8px 0 0; font-size: 0.875rem; line-height: 1.55; color: var(--muted-foreground); }
 .whatdiffers .wd-h { margin: 0; font-size: 1.125rem; }
 .whatdiffers .wd-l { margin: 12px 0 4px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted-foreground); }
 .whatdiffers ul { margin: 0; padding-left: 20px; font-size: 0.875rem; line-height: 1.6; }
@@ -1493,6 +1499,7 @@ html:not(.js) [data-scan-upgrade], html:not(.js) [data-co-card] { display: grid 
 .cur-item-sum { margin: 0; font-size: 0.8125rem; color: var(--muted-foreground); line-height: 1.4; }
 .cur-empty { margin: 0; font-size: 0.8125rem; color: var(--muted-foreground); line-height: 1.45; }
 .cur-al-wrap { display: grid; gap: 6px; padding-top: 6px; border-top: 1px dashed var(--border); }
+.cur-un-wrap { display: grid; gap: 6px; padding-top: 6px; border-top: 1px dashed var(--border); }
 .cur-sub-k { font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.04em; color: var(--muted-foreground); }
 .cur-al-chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .cur-al-chip { display: inline-flex; align-items: center; gap: 5px; padding: 3px 8px; border: 1px solid var(--border); border-radius: calc(var(--radius) + 8px); background: var(--card); font-size: 0.75rem; font-weight: 500; color: var(--foreground); text-decoration: none; }

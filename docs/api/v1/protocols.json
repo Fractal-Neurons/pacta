@@ -110,7 +110,7 @@
    "baseEasUids": [
     "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768"
    ],
-   "category": "veNFT-backed lending vault (UUPS) on Base",
+   "category": "veNFT-backed lending (AERO USDC Loan UUPS proxy on Base)",
    "chain": "base",
    "chainId": 8453,
    "classification": "parameter_delta",
@@ -142,12 +142,12 @@
      "classification": "parameter_delta",
      "id": "40-acres-base-upgradeability-s28",
      "sprint": 28,
-     "surface": "Lending vault proxy: docs call the contracts immutable, but it is an upgradeable proxy",
+     "surface": "AERO USDC Loan contract (UUPS proxy): docs call the contracts immutable, but it is an upgradeable proxy",
      "targetContract": "0x87f18b377e625b62c708D5f6EA96EC193558EFD0",
-     "targetLabel": "40 Acres vault proxy (UUPS)"
+     "targetLabel": "40 Acres AERO USDC Loan proxy (UUPS)"
     }
    ],
-   "targetLabel": "40 Acres vault proxy (UUPS)",
+   "targetLabel": "40 Acres AERO USDC Loan proxy (UUPS)",
    "tokens": [
     "40Acres"
    ],
@@ -3425,10 +3425,10 @@
   },
   {
    "badge": {
-    "label": "Parameter Delta",
+    "label": "Unresolved · Unverified Scope",
     "live": "https://pacta-x402.pacta.workers.dev/v1/badges/concrete.svg",
     "svg": "https://pacta.wtf/badges/concrete.svg",
-    "tier": "parameter_delta"
+    "tier": "unresolved"
    },
    "baseEasUids": [
     "0xe712dd31d79ab492e2e64eb5847396651dee81daa9f895ead45548e97f1a2eb7"
@@ -3453,6 +3453,7 @@
     "0x0265d73a8E61F698d8EB0dfeb91Ddce55516844C",
     "0xFB65336D4323BA79d07F7024c81B8B69E1781527"
    ],
+   "scorecardStatus": "unresolved",
    "slug": "concrete",
    "sprints": [
     20
@@ -8311,10 +8312,10 @@
   },
   {
    "badge": {
-    "label": "Parameter Delta",
+    "label": "Unresolved · Unverified Scope",
     "live": "https://pacta-x402.pacta.workers.dev/v1/badges/lagoon.svg",
     "svg": "https://pacta.wtf/badges/lagoon.svg",
-    "tier": "parameter_delta"
+    "tier": "unresolved"
    },
    "baseEasUids": [
     "0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13"
@@ -8339,6 +8340,7 @@
     "0x6C77c47FB8168E22976C3B0338CB1769c952249f",
     "0x6D46e28aB34622d9A39d0F306a37a8dC270951aF"
    ],
+   "scorecardStatus": "unresolved",
    "slug": "lagoon",
    "sprints": [
     29
@@ -8352,7 +8354,7 @@
      "classification": "parameter_delta",
      "id": "lagoon-vault-beacon-upgrade-delay-s29",
      "sprint": 29,
-     "surface": "cbBTC vault upgrades: docs require a 24 h to 30 day wait; the vault's beacon owner is a 3-of-6 Safe with no delay",
+     "surface": "Legacy cbBTC vault beacon upgrades: no enforced delay under a 3-of-6 Safe; coverage by the 24 h Opt-in delay docs is unverified",
      "targetContract": "0x707D622cdA4b5459e7DcEe8Ba8E429F154f96A27",
      "targetLabel": "Lagoon cbBTC vault UpgradeableBeacon"
     }
@@ -9603,10 +9605,10 @@
   },
   {
    "badge": {
-    "label": "Parameter Delta",
+    "label": "Unresolved · Unverified Scope",
     "live": "https://pacta-x402.pacta.workers.dev/v1/badges/metamorpho-re7-weth-vs-re7-usdt.svg",
     "svg": "https://pacta.wtf/badges/metamorpho-re7-weth-vs-re7-usdt.svg",
-    "tier": "parameter_delta"
+    "tier": "unresolved"
    },
    "baseEasUids": [
     "0x804289d4357b0a8d5a360911ec450c13ca36c4422d1e811c4c7040ef7d2628e5"
@@ -9632,6 +9634,7 @@
     "0x95EeF579155cd2C5510F312c8fA39208c3Be01a8",
     "0x2F80ba89362f86a9acC71BFfE5EcF4997F52BDd4"
    ],
+   "scorecardStatus": "unresolved",
    "slug": "metamorpho-re7-weth-vs-re7-usdt",
    "sprints": [
     5
@@ -12240,10 +12243,10 @@
   },
   {
    "badge": {
-    "label": "Parameter Delta",
+    "label": "Unresolved · Unverified Scope",
     "live": "https://pacta-x402.pacta.workers.dev/v1/badges/renzo-protocol-ezeth.svg",
     "svg": "https://pacta.wtf/badges/renzo-protocol-ezeth.svg",
-    "tier": "parameter_delta"
+    "tier": "unresolved"
    },
    "baseEasUids": [
     "0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
@@ -12270,6 +12273,7 @@
     "0x10586b9b7Ff0F842913a57539f8167CE143C3011",
     "0x24Aa958C90b7973DC16c63C9992f69E1767377Ae"
    ],
+   "scorecardStatus": "unresolved",
    "slug": "renzo-protocol-ezeth",
    "sprints": [
     8,
@@ -15676,10 +15680,10 @@
   },
   {
    "badge": {
-    "label": "Parameter Delta",
+    "label": "Docs Updated · Pending Re-Read",
     "live": "https://pacta-x402.pacta.workers.dev/v1/badges/tori-finance.svg",
     "svg": "https://pacta.wtf/badges/tori-finance.svg",
-    "tier": "parameter_delta"
+    "tier": "docs_updated"
    },
    "baseEasUids": [
     "0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc"
@@ -15704,6 +15708,8 @@
     "0xA952453E39F77108Ee37C1b92de593F1C59A6ef4",
     "0x0C6Bbfd2d5666d44bf28580eDEec0263692C8316"
    ],
+   "scorecardStatus": "unresolved",
+   "scorecardStatusNote": "Docs updated · pending chain read",
    "slug": "tori-finance",
    "sprints": [
     32
@@ -16700,10 +16706,10 @@
   },
   {
    "badge": {
-    "label": "Parameter Delta",
+    "label": "Unresolved · Unverified Scope",
     "live": "https://pacta-x402.pacta.workers.dev/v1/badges/whales-market.svg",
     "svg": "https://pacta.wtf/badges/whales-market.svg",
-    "tier": "parameter_delta"
+    "tier": "unresolved"
    },
    "baseEasUids": [
     "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768"
@@ -16727,6 +16733,7 @@
     "0x623620b3Eff4e1A30e9f1154f88198Ab26952EeB",
     "0xeB5E772919661F455619A4cABd9B2b64715505E6"
    ],
+   "scorecardStatus": "unresolved",
    "slug": "whales-market",
    "sprints": [
     28
@@ -16740,7 +16747,7 @@
      "classification": "parameter_delta",
      "id": "whales-market-upgradeability-s28",
      "sprint": 28,
-     "surface": "Whales Market TransparentUpgradeableProxy: docs describe it as immutable, but it is an upgradeable proxy",
+     "surface": "Whales Market TransparentUpgradeableProxy: upgradeable; coverage by the pre-market escrow immutability statement is unverified",
      "targetContract": "0x1eCdB32e59e948C010a189a0798C674a2d0c6603",
      "targetLabel": "Whales Market TransparentUpgradeableProxy"
     }
@@ -17748,8 +17755,10 @@
  "totals": {
   "badgeTiers": {
    "aligned": 126,
-   "parameter_delta": 63,
-   "rpc_observed": 127
+   "docs_updated": 1,
+   "parameter_delta": 57,
+   "rpc_observed": 127,
+   "unresolved": 5
   },
   "easAttested": 189,
   "protocols": 316,

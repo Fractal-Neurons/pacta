@@ -32,6 +32,7 @@ import build_lookup as LK  # noqa: E402
 import control_diff as CD  # noqa: E402  "What differs": changed vs matched parameters of flagged records
 import graph_manifest as GM  # noqa: E402  docs/api/v1/graph-manifest.json (pacta.graph_manifest.v1)
 import summary_short as SS  # noqa: E402  M7: <= 90-char human "What differs" line per protocol
+import scorecard_corrections as CORR  # noqa: E402  declarative wording / scope / status corrections (tools/scorecard_corrections.json)
 import ui as U  # noqa: E402  shadcn/ui component markup (data-slot anatomy)
 import decoded_briefs as DB  # noqa: E402  v4.6: radar briefs rendered from tools/briefs_decoded.json
 
@@ -61,8 +62,10 @@ RATE_LIMIT = "60 requests / minute per caller"
 # T2: plain clients. curl and python-requests reach the API with their default User-Agent; Python's stdlib quickstart reads the
 # static JSON on pacta.wtf (GitHub Pages), so no snippet needs a custom header and no copy talks about edge errors.
 CURL = "curl -s"
-EDITORIAL_INDEPENDENCE = ("Payment never alters a Pacta classification. A status changes only when onchain contract state or public "
-                          "documentation changes and is verified at a new finalized block.")
+EDITORIAL_INDEPENDENCE = ("Payment never alters a Pacta classification. A status changes when onchain contract state or public "
+                          "documentation changes and is verified at a new finalized block — or immediately and free of charge whenever "
+                          "Pacta corrects an overstatement or scoping error in its own comparison.")
+SELF_CORRECTION = ("Pacta corrects its own errors immediately and for free, without requiring any protocol change or paid re-check.")
 HERO_EXAMPLE = ("stader-labs-ethx", "ethereum", "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b")   # (record slug, chain, ETHx token)
 # Live checker presets: (label, chain, address). Public contracts; the ETHx token is an indexed record (Stader, sprint 12).
 PREFLIGHT_PRESETS = [("USDC on Base", "base", "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"),
@@ -173,7 +176,7 @@ CHECKOUT = {   # sku -> product page; "tier" is the /request/?tier= alias that f
         "badge": "Free Ethereum & Base Wallet, Safe & Protocol Scanner",
         "h1": "Paste any wallet, Safe, or protocol to scan live DeFi control-plane exposure.",
         "label": "Full Wallet & Safe Exposure Report",
-        "lede": "Instant read-only Multicall3 balanceOf + Safe custody scan across 316 Ethereum & Base protocols (189 Base-EAS attested · 56 verified adverse control-plane gaps). "
+        "lede": "Instant read-only Multicall3 balanceOf + Safe custody scan across 316 Ethereum & Base protocols (189 Base-EAS attested · 50 verified adverse control-plane gaps). "
                 "Zero wallet connection, zero signature, zero upfront price tags.",
         "cta": "Pay $9 USDC on Base & Unlock Full Report",
         "title": "Free Wallet, Safe & Protocol Control-Plane Exposure Scanner · Pacta", "card": "x-card-scan19-1200x628.png",
@@ -589,6 +592,10 @@ def footer(count_line, reg, home=""):
 
 def load():
     idx = json.load(open(os.path.join(DOCS, "api", "v1", "index.json")))
+    # declarative record-text corrections (tools/scorecard_corrections.json) apply to every derived page and feed; the attested
+    # record store docs/api/v1/index.json itself is never rewritten
+    idx["entries"] = CORR.apply_record_overrides(idx["entries"])
+    assert not CORR.check(), CORR.check()
     radar = json.load(open(os.path.join(DOCS, "api", "v1", "radar.json")))
     m = idx["summary_metrics"]
     n = len(idx["entries"])
@@ -734,10 +741,16 @@ def scorecards(idx, pinned=None, sp=None):
         facts = [dict(cf[f"{c}:{a[2:]}"], address=a) for c, a in sorted(addrs) if f"{c}:{a[2:]}" in cf]
         cls = [e["classification"] for e in es]
         recon = [e for e in es if e.get("reconciledFrom")]
-        g = SC.grade(cls, eas, bool(recon))
-        fs = SC.factors(es, eas, g, facts)
+        corr = CORR.get(v["slug"]) or {}
+        g = SC.grade(cls, eas, bool(recon), v["slug"])
+        fs = SC.factors(es, eas, g, facts, parity_text=corr.get("parityText"))
+        for f in fs:                                       # a correction's scoped factor wording replaces the derived sentence
+            if f["key"] in (corr.get("factorOverrides") or {}):
+                f["value"] = corr["factorOverrides"][f["key"]]
         wd = CD.what_differs(es) if eas else None
-        if wd and wd.get("changed"):
+        if CORR.finding(v["slug"]):
+            finding = CORR.finding(v["slug"])
+        elif wd and wd.get("changed"):
             c0 = wd["changed"][0]
             finding = f'{c0["parameter"]}: docs say {c0["documented"]} · chain says {c0["observed"]}'
         else:
@@ -770,6 +783,9 @@ def scorecards(idx, pinned=None, sp=None):
                     "easAttested": eas, "chains": chains,
                     "category": es[0].get("category", ""), "baskets": sorted({b for c in cats for b in baskets_of(c, chains)}),
                     "records": len(es), "deltas": cls.count("parameter_delta"), "finding": finding,
+                    **({"scopeNote": corr["explanatorySentence"]} if corr.get("explanatorySentence") else {}),
+                    **({"subPill": corr["subPill"]} if corr.get("subPill") else {}),
+                    **({"subtitle": corr["subtitle"]} if corr.get("subtitle") else {}),
                     "pinnedBlock": max(int(e["block_number"]) for e in es),
                     "factors": fs, "rosetteAria": SC.aria(fs, name), "url": f"{BASE_URL}/protocols/{v['slug']}/",
                     "probe": probe, "search": search})
@@ -854,6 +870,15 @@ def badge(c):
     return f'<span class="{("badge " + cls).strip()}">{lbl}</span>'
 
 
+def record_badge(e):
+    """A record's status badge: the neutral "Unresolved" (or the correction's sub-pill) for a flagged record of a protocol
+    tools/scorecard_corrections.json marks unresolved, never "Delta"; otherwise its classification badge."""
+    c = CORR.get(protocol_slug(e["protocol"])) or {}
+    if c.get("status") == "unresolved" and e.get("classification") == "parameter_delta":
+        return f'<span class="badge unresolved">{E(c.get("subPill") or "Unresolved")}</span>'
+    return badge(e["classification"])
+
+
 def dot(c):
     return f'<span class="dot {CLASS_LABEL.get(c, ("", ""))[0]}"></span>'
 
@@ -920,6 +945,7 @@ def what_differs_html(entries, compact=False, seal_cta=False):
     if not wd:
         return ""
     by = {e["id"]: e for e in entries}
+    corr = CORR.get(protocol_slug(entries[0]["protocol"])) or {}
 
     def val(full, short_v):
         """(visible excerpt, full text or "" when the excerpt already is the whole text)"""
@@ -941,8 +967,19 @@ def what_differs_html(entries, compact=False, seal_cta=False):
     mt = "".join(f'<li data-wd-matched>{E(m["parameter"])}: {E(m["value"])}</li>' for m in wd["matched"])
     tag = "div" if compact else "section"
     protective = all(c.get("classification") == "protective_delta" for c in wd["changed"])
+    unres = corr.get("status") == "unresolved"
     wd_cta = (f'<p class="wd-cta">Protocol maintainer and fixed this gap? <a href="#seal-cta" data-cta="seal_wd">Get it re-verified on mainnet in 24h{ARR}</a></p>'
-              if seal_cta and not protective else "")
+              if seal_cta and not protective and not unres else "")
+    if corr.get("headline") or corr.get("explanatorySentence"):
+        # a declarative correction (tools/scorecard_corrections.json): its headline and pinned block lead, its scope sentence follows,
+        # and the generic or overstated per-parameter lines are not repeated
+        lead = (f'<p class="wd-lead" data-wd-headline><strong>{E(corr["headline"])}</strong> '
+                f'<span class="wd-block mono">(#{corr["pinnedBlock"]:,})</span></p>' if corr.get("headline") else "")
+        scope = f'<p class="wd-scope" data-wd-scope>{E(corr["explanatorySentence"])}</p>' if corr.get("explanatorySentence") else ""
+        cls = " unresolved" if unres else (" protective" if protective else "")
+        return (f'<{tag} class="{"memo-sec " if not compact else ""}whatdiffers{cls}" data-what-differs>'
+                f'<h2 class="wd-h">{"Verification scope" if unres else "What differs"}</h2>{lead}{scope}'
+                + (f'<p class="wd-l">Matched</p><ul class="wd-matched">{mt}</ul>' if mt else "") + wd_cta + f'</{tag}>\n')
     return (f'<{tag} class="{"memo-sec " if not compact else ""}whatdiffers{" protective" if protective else ""}" data-what-differs><h2 class="wd-h">What differs</h2>'
             f'<p class="wd-l">Changed / discrepant</p><ul class="wd-changed">{"".join(items)}</ul>'
             + (f'<p class="wd-l">Matched</p><ul class="wd-matched">{mt}</ul>' if mt else "") + wd_cta + f'</{tag}>\n')
@@ -971,7 +1008,7 @@ def sheet(e):
              ("Summary", f'<a href="{REPO}/blob/main/{E(e["summary_doc"])}" target="_blank" rel="noopener">{E(os.path.basename(e["summary_doc"]))}{EXT}</a>'
                          f' · SHA-256 {hexref(e["summary_sha256"], 8, 4)}')]
     kv = "".join(f"<dt>{k}</dt><dd>{v}</dd>" for k, v in rows)
-    return (f'<div class="sheet-h"><h3>{E(e["protocol"])}</h3>{badge(e["classification"])}</div>'
+    return (f'<div class="sheet-h"><h3>{E(e["protocol"])}</h3>{record_badge(e)}</div>'
             f'<p class="sheet-sub">{E(e["surface"])}</p>'
             + what_differs_html([e], compact=True) +
             f'<dl class="kv">{kv}</dl>'
@@ -2319,7 +2356,8 @@ def card_for(idx, slug):
 def grade_pill(card):
     import scorecard as SC
     lbl, v = GRADE_UI[card["grade"]]
-    sub = '<span class="grade-sub">Reconciled</span>' if card["reconciled"] else ""
+    sub = (f'<span class="grade-sub">{E(card["subPill"])}</span>' if card.get("subPill") else
+           '<span class="grade-sub">Reconciled</span>' if card["reconciled"] else "")
     return (f'<span class="grade g-{card["grade"]}" data-slot="badge" data-variant="{v}" title="{E(SC.GRADES[card["grade"]][1])}">'
             f'{lbl}</span>{sub}')
 
@@ -2360,7 +2398,7 @@ def scorecard_section(card):
     import scorecard as SC
     svg = SC.rosette_svg(card["factors"], 72, card["name"], interactive=True)
     return (f'<section class="memo-sec scorecard" id="scorecard"><h2>Control-plane scorecard</h2>'
-            f'<div class="sc-head">{svg}<p>{grade_pill(card)} <span>{E(SC.GRADES[card["grade"]][1])}</span></p></div>'
+            f'<div class="sc-head">{svg}<p>{grade_pill(card)} <span>{E(card.get("subtitle") or SC.GRADES[card["grade"]][1])}</span></p></div>'
             + U.alert("", "Aligned means the docs are accurate, not that the protocol is low-risk. The rosette rates the controls themselves.",
                       icon_name="info") +
             f'{factor_list(card)}{recon_trail(card)}'
@@ -2399,9 +2437,22 @@ def badge_section(name, slug, tier):
                 f'<p class="badge-preview">{img}</p>'
                 f'<p>This badge is amber because at least one Base-EAS-attested surface of {E(name)} differs from what the protocol documents. '
                 f'It turns to the neutral <b>Aligned · Base EAS</b> shield only when the on-chain state or the documentation changes and '
-                f'the two match at a new finalized block, whoever requests the re-check.</p>'
+                f'the two match at a new finalized block, whoever requests the re-check. {E(SELF_CORRECTION)}</p>'
                 f'<p><a class="btn" href="{E(request_href("community", slug))}" data-cta="badge_free_notify">{E(FREE_NOTIFY_CTA)} <span class="arr">{ARR}</span></a></p>'
                 f'<p class="s">Embed this badge (it updates when the status changes):</p>{badge_embed(name, slug, tier)}'
+                f'<p class="s">Badge: <code>{E(BASE_URL)}/badges/{E(slug)}.svg</code> · live: <code>{E(live)}</code>.</p></section>\n')
+    if tier in ("unresolved", "docs_updated"):
+        c = CORR.get(slug) or {}
+        why = ("Pacta's comparison was resolved on the documentation side: the current documentation names the controller Pacta "
+               "observed. The status stays neutral until a fresh finalized-block chain read confirms it." if tier == "docs_updated" else
+               "Pacta pinned this protocol's onchain state, but its comparison does not establish that a documented commitment is "
+               "broken (the scope of the documentation, or what the observed parameter implies, is not verified).")
+        return (f'<section class="memo-sec badge-card unresolved" id="badge-status"><h2>Control-plane badge: {E(label)}</h2>'
+                f'<p class="badge-preview">{img}</p>'
+                f'<p>This badge is neutral: it is neither the amber <b>Parameter Delta</b> nor the <b>Aligned · Base EAS</b> shield. {E(why)} '
+                f'{E(SELF_CORRECTION)}</p>'
+                + (f'<p class="s">{E(c["explanatorySentence"])}</p>' if c.get("explanatorySentence") else "")
+                + f'<p class="s">Embed this badge (it updates when the status changes):</p>{badge_embed(name, slug, tier)}'
                 f'<p class="s">Badge: <code>{E(BASE_URL)}/badges/{E(slug)}.svg</code> · live: <code>{E(live)}</code>.</p></section>\n')
     return (f'<section class="memo-sec badge-card observed" id="badge-status"><h2>Control-plane badge: RPC-Observed</h2>'
             f'<p class="badge-preview">{img}</p>'
@@ -2504,7 +2555,7 @@ def protocol_page(name, entries, idx, radar, digest=None, slug=None):
         eas_dd = "" if pinned else f'<dt>Attestation</dt><dd>{proof_html(e)}</dd>'   # EAS-attested records link their Base EAS UID
         doc_lbl = "Documentation (linked, not compared)." if pinned else "Documented."
         records += (f'<article class="memo-sec" id="{E(e["id"])}"><h2>{E(e["surface"])}</h2>'
-                    f'<dl class="memo-meta"><dt>Status</dt><dd>{badge(e["classification"])}</dd>'
+                    f'<dl class="memo-meta"><dt>Status</dt><dd>{record_badge(e)}</dd>'
                     f'<dt>Target</dt><dd>{E(e["target_label"])} {hexref(e["target_contract"])} · {explorer_link(e, "address")}</dd>'
                     f'<dt>Pinned block</dt><dd>{ch} <span class="num">#{int(e["block_number"]):,}</span> · {explorer_link(e)} · {prov}</dd>'
                     f'<dt>Block hash</dt><dd>{hexref(e["block_hash"], 10, 6)}</dd>{eas_dd}{ctrl}</dl>'
@@ -2558,7 +2609,10 @@ def protocol_page(name, entries, idx, radar, digest=None, slug=None):
     lede = (f'{n} indexed control-plane {"surface" if n == 1 else "surfaces"} for {E(name)}, {pin_clause}. '
             f'{"Contract" if len(targets) == 1 else "Contracts"}: {codes}{"" if targets and ADDR40.fullmatch(targets[-1]) else "."}')
     forum = first.get("governance_url") if pinned else None
-    tier = "rpc_observed" if pinned else ("aligned" if is_aligned_page(entries) else "parameter_delta")
+    corr_t = CORR.get(slug) or {}
+    tier = ("rpc_observed" if pinned else
+            ("docs_updated" if corr_t.get("subPill") else "unresolved") if corr_t.get("status") == "unresolved" else
+            ("aligned" if is_aligned_page(entries) else "parameter_delta"))
     badge_html = badge_section(name, slug, tier)
     if is_aligned_page(entries):
         callout = maintenance_callout(name, slug)
@@ -2618,8 +2672,8 @@ def protocols_index_page(idx, sp=None):
 
     g = {k: sum(x["grade"] == k for x in cards.values()) for k in GRADE_UI}
     n_chain = {ch: sum(any(e.get("chain", "ethereum") == ch for e in v["entries"]) for v in sp.values()) for ch in ("ethereum", "base")}
-    status = [("all", "All", len(sp)), ("delta", "Deltas", g["delta"]), ("protective", "Protective", g["protective"]),
-              ("aligned", "Aligned", g["aligned"]), ("observed", "Observed", g["observed"])]
+    status = [("all", "All", len(sp)), ("delta", "Deltas", g["delta"]), ("unresolved", "Unresolved", g["unresolved"]),
+              ("protective", "Protective", g["protective"]), ("aligned", "Aligned", g["aligned"]), ("observed", "Observed", g["observed"])]
     chain_pills = [("all", "All chains", len(sp)), ("ethereum", "Ethereum", n_chain["ethereum"]), ("base", "Base", n_chain["base"])]
     group = lambda kind, label, pills: (f'<div class="seg" data-slot="toggle-group" role="group" aria-label="{label}" data-pgroup="{kind}"><span class="seg-l">{label}</span>'
                                         + "".join(f'<button type="button" data-slot="toggle-group-item" data-pfilter-{kind}="{k}" aria-pressed="{"true" if k == "all" else "false"}">{E(lbl)}'
@@ -2705,16 +2759,16 @@ HOME_SUB = ("Pacta reads who can upgrade, pause or change {n} DeFi protocols on 
 # references (the grades come from the data; build_site asserts the order). /scorecards/ and /protocols/ keep all of them.
 FLAGSHIP = ["stader-labs-ethx", "yo-protocol", "moonwell-lending-base", "ethena-usde-susde", "axelar-network",
             "ethena-usdtb", "aave-v3-gho", "eigenlayer-core"]
-GRADE_RANK = {"delta": 0, "protective": 1, "aligned": 2, "observed": 3}
+GRADE_RANK = {"delta": 0, "unresolved": 1, "protective": 2, "aligned": 3, "observed": 4}
 # (slug, record id, label, "docs say", "chain says", tokens asserted in the documented / observed evidence)
 # (slug, record id, label, "docs say", "chain says", tokens asserted in the documented / observed evidence)
 RECEIPTS = [
     ("stader-labs-ethx", "stader-ethx-manager-safe-and-timelock", "Stader ETHx", "Manager Safe is 3-of-5", "Manager Safe is 3-of-6",
      ("3-of-5",), ("3-of-6",)),
     ("yo-protocol", "yo-protocol-approval-registry-owner-admin-safe-s22", "YO Protocol", "Vault caps are timelocked",
-     "A 4-of-6 Safe, no delay", ("timelocked",), ("4-of-6", "not the YO Timelock")),
-    ("moonwell-lending-base", "moonwell-pause-guardian-2of4-safe-s18", "Moonwell (Base)", "Pause needs a 3-of-5 council",
-     "Pause guardian is a 2-of-4 Safe", ("3-of-5",), ("2-of-4",)),
+     "Approval Registry: a 4-of-6 Safe, no delay (vault upgrades keep 48h)", ("timelocked",), ("4-of-6", "not the YO Timelock")),
+    ("moonwell-lending-base", "moonwell-pause-guardian-2of4-safe-s18", "Moonwell (Base)", "Older constitution: pause needs a 3-of-5 council",
+     "Pause guardian is a 2-of-4 Safe (October MIP-X71 migration)", ("3-of-5",), ("2-of-4",)),
 ]
 MCP_REGISTRY_URL = "https://registry.modelcontextprotocol.io/v0/servers?search=io.github.Fractal-Neurons/pacta"
 GLAMA_URL = "https://glama.ai/mcp/servers/Fractal-Neurons/pacta"
@@ -2809,7 +2863,7 @@ def scorecards_section(cards, prefix="", full=False, heading="h2"):
     rows = "".join(sc_row(c, prefix, short=not full, mobile_more=not full and i >= MOBILE_FIRST_ROWS) for i, c in enumerate(shown))
     n = len(cards)
     g = {k: sum(c["grade"] == k for c in cards) for k in GRADE_UI}
-    filt = [("all", "All", n), ("delta", "Deltas", g["delta"]), ("protective", "Protective", g["protective"]),
+    filt = [("all", "All", n), ("delta", "Deltas", g["delta"]), ("unresolved", "Unresolved", g["unresolved"]), ("protective", "Protective", g["protective"]),
             ("aligned", "Aligned", g["aligned"]), ("observed", "Observed", g["observed"])]
     pills = "".join(f'<button data-slot="toggle-group-item" type="button" data-sc-f="{k}" aria-pressed="{"true" if k == "all" else "false"}">'
                     f'{lbl} <span class="num">({cnt})</span></button>' for k, lbl, cnt in filt)
@@ -2962,13 +3016,13 @@ CASES = [
      "Official GitBook: the Manager multisig is a 3-of-5.", "Finalized Ethereum state: the Manager Safe runs at a 3-of-6 quorum; upgrades still wait the 7-day TimelockController.",
      ("3-of-5",), ("3-of-6", "604800s")),
     ("yo-protocol", "yo-protocol-approval-registry-owner-admin-safe-s22", "YO Protocol", "Base",
-     "Docs: “Onchain, timelocked caps” on what each vault may approve.", "YoApprovalRegistry.owner() is the 4-of-6 Admin Safe directly, not the 48-hour YO Timelock: no enforced delay.",
+     "Docs: “Onchain, timelocked caps” on what each vault may approve.", "YoApprovalRegistry.owner() is the 4-of-6 Admin Safe directly, not the 48-hour YO Timelock: no enforced delay on the Approval Registry; yoETH and yoUSD vault upgrades retain the 48-hour timelock.",
      ("timelocked caps",), ("4-of-6", "not the YO Timelock")),
     ("stake-dao", "stake-dao-protocol-timelock-min-delay-5d-s22", "Stake DAO", "Ethereum",
      "Docs: a 48-hour timelock on all protocol changes; all wallets 4-of-7.", "ProtocolTimelock enforces 5 days (432,000s), stronger than documented (protective); the Treasury Safe is 3-of-5 (delta).",
      ("48-hour",), ("432000s",)),
     ("moonwell-lending-base", "moonwell-pause-guardian-2of4-safe-s18", "Moonwell (Base)", "Base",
-     "Governance Constitution 8.1: emergency actions need a 3-of-5 Security Council approval.", "Unitroller.pauseGuardian() resolves to a 2-of-4 Safe.",
+     "Governance Constitution 8.1 (older): emergency actions need a 3-of-5 Security Council approval.", "Unitroller.pauseGuardian() resolves to a 2-of-4 Safe, a configuration Moonwell described in its October 2026 governance migration recap (MIP-X71).",
      ("3-of-5",), ("2-of-4",)),
 ]
 
@@ -4214,20 +4268,21 @@ def site_numbers(idx, cards=None, pinned=None):
     pinned = load_pinned() if pinned is None else pinned
     cards = scorecards(idx, pinned) if cards is None else cards
     c = counts(idx)
-    g = {k: sum(x["grade"] == k for x in cards) for k in ("delta", "protective", "aligned", "observed")}
+    g = {k: sum(x["grade"] == k for x in cards) for k in ("delta", "unresolved", "protective", "aligned", "observed")}
     eas = sum(1 for x in cards if x["easAttested"])
     n = len(cards)
     assert n == sum(g.values()) == eas + g["observed"], (n, g, eas)
     assert g["observed"] == sum(1 for x in cards if not x["easAttested"]), "observed grade = RPC-observed protocols"
-    res = {"protocols": n, "eas_protocols": eas, "observed": g["observed"], "delta": g["delta"], "protective": g["protective"],
+    res = {"protocols": n, "eas_protocols": eas, "observed": g["observed"], "delta": g["delta"], "unresolved": g["unresolved"],
+           "protective": g["protective"],
            "aligned": g["aligned"], "checks": c["records"], "batches": c["eas_n"], "sprints": c["sprints"],
            "observed_records": len(pinned["entries"])}
     _NUMS[key] = ((idx, pinned, cards), res)   # keeps the keyed objects alive, so their id() can never be reused while cached
     return res
 
 
-GRADE_UI = {"delta": ("Delta", "warning"), "protective": ("Protective", "info"), "aligned": ("Aligned", "neutral"),
-            "observed": ("Observed", "outline")}
+GRADE_UI = {"delta": ("Delta", "warning"), "unresolved": ("Unresolved", "outline"), "protective": ("Protective", "info"),
+            "aligned": ("Aligned", "neutral"), "observed": ("Observed", "outline")}
 
 
 AWESOME_MCP_URL = "https://github.com/punkpeye/awesome-mcp-servers/pull/19455"
@@ -4918,8 +4973,11 @@ def _curator_item_row(it, tone="aligned"):
     blk = it.get("pinnedBlock")
     uid = (it.get("baseEasUids") or [""])[0]
     addr = it.get("primaryContract") or ""
-    pill_lbl = "ADVERSE GAP" if tone == "gap" else ("PROTECTIVE" if it.get("grade") == "PROTECTIVE" else ("OBSERVED" if it.get("grade") == "OBSERVED" else "ALIGNED"))
-    pill_tone = "gap" if tone == "gap" else ("protective" if it.get("grade") == "PROTECTIVE" else ("observed" if it.get("grade") == "OBSERVED" else "aligned"))
+    unres = it.get("grade") == "UNRESOLVED"     # never an adverse gap, never aligned: the neutral tone
+    pill_lbl = ("UNRESOLVED" if unres else "ADVERSE GAP" if tone == "gap" else
+                ("PROTECTIVE" if it.get("grade") == "PROTECTIVE" else ("OBSERVED" if it.get("grade") == "OBSERVED" else "ALIGNED")))
+    pill_tone = ("observed" if unres else "gap" if tone == "gap" else
+                 ("protective" if it.get("grade") == "PROTECTIVE" else ("observed" if it.get("grade") == "OBSERVED" else "aligned")))
     eas_html = (f'<a class="cur-eas mono" href="https://base.easscan.org/attestation/view/{uid}" target="_blank" rel="noopener">'
                 f'EAS {short(uid, 6, 4)}{EXT}</a>') if uid else '<span class="cur-eas mono muted">RPC-pinned</span>'
     scan_href = f'../scan/?chain={ch}&amp;address={addr}' if HEX40.fullmatch(addr) else '../scan/'
@@ -4967,13 +5025,16 @@ def curators_page(idx):
             w_badges = f'<span class="pf-st-pill" data-tone="aligned">{wc["aligned_or_protective"]} ALIGNED</span>'
             if wc.get("delta", 0) > 0:
                 w_badges += f' <span class="pf-st-pill" data-tone="gap">{wc["delta"]} GAP</span>'
+            if wc.get("unresolved", 0) > 0:
+                w_badges += f' <span class="pf-st-pill" data-tone="observed">{wc["unresolved"]} UNRESOLVED</span>'
             if wc.get("observed", 0) > 0:
                 w_badges += f' <span class="pf-st-pill" data-tone="observed">{wc["observed"]} PINNED</span>'
         else:
             w_badges = '<span class="pf-st-pill" data-tone="observed">DIRECT MARKET CURATION</span>'
 
         u_badges = (f'<span class="pf-st-pill" data-tone="aligned">{uc["aligned_or_protective"]} ALIGNED</span> '
-                    f'<span class="pf-st-pill" data-tone="gap">{uc["adverse_gaps_delta"]} ADVERSE GAPS</span>')
+                    f'<span class="pf-st-pill" data-tone="gap">{uc["adverse_gaps_delta"]} ADVERSE GAPS</span>'
+                    + (f' <span class="pf-st-pill" data-tone="observed">{uc["unresolved"]} UNRESOLVED</span>' if uc.get("unresolved") else ""))
 
         short_insight = clean_excerpt(c["curator_exposure_insight"], 145)
         tbl_rows.append(
@@ -4990,7 +5051,9 @@ def curators_page(idx):
         )
 
         if wrappers:
-            w_list = '<ul class="cur-list">' + "".join(_curator_item_row(w, "gap" if w.get("grade") == "DELTA" else "aligned") for w in wrappers) + '</ul>'
+            w_list = '<ul class="cur-list">' + "".join(_curator_item_row(w, "gap" if w.get("grade") == "DELTA" else
+                                                                         "observed" if w.get("grade") == "UNRESOLVED" else "aligned")
+                                                      for w in wrappers) + '</ul>'
         else:
             w_list = ('<p class="cur-empty">Curates isolated lending markets and collateral parameters directly on host protocols '
                       '(see underlying market &amp; collateral exposure alongside).</p>')
@@ -5004,7 +5067,11 @@ def curators_page(idx):
         )
         al_block = (f'<div class="cur-al-wrap"><span class="cur-sub-k mono">ALIGNED / PROTECTIVE UNDERLYING BASELINES ({len(u_al)})</span>'
                     f'<div class="cur-al-chips">{al_chips}</div></div>') if u_al else ""
-        u_list = (('<ul class="cur-list">' + gap_items + '</ul>') if gap_items else '') + al_block
+        # an unresolved comparison is listed apart, in the neutral tone: never counted or coloured as a proved adverse gap
+        u_un = c.get("underlying_unresolved") or []
+        un_block = (f'<div class="cur-un-wrap"><span class="cur-sub-k mono">UNRESOLVED UNDERLYING (DOCUMENT BREACH NOT ESTABLISHED) ({len(u_un)})</span>'
+                    '<ul class="cur-list">' + "".join(_curator_item_row(g, "observed") for g in u_un) + '</ul></div>') if u_un else ""
+        u_list = (('<ul class="cur-list">' + gap_items + '</ul>') if gap_items else '') + un_block + al_block
 
         edges = c.get("verified_contagion_edges") or []
         edge_html = (f'<p class="cur-edges mono"><b>Verified graph edges:</b> {E(" · ".join(edges))}</p>') if edges else ""

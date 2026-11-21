@@ -8,7 +8,8 @@
     "base_eas_attested_protocols": 189,
     "grades_breakdown": {
       "ALIGNED": 126,
-      "DELTA_adverse_gaps": 56,
+      "DELTA_adverse_gaps": 50,
+      "UNRESOLVED": 6,
       "PROTECTIVE": 7,
       "OBSERVED_rpc_pinned": 127
     },
@@ -51,6 +52,7 @@
         "total": 3,
         "aligned_or_protective": 3,
         "delta": 0,
+        "unresolved": 0,
         "observed": 0
       },
       "underlying_182_eas_counts": {
@@ -364,7 +366,7 @@
           "baseEasUids": [
             "0x749d96e1a3d214a4ab66c528ca12c84dce085fa138dc370dd0eb817d890f09fa"
           ],
-          "summary_short": "Proxy admin is the 4-of-7 DAO Safe; docs describe a 3-day GovernorTimelock",
+          "summary_short": "PoolPermissionManager proxy admin is the 4-of-7 DAO Safe, not GovernorTimelock",
           "url": "https://pacta.wtf/protocols/maple-finance-v2-syrup/"
         },
         {
@@ -386,7 +388,7 @@
           "baseEasUids": [
             "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2"
           ],
-          "summary_short": "Timelock delay: docs 3 days · chain 1 second",
+          "summary_short": "DEFAULT_ADMIN handover delay: 1 second observed vs 3 days documented",
           "url": "https://pacta.wtf/protocols/usual-money-usd0-usd0/"
         }
       ]
@@ -410,7 +412,6 @@
       ],
       "underlying_adverse_gap_slugs": [
         "mellow-protocol-lido-earn",
-        "renzo-protocol-ezeth",
         "puffer-finance-pufeth",
         "stader-labs-ethx",
         "treehouse-tree-teth",
@@ -421,23 +422,25 @@
         "metamorpho-re7-weth-vs-re7-usdt -> morpho-blue-core (curated_vault_allocates_to_markets, ETH #26,422,531)",
         "Referenced in Morpho governance thread morpho-2301 ([RFC] User-centric DeFi Collateral Transparency Framework)"
       ],
-      "curator_exposure_insight": "Direct wrapper DELTA on MetaMorpho Re7 WETH (0x78Fc...94d0 at ETH #26,401,405: no on-chain guardian set, owned by 2-of-4 Safe with 3d timelock), plus heavy LRT/restaking collateral exposure across 7 Base-EAS DELTA issuers (Mellow 3-of-5 vs 3-of-6, Renzo 100% reward fee parameter, Puffer 3-of-7, Stader 3-of-6, Treehouse instant 5-of-7 freeze).",
+      "curator_exposure_insight": "Direct wrapper MetaMorpho Re7 WETH is Unresolved (0x78Fc...94d0 at ETH #26,401,405: no guardian set under a 2-of-4 owner Safe with a 3d timelock; no documented promise of matching guardian configurations was verified), plus LRT/restaking collateral exposure across 6 Base-EAS DELTA issuers (Mellow 3-of-5 vs 3-of-6, Puffer 3-of-7, Stader 3-of-6, Treehouse TREE blacklisting with no delay under a 5-of-7 Safe) and Renzo, Unresolved (DepositQueue feeBasisPoints reads 10,000 bps; the effective reward fee is not verified).",
       "wrapper_counts": {
         "total": 1,
         "aligned_or_protective": 0,
-        "delta": 1,
+        "delta": 0,
+        "unresolved": 1,
         "observed": 0
       },
       "underlying_182_eas_counts": {
         "aligned_or_protective": 7,
-        "adverse_gaps_delta": 7,
-        "adverse_gap_share_pct": 50.0
+        "adverse_gaps_delta": 6,
+        "adverse_gap_share_pct": 42.9,
+        "unresolved": 1
       },
       "direct_wrappers": [
         {
           "slug": "metamorpho-re7-weth-vs-re7-usdt",
           "name": "MetaMorpho (Re7 WETH vs. Re7 USDT)",
-          "grade": "DELTA",
+          "grade": "UNRESOLVED",
           "easAttested": true,
           "chains": [
             "ethereum"
@@ -453,7 +456,7 @@
           "baseEasUids": [
             "0x804289d4357b0a8d5a360911ec450c13ca36c4422d1e811c4c7040ef7d2628e5"
           ],
-          "summary_short": "Re7 WETH vault has no guardian; its owner is a 2-of-4 Safe with a 3-day timelock",
+          "summary_short": "Re7 WETH has no guardian while Re7 USDT does; no parity promise was verified",
           "url": "https://pacta.wtf/protocols/metamorpho-re7-weth-vs-re7-usdt/"
         }
       ],
@@ -632,28 +635,6 @@
           "url": "https://pacta.wtf/protocols/mellow-protocol-lido-earn/"
         },
         {
-          "slug": "renzo-protocol-ezeth",
-          "name": "Renzo Protocol (ezETH)",
-          "grade": "DELTA",
-          "easAttested": true,
-          "chains": [
-            "ethereum"
-          ],
-          "pinnedBlock": 26448221,
-          "primaryContract": "0xf2F305D14DCD8aaef887E0428B3c9534795D0d60",
-          "targetLabel": "DepositQueue",
-          "tokens": [
-            "ezETH",
-            "REZ"
-          ],
-          "baseEasUids": [
-            "0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
-            "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2"
-          ],
-          "summary_short": "Docs state a 10% reward fee; feeBasisPoints() now reads 10,000 (100%), up from 1,500",
-          "url": "https://pacta.wtf/protocols/renzo-protocol-ezeth/"
-        },
-        {
           "slug": "puffer-finance-pufeth",
           "name": "Puffer Finance (pufETH)",
           "grade": "DELTA",
@@ -715,7 +696,7 @@
             "0x5c12867816bee7d00c13412cf7ec67c00b7d42f3020643ab2a2ca577a28de424",
             "0x8965ae6e51a78132a77eb14c0ac1c6cd1be357d6f261253efff28869478ae5b8"
           ],
-          "summary_short": "A 5-of-7 Safe can freeze TREE transfers at once; docs promise a 5-day timelock",
+          "summary_short": "TREE blacklisting has no delay; TREE and tETH owner paths keep 5-day timelocks",
           "url": "https://pacta.wtf/protocols/treehouse-tree-teth/"
         },
         {
@@ -760,9 +741,36 @@
           "baseEasUids": [
             "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2"
           ],
-          "summary_short": "Timelock delay: docs 3 days · chain 1 second",
+          "summary_short": "DEFAULT_ADMIN handover delay: 1 second observed vs 3 days documented",
           "url": "https://pacta.wtf/protocols/usual-money-usd0-usd0/"
         }
+      ],
+      "underlying_unresolved": [
+        {
+          "slug": "renzo-protocol-ezeth",
+          "name": "Renzo Protocol (ezETH)",
+          "grade": "UNRESOLVED",
+          "easAttested": true,
+          "chains": [
+            "ethereum"
+          ],
+          "pinnedBlock": 26448221,
+          "primaryContract": "0xf2F305D14DCD8aaef887E0428B3c9534795D0d60",
+          "targetLabel": "DepositQueue",
+          "tokens": [
+            "ezETH",
+            "REZ"
+          ],
+          "baseEasUids": [
+            "0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
+            "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2"
+          ],
+          "summary_short": "DepositQueue feeBasisPoints reads 10,000 bps; effective fee and routing unverified",
+          "url": "https://pacta.wtf/protocols/renzo-protocol-ezeth/"
+        }
+      ],
+      "underlying_unresolved_slugs": [
+        "renzo-protocol-ezeth"
       ]
     },
     {
@@ -786,7 +794,6 @@
         "moonwell-lending-base",
         "seamless-protocol-base",
         "ethena-usde-susde",
-        "renzo-protocol-ezeth",
         "puffer-finance-pufeth",
         "stader-labs-ethx",
         "rocket-pool-reth"
@@ -799,12 +806,14 @@
         "total": 1,
         "aligned_or_protective": 0,
         "delta": 0,
+        "unresolved": 0,
         "observed": 1
       },
       "underlying_182_eas_counts": {
         "aligned_or_protective": 7,
-        "adverse_gaps_delta": 7,
-        "adverse_gap_share_pct": 50.0
+        "adverse_gaps_delta": 6,
+        "adverse_gap_share_pct": 42.9,
+        "unresolved": 1
       },
       "direct_wrappers": [
         {
@@ -997,7 +1006,7 @@
           "baseEasUids": [
             "0x105ea2849a5cd9ef601ae565e6b0adf288884771c8ac82c1c3d0a87aa789eb4f"
           ],
-          "summary_short": "Pause guardian: docs 3-of-5 Security Council · chain 2-of-4 Safe",
+          "summary_short": "Base pause guardian is a 2-of-4 Safe (Oct MIP-X71); older constitution says 3-of-5",
           "url": "https://pacta.wtf/protocols/moonwell-lending-base/"
         },
         {
@@ -1042,28 +1051,6 @@
           ],
           "summary_short": "Timelock delay: docs 7 days · chain 1 day",
           "url": "https://pacta.wtf/protocols/ethena-usde-susde/"
-        },
-        {
-          "slug": "renzo-protocol-ezeth",
-          "name": "Renzo Protocol (ezETH)",
-          "grade": "DELTA",
-          "easAttested": true,
-          "chains": [
-            "ethereum"
-          ],
-          "pinnedBlock": 26448221,
-          "primaryContract": "0xf2F305D14DCD8aaef887E0428B3c9534795D0d60",
-          "targetLabel": "DepositQueue",
-          "tokens": [
-            "ezETH",
-            "REZ"
-          ],
-          "baseEasUids": [
-            "0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
-            "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2"
-          ],
-          "summary_short": "Docs state a 10% reward fee; feeBasisPoints() now reads 10,000 (100%), up from 1,500",
-          "url": "https://pacta.wtf/protocols/renzo-protocol-ezeth/"
         },
         {
           "slug": "puffer-finance-pufeth",
@@ -1128,6 +1115,33 @@
           "summary_short": "Council leave notice: chain 28 days · RPIP-33 bound under 14 days",
           "url": "https://pacta.wtf/protocols/rocket-pool-reth/"
         }
+      ],
+      "underlying_unresolved": [
+        {
+          "slug": "renzo-protocol-ezeth",
+          "name": "Renzo Protocol (ezETH)",
+          "grade": "UNRESOLVED",
+          "easAttested": true,
+          "chains": [
+            "ethereum"
+          ],
+          "pinnedBlock": 26448221,
+          "primaryContract": "0xf2F305D14DCD8aaef887E0428B3c9534795D0d60",
+          "targetLabel": "DepositQueue",
+          "tokens": [
+            "ezETH",
+            "REZ"
+          ],
+          "baseEasUids": [
+            "0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
+            "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2"
+          ],
+          "summary_short": "DepositQueue feeBasisPoints reads 10,000 bps; effective fee and routing unverified",
+          "url": "https://pacta.wtf/protocols/renzo-protocol-ezeth/"
+        }
+      ],
+      "underlying_unresolved_slugs": [
+        "renzo-protocol-ezeth"
       ]
     },
     {
@@ -1151,26 +1165,26 @@
         "ethena-usde-susde",
         "usual-money-usd0-usd0",
         "mellow-protocol-lido-earn",
-        "lagoon",
         "upshift",
         "treehouse-tree-teth",
-        "renzo-protocol-ezeth",
         "maple-finance-v2-syrup"
       ],
       "verified_contagion_edges": [
         "mev-capital-weth-metamorpho -> morpho-blue-core (curated_vault_allocates_to_markets, Ethereum #26,458,556)"
       ],
-      "curator_exposure_insight": "MEV Capital curates active lending, PT-collateral, and basis-trade strategies across Morpho, Euler V2, Mellow, Pendle, Lagoon, and Upshift. Its core strategy stack spans 8 verified Base-EAS DELTAs (USDe 1d timelock, USD0++ 1s timelock, Lagoon 0s-delay 3-of-6 beacon owner, Upshift 2-of-3 vault ProxyAdmin, syrupUSDC 4-of-7 Safe ProxyAdmin).",
+      "curator_exposure_insight": "MEV Capital curates active lending, PT-collateral, and basis-trade strategies across Morpho, Euler V2, Mellow, Pendle, Lagoon, and Upshift. Its core strategy stack spans 6 verified Base-EAS DELTAs (USDe 1d timelock, USD0++ 1s DEFAULT_ADMIN handover delay, Upshift 2-of-3 vault ProxyAdmin, syrupUSDC 4-of-7 Safe proxy admin) and 2 Unresolved comparisons (Lagoon legacy cbBTC beacon upgrades; Renzo DepositQueue fee parameter).",
       "wrapper_counts": {
         "total": 1,
         "aligned_or_protective": 1,
         "delta": 0,
+        "unresolved": 0,
         "observed": 0
       },
       "underlying_182_eas_counts": {
         "aligned_or_protective": 7,
-        "adverse_gaps_delta": 8,
-        "adverse_gap_share_pct": 53.3
+        "adverse_gaps_delta": 6,
+        "adverse_gap_share_pct": 40.0,
+        "unresolved": 2
       },
       "direct_wrappers": [
         {
@@ -1390,7 +1404,7 @@
           "baseEasUids": [
             "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2"
           ],
-          "summary_short": "Timelock delay: docs 3 days · chain 1 second",
+          "summary_short": "DEFAULT_ADMIN handover delay: 1 second observed vs 3 days documented",
           "url": "https://pacta.wtf/protocols/usual-money-usd0-usd0/"
         },
         {
@@ -1415,26 +1429,6 @@
           "url": "https://pacta.wtf/protocols/mellow-protocol-lido-earn/"
         },
         {
-          "slug": "lagoon",
-          "name": "Lagoon",
-          "grade": "DELTA",
-          "easAttested": true,
-          "chains": [
-            "ethereum"
-          ],
-          "pinnedBlock": 26448221,
-          "primaryContract": "0x707D622cdA4b5459e7DcEe8Ba8E429F154f96A27",
-          "targetLabel": "Lagoon cbBTC vault UpgradeableBeacon",
-          "tokens": [
-            "Lagoon"
-          ],
-          "baseEasUids": [
-            "0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13"
-          ],
-          "summary_short": "Docs require a 24 h minimum upgrade wait; the vault beacon's owner is a 3-of-6 Safe",
-          "url": "https://pacta.wtf/protocols/lagoon/"
-        },
-        {
           "slug": "upshift",
           "name": "Upshift",
           "grade": "DELTA",
@@ -1451,7 +1445,7 @@
           "baseEasUids": [
             "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768"
           ],
-          "summary_short": "Docs state a 4-of-6 ProxyAdmin multisig; the vault's is 2-of-3",
+          "summary_short": "Docs say ProxyAdmin is generally 4-of-6 (no timelock disclosed); vault's is 2-of-3",
           "url": "https://pacta.wtf/protocols/upshift/"
         },
         {
@@ -1474,30 +1468,8 @@
             "0x5c12867816bee7d00c13412cf7ec67c00b7d42f3020643ab2a2ca577a28de424",
             "0x8965ae6e51a78132a77eb14c0ac1c6cd1be357d6f261253efff28869478ae5b8"
           ],
-          "summary_short": "A 5-of-7 Safe can freeze TREE transfers at once; docs promise a 5-day timelock",
+          "summary_short": "TREE blacklisting has no delay; TREE and tETH owner paths keep 5-day timelocks",
           "url": "https://pacta.wtf/protocols/treehouse-tree-teth/"
-        },
-        {
-          "slug": "renzo-protocol-ezeth",
-          "name": "Renzo Protocol (ezETH)",
-          "grade": "DELTA",
-          "easAttested": true,
-          "chains": [
-            "ethereum"
-          ],
-          "pinnedBlock": 26448221,
-          "primaryContract": "0xf2F305D14DCD8aaef887E0428B3c9534795D0d60",
-          "targetLabel": "DepositQueue",
-          "tokens": [
-            "ezETH",
-            "REZ"
-          ],
-          "baseEasUids": [
-            "0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
-            "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2"
-          ],
-          "summary_short": "Docs state a 10% reward fee; feeBasisPoints() now reads 10,000 (100%), up from 1,500",
-          "url": "https://pacta.wtf/protocols/renzo-protocol-ezeth/"
         },
         {
           "slug": "maple-finance-v2-syrup",
@@ -1518,9 +1490,57 @@
           "baseEasUids": [
             "0x749d96e1a3d214a4ab66c528ca12c84dce085fa138dc370dd0eb817d890f09fa"
           ],
-          "summary_short": "Proxy admin is the 4-of-7 DAO Safe; docs describe a 3-day GovernorTimelock",
+          "summary_short": "PoolPermissionManager proxy admin is the 4-of-7 DAO Safe, not GovernorTimelock",
           "url": "https://pacta.wtf/protocols/maple-finance-v2-syrup/"
         }
+      ],
+      "underlying_unresolved": [
+        {
+          "slug": "lagoon",
+          "name": "Lagoon",
+          "grade": "UNRESOLVED",
+          "easAttested": true,
+          "chains": [
+            "ethereum"
+          ],
+          "pinnedBlock": 26448221,
+          "primaryContract": "0x707D622cdA4b5459e7DcEe8Ba8E429F154f96A27",
+          "targetLabel": "Lagoon cbBTC vault UpgradeableBeacon",
+          "tokens": [
+            "Lagoon"
+          ],
+          "baseEasUids": [
+            "0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13"
+          ],
+          "summary_short": "Legacy cbBTC beacon upgrades have no delay; 24h Opt-in doc coverage unverified",
+          "url": "https://pacta.wtf/protocols/lagoon/"
+        },
+        {
+          "slug": "renzo-protocol-ezeth",
+          "name": "Renzo Protocol (ezETH)",
+          "grade": "UNRESOLVED",
+          "easAttested": true,
+          "chains": [
+            "ethereum"
+          ],
+          "pinnedBlock": 26448221,
+          "primaryContract": "0xf2F305D14DCD8aaef887E0428B3c9534795D0d60",
+          "targetLabel": "DepositQueue",
+          "tokens": [
+            "ezETH",
+            "REZ"
+          ],
+          "baseEasUids": [
+            "0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
+            "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2"
+          ],
+          "summary_short": "DepositQueue feeBasisPoints reads 10,000 bps; effective fee and routing unverified",
+          "url": "https://pacta.wtf/protocols/renzo-protocol-ezeth/"
+        }
+      ],
+      "underlying_unresolved_slugs": [
+        "lagoon",
+        "renzo-protocol-ezeth"
       ]
     },
     {
@@ -1553,6 +1573,7 @@
         "total": 1,
         "aligned_or_protective": 0,
         "delta": 0,
+        "unresolved": 0,
         "observed": 1
       },
       "underlying_182_eas_counts": {
@@ -1821,6 +1842,7 @@
         "total": 1,
         "aligned_or_protective": 0,
         "delta": 1,
+        "unresolved": 0,
         "observed": 0
       },
       "underlying_182_eas_counts": {
@@ -1846,7 +1868,7 @@
           "baseEasUids": [
             "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768"
           ],
-          "summary_short": "Docs state a 4-of-6 ProxyAdmin multisig; the vault's is 2-of-3",
+          "summary_short": "Docs say ProxyAdmin is generally 4-of-6 (no timelock disclosed); vault's is 2-of-3",
           "url": "https://pacta.wtf/protocols/upshift/"
         }
       ],
@@ -1978,7 +2000,7 @@
           "baseEasUids": [
             "0x749d96e1a3d214a4ab66c528ca12c84dce085fa138dc370dd0eb817d890f09fa"
           ],
-          "summary_short": "Proxy admin is the 4-of-7 DAO Safe; docs describe a 3-day GovernorTimelock",
+          "summary_short": "PoolPermissionManager proxy admin is the 4-of-7 DAO Safe, not GovernorTimelock",
           "url": "https://pacta.wtf/protocols/maple-finance-v2-syrup/"
         },
         {
@@ -2001,7 +2023,7 @@
             "0x5c12867816bee7d00c13412cf7ec67c00b7d42f3020643ab2a2ca577a28de424",
             "0x8965ae6e51a78132a77eb14c0ac1c6cd1be357d6f261253efff28869478ae5b8"
           ],
-          "summary_short": "A 5-of-7 Safe can freeze TREE transfers at once; docs promise a 5-day timelock",
+          "summary_short": "TREE blacklisting has no delay; TREE and tETH owner paths keep 5-day timelocks",
           "url": "https://pacta.wtf/protocols/treehouse-tree-teth/"
         },
         {
@@ -2060,6 +2082,7 @@
         "total": 3,
         "aligned_or_protective": 2,
         "delta": 0,
+        "unresolved": 0,
         "observed": 1
       },
       "underlying_182_eas_counts": {
@@ -2319,7 +2342,7 @@
           "baseEasUids": [
             "0x754edd7612258b755ff2e56903243d1f8867bad53c29ce3febb5ed9114005e42"
           ],
-          "summary_short": "Timelock delay: docs 2 days · chain 36 hours",
+          "summary_short": "LegacyTimelock reads 36 hours; V3.0 technical-change docs describe 2 days",
           "url": "https://pacta.wtf/protocols/gearbox-v3-v3-1/"
         },
         {
@@ -2342,7 +2365,7 @@
             "0x5c12867816bee7d00c13412cf7ec67c00b7d42f3020643ab2a2ca577a28de424",
             "0x8965ae6e51a78132a77eb14c0ac1c6cd1be357d6f261253efff28869478ae5b8"
           ],
-          "summary_short": "A 5-of-7 Safe can freeze TREE transfers at once; docs promise a 5-day timelock",
+          "summary_short": "TREE blacklisting has no delay; TREE and tETH owner paths keep 5-day timelocks",
           "url": "https://pacta.wtf/protocols/treehouse-tree-teth/"
         },
         {
@@ -2392,6 +2415,7 @@
         "total": 1,
         "aligned_or_protective": 0,
         "delta": 1,
+        "unresolved": 0,
         "observed": 0
       },
       "underlying_182_eas_counts": {
@@ -2548,30 +2572,31 @@
       ],
       "underlying_adverse_gap_slugs": [
         "ethena-usde-susde",
-        "renzo-protocol-ezeth",
         "puffer-finance-pufeth"
       ],
       "verified_contagion_edges": [
-        "lagoon (0x707D...6A27, ETH #26,448,221): Vault beacon owned directly by 3-of-6 Safe despite documented 24h upgrade wait",
-        "concrete (0xB9DC...8f20, ETH #26,425,374): Vault & factory manager Safe runs at 1-of-2 despite documented role separation"
+        "lagoon (0x707D...6A27, ETH #26,448,221): legacy cbBTC vault beacon owned directly by a 3-of-6 Safe; coverage by the 24h Opt-in delay docs is unverified",
+        "concrete (0xB9DC...8f20, ETH #26,425,374): ctDeltaWeETH owner and manager roles share a 1-of-2 Safe; a single-key drain is not established"
       ],
-      "curator_exposure_insight": "Both emerging institutional vault factories exhibit high-severity upgrade/quorum DELTAs (Lagoon 0s beacon upgrade path vs 24h docs; Concrete 1-of-2 manager Safe). Any wallet holding ctDeltaWeETH or Lagoon vault shares inherits immediate factory-level control-plane exposure regardless of underlying weETH/USDC alignment.",
+      "curator_exposure_insight": "Both vault factories are Unresolved after Pacta's scoping review: Lagoon's legacy cbBTC beacon vault upgrades with no enforced delay under a 3-of-6 Safe (coverage by the documented 24h Opt-in delay is unverified), and Concrete's ctDeltaWeETH owner and manager roles share a 1-of-2 Safe (a single-key drain is not established). Holders of these vault shares inherit that control-plane exposure regardless of underlying weETH/USDC alignment.",
       "wrapper_counts": {
         "total": 2,
         "aligned_or_protective": 0,
-        "delta": 2,
+        "delta": 0,
+        "unresolved": 2,
         "observed": 0
       },
       "underlying_182_eas_counts": {
         "aligned_or_protective": 3,
-        "adverse_gaps_delta": 3,
-        "adverse_gap_share_pct": 50.0
+        "adverse_gaps_delta": 2,
+        "adverse_gap_share_pct": 33.3,
+        "unresolved": 1
       },
       "direct_wrappers": [
         {
           "slug": "lagoon",
           "name": "Lagoon",
-          "grade": "DELTA",
+          "grade": "UNRESOLVED",
           "easAttested": true,
           "chains": [
             "ethereum"
@@ -2585,13 +2610,13 @@
           "baseEasUids": [
             "0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13"
           ],
-          "summary_short": "Docs require a 24 h minimum upgrade wait; the vault beacon's owner is a 3-of-6 Safe",
+          "summary_short": "Legacy cbBTC beacon upgrades have no delay; 24h Opt-in doc coverage unverified",
           "url": "https://pacta.wtf/protocols/lagoon/"
         },
         {
           "slug": "concrete",
           "name": "Concrete",
-          "grade": "DELTA",
+          "grade": "UNRESOLVED",
           "easAttested": true,
           "chains": [
             "ethereum"
@@ -2606,7 +2631,7 @@
           "baseEasUids": [
             "0xe712dd31d79ab492e2e64eb5847396651dee81daa9f895ead45548e97f1a2eb7"
           ],
-          "summary_short": "Vault and factory manager Safe runs at 1-of-2 despite documented role separation",
+          "summary_short": "ctDeltaWeETH owner/manager share a 1-of-2 Safe; single-key drain not established",
           "url": "https://pacta.wtf/protocols/concrete/"
         }
       ],
@@ -2701,28 +2726,6 @@
           "url": "https://pacta.wtf/protocols/ethena-usde-susde/"
         },
         {
-          "slug": "renzo-protocol-ezeth",
-          "name": "Renzo Protocol (ezETH)",
-          "grade": "DELTA",
-          "easAttested": true,
-          "chains": [
-            "ethereum"
-          ],
-          "pinnedBlock": 26448221,
-          "primaryContract": "0xf2F305D14DCD8aaef887E0428B3c9534795D0d60",
-          "targetLabel": "DepositQueue",
-          "tokens": [
-            "ezETH",
-            "REZ"
-          ],
-          "baseEasUids": [
-            "0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
-            "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2"
-          ],
-          "summary_short": "Docs state a 10% reward fee; feeBasisPoints() now reads 10,000 (100%), up from 1,500",
-          "url": "https://pacta.wtf/protocols/renzo-protocol-ezeth/"
-        },
-        {
           "slug": "puffer-finance-pufeth",
           "name": "Puffer Finance (pufETH)",
           "grade": "DELTA",
@@ -2743,6 +2746,33 @@
           "summary_short": "Community multisig: docs 3-of-6 · chain 3-of-7",
           "url": "https://pacta.wtf/protocols/puffer-finance-pufeth/"
         }
+      ],
+      "underlying_unresolved": [
+        {
+          "slug": "renzo-protocol-ezeth",
+          "name": "Renzo Protocol (ezETH)",
+          "grade": "UNRESOLVED",
+          "easAttested": true,
+          "chains": [
+            "ethereum"
+          ],
+          "pinnedBlock": 26448221,
+          "primaryContract": "0xf2F305D14DCD8aaef887E0428B3c9534795D0d60",
+          "targetLabel": "DepositQueue",
+          "tokens": [
+            "ezETH",
+            "REZ"
+          ],
+          "baseEasUids": [
+            "0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
+            "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2"
+          ],
+          "summary_short": "DepositQueue feeBasisPoints reads 10,000 bps; effective fee and routing unverified",
+          "url": "https://pacta.wtf/protocols/renzo-protocol-ezeth/"
+        }
+      ],
+      "underlying_unresolved_slugs": [
+        "renzo-protocol-ezeth"
       ]
     },
     {
@@ -2772,7 +2802,6 @@
         "usual-money-usd0-usd0",
         "maple-finance-v2-syrup",
         "ondo-finance-ousg-flux-finance",
-        "renzo-protocol-ezeth",
         "treehouse-tree-teth",
         "bedrock-unibtc"
       ],
@@ -2780,17 +2809,19 @@
         "2 verified collateral_contagion_upstream edges (Steakhouse Base & Re7 ETH -> morpho-blue-core)",
         "Active Morpho governance RFC morpho-2301 (User-centric DeFi Collateral Transparency Framework - Phase 1)"
       ],
-      "curator_exposure_insight": "Illustrates Pacta's core 'Immutable Core, Mutable Curator' thesis: Morpho Blue Core (0xBBBB...FFCb) and Steakhouse vaults are ALIGNED, whereas Re7 WETH (missing guardian, 2-of-4 owner) and YO Protocol on Base (MorphoMarket registry owned directly by 4-of-6 Safe with 0s timelock vs 48h docs) introduce wrapper-layer DELTAs.",
+      "curator_exposure_insight": "Illustrates Pacta's core 'Immutable Core, Mutable Curator' thesis: Morpho Blue Core (0xBBBB...FFCb) and Steakhouse vaults are ALIGNED, whereas YO Protocol on Base (Approval Registry owned directly by the 4-of-6 Admin Safe; vault upgrades keep the 48h timelock) introduces a wrapper-layer DELTA, and Re7 WETH (no guardian, 2-of-4 owner) is Unresolved: no documented promise of matching guardian configurations was verified.",
       "wrapper_counts": {
         "total": 7,
         "aligned_or_protective": 4,
-        "delta": 2,
+        "delta": 1,
+        "unresolved": 1,
         "observed": 1
       },
       "underlying_182_eas_counts": {
         "aligned_or_protective": 6,
-        "adverse_gaps_delta": 7,
-        "adverse_gap_share_pct": 53.8
+        "adverse_gaps_delta": 6,
+        "adverse_gap_share_pct": 46.2,
+        "unresolved": 1
       },
       "direct_wrappers": [
         {
@@ -2881,7 +2912,7 @@
         {
           "slug": "metamorpho-re7-weth-vs-re7-usdt",
           "name": "MetaMorpho (Re7 WETH vs. Re7 USDT)",
-          "grade": "DELTA",
+          "grade": "UNRESOLVED",
           "easAttested": true,
           "chains": [
             "ethereum"
@@ -2897,7 +2928,7 @@
           "baseEasUids": [
             "0x804289d4357b0a8d5a360911ec450c13ca36c4422d1e811c4c7040ef7d2628e5"
           ],
-          "summary_short": "Re7 WETH vault has no guardian; its owner is a 2-of-4 Safe with a 3-day timelock",
+          "summary_short": "Re7 WETH has no guardian while Re7 USDT does; no parity promise was verified",
           "url": "https://pacta.wtf/protocols/metamorpho-re7-weth-vs-re7-usdt/"
         },
         {
@@ -2919,7 +2950,7 @@
           "baseEasUids": [
             "0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5"
           ],
-          "summary_short": "Timelock delay: docs 2 days · chain none",
+          "summary_short": "Approval Registry owned by Admin Safe; vault upgrades keep a 48-hour timelock",
           "url": "https://pacta.wtf/protocols/yo-protocol/"
         },
         {
@@ -3125,7 +3156,7 @@
           "baseEasUids": [
             "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2"
           ],
-          "summary_short": "Timelock delay: docs 3 days · chain 1 second",
+          "summary_short": "DEFAULT_ADMIN handover delay: 1 second observed vs 3 days documented",
           "url": "https://pacta.wtf/protocols/usual-money-usd0-usd0/"
         },
         {
@@ -3147,7 +3178,7 @@
           "baseEasUids": [
             "0x749d96e1a3d214a4ab66c528ca12c84dce085fa138dc370dd0eb817d890f09fa"
           ],
-          "summary_short": "Proxy admin is the 4-of-7 DAO Safe; docs describe a 3-day GovernorTimelock",
+          "summary_short": "PoolPermissionManager proxy admin is the 4-of-7 DAO Safe, not GovernorTimelock",
           "url": "https://pacta.wtf/protocols/maple-finance-v2-syrup/"
         },
         {
@@ -3173,28 +3204,6 @@
           "url": "https://pacta.wtf/protocols/ondo-finance-ousg-flux-finance/"
         },
         {
-          "slug": "renzo-protocol-ezeth",
-          "name": "Renzo Protocol (ezETH)",
-          "grade": "DELTA",
-          "easAttested": true,
-          "chains": [
-            "ethereum"
-          ],
-          "pinnedBlock": 26448221,
-          "primaryContract": "0xf2F305D14DCD8aaef887E0428B3c9534795D0d60",
-          "targetLabel": "DepositQueue",
-          "tokens": [
-            "ezETH",
-            "REZ"
-          ],
-          "baseEasUids": [
-            "0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
-            "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2"
-          ],
-          "summary_short": "Docs state a 10% reward fee; feeBasisPoints() now reads 10,000 (100%), up from 1,500",
-          "url": "https://pacta.wtf/protocols/renzo-protocol-ezeth/"
-        },
-        {
           "slug": "treehouse-tree-teth",
           "name": "Treehouse (TREE / tETH)",
           "grade": "DELTA",
@@ -3214,7 +3223,7 @@
             "0x5c12867816bee7d00c13412cf7ec67c00b7d42f3020643ab2a2ca577a28de424",
             "0x8965ae6e51a78132a77eb14c0ac1c6cd1be357d6f261253efff28869478ae5b8"
           ],
-          "summary_short": "A 5-of-7 Safe can freeze TREE transfers at once; docs promise a 5-day timelock",
+          "summary_short": "TREE blacklisting has no delay; TREE and tETH owner paths keep 5-day timelocks",
           "url": "https://pacta.wtf/protocols/treehouse-tree-teth/"
         },
         {
@@ -3237,6 +3246,33 @@
           "summary_short": "uniBTC mints test 90% of existing supply vs reserves; docs say short reserves revert",
           "url": "https://pacta.wtf/protocols/bedrock-unibtc/"
         }
+      ],
+      "underlying_unresolved": [
+        {
+          "slug": "renzo-protocol-ezeth",
+          "name": "Renzo Protocol (ezETH)",
+          "grade": "UNRESOLVED",
+          "easAttested": true,
+          "chains": [
+            "ethereum"
+          ],
+          "pinnedBlock": 26448221,
+          "primaryContract": "0xf2F305D14DCD8aaef887E0428B3c9534795D0d60",
+          "targetLabel": "DepositQueue",
+          "tokens": [
+            "ezETH",
+            "REZ"
+          ],
+          "baseEasUids": [
+            "0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
+            "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2"
+          ],
+          "summary_short": "DepositQueue feeBasisPoints reads 10,000 bps; effective fee and routing unverified",
+          "url": "https://pacta.wtf/protocols/renzo-protocol-ezeth/"
+        }
+      ],
+      "underlying_unresolved_slugs": [
+        "renzo-protocol-ezeth"
       ]
     },
     {
@@ -3258,8 +3294,7 @@
         "ethena-usde-susde",
         "usual-money-usd0-usd0",
         "treehouse-tree-teth",
-        "bedrock-unibtc",
-        "renzo-protocol-ezeth"
+        "bedrock-unibtc"
       ],
       "verified_contagion_edges": [
         "2 live Base onboarding briefs in proposals.json/onboarding.json: euler-1862 (kUSD/USDC isolated market curator packet) & euler-1850 (efixDI/USDC governedPerspective whitelist)"
@@ -3269,12 +3304,14 @@
         "total": 1,
         "aligned_or_protective": 1,
         "delta": 0,
+        "unresolved": 0,
         "observed": 0
       },
       "underlying_182_eas_counts": {
         "aligned_or_protective": 5,
-        "adverse_gaps_delta": 5,
-        "adverse_gap_share_pct": 50.0
+        "adverse_gaps_delta": 4,
+        "adverse_gap_share_pct": 40.0,
+        "unresolved": 1
       },
       "direct_wrappers": [
         {
@@ -3457,7 +3494,7 @@
           "baseEasUids": [
             "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2"
           ],
-          "summary_short": "Timelock delay: docs 3 days · chain 1 second",
+          "summary_short": "DEFAULT_ADMIN handover delay: 1 second observed vs 3 days documented",
           "url": "https://pacta.wtf/protocols/usual-money-usd0-usd0/"
         },
         {
@@ -3480,7 +3517,7 @@
             "0x5c12867816bee7d00c13412cf7ec67c00b7d42f3020643ab2a2ca577a28de424",
             "0x8965ae6e51a78132a77eb14c0ac1c6cd1be357d6f261253efff28869478ae5b8"
           ],
-          "summary_short": "A 5-of-7 Safe can freeze TREE transfers at once; docs promise a 5-day timelock",
+          "summary_short": "TREE blacklisting has no delay; TREE and tETH owner paths keep 5-day timelocks",
           "url": "https://pacta.wtf/protocols/treehouse-tree-teth/"
         },
         {
@@ -3502,11 +3539,13 @@
           ],
           "summary_short": "uniBTC mints test 90% of existing supply vs reserves; docs say short reserves revert",
           "url": "https://pacta.wtf/protocols/bedrock-unibtc/"
-        },
+        }
+      ],
+      "underlying_unresolved": [
         {
           "slug": "renzo-protocol-ezeth",
           "name": "Renzo Protocol (ezETH)",
-          "grade": "DELTA",
+          "grade": "UNRESOLVED",
           "easAttested": true,
           "chains": [
             "ethereum"
@@ -3522,9 +3561,12 @@
             "0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
             "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2"
           ],
-          "summary_short": "Docs state a 10% reward fee; feeBasisPoints() now reads 10,000 (100%), up from 1,500",
+          "summary_short": "DepositQueue feeBasisPoints reads 10,000 bps; effective fee and routing unverified",
           "url": "https://pacta.wtf/protocols/renzo-protocol-ezeth/"
         }
+      ],
+      "underlying_unresolved_slugs": [
+        "renzo-protocol-ezeth"
       ]
     },
     {
@@ -3561,6 +3603,7 @@
         "total": 3,
         "aligned_or_protective": 1,
         "delta": 2,
+        "unresolved": 0,
         "observed": 0
       },
       "underlying_182_eas_counts": {
@@ -3587,7 +3630,7 @@
             "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
             "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2"
           ],
-          "summary_short": "Docs list a yChad signer who is no longer on the 6-of-9 Safe",
+          "summary_short": "Sampled RoleManager uses a 7-day timelock; yChad signer roster differs (6-of-9)",
           "url": "https://pacta.wtf/protocols/yearn-v3/"
         },
         {
@@ -3608,7 +3651,7 @@
             "0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5",
             "0x6692c36731ecd514fb7a92fe3de0a6770b67f68f55eece26faa669c2c84b3a08"
           ],
-          "summary_short": "Timelock delay: docs 6 hours · chain none",
+          "summary_short": "Base vault-owner timelock has zero delay; strategy-owner changes keep 6 hours",
           "url": "https://pacta.wtf/protocols/beefy-finance-base/"
         },
         {
@@ -3942,6 +3985,7 @@
         "total": 13,
         "aligned_or_protective": 10,
         "delta": 0,
+        "unresolved": 0,
         "observed": 3
       },
       "underlying_182_eas_counts": {
@@ -4429,7 +4473,7 @@
           "baseEasUids": [
             "0x749d96e1a3d214a4ab66c528ca12c84dce085fa138dc370dd0eb817d890f09fa"
           ],
-          "summary_short": "Proxy admin is the 4-of-7 DAO Safe; docs describe a 3-day GovernorTimelock",
+          "summary_short": "PoolPermissionManager proxy admin is the 4-of-7 DAO Safe, not GovernorTimelock",
           "url": "https://pacta.wtf/protocols/maple-finance-v2-syrup/"
         },
         {
@@ -4907,7 +4951,7 @@
       "slug": "40-acres-base",
       "tvl_impact_tier": "Tier 3 · Base Aerodrome veNFT-Backed Lending Vault (UUPS) (Base)",
       "ecosystem_impact_rationale": "Base ecosystem veAERO lending vault claiming post-deployment immutability while running an active OpenZeppelin v5 UUPS upgradeable proxy owned by a 2-of-3 Safe with 0s timelock.",
-      "clinical_brief_hook": "At Base block #59,025,642, 40 Acres vault 0x87f1…EFD0 resolves EIP-1967 implementation 0xb43b…0735 (UUPS v5.0.0) with owner() = 2-of-3 Safe 0xfF16…BD23, whereas docs.40acres.finance states contracts are immutable; adding a timelock or publishing UUPS proxy & Safe disclosures unlocks a 24h Base-EAS re-verification seal.",
+      "clinical_brief_hook": "At Base block #59,025,642, 40 Acres AERO USDC Loan contract 0x87f1…EFD0 resolves EIP-1967 implementation 0xb43b…0735 (UUPS v5.0.0) with owner() = 2-of-3 Safe 0xfF16…BD23, whereas docs.40acres.finance states contracts are immutable; adding a timelock or publishing UUPS proxy & Safe disclosures unlocks a 24h Base-EAS re-verification seal.",
       "name": "40 Acres (Base)",
       "grade": "DELTA",
       "easAttested": true,
@@ -4916,7 +4960,7 @@
       ],
       "pinnedBlock": 59025642,
       "primaryContract": "0x87f18b377e625b62c708D5f6EA96EC193558EFD0",
-      "targetLabel": "40 Acres vault proxy (UUPS)",
+      "targetLabel": "40 Acres AERO USDC Loan proxy (UUPS)",
       "tokens": [
         "40Acres"
       ],
@@ -4925,7 +4969,7 @@
       ],
       "summary_short": "Docs call 40 Acres immutable, but an upgradeable proxy sits on chain",
       "url": "https://pacta.wtf/protocols/40-acres-base/",
-      "surface": "Lending vault proxy: docs call the contracts immutable, but it is an upgradeable proxy",
+      "surface": "AERO USDC Loan contract (UUPS proxy): docs call the contracts immutable, but it is an upgradeable proxy",
       "documented_excerpt": "'40 Acres has completed four independent audits with Sherlock. Smart contracts are immutable and non-upgradeable post-deployment.' (docs.40acres.finance)",
       "observed_excerpt": "40 Acres proxy 0x87f18b377e625b62c708D5f6EA96EC193558EFD0 (Base): EIP-1967 implementation slot = 0xb43b30c405c61BC330227968635d130994450735; the implementation's proxiableUUID() = the EIP-1967 slot (UUPS), UPGRADE_INTERFACE_VERSION() = '5.0.0'; owner() = 0xfF16fd3D147220E6CC002a8e4a1f942ac41DBD23, a Safe 2-of-3.",
       "recordId": "40-acres-base-upgradeability-s28"
@@ -5296,7 +5340,7 @@
       ],
       "pinnedBlock": 59025642,
       "primaryContract": "0x87f18b377e625b62c708D5f6EA96EC193558EFD0",
-      "targetLabel": "40 Acres vault proxy (UUPS)",
+      "targetLabel": "40 Acres AERO USDC Loan proxy (UUPS)",
       "tokens": [
         "40Acres"
       ],
@@ -5305,8 +5349,8 @@
       ],
       "summary_short": "Docs call 40 Acres immutable, but an upgradeable proxy sits on chain",
       "url": "https://pacta.wtf/protocols/40-acres-base/",
-      "category": "veNFT-backed lending vault (UUPS) on Base",
-      "surface": "Lending vault proxy: docs call the contracts immutable, but it is an upgradeable proxy",
+      "category": "veNFT-backed lending (AERO USDC Loan UUPS proxy on Base)",
+      "surface": "AERO USDC Loan contract (UUPS proxy): docs call the contracts immutable, but it is an upgradeable proxy",
       "recordId": "40-acres-base-upgradeability-s28"
     },
     {

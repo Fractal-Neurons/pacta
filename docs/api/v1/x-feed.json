@@ -1,20 +1,21 @@
 {
  "schema": "pacta.x_feed.v1",
- "description": "Pacta findings ready to post on X: one item per published protocol (docs-vs-chain delta, protective delta, aligned baseline or RPC-observed) plus active timelock operations from the radar. mainPostText has no links; replyPostText carries the receipt page and the Base EAS attestation. feedId is stable: post each id once.",
+ "description": "Pacta findings ready to post on X: one item per published protocol (docs-vs-chain delta, unresolved scope, protective delta, aligned baseline or RPC-observed) plus active timelock operations from the radar. mainPostText has no links; replyPostText carries the receipt page and the Base EAS attestation. feedId is stable: post each id once.",
  "generatedFrom": {
   "site": {
-   "scorecards.json": "c669941bf8fb578ccd8e3d166e8441abdf16e580a8b9df7593b9412f954e33f9",
-   "index.json": "c5fde557115ba9a519d2c40c34e25dd47e29063265b2b441df83cd162b28ec01",
+   "scorecards.json": "e1015a3998d0e2e2c363f102586f665135ba8680385b56b2457d316f3584d7a2",
+   "index.json": "bbb8df53cc3e404b3d135e2b20e37298cd739664acad5cfd9e95a85fe95abe04",
    "rpc-pinned.json": "108919b7ce46d2c3e09943bbd5dad4344ee375a275c6056f4b391a57ee11a418",
    "radar.json": "16d9637777dc1df9babb767d0ac31c4e1fe8c339332ea815cc32db745d097e1d",
-   "protocols.json": "28c6461d443e3783d8fcc966daf9fe9d246c5b78073b979136451c99175457a1"
+   "protocols.json": "460640035cd2baaeae02c7bf4ab9e6db15975c82910c6983bef05390ab14fd14"
   },
   "xHandles": "7cfe44213e579618486dd28fee3bbc8b9205bb82843823ed2dc931314c1598c3",
   "radarBlock": 26457377,
   "radarBlockBase": 59999187
  },
  "counts": {
-  "adverse_delta": 56,
+  "adverse_delta": 50,
+  "unresolved_scope": 6,
   "protective_delta": 7,
   "radar_timelock": 3,
   "aligned_baseline": 126,
@@ -228,7 +229,7 @@
      "label": "Timelock floor",
      "state": "b",
      "cue": "M",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -288,7 +289,7 @@
      "label": "Timelock floor",
      "state": "b",
      "cue": "M",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -408,7 +409,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "7d minimum enforced delay across control surfaces"
+     "value": "7d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -468,7 +469,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -528,7 +529,7 @@
      "label": "Timelock floor",
      "state": "b",
      "cue": "M",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -708,7 +709,7 @@
      "label": "Timelock floor",
      "state": "a",
      "cue": "W",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -768,7 +769,7 @@
      "label": "Timelock floor",
      "state": "a",
      "cue": "W",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -828,7 +829,7 @@
      "label": "Timelock floor",
      "state": "b",
      "cue": "M",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -862,40 +863,40 @@
    "priority": 14
   },
   {
-   "feedId": "finding:tori-finance:S32:adverse_delta",
-   "slug": "tori-finance",
-   "protocolName": "Tori Finance",
-   "xHandle": "@tori_finance",
-   "xUrl": "https://x.com/tori_finance",
+   "feedId": "finding:cian-yield-layer:S31:adverse_delta",
+   "slug": "cian-yield-layer",
+   "protocolName": "CIAN Yield Layer",
+   "xHandle": "@CIAN_protocol",
+   "xUrl": "https://x.com/CIAN_protocol",
    "kind": "adverse_delta",
    "chain": "ethereum",
-   "pinnedBlock": 26451608,
-   "blockHash": "0x0266af5bcad519d93b3be78e41b76a62985e22fbe4feef043ac3225f6f217a17",
-   "easUid": "0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
-   "sprint": 32,
-   "recordId": "tori-trusd-timelock-admin-undocumented-timelock-s32",
-   "summaryShort": "trUSD's Timelock Admin is a second ToriTimelock, not the one the roles page names",
+   "pinnedBlock": 26450616,
+   "blockHash": "0xd2df7ccb74a6772b51a5597c8f144f5cfae362efeabf193ecfc7c80f8ff37c35",
+   "easUid": "0x63d29eafa88f7e52cc6a596668ae3f03c8132704108794092dc25710fa8bde77",
+   "sprint": 31,
+   "recordId": "cian-yield-layer-allocation-no-timelock-s31",
+   "summaryShort": "CIAN's stETH vault settings change via a Safe directly; the docs say they are time-locked",
    "rosette": [
     {
      "key": "upgrade",
      "label": "Upgradeability",
      "state": "n",
      "cue": "—",
-     "value": "Upgrade path not in the published records"
+     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
     },
     {
      "key": "timelock",
      "label": "Timelock floor",
      "state": "b",
      "cue": "M",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
      "label": "Signer quorum",
      "state": "g",
      "cue": "S",
-     "value": "Lowest controlling quorum: 3-of-5"
+     "value": "Lowest controlling quorum: 3-of-4"
     },
     {
      "key": "emergency",
@@ -912,13 +913,13 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "docsSay": "the documented timelock holding Timelock Admin on trUSD",
-   "chainSays": "Timelock Admin held by a second, undocumented ToriTimelock",
-   "mainPostText": "Tori Finance @tori_finance. Docs say: The documented timelock holding Timelock Admin on trUSD. On-chain at Ethereum block #26,451,608: Timelock Admin held by a second, undocumented ToriTimelock. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/tori-finance/ · Base attestation: https://base.easscan.org/attestation/view/0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
-   "cardFilename": "tori-finance.png",
-   "receiptUrl": "https://pacta.wtf/protocols/tori-finance/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
+   "docsSay": "time-locked fund allocation",
+   "chainSays": "allocation settings changed by a Safe directly",
+   "mainPostText": "CIAN Yield Layer @CIAN_protocol. Docs say: Time-locked fund allocation. On-chain at Ethereum block #26,450,616: Allocation settings changed by a Safe directly. Docs and chain differ. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/cian-yield-layer/ · Base attestation: https://base.easscan.org/attestation/view/0x63d29eafa88f7e52cc6a596668ae3f03c8132704108794092dc25710fa8bde77",
+   "cardFilename": "cian-yield-layer.png",
+   "receiptUrl": "https://pacta.wtf/protocols/cian-yield-layer/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0x63d29eafa88f7e52cc6a596668ae3f03c8132704108794092dc25710fa8bde77",
    "priority": 15
   },
   {
@@ -948,7 +949,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "7d minimum enforced delay across control surfaces"
+     "value": "7d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -980,66 +981,6 @@
    "receiptUrl": "https://pacta.wtf/protocols/enzyme-finance/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x105ea2849a5cd9ef601ae565e6b0adf288884771c8ac82c1c3d0a87aa789eb4f",
    "priority": 16
-  },
-  {
-   "feedId": "finding:cian-yield-layer:S31:adverse_delta",
-   "slug": "cian-yield-layer",
-   "protocolName": "CIAN Yield Layer",
-   "xHandle": "@CIAN_protocol",
-   "xUrl": "https://x.com/CIAN_protocol",
-   "kind": "adverse_delta",
-   "chain": "ethereum",
-   "pinnedBlock": 26450616,
-   "blockHash": "0xd2df7ccb74a6772b51a5597c8f144f5cfae362efeabf193ecfc7c80f8ff37c35",
-   "easUid": "0x63d29eafa88f7e52cc6a596668ae3f03c8132704108794092dc25710fa8bde77",
-   "sprint": 31,
-   "recordId": "cian-yield-layer-allocation-no-timelock-s31",
-   "summaryShort": "CIAN's stETH vault settings change via a Safe directly; the docs say they are time-locked",
-   "rosette": [
-    {
-     "key": "upgrade",
-     "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
-    },
-    {
-     "key": "timelock",
-     "label": "Timelock floor",
-     "state": "b",
-     "cue": "M",
-     "value": "1d minimum enforced delay across control surfaces"
-    },
-    {
-     "key": "quorum",
-     "label": "Signer quorum",
-     "state": "g",
-     "cue": "S",
-     "value": "Lowest controlling quorum: 3-of-4"
-    },
-    {
-     "key": "emergency",
-     "label": "Emergency / freeze scope",
-     "state": "n",
-     "cue": "—",
-     "value": "No pause / freeze authority in the published records"
-    },
-    {
-     "key": "parity",
-     "label": "Docs-vs-chain parity",
-     "state": "a",
-     "cue": "W",
-     "value": "Documentation differs from the chain (parameter delta)"
-    }
-   ],
-   "docsSay": "time-locked fund allocation",
-   "chainSays": "allocation settings changed by a Safe directly",
-   "mainPostText": "CIAN Yield Layer @CIAN_protocol. Docs say: Time-locked fund allocation. On-chain at Ethereum block #26,450,616: Allocation settings changed by a Safe directly. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/cian-yield-layer/ · Base attestation: https://base.easscan.org/attestation/view/0x63d29eafa88f7e52cc6a596668ae3f03c8132704108794092dc25710fa8bde77",
-   "cardFilename": "cian-yield-layer.png",
-   "receiptUrl": "https://pacta.wtf/protocols/cian-yield-layer/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0x63d29eafa88f7e52cc6a596668ae3f03c8132704108794092dc25710fa8bde77",
-   "priority": 17
   },
   {
    "feedId": "finding:sonic-gateway:S31:adverse_delta",
@@ -1099,7 +1040,7 @@
    "cardFilename": "sonic-gateway.png",
    "receiptUrl": "https://pacta.wtf/protocols/sonic-gateway/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x63d29eafa88f7e52cc6a596668ae3f03c8132704108794092dc25710fa8bde77",
-   "priority": 18
+   "priority": 17
   },
   {
    "feedId": "finding:abracadabra-spell:S30:adverse_delta",
@@ -1159,67 +1100,7 @@
    "cardFilename": "abracadabra-spell.png",
    "receiptUrl": "https://pacta.wtf/protocols/abracadabra-spell/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
-   "priority": 19
-  },
-  {
-   "feedId": "finding:solv-protocol-solvbtc:S17:protective_delta",
-   "slug": "solv-protocol-solvbtc",
-   "protocolName": "Solv Protocol (SolvBTC)",
-   "xHandle": null,
-   "xUrl": null,
-   "kind": "protective_delta",
-   "chain": "ethereum",
-   "pinnedBlock": 26418060,
-   "blockHash": "0x8914f5134a4488a812b61c1c7f479c3082d80f6fbe2f181abb9e5ef4ff973f3c",
-   "easUid": "0xbeb412dfc350f879f816a5cb001b53257a3ee03c12cf1d8e2c15a070141ed8c7",
-   "sprint": 17,
-   "recordId": "solv-solvbtc-upgrade-beacon-3d-timelock-s17",
-   "summaryShort": "Beacon upgrades already wait 3 days in a timelock the docs say will be added",
-   "rosette": [
-    {
-     "key": "upgrade",
-     "label": "Upgradeability",
-     "state": "g",
-     "cue": "S",
-     "value": "Upgradeable behind a ≥48h delay (3d)"
-    },
-    {
-     "key": "timelock",
-     "label": "Timelock floor",
-     "state": "g",
-     "cue": "S",
-     "value": "3d minimum enforced delay across control surfaces"
-    },
-    {
-     "key": "quorum",
-     "label": "Signer quorum",
-     "state": "g",
-     "cue": "S",
-     "value": "Lowest controlling quorum: 3-of-5"
-    },
-    {
-     "key": "emergency",
-     "label": "Emergency / freeze scope",
-     "state": "n",
-     "cue": "—",
-     "value": "No pause / freeze authority in the published records"
-    },
-    {
-     "key": "parity",
-     "label": "Docs-vs-chain parity",
-     "state": "g",
-     "cue": "S",
-     "value": "Chain matches or is stronger than the documentation"
-    }
-   ],
-   "docsSay": "a timelock will be added",
-   "chainSays": "beacon upgrades already wait 3 days in a timelock",
-   "mainPostText": "Credit to Solv Protocol (SolvBTC): the chain is stricter than the docs. Docs say: A timelock will be added. On-chain at Ethereum block #26,418,060: Beacon upgrades already wait 3 days in a timelock. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/solv-protocol-solvbtc/ · Base attestation: https://base.easscan.org/attestation/view/0xbeb412dfc350f879f816a5cb001b53257a3ee03c12cf1d8e2c15a070141ed8c7",
-   "cardFilename": "solv-protocol-solvbtc.png",
-   "receiptUrl": "https://pacta.wtf/protocols/solv-protocol-solvbtc/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0xbeb412dfc350f879f816a5cb001b53257a3ee03c12cf1d8e2c15a070141ed8c7",
-   "priority": 20
+   "priority": 18
   },
   {
    "feedId": "finding:bedrock-unibtc:S30:adverse_delta",
@@ -1279,7 +1160,67 @@
    "cardFilename": "bedrock-unibtc.png",
    "receiptUrl": "https://pacta.wtf/protocols/bedrock-unibtc/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
-   "priority": 21
+   "priority": 19
+  },
+  {
+   "feedId": "finding:solv-protocol-solvbtc:S17:protective_delta",
+   "slug": "solv-protocol-solvbtc",
+   "protocolName": "Solv Protocol (SolvBTC)",
+   "xHandle": null,
+   "xUrl": null,
+   "kind": "protective_delta",
+   "chain": "ethereum",
+   "pinnedBlock": 26418060,
+   "blockHash": "0x8914f5134a4488a812b61c1c7f479c3082d80f6fbe2f181abb9e5ef4ff973f3c",
+   "easUid": "0xbeb412dfc350f879f816a5cb001b53257a3ee03c12cf1d8e2c15a070141ed8c7",
+   "sprint": 17,
+   "recordId": "solv-solvbtc-upgrade-beacon-3d-timelock-s17",
+   "summaryShort": "Beacon upgrades already wait 3 days in a timelock the docs say will be added",
+   "rosette": [
+    {
+     "key": "upgrade",
+     "label": "Upgradeability",
+     "state": "g",
+     "cue": "S",
+     "value": "Upgradeable behind a ≥48h delay (3d)"
+    },
+    {
+     "key": "timelock",
+     "label": "Timelock floor",
+     "state": "g",
+     "cue": "S",
+     "value": "3d minimum enforced delay on sampled timelocked surfaces"
+    },
+    {
+     "key": "quorum",
+     "label": "Signer quorum",
+     "state": "g",
+     "cue": "S",
+     "value": "Lowest controlling quorum: 3-of-5"
+    },
+    {
+     "key": "emergency",
+     "label": "Emergency / freeze scope",
+     "state": "n",
+     "cue": "—",
+     "value": "No pause / freeze authority in the published records"
+    },
+    {
+     "key": "parity",
+     "label": "Docs-vs-chain parity",
+     "state": "g",
+     "cue": "S",
+     "value": "Chain matches or is stronger than the documentation"
+    }
+   ],
+   "docsSay": "a timelock will be added",
+   "chainSays": "beacon upgrades already wait 3 days in a timelock",
+   "mainPostText": "Credit to Solv Protocol (SolvBTC): the chain is stricter than the docs. Docs say: A timelock will be added. On-chain at Ethereum block #26,418,060: Beacon upgrades already wait 3 days in a timelock. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/solv-protocol-solvbtc/ · Base attestation: https://base.easscan.org/attestation/view/0xbeb412dfc350f879f816a5cb001b53257a3ee03c12cf1d8e2c15a070141ed8c7",
+   "cardFilename": "solv-protocol-solvbtc.png",
+   "receiptUrl": "https://pacta.wtf/protocols/solv-protocol-solvbtc/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0xbeb412dfc350f879f816a5cb001b53257a3ee03c12cf1d8e2c15a070141ed8c7",
+   "priority": 20
   },
   {
    "feedId": "finding:goldfinch:S30:adverse_delta",
@@ -1339,7 +1280,7 @@
    "cardFilename": "goldfinch.png",
    "receiptUrl": "https://pacta.wtf/protocols/goldfinch/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
-   "priority": 22
+   "priority": 21
   },
   {
    "feedId": "finding:infinifi:S30:adverse_delta",
@@ -1368,7 +1309,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "7d minimum enforced delay across control surfaces"
+     "value": "7d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -1399,6 +1340,66 @@
    "cardFilename": "infinifi.png",
    "receiptUrl": "https://pacta.wtf/protocols/infinifi/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0xe712dd31d79ab492e2e64eb5847396651dee81daa9f895ead45548e97f1a2eb7",
+   "priority": 22
+  },
+  {
+   "feedId": "finding:inverse-finance-firm:S30:adverse_delta",
+   "slug": "inverse-finance-firm",
+   "protocolName": "Inverse Finance (FiRM)",
+   "xHandle": "@InverseFinance",
+   "xUrl": "https://x.com/InverseFinance",
+   "kind": "adverse_delta",
+   "chain": "ethereum",
+   "pinnedBlock": 26399876,
+   "blockHash": "0x8bf896b892683ff3267b88b367ab015a70cf5caf53542eb405f4f648f6bcde8a",
+   "easUid": "0x34049a2c64fe3355f8e325481234754c8422a48bb4784fed1d028fa40eb93058",
+   "sprint": 30,
+   "recordId": "inverse-finance-firm-policy-safe",
+   "summaryShort": "sDOLA staleness limit reads 86,500 s, was 0 (check off); docs say typically 1-24 hours",
+   "rosette": [
+    {
+     "key": "upgrade",
+     "label": "Upgradeability",
+     "state": "n",
+     "cue": "—",
+     "value": "Upgrade path not in the published records"
+    },
+    {
+     "key": "timelock",
+     "label": "Timelock floor",
+     "state": "g",
+     "cue": "S",
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
+    },
+    {
+     "key": "quorum",
+     "label": "Signer quorum",
+     "state": "g",
+     "cue": "S",
+     "value": "Lowest controlling quorum: 3-of-6"
+    },
+    {
+     "key": "emergency",
+     "label": "Emergency / freeze scope",
+     "state": "g",
+     "cue": "S",
+     "value": "Pause / freeze authority scoped behind a multi-signer controller (3-of-N Safe)"
+    },
+    {
+     "key": "parity",
+     "label": "Docs-vs-chain parity",
+     "state": "a",
+     "cue": "W",
+     "value": "Documentation differs from the chain (parameter delta)"
+    }
+   ],
+   "docsSay": "a 5-of-9 Policy Committee multisig",
+   "chainSays": "a 4-of-7 Policy Committee Safe",
+   "mainPostText": "Inverse Finance (FiRM) @InverseFinance. Docs say: A 5-of-9 Policy Committee multisig. On-chain at Ethereum block #26,399,876: A 4-of-7 Policy Committee Safe. Docs and chain differ. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/inverse-finance-firm/ · Base attestation: https://base.easscan.org/attestation/view/0x34049a2c64fe3355f8e325481234754c8422a48bb4784fed1d028fa40eb93058",
+   "cardFilename": "inverse-finance-firm.png",
+   "receiptUrl": "https://pacta.wtf/protocols/inverse-finance-firm/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0x34049a2c64fe3355f8e325481234754c8422a48bb4784fed1d028fa40eb93058",
    "priority": 23
   },
   {
@@ -1428,7 +1429,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -1460,66 +1461,6 @@
    "receiptUrl": "https://pacta.wtf/protocols/ether-fi-core-eeth-weeth/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x6afd266541ea1643b680ce6ec15d218874356598820987c6b3eaf16342cd075c",
    "priority": 24
-  },
-  {
-   "feedId": "finding:inverse-finance-firm:S30:adverse_delta",
-   "slug": "inverse-finance-firm",
-   "protocolName": "Inverse Finance (FiRM)",
-   "xHandle": "@InverseFinance",
-   "xUrl": "https://x.com/InverseFinance",
-   "kind": "adverse_delta",
-   "chain": "ethereum",
-   "pinnedBlock": 26399876,
-   "blockHash": "0x8bf896b892683ff3267b88b367ab015a70cf5caf53542eb405f4f648f6bcde8a",
-   "easUid": "0x34049a2c64fe3355f8e325481234754c8422a48bb4784fed1d028fa40eb93058",
-   "sprint": 30,
-   "recordId": "inverse-finance-firm-policy-safe",
-   "summaryShort": "sDOLA staleness limit reads 86,500 s, was 0 (check off); docs say typically 1-24 hours",
-   "rosette": [
-    {
-     "key": "upgrade",
-     "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
-    },
-    {
-     "key": "timelock",
-     "label": "Timelock floor",
-     "state": "g",
-     "cue": "S",
-     "value": "2d minimum enforced delay across control surfaces"
-    },
-    {
-     "key": "quorum",
-     "label": "Signer quorum",
-     "state": "g",
-     "cue": "S",
-     "value": "Lowest controlling quorum: 3-of-6"
-    },
-    {
-     "key": "emergency",
-     "label": "Emergency / freeze scope",
-     "state": "g",
-     "cue": "S",
-     "value": "Pause / freeze authority scoped behind a multi-signer controller (3-of-N Safe)"
-    },
-    {
-     "key": "parity",
-     "label": "Docs-vs-chain parity",
-     "state": "a",
-     "cue": "W",
-     "value": "Documentation differs from the chain (parameter delta)"
-    }
-   ],
-   "docsSay": "a 5-of-9 Policy Committee multisig",
-   "chainSays": "a 4-of-7 Policy Committee Safe",
-   "mainPostText": "Inverse Finance (FiRM) @InverseFinance. Docs say: A 5-of-9 Policy Committee multisig. On-chain at Ethereum block #26,399,876: A 4-of-7 Policy Committee Safe. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/inverse-finance-firm/ · Base attestation: https://base.easscan.org/attestation/view/0x34049a2c64fe3355f8e325481234754c8422a48bb4784fed1d028fa40eb93058",
-   "cardFilename": "inverse-finance-firm.png",
-   "receiptUrl": "https://pacta.wtf/protocols/inverse-finance-firm/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0x34049a2c64fe3355f8e325481234754c8422a48bb4784fed1d028fa40eb93058",
-   "priority": 25
   },
   {
    "feedId": "finding:polygon-bridge:S30:adverse_delta",
@@ -1579,7 +1520,7 @@
    "cardFilename": "polygon-bridge.png",
    "receiptUrl": "https://pacta.wtf/protocols/polygon-bridge/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
-   "priority": 26
+   "priority": 25
   },
   {
    "feedId": "finding:base-bridge:S29:adverse_delta",
@@ -1608,7 +1549,7 @@
      "label": "Timelock floor",
      "state": "a",
      "cue": "W",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -1639,6 +1580,66 @@
    "cardFilename": "base-bridge.png",
    "receiptUrl": "https://pacta.wtf/protocols/base-bridge/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
+   "priority": 26
+  },
+  {
+   "feedId": "finding:f-x-protocol-v2:S29:adverse_delta",
+   "slug": "f-x-protocol-v2",
+   "protocolName": "f(x) Protocol v2",
+   "xHandle": null,
+   "xUrl": null,
+   "kind": "adverse_delta",
+   "chain": "ethereum",
+   "pinnedBlock": 26400152,
+   "blockHash": "0xa9a61622304ec55c5fec49abbcabec60069f66f28792cf841bdd7aef12ce63aa",
+   "easUid": "0xca4b525bf5142d8e88433cbed2a1aa87bb06a97d1353cb77621ec41a51ce8101",
+   "sprint": 29,
+   "recordId": "fx-protocol-v2-treasury-admin",
+   "summaryShort": "V2 Router owner is the 6-of-9 operational Safe; separate timelock keeps 3 days",
+   "rosette": [
+    {
+     "key": "upgrade",
+     "label": "Upgradeability",
+     "state": "n",
+     "cue": "—",
+     "value": "Upgrade path not in the published records"
+    },
+    {
+     "key": "timelock",
+     "label": "Timelock floor",
+     "state": "a",
+     "cue": "W",
+     "value": "No enforced delay on at least one sampled control surface (0s)"
+    },
+    {
+     "key": "quorum",
+     "label": "Signer quorum",
+     "state": "g",
+     "cue": "S",
+     "value": "Lowest controlling quorum: 3-of-4"
+    },
+    {
+     "key": "emergency",
+     "label": "Emergency / freeze scope",
+     "state": "n",
+     "cue": "—",
+     "value": "No pause / freeze authority in the published records"
+    },
+    {
+     "key": "parity",
+     "label": "Docs-vs-chain parity",
+     "state": "a",
+     "cue": "W",
+     "value": "Documentation differs from the chain (parameter delta)"
+    }
+   ],
+   "docsSay": "a 3-day public timelock for queued transactions",
+   "chainSays": "the V2 Router's owner is the 6-of-9 operational Safe directly; the separate timelock keeps 3 days",
+   "mainPostText": "f(x) Protocol v2. Docs say: A 3-day public timelock for queued transactions. On-chain at Ethereum block #26,400,152: The V2 Router's owner is the 6-of-9 operational Safe directly; the separate timelock keeps 3 days. Docs and chain differ. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/f-x-protocol-v2/ · Base attestation: https://base.easscan.org/attestation/view/0xca4b525bf5142d8e88433cbed2a1aa87bb06a97d1353cb77621ec41a51ce8101",
+   "cardFilename": "f-x-protocol-v2.png",
+   "receiptUrl": "https://pacta.wtf/protocols/f-x-protocol-v2/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0xca4b525bf5142d8e88433cbed2a1aa87bb06a97d1353cb77621ec41a51ce8101",
    "priority": 27
   },
   {
@@ -1668,7 +1669,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "3d minimum enforced delay across control surfaces"
+     "value": "3d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -1702,186 +1703,6 @@
    "priority": 28
   },
   {
-   "feedId": "finding:f-x-protocol-v2:S29:adverse_delta",
-   "slug": "f-x-protocol-v2",
-   "protocolName": "f(x) Protocol v2",
-   "xHandle": null,
-   "xUrl": null,
-   "kind": "adverse_delta",
-   "chain": "ethereum",
-   "pinnedBlock": 26400152,
-   "blockHash": "0xa9a61622304ec55c5fec49abbcabec60069f66f28792cf841bdd7aef12ce63aa",
-   "easUid": "0xca4b525bf5142d8e88433cbed2a1aa87bb06a97d1353cb77621ec41a51ce8101",
-   "sprint": 29,
-   "recordId": "fx-protocol-v2-treasury-admin",
-   "summaryShort": "Docs set a 3-day timelock on every transaction; the V2 Router's owner is a 6-of-9 Safe",
-   "rosette": [
-    {
-     "key": "upgrade",
-     "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
-    },
-    {
-     "key": "timelock",
-     "label": "Timelock floor",
-     "state": "a",
-     "cue": "W",
-     "value": "0s minimum enforced delay across control surfaces"
-    },
-    {
-     "key": "quorum",
-     "label": "Signer quorum",
-     "state": "g",
-     "cue": "S",
-     "value": "Lowest controlling quorum: 3-of-4"
-    },
-    {
-     "key": "emergency",
-     "label": "Emergency / freeze scope",
-     "state": "n",
-     "cue": "—",
-     "value": "No pause / freeze authority in the published records"
-    },
-    {
-     "key": "parity",
-     "label": "Docs-vs-chain parity",
-     "state": "a",
-     "cue": "W",
-     "value": "Documentation differs from the chain (parameter delta)"
-    }
-   ],
-   "docsSay": "treasury admin sits behind a 3-day timelock",
-   "chainSays": "the Ops and Emergency Safes hold treasury admin directly",
-   "mainPostText": "f(x) Protocol v2. Docs say: Treasury admin sits behind a 3-day timelock. On-chain at Ethereum block #26,400,152: The Ops and Emergency Safes hold treasury admin directly. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/f-x-protocol-v2/ · Base attestation: https://base.easscan.org/attestation/view/0xca4b525bf5142d8e88433cbed2a1aa87bb06a97d1353cb77621ec41a51ce8101",
-   "cardFilename": "f-x-protocol-v2.png",
-   "receiptUrl": "https://pacta.wtf/protocols/f-x-protocol-v2/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0xca4b525bf5142d8e88433cbed2a1aa87bb06a97d1353cb77621ec41a51ce8101",
-   "priority": 29
-  },
-  {
-   "feedId": "finding:lagoon:S29:adverse_delta",
-   "slug": "lagoon",
-   "protocolName": "Lagoon",
-   "xHandle": null,
-   "xUrl": null,
-   "kind": "adverse_delta",
-   "chain": "ethereum",
-   "pinnedBlock": 26448221,
-   "blockHash": "0xa7818c0e1b8807aac0c999c2dc9aeeea40b91b4f19b1b76a62ad02d8d17607c8",
-   "easUid": "0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
-   "sprint": 29,
-   "recordId": "lagoon-vault-beacon-upgrade-delay-s29",
-   "summaryShort": "Docs require a 24 h minimum upgrade wait; the vault beacon's owner is a 3-of-6 Safe",
-   "rosette": [
-    {
-     "key": "upgrade",
-     "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
-    },
-    {
-     "key": "timelock",
-     "label": "Timelock floor",
-     "state": "a",
-     "cue": "W",
-     "value": "0s minimum enforced delay across control surfaces"
-    },
-    {
-     "key": "quorum",
-     "label": "Signer quorum",
-     "state": "n",
-     "cue": "—",
-     "value": "No signer quorum in the published records"
-    },
-    {
-     "key": "emergency",
-     "label": "Emergency / freeze scope",
-     "state": "n",
-     "cue": "—",
-     "value": "No pause / freeze authority in the published records"
-    },
-    {
-     "key": "parity",
-     "label": "Docs-vs-chain parity",
-     "state": "a",
-     "cue": "W",
-     "value": "Documentation differs from the chain (parameter delta)"
-    }
-   ],
-   "docsSay": "a mandatory 24 h minimum wait on every vault upgrade",
-   "chainSays": "the vault's beacon is owned by a 3-of-6 Safe with no delay",
-   "mainPostText": "Lagoon. Docs say: A mandatory 24 h minimum wait on every vault upgrade. On-chain at Ethereum block #26,448,221: The vault's beacon is owned by a 3-of-6 Safe with no delay. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/lagoon/ · Base attestation: https://base.easscan.org/attestation/view/0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
-   "cardFilename": "lagoon.png",
-   "receiptUrl": "https://pacta.wtf/protocols/lagoon/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
-   "priority": 30
-  },
-  {
-   "feedId": "finding:renzo-protocol-ezeth:S29:adverse_delta",
-   "slug": "renzo-protocol-ezeth",
-   "protocolName": "Renzo Protocol (ezETH)",
-   "xHandle": "@renzoai",
-   "xUrl": "https://x.com/renzoai",
-   "kind": "adverse_delta",
-   "chain": "ethereum",
-   "pinnedBlock": 26401725,
-   "blockHash": "0xec3820f0a9db32c01728e66f78dc1958e410269e1077fd1db53df4fbce2ad7a1",
-   "easUid": "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2",
-   "sprint": 29,
-   "recordId": "renzo-ezeth-deposit-queue-fee",
-   "summaryShort": "Docs state a 10% reward fee; feeBasisPoints() now reads 10,000 (100%), up from 1,500",
-   "rosette": [
-    {
-     "key": "upgrade",
-     "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
-    },
-    {
-     "key": "timelock",
-     "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
-    },
-    {
-     "key": "quorum",
-     "label": "Signer quorum",
-     "state": "g",
-     "cue": "S",
-     "value": "Lowest controlling quorum: 3-of-5"
-    },
-    {
-     "key": "emergency",
-     "label": "Emergency / freeze scope",
-     "state": "n",
-     "cue": "—",
-     "value": "No pause / freeze authority in the published records"
-    },
-    {
-     "key": "parity",
-     "label": "Docs-vs-chain parity",
-     "state": "a",
-     "cue": "W",
-     "value": "Documentation differs from the chain (parameter delta)"
-    }
-   ],
-   "docsSay": "a 10% restaking fee",
-   "chainSays": "a 15% fee",
-   "mainPostText": "Renzo Protocol (ezETH) @renzoai. Docs say: A 10% restaking fee. On-chain at Ethereum block #26,401,725: A 15% fee. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/renzo-protocol-ezeth/ · Base attestation: https://base.easscan.org/attestation/view/0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2",
-   "cardFilename": "renzo-protocol-ezeth.png",
-   "receiptUrl": "https://pacta.wtf/protocols/renzo-protocol-ezeth/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2",
-   "priority": 31
-  },
-  {
    "feedId": "finding:40-acres-base:S28:adverse_delta",
    "slug": "40-acres-base",
    "protocolName": "40 Acres (Base)",
@@ -1894,7 +1715,7 @@
    "easUid": "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
    "sprint": 28,
    "recordId": "40-acres-base-upgradeability-s28",
-   "summaryShort": "Docs call 40 Acres immutable, but an upgradeable proxy sits on chain",
+   "summaryShort": "Base AERO USDC Loan contract is upgradeable (2-of-3 Safe); intro says immutable",
    "rosette": [
     {
      "key": "upgrade",
@@ -1933,13 +1754,13 @@
     }
    ],
    "docsSay": "immutable, non-upgradeable contracts",
-   "chainSays": "an upgradeable UUPS proxy",
-   "mainPostText": "40 Acres (Base). Docs say: Immutable, non-upgradeable contracts. On-chain at Base block #59,025,642: An upgradeable UUPS proxy. Docs and chain differ. Receipt below.",
+   "chainSays": "the AERO USDC Loan contract is an upgradeable UUPS proxy under a 2-of-3 Safe",
+   "mainPostText": "40 Acres (Base). Docs say: Immutable, non-upgradeable contracts. On-chain at Base block #59,025,642: The AERO USDC Loan contract is an upgradeable UUPS proxy under a 2-of-3 Safe. Docs and chain differ. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/40-acres-base/ · Base attestation: https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
    "cardFilename": "40-acres-base.png",
    "receiptUrl": "https://pacta.wtf/protocols/40-acres-base/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
-   "priority": 32
+   "priority": 29
   },
   {
    "feedId": "finding:defi-saver:S28:adverse_delta",
@@ -1999,7 +1820,7 @@
    "cardFilename": "defi-saver.png",
    "receiptUrl": "https://pacta.wtf/protocols/defi-saver/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
-   "priority": 33
+   "priority": 30
   },
   {
    "feedId": "finding:upshift:S28:adverse_delta",
@@ -2014,21 +1835,21 @@
    "easUid": "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
    "sprint": 28,
    "recordId": "upshift-proxyadmin-safe-s28",
-   "summaryShort": "Docs state a 4-of-6 ProxyAdmin multisig; the vault's is 2-of-3",
+   "summaryShort": "Docs say ProxyAdmin is generally 4-of-6 (no timelock disclosed); vault's is 2-of-3",
    "rosette": [
     {
      "key": "upgrade",
      "label": "Upgradeability",
      "state": "a",
      "cue": "W",
-     "value": "Upgradeable with no enforced delay: upgraded by a Safe directly (a Safe has no delay of its own)"
+     "value": "Upgradeable with no enforced delay: upgraded by a Safe directly (Upshift's documentation expressly discloses that proxy upgrades have no timelock)"
     },
     {
      "key": "timelock",
      "label": "Timelock floor",
      "state": "a",
      "cue": "W",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -2052,14 +1873,14 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "docsSay": "a 4-of-6 ProxyAdmin multisig",
-   "chainSays": "a 2-of-3 Safe",
-   "mainPostText": "Upshift. Docs say: A 4-of-6 ProxyAdmin multisig. On-chain at Ethereum block #26,441,165: A 2-of-3 Safe. Docs and chain differ. Receipt below.",
+   "docsSay": "a ProxyAdmin multisig of generally 4 of 6, with no upgrade timelock",
+   "chainSays": "the sampled vault's ProxyAdmin owner is a 2-of-3 Safe",
+   "mainPostText": "Upshift. Docs say: A ProxyAdmin multisig of generally 4 of 6, with no upgrade timelock. On-chain at Ethereum block #26,441,165: The sampled vault's ProxyAdmin owner is a 2-of-3 Safe. Docs and chain differ. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/upshift/ · Base attestation: https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
    "cardFilename": "upshift.png",
    "receiptUrl": "https://pacta.wtf/protocols/upshift/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
-   "priority": 34
+   "priority": 31
   },
   {
    "feedId": "finding:vesper-v1:S28:adverse_delta",
@@ -2119,67 +1940,7 @@
    "cardFilename": "vesper-v1.png",
    "receiptUrl": "https://pacta.wtf/protocols/vesper-v1/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
-   "priority": 35
-  },
-  {
-   "feedId": "finding:whales-market:S28:adverse_delta",
-   "slug": "whales-market",
-   "protocolName": "Whales Market",
-   "xHandle": "@WhalesMarket",
-   "xUrl": "https://x.com/WhalesMarket",
-   "kind": "adverse_delta",
-   "chain": "ethereum",
-   "pinnedBlock": 26441165,
-   "blockHash": "0x5182be2c61af5f48ed2ec43d3c177dedad257c4e966a7e384120829de73901d9",
-   "easUid": "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
-   "sprint": 28,
-   "recordId": "whales-market-upgradeability-s28",
-   "summaryShort": "Docs call Whales Market immutable, but an upgradeable proxy sits on chain",
-   "rosette": [
-    {
-     "key": "upgrade",
-     "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
-    },
-    {
-     "key": "timelock",
-     "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
-    },
-    {
-     "key": "quorum",
-     "label": "Signer quorum",
-     "state": "n",
-     "cue": "—",
-     "value": "No signer quorum in the published records"
-    },
-    {
-     "key": "emergency",
-     "label": "Emergency / freeze scope",
-     "state": "n",
-     "cue": "—",
-     "value": "No pause / freeze authority in the published records"
-    },
-    {
-     "key": "parity",
-     "label": "Docs-vs-chain parity",
-     "state": "a",
-     "cue": "W",
-     "value": "Documentation differs from the chain (parameter delta)"
-    }
-   ],
-   "docsSay": "immutable contracts",
-   "chainSays": "an upgradeable proxy",
-   "mainPostText": "Whales Market @WhalesMarket. Docs say: Immutable contracts. On-chain at Ethereum block #26,441,165: An upgradeable proxy. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/whales-market/ · Base attestation: https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
-   "cardFilename": "whales-market.png",
-   "receiptUrl": "https://pacta.wtf/protocols/whales-market/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
-   "priority": 36
+   "priority": 32
   },
   {
    "feedId": "finding:yearn-v3:S28:adverse_delta",
@@ -2189,12 +1950,12 @@
    "xUrl": "https://x.com/yearnfi",
    "kind": "adverse_delta",
    "chain": "ethereum",
-   "pinnedBlock": 26401725,
-   "blockHash": "0xec3820f0a9db32c01728e66f78dc1958e410269e1077fd1db53df4fbce2ad7a1",
-   "easUid": "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2",
+   "pinnedBlock": 26441165,
+   "blockHash": "0x5182be2c61af5f48ed2ec43d3c177dedad257c4e966a7e384120829de73901d9",
+   "easUid": "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
    "sprint": 28,
-   "recordId": "yearn-v3-role-manager-timelock",
-   "summaryShort": "Docs list a yChad signer who is no longer on the 6-of-9 Safe",
+   "recordId": "yearn-v3-ychad-safe-signers-s28",
+   "summaryShort": "Sampled RoleManager uses a 7-day timelock; yChad signer roster differs (6-of-9)",
    "rosette": [
     {
      "key": "upgrade",
@@ -2208,7 +1969,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "7d minimum enforced delay across control surfaces"
+     "value": "7d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -2232,14 +1993,14 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "docsSay": "no timelock",
-   "chainSays": "a 7-day timelock",
-   "mainPostText": "Yearn V3 @yearnfi. Docs say: No timelock. On-chain at Ethereum block #26,401,725: A 7-day timelock. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/yearn-v3/ · Base attestation: https://base.easscan.org/attestation/view/0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2",
+   "docsSay": "a yChad signer roster that no longer matches the Safe",
+   "chainSays": "a 6-of-9 yChad Safe without one documented signer; a sampled RoleManager uses a 7-day timelock",
+   "mainPostText": "Yearn V3 @yearnfi. Docs say: A yChad signer roster that no longer matches the Safe. On-chain at Ethereum block #26,441,165: A 6-of-9 yChad Safe without one documented signer; a sampled RoleManager uses a 7-day timelock. Docs and chain differ. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/yearn-v3/ · Base attestation: https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
    "cardFilename": "yearn-v3.png",
    "receiptUrl": "https://pacta.wtf/protocols/yearn-v3/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2",
-   "priority": 37
+   "attestationUrl": "https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
+   "priority": 33
   },
   {
    "feedId": "finding:zircuit-staking:S28:adverse_delta",
@@ -2299,7 +2060,7 @@
    "cardFilename": "zircuit-staking.png",
    "receiptUrl": "https://pacta.wtf/protocols/zircuit-staking/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
-   "priority": 38
+   "priority": 34
   },
   {
    "feedId": "finding:treehouse-tree-teth:S27:adverse_delta",
@@ -2314,7 +2075,7 @@
    "easUid": "0x5c12867816bee7d00c13412cf7ec67c00b7d42f3020643ab2a2ca577a28de424",
    "sprint": 27,
    "recordId": "treehouse-tree-teth-tree-blacklister-safe-s27",
-   "summaryShort": "A 5-of-7 Safe can freeze TREE transfers at once; docs promise a 5-day timelock",
+   "summaryShort": "TREE blacklisting has no delay; TREE and tETH owner paths keep 5-day timelocks",
    "rosette": [
     {
      "key": "upgrade",
@@ -2328,7 +2089,7 @@
      "label": "Timelock floor",
      "state": "a",
      "cue": "W",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "0s on TREE token blacklisting (5-of-7 Safe); TREE and tETH owner/upgrade paths enforce a 5d timelock"
     },
     {
      "key": "quorum",
@@ -2352,14 +2113,14 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "docsSay": "a 5-day timelock on every contract",
-   "chainSays": "a 5-of-7 Safe can blacklist TREE holders at once",
-   "mainPostText": "Treehouse (TREE / tETH) @TreehouseFi. Docs say: A 5-day timelock on every contract. On-chain at Ethereum block #26,440,048: A 5-of-7 Safe can blacklist TREE holders at once. Docs and chain differ. Receipt below.",
+   "docsSay": "a 5-day timelock on all Treehouse contracts",
+   "chainSays": "a 5-of-7 Safe can blacklist TREE transfers with no delay; TREE and tETH owner paths keep 5-day timelocks",
+   "mainPostText": "Treehouse (TREE / tETH) @TreehouseFi. Docs say: A 5-day timelock on all Treehouse contracts. On-chain at Ethereum block #26,440,048: A 5-of-7 Safe can blacklist TREE transfers with no delay; TREE and tETH owner paths keep 5-day timelocks. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/treehouse-tree-teth/ · Base attestation: https://base.easscan.org/attestation/view/0x5c12867816bee7d00c13412cf7ec67c00b7d42f3020643ab2a2ca577a28de424",
    "cardFilename": "treehouse-tree-teth.png",
    "receiptUrl": "https://pacta.wtf/protocols/treehouse-tree-teth/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x5c12867816bee7d00c13412cf7ec67c00b7d42f3020643ab2a2ca577a28de424",
-   "priority": 39
+   "priority": 35
   },
   {
    "feedId": "finding:beefy-finance-base:S26:adverse_delta",
@@ -2374,7 +2135,7 @@
    "easUid": "0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5",
    "sprint": 26,
    "recordId": "beefy-finance-base-vault-owner-timelock-zero-delay-s22",
-   "summaryShort": "Timelock delay: docs 6 hours · chain none",
+   "summaryShort": "Base vault-owner timelock has zero delay; strategy-owner changes keep 6 hours",
    "rosette": [
     {
      "key": "upgrade",
@@ -2388,7 +2149,7 @@
      "label": "Timelock floor",
      "state": "a",
      "cue": "W",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -2412,14 +2173,14 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "docsSay": "a 6-hour timelock",
-   "chainSays": "no delay",
-   "mainPostText": "Beefy Finance (Base) @beefyfinance. Docs say: A 6-hour timelock. On-chain at Base block #58,315,414: No delay. Docs and chain differ. Receipt below.",
+   "docsSay": "a 6-hour timelock for strategy changes and upgrades",
+   "chainSays": "the Base vault-owner timelock has zero delay; strategy-owner changes keep 6 hours",
+   "mainPostText": "Beefy Finance (Base) @beefyfinance. Docs say: A 6-hour timelock for strategy changes and upgrades. On-chain at Base block #58,315,414: The Base vault-owner timelock has zero delay; strategy-owner changes keep 6 hours. Docs and chain differ. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/beefy-finance-base/ · Base attestation: https://base.easscan.org/attestation/view/0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5",
    "cardFilename": "beefy-finance-base.png",
    "receiptUrl": "https://pacta.wtf/protocols/beefy-finance-base/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5",
-   "priority": 40
+   "priority": 36
   },
   {
    "feedId": "finding:yieldnest:S26:adverse_delta",
@@ -2479,7 +2240,7 @@
    "cardFilename": "yieldnest.png",
    "receiptUrl": "https://pacta.wtf/protocols/yieldnest/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x6692c36731ecd514fb7a92fe3de0a6770b67f68f55eece26faa669c2c84b3a08",
-   "priority": 41
+   "priority": 37
   },
   {
    "feedId": "finding:axelar-network:S25:adverse_delta",
@@ -2539,7 +2300,7 @@
    "cardFilename": "axelar-network.png",
    "receiptUrl": "https://pacta.wtf/protocols/axelar-network/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x1c379ef9f845a2affa9c42715ba2b1b4b2f750b71b4edf9c50d0e1ae739e11ff",
-   "priority": 42
+   "priority": 38
   },
   {
    "feedId": "finding:bedrock-unieth:S25:adverse_delta",
@@ -2568,7 +2329,7 @@
      "label": "Timelock floor",
      "state": "a",
      "cue": "W",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -2599,7 +2360,7 @@
    "cardFilename": "bedrock-unieth.png",
    "receiptUrl": "https://pacta.wtf/protocols/bedrock-unieth/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x1c379ef9f845a2affa9c42715ba2b1b4b2f750b71b4edf9c50d0e1ae739e11ff",
-   "priority": 43
+   "priority": 39
   },
   {
    "feedId": "finding:obol-network:S24:adverse_delta",
@@ -2628,7 +2389,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "5d minimum enforced delay across control surfaces"
+     "value": "5d Token House governance timelock (getMinDelay() = 432,000s); OBOL MINTER_ROLE sits with a separate 2-of-3 Safe outside this timelock"
     },
     {
      "key": "quorum",
@@ -2659,7 +2420,7 @@
    "cardFilename": "obol-network.png",
    "receiptUrl": "https://pacta.wtf/protocols/obol-network/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x61c2970c176b85ab604e6b565c5f050a7176b62e725d449e8d27d700365283d6",
-   "priority": 44
+   "priority": 40
   },
   {
    "feedId": "finding:uniswap-governance-timelock:S23:adverse_delta",
@@ -2688,7 +2449,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -2719,7 +2480,7 @@
    "cardFilename": "uniswap-governance-timelock.png",
    "receiptUrl": "https://pacta.wtf/protocols/uniswap-governance-timelock/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x435a5212e2490cd6024859f474dbbd897752b24985480413301d7573cb195801",
-   "priority": 45
+   "priority": 41
   },
   {
    "feedId": "finding:stake-dao:S22:adverse_delta",
@@ -2733,7 +2494,7 @@
    "blockHash": "0x3fb83aa053c26ac6b98d634858da1b3c23bb65bae7a12f8f14d72d8273e16d71",
    "easUid": "0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5",
    "sprint": 22,
-   "recordId": "stake-dao-protocol-timelock-min-delay-5d-s22",
+   "recordId": "stake-dao-timelock-executor-permissioned-s22",
    "summaryShort": "Timelock: docs 2 days · chain 5 days; Treasury Safe 3-of-5, not 4-of-7",
    "rosette": [
     {
@@ -2748,7 +2509,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "5d minimum enforced delay across control surfaces"
+     "value": "5d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -2779,7 +2540,7 @@
    "cardFilename": "stake-dao.png",
    "receiptUrl": "https://pacta.wtf/protocols/stake-dao/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5",
-   "priority": 46
+   "priority": 42
   },
   {
    "feedId": "finding:yo-protocol:S22:adverse_delta",
@@ -2794,7 +2555,7 @@
    "easUid": "0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5",
    "sprint": 22,
    "recordId": "yo-protocol-approval-registry-owner-admin-safe-s22",
-   "summaryShort": "Timelock delay: docs 2 days · chain none",
+   "summaryShort": "Approval Registry owned by Admin Safe; vault upgrades keep a 48-hour timelock",
    "rosette": [
     {
      "key": "upgrade",
@@ -2808,7 +2569,7 @@
      "label": "Timelock floor",
      "state": "a",
      "cue": "W",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -2832,14 +2593,14 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "docsSay": "a 2-day timelock",
-   "chainSays": "no delay",
-   "mainPostText": "YO Protocol. Docs say: A 2-day timelock. On-chain at Base block #58,315,414: No delay. Docs and chain differ. Receipt below.",
+   "docsSay": "timelocked caps on what each vault may approve",
+   "chainSays": "the Approval Registry is owned by the 4-of-6 Admin Safe directly; vault upgrades keep a 48-hour timelock",
+   "mainPostText": "YO Protocol. Docs say: Timelocked caps on what each vault may approve. On-chain at Base block #58,315,414: The Approval Registry is owned by the 4-of-6 Admin Safe directly; vault upgrades keep a 48-hour timelock. Docs and chain differ. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/yo-protocol/ · Base attestation: https://base.easscan.org/attestation/view/0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5",
    "cardFilename": "yo-protocol.png",
    "receiptUrl": "https://pacta.wtf/protocols/yo-protocol/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5",
-   "priority": 47
+   "priority": 43
   },
   {
    "feedId": "finding:resupply:S22:adverse_delta",
@@ -2868,7 +2629,7 @@
      "label": "Timelock floor",
      "state": "b",
      "cue": "M",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -2899,7 +2660,7 @@
    "cardFilename": "resupply.png",
    "receiptUrl": "https://pacta.wtf/protocols/resupply/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5",
-   "priority": 48
+   "priority": 44
   },
   {
    "feedId": "finding:aerodrome-finance-base:S21:adverse_delta",
@@ -2959,67 +2720,7 @@
    "cardFilename": "aerodrome-finance-base.png",
    "receiptUrl": "https://pacta.wtf/protocols/aerodrome-finance-base/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0xaddd478e0a488405a28720e11fed8d1942853dbb36fc75bb5a0725b83a460ad6",
-   "priority": 49
-  },
-  {
-   "feedId": "finding:concrete:S20:adverse_delta",
-   "slug": "concrete",
-   "protocolName": "Concrete",
-   "xHandle": "@ConcreteXYZ",
-   "xUrl": "https://x.com/ConcreteXYZ",
-   "kind": "adverse_delta",
-   "chain": "ethereum",
-   "pinnedBlock": 26425374,
-   "blockHash": "0xfa22e277760f1df7134b0af20499d6305ee4e017219a917a61a78aa76e89382d",
-   "easUid": "0xe712dd31d79ab492e2e64eb5847396651dee81daa9f895ead45548e97f1a2eb7",
-   "sprint": 20,
-   "recordId": "concrete-vault-owner-safe-1of2-s20",
-   "summaryShort": "Vault and factory manager Safe runs at 1-of-2 despite documented role separation",
-   "rosette": [
-    {
-     "key": "upgrade",
-     "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
-    },
-    {
-     "key": "timelock",
-     "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
-    },
-    {
-     "key": "quorum",
-     "label": "Signer quorum",
-     "state": "a",
-     "cue": "W",
-     "value": "Lowest controlling quorum: 1-of-2"
-    },
-    {
-     "key": "emergency",
-     "label": "Emergency / freeze scope",
-     "state": "n",
-     "cue": "—",
-     "value": "No pause / freeze authority in the published records"
-    },
-    {
-     "key": "parity",
-     "label": "Docs-vs-chain parity",
-     "state": "a",
-     "cue": "W",
-     "value": "Documentation differs from the chain (parameter delta)"
-    }
-   ],
-   "docsSay": "separated roles, with no single key in full control",
-   "chainSays": "the vault owner and manager Safe needs just 1 of its 2 signers",
-   "mainPostText": "Concrete @ConcreteXYZ. Docs say: Separated roles, with no single key in full control. On-chain at Ethereum block #26,425,374: The vault owner and manager Safe needs just 1 of its 2 signers. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/concrete/ · Base attestation: https://base.easscan.org/attestation/view/0xe712dd31d79ab492e2e64eb5847396651dee81daa9f895ead45548e97f1a2eb7",
-   "cardFilename": "concrete.png",
-   "receiptUrl": "https://pacta.wtf/protocols/concrete/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0xe712dd31d79ab492e2e64eb5847396651dee81daa9f895ead45548e97f1a2eb7",
-   "priority": 50
+   "priority": 45
   },
   {
    "feedId": "finding:puffer-finance-pufeth:S20:adverse_delta",
@@ -3048,7 +2749,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "168h minimum enforced delay across control surfaces"
+     "value": "168h minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -3079,7 +2780,7 @@
    "cardFilename": "puffer-finance-pufeth.png",
    "receiptUrl": "https://pacta.wtf/protocols/puffer-finance-pufeth/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0xe712dd31d79ab492e2e64eb5847396651dee81daa9f895ead45548e97f1a2eb7",
-   "priority": 51
+   "priority": 46
   },
   {
    "feedId": "finding:rocket-pool-reth:S19:adverse_delta",
@@ -3108,7 +2809,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "7d minimum enforced delay across control surfaces"
+     "value": "7d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -3139,7 +2840,7 @@
    "cardFilename": "rocket-pool-reth.png",
    "receiptUrl": "https://pacta.wtf/protocols/rocket-pool-reth/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0xa04d9c98873fce6fffb60fe535510092f22284f3afeeb78e36e4a0c25d5ea928",
-   "priority": 52
+   "priority": 47
   },
   {
    "feedId": "finding:moonwell-lending-base:S18:adverse_delta",
@@ -3154,7 +2855,7 @@
    "easUid": "0x105ea2849a5cd9ef601ae565e6b0adf288884771c8ac82c1c3d0a87aa789eb4f",
    "sprint": 18,
    "recordId": "moonwell-pause-guardian-2of4-safe-s18",
-   "summaryShort": "Pause guardian: docs 3-of-5 Security Council · chain 2-of-4 Safe",
+   "summaryShort": "Base pause guardian is a 2-of-4 Safe (Oct MIP-X71); older constitution says 3-of-5",
    "rosette": [
     {
      "key": "upgrade",
@@ -3168,7 +2869,7 @@
      "label": "Timelock floor",
      "state": "b",
      "cue": "M",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -3192,14 +2893,14 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "docsSay": "a 3-of-5 Security Council holds pause power",
-   "chainSays": "the pause guardian is a 2-of-4 Safe",
-   "mainPostText": "Moonwell Lending (Base) @MoonwellDeFi. Docs say: A 3-of-5 Security Council holds pause power. On-chain at Base block #57,842,915: The pause guardian is a 2-of-4 Safe. Docs and chain differ. Receipt below.",
+   "docsSay": "an older constitution: a 3-of-5 Security Council for pause",
+   "chainSays": "the Base pause guardian is a 2-of-4 Safe (October MIP-X71 migration)",
+   "mainPostText": "Moonwell Lending (Base) @MoonwellDeFi. Docs say: An older constitution: a 3-of-5 Security Council for pause. On-chain at Base block #57,842,915: The Base pause guardian is a 2-of-4 Safe (October MIP-X71 migration). Docs and chain differ. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/moonwell-lending-base/ · Base attestation: https://base.easscan.org/attestation/view/0x105ea2849a5cd9ef601ae565e6b0adf288884771c8ac82c1c3d0a87aa789eb4f",
    "cardFilename": "moonwell-lending-base.png",
    "receiptUrl": "https://pacta.wtf/protocols/moonwell-lending-base/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x105ea2849a5cd9ef601ae565e6b0adf288884771c8ac82c1c3d0a87aa789eb4f",
-   "priority": 53
+   "priority": 48
   },
   {
    "feedId": "finding:ethena-usde-susde:S14:adverse_delta",
@@ -3228,7 +2929,7 @@
      "label": "Timelock floor",
      "state": "b",
      "cue": "M",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -3259,7 +2960,7 @@
    "cardFilename": "ethena-usde-susde.png",
    "receiptUrl": "https://pacta.wtf/protocols/ethena-usde-susde/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779",
-   "priority": 54
+   "priority": 49
   },
   {
    "feedId": "finding:stader-labs-ethx:S12:adverse_delta",
@@ -3288,7 +2989,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "7d minimum enforced delay across control surfaces"
+     "value": "7d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -3319,7 +3020,7 @@
    "cardFilename": "stader-labs-ethx.png",
    "receiptUrl": "https://pacta.wtf/protocols/stader-labs-ethx/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x7caae9c22c86ae171392def07dce83fa5da6fbf904b1ba9b5ff66a5021b16de9",
-   "priority": 55
+   "priority": 50
   },
   {
    "feedId": "finding:curve-finance-crvusd:S11:adverse_delta",
@@ -3379,7 +3080,7 @@
    "cardFilename": "curve-finance-crvusd.png",
    "receiptUrl": "https://pacta.wtf/protocols/curve-finance-crvusd/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x754edd7612258b755ff2e56903243d1f8867bad53c29ce3febb5ed9114005e42",
-   "priority": 56
+   "priority": 51
   },
   {
    "feedId": "finding:gearbox-v3-v3-1:S11:adverse_delta",
@@ -3394,7 +3095,7 @@
    "easUid": "0x754edd7612258b755ff2e56903243d1f8867bad53c29ce3febb5ed9114005e42",
    "sprint": 11,
    "recordId": "gearbox-v3-legacy-timelock-and-instance-safe",
-   "summaryShort": "Timelock delay: docs 2 days · chain 36 hours",
+   "summaryShort": "LegacyTimelock reads 36 hours; V3.0 technical-change docs describe 2 days",
    "rosette": [
     {
      "key": "upgrade",
@@ -3408,7 +3109,7 @@
      "label": "Timelock floor",
      "state": "b",
      "cue": "M",
-     "value": "1d 12h minimum enforced delay across control surfaces"
+     "value": "1d 12h minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -3432,14 +3133,14 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "docsSay": "a 2-day timelock",
-   "chainSays": "a 36-hour timelock",
-   "mainPostText": "Gearbox V3 / V3.1. Docs say: A 2-day timelock. On-chain at Ethereum block #26,403,523: A 36-hour timelock. Docs and chain differ. Receipt below.",
+   "docsSay": "a 2-day timelock for V3.0 technical changes",
+   "chainSays": "the sampled LegacyTimelock reads 36 hours",
+   "mainPostText": "Gearbox V3 / V3.1. Docs say: A 2-day timelock for V3.0 technical changes. On-chain at Ethereum block #26,403,523: The sampled LegacyTimelock reads 36 hours. Docs and chain differ. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/gearbox-v3-v3-1/ · Base attestation: https://base.easscan.org/attestation/view/0x754edd7612258b755ff2e56903243d1f8867bad53c29ce3febb5ed9114005e42",
    "cardFilename": "gearbox-v3-v3-1.png",
    "receiptUrl": "https://pacta.wtf/protocols/gearbox-v3-v3-1/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x754edd7612258b755ff2e56903243d1f8867bad53c29ce3febb5ed9114005e42",
-   "priority": 57
+   "priority": 52
   },
   {
    "feedId": "finding:ondo-finance-ousg-flux-finance:S10:adverse_delta",
@@ -3468,7 +3169,7 @@
      "label": "Timelock floor",
      "state": "b",
      "cue": "M",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -3499,7 +3200,7 @@
    "cardFilename": "ondo-finance-ousg-flux-finance.png",
    "receiptUrl": "https://pacta.wtf/protocols/ondo-finance-ousg-flux-finance/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0xfdd83c8091ef6e8ffe67e8a55a78892fcfbb1092683b21ff2d85f8cc09750e6c",
-   "priority": 58
+   "priority": 53
   },
   {
    "feedId": "finding:usual-money-usd0-usd0:S8:adverse_delta",
@@ -3514,7 +3215,7 @@
    "easUid": "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2",
    "sprint": 8,
    "recordId": "usual-money-registry-access-delay",
-   "summaryShort": "Timelock delay: docs 3 days · chain 1 second",
+   "summaryShort": "DEFAULT_ADMIN handover delay: 1 second observed vs 3 days documented",
    "rosette": [
     {
      "key": "upgrade",
@@ -3528,7 +3229,7 @@
      "label": "Timelock floor",
      "state": "a",
      "cue": "W",
-     "value": "1s minimum enforced delay across control surfaces"
+     "value": "1s DEFAULT_ADMIN role-handover delay (RegistryAccess.defaultAdminDelay); ordinary admin action delay not in published records"
     },
     {
      "key": "quorum",
@@ -3552,14 +3253,14 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "docsSay": "a 3-day delay before a new default admin is granted",
-   "chainSays": "a 1-second default-admin transfer delay",
-   "mainPostText": "Usual Money (USD0 / USD0++) @usualmoney. Docs say: A 3-day delay before a new default admin is granted. On-chain at Ethereum block #26,401,725: A 1-second default-admin transfer delay. Docs and chain differ. Receipt below.",
+   "docsSay": "three days before DEFAULT_ADMIN is transferred to a new address",
+   "chainSays": "a one-second DEFAULT_ADMIN handover delay",
+   "mainPostText": "Usual Money (USD0 / USD0++) @usualmoney. Docs say: Three days before DEFAULT_ADMIN is transferred to a new address. On-chain at Ethereum block #26,401,725: A one-second DEFAULT_ADMIN handover delay. Docs and chain differ. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/usual-money-usd0-usd0/ · Base attestation: https://base.easscan.org/attestation/view/0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2",
    "cardFilename": "usual-money-usd0-usd0.png",
    "receiptUrl": "https://pacta.wtf/protocols/usual-money-usd0-usd0/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2",
-   "priority": 59
+   "priority": 54
   },
   {
    "feedId": "finding:maple-finance-v2-syrup:S6:adverse_delta",
@@ -3574,7 +3275,7 @@
    "easUid": "0x749d96e1a3d214a4ab66c528ca12c84dce085fa138dc370dd0eb817d890f09fa",
    "sprint": 6,
    "recordId": "maple-v2-syrup-ppm-admin",
-   "summaryShort": "Proxy admin is the 4-of-7 DAO Safe; docs describe a 3-day GovernorTimelock",
+   "summaryShort": "PoolPermissionManager proxy admin is the 4-of-7 DAO Safe, not GovernorTimelock",
    "rosette": [
     {
      "key": "upgrade",
@@ -3612,14 +3313,14 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "docsSay": "admin actions go through a 3-day GovernorTimelock",
-   "chainSays": "the proxy admin is the 4-of-7 DAO Safe",
-   "mainPostText": "Maple Finance V2 / Syrup @maplefinance. Docs say: Admin actions go through a 3-day GovernorTimelock. On-chain at Ethereum block #26,401,540: The proxy admin is the 4-of-7 DAO Safe. Docs and chain differ. Receipt below.",
+   "docsSay": "PoolPermissionManager implementation changes go behind the Governor's delay",
+   "chainSays": "the PoolPermissionManager proxy admin is the 4-of-7 DAO Safe, not GovernorTimelock",
+   "mainPostText": "Maple Finance V2 / Syrup @maplefinance. Docs say: PoolPermissionManager implementation changes go behind the Governor's delay. On-chain at Ethereum block #26,401,540: The PoolPermissionManager proxy admin is the 4-of-7 DAO Safe, not GovernorTimelock. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/maple-finance-v2-syrup/ · Base attestation: https://base.easscan.org/attestation/view/0x749d96e1a3d214a4ab66c528ca12c84dce085fa138dc370dd0eb817d890f09fa",
    "cardFilename": "maple-finance-v2-syrup.png",
    "receiptUrl": "https://pacta.wtf/protocols/maple-finance-v2-syrup/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x749d96e1a3d214a4ab66c528ca12c84dce085fa138dc370dd0eb817d890f09fa",
-   "priority": 60
+   "priority": 55
   },
   {
    "feedId": "finding:fluid-instadapp:S5:adverse_delta",
@@ -3679,67 +3380,7 @@
    "cardFilename": "fluid-instadapp.png",
    "receiptUrl": "https://pacta.wtf/protocols/fluid-instadapp/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x804289d4357b0a8d5a360911ec450c13ca36c4422d1e811c4c7040ef7d2628e5",
-   "priority": 61
-  },
-  {
-   "feedId": "finding:metamorpho-re7-weth-vs-re7-usdt:S5:adverse_delta",
-   "slug": "metamorpho-re7-weth-vs-re7-usdt",
-   "protocolName": "MetaMorpho (Re7 WETH vs. Re7 USDT)",
-   "xHandle": null,
-   "xUrl": null,
-   "kind": "adverse_delta",
-   "chain": "ethereum",
-   "pinnedBlock": 26401405,
-   "blockHash": "0x26e155e1569d436406a52ecee31c94d8d8ef2ca4c45d82211a84c8c802be1510",
-   "easUid": "0x804289d4357b0a8d5a360911ec450c13ca36c4422d1e811c4c7040ef7d2628e5",
-   "sprint": 5,
-   "recordId": "metamorpho-re7-weth-guardian-parity",
-   "summaryShort": "Re7 WETH vault has no guardian; its owner is a 2-of-4 Safe with a 3-day timelock",
-   "rosette": [
-    {
-     "key": "upgrade",
-     "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
-    },
-    {
-     "key": "timelock",
-     "label": "Timelock floor",
-     "state": "g",
-     "cue": "S",
-     "value": "3d minimum enforced delay across control surfaces"
-    },
-    {
-     "key": "quorum",
-     "label": "Signer quorum",
-     "state": "b",
-     "cue": "M",
-     "value": "Lowest controlling quorum: 2-of-4"
-    },
-    {
-     "key": "emergency",
-     "label": "Emergency / freeze scope",
-     "state": "g",
-     "cue": "S",
-     "value": "Pause / freeze authority scoped behind a multi-signer controller (2-of-4)"
-    },
-    {
-     "key": "parity",
-     "label": "Docs-vs-chain parity",
-     "state": "a",
-     "cue": "W",
-     "value": "Documentation differs from the chain (parameter delta)"
-    }
-   ],
-   "docsSay": "Re7 vaults use an Aragon guardian",
-   "chainSays": "the Re7 WETH vault has no guardian set; its USDT peer does",
-   "mainPostText": "MetaMorpho (Re7 WETH vs. Re7 USDT). Docs say: Re7 vaults use an Aragon guardian. On-chain at Ethereum block #26,401,405: The Re7 WETH vault has no guardian set; its USDT peer does. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/metamorpho-re7-weth-vs-re7-usdt/ · Base attestation: https://base.easscan.org/attestation/view/0x804289d4357b0a8d5a360911ec450c13ca36c4422d1e811c4c7040ef7d2628e5",
-   "cardFilename": "metamorpho-re7-weth-vs-re7-usdt.png",
-   "receiptUrl": "https://pacta.wtf/protocols/metamorpho-re7-weth-vs-re7-usdt/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0x804289d4357b0a8d5a360911ec450c13ca36c4422d1e811c4c7040ef7d2628e5",
-   "priority": 62
+   "priority": 56
   },
   {
    "feedId": "finding:mellow-protocol-lido-earn:S4:adverse_delta",
@@ -3768,7 +3409,7 @@
      "label": "Timelock floor",
      "state": "a",
      "cue": "W",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -3799,6 +3440,366 @@
    "cardFilename": "mellow-protocol-lido-earn.png",
    "receiptUrl": "https://pacta.wtf/protocols/mellow-protocol-lido-earn/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0xa26f81b0e68248c7f286527286b3d2e6b299502d53f4dfbc4397df7d22262986",
+   "priority": 57
+  },
+  {
+   "feedId": "finding:tori-finance:S32:unresolved_scope",
+   "slug": "tori-finance",
+   "protocolName": "Tori Finance",
+   "xHandle": "@tori_finance",
+   "xUrl": "https://x.com/tori_finance",
+   "kind": "unresolved_scope",
+   "chain": "ethereum",
+   "pinnedBlock": 26451608,
+   "blockHash": "0x0266af5bcad519d93b3be78e41b76a62985e22fbe4feef043ac3225f6f217a17",
+   "easUid": "0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
+   "sprint": 32,
+   "recordId": "tori-trusd-timelock-admin-undocumented-timelock-s32",
+   "summaryShort": "trUSD timelock: current docs name the same 24-hour controller as observed",
+   "rosette": [
+    {
+     "key": "upgrade",
+     "label": "Upgradeability",
+     "state": "n",
+     "cue": "—",
+     "value": "Upgrade path not in the published records"
+    },
+    {
+     "key": "timelock",
+     "label": "Timelock floor",
+     "state": "b",
+     "cue": "M",
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
+    },
+    {
+     "key": "quorum",
+     "label": "Signer quorum",
+     "state": "g",
+     "cue": "S",
+     "value": "Lowest controlling quorum: 3-of-5"
+    },
+    {
+     "key": "emergency",
+     "label": "Emergency / freeze scope",
+     "state": "n",
+     "cue": "—",
+     "value": "No pause / freeze authority in the published records"
+    },
+    {
+     "key": "parity",
+     "label": "Docs-vs-chain parity",
+     "state": "n",
+     "cue": "—",
+     "value": "Current documentation names the retained 24-hour controller; pending a fresh chain read"
+    }
+   ],
+   "docsSay": "documentation scope not verified; a documented breach is not established",
+   "chainSays": "trUSD timelock: current docs name the same 24-hour controller as observed",
+   "mainPostText": "Tori Finance @tori_finance: TrUSD timelock: current docs name the same 24-hour controller as observed. On-chain at Ethereum block #26,451,608. Observed on chain; a breach of a documented commitment is not established. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/tori-finance/ · Base attestation: https://base.easscan.org/attestation/view/0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
+   "cardFilename": "tori-finance.png",
+   "receiptUrl": "https://pacta.wtf/protocols/tori-finance/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
+   "priority": 58
+  },
+  {
+   "feedId": "finding:lagoon:S29:unresolved_scope",
+   "slug": "lagoon",
+   "protocolName": "Lagoon",
+   "xHandle": null,
+   "xUrl": null,
+   "kind": "unresolved_scope",
+   "chain": "ethereum",
+   "pinnedBlock": 26448221,
+   "blockHash": "0xa7818c0e1b8807aac0c999c2dc9aeeea40b91b4f19b1b76a62ad02d8d17607c8",
+   "easUid": "0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
+   "sprint": 29,
+   "recordId": "lagoon-vault-beacon-upgrade-delay-s29",
+   "summaryShort": "Legacy cbBTC beacon upgrades have no delay; 24h Opt-in doc coverage unverified",
+   "rosette": [
+    {
+     "key": "upgrade",
+     "label": "Upgradeability",
+     "state": "n",
+     "cue": "—",
+     "value": "Upgrade path not in the published records"
+    },
+    {
+     "key": "timelock",
+     "label": "Timelock floor",
+     "state": "a",
+     "cue": "W",
+     "value": "0s on the legacy cbBTC vault beacon upgrade path (3-of-6 Safe); whether the documented 24h Opt-in delay covers this vault is unverified"
+    },
+    {
+     "key": "quorum",
+     "label": "Signer quorum",
+     "state": "n",
+     "cue": "—",
+     "value": "No signer quorum in the published records"
+    },
+    {
+     "key": "emergency",
+     "label": "Emergency / freeze scope",
+     "state": "n",
+     "cue": "—",
+     "value": "No pause / freeze authority in the published records"
+    },
+    {
+     "key": "parity",
+     "label": "Docs-vs-chain parity",
+     "state": "n",
+     "cue": "—",
+     "value": "Observed onchain state pinned; a breach of a documented commitment is not established"
+    }
+   ],
+   "docsSay": "documentation scope not verified; a documented breach is not established",
+   "chainSays": "Legacy cbBTC beacon upgrades have no delay; 24h Opt-in doc coverage unverified",
+   "mainPostText": "Lagoon: Legacy cbBTC beacon upgrades have no delay; 24h Opt-in doc coverage unverified. On-chain at Ethereum block #26,448,221. Observed on chain; a breach of a documented commitment is not established. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/lagoon/ · Base attestation: https://base.easscan.org/attestation/view/0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
+   "cardFilename": "lagoon.png",
+   "receiptUrl": "https://pacta.wtf/protocols/lagoon/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
+   "priority": 59
+  },
+  {
+   "feedId": "finding:renzo-protocol-ezeth:S29:unresolved_scope",
+   "slug": "renzo-protocol-ezeth",
+   "protocolName": "Renzo Protocol (ezETH)",
+   "xHandle": "@renzoai",
+   "xUrl": "https://x.com/renzoai",
+   "kind": "unresolved_scope",
+   "chain": "ethereum",
+   "pinnedBlock": 26401725,
+   "blockHash": "0xec3820f0a9db32c01728e66f78dc1958e410269e1077fd1db53df4fbce2ad7a1",
+   "easUid": "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2",
+   "sprint": 29,
+   "recordId": "renzo-ezeth-deposit-queue-fee",
+   "summaryShort": "DepositQueue feeBasisPoints reads 10,000 bps; effective fee and routing unverified",
+   "rosette": [
+    {
+     "key": "upgrade",
+     "label": "Upgradeability",
+     "state": "n",
+     "cue": "—",
+     "value": "Upgrade path not in the published records"
+    },
+    {
+     "key": "timelock",
+     "label": "Timelock floor",
+     "state": "n",
+     "cue": "—",
+     "value": "No enforced admin delay in the published records"
+    },
+    {
+     "key": "quorum",
+     "label": "Signer quorum",
+     "state": "g",
+     "cue": "S",
+     "value": "Lowest controlling quorum: 3-of-5"
+    },
+    {
+     "key": "emergency",
+     "label": "Emergency / freeze scope",
+     "state": "n",
+     "cue": "—",
+     "value": "No pause / freeze authority in the published records"
+    },
+    {
+     "key": "parity",
+     "label": "Docs-vs-chain parity",
+     "state": "n",
+     "cue": "—",
+     "value": "Observed onchain state pinned; a breach of a documented commitment is not established"
+    }
+   ],
+   "docsSay": "documentation scope not verified; a documented breach is not established",
+   "chainSays": "DepositQueue feeBasisPoints reads 10,000 bps; effective fee and routing unverified",
+   "mainPostText": "Renzo Protocol (ezETH) @renzoai: DepositQueue feeBasisPoints reads 10,000 bps; effective fee and routing unverified. On-chain at Ethereum block #26,401,725. Observed on chain; a breach of a documented commitment is not established. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/renzo-protocol-ezeth/ · Base attestation: https://base.easscan.org/attestation/view/0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2",
+   "cardFilename": "renzo-protocol-ezeth.png",
+   "receiptUrl": "https://pacta.wtf/protocols/renzo-protocol-ezeth/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2",
+   "priority": 60
+  },
+  {
+   "feedId": "finding:whales-market:S28:unresolved_scope",
+   "slug": "whales-market",
+   "protocolName": "Whales Market",
+   "xHandle": "@WhalesMarket",
+   "xUrl": "https://x.com/WhalesMarket",
+   "kind": "unresolved_scope",
+   "chain": "ethereum",
+   "pinnedBlock": 26441165,
+   "blockHash": "0x5182be2c61af5f48ed2ec43d3c177dedad257c4e966a7e384120829de73901d9",
+   "easUid": "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
+   "sprint": 28,
+   "recordId": "whales-market-upgradeability-s28",
+   "summaryShort": "Sampled Whales Market proxy is upgradeable; escrow doc coverage is unverified",
+   "rosette": [
+    {
+     "key": "upgrade",
+     "label": "Upgradeability",
+     "state": "n",
+     "cue": "—",
+     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+    },
+    {
+     "key": "timelock",
+     "label": "Timelock floor",
+     "state": "n",
+     "cue": "—",
+     "value": "No enforced admin delay in the published records"
+    },
+    {
+     "key": "quorum",
+     "label": "Signer quorum",
+     "state": "n",
+     "cue": "—",
+     "value": "No signer quorum in the published records"
+    },
+    {
+     "key": "emergency",
+     "label": "Emergency / freeze scope",
+     "state": "n",
+     "cue": "—",
+     "value": "No pause / freeze authority in the published records"
+    },
+    {
+     "key": "parity",
+     "label": "Docs-vs-chain parity",
+     "state": "n",
+     "cue": "—",
+     "value": "Observed onchain state pinned; a breach of a documented commitment is not established"
+    }
+   ],
+   "docsSay": "documentation scope not verified; a documented breach is not established",
+   "chainSays": "Sampled Whales Market proxy is upgradeable; escrow doc coverage is unverified",
+   "mainPostText": "Whales Market @WhalesMarket: Sampled Whales Market proxy is upgradeable; escrow doc coverage is unverified. On-chain at Ethereum block #26,441,165. Observed on chain; a breach of a documented commitment is not established. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/whales-market/ · Base attestation: https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
+   "cardFilename": "whales-market.png",
+   "receiptUrl": "https://pacta.wtf/protocols/whales-market/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
+   "priority": 61
+  },
+  {
+   "feedId": "finding:concrete:S20:unresolved_scope",
+   "slug": "concrete",
+   "protocolName": "Concrete",
+   "xHandle": "@ConcreteXYZ",
+   "xUrl": "https://x.com/ConcreteXYZ",
+   "kind": "unresolved_scope",
+   "chain": "ethereum",
+   "pinnedBlock": 26425374,
+   "blockHash": "0xfa22e277760f1df7134b0af20499d6305ee4e017219a917a61a78aa76e89382d",
+   "easUid": "0xe712dd31d79ab492e2e64eb5847396651dee81daa9f895ead45548e97f1a2eb7",
+   "sprint": 20,
+   "recordId": "concrete-vault-owner-safe-1of2-s20",
+   "summaryShort": "ctDeltaWeETH owner/manager share a 1-of-2 Safe; single-key drain not established",
+   "rosette": [
+    {
+     "key": "upgrade",
+     "label": "Upgradeability",
+     "state": "n",
+     "cue": "—",
+     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+    },
+    {
+     "key": "timelock",
+     "label": "Timelock floor",
+     "state": "n",
+     "cue": "—",
+     "value": "No enforced admin delay in the published records"
+    },
+    {
+     "key": "quorum",
+     "label": "Signer quorum",
+     "state": "a",
+     "cue": "W",
+     "value": "Lowest controlling quorum: 1-of-2"
+    },
+    {
+     "key": "emergency",
+     "label": "Emergency / freeze scope",
+     "state": "n",
+     "cue": "—",
+     "value": "No pause / freeze authority in the published records"
+    },
+    {
+     "key": "parity",
+     "label": "Docs-vs-chain parity",
+     "state": "n",
+     "cue": "—",
+     "value": "Observed onchain state pinned; a breach of a documented commitment is not established"
+    }
+   ],
+   "docsSay": "documentation scope not verified; a documented breach is not established",
+   "chainSays": "ctDeltaWeETH owner/manager share a 1-of-2 Safe; single-key drain not established",
+   "mainPostText": "Concrete @ConcreteXYZ: CtDeltaWeETH owner/manager share a 1-of-2 Safe; single-key drain not established. On-chain at Ethereum block #26,425,374. Observed on chain; a breach of a documented commitment is not established. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/concrete/ · Base attestation: https://base.easscan.org/attestation/view/0xe712dd31d79ab492e2e64eb5847396651dee81daa9f895ead45548e97f1a2eb7",
+   "cardFilename": "concrete.png",
+   "receiptUrl": "https://pacta.wtf/protocols/concrete/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0xe712dd31d79ab492e2e64eb5847396651dee81daa9f895ead45548e97f1a2eb7",
+   "priority": 62
+  },
+  {
+   "feedId": "finding:metamorpho-re7-weth-vs-re7-usdt:S5:unresolved_scope",
+   "slug": "metamorpho-re7-weth-vs-re7-usdt",
+   "protocolName": "MetaMorpho (Re7 WETH vs. Re7 USDT)",
+   "xHandle": null,
+   "xUrl": null,
+   "kind": "unresolved_scope",
+   "chain": "ethereum",
+   "pinnedBlock": 26401405,
+   "blockHash": "0x26e155e1569d436406a52ecee31c94d8d8ef2ca4c45d82211a84c8c802be1510",
+   "easUid": "0x804289d4357b0a8d5a360911ec450c13ca36c4422d1e811c4c7040ef7d2628e5",
+   "sprint": 5,
+   "recordId": "metamorpho-re7-weth-guardian-parity",
+   "summaryShort": "Re7 WETH has no guardian while Re7 USDT does; no parity promise was verified",
+   "rosette": [
+    {
+     "key": "upgrade",
+     "label": "Upgradeability",
+     "state": "n",
+     "cue": "—",
+     "value": "Upgrade path not in the published records"
+    },
+    {
+     "key": "timelock",
+     "label": "Timelock floor",
+     "state": "g",
+     "cue": "S",
+     "value": "3d minimum enforced delay on sampled timelocked surfaces"
+    },
+    {
+     "key": "quorum",
+     "label": "Signer quorum",
+     "state": "b",
+     "cue": "M",
+     "value": "Lowest controlling quorum: 2-of-4"
+    },
+    {
+     "key": "emergency",
+     "label": "Emergency / freeze scope",
+     "state": "g",
+     "cue": "S",
+     "value": "Pause / freeze authority scoped behind a multi-signer controller (2-of-4)"
+    },
+    {
+     "key": "parity",
+     "label": "Docs-vs-chain parity",
+     "state": "n",
+     "cue": "—",
+     "value": "Peer vault comparison only; no documented promise of matching guardian configurations was verified"
+    }
+   ],
+   "docsSay": "documentation scope not verified; a documented breach is not established",
+   "chainSays": "Re7 WETH has no guardian while Re7 USDT does; no parity promise was verified",
+   "mainPostText": "MetaMorpho (Re7 WETH vs. Re7 USDT): Re7 WETH has no guardian while Re7 USDT does; no parity promise was verified. On-chain at Ethereum block #26,401,405. Observed on chain; a breach of a documented commitment is not established. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/metamorpho-re7-weth-vs-re7-usdt/ · Base attestation: https://base.easscan.org/attestation/view/0x804289d4357b0a8d5a360911ec450c13ca36c4422d1e811c4c7040ef7d2628e5",
+   "cardFilename": "metamorpho-re7-weth-vs-re7-usdt.png",
+   "receiptUrl": "https://pacta.wtf/protocols/metamorpho-re7-weth-vs-re7-usdt/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0x804289d4357b0a8d5a360911ec450c13ca36c4422d1e811c4c7040ef7d2628e5",
    "priority": 63
   },
   {
@@ -3833,7 +3834,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -3898,7 +3899,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -3963,7 +3964,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "7d minimum enforced delay across control surfaces"
+     "value": "7d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -4023,7 +4024,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "7d minimum enforced delay across control surfaces"
+     "value": "7d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -4083,7 +4084,7 @@
      "label": "Timelock floor",
      "state": "a",
      "cue": "W",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -4203,7 +4204,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "3d minimum enforced delay across control surfaces"
+     "value": "3d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -4323,7 +4324,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "3d minimum enforced delay across control surfaces"
+     "value": "3d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -4383,7 +4384,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -4563,7 +4564,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "5d minimum enforced delay across control surfaces"
+     "value": "5d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -5043,7 +5044,7 @@
      "label": "Timelock floor",
      "state": "a",
      "cue": "W",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -5763,7 +5764,7 @@
      "label": "Timelock floor",
      "state": "b",
      "cue": "M",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -5943,7 +5944,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "3d minimum enforced delay across control surfaces"
+     "value": "3d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -6003,7 +6004,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "10d minimum enforced delay across control surfaces"
+     "value": "10d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -6063,7 +6064,7 @@
      "label": "Timelock floor",
      "state": "b",
      "cue": "M",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -6123,7 +6124,7 @@
      "label": "Timelock floor",
      "state": "a",
      "cue": "W",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -6243,7 +6244,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "7d minimum enforced delay across control surfaces"
+     "value": "7d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -6423,7 +6424,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "7d minimum enforced delay across control surfaces"
+     "value": "7d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -6543,7 +6544,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -6603,7 +6604,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -6663,7 +6664,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -6783,7 +6784,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -6843,7 +6844,7 @@
      "label": "Timelock floor",
      "state": "b",
      "cue": "M",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -7023,7 +7024,7 @@
      "label": "Timelock floor",
      "state": "b",
      "cue": "M",
-     "value": "12h minimum enforced delay across control surfaces"
+     "value": "12h minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -7143,7 +7144,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -7263,7 +7264,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -7383,7 +7384,7 @@
      "label": "Timelock floor",
      "state": "b",
      "cue": "M",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -7563,7 +7564,7 @@
      "label": "Timelock floor",
      "state": "b",
      "cue": "M",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -7683,7 +7684,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "3d minimum enforced delay across control surfaces"
+     "value": "3d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -7743,7 +7744,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -8103,7 +8104,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "7d minimum enforced delay across control surfaces"
+     "value": "7d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -8343,7 +8344,7 @@
      "label": "Timelock floor",
      "state": "b",
      "cue": "M",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -8643,7 +8644,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -8703,7 +8704,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "7d minimum enforced delay across control surfaces"
+     "value": "7d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -9243,7 +9244,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -9303,7 +9304,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "7d minimum enforced delay across control surfaces"
+     "value": "7d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -9423,7 +9424,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -9483,7 +9484,7 @@
      "label": "Timelock floor",
      "state": "a",
      "cue": "W",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -9603,7 +9604,7 @@
      "label": "Timelock floor",
      "state": "a",
      "cue": "W",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -9663,7 +9664,7 @@
      "label": "Timelock floor",
      "state": "a",
      "cue": "W",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -10143,7 +10144,7 @@
      "label": "Timelock floor",
      "state": "b",
      "cue": "M",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -10203,7 +10204,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -10263,7 +10264,7 @@
      "label": "Timelock floor",
      "state": "a",
      "cue": "W",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -10323,7 +10324,7 @@
      "label": "Timelock floor",
      "state": "b",
      "cue": "M",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -10383,7 +10384,7 @@
      "label": "Timelock floor",
      "state": "b",
      "cue": "M",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -10443,7 +10444,7 @@
      "label": "Timelock floor",
      "state": "a",
      "cue": "W",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -10563,7 +10564,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "4d minimum enforced delay across control surfaces"
+     "value": "4d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -10623,7 +10624,7 @@
      "label": "Timelock floor",
      "state": "b",
      "cue": "M",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -10863,7 +10864,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "7d minimum enforced delay across control surfaces"
+     "value": "7d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -10923,7 +10924,7 @@
      "label": "Timelock floor",
      "state": "b",
      "cue": "M",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -11043,7 +11044,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "7d minimum enforced delay across control surfaces"
+     "value": "7d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -11223,7 +11224,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -11283,7 +11284,7 @@
      "label": "Timelock floor",
      "state": "a",
      "cue": "W",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -11523,7 +11524,7 @@
      "label": "Timelock floor",
      "state": "b",
      "cue": "M",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -11703,7 +11704,7 @@
      "label": "Timelock floor",
      "state": "b",
      "cue": "M",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -12063,7 +12064,7 @@
      "label": "Timelock floor",
      "state": "a",
      "cue": "W",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -15003,7 +15004,7 @@
      "label": "Timelock floor",
      "state": "a",
      "cue": "W",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -15843,7 +15844,7 @@
      "label": "Timelock floor",
      "state": "a",
      "cue": "W",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -16203,7 +16204,7 @@
      "label": "Timelock floor",
      "state": "b",
      "cue": "M",
-     "value": "1h minimum enforced delay across control surfaces"
+     "value": "1h minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -16323,7 +16324,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -17043,7 +17044,7 @@
      "label": "Timelock floor",
      "state": "b",
      "cue": "M",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -17283,7 +17284,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "5d minimum enforced delay across control surfaces"
+     "value": "5d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -18063,7 +18064,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -18903,7 +18904,7 @@
      "label": "Timelock floor",
      "state": "b",
      "cue": "M",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -18963,7 +18964,7 @@
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",

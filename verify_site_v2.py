@@ -29,6 +29,7 @@ malformed #r-... hashes never throw during initialization.
 """
 
 import datetime as dt
+import functools
 import glob
 import hashlib
 import html.parser
@@ -50,7 +51,7 @@ RESULTS = []
 EXPECT = {
     "sprints": 37, "records": 309, "eas_attestations": 37,              # index.json sprints_completed / records_indexed; Base EAS sprint UIDs
     "protocols": 316, "eas_protocols": 189, "rpc_protocols": 127,          # /protocols/ pages = EAS-attested + RPC-pinned; badges = protocols
-    "briefs": 17, "badge_tiers": {"aligned": 126, "parameter_delta": 63, "rpc_observed": 127},
+    "briefs": 17, "badge_tiers": {"aligned": 126, "parameter_delta": 57, "rpc_observed": 127, "unresolved": 5, "docs_updated": 1},
     "base_records": 38,                                                  # index.json records with chain "base"
     "rpc_by_chain": {"ethereum": 117, "base": 10},                         # rpc-pinned.json records per chain (sum = rpc_protocols)
     "multi_attest_txs": ["1–12", "13–16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37"],                              # attestation_coverage.eas_multi_attest_txs keys
@@ -82,7 +83,7 @@ EXPECT = {
 X = EXPECT
 # sha256 of docs/api/v1/graph-manifest.json: changes only through a deliberate re-pin (a Sprint stage / stamp rewrites it after the
 # rebuild); a merged Wave 2 claim or any site-only change must leave it as is
-GRAPH_MANIFEST_SHA256 = "7a88b1b779136798f22e97443055da6b43027713462ffa7a73df2424efede5e9"
+GRAPH_MANIFEST_SHA256 = "4e620a150b02d262e06b522950870960e77de7b95a2d4b6d23ea271f07a764bd"
 NON_PROTOCOL_PAGES = 40                                                  # docs/**/*.html pages that are not /protocols/<slug>/ (40: + /curators/ /scan/ /webhook/ /seal/ /miniapp/, + the Cap, Compound V3 and Lista Lending briefs)
 
 
@@ -704,10 +705,10 @@ def graph_manifest_checks(args):
     prot_doc = json.loads(read("docs/api/v1/protocols.json"))
     flip = {"aligned_baseline": "protective_delta", "protective_delta": "aligned_baseline", "parameter_delta": "protective_delta",
             "rpc_observed": "aligned_baseline", "mixed": "aligned_baseline"}
-    tiers = ["aligned", "parameter_delta", "rpc_observed"]
+    tiers = ["aligned", "parameter_delta", "rpc_observed", "unresolved", "docs_updated"]   # every badge tier build_lookup can emit
     moved_p = json.loads(json.dumps(prot_doc))
     for q in moved_p["protocols"]:                  # every changing protocol fact moves (an rpc_observed <-> EAS conversion and more)
-        q["badge"] = {**(q.get("badge") or {}), "tier": tiers[(tiers.index((q.get("badge") or {}).get("tier", "aligned")) + 1) % 3]}
+        q["badge"] = {**(q.get("badge") or {}), "tier": tiers[(tiers.index((q.get("badge") or {}).get("tier", "aligned")) + 1) % len(tiers)]}
         q["easAttested"] = not q.get("easAttested")
         q["evidenceBasis"] = "eas_attested" if q.get("evidenceBasis") == "rpc_observed" else "rpc_observed"
         q["classification"] = flip.get(q.get("classification"), "aligned_baseline")
@@ -987,7 +988,13 @@ def main(argv=None):
                   "REMEDIATION_SERVICES.md", "METHODOLOGY.md", ".github/ISSUE_TEMPLATE/request-scan.yml"] + \
                  [os.path.relpath(p, ROOT) for p in glob.glob(os.path.join(DOCS, "briefs", "*", "index.html"))]
     charity = re.compile(r"private disclosure|\$0 private|\$0 gratis|gratis|free of charge|at no cost|at \$0 cost|no cost to the protocol", re.I)
-    bad_c = sorted({f"{f}: {m.group(0)}" for f in copy_files for m in charity.finditer(read(f))})
+    # the one sanctioned use: the editorial self-correction rule (Pacta corrects its own overstatements free of charge). It is stripped
+    # verbatim (HTML-escaped too) before the scan, so any other "free of charge" / "at no cost" copy still fails
+    sys.path.insert(0, os.path.join(ROOT, "tools"))
+    _ei = __import__("build_site").EDITORIAL_INDEPENDENCE
+    policy = [_ei, html.escape(_ei, quote=False)]
+    bad_c = sorted({f"{f}: {m.group(0)}" for f in copy_files
+                    for m in charity.finditer(functools.reduce(lambda t, x: t.replace(x, ""), policy, read(f)))})
     check('zero "private disclosure" / "$0" / gratis copy in public files', not bad_c, f"{len(copy_files)} files; {bad_c[:4]}")
     subs = re.compile(r"Curator Radar|Commitment CI Gate|\$3,000|/ year|USDC/mo\)|USDC/yr", re.I)
     bad_s = sorted({f"{f}: {m.group(0)}" for f in copy_files for m in subs.finditer(read(f))})
@@ -2389,7 +2396,8 @@ def main(argv=None):
                  and all(b[:8] == b"\x89PNG\r\n\x1a\n" and _st45.unpack(">II", b[16:24]) == (1200, 675) for b in cards45.values()))
     try:
         xf45, xh45 = json.loads(read("docs/api/v1/x-feed.json")), json.loads(read("docs/api/v1/x-handles.json"))
-        kind_grade = {"adverse_delta": "delta", "protective_delta": "protective", "aligned_baseline": "aligned", "rpc_observed": "observed"}
+        kind_grade = {"adverse_delta": "delta", "unresolved_scope": "unresolved", "protective_delta": "protective", "aligned_baseline": "aligned",
+                      "rpc_observed": "observed"}
         sc_g45 = {c["slug"]: c["grade"] for c in json.loads(read("docs/api/v1/scorecards.json"))["protocols"]}
         prot_items = [i for i in xf45["items"] if i.get("kind") in kind_grade]
         xfeed_ok45 = (xf45["schema"] == "pacta.x_feed.v1" and xh45["schema"] == "pacta.x_handles.v1"
@@ -2919,7 +2927,15 @@ def main(argv=None):
     rb = subprocess.run([node_, "--input-type=module", "-e", probe_b], capture_output=True, text=True, timeout=60) if node_ else None
     js_badges = json.loads(rb.stdout) if rb and rb.returncode == 0 else {}
     svg_files = sorted(f for f in os.listdir(os.path.join(DOCS, "badges")) if f.endswith(".svg")) if os.path.isdir(os.path.join(DOCS, "badges")) else []
-    tier_of = {v["slug"]: ("rpc_observed" if v["pinned"] else ("aligned" if BS.is_aligned_page(v["entries"]) else "parameter_delta")) for v in sp_lk.values()}
+    import scorecard_corrections as CORR_
+    def _tier(v):    # the neutral tiers for a protocol tools/scorecard_corrections.json marks unresolved (no documented breach established)
+        if v["pinned"]:
+            return "rpc_observed"
+        c_ = CORR_.get(v["slug"]) or {}
+        if c_.get("status") == "unresolved":
+            return "docs_updated" if c_.get("subPill") else "unresolved"
+        return "aligned" if BS.is_aligned_page(v["entries"]) else "parameter_delta"
+    tier_of = {v["slug"]: _tier(v) for v in sp_lk.values()}
     card_bad = []
     for slug_, t in tier_of.items():
         pg = pages.get(os.path.join("protocols", slug_, "index.html"), "")
@@ -2930,6 +2946,9 @@ def main(argv=None):
         elif t == "parameter_delta":
             ok_ = 'id="badge-status"' in pg and f'href="../../request/?tier=clearance&amp;protocol={slug_}&amp;settlement=invoice"' in pg \
                 and "Aligned · Base EAS" in pg and 'id="embed-badge"' not in pg
+        elif t in ("unresolved", "docs_updated"):   # the neutral status card: copyable embed, never the paid clearance prompt
+            ok_ = 'class="memo-sec badge-card unresolved" id="badge-status"' in pg and html.escape(md_) in pg and 'id="embed-badge"' not in pg \
+                and 'data-cta="seal_wd"' not in pg and "Control-plane badge: Parameter Delta" not in pg
         else:   # RPC-observed: the slate status card with a copyable embed, and never an Aligned / Base EAS claim
             ok_ = 'id="embed-badge"' not in pg and 'class="memo-sec badge-card observed" id="badge-status"' in pg and html.escape(md_) in pg \
                 and "Aligned · Base EAS" not in pg
@@ -2944,7 +2963,8 @@ def main(argv=None):
         "static badges (one per protocol)": svg_files == sorted(f"{s_}.svg" for s_ in tier_of),
         "== worker badgeSvg (node)": len(js_badges) == X["protocols"] == len(svg_files) and all(js_badges[s_] == read(f"docs/badges/{s_}.svg") for s_ in tier_of),
         "badge tiers (EXPECT)": counts_ == X["badge_tiers"]
-            and all(("Aligned · Base EAS" if t == "aligned" else "Parameter Delta" if t == "parameter_delta" else "RPC-Observed") in read(f"docs/badges/{s_}.svg")
+            and all({"aligned": "Aligned · Base EAS", "parameter_delta": "Parameter Delta", "rpc_observed": "RPC-Observed",
+                     "unresolved": "Unresolved · Unverified Scope", "docs_updated": "Docs Updated · Pending Re-Read"}[t] in read(f"docs/badges/{s_}.svg")
                     for s_, t in tier_of.items()),
         "RPC-observed never implies EAS": not any("EAS" in read(f"docs/badges/{s_}.svg") for s_, t in tier_of.items() if t == "rpc_observed"),
         "cards": not card_bad,
@@ -3084,11 +3104,11 @@ def main(argv=None):
         "MCP recipes (Claude Code / OpenAI Agents SDK / LangChain, <= 10 lines) in README + SKILL.md": all(code in read("README.md") and code in read("docs/SKILL.md")
                                                                                                          and len(code.splitlines()) <= 10 for _, _, code in B2AV.MCP_RECIPES)
             and [t for t, _, _ in B2AV.MCP_RECIPES] == ["Claude Code", "OpenAI Agents SDK (Python)", "LangChain (langchain-mcp-adapters)"],
-        "/protocols/ filter: input + Docs vs chain (5), Chain (3) and Basket (5) groups, Clear all, active state, empty-state slot, data attrs on every protocol row":
-            all(f'data-pfilter-status="{k}"' in hub_ for k in ("all", "delta", "protective", "aligned", "observed"))
+        "/protocols/ filter: input + Docs vs chain (6), Chain (3) and Basket (5) groups, Clear all, active state, empty-state slot, data attrs on every protocol row":
+            all(f'data-pfilter-status="{k}"' in hub_ for k in ("all", "delta", "unresolved", "protective", "aligned", "observed"))
             and all(f'data-pfilter-chain="{k}"' in hub_ for k in ("all", "ethereum", "base"))
             and all(x in hub_ for x in ('id="proto-clear"', 'id="proto-active"', 'id="proto-empty"', 'data-pgroup="status"', 'data-pgroup="chain"'))
-            and 'id="proto-q"' in hub_ and len(re.findall(r'<tr data-ptier="(?:delta|protective|aligned|observed)" data-pchains="[a-z ]+" data-pbaskets="[a-z_ ]*" data-psearch="[^"]*">', hub_)) == X["protocols"]
+            and 'id="proto-q"' in hub_ and len(re.findall(r'<tr data-ptier="(?:delta|unresolved|protective|aligned|observed)" data-pchains="[a-z ]+" data-pbaskets="[a-z_ ]*" data-psearch="[^"]*">', hub_)) == X["protocols"]
             and all(f'data-pfilter-basket="{k}"' in hub_ for k in ["all"] + [b[0] for b in BS.BASKETS]),
         "/protocols/ filter: textContent / hidden only": (lambda m: bool(m) and not re.search(r"innerHTML|outerHTML|insertAdjacentHTML|document\.write|fetch\(", m.group(0)))(
             re.search(r"function initProtocolFilter\(\) \{.*?\n  \}\n", appjs, re.S)),
@@ -3654,7 +3674,11 @@ def main(argv=None):
        "hollow 'u' for every RPC-observed protocol and never 'u' for an attested one; states only g/b/a/n/u; byte-identical rebuild"] = (
         sc_.get("schema") == "pacta.scorecards.v1" and set(cards_) == set(pjp_) and len(cards_) == X["protocols"]
         and all((c_["grade"] == "observed") == (not pjp_[k_]["easAttested"]) for k_, c_ in cards_.items())
-        and all((c_["grade"] == "delta") == any(sf_["classification"] == "parameter_delta" for sf_ in pjp_[k_]["surfaces"]) for k_, c_ in cards_.items())
+        and all((c_["grade"] in ("delta", "unresolved")) == any(sf_["classification"] == "parameter_delta" for sf_ in pjp_[k_]["surfaces"])
+                for k_, c_ in cards_.items())
+        # UNRESOLVED <=> tools/scorecard_corrections.json marks the protocol unresolved (a documented breach not established)
+        and all((c_["grade"] == "unresolved") == ((__import__("scorecard_corrections").get(k_) or {}).get("status") == "unresolved")
+                for k_, c_ in cards_.items())
         and all((c_["factors"][4]["state"] == "u") == (not c_["easAttested"]) for c_ in cards_.values())
         and sum(c_["factors"][4]["state"] == "u" for c_ in cards_.values()) == X["rpc_protocols"]
         and all(f_["state"] in ("g", "b", "a", "n", "u") and [x_["key"] for x_ in c_["factors"]] == ["upgrade", "timelock", "quorum", "emergency", "parity"]
@@ -3846,6 +3870,15 @@ def main(argv=None):
         ex_ = lambda short_, full_: short_ if (not short_.endswith("…") and len(short_) <= 60) else BS.clean_excerpt(full_ or short_)
         want = [f'<li data-wd-changed><b>{html.escape(c["parameter"])}</b>: <span class="obs">{html.escape(ex_(c["observed"], by_v[c["recordId"]]["onchain_observed"]))}</span> observed vs '
                 f'<span class="doc">{html.escape(ex_(c["documented"], by_v[c["recordId"]]["documented_reference"]))}</span> documented' for c in wd["changed"]]
+        corr_v = __import__("scorecard_corrections").get(v["slug"]) or {}
+        if corr_v.get("headline") or corr_v.get("explanatorySentence"):
+            # a declarative correction leads with its headline + pinned block and its scope sentence, never the generic changed lines
+            want = ([f'<p class="wd-lead" data-wd-headline><strong>{html.escape(corr_v["headline"])}</strong> '
+                     f'<span class="wd-block mono">(#{corr_v["pinnedBlock"]:,})</span></p>'] if corr_v.get("headline") else []) + \
+                   ([f'<p class="wd-scope" data-wd-scope>{html.escape(corr_v["explanatorySentence"])}</p>'] if corr_v.get("explanatorySentence") else [])
+            sec_v = t[t.find("data-what-differs"):t.find("</section>", t.find("data-what-differs"))]
+            if "<li data-wd-changed>" in sec_v:
+                want.append("(no generic changed lines)")
         if not (all(w in t for w in want) and t.find("</header>") < t.find("data-what-differs") < t.find("Check it live (free)")):
             wd_bad.append(v["slug"])
     n_flagged = sum(1 for v in sp_v.values() if CDV1.what_differs(v["entries"]))
@@ -3889,7 +3922,9 @@ def main(argv=None):
     pr_v = re.search(r'<section class="sec" id="pricing">.*?</section>', home_v, re.S)
     v1["P2 editorial independence: the exact firewall sentence on every protocol page (after the free evidence + cast workflow, before the badge card and every paid-service / $ mention) and on #pricing"] = (
         not ed_bad and bool(pr_v) and html.escape(BS.EDITORIAL_INDEPENDENCE, quote=False) in pr_v.group(0)
-        and BS.EDITORIAL_INDEPENDENCE == "Payment never alters a Pacta classification. A status changes only when onchain contract state or public documentation changes and is verified at a new finalized block.")
+        and BS.EDITORIAL_INDEPENDENCE == ("Payment never alters a Pacta classification. A status changes when onchain contract state or public "
+                                          "documentation changes and is verified at a new finalized block — or immediately and free of charge whenever "
+                                          "Pacta corrects an overstatement or scoping error in its own comparison."))
     lk_v = json.loads(read("docs/api/v1/lookup.json"))
     st_item = next(x for x in lk_v["items"] if x.get("slug") == "stader-labs-ethx")
     v1["P1 catalog for the Worker / MCP: lookup items carry whatDiffers (== control_diff), pinnedBlock and relatedContracts (the ETHx token links Stader)"] = (

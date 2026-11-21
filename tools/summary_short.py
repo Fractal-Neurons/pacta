@@ -328,6 +328,20 @@ SUMMARY = {
 }
 
 
+# declarative corrections (tools/scorecard_corrections.json) carry their own <= 90-character line: they win over the entry above, so
+# a wording correction is a JSON entry, never an edit here
+def _apply_corrections():
+    import os
+    import sys
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import scorecard_corrections as CORR
+    for slug, c in CORR.data()["protocols"].items():
+        if c.get("summaryShort"):
+            SUMMARY[slug] = c["summaryShort"]
+
+
+_apply_corrections()
+
 def problems(text):
     """Why a summary line would fail M7 (empty list = fine)."""
     out = []

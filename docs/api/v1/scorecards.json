@@ -2,7 +2,7 @@
  "description": "One canonical grade per published protocol (DELTA / PROTECTIVE / ALIGNED / OBSERVED) and a 5-factor control-plane rosette derived deterministically from Pacta's published records (index.json, rpc-pinned.json) and controller facts. A factor the published evidence does not decide is 'n' (not determined); docs-vs-chain parity is 'u' (uncompared) for every RPC-observed protocol. States: g strong, b moderate, a weak, n not determined, u uncompared.",
  "factorCoverage": {
   "emergency": 25,
-  "parity": 189,
+  "parity": 183,
   "quorum": 168,
   "timelock": 102,
   "upgrade": 44
@@ -38,7 +38,7 @@
   "delta": {
    "label": "DELTA",
    "meaning": "Docs and chain differ",
-   "protocols": 56
+   "protocols": 50
   },
   "observed": {
    "label": "OBSERVED",
@@ -49,6 +49,11 @@
    "label": "PROTECTIVE",
    "meaning": "Chain stronger than documented",
    "protocols": 7
+  },
+  "unresolved": {
+   "label": "UNRESOLVED",
+   "meaning": "Observed on chain; document breach not established",
+   "protocols": 6
   }
  },
  "protocols": [
@@ -165,7 +170,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "7d minimum enforced delay across control surfaces"
+     "value": "7d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,
@@ -224,7 +229,7 @@
     "base",
     "lending_vaults"
    ],
-   "category": "veNFT-backed lending vault (UUPS) on Base",
+   "category": "veNFT-backed lending (AERO USDC Loan UUPS proxy on Base)",
    "chains": [
     "base"
    ],
@@ -232,13 +237,13 @@
    "easAttested": true,
    "evidence": {
     "documented": "'40 Acres has completed four independent audits with Sherlock. Smart contracts are immutable and non-upgradeable post-deployment.' (docs.40acres.finance)",
-    "observed": "40 Acres proxy 0x87f18b377e625b62c708D5f6EA96EC193558EFD0 (Base): EIP-1967 implementation slot = 0xb43b30c405c61BC330227968635d130994450735; the implementation's proxiableUUID() = the EIP-1967 slot (UUPS), UPGRADE_INTERFACE_VERSION() = '5.0.0'; owner() = 0xfF16fd3D147220E6CC002a8e4a1f942ac41DBD23, a Safe 2-of-3.",
+    "observed": "40 Acres AERO USDC Loan proxy 0x87f18b377e625b62c708D5f6EA96EC193558EFD0 (Base): EIP-1967 implementation slot = 0xb43b30c405c61BC330227968635d130994450735; the implementation's proxiableUUID() = the EIP-1967 slot (UUPS), UPGRADE_INTERFACE_VERSION() = '5.0.0'; owner() = 0xfF16fd3D147220E6CC002a8e4a1f942ac41DBD23, a Safe 2-of-3.",
     "recordId": "40-acres-base-upgradeability-s28",
-    "surface": "Lending vault proxy: docs call the contracts immutable, but it is an upgradeable proxy"
+    "surface": "AERO USDC Loan contract (UUPS proxy): docs call the contracts immutable, but it is an upgradeable proxy"
    },
    "factors": [
     {
-     "evidence": "40-acres-base-upgradeability-s28: 40 Acres proxy 0x87f18b377e625b62c708D5f6EA96EC193558EFD0 (Base): EIP-1967 implementation slot = 0xb43b30c405c61BC330227968635d130994450735",
+     "evidence": "40-acres-base-upgradeability-s28: 40 Acres AERO USDC Loan proxy 0x87f18b377e625b62c708D5f6EA96EC193558EFD0 (Base): EIP-1967 implementation slot = 0xb43b30c405c61BC330227968635d130994450735",
      "key": "upgrade",
      "label": "Upgradeability",
      "state": "n",
@@ -273,7 +278,7 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "finding": "Lending vault proxy: docs call the contracts immutable, but it is an upgradeable proxy: docs say '40 Acres has completed four independent audits with Sherlock. · chain says 40 Acres proxy 0x87f18b377e625b62c708D5f6EA96EC193558EFD0 (Base): EIP-1967 implementation slot = 0xb43b30c405c61BC330227968635d130994450735;",
+   "finding": "40 Acres Base loan contract is upgradeable under a 2-of-3 Safe; its introduction describes contracts as immutable (#59,025,642)",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "40 Acres (Base)",
@@ -291,16 +296,17 @@
     "rpc_env_var": "$BASE_RPC_URL",
     "selector_or_slot": "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
     "target_contract": "0x87f18b377e625b62c708D5f6EA96EC193558EFD0",
-    "target_label": "40 Acres vault proxy (UUPS)"
+    "target_label": "40 Acres AERO USDC Loan proxy (UUPS)"
    },
    "reconciled": false,
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
    "rosetteAria": "40 Acres (Base) control-plane rosette: Upgradeability not determined; Timelock floor not determined; Signer quorum moderate; Emergency / freeze scope not determined; Docs-vs-chain parity weak",
-   "search": "40 acres (base) 40-acres-base venft-backed lending vault (uups) on base 40acres 0x87f18b377e625b62c708d5f6ea96ec193558efd0 0xb43b30c405c61bc330227968635d130994450735 0xff16fd3d147220e6cc002a8e4a1f942ac41dbd23",
+   "scopeNote": "40 Acres' introduction page states that smart contracts are immutable and non-upgradeable post-deployment, while Pacta recorded at Base block 59,025,642 that 0x87f18b377e625b62c708D5f6EA96EC193558EFD0 — listed on 40 Acres' contracts page as the AERO USDC Loan contract (distinct from the 0xB99B…7Cf5 Vault) — is a UUPS proxy owned by a 2-of-3 Safe.",
+   "search": "40 acres (base) 40-acres-base venft-backed lending (aero usdc loan uups proxy on base) 40acres 0x87f18b377e625b62c708d5f6ea96ec193558efd0 0xb43b30c405c61bc330227968635d130994450735 0xff16fd3d147220e6cc002a8e4a1f942ac41dbd23",
    "slug": "40-acres-base",
-   "summary_short": "Docs call 40 Acres immutable, but an upgradeable proxy sits on chain",
+   "summary_short": "Base AERO USDC Loan contract is upgradeable (2-of-3 Safe); intro says immutable",
    "url": "https://pacta.wtf/protocols/40-acres-base/"
   },
   {
@@ -333,7 +339,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "b",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "controller fact: Safe getThreshold()",
@@ -831,7 +837,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "b",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,
@@ -1323,7 +1329,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "5d minimum enforced delay across control surfaces"
+     "value": "5d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,
@@ -1489,7 +1495,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "7d minimum enforced delay across control surfaces"
+     "value": "7d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,
@@ -1817,7 +1823,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "a",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "evidence": "arkis-control-plane: … controller is in turn controlled by externally owned account (no code) 0xC0096A2032Cd8ad726181D1399C5F20768037fc1.",
@@ -1900,7 +1906,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,
@@ -2893,7 +2899,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "a",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "evidence": "base-bridge-l1-proxyadmin-owner-s29: … 0x5a0Aae59D09fccBdDb6C6CcEB07B7279367C3d2A, is a 2-of-2 Safe, not one of those owners.",
@@ -3141,7 +3147,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "a",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "evidence": "bedrock-unieth-upgrade-admin-s25: … 0x3050620423f4dB43E1904815E898C466526387b8 (3-of-5, no guard); uniETH owner() = Safe 0xAeE017052DF6Ac002647229D58B786E380B9721A …",
@@ -3225,7 +3231,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "a",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "evidence": "beefy-finance-base-fee-config-owner-dev-multisig-s22: … 0x6FfaCA7C3B38Ec2d631D86e15f328ee6eF6C6226 (3-of-6 Safe, v1.3.0, no modules); transparent …",
@@ -3249,7 +3255,7 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "finding": "Timelock delay: docs say 6 h · chain says 0 s (no delay)",
+   "finding": "Base vault-owner timelock: zero delay; strategy-owner changes retain six hours (#58,315,414)",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Beefy Finance (Base)",
@@ -3274,9 +3280,10 @@
    "reconciledTo": [],
    "records": 4,
    "rosetteAria": "Beefy Finance (Base) control-plane rosette: Upgradeability moderate; Timelock floor weak; Signer quorum strong; Emergency / freeze scope not determined; Docs-vs-chain parity weak",
+   "scopeNote": "Beefy documents a 6-hour default timelock for strategy changes and upgrades alongside a general timelock assurance; at Base block 58,315,414 the sampled strategyOwner timelock enforces 6 hours while the Base vaultOwner timelock reads getMinDelay() = 0s.",
    "search": "beefy finance (base) beefy-finance-base automated yield vaults & clm (base) bifi 0x03f6afbcbf398e2362c93ddc846619f1b1b860d2 0x09d19184f46a32213df06b981122e06882b61309 0x2b0c9702a4724f2bfe7922db92c4082098533c62 0x3b60f7f25b09e71356cdffc6475c222a466a2ac9 0x6ffaca7c3b38ec2d631d86e15f328ee6ef6c6226 0xab35d11199216c7f7368080cf41bed8f3abbc4e4 0xfc69704cc3caac545cc7577009ea4aa04f1a61eb",
    "slug": "beefy-finance-base",
-   "summary_short": "Timelock delay: docs 6 hours · chain none",
+   "summary_short": "Base vault-owner timelock has zero delay; strategy-owner changes keep 6 hours",
    "url": "https://pacta.wtf/protocols/beefy-finance-base/"
   },
   {
@@ -3308,7 +3315,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "b",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,
@@ -3332,7 +3339,7 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "finding": "Timelock delay: docs say 7 d · chain says 1 d",
+   "finding": "BEND ProxyAdmin owner: BendDAO Timelock 7D, getMinDelay() 86,400 s: docs say 7 d · chain says 1 d",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "BendDAO APE Staking",
@@ -3475,7 +3482,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "a",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "evidence": null,
@@ -3889,7 +3896,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "b",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "cap-1d-timelock-min-delay-s20: … 0xb8FC49402dF3ee4f8587268FB89fda4d621a8793 (3-of-5 Safe); the timelock is its own admin.",
@@ -3970,7 +3977,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "7d minimum enforced delay across control surfaces"
+     "value": "7d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,
@@ -4054,7 +4061,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "centrifuge-liquidity-pools-base-ops-guardian-s24: … 0xd21413291444C5c104F1b5918cA0D2f6EC91Ad16 (2-of-7, v1.4.1), not a ward either.",
@@ -4306,7 +4313,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "b",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "cian-yield-layer-allocation-no-timelock-s31: … 0x261090afE1E7305474F4e3eEFCAca9964eBffFf5, a 3-of-4 Safe; the vault's ProxyAdmin 0xf24955E9D0a05222373d4555f8831f7A05e83F62 …",
@@ -4387,7 +4394,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "a",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "evidence": "circle-gateway-wallet-eoa-owner-and-pauser-s32: … 0x9812d5F0a0832d9A0a78a1ba728fACd87bC35b19, both accounts with no code (externally owned) at this pin; denylister() = 0x7359fD9aA258992eb4B6d9572c6f6c74Cf719a94, …",
@@ -4472,7 +4479,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "a",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "evidence": "circle-usdc-base-owner-role-assignment-s23: … 0x1f2e3A640175d20ac31ed523B6733B977173E277 (no contract code); masterMinter() = MasterMinter 0x2230393EDAD0299b7E7B59F20AA856cD1bEd52e1, …",
@@ -4720,7 +4727,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "b",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "compound-v3-base-pause-guardian-community-multisig-5of9-s19: … 0x3cb4653F3B45F448D9100b118B75a1503281d2ee (5-of-9, v1.3.0), whose 9 owners equal, in …",
@@ -4803,7 +4810,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "compound-v3-comet-timelock-and-pause-safe: … 0x309a862bbC1A00e45506cB8A802D1ff10004c8C0); pauseGuardian() = 5-of-9 Community Pause Safe (0xbbf3f1421D886E9b2c5D716B5192aC998af2012c).",
@@ -4987,13 +4994,13 @@
      "evidence": null,
      "key": "parity",
      "label": "Docs-vs-chain parity",
-     "state": "a",
-     "value": "Documentation differs from the chain (parameter delta)"
+     "state": "n",
+     "value": "Observed onchain state pinned; a breach of a documented commitment is not established"
     }
    ],
-   "finding": "Vault owner, VAULT_MANAGER and factory manager Safe threshold: 1-of-2: docs say docs.concrete.xyz (risks and safety): 'Separated roles. · chain says Safe 0x8F5f1d40243b259cEB7aB44bA421Ff191bCD3381: getThreshold() = 1 with 2 owners;",
-   "grade": "delta",
-   "gradeLabel": "DELTA",
+   "finding": "ctDeltaWeETH: owner and manager roles share a 1-of-2 Safe; single-key full control or draining is not established (#26,425,374)",
+   "grade": "unresolved",
+   "gradeLabel": "UNRESOLVED",
    "name": "Concrete",
    "pinnedBlock": 26425374,
    "probe": {
@@ -5015,10 +5022,11 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 3,
-   "rosetteAria": "Concrete control-plane rosette: Upgradeability not determined; Timelock floor not determined; Signer quorum weak; Emergency / freeze scope not determined; Docs-vs-chain parity weak",
+   "rosetteAria": "Concrete control-plane rosette: Upgradeability not determined; Timelock floor not determined; Signer quorum weak; Emergency / freeze scope not determined; Docs-vs-chain parity not determined",
+   "scopeNote": "A 16 November snapshot of Concrete's Risks and Safety page describes separated roles preventing single-key full control or draining, while Pacta recorded ctDeltaWeETH's owner, VAULT_MANAGER and factory-manager authority in one 1-of-2 Safe at Ethereum block 26,425,374; this establishes concentrated manager authority, not a demonstrated single-key drain, and the page's current wording could not be verified. Separate role administrators, ConcreteFactory's 3-of-5 owner Safe and tiered Timelock implementation-approval controls, and strategy custody remain distinct checks.",
    "search": "concrete concrete yield vaults (erc-4626) ctdeltaweeth concrete 0x0265d73a8e61f698d8eb0dfeb91ddce55516844c 0x70ebf87ba7a1517c204979e51979cfbf693364f9 0x8f5f1d40243b259ceb7ab44ba421ff191bcd3381 0xb9dc54c8261745cb97070cefbe3d3d815aee8f20 0xfb65336d4323ba79d07f7024c81b8b69e1781527",
    "slug": "concrete",
-   "summary_short": "Vault and factory manager Safe runs at 1-of-2 despite documented role separation",
+   "summary_short": "ctDeltaWeETH owner/manager share a 1-of-2 Safe; single-key drain not established",
    "url": "https://pacta.wtf/protocols/concrete/"
   },
   {
@@ -5625,7 +5633,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "a",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "evidence": "cvault-core-no-new-tokens-s33: … one at construction. The owner (an externally owned account) can still set the transfer …",
@@ -5870,7 +5878,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "7d minimum enforced delay across control surfaces"
+     "value": "7d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,
@@ -6857,7 +6865,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "b",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,
@@ -7183,7 +7191,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "a",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "evidence": "eigenlayer-core-proxy-admin-and-timelock: … (0xC06Fd4F821eaC1fF1ae8067b36342899b57BAa2d, getMinDelay() = 864000s) and 9-of-13 CommunityMultisig (0xFEA47018D632A77bA579846c840d5706705Dc598); …",
@@ -7512,7 +7520,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "7d minimum enforced delay across control surfaces"
+     "value": "7d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "enzyme-dispatcher-7d-migration-timelock-s18: … + migrationTimelock). getOwner() = 3-of-5 Safe 0xb270FE91e8E4b80452fBF1b4704208792A350f53 …",
@@ -7536,7 +7544,7 @@
      "value": "Chain matches or is stronger than the documentation"
     }
    ],
-   "finding": "Timelock delay: docs say 0 s (no delay) · chain says 7 d",
+   "finding": "Dispatcher migration timelock = 7 days (specs: 'no longer used and is set to 0'): docs say 0 s (no delay) · chain says 7 d",
    "grade": "protective",
    "gradeLabel": "PROTECTIVE",
    "name": "Enzyme Finance",
@@ -7593,7 +7601,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "b",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,
@@ -7759,7 +7767,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "b",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "ethena-admin-timelock-and-dev-safe: … getThreshold() = 5, getOwners().length = 10 (5-of-10 Gnosis Safe).",
@@ -7783,7 +7791,7 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "finding": "Timelock delay: docs say 7 d · chain says 1 d",
+   "finding": "TimelockController MinDelay & Dev Multisig Quorum: docs say 7 d · chain says 1 d",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Ethena (USDe / sUSDe)",
@@ -7842,7 +7850,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "a",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "evidence": "ethena-usdtb-single-admin-no-timelock-s19: … 0xd93826BB299765c87D13AeBa2A7E5d9B27A03956 (no code), which also holds DEFAULT_ADMIN_ROLE …",
@@ -7925,7 +7933,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,
@@ -8009,7 +8017,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "b",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,
@@ -8092,7 +8100,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "4d minimum enforced delay across control surfaces"
+     "value": "4d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "euler-v2-evk-factorygovernor-4d-timelock-s18: … open; CANCELLER_ROLE: that Safe and 2-of-3 Safe 0xb3b84e8320250Afe7a5fb313Ee32B52982b73c53). …",
@@ -8176,7 +8184,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "b",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,
@@ -8343,7 +8351,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "a",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "evidence": "fx-protocol-v2-treasury-admin: … (0x28c921adAC4c1072658eB01a28DA06b5F651eF62, 3-of-4 Safe), while Timelock (0x68863fb8855b04509a835082478D6E3D0bE4E61a, …",
@@ -8367,7 +8375,7 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "finding": "ProtocolTreasury DEFAULT_ADMIN_ROLE Holders: docs say LongPoolManager (0x250893CA4Ba5d05626C785e8da758026928FCD24) and v2 governance docs scope EmergencySafe strictly to EMERGENCY_ROLE behind 3-day Timelock admin. · chain says DEFAULT_ADMIN_ROLE (0x00) on all 4 v2 ProtocolTreasury proxies (0x32356FE312Eba9B7D6A157ad28D1ca91b571CdA6, 0xb178197E88D58Da21bE22A408E850d1e6Dc09A38, 0x6D9e81c5b7C4b37d0Fe9E8CDA776e057f4040868, 0x87d5e4cAaF4358A4337C1…",
+   "finding": "V2 Router owner is the operational Safe; the separate timelock retains three days (#26,448,221)",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "f(x) Protocol v2",
@@ -8395,9 +8403,10 @@
    "reconciledTo": [],
    "records": 2,
    "rosetteAria": "f(x) Protocol v2 control-plane rosette: Upgradeability not determined; Timelock floor weak; Signer quorum strong; Emergency / freeze scope not determined; Docs-vs-chain parity weak",
+   "scopeNote": "f(x) Protocol documents a 3-day public timelock for queued transactions (with an oracle-update exception) and names LongPoolManager and ShortPoolManager for emergency pause; at Ethereum block 26,448,221 the V2 Router Diamond's owner() is the 6-of-9 operational Safe directly while the separate timelock retains three days (ProtocolTreasury role checks are distinct from the Long/ShortPoolManager pause promise).",
    "search": "f(x) protocol v2 f-x-protocol-v2 leveraged eth / stablecoin fxusd fxn 0x221ffb180ad01213ff882ab7de9c75e23f9efa63 0x250893ca4ba5d05626c785e8da758026928fcd24 0x26b2ec4e02ebe2f54583af25b647b1d619e67bbf 0x28c921adac4c1072658eb01a28da06b5f651ef62 0x32356fe312eba9b7d6a157ad28d1ca91b571cda6 0x33636d49fbefbe798e15e7f356e8dbef543cc708 0x68863fb8855b04509a835082478d6e3d0be4e61a 0x6d9e81c5b7c4b37d0fe9e8cda776e057f4040868 0x87d5e4caaf4358a4337c10859c7107c7aef4f8ce 0xb178197e88d58da21be22a408e850d1e6dc09a38",
    "slug": "f-x-protocol-v2",
-   "summary_short": "Docs set a 3-day timelock on every transaction; the V2 Router's owner is a 6-of-9 Safe",
+   "summary_short": "V2 Router owner is the 6-of-9 operational Safe; separate timelock keeps 3 days",
    "url": "https://pacta.wtf/protocols/f-x-protocol-v2/"
   },
   {
@@ -8676,7 +8685,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,
@@ -9173,7 +9182,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "b",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "controller fact: Safe getThreshold()",
@@ -9257,7 +9266,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "a",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "evidence": "frax-usd-sfrxusd-proxyadmin-safe-3of5-s23: … 0xB1748C79709f4Ba2Dd82834B8c82D4a505003f27 (3-of-5, v1.3.0; no timelock); timelockAddress() …",
@@ -9507,7 +9516,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "b",
-     "value": "1d 12h minimum enforced delay across control surfaces"
+     "value": "1d 12h minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "gearbox-v3-legacy-timelock-and-instance-safe: … (0xbb803559B4D58b75E12dd74641AB955e8B0Df40E, 4-of-12), Treasury (0x7b065Fcb0760dF0CEA8CFd144e08554F3CeA73D1, …",
@@ -9531,7 +9540,7 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "finding": "Timelock delay: docs say 2 d · chain says 36 h",
+   "finding": "LegacyTimelock reads 36 hours; V3.0 technical-change docs describe two days (#26,403,523)",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Gearbox V3 / V3.1",
@@ -9556,9 +9565,10 @@
    "reconciledTo": [],
    "records": 1,
    "rosetteAria": "Gearbox V3 / V3.1 control-plane rosette: Upgradeability not determined; Timelock floor moderate; Signer quorum strong; Emergency / freeze scope not determined; Docs-vs-chain parity weak",
+   "scopeNote": "Gearbox's V3.0 operational-multisig documentation describes a 2-day timelock for technical changes (with exceptions) and notes chain-specific configuration for the 4-of-12 InstanceManager; at Ethereum block 26,403,523 the sampled LegacyTimelock reads delay() = 129,600s (36 hours per GIP-104).",
    "search": "gearbox v3 / v3.1 gearbox-v3-v3-1 leveraged credit & curated lending gear 0x1e9ec044853611f4bcd4bbcfe7657508bd1c53d3 0x29b97f37b3e0c704bcfd785f5b7bba2a0b7df2c7 0x3e965117a51186e41c2bb58b729a1e518a715e5f 0x77777777144339bdc3accee992d8d4d31734cb2e 0x7b065fcb0760df0cea8cfd144e08554f3cea73d1 0xa133c9a92fb8ddb962af1cbae58b2723a0bdf23b 0xa7d5ddc1b8557914f158076b228aa91ef613f1d5 0xbb803559b4d58b75e12dd74641ab955e8b0df40e",
    "slug": "gearbox-v3-v3-1",
-   "summary_short": "Timelock delay: docs 2 days · chain 36 hours",
+   "summary_short": "LegacyTimelock reads 36 hours; V3.0 technical-change docs describe 2 days",
    "url": "https://pacta.wtf/protocols/gearbox-v3-v3-1/"
   },
   {
@@ -10578,7 +10588,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "b",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "hop-l1-eth-bridge-governance-2-of-3-safe-s34: … accounts with no code. Neither the DAO Governor 0xed8Bdb5895B8B7f9Fdb3C087628FD8410E853D48 …",
@@ -10987,7 +10997,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "idle-governance-timelock-2d-s31: … 0xD6dABBc2b275114a2366555d6C481EF08FDC2556 (Ethereum): delay() = 172,800 s; Governor Bravo 0x3D5Fc645320be0A085A32885F078F7121e5E5375 …",
@@ -11071,7 +11081,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "3d minimum enforced delay across control surfaces"
+     "value": "3d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "inception-vault-upgrades-timelock-3d-s32: … 0x8e6C8799B542E507bfDDCA1a424867e885D96e79, a 3-of-5 Safe, acting without the timelock on …",
@@ -11236,7 +11246,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "7d minimum enforced delay across control surfaces"
+     "value": "7d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "controller fact: Safe getThreshold()",
@@ -11402,7 +11412,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "a",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "evidence": "interest-protocol-control-plane: … controller is in turn controlled by externally owned account (no code) 0x3CB68a6762041aA05E762814A8791CA9d98E79A0.",
@@ -11486,7 +11496,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "inverse-firm-policy-safe-3of6-s30: … inverse-finance-firm-policy-safe) and already 3-of-6 at #26,406,106 and at the protocol's …",
@@ -11653,7 +11663,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "b",
-     "value": "12h minimum enforced delay across control surfaces"
+     "value": "12h minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,
@@ -11984,7 +11994,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "10d minimum enforced delay across control surfaces"
+     "value": "10d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "kelp-dao-rseth-proxy-admin-and-timelock: … (0x947Cb49334e6571ccBFEF1f1f1178d8469D65ec7) DEFAULT_ADMIN_ROLE held by 6-of-11 Safe (0xb3696a817D01C8623E66D156B6798291fa10a46d); …",
@@ -12463,7 +12473,7 @@
     "documented": "'Every upgrade is subject to a mandatory waiting period before it takes effect. This gives investors time to evaluate the incoming change and exit the vault if needed.' and 'The delay window is configurable by the vault admin , within the protocol bounds of 24 hours (minimum) to 30 days (maximum).' (docs.lagoon.finance/vault/upgradability-and-opt-in-proxy)",
     "observed": "Lagoon cbBTC vault 0xB09F761Cb13baCa8eC087Ac476647361b6314F98 (Ethereum) is an EIP-1967 BeaconProxy: beacon slot = UpgradeableBeacon 0x707D622cdA4b5459e7DcEe8Ba8E429F154f96A27 (implementation() = 0x6C77c47FB8168E22976C3B0338CB1769c952249f), admin slot empty. The beacon's owner() = Safe 0x6D46e28aB34622d9A39d0F306a37a8dC270951aF with getThreshold() = 3 of getOwners() = 6 owners (Safe v1.3.0), no Safe guard; the beacon exposes no delay(). An upgrade of the beacon applies to the vault at once.",
     "recordId": "lagoon-vault-beacon-upgrade-delay-s29",
-    "surface": "cbBTC vault upgrades: docs require a 24 h to 30 day wait; the vault's beacon owner is a 3-of-6 Safe with no delay"
+    "surface": "Legacy cbBTC vault beacon upgrades: no enforced delay under a 3-of-6 Safe; coverage by the 24 h Opt-in delay docs is unverified"
    },
    "factors": [
     {
@@ -12478,7 +12488,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "a",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "0s on the legacy cbBTC vault beacon upgrade path (3-of-6 Safe); whether the documented 24h Opt-in delay covers this vault is unverified"
     },
     {
      "evidence": null,
@@ -12498,13 +12508,13 @@
      "evidence": null,
      "key": "parity",
      "label": "Docs-vs-chain parity",
-     "state": "a",
-     "value": "Documentation differs from the chain (parameter delta)"
+     "state": "n",
+     "value": "Observed onchain state pinned; a breach of a documented commitment is not established"
     }
    ],
-   "finding": "Timelock delay: docs say 1 d · chain says 0 s (no delay)",
-   "grade": "delta",
-   "gradeLabel": "DELTA",
+   "finding": "Legacy cbBTC vault: immediate beacon upgrades; coverage by the documented 24-hour Opt-in delay is unverified (#26,448,221)",
+   "grade": "unresolved",
+   "gradeLabel": "UNRESOLVED",
    "name": "Lagoon",
    "pinnedBlock": 26448221,
    "probe": {
@@ -12526,10 +12536,11 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "Lagoon control-plane rosette: Upgradeability not determined; Timelock floor weak; Signer quorum not determined; Emergency / freeze scope not determined; Docs-vs-chain parity weak",
+   "rosetteAria": "Lagoon control-plane rosette: Upgradeability not determined; Timelock floor weak; Signer quorum not determined; Emergency / freeze scope not determined; Docs-vs-chain parity not determined",
+   "scopeNote": "Lagoon's Opt-in/DelayProxyAdmin documentation describes a 24-hour minimum upgrade wait (24 hours to 30 days), while Pacta's snapshot at Ethereum block 26,448,221 records a different, legacy cbBTC beacon-vault design controlled by a 3-of-6 Safe with no enforced wait on the recorded beacon upgrade path; whether that deployment is covered by the documented promise remains unverified.",
    "search": "lagoon lagoon curated vault infrastructure: erc-7540 vaults behind upgradeable proxies lagoon 0x6c77c47fb8168e22976c3b0338cb1769c952249f 0x6d46e28ab34622d9a39d0f306a37a8dc270951af 0x707d622cda4b5459e7dcee8ba8e429f154f96a27 0xb09f761cb13baca8ec087ac476647361b6314f98",
    "slug": "lagoon",
-   "summary_short": "Docs require a 24 h minimum upgrade wait; the vault beacon's owner is a 3-of-6 Safe",
+   "summary_short": "Legacy cbBTC beacon upgrades have no delay; 24h Opt-in doc coverage unverified",
    "url": "https://pacta.wtf/protocols/lagoon/"
   },
   {
@@ -13051,7 +13062,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "3d minimum enforced delay across control surfaces"
+     "value": "3d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "lido-dual-governance-emergency-timelock: … (0x8772E3a2D86B9347A2688f9bc1808A6d8917760C, 3-of-6 Safe); stETH totalSupply = 9,759,371.53 …",
@@ -13215,7 +13226,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "a",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "evidence": "liquid-collective-lseth-admin-multisig-4of7-s19: … 0xDE55C9dc78f985fE1502484Cb98EBfAB66A56B62 (2-of-3) may call pause() but not unpause() …",
@@ -13464,7 +13475,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "b",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,
@@ -13548,7 +13559,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "b",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "lombard-lbtc-core-proxy-upgrade-timelock: … 86400s / 24h, EXECUTOR_ROLE held by 3-of-5 Safe 0x251a604E8E8f6906d60f8dedC5aAeb8CD38F4892 …",
@@ -13793,7 +13804,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,
@@ -13879,7 +13890,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "3d minimum enforced delay across control surfaces"
+     "value": "3d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "mantle-lsp-meth-upgrade-timelock: … (3 days) and PROPOSER_ROLE held by 6-of-14 Security Council Safe (0x4e59e778a0fb77fBb305637435C62FaeD9aED40f); …",
@@ -13903,7 +13914,7 @@
      "value": "Chain matches or is stronger than the documentation"
     }
    ],
-   "finding": "Timelock delay: docs say 0 s (no delay) · chain says 3 d",
+   "finding": "Core Proxy EIP-1967 Admin Slot & 3-Day UpgradeTimelock: docs say 0 s (no delay) · chain says 3 d",
    "grade": "protective",
    "gradeLabel": "PROTECTIVE",
    "name": "Mantle Liquid Staking (mETH / cmETH)",
@@ -13944,8 +13955,8 @@
    "deltas": 1,
    "easAttested": true,
    "evidence": {
-    "documented": "Governor admin actions documentation describes GovernorTimelock (3-day delay) governance path.",
-    "observed": "EIP-1967 admin slot holds 4-of-7 Maple DAO Safe (0xd6d4Bcde6c816F17889f1Dd3000aF0261B03a196); Globals.governor() (0x804a6F5F667170F545Bf14e5DDB48C70B788390C) points to GovernorTimelock (0x2eFFf88747EB5a3FF00d4d8d0f0800E306C0426b, getMinDelay = 259200s / 3d); syrupUSDC (0x80ac24aA929eaF5013f6436cdA2a7ba190f5Cc0b) totalAssets = 898,551,580.57 units (6 dec).",
+    "documented": "Maple's Governor documentation places PoolPermissionManager implementation changes behind the Governor's delay; GovernorTimelock documentation specifies configurable delays with a 1-day minimum and discloses Security Admin exceptions; Maple's Token Transparency filing on Blockworks, section 3(b), states a 3-day GovernorTimelock for listed governance changes.",
+    "observed": "EIP-1967 admin slot holds 4-of-7 Maple DAO Safe (0xd6d4Bcde6c816F17889f1Dd3000aF0261B03a196); Globals.governor() (0x804a6F5F667170F545Bf14e5DDB48C70B788390C) points to GovernorTimelock (0x2eFFf88747EB5a3FF00d4d8d0f0800E306C0426b, defaultTimelockParameters() = 259200s / 3d); syrupUSDC (0x80ac24aA929eaF5013f6436cdA2a7ba190f5Cc0b) totalAssets = 898,551,580.57 units (6 dec).",
     "recordId": "maple-v2-syrup-ppm-admin",
     "surface": "EIP-1967 Proxy Admin Slot vs. GovernorTimelock"
    },
@@ -13986,7 +13997,7 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "finding": "EIP-1967 Proxy Admin Slot vs. GovernorTimelock: docs say Governor admin actions documentation describes GovernorTimelock (3-day delay) governance path. · chain says EIP-1967 admin slot holds 4-of-7 Maple DAO Safe (0xd6d4Bcde6c816F17889f1Dd3000aF0261B03a196);",
+   "finding": "PoolPermissionManager proxy admin is the 4-of-7 DAO Safe, not GovernorTimelock (#26,401,540)",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Maple Finance V2 / Syrup",
@@ -14011,9 +14022,10 @@
    "reconciledTo": [],
    "records": 1,
    "rosetteAria": "Maple Finance V2 / Syrup control-plane rosette: Upgradeability not determined; Timelock floor not determined; Signer quorum strong; Emergency / freeze scope not determined; Docs-vs-chain parity weak",
+   "scopeNote": "Maple's Governor documentation places PoolPermissionManager implementation changes behind the Governor's delay, while Pacta's snapshot at Ethereum block 26,401,540 records that named proxy's admin as the 4-of-7 DAO Safe; this is a question about that proxy's upgrade route, not evidence that every Maple administrative action bypasses a three-day wait. (GovernorTimelock documentation specifies configurable delays with a 1-day minimum and discloses Security Admin exceptions; Maple's Token Transparency filing on Blockworks, section 3(b), states a 3-day GovernorTimelock for listed governance changes.)",
    "search": "maple finance v2 / syrup maple-finance-v2-syrup institutional credit / rwa syrup syrupusdc syrupusdt 0x2efff88747eb5a3ff00d4d8d0f0800e306c0426b 0x804a6f5f667170f545bf14e5ddb48c70b788390c 0x80ac24aa929eaf5013f6436cda2a7ba190f5cc0b 0xbe10adce8b6e3e02db384e7fada5395dd113d8b3 0xd6d4bcde6c816f17889f1dd3000af0261b03a196",
    "slug": "maple-finance-v2-syrup",
-   "summary_short": "Proxy admin is the 4-of-7 DAO Safe; docs describe a 3-day GovernorTimelock",
+   "summary_short": "PoolPermissionManager proxy admin is the 4-of-7 DAO Safe, not GovernorTimelock",
    "url": "https://pacta.wtf/protocols/maple-finance-v2-syrup/"
   },
   {
@@ -14127,7 +14139,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "a",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "evidence": "mellow-lido-earn-curator-quorum: getThreshold() = 3, getOwners().length = 5 (3-of-5 Gnosis Safe); DEFAULT_ADMIN_ROLE (0x00) …",
@@ -14275,7 +14287,7 @@
    "deltas": 1,
    "easAttested": true,
    "evidence": {
-    "documented": "Peer Re7 curated vault architecture and Aragon guardian integration.",
+    "documented": "Peer-vault configuration comparison (Re7 WETH vs Re7 USDT guardian settings); no Re7 documentation promising matching guardian configurations was verified, so this is not a broken documentation promise.",
     "observed": "Re7 WETH owner() = 0xE86399fE6d7007FdEcb08A2ee1434Ee677a04433 (2-of-4 Safe), timelock() = 259200s (3d), guardian() = 0x0000000000000000000000000000000000000000, pendingGuardian() = (0x0, 0); peer Re7 USDT (0x95EeF579155cd2C5510F312c8fA39208c3Be01a8) sets guardian() = 0x2F80ba89362f86a9acC71BFfE5EcF4997F52BDd4 (Aragon Guardian).",
     "recordId": "metamorpho-re7-weth-guardian-parity",
     "surface": "Sampled MetaMorpho Vault Guardian Configuration"
@@ -14293,7 +14305,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "3d minimum enforced delay across control surfaces"
+     "value": "3d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "metamorpho-re7-weth-guardian-parity: … 0xE86399fE6d7007FdEcb08A2ee1434Ee677a04433 (2-of-4 Safe), timelock() = 259200s (3d), guardian() …",
@@ -14313,13 +14325,13 @@
      "evidence": null,
      "key": "parity",
      "label": "Docs-vs-chain parity",
-     "state": "a",
-     "value": "Documentation differs from the chain (parameter delta)"
+     "state": "n",
+     "value": "Peer vault comparison only; no documented promise of matching guardian configurations was verified"
     }
    ],
-   "finding": "Sampled MetaMorpho Vault Guardian Configuration: docs say Peer Re7 curated vault architecture and Aragon guardian integration. · chain says Re7 WETH owner() = 0xE86399fE6d7007FdEcb08A2ee1434Ee677a04433 (2-of-4 Safe), timelock() = 259200s (3d), guardian() = 0x0000000000000000000000000000000000000000, pendingGuardian() = (0x0, 0);",
-   "grade": "delta",
-   "gradeLabel": "DELTA",
+   "finding": "Re7 WETH has no guardian; Re7 USDT has an Aragon guardian—no promise of matching configurations was verified (#26,401,405)",
+   "grade": "unresolved",
+   "gradeLabel": "UNRESOLVED",
    "name": "MetaMorpho (Re7 WETH vs. Re7 USDT)",
    "pinnedBlock": 26401405,
    "probe": {
@@ -14341,10 +14353,12 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "MetaMorpho (Re7 WETH vs. Re7 USDT) control-plane rosette: Upgradeability not determined; Timelock floor strong; Signer quorum moderate; Emergency / freeze scope strong; Docs-vs-chain parity weak",
+   "rosetteAria": "MetaMorpho (Re7 WETH vs. Re7 USDT) control-plane rosette: Upgradeability not determined; Timelock floor strong; Signer quorum moderate; Emergency / freeze scope strong; Docs-vs-chain parity not determined",
+   "scopeNote": "At Ethereum block 26,401,405 MetaMorpho Re7 WETH sets guardian() to the zero address under a 2-of-4 owner Safe and 3-day timelock, whereas peer vault Re7 USDT configures an Aragon guardian; Morpho's vault architecture explicitly supports vaults without a guardian and no Re7 documentation promising matching guardian configurations was verified.",
    "search": "metamorpho (re7 weth vs. re7 usdt) metamorpho-re7-weth-vs-re7-usdt curated lending vaults re7weth re7usdt metamorpho 0x0000000000000000000000000000000000000000 0x2f80ba89362f86a9acc71bffe5ecf4997f52bdd4 0x78fc2c2ed1a4cdb5402365934ae5648adad094d0 0x95eef579155cd2c5510f312c8fa39208c3be01a8 0xe86399fe6d7007fdecb08a2ee1434ee677a04433",
    "slug": "metamorpho-re7-weth-vs-re7-usdt",
-   "summary_short": "Re7 WETH vault has no guardian; its owner is a 2-of-4 Safe with a 3-day timelock",
+   "subtitle": "Peer vault configuration differs; no documented parity promise verified",
+   "summary_short": "Re7 WETH has no guardian while Re7 USDT does; no parity promise was verified",
    "url": "https://pacta.wtf/protocols/metamorpho-re7-weth-vs-re7-usdt/"
   },
   {
@@ -14457,7 +14471,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "a",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "evidence": "metric-factory-protocol-fee-no-timelock-s32: … 0xa082C768B1C40f5e980b75959D85cF245AFF0FAE, a 3-of-5 Safe.",
@@ -14621,7 +14635,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "3d minimum enforced delay across control surfaces"
+     "value": "3d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,
@@ -14790,7 +14804,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "b",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "moonwell-pause-guardian-2of4-safe-s18: … (0xfBb21d0380beE3312B33c4353c8936a0F13EF26C).pauseGuardian() = 2-of-4 Safe 0x5B710010586C1b728B047c3E42473c700eeA4026 …",
@@ -14814,7 +14828,7 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "finding": "Comptroller pauseGuardian = 2-of-4 Safe (Constitution: pause = Security Council 3-of-5): docs say Moonwell DAO Constitution 8.1: 'The Security Council has the power to execute any pause functionality, or perform other required actions with no delay ... · chain says Unitroller (0xfBb21d0380beE3312B33c4353c8936a0F13EF26C).pauseGuardian() = 2-of-4 Safe 0x5B710010586C1b728B047c3E42473c700eeA4026 (v1.4.1);",
+   "finding": "Base pause guardian: 2-of-4 Safe, disclosed in the October governance migration; older constitution says 3-of-5 (#57,842,915)",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Moonwell Lending (Base)",
@@ -14839,9 +14853,10 @@
    "reconciledTo": [],
    "records": 2,
    "rosetteAria": "Moonwell Lending (Base) control-plane rosette: Upgradeability not determined; Timelock floor moderate; Signer quorum moderate; Emergency / freeze scope strong; Docs-vs-chain parity weak",
+   "scopeNote": "Moonwell's DAO Constitution (section 8.1) states that emergency pause actions require a 3-of-5 Security Council approval (while noting governance may modify council powers), whereas Unitroller.pauseGuardian() on Base resolved to a 2-of-4 Safe at block 57,842,915 — a configuration explicitly described in Moonwell's October 2026 governance forum recap of MIP-X71.",
    "search": "moonwell lending (base) moonwell-lending-base base lending & borrowing well 0x08edebffae68970dcf751baa826182b3a4acfc05 0x446342af4f3bcd374276891c6bb3411bf2f8779e 0x5b710010586c1b728b047c3e42473c700eea4026 0x8769b70ac7c93af0e75de0d69877709b66d75838 0x8b621804a7637b781e2bbd58e256a591f2df7d51 0xfbb21d0380bee3312b33c4353c8936a0f13ef26c",
    "slug": "moonwell-lending-base",
-   "summary_short": "Pause guardian: docs 3-of-5 Security Council · chain 2-of-4 Safe",
+   "summary_short": "Base pause guardian is a 2-of-4 Safe (Oct MIP-X71); older constitution says 3-of-5",
    "url": "https://pacta.wtf/protocols/moonwell-lending-base/"
   },
   {
@@ -14871,7 +14886,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "a",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "evidence": null,
@@ -15446,7 +15461,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "b",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "nexus-mutual-governor-24h-timelock-s18: … (0x51ad1265C8702c9e96Ea61Fe4088C2e22eD4418e, 3-of-5 Safe owned by the 5 seat holders) can …",
@@ -15612,7 +15627,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "b",
-     "value": "1h minimum enforced delay across control surfaces"
+     "value": "1h minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,
@@ -15696,7 +15711,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "noon-usn-upgrade-timelock-48h-s31: … 0x1ea169EcCcf7714E7ba04900e1a3357cCA77327f, a 3-of-5 Safe.",
@@ -15862,7 +15877,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,
@@ -15945,7 +15960,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "5d minimum enforced delay across control surfaces"
+     "value": "5d Token House governance timelock (getMinDelay() = 432,000s); OBOL MINTER_ROLE sits with a separate 2-of-3 Safe outside this timelock"
     },
     {
      "evidence": "obol-network-stobol-withdraw-delay-s24: … 0x7E90E03654732ABedF89Faf87f05BcD03ACEeFdC (1-of-2, v1.4.1).",
@@ -16109,7 +16124,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "b",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,
@@ -16194,7 +16209,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,
@@ -16442,7 +16457,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,
@@ -17014,7 +17029,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "a",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "evidence": "paypal-usd-pyusd-pause-asset-protection-single-owner-role-s23: … 0x3Af3e85f4f97De7AD0f000B724Fb77fE5ffc024B (no contract code), holding PAUSE_ROLE, ASSET_PROTECTION_ROLE …",
@@ -17180,7 +17195,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "a",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "evidence": "pendle-finance-v2-reserve-fee-80-lp-20-s19: … 0x2aD631F72fB16d91c4953A7f4260A97C2fE2f31e (DEFAULT_ADMIN_ROLE: 3-of-5 Safe 0x8119EC16F0573B7dAc7C0CB94EB504FB32456ee1); …",
@@ -17264,7 +17279,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "b",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "pickle-masterchef-owner-safe-no-timelock-s32: … 0x9d074E37d408542FD38be78848e8814AFB38db17, a 2-of-6 Safe (the page calls it a 2/5 multisig). …",
@@ -17757,7 +17772,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "168h minimum enforced delay across control surfaces"
+     "value": "168h minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "controller fact: Safe getThreshold()",
@@ -18085,7 +18100,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "re-safe-sole-timelock-proposer-s21: … timelock is its own admin; the Safe is 3-of-5 (v1.4.1, no modules).",
@@ -18274,13 +18289,13 @@
      "evidence": null,
      "key": "parity",
      "label": "Docs-vs-chain parity",
-     "state": "a",
-     "value": "Documentation differs from the chain (parameter delta)"
+     "state": "n",
+     "value": "Observed onchain state pinned; a breach of a documented commitment is not established"
     }
    ],
-   "finding": "DepositQueue.feeBasisPoints Parameter vs. Staking Docs: docs say docs.renzoprotocol.com/docs/products/staking-suite/ezeth states 10% fee on restaking rewards. · chain says feeBasisPoints() = 1500 (15%);",
-   "grade": "delta",
-   "gradeLabel": "DELTA",
+   "finding": "DepositQueue fee parameter: 10,000 bps; effective reward fee and onward distribution are not verified (#26,448,221)",
+   "grade": "unresolved",
+   "gradeLabel": "UNRESOLVED",
    "name": "Renzo Protocol (ezETH)",
    "pinnedBlock": 26448221,
    "probe": {
@@ -18302,10 +18317,11 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 2,
-   "rosetteAria": "Renzo Protocol (ezETH) control-plane rosette: Upgradeability not determined; Timelock floor not determined; Signer quorum strong; Emergency / freeze scope not determined; Docs-vs-chain parity weak",
+   "rosetteAria": "Renzo Protocol (ezETH) control-plane rosette: Upgradeability not determined; Timelock floor not determined; Signer quorum strong; Emergency / freeze scope not determined; Docs-vs-chain parity not determined",
+   "scopeNote": "Renzo documents a 10% restaking-reward fee, split equally between treasury and node operators (alongside separate EigenLayer-reward pass-through language), while Pacta recorded DepositQueue feeBasisPoints at 10,000 at Ethereum block 26,448,221, versus 1,500 at block 26,433,001; that parameter alone does not establish the effective fee on all ezETH rewards or who ultimately retains funds routed to feeAddress.",
    "search": "renzo protocol (ezeth) renzo-protocol-ezeth liquid restaking ezeth rez 0x10586b9b7ff0f842913a57539f8167ce143c3011 0x24aa958c90b7973dc16c63c9992f69e1767377ae 0xbf5495efe5db9ce00f80364c8b423567e58d2110 0xd1e6626310fd54eceb5b9a51da2ec329d6d4b68a 0xf2f305d14dcd8aaef887e0428b3c9534795d0d60",
    "slug": "renzo-protocol-ezeth",
-   "summary_short": "Docs state a 10% reward fee; feeBasisPoints() now reads 10,000 (100%), up from 1,500",
+   "summary_short": "DepositQueue feeBasisPoints reads 10,000 bps; effective fee and routing unverified",
    "url": "https://pacta.wtf/protocols/renzo-protocol-ezeth/"
   },
   {
@@ -18418,7 +18434,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "b",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "resolv-usr-default-admin-delay-and-safe: … (0x66a1E37c9b0eAddca17d3662D6c05F4DECf3e110) defaultAdmin() = 4-of-6 Core Safe (0xD6889F307BE1b83Bb355d5DA7d4478FB0d2Af547) …",
@@ -18502,7 +18518,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "b",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "resupply-main-multisig-3of5-s22: … 0xFE11a5009f2121622271e7dd0FD470264e076af6: 3-of-5 (getThreshold() = 3, getOwners() = …",
@@ -18526,7 +18542,7 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "finding": "Safe threshold: docs say 3-of-4 · chain says 3-of-5",
+   "finding": "Main multisig: 3-of-5 signers: docs say 3-of-4 · chain says 3-of-5",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Resupply",
@@ -18749,7 +18765,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "b",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,
@@ -18832,7 +18848,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "7d minimum enforced delay across control surfaces"
+     "value": "7d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "rocket-pool-reth-security-council-leave-time-28d-s19: … 0x6C565aF34f15dE064b56afEdF7B0F59C15bB20FE (2-of-3).",
@@ -19243,7 +19259,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "5d minimum enforced delay across control surfaces"
+     "value": "5d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,
@@ -19738,7 +19754,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "3d minimum enforced delay across control surfaces"
+     "value": "3d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "solv-solvbtc-owner-3of5-safe-s17: … (0x7A56E1C57C7475CCf742a1832B028F0456652F97).owner() = 3-of-5 Safe 0x0c2Bc4d2698820e12E6eBe863E7b9E2650CD5b7D; …",
@@ -19821,7 +19837,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "3d minimum enforced delay across control surfaces"
+     "value": "3d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,
@@ -20071,7 +20087,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,
@@ -20487,7 +20503,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "7d minimum enforced delay across control surfaces"
+     "value": "7d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "stader-ethx-manager-safe-and-timelock: … getThreshold() = 3, getOwners().length = 6 (3-of-6 Gnosis Safe); ETHx (0xA35b1B31Ce002FBF2058D22F30f95D405200A15b) …",
@@ -20511,7 +20527,7 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "finding": "Safe threshold: docs say 3-of-5 · chain says 3-of-6",
+   "finding": "Manager Safe Quorum & 7-Day TimelockController Admin Path: docs say 3-of-5 · chain says 3-of-6",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Stader Labs (ETHx)",
@@ -20635,10 +20651,10 @@
    "deltas": 2,
    "easAttested": true,
    "evidence": {
-    "documented": "docs.stakedao.org (timelock): 'Stake DAO's core contracts are protected by a governance timelock that enforces a 48-hour delay on all protocol changes.' and 'A proposer submits the operation with a minimum 48-hour delay'",
-    "observed": "ProtocolTimelock 0xb27afc7844988948FBd6210AeF4E1362bC2d8E6a: getMinDelay() = 432000s (5 days). It owns the ProtocolController 0x2d8BcE1FaE00a959354aCD9eBf9174337A64d4fb; the Governance Safe 0xB0552b6860CE5C0202976Db056b5e3Cc4f9CC765 holds PROPOSER_ROLE; OpenZeppelin TimelockController (Sourcify exact match).",
-    "recordId": "stake-dao-protocol-timelock-min-delay-5d-s22",
-    "surface": "Protocol changes wait 5 days, longer than the documented 48 hours"
+    "documented": "docs.stakedao.org (timelock, role structure): Executor 'Can execute operations after delay (permissionless)'; Proposer 'Can schedule operations (governance multisig)'",
+    "observed": "ProtocolTimelock 0xb27afc7844988948FBd6210AeF4E1362bC2d8E6a: hasRole(EXECUTOR_ROLE, address(0)) = false, so execution is permissioned, not permissionless; the Governance Safe 0xB0552b6860CE5C0202976Db056b5e3Cc4f9CC765 (3-of-5, Safe v1.3.0, 3 modules enabled) holds EXECUTOR_ROLE, PROPOSER_ROLE, CANCELLER_ROLE and GUARDIAN_ROLE; the timelock is its own admin and does not hold EXECUTOR_ROLE (AccessControl without enumeration: other holders are not excluded).",
+    "recordId": "stake-dao-timelock-executor-permissioned-s22",
+    "surface": "Executing queued changes: permissioned (EXECUTOR_ROLE held by the governance multisig), not permissionless"
    },
    "factors": [
     {
@@ -20653,7 +20669,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "5d minimum enforced delay across control surfaces"
+     "value": "5d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "stake-dao-timelock-executor-permissioned-s22: … 0xB0552b6860CE5C0202976Db056b5e3Cc4f9CC765 (3-of-5, Safe v1.3.0, 3 modules enabled) holds …",
@@ -20677,7 +20693,7 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "finding": "Timelock delay: docs say 2 d · chain says 5 d",
+   "finding": "Executing queued changes: permissioned (EXECUTOR_ROLE held by the governance multisig), not permissionless: docs say docs.stakedao.org (timelock, role structure): Executor 'Can execute operations after delay (permissionless)'; · chain says ProtocolTimelock 0xb27afc7844988948FBd6210AeF4E1362bC2d8E6a: hasRole(EXECUTOR_ROLE, address(0)) = false, so execution is permissioned, not permissionless;",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Stake DAO",
@@ -20739,7 +20755,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "controller fact: Safe getThreshold()",
@@ -21151,7 +21167,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "7d minimum enforced delay across control surfaces"
+     "value": "7d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "steakhouse-financial-ethereum-vaults-owner-safe-5-of-10-s24: … 0x827e86072B06674a077f592A531dcE4590aDeCdB (3-of-9).",
@@ -21235,7 +21251,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "7d minimum enforced delay across control surfaces"
+     "value": "7d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,
@@ -21319,7 +21335,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "7d minimum enforced delay across control surfaces"
+     "value": "7d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "steakhouse-usdc-base-timelock-7d-s17: … 0x9e0FdDDa790651E6a05CD2dE69e624B94C04eAf5 has no contract code (eth_getCode = 0x on Base and on Ethereum …",
@@ -21567,7 +21583,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "7d minimum enforced delay across control surfaces"
+     "value": "7d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,
@@ -21899,7 +21915,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "7d minimum enforced delay across control surfaces"
+     "value": "7d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "swell-sweth-rsweth-timelock-and-reprice-bounds: … (0xbA829003e6b5dD858fbed3945719939a6DC3073b, delay() = 604800s / 7d, admin() = 4-of-7 Safe 0x20fDF47509C5eFC0e1101e3CE443691781C17F90), …",
@@ -22891,7 +22907,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,
@@ -22972,7 +22988,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "b",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,
@@ -23136,7 +23152,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "b",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "tori-trusd-timelock-admin-undocumented-timelock-s32: … have getMinDelay() = 86,400 s and the 3-of-5 Safe 0x0C6Bbfd2d5666d44bf28580eDEec0263692C8316 …",
@@ -23156,13 +23172,13 @@
      "evidence": null,
      "key": "parity",
      "label": "Docs-vs-chain parity",
-     "state": "a",
-     "value": "Documentation differs from the chain (parameter delta)"
+     "state": "n",
+     "value": "Current documentation names the retained 24-hour controller; pending a fresh chain read"
     }
    ],
-   "finding": "trUSD TIMELOCK_ADMIN_ROLE: a second ToriTimelock, not the documented timelock: docs say 'It holds the Timelock Admin role on the core contracts' (docs.tori.finance/security/roles.md) · chain says Tori trUSD 0xd0580192E98eA6CEB9c7b6191Ed2E27560911697 (Ethereum, EIP-1967 proxy, implementation 0xb1d133fE29255EB4Ac9B05d647d49cd7F05ff631): hasRole(TIMELOCK_ADMIN_ROLE 0x5f58e3a2316349923ce3780f8d587db2d72378aed66a8261…",
-   "grade": "delta",
-   "gradeLabel": "DELTA",
+   "finding": "trUSD timelock: current documentation names the same 24-hour controller as the retained observation (#26,451,608)",
+   "grade": "unresolved",
+   "gradeLabel": "UNRESOLVED",
    "name": "Tori Finance",
    "pinnedBlock": 26451608,
    "probe": {
@@ -23187,10 +23203,13 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "Tori Finance control-plane rosette: Upgradeability not determined; Timelock floor moderate; Signer quorum strong; Emergency / freeze scope not determined; Docs-vs-chain parity weak",
+   "rosetteAria": "Tori Finance control-plane rosette: Upgradeability not determined; Timelock floor moderate; Signer quorum strong; Emergency / freeze scope not determined; Docs-vs-chain parity not determined",
+   "scopeNote": "At Ethereum block 26,451,608 Pacta recorded TIMELOCK_ADMIN_ROLE on trUSD held by 24-hour ToriTimelock 0xcd3c66e73abF927EAAF1238aEB5F251b4f2f667b rather than 0xA952453E39F77108Ee37C1b92de593F1C59A6ef4; Tori Finance's retrieved roles documentation (21 November 2026) now names 0xcd3c66e73abF927EAAF1238aEB5F251b4f2f667b (86,400 seconds), resolving the document-side discrepancy pending a fresh finalized-block chain read.",
    "search": "tori finance tori-finance delta-neutral synthetic dollar (staked strusd) (ethereum) trusd 0x0c6bbfd2d5666d44bf28580edeec0263692c8316 0xa952453e39f77108ee37c1b92de593f1c59a6ef4 0xb1d133fe29255eb4ac9b05d647d49cd7f05ff631 0xcd3c66e73abf927eaaf1238aeb5f251b4f2f667b 0xd0580192e98ea6ceb9c7b6191ed2e27560911697",
    "slug": "tori-finance",
-   "summary_short": "trUSD's Timelock Admin is a second ToriTimelock, not the one the roles page names",
+   "subPill": "Docs updated · pending chain read",
+   "subtitle": "Resolved by a documentation change; pending a fresh chain read",
+   "summary_short": "trUSD timelock: current docs name the same 24-hour controller as observed",
    "url": "https://pacta.wtf/protocols/tori-finance/"
   },
   {
@@ -23303,7 +23322,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "a",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "0s on TREE token blacklisting (5-of-7 Safe); TREE and tETH owner/upgrade paths enforce a 5d timelock"
     },
     {
      "evidence": "treehouse-tree-timelock-op-0x2f11: … Blacklistable module whose blacklister is a 5-of-7 Safe; after execution that Safe can …",
@@ -23327,7 +23346,7 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "finding": "Timelock delay: docs say 5 d · chain says 0 s (no delay)",
+   "finding": "TREE transfer blacklisting: no enforced delay; TREE and tETH owner paths retain five-day timelocks (#26,440,048)",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Treehouse (TREE / tETH)",
@@ -23352,9 +23371,10 @@
    "reconciledTo": [],
    "records": 3,
    "rosetteAria": "Treehouse (TREE / tETH) control-plane rosette: Upgradeability not determined; Timelock floor weak; Signer quorum strong; Emergency / freeze scope strong; Docs-vs-chain parity weak",
+   "scopeNote": "Treehouse's Timelock documentation states that all Treehouse contracts are secured by a 5-day timelock so no critical action executes immediately, while Pacta recorded at Ethereum block 26,440,048 that a 5-of-7 Safe holds blacklister() on the TREE token with no enforced delay; TREE upgrade ownership (#26,406,106) and tETH ownership (#26,407,707) retain 5-day TimelockControllers.",
    "search": "treehouse (tree / teth) treehouse-tree-teth fixed income / lst teth tree 0x0fedcbfebc293ad8048726b0f887e6c1126effa6 0x2225dabffc7f862c99477381e971e8b1fdab467e 0x22261b4d6f629d8cf946c3524df86bf7222901f6 0x77146784315ba81904d654466968e3a7c196d1f3 0xd11c452fc99cf405034ee446803b6f6c1f6d5ed8",
    "slug": "treehouse-tree-teth",
-   "summary_short": "A 5-of-7 Safe can freeze TREE transfers at once; docs promise a 5-day timelock",
+   "summary_short": "TREE blacklisting has no delay; TREE and tETH owner paths keep 5-day timelocks",
    "url": "https://pacta.wtf/protocols/treehouse-tree-teth/"
   },
   {
@@ -23554,7 +23574,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,
@@ -23716,7 +23736,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,
@@ -23800,7 +23820,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,
@@ -24041,14 +24061,14 @@
      "key": "upgrade",
      "label": "Upgradeability",
      "state": "a",
-     "value": "Upgradeable with no enforced delay: upgraded by a Safe directly (a Safe has no delay of its own)"
+     "value": "Upgradeable with no enforced delay: upgraded by a Safe directly (Upshift's documentation expressly discloses that proxy upgrades have no timelock)"
     },
     {
      "evidence": "upshift-proxyadmin-safe-s28: Upshift vault 0xE9B725010A9E419412ed67d0fA5f3A5f40159D32 (Ethereum): EIP-1967 admin slot = ProxyAdmin 0xB5fBf201A35327Ddd89986FfA60CF5A675B2bDbc, whose owner() …",
      "key": "timelock",
      "label": "Timelock floor",
      "state": "a",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "evidence": "upshift-proxyadmin-safe-s28: … 0x17ab7568Cd5386DF6C8E4552438E32794D057cC1 (2-of-3).",
@@ -24097,9 +24117,10 @@
    "reconciledTo": [],
    "records": 1,
    "rosetteAria": "Upshift control-plane rosette: Upgradeability weak; Timelock floor weak; Signer quorum moderate; Emergency / freeze scope not determined; Docs-vs-chain parity weak",
+   "scopeNote": "Upshift describes the ProxyAdmin Safe as generally 4-of-6 and discloses upgrades without a timelock, while Pacta recorded the ProxyAdmin owner of vault 0xE9B725010A9E419412ed67d0fA5f3A5f40159D32 as 2-of-3 at Ethereum block 26,441,165; the different signer count does not by itself show that one organization can upgrade alone.",
    "search": "upshift upshift institutional curated vaults run through a safe owner and a proxyadmin multisig upshift 0x17ab7568cd5386df6c8e4552438e32794d057cc1 0x4107557d726933f0bca591a4218afc92978457f7 0xb5fbf201a35327ddd89986ffa60cf5a675b2bdbc 0xe9b725010a9e419412ed67d0fa5f3a5f40159d32",
    "slug": "upshift",
-   "summary_short": "Docs state a 4-of-6 ProxyAdmin multisig; the vault's is 2-of-3",
+   "summary_short": "Docs say ProxyAdmin is generally 4-of-6 (no timelock disclosed); vault's is 2-of-3",
    "url": "https://pacta.wtf/protocols/upshift/"
   },
   {
@@ -24214,7 +24235,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "a",
-     "value": "1s minimum enforced delay across control surfaces"
+     "value": "1s DEFAULT_ADMIN role-handover delay (RegistryAccess.defaultAdminDelay); ordinary admin action delay not in published records"
     },
     {
      "evidence": "usual-money-registry-access-delay: … 0x6e9d65eC80D69b1f508560Bc7aeA5003db1f7FB7 (8-of-15 Gnosis Safe).",
@@ -24238,7 +24259,7 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "finding": "Timelock delay: docs say 3 d · chain says 1 s",
+   "finding": "DEFAULT_ADMIN handover: one-second delay observed versus three days documented (#26,401,725)",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Usual Money (USD0 / USD0++)",
@@ -24263,9 +24284,10 @@
    "reconciledTo": [],
    "records": 1,
    "rosetteAria": "Usual Money (USD0 / USD0++) control-plane rosette: Upgradeability not determined; Timelock floor weak; Signer quorum strong; Emergency / freeze scope not determined; Docs-vs-chain parity weak",
+   "scopeNote": "Usual documents three days before transferring DEFAULT_ADMIN to a new address, while Pacta recorded RegistryAccess defaultAdminDelay() as one second at Ethereum block 26,401,725; this finding concerns administrator handover, not a delay on every action by an existing administrator.",
    "search": "usual money (usd0 / usd0++) usual-money-usd0-usd0 rwa stablecoin usd0 usd0++ usual 0x0d374775e962c3608b8f0a4b8b10567df739bb56 0x6e9d65ec80d69b1f508560bc7aea5003db1f7fb7",
    "slug": "usual-money-usd0-usd0",
-   "summary_short": "Timelock delay: docs 3 days · chain 1 second",
+   "summary_short": "DEFAULT_ADMIN handover delay: 1 second observed vs 3 days documented",
    "url": "https://pacta.wtf/protocols/usual-money-usd0-usd0/"
   },
   {
@@ -24613,7 +24635,7 @@
     "documented": "'Your deposited funds will be sent to and stored in an escrow secured by **an immutable smart contract,**' (docs.whales.market/llms-full.txt)",
     "observed": "Whales Market TransparentUpgradeableProxy 0x1eCdB32e59e948C010a189a0798C674a2d0c6603 (Ethereum): EIP-1967 implementation slot = 0x623620b3Eff4e1A30e9f1154f88198Ab26952EeB, admin slot = 0xeB5E772919661F455619A4cABd9B2b64715505E6; upgradeable (EIP-1967 implementation + admin slot (transparent proxy)).",
     "recordId": "whales-market-upgradeability-s28",
-    "surface": "Whales Market TransparentUpgradeableProxy: docs describe it as immutable, but it is an upgradeable proxy"
+    "surface": "Whales Market TransparentUpgradeableProxy: upgradeable; coverage by the pre-market escrow immutability statement is unverified"
    },
    "factors": [
     {
@@ -24648,13 +24670,13 @@
      "evidence": null,
      "key": "parity",
      "label": "Docs-vs-chain parity",
-     "state": "a",
-     "value": "Documentation differs from the chain (parameter delta)"
+     "state": "n",
+     "value": "Observed onchain state pinned; a breach of a documented commitment is not established"
     }
    ],
-   "finding": "Whales Market TransparentUpgradeableProxy: docs describe it as immutable, but it is an upgradeable proxy: docs say 'Your deposited funds will be sent to and stored in an escrow secured by **an immutable smart contract,**' (docs.whales.market/llms-full.txt) · chain says Whales Market TransparentUpgradeableProxy 0x1eCdB32e59e948C010a189a0798C674a2d0c6603 (Ethereum): EIP-1967 implementation slot = 0x623620b3Eff4e1A30e9f1154f88198Ab26952EeB, admin slot = 0xeB5E772919661F455619A4cABd9B2b64…",
-   "grade": "delta",
-   "gradeLabel": "DELTA",
+   "finding": "Sampled Whales Market proxy is upgradeable; coverage by the pre-market escrow immutability promise is unverified (#26,441,165)",
+   "grade": "unresolved",
+   "gradeLabel": "UNRESOLVED",
    "name": "Whales Market",
    "pinnedBlock": 26441165,
    "probe": {
@@ -24676,10 +24698,11 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "Whales Market control-plane rosette: Upgradeability not determined; Timelock floor not determined; Signer quorum not determined; Emergency / freeze scope not determined; Docs-vs-chain parity weak",
+   "rosetteAria": "Whales Market control-plane rosette: Upgradeability not determined; Timelock floor not determined; Signer quorum not determined; Emergency / freeze scope not determined; Docs-vs-chain parity not determined",
+   "scopeNote": "Whales Market's pre-market buy guide states that deposited funds are stored in an escrow secured by an immutable smart contract, while Pacta recorded TransparentUpgradeableProxy slots on 0x1eCdB32e59e948C010a189a0798C674a2d0c6603 at Ethereum block 26,441,165; whether that proxy is the contract covered by the pre-market sell-order escrow statement is unverified.",
    "search": "whales market whales-market peer-to-peer escrow for pre-market token and points trades (ethereum) whales 0x1ecdb32e59e948c010a189a0798c674a2d0c6603 0x623620b3eff4e1a30e9f1154f88198ab26952eeb 0xeb5e772919661f455619a4cabd9b2b64715505e6",
    "slug": "whales-market",
-   "summary_short": "Docs call Whales Market immutable, but an upgradeable proxy sits on chain",
+   "summary_short": "Sampled Whales Market proxy is upgradeable; escrow doc coverage is unverified",
    "url": "https://pacta.wtf/protocols/whales-market/"
   },
   {
@@ -25276,10 +25299,10 @@
    "deltas": 1,
    "easAttested": true,
    "evidence": {
-    "documented": "yearn-devdocs security overview previously noted governance was not behind a timelock (live deployment enforces stricter 7-day TimelockController).",
-    "observed": "governance() = 0x88Ba032be87d5EF1fbE87336B7090767F367BF73 (TimelockController, getMinDelay() = 604800s / 7 days); getDaddy() = 0xFEB4acf3df3cDEA7399794D0869ef76A6EfAff52 (6-of-9 ychad.eth Safe); getBrain() = 0x16388463d60FFE0661Cf7F1f31a7D658aC790ff7 (3-of-6 Safe).",
-    "recordId": "yearn-v3-role-manager-timelock",
-    "surface": "Sampled RoleManager.governance() Timelock Wiring"
+    "documented": "'| [0x6F2A8Ee9452ba7d336b3fba03caC27f7818AeAD6](https://etherscan.io/address/0x6F2A8Ee9452ba7d336b3fba03caC27f7818AeAD6) | Mariano Conti (nanexcool.com, prev. MakerDAO) |' (raw.githubusercontent.com/yearn/yearn-devdocs/master/docs/developers/security/multisig.md)",
+    "observed": "yChad Safe 0xFEB4acf3df3cDEA7399794D0869ef76A6EfAff52 (Ethereum): getThreshold() = 6 of getOwners() = 9 owners; 0x6F2A8Ee9452ba7d336b3fba03caC27f7818AeAD6 is not among getOwners().",
+    "recordId": "yearn-v3-ychad-safe-signers-s28",
+    "surface": "yChad governance Safe: documented signer 0x6F2A…eAD6 is no longer an owner"
    },
    "factors": [
     {
@@ -25294,7 +25317,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "7d minimum enforced delay across control surfaces"
+     "value": "7d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": "yearn-v3-role-manager-timelock: … 0x16388463d60FFE0661Cf7F1f31a7D658aC790ff7 (3-of-6 Safe).",
@@ -25318,7 +25341,7 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "finding": "Timelock delay: docs say 0 s (no delay) · chain says 7 d",
+   "finding": "Sampled V3 RoleManager uses a seven-day timelock; yChad's documented signer roster differs (#26,441,165)",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "Yearn V3",
@@ -25343,9 +25366,10 @@
    "reconciledTo": [],
    "records": 2,
    "rosetteAria": "Yearn V3 control-plane rosette: Upgradeability not determined; Timelock floor strong; Signer quorum strong; Emergency / freeze scope not determined; Docs-vs-chain parity weak",
+   "scopeNote": "At Ethereum block 26,441,165 the yChad Safe retains its 6-of-9 threshold while one address listed on the multisig documentation page is no longer an owner (consistent with an October 28 signer-rotation proposal, not a reduced threshold); separately, at block 26,401,725 a sampled V3 RoleManager points governance() to a 7-day TimelockController whereas Yearn's security overview notes the governance role itself is not behind a timelock.",
    "search": "yearn v3 yearn-v3 yield aggregation vaults yfi 0x16388463d60ffe0661cf7f1f31a7d658ac790ff7 0x6f2a8ee9452ba7d336b3fba03cac27f7818aead6 0x88ba032be87d5ef1fbe87336b7090767f367bf73 0xb3bd6b2e61753c311efbcf0111f75d29706d9a41 0xfeb4acf3df3cdea7399794d0869ef76a6efaff52",
    "slug": "yearn-v3",
-   "summary_short": "Docs list a yChad signer who is no longer on the 6-of-9 Safe",
+   "summary_short": "Sampled RoleManager uses a 7-day timelock; yChad signer roster differs (6-of-9)",
    "url": "https://pacta.wtf/protocols/yearn-v3/"
   },
   {
@@ -25459,7 +25483,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "b",
-     "value": "1d minimum enforced delay across control surfaces"
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,
@@ -25627,7 +25651,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "a",
-     "value": "0s minimum enforced delay across control surfaces"
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "evidence": "yo-protocol-approval-registry-owner-admin-safe-s22: … 0x67b6F699F1c8040414032a3C2C88a54db144FCd2 (4-of-6 Safe, v1.4.1, no modules), not the …",
@@ -25651,7 +25675,7 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "finding": "Timelock delay: docs say 2 d · chain says 0 s (no delay)",
+   "finding": "Approval Registry is owned directly by the Admin Safe; vault upgrades retain a 48-hour timelock (#58,315,414)",
    "grade": "delta",
    "gradeLabel": "DELTA",
    "name": "YO Protocol",
@@ -25676,9 +25700,10 @@
    "reconciledTo": [],
    "records": 3,
    "rosetteAria": "YO Protocol control-plane rosette: Upgradeability strong; Timelock floor weak; Signer quorum strong; Emergency / freeze scope not determined; Docs-vs-chain parity weak",
+   "scopeNote": "At Base block 58,315,414 YoApprovalRegistry owner() is the 4-of-6 Admin Multisig directly, while yoETH and yoUSD ProxyAdmins sit behind the 48-hour YO Timelock; the retained YO V2 Security Framework quote is from Pacta's Sprint 22 snapshot and was not re-verified against live docs today.",
    "search": "yo protocol yo-protocol cross-chain yield optimizer vaults yoeth yousd yo 0x0000000f2eb9f69274678c76222b35eec7588a65 0x12e81209d180ff0b3fbfbfe8fa9ffdb5990e1073 0x38ce5e45d0f5d03e83863bb19b3b1a272c186f48 0x3a43aec53490cb9fa922847385d82fe25d0e9de7 0x67b6f699f1c8040414032a3c2c88a54db144fcd2 0xb4b3f5c964a360bbd7201f72a55d0c48b8ad7021 0xc84a6e01bff58996540f1abc22355a9dfe0d78dc 0xd460cf1f5d764acad1c3276c549ee5f1bb671473",
    "slug": "yo-protocol",
-   "summary_short": "Timelock delay: docs 2 days · chain none",
+   "summary_short": "Approval Registry owned by Admin Safe; vault upgrades keep a 48-hour timelock",
    "url": "https://pacta.wtf/protocols/yo-protocol/"
   },
   {
@@ -25711,7 +25736,7 @@
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
-     "value": "2d minimum enforced delay across control surfaces"
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "evidence": null,

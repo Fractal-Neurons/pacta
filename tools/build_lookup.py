@@ -225,6 +225,16 @@ ADDRESS_ALIASES = {
 }
 
 
+def _corrected_status(slug, pinned):
+    """{"scorecardStatus": "unresolved"} for a protocol tools/scorecard_corrections.json marks unresolved (its comparison does
+    not establish a documented breach), with the correction's sub-pill as a note when it has one; {} otherwise."""
+    import scorecard_corrections as CORR
+    c = CORR.get(slug) or {}
+    if pinned or c.get("status") != "unresolved":
+        return {}
+    return {"scorecardStatus": "unresolved", **({"scorecardStatusNote": c["subPill"]} if c.get("subPill") else {})}
+
+
 def _protocol_item(name, v):
     es, first = v["entries"], v["entries"][0]
     pinned = v["pinned"]
@@ -254,6 +264,7 @@ def _protocol_item(name, v):
             "controllerAddress": ctrl, "controllerKind": ctrl_kind,
             "observedDelaySeconds": first.get("observed_delay_seconds"), "documentedDelaySeconds": first.get("documented_delay_seconds"),
             **basis,
+            **_corrected_status(v["slug"], pinned),
             "surfaces": [{"id": e["id"], "surface": e["surface"], "classification": e["classification"],
                           "targetContract": _addr(e["target_contract"]), "targetLabel": e["target_label"], "chain": e.get("chain", "ethereum"),
                           "blockNumber": int(e["block_number"])} for e in es],
@@ -362,7 +373,10 @@ def write_all(root, docs, sp, onb, radar, brief_protocol):
 BADGE_TITLE = "Pacta Control Plane"
 # v4.5.1 R3-01: Aligned is neutral (gray-700, white text 10.3:1), never safety-green; amber stays reserved for Parameter Delta
 BADGE_TIERS = {"aligned": ("Aligned · Base EAS", "#374151"), "parameter_delta": ("Parameter Delta", "#b45309"),
-               "rpc_observed": ("RPC-Observed", "#475569")}
+               "rpc_observed": ("RPC-Observed", "#475569"),
+               # neutral slate tiers for a protocol whose comparison does not establish a documented breach
+               # (tools/scorecard_corrections.json status "unresolved"): never the amber Parameter Delta, never Aligned
+               "unresolved": ("Unresolved · Unverified Scope", "#475569"), "docs_updated": ("Docs Updated · Pending Re-Read", "#475569")}
 
 
 def badge_tier(item):
@@ -370,6 +384,8 @@ def badge_tier(item):
         return None
     if item.get("evidenceBasis") == "rpc_observed":
         return "rpc_observed"
+    if item.get("scorecardStatus") == "unresolved":         # neutral: a documented breach is not established
+        return "docs_updated" if item.get("scorecardStatusNote") else "unresolved"
     return "aligned" if item.get("classification") == "aligned_baseline" else "parameter_delta"
 
 
@@ -430,6 +446,7 @@ def protocols_json(sp, items):
         out.append({"slug": x["slug"], "name": name, "category": x["category"], "chain": x["chain"], "chainId": x["chainId"],
                     "url": x["url"], "evidenceBasis": x["evidenceBasis"], "easAttested": x["easAttested"],
                     "documentationComparison": x["documentationComparison"], "classification": x["classification"],
+                    **{k: x[k] for k in ("scorecardStatus", "scorecardStatusNote") if k in x},
                     "sprints": x.get("sprints", []), "baseEasUids": x["baseEasUids"],
                     "badge": {"tier": tier, "label": BADGE_TIERS[tier][0], "svg": f"{BASE}/badges/{x['slug']}.svg", "live": f"{API}/v1/badges/{x['slug']}.svg"},
                     "primaryContract": x["primaryContract"], "targetLabel": x["targetLabel"], "controllerAddress": x["controllerAddress"],

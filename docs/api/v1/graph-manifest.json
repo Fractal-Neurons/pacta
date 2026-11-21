@@ -14,8 +14,8 @@
  ],
  "sources": {
   "sha256": {
-   "protocols.json": "28c6461d443e3783d8fcc966daf9fe9d246c5b78073b979136451c99175457a1",
-   "index.json": "c5fde557115ba9a519d2c40c34e25dd47e29063265b2b441df83cd162b28ec01",
+   "protocols.json": "460640035cd2baaeae02c7bf4ab9e6db15975c82910c6983bef05390ab14fd14",
+   "index.json": "bbb8df53cc3e404b3d135e2b20e37298cd739664acad5cfd9e95a85fe95abe04",
    "rpc-pinned.json": "108919b7ce46d2c3e09943bbd5dad4344ee375a275c6056f4b391a57ee11a418",
    "graph_dependencies.json": "c32f718b692f497f33bd8e50e300b883ae1ce3316215fb5e2d01f2c235bff4fa",
    "graph_controller_facts.json": "8bf0299b9aaf52211fccdc5ced9e9b60603b877b7942b19c9e0afe82d10a9ddf"
@@ -13447,12 +13447,12 @@
     "target_contract_hex": "87f18b377e625b62c708d5f6ea96ec193558efd0",
     "block_number": 59025642,
     "block_hash_hex": "8fc618f8e02aa1fd1c3bcf1300fd25e40291a0fcde351bd39ad8cb61781d5e12",
-    "surface": "Lending vault proxy: docs call the contracts immutable, but it is an upgradeable proxy",
+    "surface": "AERO USDC Loan contract (UUPS proxy): docs call the contracts immutable, but it is an upgradeable proxy",
     "observed_delay_seconds": null,
     "documented_delay_seconds": null,
     "summary_sha256_hex": "062632d4abf0411664883823e185de5f974c9e989bf8497c0e8863b557b878bd"
    },
-   "content_hash": "10d73f468be67d04cc43ef92edac03530be7cbf6fbd4c2ab9e858b6c6a74070b"
+   "content_hash": "276cf69129163542ae408117dba927f75a157b67caf3a6394a9a180dd271544c"
   },
   {
    "edge_key": "exhibits_control_plane_gap:pacta-proto-abracadabra-spell->pacta-gap-abracadabra-spell-safe-threshold-s30",
@@ -14463,12 +14463,12 @@
     "target_contract_hex": "707d622cda4b5459e7dcee8ba8e429f154f96a27",
     "block_number": 26448221,
     "block_hash_hex": "a7818c0e1b8807aac0c999c2dc9aeeea40b91b4f19b1b76a62ad02d8d17607c8",
-    "surface": "cbBTC vault upgrades: docs require a 24 h to 30 day wait; the vault's beacon owner is a 3-of-6 Safe with no delay",
+    "surface": "Legacy cbBTC vault beacon upgrades: no enforced delay under a 3-of-6 Safe; coverage by the 24 h Opt-in delay docs is unverified",
     "observed_delay_seconds": 0,
     "documented_delay_seconds": 86400,
     "summary_sha256_hex": "ba61b61feb65e1b23d10c998f70bcabce22a8b27203581542ef1cc3b68a4507f"
    },
-   "content_hash": "1cfa5e5755b0193de81b11fb3601f429e63e9bd00e77c7579e93c77a73b3a990"
+   "content_hash": "3ceb79332152f2241b7cef6383fcc1b86d60217252e6e2579da1ac4f571fc8b8"
   },
   {
    "edge_key": "exhibits_control_plane_gap:pacta-proto-maple-finance-v2-syrup->pacta-gap-maple-v2-syrup-ppm-admin",
@@ -15475,12 +15475,12 @@
     "target_contract_hex": "1ecdb32e59e948c010a189a0798c674a2d0c6603",
     "block_number": 26441165,
     "block_hash_hex": "5182be2c61af5f48ed2ec43d3c177dedad257c4e966a7e384120829de73901d9",
-    "surface": "Whales Market TransparentUpgradeableProxy: docs describe it as immutable, but it is an upgradeable proxy",
+    "surface": "Whales Market TransparentUpgradeableProxy: upgradeable; coverage by the pre-market escrow immutability statement is unverified",
     "observed_delay_seconds": null,
     "documented_delay_seconds": null,
     "summary_sha256_hex": "062632d4abf0411664883823e185de5f974c9e989bf8497c0e8863b557b878bd"
    },
-   "content_hash": "74f80e1ba4ec57a13c43185c146d571eb97716169726102d4113c290a9e725ee"
+   "content_hash": "aff028691c841b41d5e846d6604bdc1ee6ccc61e432ce1df9968d0152ae4ddd6"
   },
   {
    "edge_key": "exhibits_control_plane_gap:pacta-proto-yearn-v3->pacta-gap-yearn-v3-ychad-safe-signers-s28",
@@ -15769,7 +15769,7 @@
      "40-acres-base-upgradeability-s28"
     ],
     "target_labels": [
-     "40 Acres vault proxy (UUPS)"
+     "40 Acres AERO USDC Loan proxy (UUPS)"
     ],
     "controller_kind": null,
     "evidence_basis": "eas_attested",
@@ -15781,7 +15781,7 @@
      "owner_hex": "ff16fd3d147220e6cc002a8e4a1f942ac41dbd23"
     }
    },
-   "content_hash": "66f497e905bd03c08863f7b260819dbb2c41ebc27c3032c49a40ac45c68e41d6"
+   "content_hash": "27d3c1cafc09e5f79abaae33fb51f8f933de510e3d5cb8d1570c275888256281"
   },
   {
    "edge_key": "governed_by_controller:pacta-proto-aave-v3-base->pacta-ctrl-base-2dc219e7",
@@ -20686,7 +20686,7 @@
     ],
     "controller_kind": null,
     "evidence_basis": "eas_attested",
-    "badge_tier": "parameter_delta",
+    "badge_tier": "unresolved",
     "observed_controller": {
      "facts_block_number": 26425374,
      "code_bytes": 171,
@@ -20697,7 +20697,7 @@
      "safe_owners_digest_hex": "bb71595e19dce316f32bb812a4f7ba43333ee4aeea57a01a1300a5acb096f2de"
     }
    },
-   "content_hash": "d8f7eefd55ea5c9f729489512eba30972a1f8442cc502a23e2bc340f8bf8c539"
+   "content_hash": "a0380c9d32665b188dd36f565f155da2c13c939ecbe4915f89eeeebd842ea72f"
   },
   {
    "edge_key": "governed_by_controller:pacta-proto-concrete->pacta-ctrl-ethereum-b9dc54c8",
@@ -20735,7 +20735,7 @@
     ],
     "controller_kind": null,
     "evidence_basis": "eas_attested",
-    "badge_tier": "parameter_delta",
+    "badge_tier": "unresolved",
     "observed_controller": {
      "facts_block_number": 26425374,
      "code_bytes": 1022,
@@ -20743,7 +20743,7 @@
      "owner_hex": "8f5f1d40243b259ceb7ab44ba421ff191bcd3381"
     }
    },
-   "content_hash": "660ec767c02ddba35c876ca4ad8c090c74a9645840ed2993429cc2ffd5b76be8"
+   "content_hash": "92367f6ff2b947b53ba23574207e61c1bb963aba3b056826db81b983537f5702"
   },
   {
    "edge_key": "governed_by_controller:pacta-proto-convergence-fi->pacta-ctrl-ethereum-b0afc836",
@@ -27604,7 +27604,7 @@
     ],
     "controller_kind": null,
     "evidence_basis": "eas_attested",
-    "badge_tier": "parameter_delta",
+    "badge_tier": "unresolved",
     "observed_controller": {
      "facts_block_number": 26448221,
      "code_bytes": 644,
@@ -27612,7 +27612,7 @@
      "owner_hex": "6d46e28ab34622d9a39d0f306a37a8dc270951af"
     }
    },
-   "content_hash": "4c171ffddf8e0adef58794d9ea53b0728a9cac0edb9237d12189323289ac1e82"
+   "content_hash": "e4cffc61cf07ceea03e011f7a8fb5d69deca0064fc66367f11d062d300b031cc"
   },
   {
    "edge_key": "governed_by_controller:pacta-proto-landx-finance->pacta-ctrl-ethereum-08a1c30b",
@@ -29205,7 +29205,7 @@
     ],
     "controller_kind": "timelock",
     "evidence_basis": "eas_attested",
-    "badge_tier": "parameter_delta",
+    "badge_tier": "unresolved",
     "observed_controller": {
      "facts_block_number": 26422627,
      "code_bytes": 19340,
@@ -29213,7 +29213,7 @@
      "owner_hex": "e86399fe6d7007fdecb08a2ee1434ee677a04433"
     }
    },
-   "content_hash": "ca693c49fb9c6e810c0ae5972e5858afbfaf5b646a01abf649220c11c1250d0d"
+   "content_hash": "7f6df3c1c28a94ace195e8f78c94fdb84c9ceaac1558c8d5435e7b85f7724957"
   },
   {
    "edge_key": "governed_by_controller:pacta-proto-metis-bridge->pacta-ctrl-ethereum-9e32b13c",
@@ -33076,14 +33076,14 @@
     ],
     "controller_kind": null,
     "evidence_basis": "eas_attested",
-    "badge_tier": "parameter_delta",
+    "badge_tier": "unresolved",
     "observed_controller": {
      "facts_block_number": 26422627,
      "code_bytes": 2739,
      "code_keccak_hex": "e5e3693157141608a301682c8c228c0277eac7efc0b98b57f874ca49752b5fd8"
     }
    },
-   "content_hash": "67b30ed235e43e5f671cb03cbad541fd18ac40100a85862c29ad74c5d50ea621"
+   "content_hash": "2ea6c4844816757996a246a4c10bc7c9064d37640b878cdadf1b30aa5a599185"
   },
   {
    "edge_key": "governed_by_controller:pacta-proto-reserve-protocol-rtoken->pacta-ctrl-ethereum-18ba6e33",
@@ -38005,7 +38005,7 @@
     "target_labels": [],
     "controller_kind": "timelock",
     "evidence_basis": "eas_attested",
-    "badge_tier": "parameter_delta",
+    "badge_tier": "docs_updated",
     "observed_controller": {
      "facts_block_number": 26438867,
      "code_bytes": 171,
@@ -38019,7 +38019,7 @@
      "tori-finance-control-plane"
     ]
    },
-   "content_hash": "3cc84772733275c71027104bff590c15aa50bc33a228bcb33dc73a34f79aca8d"
+   "content_hash": "339c75be0626b84f011235abb2d5177a80b9c00cd886bb9b964da11cd708ba18"
   },
   {
    "edge_key": "governed_by_controller:pacta-proto-tori-finance->pacta-ctrl-ethereum-cd3c66e7",
@@ -38051,10 +38051,10 @@
     "target_labels": [],
     "controller_kind": "timelock",
     "evidence_basis": "eas_attested",
-    "badge_tier": "parameter_delta",
+    "badge_tier": "docs_updated",
     "observed_controller": null
    },
-   "content_hash": "902c3088591e92cf49f2bfc2074a108cf3df9d3a4f960da848f4d89e2fd9c48c"
+   "content_hash": "0d2105817223f676fea1c0d50d65423f9778677408b9bf5a214183439aff7d00"
   },
   {
    "edge_key": "governed_by_controller:pacta-proto-tori-finance->pacta-ctrl-ethereum-d0580192",
@@ -38091,7 +38091,7 @@
     ],
     "controller_kind": null,
     "evidence_basis": "eas_attested",
-    "badge_tier": "parameter_delta",
+    "badge_tier": "docs_updated",
     "observed_controller": {
      "facts_block_number": 26438867,
      "code_bytes": 170,
@@ -38102,7 +38102,7 @@
      "tori-finance-control-plane"
     ]
    },
-   "content_hash": "23de72c46f52853937c7c891c77e54ad293a4bd74ff7d9f36c6c873bcf8069f2"
+   "content_hash": "759a68d8ecc419c92b79d81e2caa14799232cc198d13feb3080dc8900ae5be9a"
   },
   {
    "edge_key": "governed_by_controller:pacta-proto-tornado-cash->pacta-ctrl-ethereum-77777fed",
@@ -39671,7 +39671,7 @@
     ],
     "controller_kind": null,
     "evidence_basis": "eas_attested",
-    "badge_tier": "parameter_delta",
+    "badge_tier": "unresolved",
     "observed_controller": {
      "facts_block_number": 26441165,
      "code_bytes": 2227,
@@ -39679,7 +39679,7 @@
      "owner_hex": "914b776bf3c8915fd47fd31b960f5f3990aa35b3"
     }
    },
-   "content_hash": "7e2b9c5d333e7546cdaeeb809f6d34afb6ea534684a6a193cf84408536c5dda2"
+   "content_hash": "52124e376772c504be6cdd7b70bac5f396b3a39cbea73bdcca92b0b2452dd25c"
   },
   {
    "edge_key": "governed_by_controller:pacta-proto-wildcat-protocol->pacta-ctrl-ethereum-c15be521",
@@ -41193,5 +41193,5 @@
    "content_hash": "05ef371295b62fdb44d9ca5283d2bb88c8b04b97efbd3cd97341b187a3797141"
   }
  ],
- "manifest_sha256": "cee32e7561a8cb584a8f7c708ce57abc71980846b8518f4f01405749f79bebc8"
+ "manifest_sha256": "847a4c98fb616f7f6345f742878cf7250ab77a3ebb36a6c1289ac99dcab9ae11"
 }

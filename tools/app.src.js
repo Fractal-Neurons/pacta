@@ -287,8 +287,8 @@
   }
   // ---- Website Edge v3: protocol scorecards (#scorecards) ------------------------------------------------------------------
   var SC_STATE = { g: "Strong", b: "Moderate", a: "Weak", n: "Not determined", u: "Uncompared" };
-  var SC_GRADE = { delta: "Delta", protective: "Protective", aligned: "Aligned", observed: "Observed" };
-  var SC_VARIANT = { delta: "warning", protective: "info", aligned: "neutral", observed: "outline" };
+  var SC_GRADE = { delta: "Delta", unresolved: "Unresolved", protective: "Protective", aligned: "Aligned", observed: "Observed" };
+  var SC_VARIANT = { delta: "warning", unresolved: "outline", protective: "info", aligned: "neutral", observed: "outline" };
   var SC_LETTER = { g: "S", b: "M", a: "W", n: "—", u: "—" };
   var SC_RADIUS = { g: 1, b: 0.78, a: 0.56, n: 1, u: 1 };
   var SC_CHAIN = { ethereum: "Ethereum", base: "Base" };
@@ -326,7 +326,8 @@
   function gradePill(card) {
     var g = SC_GRADE[card.grade] ? card.grade : "observed";
     var w = el("span", {}, [el("span", { "class": "grade g-" + g, "data-slot": "badge", "data-variant": SC_VARIANT[g], text: SC_GRADE[g] })]);
-    if (card.reconciled) w.appendChild(el("span", { "class": "grade-sub", text: "Reconciled" }));
+    if (card.subPill) w.appendChild(el("span", { "class": "grade-sub", text: String(card.subPill) }));
+    else if (card.reconciled) w.appendChild(el("span", { "class": "grade-sub", text: "Reconciled" }));
     return w;
   }
   function factorList(card) {
@@ -686,7 +687,7 @@
     var row = el("tr", { "data-class": e.classification, "class": "rec", "data-id": e.id, "data-search": searchText(e) }, [
       el("td", {}, [el("b", { "class": "ell", text: e.protocol }), el("span", { "class": "sub ell", text: e.category })]),
       el("td", { "class": "hide-s" }, [el("span", { "class": "ell", text: e.target_label }), el("span", { "class": "sub" }, hexref(e.target_contract))]),
-      el("td", {}, [badge(e.classification)]),
+      el("td", {}, [recBadge(e)]),
       el("td", { "class": "hide-m num nowrap" }, [secs(e.observed_delay_seconds) + " ", el("span", { "class": "muted", text: "/ " + secs(e.documented_delay_seconds) })]),
       el("td", { "class": "hide-m nowrap" }, [el("span", { "class": "num", text: "S" + e.sprint + " · #" + num(e.block_number) }), el("span", { "class": "sub" }, [proofEl])]),
       el("td", { "class": "x" }, [el("a", { "class": "inspect-btn", href: "#r-" + e.id, "aria-expanded": "false", "aria-controls": "r-" + e.id, text: "Details" })])]);
@@ -709,6 +710,12 @@
   // ---- record rendering (mirrors sheet() in tools/build_site.py) -------------------------------------
   var CLS = { parameter_delta: ["delta", "Parameter delta"], protective_delta: ["protect", "Protective delta"], aligned_baseline: ["", "Aligned baseline"] };
   function badge(c, text, extra) { var k = CLS[c] || CLS.aligned_baseline; return el("span", { "class": ("badge " + (extra || k[0])).trim(), text: text || k[1] }); }
+  // a record of a protocol whose comparison does not establish a documented breach (index.json scorecard_status_overrides, from
+  // tools/scorecard_corrections.json) shows the neutral status, never "Parameter delta"
+  function recBadge(e) {
+    var o = DATA && DATA.scorecard_status_overrides ? DATA.scorecard_status_overrides[e.id] : null;
+    return o && o.status === "unresolved" ? el("span", { "class": "badge unresolved", text: String(o.label || "Unresolved") }) : badge(e.classification);
+  }
   // Exact compact duration: 0 -> 0s, 1 -> 1s, 86400 -> 1d, 129600 -> 1d 12h (mirrors secs() in tools/build_site.py)
   function secs(s) {
     if (s === null || s === undefined) return "—";
@@ -795,18 +802,34 @@
     if (e.classification !== "parameter_delta" && e.classification !== "protective_delta") return null;
     var changed = [], matched = [], paired = false, obs = thresholds(e.onchain_observed), doc = thresholds(e.documented_reference);
     doc.forEach(function (d) {
-      if (obs.indexOf(d) >= 0) { matched.push(["Safe threshold", d]); return; }
+      if (obs.indexOf(d) >= 0) { matched.push([e.surface || e.target_label || "Safe threshold", d]); return; }
       var dk = d.split("-of-"), o = obs.filter(function (x) { return x.split("-of-")[0] === dk[0] && doc.indexOf(x) < 0; })[0]
         || obs.filter(function (x) { return x.split("-of-")[1] === dk[1] && doc.indexOf(x) < 0; })[0];
-      if (o) { changed.push(["Safe threshold", o, d]); paired = true; }
+      if (o) { changed.push([e.surface || e.target_label || "Safe threshold", o, d]); paired = true; }
     });
     var od = fmtDelay(e.observed_delay_seconds), dd = fmtDelay(e.documented_delay_seconds);
-    if (od && dd) { if (e.observed_delay_seconds === e.documented_delay_seconds) matched.push(["Timelock delay", od]); else { changed.push(["Timelock delay", od, dd]); paired = true; } }
+    var dl = e.surface || e.target_label || "Timelock delay";   // the record's own scope, never reduced to the bare generic label
+    if (od && dd) { if (e.observed_delay_seconds === e.documented_delay_seconds) matched.push([dl, od]); else { changed.push([dl, od, dd]); paired = true; } }
     if (!paired) changed.push([e.surface || e.id, firstSentence(e.onchain_observed), firstSentence(e.documented_reference)]);
     return { changed: changed, matched: matched };
   }
   function whatDiffersBox(e) {
     var wd = whatDiffers(e); if (!wd) return null;
+    var co = DATA && DATA.scorecard_wording_overrides ? DATA.scorecard_wording_overrides[e.id] : null;
+    if (co) {   // a declarative correction: its headline and pinned block lead, its scope follows; no generic per-parameter lines
+      var cb = el("div", { "class": "whatdiffers" + (co.unresolved ? " unresolved" : ""), "data-what-differs": "" },
+        [el("h2", { "class": "wd-h", text: co.unresolved ? "Verification scope" : "What differs" })]);
+      if (co.headline) cb.appendChild(el("p", { "class": "wd-lead", "data-wd-headline": "" }, [el("strong", { text: String(co.headline) }), " ",
+        el("span", { "class": "wd-block mono", text: "(#" + num(co.pinnedBlock) + ")" })]));
+      if (co.scope) cb.appendChild(el("p", { "class": "wd-scope", "data-wd-scope": "", text: String(co.scope) }));
+      if (wd.matched.length) {
+        cb.appendChild(el("p", { "class": "wd-l", text: "Matched" }));
+        var cm = el("ul", { "class": "wd-matched" });
+        wd.matched.forEach(function (m) { cm.appendChild(el("li", { "data-wd-matched": "", text: m[0] + ": " + m[1] })); });
+        cb.appendChild(cm);
+      }
+      return cb;
+    }
     var box = el("div", { "class": "whatdiffers", "data-what-differs": "" }, [el("h2", { "class": "wd-h", text: "What differs" }),
       el("p", { "class": "wd-l", text: "Changed / discrepant" })]);
     var ul = el("ul", { "class": "wd-changed" });
@@ -841,7 +864,7 @@
     var dl = el("dl", { "class": "kv" });
     rows.forEach(function (r) { dl.appendChild(el("dt", { text: r[0] })); dl.appendChild(el("dd", {}, r[1])); });
     panel.textContent = "";
-    panel.appendChild(el("div", { "class": "sheet-h" }, [el("h3", { text: e.protocol }), badge(e.classification)]));
+    panel.appendChild(el("div", { "class": "sheet-h" }, [el("h3", { text: e.protocol }), recBadge(e)]));
     panel.appendChild(el("p", { "class": "sheet-sub", text: e.surface }));
     var wdb = whatDiffersBox(e); if (wdb) panel.appendChild(wdb);
     panel.appendChild(dl);
@@ -3491,7 +3514,7 @@
       .sort(function (a, b) { return a.r - b.r || (a.x.it.kind === "brief") - (b.x.it.kind === "brief") || (a.x.name < b.x.name ? -1 : a.x.name > b.x.name ? 1 : 0); })
       .slice(0, n).map(function (m) { return m.x; });
   }
-  var GRADE_WORD = { delta: "Delta", protective: "Protective", aligned: "Aligned", observed: "Observed" };
+  var GRADE_WORD = { delta: "Delta", unresolved: "Unresolved", protective: "Protective", aligned: "Aligned", observed: "Observed" };
   function lkSub(x) {
     var it = x.it, ch = it.chain === "base" ? "Base" : "Ethereum";
     if (it.kind === "brief") return "Brief · " + ch + " · " + String(it.category || "");
