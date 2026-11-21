@@ -1708,7 +1708,7 @@ def seal_how_section(preview_html):
         '<ol class="seal-steps">'
         '<li><b>1 · Submit primary contract(s) &amp; docs URL</b><span>Provide your Ethereum or Base vault, proxy, Safe, or timelock address plus your merged public security docs or PR.</span></li>'
         '<li><b>2 · Automated dual-RPC extraction + independent verifier pass</b><span>Pacta extracts live proxy/Safe/timelock storage across two RPCs and verifies every published governance, timelock, and role claim.</span></li>'
-        '<li><b>3 · Permanent Base Mainnet EAS UID + public scorecard + live SVG badge</b><span>Receive an on-chain Base EAS attestation UID, public Pacta scorecard, embeddable README/docs badge, and Safe remediation JSON if any step remains.</span></li>'
+        '<li><b>3 · Permanent public attestation on Base + public scorecard + live badge</b><span>Receive a public attestation receipt on Base (its EAS attestation ID), a public Pacta scorecard, an embeddable README/docs badge, and Safe remediation JSON if any step remains.</span></li>'
         '</ol>'
         f'<div class="seal-indep" role="note"><b>{E(EDITORIAL_FIREWALL)}</b> {E(SEAL_GUARANTEE)}</div>'
         f'<aside class="pd-preview" aria-label="Sample Base-EAS deliverables">{preview_html}</aside>'
@@ -3251,7 +3251,7 @@ def for_protocols_page(idx):
         f'<div><h3>{E(t)}</h3><p>{E(d)}</p>' + U.button(E(cta), href=href, variant="default" if href.endswith("clearance") else "outline") + '</div>'
         for href, t, d, cta in (
             ("../request/?tier=community", "Free 7-day fix re-check · $0", "Free factual re-verification within 7 days whenever a protocol merges a public docs or on-chain fix.", "Submit updated docs"),
-            ("../bounties/#sponsor-pool", "Verification pools & wholesale · $50+ / $150 per protocol", "Sponsor an independent protocol pool ($50 live check / $150 3-year dossier) or a $150/protocol curator sweep.", "Fund a pool"),
+            ("../bounties/#sponsor-pool", "Verification pools & wholesale · $50+ / $150 per protocol", "Sponsor an independent protocol pool ($50 minimum pool, $25 fixed verification fee; opening soon, reservation or invoice only) or a sweep of 20 or more protocols at $150 per protocol.", "Fund a pool"),
             ("../request/?tier=clearance", "Full dossier · $2,500–$5,000, 24h", "Every proxy, Safe, governor and timelock across a pre-launch or multi-contract suite, reconciled with your docs and attested on Base.", "Request a dossier")))
     body = f"""<body>
 {topbar("../", "for-protocols/")}
@@ -3688,7 +3688,7 @@ def bounties_page(idx, radar, bounties=None, claims=None, lb=None, claims3=None)
                 og_title="Pacta bounties · Wave 3 closed, in settlement") + "\n" + body
 
 
-# ---- Wave 3 (2 x $20 USDC 3-Year Dossiers, OPEN) + Wave 2 ($1 micro-bounties, Completed & Retired) + Wave 1 Archive + /leaderboard/ ----
+# ---- Wave 3 (2 x $20 USDC Protocol Trajectory & Integrity Dossiers, closed and in settlement) + Wave 2 ($1 micro-bounties, Completed & Retired) + Wave 1 Archive + /leaderboard/ ----
 WAVE3_SRC = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bounty_wave3.json")
 WAVE3 = json.load(open(WAVE3_SRC))
 WAVE3_REWARD_USDC = WAVE3["rewardUsdc"]            # "20.00"
@@ -3837,7 +3837,7 @@ def load_wave2_claims(path=None):
 
 
 def load_wave3_claims(path=None):
-    """Merged Wave 3 3-Year Dossiers (bounties/wave-3/*.json), sorted by file name."""
+    """Merged Wave 3 protocol trajectory dossiers (bounties/wave-3/*.json), sorted by file name."""
     d = path or WAVE3_DIR
     out = []
     for name in sorted(os.listdir(d)) if os.path.isdir(d) else []:
