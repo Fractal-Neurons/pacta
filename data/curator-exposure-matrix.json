@@ -811,7 +811,7 @@
         "rocket-pool-reth"
       ],
       "verified_contagion_edges": [
-        "Curates risk parameters on Moonwell Base (DELTA: 2-of-4 Pause Guardian vs 3-of-5 Security Council) & Seamless Base (DELTA: 2-of-3 Guardian Safe vs 3-of-6)"
+        "Curates risk parameters on Moonwell Base (DELTA: 2-of-4 Pause Guardian vs 3-of-5 Security Council) & Seamless Base (UNRESOLVED: 2-of-3 Guardian Safe; retained 3-of-6 docs not verified)"
       ],
       "curator_exposure_insight": "Gauntlet's own treasury product Aera V3 (0x2972...0B4F) is pinned as OBSERVED (timelock-governed, docs unassessed), while two flagship Base lending markets in Gauntlet's curation orbit carry guardian-quorum findings — Moonwell Base a verified DELTA, and Seamless Base Unresolved (its retained 3-of-6 guardian documentation could not be verified against the current page) alongside 4 LST/LRT/synthetic collateral DELTAs (Ethena, Puffer, Stader, Rocket Pool) and an Unresolved Renzo fee comparison.",
       "wrapper_counts": {
@@ -3609,7 +3609,7 @@
         "pickle"
       ],
       "verified_contagion_edges": [
-        "Live Timelock Radar briefs: yearn-v3-op-0x2a14 (8 new strategies added across yvUSDC-1, yvUSD, yvWETH-1, yvFlexUSDC) & beefy-base-op-0x3302 (Aerodrome CLM calm-check widened 9 -> 25 ticks)"
+        "Live Timelock Radar briefs: Yearn V3 queued strategy additions (8 new strategies added across yvUSDC-1, yvUSD, yvWETH-1, yvFlexUSDC) & beefy-base-op-0x3302 (Aerodrome CLM calm-check widened 9 -> 25 ticks)"
       ],
       "curator_exposure_insight": "Yearn V3 is Changed recently: at ETH #26,441,165 one address on yChad's documented signer list was no longer an owner of the 6-of-9 Safe, observed within 48 hours of the October 28 signer-rotation proposal, so it is re-checked after 72 hours before it counts as a documentation gap. Beefy Finance Base is a Base-EAS DELTA: its Base vault-owner timelock reads zero delay while strategy-owner changes keep 6 hours (Base #58,315,414). Both route depositor capital across downstream lending/AMM pools that include Aerodrome Base and crvUSD DELTAs.",
       "wrapper_counts": {
@@ -4591,7 +4591,7 @@
       "slug": "taiko-bridge",
       "tvl_impact_tier": "Tier 1 · Canonical L1->L2 Rollup Bridge & DAO Security Council Root (Ethereum)",
       "ecosystem_impact_rationale": "Canonical Ethereum bridge custodying bridged rollup TVL; lower-than-documented council execution threshold affects every downstream Taiko DeFi asset.",
-      "clinical_brief_hook": "At Ethereum block #26,453,551, EmergencyMultisig 0x2Aff…7ECd executes zero-duration DAO proposals at 4-of-5 council approvals (standard stage: 3-of-5) rather than the 6 approvals stated in dao-docs.taiko.xyz; updating multisigSettings() or aligning council documentation qualifies for 24h Base-EAS re-verification.",
+      "clinical_brief_hook": "At Ethereum block #26,453,551, EmergencyMultisig 0x2Aff…7ECd executes zero-duration DAO proposals at 4-of-5 council approvals (standard stage: 3-of-5) rather than the 6 approvals stated in dao-docs.taiko.xyz; current documentation scope unverified.",
       "name": "Taiko Bridge",
       "grade": "UNRESOLVED",
       "easAttested": true,
@@ -4732,7 +4732,7 @@
       "slug": "seamless-protocol-base",
       "tvl_impact_tier": "Tier 2 · Major Base Native Lending & ILM Vault Venue (Base)",
       "ecosystem_impact_rationale": "Key Base lending & Integrated Liquidity Market protocol where Community Guardian Safe holds CANCELLER_ROLE and guardian powers at 2-of-3 vs documented 3-of-6.",
-      "clinical_brief_hook": "At Base block #59,847,352, Seamless Community Guardian Safe 0xA1b5…5A22 (holding CANCELLER_ROLE on short timelock 0x639d…5fee) executes at 2-of-3 owners rather than the 3-of-6 multisig stated in seamless-guardians.md; expanding the Safe signer set or updating GitBook clears the delta for a 24h Base-EAS seal.",
+      "clinical_brief_hook": "At Base block #59,847,352, Seamless Community Guardian Safe 0xA1b5…5A22 (holding CANCELLER_ROLE on short timelock 0x639d…5fee) executes at 2-of-3 owners rather than the 3-of-6 multisig stated in seamless-guardians.md; retained documentation scope unverified.",
       "name": "Seamless Protocol (Base)",
       "grade": "UNRESOLVED",
       "easAttested": true,
@@ -4879,7 +4879,7 @@
       "slug": "yo-protocol",
       "tvl_impact_tier": "Tier 2 · Base Cross-Chain ERC-4626 Yield Optimizer (yoETH / yoUSD) (Base)",
       "ecosystem_impact_rationale": "High-visibility Base yield vaults routing into Morpho & ERC-4626 adapters; all 6 approval/route registries sit directly under the 4-of-6 Admin Safe with 0s timelock instead of YO Timelock.",
-      "clinical_brief_hook": "At Base block #58,315,414, YoApprovalRegistry 0xB4b3…7021 and five sibling route registries for yoETH/yoUSD read owner() = 4-of-6 Admin Safe 0x67b6…FCd2 (0s delay) rather than 48h YO Timelock 0x38cE…6F48; transferring registry ownership to the deployed timelock unlocks a 24h Base-EAS parity seal.",
+      "clinical_brief_hook": "At Base block #58,315,414, YoApprovalRegistry 0xB4b3…7021 and five sibling route registries for yoETH/yoUSD read owner() = 4-of-6 Admin Safe 0x67b6…FCd2 (0s delay) rather than 48h YO Timelock 0x38cE…6F48; current documentation scope unverified.",
       "name": "YO Protocol",
       "grade": "UNRESOLVED",
       "easAttested": true,
@@ -6110,6 +6110,1368 @@
       "category": "Distributed Validator Infrastructure & Governance Token",
       "surface": "OBOL supply: documented cap of 500M, no cap on-chain; a 2-of-3 Safe holds MINTER_ROLE",
       "recordId": "obol-network-token-supply-cap-s24"
+    },
+    {
+      "slug": "odyssey-finance",
+      "name": "Odyssey Finance",
+      "grade": "UNRESOLVED",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26458556,
+      "primaryContract": "0x3F6da0A118B3A0ddfdbaB4690cC96b2cF73B488D",
+      "targetLabel": "PositionRegistry ProxyAdmin (Ethereum)",
+      "tokens": [
+        "Odyssey"
+      ],
+      "baseEasUids": [
+        "0xa20a0fa97ac80abb3d3f9d4de615018ff3a07f42eb4f124375dc26a216f896a5"
+      ],
+      "summary_short": "Six ProxyAdmins share a 2-of-4 owner Safe; current governor docs unverified",
+      "url": "https://pacta.wtf/protocols/odyssey-finance/",
+      "category": "Automated DeFi position manager: strategies, order executors and fee policies behind upgradeable proxies",
+      "surface": "Upgrade governor: docs state a 3/5 multisig; every ProxyAdmin owner is one Safe, 2-of-4 (Ethereum and Base)",
+      "recordId": "odyssey-finance-governor-safe-2-of-4-vs-3-of-5-s37"
+    },
+    {
+      "slug": "ondo-finance-ousg-flux-finance",
+      "name": "Ondo Finance (OUSG & Flux Finance)",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26403121,
+      "primaryContract": "0x98Db502215Da1ad9F626D4a0090A8A2f4971003c",
+      "targetLabel": "Ondo RateLimiter",
+      "tokens": [
+        "OUSG",
+        "ONDO",
+        "Flux"
+      ],
+      "baseEasUids": [
+        "0xfdd83c8091ef6e8ffe67e8a55a78892fcfbb1092683b21ff2d85f8cc09750e6c"
+      ],
+      "summary_short": "OUSG instant mint limit: docs $50M · chain $100M per day",
+      "url": "https://pacta.wtf/protocols/ondo-finance-ousg-flux-finance/",
+      "category": "Institutional RWA / Tokenized Treasuries",
+      "surface": "OUSG RateLimiter Global Subscription Limit & Flux 1d Timelock",
+      "recordId": "ondo-ousg-rate-limiter-and-flux-timelock"
+    },
+    {
+      "slug": "pickle",
+      "name": "Pickle",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26451608,
+      "primaryContract": "0xbD17B1ce622d73bD438b9E658acA5996dc394b0d",
+      "targetLabel": "Pickle MasterChef",
+      "tokens": [
+        "Pickle"
+      ],
+      "baseEasUids": [
+        "0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc"
+      ],
+      "summary_short": "Pickle's MasterChef admin functions run from a Safe directly; docs: a 24-hour timelock",
+      "url": "https://pacta.wtf/protocols/pickle/",
+      "category": "Auto-compounding LP yield aggregator with dill staking (Ethereum)",
+      "surface": "MasterChef admin: owner is a 2-of-6 Safe, the documented 24 h timelock is not in the path",
+      "recordId": "pickle-masterchef-owner-safe-no-timelock-s32"
+    },
+    {
+      "slug": "polygon-bridge",
+      "name": "Polygon Bridge",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26449594,
+      "primaryContract": "0xFa7D2a996aC6350f4b56C043112Da0366a59b74c",
+      "targetLabel": "Polygon Bridge Safe",
+      "tokens": [
+        "Polygon"
+      ],
+      "baseEasUids": [
+        "0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
+        "0x6692c36731ecd514fb7a92fe3de0a6770b67f68f55eece26faa669c2c84b3a08"
+      ],
+      "summary_short": "Polygon's 5-of-9 Safe can upgrade the bridge with no delay; docs say it cannot censor",
+      "url": "https://pacta.wtf/protocols/polygon-bridge/",
+      "category": "Canonical Bridge (sidechain checkpoints) (Ethereum)",
+      "surface": "Custom ChildERC20 mapping Safe: 4-of-13 (docs: 4/8)",
+      "recordId": "polygon-bridge-mapping-safe-4of13-s30"
+    },
+    {
+      "slug": "puffer-finance-pufeth",
+      "name": "Puffer Finance (pufETH)",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26425374,
+      "primaryContract": "0xD9A442856C234a39a81a089C06451EBAa4306a72",
+      "targetLabel": "PufferVault (pufETH)",
+      "tokens": [
+        "pufETH",
+        "PUFFER"
+      ],
+      "baseEasUids": [
+        "0xe712dd31d79ab492e2e64eb5847396651dee81daa9f895ead45548e97f1a2eb7"
+      ],
+      "summary_short": "Community multisig: docs 3-of-6 · chain 3-of-7",
+      "url": "https://pacta.wtf/protocols/puffer-finance-pufeth/",
+      "category": "Native Liquid Restaking",
+      "surface": "Community Multisig threshold: 3-of-7",
+      "recordId": "puffer-community-multisig-3of7-s20"
+    },
+    {
+      "slug": "renzo-protocol-ezeth",
+      "name": "Renzo Protocol (ezETH)",
+      "grade": "UNRESOLVED",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26448221,
+      "primaryContract": "0xf2F305D14DCD8aaef887E0428B3c9534795D0d60",
+      "targetLabel": "DepositQueue",
+      "tokens": [
+        "ezETH",
+        "REZ"
+      ],
+      "baseEasUids": [
+        "0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
+        "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2"
+      ],
+      "summary_short": "DepositQueue feeBasisPoints reads 10,000 bps; effective fee and routing unverified",
+      "url": "https://pacta.wtf/protocols/renzo-protocol-ezeth/",
+      "category": "Liquid Restaking",
+      "surface": "DepositQueue.feeBasisPoints Parameter vs. Staking Docs",
+      "recordId": "renzo-ezeth-deposit-queue-fee"
+    },
+    {
+      "slug": "resupply",
+      "name": "Resupply",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26429396,
+      "primaryContract": "0xc07e000044F95655c11fda4cD37F70A94d7e0a7d",
+      "targetLabel": "Resupply Core",
+      "tokens": [
+        "RSUP",
+        "sreUSD"
+      ],
+      "baseEasUids": [
+        "0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5"
+      ],
+      "summary_short": "Safe threshold: docs 3-of-4 · chain 3-of-5",
+      "url": "https://pacta.wtf/protocols/resupply/",
+      "category": "CDP Stablecoin (reUSD) & Lending Markets",
+      "surface": "Main multisig: 3-of-5 signers",
+      "recordId": "resupply-main-multisig-3of5-s22"
+    },
+    {
+      "slug": "rocket-pool-reth",
+      "name": "Rocket Pool (rETH)",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26422243,
+      "primaryContract": "0xdA1AB39e62E0A5297AF44C7064E501b0613f0D01",
+      "targetLabel": "RocketDAONodeTrustedSettingsMembers",
+      "tokens": [
+        "rETH",
+        "RPL"
+      ],
+      "baseEasUids": [
+        "0xa04d9c98873fce6fffb60fe535510092f22284f3afeeb78e36e4a0c25d5ea928"
+      ],
+      "summary_short": "Council leave notice: chain 28 days · RPIP-33 bound under 14 days",
+      "url": "https://pacta.wtf/protocols/rocket-pool-reth/",
+      "category": "Decentralized Liquid Staking",
+      "surface": "Security council members.leave.time = 28 days (RPIP-33 bound: < 14 days)",
+      "recordId": "rocket-pool-reth-security-council-leave-time-28d-s19"
+    },
+    {
+      "slug": "seamless-protocol-base",
+      "name": "Seamless Protocol (Base)",
+      "grade": "UNRESOLVED",
+      "easAttested": true,
+      "chains": [
+        "base"
+      ],
+      "pinnedBlock": 59847352,
+      "primaryContract": "0xA1b5f2cc9B407177CD8a4ACF1699fa0b99955A22",
+      "targetLabel": "Seamless Community Guardian Safe (Base)",
+      "tokens": [
+        "SEAM"
+      ],
+      "baseEasUids": [
+        "0xce8821d521758614be8860ac6476e1cec01ae000d81a660644e7bf1260d8cdfd"
+      ],
+      "summary_short": "Community Guardian Safe is 2-of-3; current guardian page unverified",
+      "url": "https://pacta.wtf/protocols/seamless-protocol-base/",
+      "category": "Base Lending & Integrated Liquidity",
+      "surface": "Community Guardian Safe: docs state a 3/6 multi-sig; the Safe is 2-of-3",
+      "recordId": "seamless-community-guardian-safe-2-of-3-s35"
+    },
+    {
+      "slug": "sonic-gateway",
+      "name": "Sonic Gateway",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26450616,
+      "primaryContract": "0xa1E2481a9CD0Cb0447EeB1cbc26F1b3fff3bec20",
+      "targetLabel": "Sonic Gateway TokenDeposit (Ethereum)",
+      "tokens": [
+        "Sonic"
+      ],
+      "baseEasUids": [
+        "0x63d29eafa88f7e52cc6a596668ae3f03c8132704108794092dc25710fa8bde77"
+      ],
+      "summary_short": "Sonic Gateway's fail-safe opens after 200 days offline, not the documented 14",
+      "url": "https://pacta.wtf/protocols/sonic-gateway/",
+      "category": "L1 Canonical Bridge (token deposits) (Ethereum)",
+      "surface": "Fail-safe recovery: bridge declared dead after 200 days offline (docs: 14 days, immutable)",
+      "recordId": "sonic-gateway-fail-safe-200-days-s31"
+    },
+    {
+      "slug": "stader-labs-ethx",
+      "name": "Stader Labs (ETHx)",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26403676,
+      "primaryContract": "0xAAfb31780e4b9c95Bc920e388f4925A874cd07AF",
+      "targetLabel": "Stader Manager Safe",
+      "tokens": [
+        "ETHx",
+        "SD"
+      ],
+      "baseEasUids": [
+        "0x7caae9c22c86ae171392def07dce83fa5da6fbf904b1ba9b5ff66a5021b16de9"
+      ],
+      "summary_short": "Manager Safe: docs 3-of-5 · chain 3-of-6",
+      "url": "https://pacta.wtf/protocols/stader-labs-ethx/",
+      "category": "Liquid Staking",
+      "surface": "Manager Safe Quorum & 7-Day TimelockController Admin Path",
+      "recordId": "stader-ethx-manager-safe-and-timelock"
+    },
+    {
+      "slug": "stake-dao",
+      "name": "Stake DAO",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26429396,
+      "primaryContract": "0xb27afc7844988948FBd6210AeF4E1362bC2d8E6a",
+      "targetLabel": "Stake DAO ProtocolTimelock",
+      "tokens": [
+        "SDT",
+        "veSDT"
+      ],
+      "baseEasUids": [
+        "0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5"
+      ],
+      "summary_short": "Timelock: docs 2 days · chain 5 days; Treasury Safe 3-of-5, not 4-of-7",
+      "url": "https://pacta.wtf/protocols/stake-dao/",
+      "category": "Liquid Lockers & Yield Strategies",
+      "surface": "Protocol changes wait 5 days, longer than the documented 48 hours",
+      "recordId": "stake-dao-protocol-timelock-min-delay-5d-s22"
+    },
+    {
+      "slug": "taiko-bridge",
+      "name": "Taiko Bridge",
+      "grade": "UNRESOLVED",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26453551,
+      "primaryContract": "0x2AffADEb2ef5e1F2a7F58964ee191F1e88317ECd",
+      "targetLabel": "Taiko DAO Emergency Multisig plugin",
+      "tokens": [
+        "TAIKO"
+      ],
+      "baseEasUids": [
+        "0xc281741a4fb297a9ccb30b5485ca6ef2bcfb69be10236c056e7208301e30d992"
+      ],
+      "summary_short": "Emergency council 4-of-5, standard route 3 approvals; current guides unverified",
+      "url": "https://pacta.wtf/protocols/taiko-bridge/",
+      "category": "Canonical bridge into a based contestable ZK rollup (Ethereum)",
+      "surface": "Emergency Multisig: minApprovals 4 of 5 signers (docs: 6); standard 3 (docs: 5)",
+      "recordId": "taiko-dao-emergency-multisig-4-of-5-s34"
+    },
+    {
+      "slug": "tori-finance",
+      "name": "Tori Finance",
+      "grade": "DOCS UPDATED",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26451608,
+      "primaryContract": "0xd0580192E98eA6CEB9c7b6191Ed2E27560911697",
+      "targetLabel": "Tori trUSD",
+      "tokens": [
+        "trUSD"
+      ],
+      "baseEasUids": [
+        "0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc"
+      ],
+      "summary_short": "Retrieved roles page names the retained trUSD controller; chain re-read pending",
+      "url": "https://pacta.wtf/protocols/tori-finance/",
+      "category": "Delta-Neutral Synthetic Dollar (staked strUSD) (Ethereum)",
+      "surface": "trUSD TIMELOCK_ADMIN_ROLE: a second ToriTimelock, not the documented timelock",
+      "recordId": "tori-trusd-timelock-admin-undocumented-timelock-s32"
+    },
+    {
+      "slug": "treehouse-tree-teth",
+      "name": "Treehouse (TREE / tETH)",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26440048,
+      "primaryContract": "0x2225DAbFfC7F862c99477381E971E8B1FDaB467e",
+      "targetLabel": "Treehouse TimelockController",
+      "tokens": [
+        "tETH",
+        "TREE"
+      ],
+      "baseEasUids": [
+        "0x217d213de3cd9ef094670ff69d258af35adf132406caa547f729f487dc9d7e58",
+        "0x5c12867816bee7d00c13412cf7ec67c00b7d42f3020643ab2a2ca577a28de424",
+        "0x8965ae6e51a78132a77eb14c0ac1c6cd1be357d6f261253efff28869478ae5b8"
+      ],
+      "summary_short": "TREE blacklisting has no delay; TREE and tETH owner paths keep 5-day timelocks",
+      "url": "https://pacta.wtf/protocols/treehouse-tree-teth/",
+      "category": "Fixed Income / LST",
+      "surface": "TREE token: a 5-of-7 Safe can blacklist holders with no delay; docs state a 5-day timelock on every contract",
+      "recordId": "treehouse-tree-teth-tree-blacklister-safe-s27"
+    },
+    {
+      "slug": "uniswap-governance-timelock",
+      "name": "Uniswap V3 & Governance Timelock",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26431152,
+      "primaryContract": "0x1F98431c8aD98523631AE4a59f267346ea31F984",
+      "targetLabel": "UniswapV3Factory",
+      "tokens": [
+        "UNI"
+      ],
+      "baseEasUids": [
+        "0x435a5212e2490cd6024859f474dbbd897752b24985480413301d7573cb195801"
+      ],
+      "summary_short": "Voting period: docs 7 days · chain 5.6 days",
+      "url": "https://pacta.wtf/protocols/uniswap-governance-timelock/",
+      "category": "Blue-Chip DEX & Governance",
+      "surface": "Voting period: 40,320 blocks (~5.6 days at 12-second slots), not 7 days",
+      "recordId": "uniswap-governance-voting-period-40320-blocks-s23"
+    },
+    {
+      "slug": "upshift",
+      "name": "Upshift",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26441165,
+      "primaryContract": "0x4107557d726933f0BcA591A4218Afc92978457F7",
+      "targetLabel": "Upshift vault ProxyAdmin owner Safe",
+      "tokens": [
+        "Upshift"
+      ],
+      "baseEasUids": [
+        "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768"
+      ],
+      "summary_short": "Docs say ProxyAdmin is generally 4-of-6 (no timelock disclosed); vault's is 2-of-3",
+      "url": "https://pacta.wtf/protocols/upshift/",
+      "category": "Institutional curated vaults run through a Safe owner and a ProxyAdmin multisig",
+      "surface": "Vault ProxyAdmin multisig: docs state generally 4 of 6, the Safe is 2-of-3",
+      "recordId": "upshift-proxyadmin-safe-s28"
+    },
+    {
+      "slug": "usual-money-usd0-usd0",
+      "name": "Usual Money (USD0 / USD0++)",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26401725,
+      "primaryContract": "0x0D374775E962c3608B8F0A4b8B10567DF739bb56",
+      "targetLabel": "RegistryAccess",
+      "tokens": [
+        "USD0",
+        "USD0++",
+        "USUAL"
+      ],
+      "baseEasUids": [
+        "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2"
+      ],
+      "summary_short": "DEFAULT_ADMIN handover delay: 1 second observed vs 3 days documented",
+      "url": "https://pacta.wtf/protocols/usual-money-usd0-usd0/",
+      "category": "RWA Stablecoin",
+      "surface": "OpenZeppelin AccessControlDefaultAdminRules Delay",
+      "recordId": "usual-money-registry-access-delay"
+    },
+    {
+      "slug": "vesper-v1",
+      "name": "Vesper V1",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26441165,
+      "primaryContract": "0x9520b477Aa81180E6DdC006Fc09Fb6d3eb4e807A",
+      "targetLabel": "Vesper governor Safe",
+      "tokens": [
+        "VSP"
+      ],
+      "baseEasUids": [
+        "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768"
+      ],
+      "summary_short": "Docs state a 3-of-5 Vesper multisig; the governor Safe is 3-of-6",
+      "url": "https://pacta.wtf/protocols/vesper-v1/",
+      "category": "Automated yield-aggregation pools with strategy rotation (Ethereum)",
+      "surface": "Pool governor multisig: docs state 3 of 5 signers, the Safe is 3-of-6",
+      "recordId": "vesper-v1-governor-safe-s28"
+    },
+    {
+      "slug": "whales-market",
+      "name": "Whales Market",
+      "grade": "UNRESOLVED",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26441165,
+      "primaryContract": "0x1eCdB32e59e948C010a189a0798C674a2d0c6603",
+      "targetLabel": "Whales Market TransparentUpgradeableProxy",
+      "tokens": [
+        "Whales"
+      ],
+      "baseEasUids": [
+        "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768"
+      ],
+      "summary_short": "Sampled Whales Market proxy is upgradeable; escrow doc coverage is unverified",
+      "url": "https://pacta.wtf/protocols/whales-market/",
+      "category": "Peer-to-peer escrow for pre-market token and points trades (Ethereum)",
+      "surface": "Whales Market TransparentUpgradeableProxy: upgradeable; coverage by the pre-market escrow immutability statement is unverified",
+      "recordId": "whales-market-upgradeability-s28"
+    },
+    {
+      "slug": "yearn-v3",
+      "name": "Yearn V3",
+      "grade": "CHANGED RECENTLY",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26441165,
+      "primaryContract": "0xb3bd6B2E61753C311EFbCF0111f75D29706D9a41",
+      "targetLabel": "RoleManager",
+      "tokens": [
+        "YFI"
+      ],
+      "baseEasUids": [
+        "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
+        "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2"
+      ],
+      "summary_short": "yChad signer roster changed; the Safe keeps its 6-of-9 threshold",
+      "url": "https://pacta.wtf/protocols/yearn-v3/",
+      "category": "Yield Aggregation Vaults",
+      "surface": "Sampled RoleManager.governance() Timelock Wiring",
+      "recordId": "yearn-v3-role-manager-timelock"
+    },
+    {
+      "slug": "yieldnest",
+      "name": "YieldNest",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26438867,
+      "primaryContract": "0xDF51B7843817F76220C0970eF58Ba726630028eF",
+      "targetLabel": "YNDelegator Safe",
+      "tokens": [
+        "YND"
+      ],
+      "baseEasUids": [
+        "0x6692c36731ecd514fb7a92fe3de0a6770b67f68f55eece26faa669c2c84b3a08"
+      ],
+      "summary_short": "Docs state a 2-of-3 YNDelegator; the YieldNest Safe is 2-of-4",
+      "url": "https://pacta.wtf/protocols/yieldnest/",
+      "category": "Liquid Restaking Vaults (Ethereum)",
+      "surface": "YNDelegator (delegates the eigenpods to the operators): docs state 2-of-3, the Safe is 2-of-4",
+      "recordId": "yieldnest-safe-threshold-df51b7-s26"
+    },
+    {
+      "slug": "yo-protocol",
+      "name": "YO Protocol",
+      "grade": "UNRESOLVED",
+      "easAttested": true,
+      "chains": [
+        "base"
+      ],
+      "pinnedBlock": 58315414,
+      "primaryContract": "0xB4b3F5C964A360bBd7201f72a55D0c48B8aD7021",
+      "targetLabel": "YoApprovalRegistry",
+      "tokens": [
+        "yoETH",
+        "yoUSD",
+        "YO"
+      ],
+      "baseEasUids": [
+        "0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5"
+      ],
+      "summary_short": "Approval Registry owned by the Admin Safe; sampled vault upgrades keep 48 hours",
+      "url": "https://pacta.wtf/protocols/yo-protocol/",
+      "category": "Cross-Chain Yield Optimizer Vaults",
+      "surface": "Approval Registry owner: the Admin Multisig directly, not the 48-hour timelock",
+      "recordId": "yo-protocol-approval-registry-owner-admin-safe-s22"
+    },
+    {
+      "slug": "zircuit-staking",
+      "name": "Zircuit Staking",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26441165,
+      "primaryContract": "0xC463EaC02572CC964D43D2414023E2c6B62bAF38",
+      "targetLabel": "Zircuit Staking Safe",
+      "tokens": [
+        "Zircuit"
+      ],
+      "baseEasUids": [
+        "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768"
+      ],
+      "summary_short": "Docs state a 6-of-8 multisig; the Zircuit Staking Safe is 4-of-6",
+      "url": "https://pacta.wtf/protocols/zircuit-staking/",
+      "category": "Pre-launch liquidity pool bootstrapping a rollup's day-one deposits (Ethereum)",
+      "surface": "Zircuit Staking multisig: docs state 6-of-8, the Safe is 4-of-6",
+      "recordId": "zircuit-staking-safe-threshold-s28"
+    }
+  ],
+  "all_56_reviewed_comparisons": [
+    {
+      "slug": "40-acres-base",
+      "name": "40 Acres (Base)",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "base"
+      ],
+      "pinnedBlock": 59025642,
+      "primaryContract": "0x87f18b377e625b62c708D5f6EA96EC193558EFD0",
+      "targetLabel": "40 Acres AERO USDC Loan proxy (UUPS)",
+      "tokens": [
+        "40Acres"
+      ],
+      "baseEasUids": [
+        "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768"
+      ],
+      "summary_short": "Base AERO USDC Loan contract is upgradeable (2-of-3 Safe); intro says immutable",
+      "url": "https://pacta.wtf/protocols/40-acres-base/",
+      "category": "veNFT-backed lending (AERO USDC Loan UUPS proxy on Base)",
+      "surface": "AERO USDC Loan contract (UUPS proxy): docs call the contracts immutable, but it is an upgradeable proxy",
+      "recordId": "40-acres-base-upgradeability-s28"
+    },
+    {
+      "slug": "abracadabra-spell",
+      "name": "Abracadabra Spell",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26449594,
+      "primaryContract": "0x5f0DeE98360d8200b20812e174d139A1a633EDd2",
+      "targetLabel": "Abracadabra Spell Safe",
+      "tokens": [
+        "SPELL"
+      ],
+      "baseEasUids": [
+        "0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c"
+      ],
+      "summary_short": "Docs state a 5-of-10 multisig; the Abracadabra Spell Safe is 5-of-11",
+      "url": "https://pacta.wtf/protocols/abracadabra-spell/",
+      "category": "Interest-bearing collateral loans minting MIM (Ethereum)",
+      "surface": "Abracadabra Spell multisig: docs state 5-of-10, the Safe is 5-of-11",
+      "recordId": "abracadabra-spell-safe-threshold-s30"
+    },
+    {
+      "slug": "aerodrome-finance-base",
+      "name": "Aerodrome Finance (Base)",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "base"
+      ],
+      "pinnedBlock": 58203774,
+      "primaryContract": "0x420DD381b31aEf6683db6B902084cB0FFECe40Da",
+      "targetLabel": "AerodromePoolFactory",
+      "tokens": [
+        "AERO",
+        "veAERO"
+      ],
+      "baseEasUids": [
+        "0xaddd478e0a488405a28720e11fed8d1942853dbb36fc75bb5a0725b83a460ad6"
+      ],
+      "summary_short": "Voter emergency council and epoch governor are the AerodromeMigration contract",
+      "url": "https://pacta.wtf/protocols/aerodrome-finance-base/",
+      "category": "Base Liquidity Hub & ve(3,3) DEX",
+      "surface": "Voter emergency council and epoch governor: the AerodromeMigration contract",
+      "recordId": "aerodrome-finance-base-emergency-council-migration-s21"
+    },
+    {
+      "slug": "axelar-network",
+      "name": "Axelar Network",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26434786,
+      "primaryContract": "0x4F4495243837681061C4743b74B3eEdf548D56A5",
+      "targetLabel": "AxelarGateway (proxy)",
+      "tokens": [
+        "AXL",
+        "Axelar",
+        "AxelarGateway",
+        "InterchainTokenService"
+      ],
+      "baseEasUids": [
+        "0x1c379ef9f845a2affa9c42715ba2b1b4b2f750b71b4edf9c50d0e1ae739e11ff"
+      ],
+      "summary_short": "Deployment config lists an older gateway implementation; 3-day timelock with operator path",
+      "url": "https://pacta.wtf/protocols/axelar-network/",
+      "category": "Cross-Chain Gateway & Interchain Token Service",
+      "surface": "Gateway implementation and auth module differ from the deployment config",
+      "recordId": "axelar-network-gateway-auth-module-s25"
+    },
+    {
+      "slug": "base-bridge",
+      "name": "Base Bridge",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26448221,
+      "primaryContract": "0x0475cBCAebd9CE8AfA5025828d5b98DFb67E059E",
+      "targetLabel": "Base L1 ProxyAdmin",
+      "tokens": [
+        "BaseBridge"
+      ],
+      "baseEasUids": [
+        "0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13"
+      ],
+      "summary_short": "Docs name another L1 ProxyAdmin Owner; owner() is a different 2-of-2 Safe",
+      "url": "https://pacta.wtf/protocols/base-bridge/",
+      "category": "Canonical OP Stack bridge between Ethereum and Base (L1 contracts behind a ProxyAdmin)",
+      "surface": "L1 ProxyAdmin owner: docs name 0x5a0A…3d2A; owner() is another 2-of-2 Safe",
+      "recordId": "base-bridge-l1-proxyadmin-owner-s29"
+    },
+    {
+      "slug": "bedrock-unibtc",
+      "name": "Bedrock (uniBTC)",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26449594,
+      "primaryContract": "0x047D41F2544B7F63A8e991aF2068a363d210d6Da",
+      "targetLabel": "Bedrock uniBTC VaultWithoutNative",
+      "tokens": [
+        "Bedrock(uniBTC)"
+      ],
+      "baseEasUids": [
+        "0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c"
+      ],
+      "summary_short": "uniBTC mints test 90% of existing supply vs reserves; docs say short reserves revert",
+      "url": "https://pacta.wtf/protocols/bedrock-unibtc/",
+      "category": "Liquid restaking Bitcoin vault and token (uniBTC) with a Proof-of-Reserve mint check",
+      "surface": "Secure Mint precondition: adequacyRatio() 900 (existing supply x 0.9 vs reserves)",
+      "recordId": "bedrock-unibtc-secure-mint-precondition-s30"
+    },
+    {
+      "slug": "bedrock-unieth",
+      "name": "Bedrock (uniETH)",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26434786,
+      "primaryContract": "0xF1376bceF0f78459C0Ed0ba5ddce976F1ddF51F4",
+      "targetLabel": "uniETH token proxy (Universal ETH)",
+      "tokens": [
+        "uniETH"
+      ],
+      "baseEasUids": [
+        "0x1c379ef9f845a2affa9c42715ba2b1b4b2f750b71b4edf9c50d0e1ae739e11ff"
+      ],
+      "summary_short": "Docs list an older restaking implementation; uniETH upgrades via a 3-of-5 Safe ProxyAdmin",
+      "url": "https://pacta.wtf/protocols/bedrock-unieth/",
+      "category": "Liquid Restaking",
+      "surface": "Restaking implementation differs from the one the docs list",
+      "recordId": "bedrock-unieth-restaking-impl-s25"
+    },
+    {
+      "slug": "beefy-finance-base",
+      "name": "Beefy Finance (Base)",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "base"
+      ],
+      "pinnedBlock": 58885628,
+      "primaryContract": "0xfc69704cC3cAac545cC7577009Ea4AA04F1a61Eb",
+      "targetLabel": "BeefyFeeConfig_Base",
+      "tokens": [
+        "BIFI"
+      ],
+      "baseEasUids": [
+        "0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5",
+        "0x6692c36731ecd514fb7a92fe3de0a6770b67f68f55eece26faa669c2c84b3a08"
+      ],
+      "summary_short": "Base vault-owner timelock has zero delay; strategy-owner changes keep 6 hours",
+      "url": "https://pacta.wtf/protocols/beefy-finance-base/",
+      "category": "Automated Yield Vaults & CLM (Base)",
+      "surface": "Vault owner timelock: no delay (0 seconds)",
+      "recordId": "beefy-finance-base-vault-owner-timelock-zero-delay-s22"
+    },
+    {
+      "slug": "benddao-ape-staking",
+      "name": "BendDAO APE Staking",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26451608,
+      "primaryContract": "0x4e4C314E2391A58775be6a15d7A05419ba7D2B6e",
+      "targetLabel": "BendDAO Timelock 7D (owner of the Incentive ProxyAdmin)",
+      "tokens": [
+        "BEND"
+      ],
+      "baseEasUids": [
+        "0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc"
+      ],
+      "summary_short": "BendDAO's 7-day timelock over the BEND token proxy waits 24 hours",
+      "url": "https://pacta.wtf/protocols/benddao-ape-staking/",
+      "category": "Yield on ApeCoin deposits matched with BAYC and MAYC collections (Ethereum)",
+      "surface": "BEND ProxyAdmin owner: BendDAO Timelock 7D, getMinDelay() 86,400 s",
+      "recordId": "benddao-timelock-7d-reads-1d-s32"
+    },
+    {
+      "slug": "bio-protocol",
+      "name": "Bio Protocol",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26451608,
+      "primaryContract": "0xcb1592591996765Ec0eFc1f92599A19767ee5ffA",
+      "targetLabel": "BIO token (BioToken)",
+      "tokens": [
+        "BIO"
+      ],
+      "baseEasUids": [
+        "0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc"
+      ],
+      "summary_short": "Existing BIO contract can mint; docs say growth needs a replacement contract",
+      "url": "https://pacta.wtf/protocols/bio-protocol/",
+      "category": "Decentralized-science funding layer for biotech projects (Ethereum)",
+      "surface": "BIO mint(): MINTER_ROLE held by a 5-of-11 Safe and a bridge manager; no cap",
+      "recordId": "bio-token-mint-role-safe-no-new-contract-s32"
+    },
+    {
+      "slug": "cbridge",
+      "name": "cBridge",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26452373,
+      "primaryContract": "0x5427FEFA711Eff984124bFBB1AB6fbf5E3DA1820",
+      "targetLabel": "cBridge pool-based Bridge (Ethereum)",
+      "tokens": [
+        "CELR"
+      ],
+      "baseEasUids": [
+        "0x897aa17688d627e9d4fdd7a49c8f4c3a9d4b1943e24e03d7c744563895d9d03c"
+      ],
+      "summary_short": "3 cBridge governance keys can replace the pool signers after 7 days; docs: 2/3 stake",
+      "url": "https://pacta.wtf/protocols/cbridge/",
+      "category": "Liquidity-pool bridge between chains run by a state guardian network (Ethereum)",
+      "surface": "Pool Bridge signers: owner can resetSigners after 7-day notice; owner = 3-of-5 EOA governance",
+      "recordId": "cbridge-liquidity-bridge-owner-resets-signers-s33"
+    },
+    {
+      "slug": "chainlink-ccip",
+      "name": "Chainlink CCIP",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26451608,
+      "primaryContract": "0x80226fc0Ee2b096224EeAc085Bb9a8cba1146f7D",
+      "targetLabel": "CCIP Router (Ethereum)",
+      "tokens": [
+        "CCIP",
+        "LINK",
+        "Chainlink"
+      ],
+      "baseEasUids": [
+        "0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
+        "0x61c2970c176b85ab604e6b565c5f050a7176b62e725d449e8d27d700365283d6"
+      ],
+      "summary_short": "Docs: only the MCMS proposes · chain: a 6-of-12 Safe can also propose",
+      "url": "https://pacta.wtf/protocols/chainlink-ccip/",
+      "category": "Cross-Chain Messaging & Token Bridge Infrastructure",
+      "surface": "Timelock proposers: a 6-of-12 Safe besides the ManyChainMultiSigs (docs: all proposals from an MCMS)",
+      "recordId": "chainlink-ccip-timelock-proposers-s24"
+    },
+    {
+      "slug": "cian-yield-layer",
+      "name": "CIAN Yield Layer",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26450616,
+      "primaryContract": "0xB13aa2d0345b0439b064f26B82D8dCf3f508775d",
+      "targetLabel": "CIAN stETH Yield Layer vault",
+      "tokens": [
+        "ylstETH"
+      ],
+      "baseEasUids": [
+        "0x63d29eafa88f7e52cc6a596668ae3f03c8132704108794092dc25710fa8bde77"
+      ],
+      "summary_short": "CIAN's stETH vault settings change via a Safe directly; the docs say they are time-locked",
+      "url": "https://pacta.wtf/protocols/cian-yield-layer/",
+      "category": "Leveraged Staking Vault (recursive ETH) (Ethereum)",
+      "surface": "Fund allocation setters: owner is a 3-of-4 Safe, the documented TimeLock is not in the path",
+      "recordId": "cian-yield-layer-allocation-no-timelock-s31"
+    },
+    {
+      "slug": "circle-gateway",
+      "name": "Circle Gateway",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26451608,
+      "primaryContract": "0x77777777Dcc4d5A8B6E418Fd04D8997ef11000eE",
+      "targetLabel": "Circle GatewayWallet",
+      "tokens": [
+        "CircleGateway"
+      ],
+      "baseEasUids": [
+        "0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc"
+      ],
+      "summary_short": "One key can pause Gateway withdrawals, another can upgrade it; docs say trustless",
+      "url": "https://pacta.wtf/protocols/circle-gateway/",
+      "category": "Chain-abstracted USDC balance: GatewayWallet deposits behind a UUPS proxy",
+      "surface": "GatewayWallet: EOA owner (UUPS upgrade, withdrawal delay) and EOA pauser over withdrawals",
+      "recordId": "circle-gateway-wallet-eoa-owner-and-pauser-s32"
+    },
+    {
+      "slug": "concrete",
+      "name": "Concrete",
+      "grade": "UNRESOLVED",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26425374,
+      "primaryContract": "0xB9DC54c8261745CB97070CeFBE3D3d815aee8f20",
+      "targetLabel": "Concrete ctDeltaWeETH vault (Concrete Delta WeETH)",
+      "tokens": [
+        "ctDeltaWeETH",
+        "Concrete"
+      ],
+      "baseEasUids": [
+        "0xe712dd31d79ab492e2e64eb5847396651dee81daa9f895ead45548e97f1a2eb7"
+      ],
+      "summary_short": "ctDeltaWeETH owner/manager share a 1-of-2 Safe; single-key drain not established",
+      "url": "https://pacta.wtf/protocols/concrete/",
+      "category": "Yield Vaults (ERC-4626)",
+      "surface": "Vault owner, VAULT_MANAGER and factory manager Safe threshold: 1-of-2",
+      "recordId": "concrete-vault-owner-safe-1of2-s20"
+    },
+    {
+      "slug": "curve-finance-crvusd",
+      "name": "Curve Finance (crvUSD)",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26403523,
+      "primaryContract": "0xC9332fdCB1C491Dcc683bAe86Fe3cb70360738BC",
+      "targetLabel": "crvUSD ControllerFactory",
+      "tokens": [
+        "crvUSD",
+        "CRV"
+      ],
+      "baseEasUids": [
+        "0x754edd7612258b755ff2e56903243d1f8867bad53c29ce3febb5ed9114005e42"
+      ],
+      "summary_short": "crvUSD factory admin is a LendingOwnerProxy; docs name the OwnershipAgent",
+      "url": "https://pacta.wtf/protocols/curve-finance-crvusd/",
+      "category": "Decentralized Stablecoin & Lending",
+      "surface": "ControllerFactory Admin Proxy & EmergencyDAO Debt-Ceiling Guard",
+      "recordId": "curve-crvusd-factory-lending-owner-proxy"
+    },
+    {
+      "slug": "defi-saver",
+      "name": "DeFi Saver",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26441165,
+      "primaryContract": "0xBc841B0dE0b93205e912CFBBd1D0c160A1ec6F00",
+      "targetLabel": "DeFi Saver Owner Safe",
+      "tokens": [
+        "DeFiSaver"
+      ],
+      "baseEasUids": [
+        "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768"
+      ],
+      "summary_short": "Docs state a 2/3 Admin multisig; the Safe is 3-of-6",
+      "url": "https://pacta.wtf/protocols/defi-saver/",
+      "category": "DeFi management and automation dashboard (recipes, automation strategies)",
+      "surface": "AdminVault Owner multisig: docs state 3/5, the Safe is 3-of-6",
+      "recordId": "defi-saver-adminvault-owner-safe-s28"
+    },
+    {
+      "slug": "ethena-usde-susde",
+      "name": "Ethena (USDe / sUSDe)",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26406106,
+      "primaryContract": "0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94",
+      "targetLabel": "EthenaTimelockController",
+      "tokens": [
+        "USDe",
+        "sUSDe",
+        "ENA"
+      ],
+      "baseEasUids": [
+        "0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779",
+        "0x8965ae6e51a78132a77eb14c0ac1c6cd1be357d6f261253efff28869478ae5b8"
+      ],
+      "summary_short": "Admin timelock minimum is one day; core-function docs say seven days",
+      "url": "https://pacta.wtf/protocols/ethena-usde-susde/",
+      "category": "Synthetic Dollar / Basis Collateral",
+      "surface": "TimelockController MinDelay & Dev Multisig Quorum",
+      "recordId": "ethena-admin-timelock-and-dev-safe"
+    },
+    {
+      "slug": "f-x-protocol-v2",
+      "name": "f(x) Protocol v2",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26448221,
+      "primaryContract": "0x32356FE312Eba9B7D6A157ad28D1ca91b571CdA6",
+      "targetLabel": "ProtocolTreasury (wstETH)",
+      "tokens": [
+        "fxUSD",
+        "FXN"
+      ],
+      "baseEasUids": [
+        "0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
+        "0xca4b525bf5142d8e88433cbed2a1aa87bb06a97d1353cb77621ec41a51ce8101"
+      ],
+      "summary_short": "V2 Router owner is the 6-of-9 operational Safe; separate timelock keeps 3 days",
+      "url": "https://pacta.wtf/protocols/f-x-protocol-v2/",
+      "category": "Leveraged ETH / Stablecoin",
+      "surface": "ProtocolTreasury DEFAULT_ADMIN_ROLE Holders",
+      "recordId": "fx-protocol-v2-treasury-admin"
+    },
+    {
+      "slug": "fluid-instadapp",
+      "name": "Fluid / Instadapp",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26401405,
+      "primaryContract": "0x324c5Dc1fC42c7a4D43d92df1eBA58a54d13Bf2d",
+      "targetLabel": "VaultFactory",
+      "tokens": [
+        "FLUID",
+        "INST"
+      ],
+      "baseEasUids": [
+        "0x804289d4357b0a8d5a360911ec450c13ca36c4422d1e811c4c7040ef7d2628e5"
+      ],
+      "summary_short": "Migration auth is live on four vaults, beyond the documented multisig scope",
+      "url": "https://pacta.wtf/protocols/fluid-instadapp/",
+      "category": "Modular Lending & DEX Vaults",
+      "surface": "VaultFactory.isVaultAuth Migration Scope",
+      "recordId": "fluid-instadapp-vault-factory-auth"
+    },
+    {
+      "slug": "gearbox-v3-v3-1",
+      "name": "Gearbox V3 / V3.1",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26403523,
+      "primaryContract": "0xa133C9A92Fb8dDB962Af1cbae58b2723A0bdf23b",
+      "targetLabel": "Gearbox LegacyTimelock",
+      "tokens": [
+        "GEAR"
+      ],
+      "baseEasUids": [
+        "0x754edd7612258b755ff2e56903243d1f8867bad53c29ce3febb5ed9114005e42"
+      ],
+      "summary_short": "LegacyTimelock 36h vs 2-day docs; InstanceManager owner is a 4-of-21 Safe",
+      "url": "https://pacta.wtf/protocols/gearbox-v3-v3-1/",
+      "category": "Leveraged Credit & Curated Lending",
+      "surface": "LegacyTimelock Delay & InstanceManager Safe Quorum",
+      "recordId": "gearbox-v3-legacy-timelock-and-instance-safe"
+    },
+    {
+      "slug": "goldfinch",
+      "name": "Goldfinch",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26449594,
+      "primaryContract": "0xBEb28978B2c755155f20fd3d09Cb37e300A6981f",
+      "targetLabel": "Goldfinch Council multisig (governance signers of the protocol)",
+      "tokens": [
+        "GFI"
+      ],
+      "baseEasUids": [
+        "0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c"
+      ],
+      "summary_short": "Docs state a 6-of-10 multisig; the Goldfinch Safe is 6-of-12",
+      "url": "https://pacta.wtf/protocols/goldfinch/",
+      "category": "Undercollateralized real-world credit pools for off-chain borrowers (Ethereum)",
+      "surface": "Goldfinch multisig: docs state 6-of-10, the Safe is 6-of-12",
+      "recordId": "goldfinch-safe-threshold-s30"
+    },
+    {
+      "slug": "hakka-finance",
+      "name": "Hakka Finance",
+      "grade": "UNRESOLVED",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26453551,
+      "primaryContract": "0xF2B8f214Dc81b849ed3BDCAEdA6c8c39625c500A",
+      "targetLabel": "Hakka Finance multi-sig (Safe)",
+      "tokens": [
+        "HAKKA"
+      ],
+      "baseEasUids": [
+        "0xc281741a4fb297a9ccb30b5485ca6ef2bcfb69be10236c056e7208301e30d992"
+      ],
+      "summary_short": "HAKKA owner Safe is 2-of-4; current documented roster unverified",
+      "url": "https://pacta.wtf/protocols/hakka-finance/",
+      "category": "Crypto-native hedging instruments: impermanent-loss and interest-rate derivatives (iGain) (Ethereum)",
+      "surface": "Multi-sig: docs name 3 keyholders; the Safe is 2-of-4 with 1 unnamed owner",
+      "recordId": "hakka-multisig-undocumented-signer-s34"
+    },
+    {
+      "slug": "hop-protocol",
+      "name": "Hop Protocol",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26453551,
+      "primaryContract": "0xb8901acB165ed027E32754E0FFe830802919727f",
+      "targetLabel": "Hop L1_ETH_Bridge (Ethereum)",
+      "tokens": [
+        "HOP"
+      ],
+      "baseEasUids": [
+        "0xc281741a4fb297a9ccb30b5485ca6ef2bcfb69be10236c056e7208301e30d992"
+      ],
+      "summary_short": "Hop's Bonder whitelist is set by a 2-of-3 key Safe, not the documented DAO",
+      "url": "https://pacta.wtf/protocols/hop-protocol/",
+      "category": "Rollup-to-rollup token bridge using bonders (Ethereum)",
+      "surface": "L1 ETH Bridge governance: 24h Timelock whose admin is a 2-of-3 key Safe",
+      "recordId": "hop-l1-eth-bridge-governance-2-of-3-safe-s34"
+    },
+    {
+      "slug": "infinifi",
+      "name": "infiniFi",
+      "grade": "UNRESOLVED",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26449594,
+      "primaryContract": "0x3D18480CC32B6AB3B833dCabD80E76CfD41c48a9",
+      "targetLabel": "infiniFi Long Timelock (GOVERNOR)",
+      "tokens": [
+        "iUSD",
+        "siUSD",
+        "liUSD"
+      ],
+      "baseEasUids": [
+        "0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
+        "0xe712dd31d79ab492e2e64eb5847396651dee81daa9f895ead45548e97f1a2eb7"
+      ],
+      "summary_short": "MINOR_ROLES_MANAGER administers PAUSE/UNPAUSE; current roles page unverified",
+      "url": "https://pacta.wtf/protocols/infinifi/",
+      "category": "Yield-Bearing Stablecoin",
+      "surface": "PAUSE / UNPAUSE role admin: MINOR_ROLES_MANAGER, not GOVERNOR",
+      "recordId": "infinifi-pause-role-admin-minor-roles-s20"
+    },
+    {
+      "slug": "inverse-finance-firm",
+      "name": "Inverse Finance (FiRM)",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26449594,
+      "primaryContract": "0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7",
+      "targetLabel": "Policy Committee Safe",
+      "tokens": [
+        "DOLA",
+        "INV",
+        "FiRM"
+      ],
+      "baseEasUids": [
+        "0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
+        "0x34049a2c64fe3355f8e325481234754c8422a48bb4784fed1d028fa40eb93058",
+        "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
+        "0x8965ae6e51a78132a77eb14c0ac1c6cd1be357d6f261253efff28869478ae5b8"
+      ],
+      "summary_short": "sDOLA staleness limit reads 86,500 s, was 0 (check off); docs say typically 1-24 hours",
+      "url": "https://pacta.wtf/protocols/inverse-finance-firm/",
+      "category": "Fixed-Rate Lending",
+      "surface": "Policy Committee Safe Quorum & GovernorMills Timelock",
+      "recordId": "inverse-finance-firm-policy-safe"
+    },
+    {
+      "slug": "lagoon",
+      "name": "Lagoon",
+      "grade": "UNRESOLVED",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26448221,
+      "primaryContract": "0x707D622cdA4b5459e7DcEe8Ba8E429F154f96A27",
+      "targetLabel": "Lagoon cbBTC vault UpgradeableBeacon",
+      "tokens": [
+        "Lagoon"
+      ],
+      "baseEasUids": [
+        "0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13"
+      ],
+      "summary_short": "Legacy cbBTC beacon upgrades have no delay; 24h Opt-in doc coverage unverified",
+      "url": "https://pacta.wtf/protocols/lagoon/",
+      "category": "Curated vault infrastructure: ERC-7540 vaults behind upgradeable proxies",
+      "surface": "Legacy cbBTC vault beacon upgrades: no enforced delay under a 3-of-6 Safe; coverage by the 24 h Opt-in delay docs is unverified",
+      "recordId": "lagoon-vault-beacon-upgrade-delay-s29"
+    },
+    {
+      "slug": "maple-finance-v2-syrup",
+      "name": "Maple Finance V2 / Syrup",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26401540,
+      "primaryContract": "0xBe10aDcE8B6E3E02Db384E7FaDA5395DD113D8b3",
+      "targetLabel": "PoolPermissionManager",
+      "tokens": [
+        "SYRUP",
+        "syrupUSDC",
+        "syrupUSDT"
+      ],
+      "baseEasUids": [
+        "0x749d96e1a3d214a4ab66c528ca12c84dce085fa138dc370dd0eb817d890f09fa"
+      ],
+      "summary_short": "PoolPermissionManager proxy admin is the 4-of-7 DAO Safe, not GovernorTimelock",
+      "url": "https://pacta.wtf/protocols/maple-finance-v2-syrup/",
+      "category": "Institutional Credit / RWA",
+      "surface": "EIP-1967 Proxy Admin Slot vs. GovernorTimelock",
+      "recordId": "maple-v2-syrup-ppm-admin"
+    },
+    {
+      "slug": "mellow-protocol-lido-earn",
+      "name": "Mellow Protocol / Lido Earn",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26401312,
+      "primaryContract": "0xe5abcc40196174Ae0d12153dE286F0D8E401769d",
+      "targetLabel": "Mellow Curator Safe",
+      "tokens": [
+        "Mellow",
+        "Lido Earn"
+      ],
+      "baseEasUids": [
+        "0xa26f81b0e68248c7f286527286b3d2e6b299502d53f4dfbc4397df7d22262986"
+      ],
+      "summary_short": "Curator Safe: docs 3-of-6 · chain 3-of-5",
+      "url": "https://pacta.wtf/protocols/mellow-protocol-lido-earn/",
+      "category": "Liquid Restaking / Curated Vaults",
+      "surface": "Curator Safe Quorum & Lazy Admin Signer Overlap",
+      "recordId": "mellow-lido-earn-curator-quorum"
+    },
+    {
+      "slug": "metamorpho-re7-weth-vs-re7-usdt",
+      "name": "MetaMorpho (Re7 WETH vs. Re7 USDT)",
+      "grade": "UNRESOLVED",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26401405,
+      "primaryContract": "0x78Fc2c2eD1A4cDb5402365934aE5648aDAd094d0",
+      "targetLabel": "MetaMorpho Re7 WETH",
+      "tokens": [
+        "Re7WETH",
+        "Re7USDT",
+        "MetaMorpho"
+      ],
+      "baseEasUids": [
+        "0x804289d4357b0a8d5a360911ec450c13ca36c4422d1e811c4c7040ef7d2628e5"
+      ],
+      "summary_short": "Re7 WETH has no guardian while Re7 USDT does; no parity promise was verified",
+      "url": "https://pacta.wtf/protocols/metamorpho-re7-weth-vs-re7-usdt/",
+      "category": "Curated Lending Vaults",
+      "surface": "Sampled MetaMorpho Vault Guardian Configuration",
+      "recordId": "metamorpho-re7-weth-guardian-parity"
+    },
+    {
+      "slug": "moonwell-lending-base",
+      "name": "Moonwell Lending (Base)",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "base"
+      ],
+      "pinnedBlock": 57842915,
+      "primaryContract": "0xfBb21d0380beE3312B33c4353c8936a0F13EF26C",
+      "targetLabel": "Moonwell Unitroller (Comptroller proxy)",
+      "tokens": [
+        "WELL"
+      ],
+      "baseEasUids": [
+        "0x105ea2849a5cd9ef601ae565e6b0adf288884771c8ac82c1c3d0a87aa789eb4f"
+      ],
+      "summary_short": "Base pause guardian is a 2-of-4 Safe (Oct MIP-X71); older constitution says 3-of-5",
+      "url": "https://pacta.wtf/protocols/moonwell-lending-base/",
+      "category": "Base Lending & Borrowing",
+      "surface": "Comptroller pauseGuardian = 2-of-4 Safe (Constitution: pause = Security Council 3-of-5)",
+      "recordId": "moonwell-pause-guardian-2of4-safe-s18"
+    },
+    {
+      "slug": "obol-network",
+      "name": "Obol Network",
+      "grade": "DELTA",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26433001,
+      "primaryContract": "0xCdBf527842Ab04Da548d33EB09d03DB831381Fb0",
+      "targetLabel": "Obol TimelockController",
+      "tokens": [
+        "OBOL",
+        "stOBOL",
+        "Obol"
+      ],
+      "baseEasUids": [
+        "0x61c2970c176b85ab604e6b565c5f050a7176b62e725d449e8d27d700365283d6"
+      ],
+      "summary_short": "OBOL mint has no enforced 500M cap; minter authority is a 2-of-3 Safe",
+      "url": "https://pacta.wtf/protocols/obol-network/",
+      "category": "Distributed Validator Infrastructure & Governance Token",
+      "surface": "OBOL supply: documented cap of 500M, no cap on-chain; a 2-of-3 Safe holds MINTER_ROLE",
+      "recordId": "obol-network-token-supply-cap-s24"
+    },
+    {
+      "slug": "odyssey-finance",
+      "name": "Odyssey Finance",
+      "grade": "UNRESOLVED",
+      "easAttested": true,
+      "chains": [
+        "ethereum"
+      ],
+      "pinnedBlock": 26458556,
+      "primaryContract": "0x3F6da0A118B3A0ddfdbaB4690cC96b2cF73B488D",
+      "targetLabel": "PositionRegistry ProxyAdmin (Ethereum)",
+      "tokens": [
+        "Odyssey"
+      ],
+      "baseEasUids": [
+        "0xa20a0fa97ac80abb3d3f9d4de615018ff3a07f42eb4f124375dc26a216f896a5"
+      ],
+      "summary_short": "Six ProxyAdmins share a 2-of-4 owner Safe; current governor docs unverified",
+      "url": "https://pacta.wtf/protocols/odyssey-finance/",
+      "category": "Automated DeFi position manager: strategies, order executors and fee policies behind upgradeable proxies",
+      "surface": "Upgrade governor: docs state a 3/5 multisig; every ProxyAdmin owner is one Safe, 2-of-4 (Ethereum and Base)",
+      "recordId": "odyssey-finance-governor-safe-2-of-4-vs-3-of-5-s37"
     },
     {
       "slug": "ondo-finance-ousg-flux-finance",

@@ -35,6 +35,12 @@ _ZERO_DELAY = re.compile(r"no delay of its own|\(0 ?s\)|needs no timelock|no enf
 _DOC_NOF = re.compile(r"\b(\d{1,2})\s*(?:-of-|/|\s+of\s+)\s*(\d{1,2})\b")
 
 
+_UNATTACHED = re.compile(r"\bowns neither\b|\bdoes not own\b|\bis not the [\w' ()-]*?owner\b|\bnot in the (?:\w+ )*path\b|\bnot wired\b", re.I)
+_ZERO_GUARDIAN = re.compile(r"guardian\(\)\s*=\s*0x0{40}\b")
+_CANCEL_ONLY = re.compile(r"CANCELLER_ROLE")
+_FREEZE_WORDS = re.compile(r"\bpause|\bfreez|\bblacklist|PAUSE_ROLE|pauseGuardian|EMERGENCY_ROLE", re.I)
+
+
 def _nofs(text):
     """Every K-of-N quorum in the text, written either as "3-of-6" or as "getThreshold() = 3 of getOwners() = 6"."""
     return sorted(list(_NOF.finditer(text)) + list(_NOF_READS.finditer(text)), key=lambda m: m.start())
@@ -292,6 +298,13 @@ def factors(records, easattested, g, facts=(), parity_text=None):
         if _COOLDOWN.search(str(_r.get("surface") or "")):        # a user withdrawal / unstaking delay is not an admin timelock
             continue
         for m in _DELAY.finditer(t):
+            # a timelock the record itself says is not on the sampled path ("owns neither", "does not own MasterChef") sets no floor:
+            # the path it was listed for has no enforced delay (v7 F4)
+            a_, b_ = t.rfind(". ", 0, m.start()), t.find(". ", m.end())
+            sent = t[a_ + 2 if a_ >= 0 else 0: b_ if b_ >= 0 else len(t)]
+            if _UNATTACHED.search(sent):
+                delays.append((0, f"{rid}: {_clip(sent)}"))
+                continue
             delays.append((int(m.group(1).replace(",", "")), f"{rid}: {_snip(t, m)}"))
         for c in clauses(t):                                      # a role that executes without the delay (e.g. RBACTimelock bypasser)
             if _BYPASS_EXEC.search(c):
@@ -357,6 +370,10 @@ def factors(records, easattested, g, facts=(), parity_text=None):
         cs = clauses(t)
         for i, c in enumerate(cs):
             if not _EMERGENCY.search(c):
+                continue
+            # an unset guardian (guardian() = 0x0) or a timelock CANCELLER_ROLE alone establishes no pause / freeze holder (v7 F3)
+            if _ZERO_GUARDIAN.search(c) or (_CANCEL_ONLY.search(c) and not _FREEZE_WORDS.search(c)):
+                em = em or (rid, c)
                 continue
             em = em or (rid, c)
             if i + 1 < len(cs) and _THAT.match(cs[i + 1]):   # "…hasRole(FREEZER, 0x…) = true; that Safe is 2-of-5"

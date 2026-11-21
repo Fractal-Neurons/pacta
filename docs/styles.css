@@ -1644,4 +1644,4 @@ html:not(.js) [data-scan-upgrade], html:not(.js) [data-co-card] { display: grid 
   .memo-meta dd .sep { display: none; }
 }
 /* v6 E18 (i): the hero search keeps room for its button / kbd hint, so the placeholder never clips */
-.hero-pf .checker input { padding-right: 12px; text-overflow: ellipsis; }
+.hero-pf .checker input { padding-right: 12px; text-overflow: ellipsis; min-width: 0; }   /* v7 F6: shrinks beside the chain selector */

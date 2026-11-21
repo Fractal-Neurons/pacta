@@ -6677,7 +6677,7 @@
       "summary_doc": "audits/sprint-29/block-26448221-summary.md",
       "summary_sha256": "0xba61b61feb65e1b23d10c998f70bcabce22a8b27203581542ef1cc3b68a4507f",
       "summary_short": "V2 Router owner is the 6-of-9 operational Safe; separate timelock keeps 3 days",
-      "surface": "V2 Router (Diamond) owner: docs put every transaction behind a 3-day timelock; owner() is the 6-of-9 Safe",
+      "surface": "V2 Router (Diamond) owner: docs put queued transactions behind a 3-day timelock (oracle updates excepted); owner() is the 6-of-9 Safe",
       "target_contract": "0x33636D49FbefBE798e15e7F356E8DBef543CC708",
       "target_label": "f(x) V2 Router (Diamond)",
       "verification_status": "scanner_dual_rpc_replayed_base_eas_attested_pending_static_review"

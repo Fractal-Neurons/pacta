@@ -755,11 +755,19 @@ def scorecards(idx, pinned=None, sp=None):
         fs = SC.factors(es, eas, g, facts, parity_text=corr.get("parityText"))
         for f in fs:                                       # a correction's scoped factor wording replaces the derived sentence
             if f["key"] in (corr.get("factorOverrides") or {}):
-                f["value"] = corr["factorOverrides"][f["key"]]
+                o_ = corr["factorOverrides"][f["key"]]
+                # a string replaces the wording; a dict may also scope the state and the cited evidence (v7 F4 infiniFi)
+                if isinstance(o_, dict):
+                    f.update({k_: o_[k_] for k_ in ("state", "value", "evidence") if k_ in o_})
+                else:
+                    f["value"] = o_
             # a human evidence caption (the record's surface, chain and pinned block); the machine record id stays in evidenceRecordId
             rid_ = (f.get("evidence") or "").split(": ", 1)[0]
             ev_r = next((e for e in es if e["id"] == rid_), None)
-            if ev_r is not None:
+            ov_ = (corr.get("factorOverrides") or {}).get(f["key"])
+            if isinstance(ov_, dict) and ov_.get("evidenceCaption"):
+                f["evidenceRecordId"], f["evidenceCaption"] = rid_, ov_["evidenceCaption"]
+            elif ev_r is not None:
                 cap_ = (corr.get("evidenceCaption") if rid_ == corr.get("leadRecord") else None) or (
                     f'{ev_r["surface"]} — {CHAINS[chain_of(ev_r)][0]} block #{int(ev_r["block_number"]):,}')
                 f["evidenceRecordId"], f["evidenceCaption"] = rid_, cap_
@@ -1066,6 +1074,7 @@ ADDR40 = re.compile(r"0x[0-9a-fA-F]{40}")
 
 _MD_BOLD = re.compile(r"\*\*([^*\n]+)\*\*|__([^_\n]+)__")
 _TEX_INLINE = re.compile(r"\$([0-9][0-9/.,+\- ]*)\$")
+_RECORD_CITE = re.compile(r"\s*\(record\s+[a-z0-9_-]+\)")
 _LONG_INT = re.compile(r"(?<![0-9A-Za-z.,])\d{18,}(?![0-9A-Za-z])")
 
 
@@ -1073,11 +1082,19 @@ def plain(text):
     """Visible text from a quoted documentation excerpt: Markdown bold (**x**) and inline TeX ($5/9$) markers are removed; the JSON
     feeds keep the record's text verbatim."""
     t = _TEX_INLINE.sub(lambda m: m.group(1), _MD_BOLD.sub(lambda m: m.group(1) or m.group(2), text or ""))
+    t = _RECORD_CITE.sub("", t)            # "(record cap-1d-timelock-min-delay-s20)": an internal id is never reader prose (v7 F2)
     # a raw 18+-digit integer (a wei amount) is shown digit-grouped (exact value, readable); 0x hex is never touched
     return _LONG_INT.sub(lambda m: f"{int(m.group(0)):,}", t)
 
 
 SEP = '<span class="sep" aria-hidden="true"> · </span>'
+_WBR_AT = re.compile(r"(?<=[A-Za-z0-9_])([.(])(?=[A-Za-z_])")
+
+
+def wbr(text):
+    """Escaped text with a soft wrap opportunity after "." and "(" inside identifier calls (EtherfiL1SyncPoolETH.<wbr>setDelegate(<wbr>
+    EtherFiTimelock)), so a phone wraps at punctuation and never splits a contract name mid-word (v7 F6)."""
+    return _WBR_AT.sub(lambda m: m.group(1) + "<wbr>", E(text))
 
 
 def prose(text):
@@ -1324,7 +1341,7 @@ def radar_section(radar, prefix="", full=False):
         rows.append(
             f'<tr data-radar-row="{st}"{" class=" + chr(34) + "is-executed" + chr(34) if st == "executed" else ""}>'
             f'<td><b>{E(it["protocol"])}</b><span class="sub" data-skel>{state_badge(st, it["operations"])}</span></td>'
-            f'<td data-label="Queued operation"><span class="op">{E(it["title"])}</span>' + (f'<span class="sub">{E(it["summary"])}</span>' if full else "") +
+            f'<td data-label="Queued operation"><span class="op">{wbr(it["title"])}</span>' + (f'<span class="sub">{wbr(it["summary"])}</span>' if full else "") +
             f'<span class="meta">{cue}Timelock {tl} · '
             + (f'Operation{"s" if n > 1 else ""} {ops}' if full and not labelled else f'{n} operation{"s" if n > 1 else ""}') + f'</span>{labels}</td>'
             + (f'<td class="nowrap num hide-m" data-label="Delay">{secs(it["min_delay_seconds"])}</td>' if full else "")
@@ -2875,7 +2892,7 @@ EAS_SCHEMA_VIEW = "https://base.easscan.org/schema/view/0x7ff485bc1159dff3c70eef
 EDITORIAL_FIREWALL = "Pacta never sells grades."
 
 
-HERO_PLACEHOLDER = "Search 316 protocols or 0x address…"   # v6 E18 (i): short enough for the button / kbd hint at 390 px
+HERO_PLACEHOLDER = "Protocol or 0x address…"   # v7 F6: never clips beside the chain selector at 1200 px or 390 px
 
 
 def hero_checker(examples="", prefix="", cap=None, label="Protocol, token or contract address", cta_variant="default", cta_label="Check protocol",

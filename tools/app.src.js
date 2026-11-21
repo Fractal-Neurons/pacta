@@ -800,7 +800,7 @@
   // visible text of a quoted documentation excerpt: Markdown bold (**x**) and inline TeX ($5/9$) markers removed (mirrors build_site.plain)
   function plainText(t) {
     return String(t || "").replace(/\*\*([^*\n]+)\*\*|__([^_\n]+)__/g, function (m, a, b) { return a || b; })
-      .replace(/\$([0-9][0-9\/.,+\- ]*)\$/g, "$1");
+      .replace(/\$([0-9][0-9\/.,+\- ]*)\$/g, "$1").replace(/\s*\(record\s+[a-z0-9_-]+\)/g, "");
   }
   function firstSentence(t) {
     t = plainText(t).replace(/\s+/g, " ").trim();

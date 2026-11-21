@@ -5638,7 +5638,7 @@
      "classification": "parameter_delta",
      "id": "f-x-protocol-v2-router-owner-safe-s29",
      "sprint": 29,
-     "surface": "V2 Router (Diamond) owner: docs put every transaction behind a 3-day timelock; owner() is the 6-of-9 Safe",
+     "surface": "V2 Router (Diamond) owner: docs put queued transactions behind a 3-day timelock (oracle updates excepted); owner() is the 6-of-9 Safe",
      "targetContract": "0x33636D49FbefBE798e15e7F356E8DBef543CC708",
      "targetLabel": "f(x) V2 Router (Diamond)"
     }

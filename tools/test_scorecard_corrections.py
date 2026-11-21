@@ -189,7 +189,7 @@ class V4(unittest.TestCase):
         idx = {e["id"]: e for e in j("api", "v1", "index.json")["entries"]}
         feed = {i["slug"]: i for i in j("api", "v1", "x-feed.json")["items"] if i["kind"] != "radar_timelock"}
         reg = CORR.data()["protocols"]
-        self.assertEqual(len(reg), 25)
+        self.assertEqual(len(reg), 27)   # v7: cian-yield-layer and pickle carry scoped timelock rows
         for s, c in reg.items():
             r = idx[c["leadRecord"]]
             ev = CARDS[s]["evidence"]
@@ -468,7 +468,7 @@ class V6(unittest.TestCase):
         import glob
         css = open(os.path.join(ROOT, "docs", "styles.css"), encoding="utf-8").read()
         home = open(os.path.join(ROOT, "docs", "index.html"), encoding="utf-8").read()
-        self.assertIn('placeholder="Search 316 protocols or 0x address…"', home)
+        self.assertIn('placeholder="Protocol or 0x address…"', home)       # v7 F6 supersedes the v6 wording
         self.assertIn('.js #how-it-works [data-tabs-stable] > [data-slot="tabs-content"][data-inactive] { display: none; }', css)
         self.assertIn("overflow-wrap: break-word; word-break: normal;", css)
         self.assertNotIn("table.radar .meta { overflow-wrap: anywhere", css)
@@ -482,6 +482,110 @@ class V6(unittest.TestCase):
             n_rated += CARDS[s]["grade"] != "observed"
         self.assertEqual(n_rated, 189)
 
+
+
+class V7(unittest.TestCase):
+    def test_f1_fx_display_title(self):
+        import glob
+        want = "V2 Router (Diamond) owner: docs put queued transactions behind a 3-day timelock (oracle updates excepted); owner() is the 6-of-9 Safe"
+        t = page("f-x-protocol-v2")
+        self.assertIn(f"<h2>{want}</h2>", t.replace("&#x27;", "'"))
+        hits = [f for f in glob.glob(os.path.join(ROOT, "docs", "**", "*"), recursive=True)
+                if os.path.isfile(f) and f.endswith((".html", ".json", ".txt")) and
+                "docs put every transaction behind a 3-day timelock" in open(f, encoding="utf-8", errors="ignore").read()]
+        self.assertEqual(hits, [])
+
+    def test_f2_no_record_citations_or_ids_in_visible_prose(self):
+        import glob
+        import re
+        import html as H
+        ids = {e["id"] for e in j("api", "v1", "index.json")["entries"]} | {"tori-finance-control-plane"}
+        id_re = re.compile(r"(?<![a-z0-9-])(" + "|".join(sorted(map(re.escape, ids), key=len, reverse=True)) + r")(?![a-z0-9-])")
+        for f in glob.glob(os.path.join(ROOT, "docs", "**", "*.html"), recursive=True):
+            t = re.sub(r"<script.*?</script>|<style.*?</style>|<code.*?</code>|<pre.*?</pre>", " ", open(f, encoding="utf-8").read(), flags=re.S)
+            v = H.unescape(re.sub(r"<[^>]+>", " ", t))
+            self.assertIsNone(re.search(r"\(record\s+[a-z0-9_-]+\)", v), f)
+            self.assertIsNone(id_re.search(v), f)
+        # the attested record text itself is unchanged (the citation is stripped only for display)
+        cap = next(e for e in j("api", "v1", "index.json")["entries"] if "(record cap-1d-timelock-min-delay-s20)" in e["onchain_observed"])
+        self.assertTrue(cap)
+
+    def _f(self, s, k):
+        return next(f for f in CARDS[s]["factors"] if f["key"] == k)
+
+    def test_f3_no_strong_freeze_from_zero_guardian_or_canceller(self):
+        e = self._f("metamorpho-re7-weth-vs-re7-usdt", "emergency")
+        self.assertEqual((e["state"], e["value"], e["evidenceRecordId"]),
+                         ("n", "Re7 WETH has no guardian set (0x0); Re7 USDT assigns an Aragon guardian", "metamorpho-re7-weth-guardian-parity"))
+        e = self._f("seamless-protocol-base", "emergency")
+        self.assertEqual((e["state"], e["value"], e["evidenceRecordId"]),
+                         ("n", "2-of-3 Safe holds timelock CANCELLER_ROLE; pause / freeze binding not in the published records",
+                          "seamless-community-guardian-safe-2-of-3-s35"))
+        # across all 56 reviewed protocols, a Strong freeze rating never rests on an unset guardian or a CANCELLER_ROLE-only record
+        import re
+        idx = {x["id"]: x for x in j("api", "v1", "index.json")["entries"]}
+        for s in RULINGS["partition"]:
+            f = self._f(s, "emergency")
+            if f["state"] == "g" and f.get("evidenceRecordId"):
+                t = idx[f["evidenceRecordId"]]["onchain_observed"]
+                self.assertIsNone(re.search(r"guardian\(\)\s*=\s*0x0{40}\b", t), s)
+                self.assertFalse("CANCELLER_ROLE" in t and not re.search(r"pause|freez|blacklist", t, re.I), s)
+
+    def test_f4_no_floor_from_an_unattached_timelock(self):
+        t = self._f("cian-yield-layer", "timelock")
+        self.assertEqual((t["state"], t["value"], t["evidenceRecordId"]),
+                         ("a", "No timelock in the sampled ownership path (3-of-4 Safe direct; listed 1d TimeLock not wired)",
+                          "cian-yield-layer-allocation-no-timelock-s31"))
+        t = self._f("pickle", "timelock")
+        self.assertEqual((t["state"], t["value"], t["evidenceRecordId"]),
+                         ("a", "No timelock in the sampled MasterChef path (2-of-6 Safe direct; listed 24h Timelock does not own MasterChef)",
+                          "pickle-masterchef-owner-safe-no-timelock-s32"))
+        t = self._f("infinifi", "timelock")
+        self.assertEqual((t["state"], t["value"], t["evidenceRecordId"], t["evidenceCaption"]),
+                         ("b", "Long governance timelock: 7d; Short timelock: 1d (per-surface wiring unverified)", "infinifi-long-timelock-7d-s20",
+                          "Long governance timelock delay: 7 days (Short timelock: 1 day) — Ethereum block #26,425,374"))
+        # no reviewed protocol's positive timelock floor is cited from a record sentence saying the timelock is not on the path
+        import re
+        un = re.compile(r"\bowns neither\b|\bdoes not own\b|\bis not the [\w' ()-]*?owner\b|\bnot in the (?:\w+ )*path\b|\bnot wired\b", re.I)
+        for s in RULINGS["partition"]:
+            f = self._f(s, "timelock")
+            if f["state"] in ("g", "b") and f.get("evidence"):
+                self.assertIsNone(un.search(f["evidence"]), s)
+
+    def test_f5_curator_matrix(self):
+        from collections import Counter
+        m = json.load(open(os.path.join(ROOT, "data", "curator-exposure-matrix.json"), encoding="utf-8"))
+        rows = m["all_55_verified_adverse_gaps"]
+        self.assertEqual(len(rows), 56)
+        self.assertEqual(sorted(r["slug"] for r in rows), sorted(RULINGS["partition"]))
+        self.assertEqual(Counter(r["grade"] for r in rows), Counter({"DELTA": 43, "UNRESOLVED": 11, "CHANGED RECENTLY": 1, "DOCS UPDATED": 1}))
+        self.assertEqual(m["all_56_reviewed_comparisons"], rows)
+        raw = json.dumps(m, ensure_ascii=False)
+        cur = open(os.path.join(ROOT, "docs", "curators", "index.html"), encoding="utf-8").read()
+        for txt in (raw, cur):
+            self.assertNotIn("Seamless Base (DELTA", txt)
+            self.assertNotIn("yearn-v3-op-0x2a14", txt)
+        self.assertIn("Seamless Base (UNRESOLVED: 2-of-3 Guardian Safe; retained 3-of-6 docs not verified)", raw)
+
+        def walk(x):
+            if isinstance(x, dict):
+                h = x.get("clinical_brief_hook")
+                if isinstance(h, str) and x.get("grade") != "DELTA":
+                    for bad in ("delta", "seal", "re-verification"):
+                        self.assertNotIn(bad, h.lower(), x.get("slug"))
+                for v in x.values():
+                    walk(v)
+            elif isinstance(x, list):
+                for v in x:
+                    walk(v)
+        walk(m)
+
+    def test_f6_placeholder_and_radar_wrap(self):
+        home = open(os.path.join(ROOT, "docs", "index.html"), encoding="utf-8").read()
+        self.assertIn('placeholder="Protocol or 0x address…"', home)
+        radar = open(os.path.join(ROOT, "docs", "radar", "index.html"), encoding="utf-8").read()
+        self.assertIn("EtherfiL1SyncPoolETH.<wbr>setDelegate(<wbr>EtherFiTimelock)", radar)
+        self.assertNotIn("EtherFiTimelo<wbr>", radar)
 
 class Wording(unittest.TestCase):
     def test_no_aggregate_overstatement(self):

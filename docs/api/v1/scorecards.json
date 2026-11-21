@@ -6,7 +6,7 @@
  },
  "description": "One canonical grade per published protocol (DELTA / CHANGED RECENTLY / UNRESOLVED / PROTECTIVE / ALIGNED / OBSERVED) and a 5-factor control-plane rosette derived deterministically from Pacta's published records (index.json, rpc-pinned.json) and controller facts. A factor the published evidence does not decide is 'n' (not determined); docs-vs-chain parity is 'u' (uncompared) for every RPC-observed protocol. States: g strong, b moderate, a weak, n not determined, u uncompared.",
  "factorCoverage": {
-  "emergency": 27,
+  "emergency": 25,
   "parity": 176,
   "quorum": 177,
   "timelock": 101,
@@ -4816,13 +4816,13 @@
      "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
     },
     {
-     "evidence": "cian-yield-layer-allocation-no-timelock-s31: … 0x0CBee811C47C3A5cb4637f1E58d98B0Abbb4c54f (delay() = 86,400 s, admin() = 0x261090afE1E7305474F4e3eEFCAca9964eBffFf5), …",
+     "evidence": "cian-yield-layer-allocation-no-timelock-s31: The TimeLock its contract table lists, 0x0CBee811C47C3A5cb4637f1E58d98B0Abbb4c54f (delay() = 86,400 s, admin() = 0x261090afE1E7305474F4e3eEFCAca9964eBffFf5) …",
      "evidenceCaption": "Fund allocation setters: owner is a 3-of-4 Safe, the documented TimeLock is not in the path — Ethereum block #26,450,616",
      "evidenceRecordId": "cian-yield-layer-allocation-no-timelock-s31",
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "b",
-     "value": "1d minimum enforced delay on sampled timelocked surfaces"
+     "state": "a",
+     "value": "No timelock in the sampled ownership path (3-of-4 Safe direct; listed 1d TimeLock not wired)"
     },
     {
      "evidence": "cian-yield-layer-allocation-no-timelock-s31: … 0x261090afE1E7305474F4e3eEFCAca9964eBffFf5, a 3-of-4 Safe; the vault's ProxyAdmin 0xf24955E9D0a05222373d4555f8831f7A05e83F62 …",
@@ -4872,7 +4872,7 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "CIAN Yield Layer control-plane rosette: Upgradeability not determined; Timelock floor moderate; Signer quorum strong; Emergency / freeze scope not determined; Docs-vs-chain parity weak",
+   "rosetteAria": "CIAN Yield Layer control-plane rosette: Upgradeability not determined; Timelock floor weak; Signer quorum strong; Emergency / freeze scope not determined; Docs-vs-chain parity weak",
    "search": "cian yield layer cian-yield-layer leveraged staking vault (recursive eth) (ethereum) ylsteth 0x0cbee811c47c3a5cb4637f1e58d98b0abbb4c54f 0x261090afe1e7305474f4e3eefcaca9964ebffff5 0xa1dc0b6a02ab091580dc57bdd5fe8a9e577e0842 0xb13aa2d0345b0439b064f26b82d8dcf3f508775d 0xf24955e9d0a05222373d4555f8831f7a05e83f62",
    "slug": "cian-yield-layer",
    "summary_short": "CIAN's stETH vault settings change via a Safe directly; the docs say they are time-locked",
@@ -9274,7 +9274,7 @@
     "observed": "f(x) V2 Router 0x33636D49FbefBE798e15e7F356E8DBef543CC708 (Ethereum, an EIP-2535 Diamond): owner() = Safe 0x26B2ec4E02ebe2F54583af25b647b1D619e67BbF with getThreshold() = 6 of getOwners() = 9 owners (Safe v1.3.0), no Safe guard; facetAddress(diamondCut 0x1f931c1c) = 0x221ffB180AD01213FF882ab7DE9c75E23F9efA63. The timelock the docs name, 0x68863fb8855b04509a835082478D6E3D0bE4E61a, reads getMinDelay() = 259,200 s and is not the Router's owner.",
     "recordId": "f-x-protocol-v2-router-owner-safe-s29",
     "sprint": 29,
-    "surface": "V2 Router (Diamond) owner: docs put every transaction behind a 3-day timelock; owner() is the 6-of-9 Safe",
+    "surface": "V2 Router (Diamond) owner: docs put queued transactions behind a 3-day timelock (oracle updates excepted); owner() is the 6-of-9 Safe",
     "target": "0x33636D49FbefBE798e15e7F356E8DBef543CC708"
    },
    "factors": [
@@ -9286,8 +9286,8 @@
      "value": "Upgrade path not in the published records"
     },
     {
-     "evidence": "f-x-protocol-v2-router-owner-safe-s29: observed_delay_seconds = 0",
-     "evidenceCaption": "V2 Router (Diamond) owner: docs put every transaction behind a 3-day timelock; owner() is the 6-of-9 Safe — Ethereum block #26,448,221",
+     "evidence": "f-x-protocol-v2-router-owner-safe-s29: The timelock the docs name, 0x68863fb8855b04509a835082478D6E3D0bE4E61a, reads getMinDelay() = 259,200 s and is not the Router's owner.",
+     "evidenceCaption": "V2 Router (Diamond) owner: docs put queued transactions behind a 3-day timelock (oracle updates excepted); owner() is the 6-of-9 Safe — Ethereum block #26,448,221",
      "evidenceRecordId": "f-x-protocol-v2-router-owner-safe-s29",
      "key": "timelock",
      "label": "Timelock floor",
@@ -12459,11 +12459,13 @@
      "value": "Upgrade path not in the published records"
     },
     {
-     "evidence": "controller fact: getMinDelay() = 604800s",
+     "evidence": "infinifi-long-timelock-7d-s20: Long Timelock 0x3D18…48a9 getMinDelay() = 604,800 s (7d); Short Timelock 0x4B17…e88c getMinDelay() = 86,400 s (1d)",
+     "evidenceCaption": "Long governance timelock delay: 7 days (Short timelock: 1 day) — Ethereum block #26,425,374",
+     "evidenceRecordId": "infinifi-long-timelock-7d-s20",
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "g",
-     "value": "7d minimum enforced delay on sampled timelocked surfaces"
+     "state": "b",
+     "value": "Long governance timelock: 7d; Short timelock: 1d (per-surface wiring unverified)"
     },
     {
      "evidence": "controller fact: Safe getThreshold()",
@@ -12515,7 +12517,7 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 4,
-   "rosetteAria": "infiniFi control-plane rosette: Upgradeability not determined; Timelock floor strong; Signer quorum strong; Emergency / freeze scope strong; Docs-vs-chain parity not determined",
+   "rosetteAria": "infiniFi control-plane rosette: Upgradeability not determined; Timelock floor moderate; Signer quorum strong; Emergency / freeze scope strong; Docs-vs-chain parity not determined",
    "scopeNote": "At Ethereum block 26,425,374, MINOR_ROLES_MANAGER administered PAUSE and UNPAUSE, with the Team Multisig and Long Timelock as members; the retained roles-page excerpt names GOVERNOR, but the current page could not be retrieved, so this comparison does not establish a current document breach or a bypass of all governance.",
    "search": "infinifi infinifi yield-bearing stablecoin iusd siusd liusd 0x3d18480cc32b6ab3b833dcabd80e76cfd41c48a9 0x4b174afbed7b98ba01f50e36109eee5e6d327c32 0x579b18e60d0245c0f66fa9463610b15e226ae8fd 0x80608f852d152024c0a2087b16939235fec2400c 0xee529a21cea25efdf527e85bb4c597603e14ccfc 0xf6d48735eccf12bdc1df2674b1ce3fcb3bd25490",
    "slug": "infinifi",
@@ -15859,8 +15861,8 @@
      "evidenceRecordId": "metamorpho-re7-weth-guardian-parity",
      "key": "emergency",
      "label": "Emergency / freeze scope",
-     "state": "g",
-     "value": "Pause / freeze authority scoped behind a multi-signer controller (2-of-4)"
+     "state": "n",
+     "value": "Re7 WETH has no guardian set (0x0); Re7 USDT assigns an Aragon guardian"
     },
     {
      "evidence": null,
@@ -15894,7 +15896,7 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "MetaMorpho (Re7 WETH vs. Re7 USDT) control-plane rosette: Upgradeability not determined; Timelock floor strong; Signer quorum moderate; Emergency / freeze scope strong; Docs-vs-chain parity not determined",
+   "rosetteAria": "MetaMorpho (Re7 WETH vs. Re7 USDT) control-plane rosette: Upgradeability not determined; Timelock floor strong; Signer quorum moderate; Emergency / freeze scope not determined; Docs-vs-chain parity not determined",
    "scopeNote": "At Ethereum block 26,401,405 MetaMorpho Re7 WETH sets guardian() to the zero address under a 2-of-4 owner Safe and 3-day timelock, whereas peer vault Re7 USDT configures an Aragon guardian; Morpho's vault architecture explicitly supports vaults without a guardian and no Re7 documentation promising matching guardian configurations was verified.",
    "search": "metamorpho (re7 weth vs. re7 usdt) metamorpho-re7-weth-vs-re7-usdt curated lending vaults re7weth re7usdt metamorpho 0x0000000000000000000000000000000000000000 0x2f80ba89362f86a9acc71bffe5ecf4997f52bdd4 0x78fc2c2ed1a4cdb5402365934ae5648adad094d0 0x95eef579155cd2c5510f312c8fa39208c3be01a8 0xe86399fe6d7007fdecb08a2ee1434ee677a04433",
    "slug": "metamorpho-re7-weth-vs-re7-usdt",
@@ -19124,13 +19126,13 @@
      "value": "Immutable or ownership renounced"
     },
     {
-     "evidence": "pickle-masterchef-owner-safe-no-timelock-s32: … 0x0040E05CE9A5fc9C0aBF89889f7b60c2fC278416 (delay() = 86,400 s, admin() = the same Safe), does not …",
+     "evidence": "pickle-masterchef-owner-safe-no-timelock-s32: The 24-hour Timelock the page links, 0x0040E05CE9A5fc9C0aBF89889f7b60c2fC278416 (delay() = 86,400 s, admin() = the same Safe), does not own MasterChef.",
      "evidenceCaption": "MasterChef admin: owner is a 2-of-6 Safe, the documented 24 h timelock is not in the path — Ethereum block #26,451,608",
      "evidenceRecordId": "pickle-masterchef-owner-safe-no-timelock-s32",
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "b",
-     "value": "1d minimum enforced delay on sampled timelocked surfaces"
+     "state": "a",
+     "value": "No timelock in the sampled MasterChef path (2-of-6 Safe direct; listed 24h Timelock does not own MasterChef)"
     },
     {
      "evidence": "pickle-masterchef-owner-safe-no-timelock-s32: … 0x9d074E37d408542FD38be78848e8814AFB38db17, a 2-of-6 Safe (the page calls it a 2/5 multisig). …",
@@ -19180,7 +19182,7 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "Pickle control-plane rosette: Upgradeability strong; Timelock floor moderate; Signer quorum moderate; Emergency / freeze scope not determined; Docs-vs-chain parity weak",
+   "rosetteAria": "Pickle control-plane rosette: Upgradeability strong; Timelock floor weak; Signer quorum moderate; Emergency / freeze scope not determined; Docs-vs-chain parity weak",
    "search": "pickle pickle auto-compounding lp yield aggregator with dill staking (ethereum) pickle 0x0040e05ce9a5fc9c0abf89889f7b60c2fc278416 0x429881672b9ae42b8eba0e26cd9c73711b891ca5 0x9d074e37d408542fd38be78848e8814afb38db17 0xbd17b1ce622d73bd438b9e658aca5996dc394b0d",
    "slug": "pickle",
    "summary_short": "Pickle's MasterChef admin functions run from a Safe directly; docs: a 24-hour timelock",
@@ -21413,8 +21415,8 @@
      "evidenceRecordId": "seamless-community-guardian-safe-2-of-3-s35",
      "key": "emergency",
      "label": "Emergency / freeze scope",
-     "state": "g",
-     "value": "Pause / freeze authority scoped behind a multi-signer controller (2-of-3)"
+     "state": "n",
+     "value": "2-of-3 Safe holds timelock CANCELLER_ROLE; pause / freeze binding not in the published records"
     },
     {
      "evidence": null,
@@ -21448,7 +21450,7 @@
    "reconciledFrom": [],
    "reconciledTo": [],
    "records": 1,
-   "rosetteAria": "Seamless Protocol (Base) control-plane rosette: Upgradeability not determined; Timelock floor not determined; Signer quorum moderate; Emergency / freeze scope strong; Docs-vs-chain parity not determined",
+   "rosetteAria": "Seamless Protocol (Base) control-plane rosette: Upgradeability not determined; Timelock floor not determined; Signer quorum moderate; Emergency / freeze scope not determined; Docs-vs-chain parity not determined",
    "scopeNote": "At Base block 59,847,352, the Community Guardian Safe required 2 of 3 owners and held the short governance timelock cancellation role; the retained documentation describes 3-of-6, but the current guardian page could not be verified, so a current document breach is not established.",
    "search": "seamless protocol (base) seamless-protocol-base base lending & integrated liquidity seam 0x639d2dd24304ac2e6a691d8c1cff4a2665925fee 0xa1b5f2cc9b407177cd8a4acf1699fa0b99955a22",
    "slug": "seamless-protocol-base",
