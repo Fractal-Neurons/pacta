@@ -74,43 +74,25 @@ test("server.json: registry schema shape (required fields, limits, known keys)",
   );
   assert.doesNotMatch(SERVER.repository.subfolder, /^\/|\.\.|\/$/, "clean relative subfolder");
 
-  assert.ok(Array.isArray(SERVER.packages) && SERVER.packages.length === 1);
-  const pkg = SERVER.packages[0];
-  subset(pkg, PACKAGE_KEYS, "packages[0]");
-  assert.equal(pkg.registryType, "npm");
-  assert.equal(pkg.identifier, "@pacta/mcp-server");
-  assert.deepEqual(pkg.transport, { type: "stdio" });
-  assert.ok(pkg.version && pkg.version !== "latest");
-  assert.doesNotMatch(pkg.version, VERSION_RANGE);
-  for (const ev of pkg.environmentVariables) {
-    subset(ev, ENV_KEYS, `env ${ev.name}`);
-    assert.match(ev.name, /^[A-Z][A-Z0-9_]*$/);
-    assert.ok(typeof ev.description === "string" && ev.description.length > 10, `${ev.name} description`);
-    assert.equal(ev.isRequired, false, `${ev.name} isRequired`);
-    assert.equal(ev.isSecret, false, `${ev.name} isSecret`);
-    if (ev.format !== undefined) assert.ok(["string", "number", "boolean", "filepath"].includes(ev.format), ev.name);
-    if (ev.default !== undefined) assert.equal(typeof ev.default, "string", ev.name);
-  }
+  // nothing is published on npm: the manifest carries the remote endpoint only (no npm "packages" block)
+  assert.equal(SERVER.packages, undefined, "server.json advertises no npm package");
 });
 
 test("server.json name/version agree with package.json mcpName/version and SERVER_INFO", () => {
   assert.equal(PKG.mcpName, SERVER.name);
   assert.equal(SERVER.version, PKG.version);
-  assert.equal(SERVER.packages[0].version, PKG.version);
-  assert.equal(SERVER.packages[0].identifier, PKG.name);
   assert.equal(SERVER_INFO.version, PKG.version);
-  assert.equal(SERVER_INFO.name, PKG.name);
+  assert.equal(SERVER_INFO.name, SERVER.name);
+  assert.equal(PKG.private, true, "package.json is private: never published to npm");
+  assert.equal(PKG.name, "pacta-mcp-server");
   assert.equal(PKG.repository.url.replace(/\.git$/, ""), SERVER.repository.url);
   assert.equal(PKG.repository.directory, SERVER.repository.subfolder);
   assert.ok(PKG.files.includes("SKILL.md") && PKG.files.includes("server.json"));
 });
 
-test("server.json environmentVariables == env vars read in src/ (regex scan), and README documents each", () => {
-  const listed = SERVER.packages[0].environmentVariables.map((e) => e.name);
-  assert.equal(new Set(listed).size, listed.length, "no duplicates");
+test("env vars read in src/ (regex scan): README documents each and SKILL.md mentions each", () => {
   const inSrc = envVarsReadInSrc();
-  assert.ok(inSrc.includes("PACTA_PROPOSALS_PATH") && inSrc.includes("PACTA_INDEX_PATH"), inSrc.join(","));
-  assert.deepEqual([...listed].sort(), inSrc);
+  assert.ok(inSrc.includes("PACTA_PROPOSALS_PATH") && inSrc.includes("PACTA_INDEX_PATH") && inSrc.includes("PACTA_X402_URL"), inSrc.join(","));
   for (const v of inSrc) assert.ok(README.includes(v), `README documents ${v}`);
   for (const v of inSrc) assert.ok(SKILL.includes(v), `SKILL.md mentions ${v}`);
 });
@@ -157,14 +139,12 @@ test("SKILL.md: frontmatter, feed URLs, tool list, pinned addresses, and Treasur
 });
 
 test("canonical live x402 gateway URL is published in SKILL.md, README.md and server.json, but stays opt-in", () => {
-  const U = "https://pacta-x402.pacta.workers.dev";
+  // 0.1.6: one canonical gateway address, https://api.pacta.wtf, in SKILL.md, README.md, server.json, the Dockerfile and X402_GATEWAY_URL.
+  const U = "https://api.pacta.wtf";
   assert.ok(SKILL.includes(U), "SKILL.md");
   assert.ok(SKILL.includes("PACTA_X402_URL=" + U), "SKILL.md shows the opt-in");
+  assert.match(read("Dockerfile"), /^ENV PACTA_X402_URL=https:\/\/api\.pacta\.wtf$/m, "Dockerfile opts in to the canonical gateway");
   assert.ok(README.includes("PACTA_X402_URL=" + U), "README.md shows the opt-in");
-  const ev = SERVER.packages.flatMap((p) => p.environmentVariables || []).find((e) => e.name === "PACTA_X402_URL");
-  assert.ok(ev && ev.description.includes(U), "server.json PACTA_X402_URL description");
-  assert.equal(ev.isRequired, false);
-  for (const k of ["default", "value"]) assert.equal(ev[k], undefined, `PACTA_X402_URL has no ${k}: paid tools stay opt-in`);
   assert.doesNotMatch(SKILL + README, /deployment pending|not yet live|planned, not live/);
 });
 
@@ -185,7 +165,7 @@ test("0x4348… is never called a Safe (SKILL.md, README.md, server.json); SKILL
 });
 
 test("server.json advertises the live remote MCP endpoint; server.remote.json is a remote-only twin (registrable before npm publish)", () => {
-  const MCP = "https://pacta-x402.pacta.workers.dev/mcp";
+  const MCP = "https://api.pacta.wtf/mcp";
   assert.deepEqual(SERVER.remotes, [{ type: "streamable-http", url: MCP }]);
   const REMOTE = JSON.parse(read("server.remote.json"));
   subset(REMOTE, SERVER_KEYS, "server.remote.json");
@@ -221,9 +201,8 @@ test("0.1.5 icons: server.json and server.remote.json carry the same schema-vali
     assert.ok(doc.description.length <= 100);
     assert.doesNotMatch(doc.version, VERSION_RANGE);
   }
-  assert.equal(SERVER.version, "0.1.5");
-  assert.equal(REMOTE.version, "0.1.5");
-  assert.equal(SERVER.packages[0].version, "0.1.5");
+  assert.equal(SERVER.version, "0.1.6");
+  assert.equal(REMOTE.version, "0.1.6");
   // pacta-github-repo: the icon files are the site's own (32x32 PNG, SVG); skipped where the site docs are absent
   const DOCS = join(ROOT, "..", "..", "docs");
   if (existsSync(join(DOCS, "favicon.png"))) {
@@ -233,3 +212,82 @@ test("0.1.5 icons: server.json and server.remote.json carry the same schema-vali
     assert.match(readFileSync(join(DOCS, "favicon.svg"), "utf8"), /^<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg"/);
   }
 });
+
+test("0.1.6 metadata: title, public description and package author / bugs / homepage", () => {
+  const REMOTE = JSON.parse(read("server.remote.json"));
+  for (const doc of [SERVER, REMOTE]) {
+    assert.equal(doc.title, "Pacta, by Fractal Neurons");
+    assert.equal(doc.description, "Fractal Neurons: contract checks for 316 DeFi protocols on Ethereum & Base (189 Base-EAS attested)");
+    assert.ok(doc.description.length <= 100, `description is ${doc.description.length} chars`);
+  }
+  for (const d of [SERVER.description, PKG.description]) {
+    for (const s of ["Fractal Neurons", "316 DeFi protocols", "189 Base-EAS attested", "Ethereum & Base"]) assert.ok(d.includes(s), `${d} names ${s}`);
+    assert.doesNotMatch(d, /\b86\b|referral|\bsprint\b|\bDRI\b/i);
+  }
+  assert.deepEqual(PKG.author, { name: "Fractal Neurons", url: "https://fractalneurons.com", email: "pacta@dri.network" });
+  assert.deepEqual(PKG.bugs, { url: "https://github.com/Fractal-Neurons/pacta/issues", email: "pacta@dri.network" });
+  assert.equal(PKG.homepage, "https://pacta.wtf");
+  assert.doesNotMatch(README, /\b86 (indexed )?protocols\b|referral|\bpacta-(gemini|claude|codex|strategy)\b|\bSprint\b/);
+  assert.doesNotMatch(README.replaceAll("pacta@dri.network", ""), /\bDRI\b/i);
+  // MCP016-01: no Sprint prose in the shipped copy (the API parameter `sprint` stays)
+  for (const [name, txt] of [["README.md", README], ["SKILL.md", read("SKILL.md")], ["src/server.mjs", read("src/server.mjs")]]) {
+    assert.doesNotMatch(txt, /\bSprints?\b|\bsprints\b|sprint attestation|\(\d+ sprints?\)/, `${name} has Sprint prose`);
+  }
+});
+
+// ---- 0.1.6 cleanup regressions (task-10b37c4d4fd7) ----
+test("0.1.6: zero Cloudflare Workers origin addresses in README.md, SKILL.md, server.json, server.remote.json, Dockerfile and every src/*.mjs; X402_GATEWAY_URL is https://api.pacta.wtf", async () => {
+  const NEEDLE = ["workers", "dev"].join(".");   // built, so this file itself stays free of the string
+  const files = ["README.md", "SKILL.md", "server.json", "server.remote.json", "Dockerfile",
+    ...readdirSync(join(ROOT, "src")).filter((f) => f.endsWith(".mjs")).map((f) => "src/" + f)];
+  assert.ok(files.length >= 9, files.join(", "));
+  for (const f of files) assert.ok(!read(f).includes(NEEDLE), `${f} names a ${NEEDLE} origin`);
+  const { X402_GATEWAY_URL } = await import("../src/x402.mjs");
+  assert.equal(X402_GATEWAY_URL, "https://api.pacta.wtf");
+});
+
+test("0.1.6: the packaged SKILL.md is evergreen (no Wave 4 / November 2026 dates; undated pointer to https://pacta.wtf/bounties/)", () => {
+  assert.doesNotMatch(SKILL, /Wave 4|November 2026/);
+  assert.ok(SKILL.split("\n").includes("- Bounties: active verification waves, open slots, and current submission rules are published at https://pacta.wtf/bounties/"));
+});
+
+test("0.1.6: publication status is truthful: registered in the official MCP Registry (remote); nothing published on npm", () => {
+  for (const [name, text] of Object.entries({ "SKILL.md": SKILL, "README.md": README })) {
+    assert.ok(!text.includes("not yet published to npm or the MCP registry"), name);
+    assert.doesNotMatch(text, /not (?:yet )?(?:published|registered) (?:in|on|to) the (?:official )?MCP [Rr]egistry/, name);
+  }
+  assert.ok(SKILL.split("\n").includes("registry_remote: io.github.Fractal-Neurons/pacta is published in the official MCP Registry as a remote Streamable HTTP server (no install): https://api.pacta.wtf/mcp. Local stdio server: git clone https://github.com/Fractal-Neurons/pacta.git, then node packages/mcp-server/bin/pacta-mcp.mjs."));
+  assert.doesNotMatch(SKILL, /^(?:publication_pending|npm_pending):/m);
+  assert.match(README, /registered in the official MCP Registry as `io\.github\.Fractal-Neurons\/pacta`/);
+  assert.match(README, /Nothing is published on npm/);
+});
+
+test("0.1.6: package.json files ships only the clean runtime set (no test/, fixtures, Dockerfile or server.remote.json)", () => {
+  const pkg = JSON.parse(read("package.json"));
+  assert.deepEqual(pkg.files, ["bin/", "src/", "index.d.ts", "README.md", "SKILL.md", "server.json"]);
+  for (const d of ["bin", "src"]) {
+    for (const f of readdirSync(join(ROOT, d))) assert.match(f, /^[a-z0-9-]+\.mjs$/, `${d}/${f}`);
+  }
+});
+
+test("no npm package name in any machine-readable public file (package.json, server.json, server.remote.json, smithery.yaml, glama.json, README, SKILL, src, index.d.ts; docs mcp.json once it drops its package key)", () => {
+  const NPM = ["@pacta", "mcp-server"].join("/");   // built, so this file itself stays free of the name
+  const REPO = join(ROOT, "..", "..");
+  const pkgFiles = ["package.json", "server.json", "server.remote.json", "README.md", "SKILL.md", "index.d.ts",
+    ...readdirSync(join(ROOT, "src")).filter((f) => f.endsWith(".mjs")).map((f) => "src/" + f)];
+  for (const f of pkgFiles) assert.ok(!read(f).includes(NPM), `packages/mcp-server/${f}`);
+  for (const f of ["smithery.yaml", "glama.json", "README.md"]) {
+    if (existsSync(join(REPO, f))) assert.ok(!readFileSync(join(REPO, f), "utf8").includes(NPM), f);
+  }
+  // site discovery manifests (the separate site commit): checked once they no longer carry a "package" key
+  for (const f of ["docs/mcp.json", "docs/.well-known/mcp.json"]) {
+    const p = join(REPO, f);
+    if (!existsSync(p)) continue;
+    const m = JSON.parse(readFileSync(p, "utf8"));
+    if (!("package" in m)) assert.ok(!JSON.stringify(m).includes(NPM) && !("packageVersion" in m), f);
+  }
+  const PKG = JSON.parse(read("package.json"));
+  assert.equal(PKG.private, true);
+  assert.equal(JSON.parse(read("server.json")).packages, undefined);
+});
+

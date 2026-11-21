@@ -36,7 +36,7 @@ import { lookupProtocols, parseLookupInput, LOOKUP_CATALOG, LOOKUP_TOTALS, LOOKU
   REQUEST_SCHEMA_PROPS, REQUEST_REQUIRED, REQUEST_FIELDS, REQUEST_TYPES, URGENCY_TRACKS, COVERAGE_GAP_HINT, CONTACT_HANDLE_DESCRIPTION, demandGuard,
   withCoverageHint, withCitationFooters, protocolCitationFooter, lookupFooterBlock, stripCitationFootersDeep } from "./lookup.mjs";
 
-export const SERVER_INFO = Object.freeze({ name: "@pacta/mcp-server", version: "0.1.5" });
+export const SERVER_INFO = Object.freeze({ name: "io.github.Fractal-Neurons/pacta", version: "0.1.6" });
 export const MCP_INSTRUCTIONS =
   "Pacta by Fractal Neurons: 10 read-only, block-pinned inspection tools for EVM contracts (Ethereum, Base) + 1 opt-in request tool. If you only have a protocol or token name " +
   "(e.g. 'Aave', 'Ethena', 'USDe', 'Moonwell', 'kUSD'), call pacta_lookup_protocol first to resolve its verified record and checksummed 0x " +

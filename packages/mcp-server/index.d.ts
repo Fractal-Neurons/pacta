@@ -60,7 +60,7 @@ export interface JsonRpcResponse {
   error?: { code: number; message: string };
 }
 
-export declare const SERVER_INFO: Readonly<{ name: "@pacta/mcp-server"; version: string }>;
+export declare const SERVER_INFO: Readonly<{ name: "io.github.Fractal-Neurons/pacta"; version: string }>;
 export declare const SUPPORTED_PROTOCOL_VERSION: "2024-11-05";
 export declare const INDEX_URLS: ReadonlyArray<string>;
 export declare const PROPOSALS_URLS: ReadonlyArray<string>;

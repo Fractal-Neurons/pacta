@@ -6146,7 +6146,7 @@ def build_all():
         # the package's copy carries the package's own version (0.1.5 published; 0.1.6 once the registry bump lands), the site
         # copy names the published one: a build on either commit leaves the package tree clean
         pkg_v = _json_file(os.path.join(ROOT, "packages", "mcp-server", "package.json"), encoding="utf-8")["version"]
-        sk_txt = re.sub(r'^version: "[^"]*"$', f'version: "{pkg_v}"', open(os.path.join(DOCS, "SKILL.md"), encoding="utf-8").read(), count=1, flags=re.M)
+        sk_txt = package_skill(open(os.path.join(DOCS, "SKILL.md"), encoding="utf-8").read(), pkg_v)
         with open(mcp_skill_p, "w", encoding="utf-8") as fh_sk:
             fh_sk.write(sk_txt)
     llms_text = llms(idx, radar)
@@ -6257,6 +6257,25 @@ def valid_base_path(bp):
     """A mount prefix such as /website-test or /a/release.v4: one or more segments, never a standalone "." or ".." segment
     (/.., /. and /website-test/../../evil would normalise outside the mount)."""
     return bool(BASE_PATH_RE.fullmatch(bp or ""))
+
+
+# packages/mcp-server/SKILL.md is rewritten from docs/SKILL.md on every build (canonical and staging): every line is docs/SKILL.md byte
+# for byte except the frontmatter version (the package's own) and, from package 0.1.6, an undated bounties pointer and the MCP status
+# line naming only io.github.Fractal-Neurons/pacta, the remote endpoint and the clone command; below 0.1.6 (the frozen 0.1.5 package
+# files) the package keeps its old status line. verify_site_v2.skill_copy_ok checks all of this.
+PKG_SKILL_BOUNTIES = '- Bounties: active verification waves, open slots, and current submission rules are published at https://pacta.wtf/bounties/'
+MCP_STATUS_LINE = 'registry_remote: io.github.Fractal-Neurons/pacta is published in the official MCP Registry as a remote Streamable HTTP server (no install): https://api.pacta.wtf/mcp. Local stdio server: git clone https://github.com/Fractal-Neurons/pacta.git, then node packages/mcp-server/bin/pacta-mcp.mjs.'
+PKG_SKILL_STATUS_015 = 'publication_pending: @pacta/mcp-server is not yet published to npm or the MCP registry. Use the remote MCP server now (no install): https://api.pacta.wtf/mcp. The stdio server runs from a clone of the repository: node packages/mcp-server/bin/pacta-mcp.mjs.'
+
+
+def package_skill(site_skill, pkg_version):
+    t = re.sub(r'^version: "[^"]*"$', f'version: "{pkg_version}"', site_skill, count=1, flags=re.M)
+    if tuple(int(x) for x in re.findall(r"\d+", pkg_version)[:3]) >= (0, 1, 6):
+        t = re.sub(r"^- Bounties\b.*$", lambda m: PKG_SKILL_BOUNTIES, t, count=1, flags=re.M)
+        t = re.sub(r"^publication_pending: .*$", lambda m: MCP_STATUS_LINE, t, count=1, flags=re.M)
+    else:
+        t = t.replace("\n" + MCP_STATUS_LINE + "\n", "\n" + PKG_SKILL_STATUS_015 + "\n", 1)
+    return t
 
 
 def staging_target(out_dir, root=None, docs=None):
