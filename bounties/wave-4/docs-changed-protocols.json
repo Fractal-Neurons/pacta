@@ -1,0 +1,3819 @@
+{
+  "schema": "pacta.wave4.docs_changed_protocols.v1",
+  "generated_at": "2026-11-21T16:15:30Z",
+  "chains_allowed": [
+    "ethereum",
+    "base"
+  ],
+  "count": 160,
+  "records_count": 246,
+  "ethereum_count": 141,
+  "base_count": 19,
+  "protocols": [
+    {
+      "protocol_slug": "3jane-lending",
+      "protocol_name": "3Jane Lending",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x3D3C41419Ab401cd25055E8f9421D7D96d887885",
+      "pacta_page_url": "https://pacta.wtf/protocols/3jane-lending/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "3Jane Lending Upgrades admin: 7-day minimum delay, as documented",
+          "target_label": "Upgrades admin timelock",
+          "pinned_block": 26438867,
+          "retained_documented_reference": "'TimelockController (7d) | Upgrades admin' (docs.3jane.xyz/developers/addresses.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "40-acres-base",
+      "protocol_name": "40 Acres (Base)",
+      "chain": "base",
+      "chain_id": 8453,
+      "primary_contract": "0x87f18b377e625b62c708D5f6EA96EC193558EFD0",
+      "pacta_page_url": "https://pacta.wtf/protocols/40-acres-base/",
+      "published_doc_records": [
+        {
+          "record_chain": "base",
+          "surface": "AERO USDC Loan contract (UUPS proxy): docs call the contracts immutable, but it is an upgradeable proxy",
+          "target_label": "40 Acres AERO USDC Loan proxy (UUPS)",
+          "pinned_block": 59025642,
+          "retained_documented_reference": "'40 Acres has completed four independent audits with Sherlock. Smart contracts are immutable and non-upgradeable post-deployment.' (docs.40acres.finance)"
+        }
+      ],
+      "chains": [
+        "base"
+      ]
+    },
+    {
+      "protocol_slug": "aave-v3-base",
+      "protocol_name": "Aave V3 (Base)",
+      "chain": "base",
+      "chain_id": 8453,
+      "primary_contract": "0x56C1a4b54921DEA9A344967a8693C7E661D72968",
+      "pacta_page_url": "https://pacta.wtf/protocols/aave-v3-base/",
+      "published_doc_records": [
+        {
+          "record_chain": "base",
+          "surface": "Level-1 governance payloads execute on Base through ExecutorLvl1 after a 1-day delay",
+          "target_label": "Aave Governance V3 PayloadsController (Base)",
+          "pinned_block": 57886975,
+          "retained_documented_reference": "aave.com/docs (governance): 'compared with the 3-day vote and 1-day timelock of a Level 1 proposal'"
+        },
+        {
+          "record_chain": "base",
+          "surface": "EMERGENCY_ADMIN (pause / unpause) = Aave Protocol Guardian 4-of-7 Safe",
+          "target_label": "Aave Protocol Guardian Safe (Base)",
+          "pinned_block": 57886975,
+          "retained_documented_reference": "aave.com/docs (governance): 'The Protocol Emergency Guardian is a 4 of 7 multi-signature wallet consisting of the following signers:' and 'The Protocol Emergency Guardian holds the EMERGENCY_ ADMIN'; ACL Manager docs: 'Holders of this role can pause and unpause the pool or an individual reserve.'"
+        }
+      ],
+      "chains": [
+        "base"
+      ]
+    },
+    {
+      "protocol_slug": "abracadabra-spell",
+      "protocol_name": "Abracadabra Spell",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x5f0DeE98360d8200b20812e174d139A1a633EDd2",
+      "pacta_page_url": "https://pacta.wtf/protocols/abracadabra-spell/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Abracadabra Spell multisig: docs state 5-of-10, the Safe is 5-of-11",
+          "target_label": "Abracadabra Spell Safe",
+          "pinned_block": 26449594,
+          "retained_documented_reference": "'The 5/10 multisign is composed of:' (docs.abracadabra.money/llms-full.txt)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "across-protocol-hubpool",
+      "protocol_name": "Across Protocol (HubPool)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xc186fA914353c44b2E33eBE05f21846F1048bEda",
+      "pacta_page_url": "https://pacta.wtf/protocols/across-protocol-hubpool/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Root-bundle proposals: only allow-listed ABT proposers",
+          "target_label": "Across Bond Token (ABT)",
+          "pinned_block": 26429396,
+          "retained_documented_reference": "docs.across.to (security model): 'The Across Bond Token is a custom ERC-20 that functions similarly to WETH.' 'ABT has an additional property: it restricts which addresses may propose root bundles to the HubPool.'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Root-bundle bond: 0.45 ABT",
+          "target_label": "AcrossHubPool",
+          "pinned_block": 26429396,
+          "retained_documented_reference": "docs.across.to (security model): 'Proposing a root bundle ~0.45 ABT' and 'The bond amount is configurable via the HubPool contract's bondAmount() function.' / disputing: 'const HUBPOOL = \"0xc186fA914353c44b2E33eBE05f21846F1048bEda\"'"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "aegis-yusd",
+      "protocol_name": "Aegis YUSD",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x4274cD7277C7bb0806Bd5FE84b9aDAE466a8DA0a",
+      "pacta_page_url": "https://pacta.wtf/protocols/aegis-yusd/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "YUSD, JUSD, config and oracles owned by the documented Multisig; it is admin of minting and rewards",
+          "target_label": "YUSD",
+          "pinned_block": 26453551,
+          "retained_documented_reference": "'Ethereum,0x4274cD7277C7bb0806Bd5FE84b9aDAE466a8DA0a,YUSD,setMinter,onlyOwner,0x4Fe78eF65BD8EDDED480efaB030BA680646503c8,Multisig' (raw.githubusercontent.com/Aegis-im/aegis-contracts/master/owners.csv)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "aerodrome-finance-base",
+      "protocol_name": "Aerodrome Finance (Base)",
+      "chain": "base",
+      "chain_id": 8453,
+      "primary_contract": "0x420DD381b31aEf6683db6B902084cB0FFECe40Da",
+      "pacta_page_url": "https://pacta.wtf/protocols/aerodrome-finance-base/",
+      "published_doc_records": [
+        {
+          "record_chain": "base",
+          "surface": "Voter emergency council and epoch governor: the AerodromeMigration contract",
+          "target_label": "AerodromeVoter",
+          "pinned_block": 58203774,
+          "retained_documented_reference": "github.com/aerodrome-finance/contracts (README): 'EpochGovernor.sol A simple epoch-based governance contract used exclusively for adjusting emissions.' / SPECIFICATION.md: 'Managed NFTs can be deactivated, a process which prevents the NFT from voting and from receiving deposits (requires emergency council).'"
+        },
+        {
+          "record_chain": "base",
+          "surface": "Custom pool fee cap: 3%; pauser and fee manager: the 3-of-7 Safe",
+          "target_label": "AerodromePoolFactory",
+          "pinned_block": 58203774,
+          "retained_documented_reference": "github.com/aerodrome-finance/contracts (SPECIFICATION.md): 'FeeManager: Can set a custom fee per pool, with a maximum fee of 3%' and 'Pauser: Switch the pool's pause state (enabling/disabling pool swaps)'"
+        }
+      ],
+      "chains": [
+        "base"
+      ]
+    },
+    {
+      "protocol_slug": "alchemix-v3",
+      "protocol_name": "Alchemix V3",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xF56D660138815fC5d7a06cd0E1630225E788293D",
+      "pacta_page_url": "https://pacta.wtf/protocols/alchemix-v3/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Alchemix V3 multisig: 3-of-7 Safe, as documented",
+          "target_label": "Alchemix V3 Safe",
+          "pinned_block": 26450616,
+          "retained_documented_reference": "'The v3 admin Safe (3-of-7) administers the Alchemist' (docs.alchemix.fi/governance/guides/contract-roles)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "angstrom",
+      "protocol_name": "Angstrom",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x0000000aa232009084Bd71A5797d089AA4Edfad4",
+      "pacta_page_url": "https://pacta.wtf/protocols/angstrom/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Hook controller = documented ControllerV1; its owner = documented Timelock (5-day min delay)",
+          "target_label": "Angstrom Hook",
+          "pinned_block": 26453551,
+          "retained_documented_reference": "'Angstrom Hook 0x0000000aa232009084Bd71A5797d089AA4Edfad4 ControllerV1 0x1746484EA5e11C75e009252c102C8C33e0315fD4 Timelock 0x60D41d9708BBEfd29000d1486C6406Ef23526c01' (docs.angstrom.xyz/contracts/deployments)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "anvil",
+      "protocol_name": "Anvil",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x4eeB7c5BB75Fc0DBEa4826BF568FD577f62cad21",
+      "pacta_page_url": "https://pacta.wtf/protocols/anvil/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "AnvilTimelock: getMinDelay() = 604,800 s (7 days), as documented; owns the documented contracts",
+          "target_label": "AnvilTimelock (OpenZeppelin TimelockController)",
+          "pinned_block": 26458556,
+          "retained_documented_reference": "'For successful proposals, there is currently a 7-day timelock to provide all Protocol users time to understand the new parameters and their implications prior to the update.' (docs.anvil.xyz/governance/proposal-process.md); '[AnvilTimelock](https://etherscan.io/address/0x4eeB7c5BB75Fc0DBEa4826BF568FD577f62cad21)' (docs.anvil.xyz/core-contracts/overview.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "apy-finance",
+      "protocol_name": "APY Finance",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xe18b0365D5D09F394f84eE56ed29DD2d8D6Fba5f",
+      "pacta_page_url": "https://pacta.wtf/protocols/apy-finance/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "APY Finance APYPoolTokenProxy: upgradeable (proxy admin), as documented",
+          "target_label": "APY Finance APYPoolTokenProxy",
+          "pinned_block": 26441165,
+          "retained_documented_reference": "'The liquidity pool contracts use a proxy pattern for upgradeability.' (docs.apy.finance/smart-contract-integration/liquidity-mining-pool.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "arrakis-modular",
+      "protocol_name": "Arrakis Modular",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xAf6f9640092cB1236E5DB6E517576355b6C40b7f",
+      "pacta_page_url": "https://pacta.wtf/protocols/arrakis-modular/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Manager proxy and module beacons: timelock admin, getMinDelay() 172,800 s",
+          "target_label": "Arrakis TimelockController (manager proxy admin, module beacon owner)",
+          "pinned_block": 26449594,
+          "retained_documented_reference": "'Arrakis implements a 48-hour timelock on upgrades' (arrakis.finance/risks)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "asymmetry-finance",
+      "protocol_name": "Asymmetry Finance",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x00000069aBbB0B1Ad6975bcF753eEe15D318A0BF",
+      "pacta_page_url": "https://pacta.wtf/protocols/asymmetry-finance/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Asymmetry Finance SimpleProxy: upgradeable (UUPS), as documented",
+          "target_label": "Asymmetry Finance SimpleProxy",
+          "pinned_block": 26441165,
+          "retained_documented_reference": "'The Votium Strategy Contract (ERC1967 proxy) 0x00000069aBbB0B1Ad6975bcF753eEe15D318A0BF' (docs.asymmetry.finance/developers/contracts.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "aura",
+      "protocol_name": "Aura",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x3Fa73f1E5d8A792C80F426fc8F84FBF7Ce9bBCAC",
+      "pacta_page_url": "https://pacta.wtf/protocols/aura/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "AuraLocker owner = Protocol Multisig, 4-of-7 (docs: 4/7); 2 vetted keeper modules",
+          "target_label": "AuraLocker (vlAURA)",
+          "pinned_block": 26455787,
+          "retained_documented_reference": "'Initially consisting of 7 signers (4/7 majority needed).' (raw.githubusercontent.com/aurafinance/aura-docs/main/aura/governance/multisig-composition.md); '0x3Fa73f1E5d8A792C80F426fc8F84FBF7Ce9bBCAC' (raw.githubusercontent.com/aurafinance/aura-docs/main/aura/governance/multisig-rights.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "axelar-network",
+      "protocol_name": "Axelar Network",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x4F4495243837681061C4743b74B3eEdf548D56A5",
+      "pacta_page_url": "https://pacta.wtf/protocols/axelar-network/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Gateway implementation and auth module differ from the deployment config",
+          "target_label": "AxelarGateway (proxy)",
+          "pinned_block": 26434786,
+          "retained_documented_reference": "axelar-contract-deployments (mainnet config, chains.ethereum, linked from docs.axelar.dev): '\"implementation\": \"0x99B5FA03a5ea4315725c43346e55a6A6fbd94098\"' / '\"authModule\": \"0xE3B83f79Fbf01B25659f8A814945aB82186A8AD0\"'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Gateway governed by Axelar governance (AxelarServiceGovernance)",
+          "target_label": "AxelarGateway (proxy)",
+          "pinned_block": 26434786,
+          "retained_documented_reference": "docs.axelar.dev (EVM contracts owned by governance contracts) / deployment config (AxelarServiceGovernance entry): 'Axelar's contracts on other chains, such as the gateway, gas service and Interchain Token Service on EVM chains, are owned by governance contracts that only accept commands from Axelar governance.' / '\"address\": \"0x7Acbae6CBa67d78AAf69e47000884aE00F9B2525\",' / '\"governanceAddress\": \"axelar10d07y265gmmuvt4z0w9aw880jnsr700j7v9daj\",'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Governance timelock: 3 days, plus a documented operator fast path",
+          "target_label": "AxelarServiceGovernance",
+          "pinned_block": 26434786,
+          "retained_documented_reference": "deployment config (minimumTimeDelay, operator) / docs.axelar.dev (operator approvals): '\"minimumTimeDelay\": 259200,' / '\"operator\": \"0xc8a8399c3D1207f4e109673be7047604737c1D56\",' / 'does the same, and can also approve proposals for an operator to execute without waiting for the timelock, so that changes can be coordinated with other network upgrades.'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Interchain Token Service owned by the Axelar governance contract",
+          "target_label": "InterchainTokenService (proxy)",
+          "pinned_block": 26434786,
+          "retained_documented_reference": "docs.axelar.dev (contract addresses / ITS): 'Axelar's contracts on other chains, such as the gateway, gas service and Interchain Token Service on EVM chains, are owned by governance contracts that only accept commands from Axelar governance.' / '0xB5FB4BE02232B1bBA4dC8f81dc24C26980dE9e3C'"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "balancer-v2-vault-timelock",
+      "protocol_name": "Balancer V2 Vault & TimelockAuthorizer",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xBA12222222228d8Ba445958a75a0704d566BF2C8",
+      "pacta_page_url": "https://pacta.wtf/protocols/balancer-v2-vault-timelock/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Authorizer DEFAULT_ADMIN_ROLE: the 6-of-11 DAO Multi-sig",
+          "target_label": "Balancer V2 Authorizer",
+          "pinned_block": 26427612,
+          "retained_documented_reference": "docs.balancer.fi (multisig): 'DAO Multi-sig 0x10A19e7eE7d7F8a52822f6817de8ea18204F2e4f open in new window 6/11 DAO Signers DAO administrative permissions' and 'Ethereum DAO Multisig \u2014 Authorizer admin on Mainnet'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Vault: not a proxy; pause window ended",
+          "target_label": "BalancerV2Vault",
+          "pinned_block": 26427612,
+          "retained_documented_reference": "docs.balancer.fi (multisig): 'The core of Balancer smart contracts are immutable and do not use proxies or other upgrade mechanisms.'"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "bancor-v3",
+      "protocol_name": "Bancor V3",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x7E3692A6D8c34a762079Fa9057AeD87be7e67cb8",
+      "pacta_page_url": "https://pacta.wtf/protocols/bancor-v3/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "MSIG: 5-of-7 Safe, as documented",
+          "target_label": "MSIG Safe",
+          "pinned_block": 26450616,
+          "retained_documented_reference": "'MSIG rule 5/7 members must sign for a transaction to be executed.' (docs.bancor.network/about-bancor-network/security-and-audits/multisig-rights.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "base-bridge",
+      "protocol_name": "Base Bridge",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x0475cBCAebd9CE8AfA5025828d5b98DFb67E059E",
+      "pacta_page_url": "https://pacta.wtf/protocols/base-bridge/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "L1 ProxyAdmin owner: docs name 0x5a0A\u20263d2A; owner() is another 2-of-2 Safe",
+          "target_label": "Base L1 ProxyAdmin",
+          "pinned_block": 26448221,
+          "retained_documented_reference": "'Authorized to update the L1 Proxy Admin.' (docs.base.org/specifications/reference/configuration, row L1 ProxyAdmin Owner: 0x5a0Aae59D09fccBdDb6C6CcEB07B7279367C3d2A)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "bedrock-unibtc",
+      "protocol_name": "Bedrock (uniBTC)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x047D41F2544B7F63A8e991aF2068a363d210d6Da",
+      "pacta_page_url": "https://pacta.wtf/protocols/bedrock-unibtc/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Secure Mint precondition: adequacyRatio() 900 (existing supply x 0.9 vs reserves)",
+          "target_label": "Bedrock uniBTC VaultWithoutNative",
+          "pinned_block": 26449594,
+          "retained_documented_reference": "'Before any minting action occurs, the smart contract automatically checks reserve sufficiency using the on-chain Proof of Reserve feed. If reserves fall short, the mint transaction reverts.' (docs.bedrock.technology/security/secure-mint)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "bedrock-unieth",
+      "protocol_name": "Bedrock (uniETH)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xF1376bceF0f78459C0Ed0ba5ddce976F1ddF51F4",
+      "pacta_page_url": "https://pacta.wtf/protocols/bedrock-unieth/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "EigenPod owned by Bedrock's restaking contract",
+          "target_label": "Bedrock EigenPod (pod 0)",
+          "pinned_block": 26434786,
+          "retained_documented_reference": "docs.bedrock.technology (restaking): 'EigenPod Manager a.k.a restaking contract is that securely manages eigenpod contract automatically, it enables all the asset management like unstake, rewards allocation etc.' / 'EigenPod: https://etherscan.io/address/0x926720Ae39114D0e2043b79570A1e08f00D01cCE' / 'RESTAKING_ADDRESS: '0x3F4eaCeb930b0Edfa78a1DFCbaE5c5494E6e9850'' / 'EIGENPOD_ADDRESS: '0x926720Ae39114D0e2043b79570A1e08f00D01cCE''"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Restaking implementation differs from the one the docs list",
+          "target_label": "Bedrock Restaking (proxy)",
+          "pinned_block": 26434786,
+          "retained_documented_reference": "docs.bedrock.technology (uniETH contracts): 'Restaking proxy contract: https://etherscan.io/address/0x3f4eaceb930b0edfa78a1dfcbae5c5494e6e9850' / 'Restaking implementation: https://etherscan.io/address/0x9609af0490b96d7add7eea3554b1a944ee440262#code'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Staking commission: 10% of rewards",
+          "target_label": "Bedrock Staking (proxy)",
+          "pinned_block": 26434786,
+          "retained_documented_reference": "docs.bedrock.technology (fees): '10% commission on block rewards, transaction and MEV fees.' / 'Total ETH staked: https://etherscan.io/address/0x4beFa2aA9c305238AA3E0b5D17eB20C045269E9d'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "uniETH upgrade admin: the ProxyAdmin named in Bedrock's deployment list",
+          "target_label": "uniETH token proxy (Universal ETH)",
+          "pinned_block": 26434786,
+          "retained_documented_reference": "Bedrock-Technology/stake README (mainnet deployment): 'UNIVERSAL_ETH_ADDRESS: '0xF1376bceF0f78459C0Ed0ba5ddce976F1ddF51F4'' / 'PROXY_ADMIN: '0xa5F2B6AB5B38b88Ba221741b3A189999b4c889C6'' / 'Total supply of uniETH: https://etherscan.io/token/0xF1376bceF0f78459C0Ed0ba5ddce976F1ddF51F4'"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "beefy-finance-base",
+      "protocol_name": "Beefy Finance (Base)",
+      "chain": "base",
+      "chain_id": 8453,
+      "primary_contract": "0xfc69704cC3cAac545cC7577009Ea4AA04F1a61Eb",
+      "pacta_page_url": "https://pacta.wtf/protocols/beefy-finance-base/",
+      "published_doc_records": [
+        {
+          "record_chain": "base",
+          "surface": "BeefyFeeConfig owner: the 3-of-6 dev multisig",
+          "target_label": "BeefyFeeConfig_Base",
+          "pinned_block": 58315414,
+          "retained_documented_reference": "docs.beefy.finance (contracts and timelocks): 'It is a 3 of 6 multisig' and 'the dev multisig is set as either the direct owner of Beefy's contracts or as the owner of the timelock which in turn owns Beefy's contracts.' / Base address book: 'const devMultisig = '0x6FfaCA7C3B38Ec2d631D86e15f328ee6eF6C6226';'"
+        },
+        {
+          "record_chain": "base",
+          "surface": "Strategy owner and upgrades: 6-hour timelock",
+          "target_label": "BeefyStrategyOwnerTimelock_Base",
+          "pinned_block": 58315414,
+          "retained_documented_reference": "docs.beefy.finance (contracts and timelocks): 'By default, a 6-hour timelock is configured for all strategy changes and upgrades.' / Base address book: 'strategyOwner: '0x3B60F7f25b09E71356cdFFC6475c222A466a2AC9','"
+        },
+        {
+          "record_chain": "base",
+          "surface": "Vault owner timelock: no delay (0 seconds)",
+          "target_label": "BeefyVaultOwnerTimelock_Base",
+          "pinned_block": 58315414,
+          "retained_documented_reference": "docs.beefy.finance (contracts and timelocks): 'Beefy ensures that all privileged functions and upgrades are protected by standardised smart contract timelocks.' and 'By default, a 6-hour timelock is configured for all strategy changes and upgrades.' / Base address book: 'vaultOwner: '0x09D19184F46A32213DF06b981122e06882B61309','"
+        },
+        {
+          "record_chain": "base",
+          "surface": "CLM USDC-VVV strategy: the queued setDeviation(25) executed through the 6-hour timelock",
+          "target_label": "Beefy CLM strategy cowAeroBaseUSDC-VVV",
+          "pinned_block": 58885628,
+          "retained_documented_reference": "docs.beefy.finance (contracts and timelocks): 'By default, a 6-hour timelock is configured for all strategy changes and upgrades.' / Pacta timelock radar brief beefy-base-op-0x3302 (decoded queued calldata): setDeviation(25) on the cowAeroBaseUSDC-VVV strategy, maxTickDeviation 9 -> 25."
+        }
+      ],
+      "chains": [
+        "base"
+      ]
+    },
+    {
+      "protocol_slug": "benddao-ape-staking",
+      "protocol_name": "BendDAO APE Staking",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x4e4C314E2391A58775be6a15d7A05419ba7D2B6e",
+      "pacta_page_url": "https://pacta.wtf/protocols/benddao-ape-staking/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "BEND ProxyAdmin owner: BendDAO Timelock 7D, getMinDelay() 86,400 s",
+          "target_label": "BendDAO Timelock 7D (owner of the Incentive ProxyAdmin)",
+          "pinned_block": 26451608,
+          "retained_documented_reference": "'| Incentive | 7 Days Timelock | 0x859f6e05410893fe64BC84d92BdA773fF798cf66 |' (raw.githubusercontent.com/BendDAO/bend-gitbook-portal/HEAD/risk/security-and-audits.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "bio-protocol",
+      "protocol_name": "Bio Protocol",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xcb1592591996765Ec0eFc1f92599A19767ee5ffA",
+      "pacta_page_url": "https://pacta.wtf/protocols/bio-protocol/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "BIO mint(): MINTER_ROLE held by a 5-of-11 Safe and a bridge manager; no cap",
+          "target_label": "BIO token (BioToken)",
+          "pinned_block": 26451608,
+          "retained_documented_reference": "'The supply is uncapped, meaning new BIO can be minted for future protocol or network growth. This requires deploying a new token contract to replace the current BIO token.' (docs.bio.xyz/bio/introduction/bio-token/basic-token-information.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "cap",
+      "protocol_name": "Cap",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xD8236031d8279d82E615aF2BFab5FC0127A329ab",
+      "pacta_page_url": "https://pacta.wtf/protocols/cap/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "TimelockController minimum delay: 1 day",
+          "target_label": "Cap TimelockController (Developer multisig proposer)",
+          "pinned_block": 26425374,
+          "retained_documented_reference": "docs.cap.app (access controls): 'Critical administrative operations are routed through an OpenZeppelin TimelockController with a 1-day minimum delay (86,400 seconds).'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "cUSD upgrade role (bytes4(0)) holder: the Timelock only",
+          "target_label": "Cap AccessControl registry",
+          "pinned_block": 26425374,
+          "retained_documented_reference": "docs.cap.app (contracts, access controls): 'The `bytes4(0)` selector is conventionally used for UUPS upgrade authorization (`_authorizeUpgrade`) across all upgradeable Cap contracts.'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Timelock operation 0x740e26ef: executed since #26,425,374; getMinDelay() still 86,400 s",
+          "target_label": "Cap TimelockController",
+          "pinned_block": 26451608,
+          "retained_documented_reference": "'The Timelock enforces a mandatory waiting period between when an operation is proposed and when it can be executed, giving participants time to react to parameter changes.' (docs.cap.app/concepts/access-controls)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "cbridge",
+      "protocol_name": "cBridge",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x5427FEFA711Eff984124bFBB1AB6fbf5E3DA1820",
+      "pacta_page_url": "https://pacta.wtf/protocols/cbridge/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Pool Bridge signers: owner can resetSigners after 7-day notice; owner = 3-of-5 EOA governance",
+          "target_label": "cBridge pool-based Bridge (Ethereum)",
+          "pinned_block": 26452373,
+          "retained_documented_reference": "'It is only when nodes with more than \u2154 of the total stake are malicious, that the fund pool will be at risk.' (cbridge-docs.celer.network/print.html)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "centrifuge-liquidity-pools-base",
+      "protocol_name": "Centrifuge V3 Root (Base)",
+      "chain": "base",
+      "chain_id": 8453,
+      "primary_contract": "0x7Ed48C31f2fdC40d37407cBaBf0870B2b688368f",
+      "pacta_page_url": "https://pacta.wtf/protocols/centrifuge-liquidity-pools-base/",
+      "published_doc_records": [
+        {
+          "record_chain": "base",
+          "surface": "OpsGuardian: not a ward of Root (no pause authority), run by the Ops Safe",
+          "target_label": "Centrifuge Root (Base)",
+          "pinned_block": 58534152,
+          "retained_documented_reference": "docs.centrifuge.io (guardians) / Base deployment config: 'The ops guardian is deployed at `0x055589229506Ee89645EF08ebE9B9a863486d0dE` on all networks.' / 'The `OpsGuardian` is controlled by a separate Ops Safe multisig and handles day-to-day operational tasks such as adapter initialization, network wiring, and pool creation. It has no pause authority.' / '\"opsAdmin\": \"0xd21413291444C5c104F1b5918cA0D2f6EC91Ad16\",'"
+        },
+        {
+          "record_chain": "base",
+          "surface": "ProtocolGuardian: a ward of Root, controlled by the Protocol Safe",
+          "target_label": "Centrifuge Root (Base)",
+          "pinned_block": 58534152,
+          "retained_documented_reference": "docs.centrifuge.io (guardians) / Base deployment config: 'The protocol guardian is deployed at `0xCEb7eD5d5B3bAD3088f6A1697738B60d829635c6` on all networks.' / 'The `ProtocolGuardian` is controlled by the Protocol Safe multisig and handles emergency response and protocol-level changes, including pausing, upgrades, and cross-chain operations. Every transaction is verified by third-party signers from [Cantina](https://cantina.xyz/solutions/multisig-security). The protocol can respond to emergencies instantly, with full resumption requiring multisig consensus.' / '\"protocolAdmin\": \"0x9711730060C73Ee7Fcfe1890e8A0993858a7D225\",'"
+        },
+        {
+          "record_chain": "base",
+          "surface": "Root timelock: 48 hours before a scheduled permission takes effect",
+          "target_label": "Centrifuge Root (Base)",
+          "pinned_block": 58534152,
+          "retained_documented_reference": "docs.centrifuge.io (security; deployments): 'All privilege escalation through `Root` goes through a 48-hour timelock. Changes must be scheduled first, then can only be executed after the delay has passed. This gives the community visibility into upcoming changes and time to react before they take effect.' / 'The protocol is controlled by the `Root` contract, an immutable smart contract that holds admin (ward) access on all other contracts. `Root` has no direct external access. The only way to interact with it is through the guardian contracts, which mediate between governance multisigs and `Root`.' / 'Root 0x7Ed48C31f2fdC40d37407cBaBf0870B2b688368f'"
+        }
+      ],
+      "chains": [
+        "base"
+      ]
+    },
+    {
+      "protocol_slug": "chainlink-ccip",
+      "protocol_name": "Chainlink CCIP",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x80226fc0Ee2b096224EeAc085Bb9a8cba1146f7D",
+      "pacta_page_url": "https://pacta.wtf/protocols/chainlink-ccip/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "CCIP configuration owner: an RBACTimelock (Router, RMN proxy, TokenAdminRegistry, CCIPHome)",
+          "target_label": "CCIP Router (Ethereum)",
+          "pinned_block": 26433001,
+          "retained_documented_reference": "docs.chain.link (CCIP upgradability): 'All configuration changes to CCIP-owned contracts must pass through a Role-Based Access Control Timelock (RBACTimelock) contract. Token pools are owned by token issuers, who configure them directly.' / 'The timelock then calls the target CCIP contracts with the specified changes.'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "RMN: uncurse is owner-only and the owner is an RBACTimelock; curse also by authorized callers",
+          "target_label": "CCIP RMN (Ethereum)",
+          "pinned_block": 26433001,
+          "retained_documented_reference": "docs.chain.link (RMN / RMN proxy API reference): 'Uncurses one subject or an array of subjects. Owner-only.' / 'Curses one subject or an array of subjects. Callable by the owner or an authorized caller.' / 'The owner may update the implementation via setARM'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Timelock proposers: a 6-of-12 Safe besides the ManyChainMultiSigs (docs: all proposals from an MCMS)",
+          "target_label": "CCIP RBACTimelock (Ethereum)",
+          "pinned_block": 26433001,
+          "retained_documented_reference": "docs.chain.link (CCIP upgradability): 'All proposals originate from a ManyChainMultiSig (MCMS), which requires multiple independent signers to sign off.' / 'For example, you can view the Ethereum mainnet MCMS on Etherscan.'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "CCIP Directory addresses resolve on-chain; TokenAdminRegistry owned by the RBACTimelock",
+          "target_label": "CCIP TokenAdminRegistry (Ethereum)",
+          "pinned_block": 26433001,
+          "retained_documented_reference": "docs.chain.link (CCIP Directory, Ethereum): 'Router 0x8022...6f7D' / 'RMN 0x411d...5e81' / 'Token admin registry 0xb227...5Cb6'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "RBACTimelock operation 0x67cdd78a: scheduled and executed since #26,433,001",
+          "target_label": "CCIP RBACTimelock (Ethereum)",
+          "pinned_block": 26451608,
+          "retained_documented_reference": "'This repo contains a set of contracts used for administering Chainlink contracts' (github.com/smartcontractkit/ccip-owner-contracts)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "cian-yield-layer",
+      "protocol_name": "CIAN Yield Layer",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xB13aa2d0345b0439b064f26B82D8dCf3f508775d",
+      "pacta_page_url": "https://pacta.wtf/protocols/cian-yield-layer/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Fund allocation setters: owner is a 3-of-4 Safe, the documented TimeLock is not in the path",
+          "target_label": "CIAN stETH Yield Layer vault",
+          "pinned_block": 26450616,
+          "retained_documented_reference": "'Fund allocation parameters are made transparent through multi-signature and time-lock mechanisms.' (docs.cian.app/llms-full.txt)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "circle-gateway",
+      "protocol_name": "Circle Gateway",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x77777777Dcc4d5A8B6E418Fd04D8997ef11000eE",
+      "pacta_page_url": "https://pacta.wtf/protocols/circle-gateway/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "GatewayWallet: EOA owner (UUPS upgrade, withdrawal delay) and EOA pauser over withdrawals",
+          "target_label": "Circle GatewayWallet",
+          "pinned_block": 26451608,
+          "retained_documented_reference": "'Users have full control of their deposited assets. Funds can only move with their signature, and withdrawals are trustless.' (www.circle.com/gateway)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "circle-usdc",
+      "protocol_name": "Circle USDC",
+      "chain": "base",
+      "chain_id": 8453,
+      "primary_contract": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "pacta_page_url": "https://pacta.wtf/protocols/circle-usdc/",
+      "published_doc_records": [
+        {
+          "record_chain": "base",
+          "surface": "USDC (Base) roles: owner, masterMinter, pauser and blacklister are single administrator addresses, as documented",
+          "target_label": "USDC FiatTokenProxy (Base)",
+          "pinned_block": 58422815,
+          "retained_documented_reference": "Circle token design (stablecoin-evm, doc/tokendesign.md): '`owner` - re-assign any of the roles except for `admin`'; '`masterMinter` - adds and removes minters and increases their minting allowance'; '`pauser` - pause the contract, which prevents all transfers, minting, and burning'; '`blacklister` - prevent all transfers to or from a particular address, and prevents that address from minting or burning' / developers.circle.com (USDC contract addresses): 'Base 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "USDC (Ethereum) roles: owner, masterMinter, pauser and blacklister are single administrator addresses, as documented",
+          "target_label": "USDC FiatTokenProxy (Ethereum)",
+          "pinned_block": 26431152,
+          "retained_documented_reference": "Circle token design (stablecoin-evm, doc/tokendesign.md): '`owner` - re-assign any of the roles except for `admin`'; '`masterMinter` - adds and removes minters and increases their minting allowance'; '`pauser` - pause the contract, which prevents all transfers, minting, and burning'; '`blacklister` - prevent all transfers to or from a particular address, and prevents that address from minting or burning' / developers.circle.com (USDC contract addresses): 'Ethereum 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'"
+        }
+      ],
+      "chains": [
+        "base",
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "coinbase-wrapped-staked-eth",
+      "protocol_name": "Coinbase Wrapped Staked ETH",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xBe9895146f7AF43049ca1c1AE358B0541Ea49704",
+      "pacta_page_url": "https://pacta.wtf/protocols/coinbase-wrapped-staked-eth/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Proxy admin separate from the token owner",
+          "target_label": "Coinbase Wrapped Staked ETH (cbETH) FiatTokenProxy",
+          "pinned_block": 26427612,
+          "retained_documented_reference": "github.com/coinbase/wrapped-tokens-os (README): 'The contract has an Owner, who can change the owner, pauser, blacklister, masterMinter, or oracle addresses. The owner can not change the proxyOwner address.'"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "compound-v3-base",
+      "protocol_name": "Compound V3 (Base)",
+      "chain": "base",
+      "chain_id": 8453,
+      "primary_contract": "0x18281dfC4d00905DA1aaA6731414EABa843c468A",
+      "pacta_page_url": "https://pacta.wtf/protocols/compound-v3-base/",
+      "published_doc_records": [
+        {
+          "record_chain": "base",
+          "surface": "Both Base Comet markets are governed by the Ethereum Timelock through a bridge receiver and a 1-day local timelock",
+          "target_label": "Compound BridgeReceiver (Base)",
+          "pinned_block": 57886975,
+          "retained_documented_reference": "docs.compound.finance (governance): 'The Timelock on Mainnet is the administrator of all community sanctioned instances of Compound III.' and 'Local Timelocks have an additional delay before Comet admin functions can be called via proposal execution.'"
+        },
+        {
+          "record_chain": "base",
+          "surface": "Pause Guardian of both Base markets = 5-of-9 Safe with the Community Multi-Sig's owners",
+          "target_label": "Compound III cUSDbCv3 (Base)",
+          "pinned_block": 57886975,
+          "retained_documented_reference": "docs.compound.finance (governance): 'COMP token-holders designate the Pause Guardian address, which is held by the Community Multi-Sig' and 'The only addresses that are allowed to call this function are the Governor and the Pause Guardian.'"
+        }
+      ],
+      "chains": [
+        "base"
+      ]
+    },
+    {
+      "protocol_slug": "concrete",
+      "protocol_name": "Concrete",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xB9DC54c8261745CB97070CeFBE3D3d815aee8f20",
+      "pacta_page_url": "https://pacta.wtf/protocols/concrete/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Vault proxy admin: the factory",
+          "target_label": "Concrete ctDeltaWeETH vault (Concrete Delta WeETH)",
+          "pinned_block": 26425374,
+          "retained_documented_reference": "docs.concrete.xyz (architecture): 'The factory is the immutable admin of every vault proxy.'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Vault DEFAULT_ADMIN_ROLE: unassigned",
+          "target_label": "Concrete ctDeltaWeETH vault (Concrete Delta WeETH)",
+          "pinned_block": 26425374,
+          "retained_documented_reference": "docs.concrete.xyz (architecture): 'The default OpenZeppelin DEFAULT_ADMIN_ROLE is intentionally unassigned at the vault.'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "ctDeltaWeETH: owner, VAULT_MANAGER and factory-manager roles share a 1-of-2 Safe; single-key full control or draining is not established",
+          "target_label": "Concrete Delta WeETH owner multisig",
+          "pinned_block": 26425374,
+          "retained_documented_reference": "docs.concrete.xyz (risks and safety), 16 November 2026 snapshot: 'Separated roles. Vault operations are split across distinct roles. No single key has full control or can drain a vault.' The page's current wording could not be verified, and this role assignment alone does not establish single-key full control or vault draining."
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "cooler-loans",
+      "protocol_name": "Cooler Loans",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x245cc372C84B3645Bf0Ffe6538620B04a217988B",
+      "pacta_page_url": "https://pacta.wtf/protocols/cooler-loans/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Cooler Loans multisig: 4-of-8 Safe, as documented",
+          "target_label": "Cooler Loans Safe",
+          "pinned_block": 26438867,
+          "retained_documented_reference": "'Threshold: 4-of-8 on Mainnet.' (docs.olympusdao.finance/main/security/multisigs)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "curve-dex-ethereum",
+      "protocol_name": "Curve DEX (Ethereum)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x467947EE34aF926cF1DCac093870f613C96B1E0c",
+      "pacta_page_url": "https://pacta.wtf/protocols/curve-dex-ethereum/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Curve DEX (Ethereum) multisig: 5-of-9 Safe, as documented",
+          "target_label": "Curve DEX (Ethereum) Safe",
+          "pinned_block": 26438867,
+          "retained_documented_reference": "'The EmergencyDAO is a **5-of-9 multisig** authorized for emergency interventions.' (docs.curve.finance/user/dao/emergency-dao.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "cvault-finance",
+      "protocol_name": "cVault Finance",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x62359Ed7505Efc61FF1D56fEF82158CcaffA23D7",
+      "pacta_page_url": "https://pacta.wtf/protocols/cvault-finance/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "CORE supply: 10,000, no mint function",
+          "target_label": "CORE token",
+          "pinned_block": 26452373,
+          "retained_documented_reference": "'Theres absolutely no way to create new CORE tokens.' (raw.githubusercontent.com/cVault-finance/CORE-v1/master/README.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "debridge",
+      "protocol_name": "deBridge",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x949b3B3c098348b879C9e4F15cecc8046d9C8A8c",
+      "pacta_page_url": "https://pacta.wtf/protocols/debridge/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "SignatureVerifier: at least 8 of 12 oracle signatures required (2/3)",
+          "target_label": "deBridge SignatureVerifier (Ethereum)",
+          "pinned_block": 26452373,
+          "retained_documented_reference": "'Validates \u2265 2\u20443 validator signatures before execution' (docs.debridge.com/dmp-details/dmp/deployed-contracts.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "decentralized-euro",
+      "protocol_name": "Decentralized Euro",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x760233b90e45d186A9A98E911B115F7F4B90d3D9",
+      "pacta_page_url": "https://pacta.wtf/protocols/decentralized-euro/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Leadrate change delay: proposeChange() schedules 7 days ahead (604,800 s)",
+          "target_label": "dEURO Savings V3 (Leadrate)",
+          "pinned_block": 26450616,
+          "retained_documented_reference": "'7-day timelock on all rate changes' (docs.deuro.com/smart-contracts.html)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "defi-saver",
+      "protocol_name": "DeFi Saver",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xBc841B0dE0b93205e912CFBBd1D0c160A1ec6F00",
+      "pacta_page_url": "https://pacta.wtf/protocols/defi-saver/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "AdminVault Owner multisig: docs state 3/5, the Safe is 3-of-6",
+          "target_label": "DeFi Saver Owner Safe",
+          "pinned_block": 26441165,
+          "retained_documented_reference": "'Automation contracts are upgradeable, with any upgrades being locked behind a 24h timelock which can be activated by a 2/3 multisig (Admin) with actual upgrades initiable by a different 3/5 multisig (Owner).' (docs.defisaver.com/protocol/security-and-audits/admin-access-control)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "diem-relay",
+      "protocol_name": "DIEM Relay",
+      "chain": "base",
+      "chain_id": 8453,
+      "primary_contract": "0x01Ea790410D9863A57771D992D2A72ea326DD7C9",
+      "pacta_page_url": "https://pacta.wtf/protocols/diem-relay/",
+      "published_doc_records": [
+        {
+          "record_chain": "base",
+          "surface": "DIEM Relay multisig: 2-of-2 Safe, as documented",
+          "target_label": "DIEM Relay Safe",
+          "pinned_block": 59025642,
+          "retained_documented_reference": "'Admin / operator 2-of-2 Safe \u2014 0x01Ea790410D9863A57771D992D2A72ea326DD7C9' (diem-relay.com/docs)"
+        }
+      ],
+      "chains": [
+        "base"
+      ]
+    },
+    {
+      "protocol_slug": "dolomite",
+      "protocol_name": "Dolomite",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xa75c21C5BE284122a87A37a76cc6C4DD3E55a1D4",
+      "pacta_page_url": "https://pacta.wtf/protocols/dolomite/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Dolomite multisig: 2-of-3 Safe, as documented",
+          "target_label": "Dolomite Safe",
+          "pinned_block": 26450616,
+          "retained_documented_reference": "'The Gnosis Safe is a 2/3 wallet. Meaning, 2 signers are needed out of the 3 owners to execute a transaction.' (docs.dolomite.io/admin-privileges.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "dydx-v3",
+      "protocol_name": "dYdX V3",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x64c7d40c07EFAbec2AafdC243bF59eaF2195c6dc",
+      "pacta_page_url": "https://pacta.wtf/protocols/dydx-v3/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "ethDYDX owner: the Short Timelock Executor, getDelay() 172,800 s",
+          "target_label": "dYdX Short Timelock Executor",
+          "pinned_block": 26451608,
+          "retained_documented_reference": "'Parameter Description Short Timelock Executor Merkle-Pauser Executor Long Timelock Executor Starkware Executor Timelock Delay* After a proposal passes and is queued, delay before the proposal is executed 2 days 0 days 7 days 2-9 days' (docs.dydx.community/dydx-governance/voting-and-governance/dip-proposal-lifecycle); 'Owner Can mint ethDYDX tokens after mint restriction Short Timelock' (docs.dydx.community/dydx-governance/voting-and-governance/governance-parameters)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "eclipse-bridge",
+      "protocol_name": "Eclipse Bridge",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x7B2c1CbB33c53c3C6a695e36096AD2cfCE1c0efC",
+      "pacta_page_url": "https://pacta.wtf/protocols/eclipse-bridge/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Eclipse Bridge multisig: 3-of-5 Safe, as documented",
+          "target_label": "Eclipse Bridge Safe",
+          "pinned_block": 26440048,
+          "retained_documented_reference": "'Our Canonical Bridge is governed by a 3-of-5 multisig.' (docs.eclipse.xyz/architecture/security-architecture-from-assumptions-to-guarantees.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "ekubo",
+      "protocol_name": "Ekubo",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xe0e0e08A6A4b9Dc7bD67BCB7aadE5cF48157d444",
+      "pacta_page_url": "https://pacta.wtf/protocols/ekubo/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Core: not a proxy; owner() is the StarknetOwnerProxy driven by the Starknet Governor",
+          "target_label": "Ekubo Core (EVM V2)",
+          "pinned_block": 26451608,
+          "retained_documented_reference": "'All smart contracts on Ethereum are immutable' (docs.ekubo.org/reference/contracts/evm-v2)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "enzyme-finance",
+      "protocol_name": "Enzyme Finance",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xC3DC853dD716bd5754f421ef94fdCbac3902ab32",
+      "pacta_page_url": "https://pacta.wtf/protocols/enzyme-finance/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Dispatcher migration timelock = 7 days (specs: 'no longer used and is set to 0')",
+          "target_label": "Enzyme Dispatcher",
+          "pinned_block": 26421541,
+          "retained_documented_reference": "specs.enzyme.finance (fund lifecycle): 'MigratorA waits for the `migrationTimelock` defined on the `Dispatcher` to pass. [NOTE: This is no longer used and is set to `0`]'; access-control handoff: 'The owner is already the Enzyme Council.' (no Council address or threshold is published)."
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "equilibria",
+      "protocol_name": "Equilibria",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xe2A63438747D2c71E14BdC2Cc222be89B1C11D03",
+      "pacta_page_url": "https://pacta.wtf/protocols/equilibria/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Equilibria timelock: 24-hour minimum delay, as documented",
+          "target_label": "Equilibria TimelockController",
+          "pinned_block": 26440048,
+          "retained_documented_reference": "'Following this process, an upgrade is made by the team, and the multi-sig signer proposes the upgrade with a 24-hour timelock.' (docs.equilibria.fi/security-and-risk/multi-sig-and-timelock.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "eth-strategy",
+      "protocol_name": "ETH Strategy",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xC53CCed6332D06972A7eaEDc64FDF6d4aF5220b8",
+      "pacta_page_url": "https://pacta.wtf/protocols/eth-strategy/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "ETH Strategy multisig: 3-of-5 Safe, as documented",
+          "target_label": "ETH Strategy Safe",
+          "pinned_block": 26440048,
+          "retained_documented_reference": "'The ETH Strategy Multisig (root authority) is a **3-of-5** Safe (v1.4.1). Five distinct EOA signers must produce 3 signatures to execute any governance action.' (docs.ethstrat.xyz/security-and-risk/decentralization-scorecard.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "ethena-usdtb",
+      "protocol_name": "Ethena USDtb",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x73E35C5c35A274E34AdE6EB13cC7f62aEE323728",
+      "pacta_page_url": "https://pacta.wtf/protocols/ethena-usdtb/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "USDtb token administered by a single admin address with no timelock (issuer: Anchorage)",
+          "target_label": "USDtb token proxy",
+          "pinned_block": 26422243,
+          "retained_documented_reference": "ethena-labs/ethena-usdtb-contest README: 'controlled by a single admin address' and 'The admin address can change the state at any time, without a timelock.'; docs.ethena.fi: 'As of October 2025, USDtb is issued by Anchorage Digital Bank.'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "USDtb PSM owned by a 24-hour TimelockController (Dev multisig proposes), not by the Dev multisig directly",
+          "target_label": "USDtb PSM",
+          "pinned_block": 26422243,
+          "retained_documented_reference": "docs.ethena.fi key addresses (Dev multisig): '5/11 signers.' and 'Owner of Ethena's deployed mainnet smart contracts & able to modify contract parameters.'"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "euler-v2-evk",
+      "protocol_name": "Euler V2 (EVK)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x29a56a1b8214D9Cf7c5561811750D5cBDb45CC8e",
+      "pacta_page_url": "https://pacta.wtf/protocols/euler-v2-evk/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "EVK factory upgradeAdmin = FactoryGovernor behind a 4d TimelockController (DAO 4-of-8 proposes)",
+          "target_label": "EulerEVaultFactory (GenericFactory)",
+          "pinned_block": 26421541,
+          "retained_documented_reference": "docs.euler.finance: '`FactoryGovernor` is installed as the `upgradeAdmin` of the EVK factory.' and 'The deployed EVC is immutable'; Euler forum: 'The signer set will be updated to 6 Euler Labs signers and 2 Foundation Directors, with a 4/8 threshold.' The prose docs state no delay; the official evk-periphery deployment script sets EVAULT_FACTORY_TIMELOCK_MIN_DELAY = 4 days."
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "f-x-protocol-v2",
+      "protocol_name": "f(x) Protocol v2",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x32356FE312Eba9B7D6A157ad28D1ca91b571CdA6",
+      "pacta_page_url": "https://pacta.wtf/protocols/f-x-protocol-v2/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "V2 Router (Diamond) owner: docs put queued transactions behind a 3-day timelock (oracle updates excepted); owner() is the 6-of-9 Safe",
+          "target_label": "f(x) V2 Router (Diamond)",
+          "pinned_block": 26448221,
+          "retained_documented_reference": "'Once queued, every transaction enter a mandatory 3-day public timelock before execution giving the community time to review, question, or flag concerns.' (fxprotocol.gitbook.io/fx-docs/more/resources/multisig)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "falcon-finance-usdf-susdf",
+      "protocol_name": "Falcon Finance (USDf / sUSDf)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xc8CF6D7991f15525488b2A83Df53468D682Ba4B0",
+      "pacta_page_url": "https://pacta.wtf/protocols/falcon-finance-usdf-susdf/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "sUSDf cooldownDuration() = 0 \u2014 instant unstaking to USDf",
+          "target_label": "Falcon sUSDf vault",
+          "pinned_block": 26418060,
+          "retained_documented_reference": "docs.falcon.finance/mechanism/redemptions/: 'This is not to be confused with unstaking, where users can unstake their sUSDf and receive USDf in return immediately.'"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "flaunch",
+      "protocol_name": "flaunch",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x6c4c0CD7E0E5eeFfbd77AAfe1820d3b9B1ef27b0",
+      "pacta_page_url": "https://pacta.wtf/protocols/flaunch/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "flaunch timelock: 2-day minimum delay, as documented",
+          "target_label": "flaunch TimelockController",
+          "pinned_block": 26448221,
+          "retained_documented_reference": "'a two day timelock will follow before the proposed code is executed' (docs.flaunch.gg/community/governance/proposals-and-voting.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "flying-tulip-lend",
+      "protocol_name": "Flying Tulip Lend",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x1118e1c057211306a40A4d7006C040dbfE1370Cb",
+      "pacta_page_url": "https://pacta.wtf/protocols/flying-tulip-lend/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Treasury Safe (FT owner): 3-of-5",
+          "target_label": "Flying Tulip treasury Safe",
+          "pinned_block": 26449594,
+          "retained_documented_reference": "'| `0x1118e1c057211306a40A4d7006C040dbfE1370Cb` |  3/5      | Msig, treasury   | PutManager, Marketplace  |' (docs.flyingtulip.com/llms.txt)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "frax-ether-sfrxeth",
+      "protocol_name": "Frax Ether (frxETH / sfrxETH)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xbAFA44EFE7901E04E39Dad13167D089C559c1138",
+      "pacta_page_url": "https://pacta.wtf/protocols/frax-ether-sfrxeth/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "frxETHMinter owner: the documented Comptroller",
+          "target_label": "frxETHMinter",
+          "pinned_block": 26425374,
+          "retained_documented_reference": "docs.frax.com (frxETH addresses): 'Multisigs / Chain / Name / Contract / Ethereum / Comptroller / 0x8306300ffd616049FD7e4b0354a64Da835c1A81C'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Ethereum lockbox owner Safe threshold: 3-of-5",
+          "target_label": "Frax Ethereum lockbox multisig (LayerZero delegate)",
+          "pinned_block": 26425374,
+          "retained_documented_reference": "docs.frax.com (crosschain addresses, page source): 'Each multisig below is the LayerZero delegate of the chain's OFTs and lockboxes, and their owner' and '| Ethereum | [`link`](https://app.safe.global/home?safe=eth:0xB1748C79709f4Ba2Dd82834B8c82D4a505003f27) | 3 of 5 |'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Ethereum upgrade Timelock delay: 24 hours",
+          "target_label": "Frax Ethereum Admin Timelock (ProxyAdmin owner)",
+          "pinned_block": 26425374,
+          "retained_documented_reference": "docs.frax.com (crosschain addresses): 'The Timelock enforces a 24-hour delay on upgrades. The Timelock admin is a 4-of-7 Safe, which also owns the Ethereum frxUSD lockbox.'"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "frax-usd-frxusd",
+      "protocol_name": "Frax USD (frxUSD)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xCAcd6fd266aF91b8AeD52aCCc382b4e165586E29",
+      "pacta_page_url": "https://pacta.wtf/protocols/frax-usd-frxusd/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "frxUSD upgrades: ProxyAdmin owned by a 1-day timelock run by the 4-of-7 Frax Safe",
+          "target_label": "frxUSD (TransparentUpgradeableProxy)",
+          "pinned_block": 26431152,
+          "retained_documented_reference": "docs.frax.com (frxUSD): 'The Frax DAO retains ownership and ultimate control of the protocol and may amend or revoke delegated authority at any time.' / addresses: 'frxUSD Chain type Address Ethereum Native 0xCAcd6fd266aF91b8AeD52aCCc382b4e165586E29'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "AMO Timelock (msig): a 3-of-6 Safe, as listed",
+          "target_label": "Frax AMO Timelock (msig) Safe",
+          "pinned_block": 26431152,
+          "retained_documented_reference": "docs.frax.com (frxUSD addresses, operations contracts): 'AMO Timelock (msig) 0x831822660572bd54ebaa065C2acef662a6277D40'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "sfrxUSD upgrades: ProxyAdmin owned directly by the 3-of-5 Frax Safe (no timelock)",
+          "target_label": "sfrxUSD (TransparentUpgradeableProxy)",
+          "pinned_block": 26431152,
+          "retained_documented_reference": "docs.frax.com (frxUSD): 'The Frax DAO retains ownership and ultimate control of the protocol and may amend or revoke delegated authority at any time.' / addresses: 'sfrxUSD Chain type Address Ethereum Native 0xcf62F905562626CfcDD2261162a51fd02Fc9c5b6'"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "gamma",
+      "protocol_name": "Gamma",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x6BeA7CFEF803D1e3d5f7C0103f7ded065644e197",
+      "pacta_page_url": "https://pacta.wtf/protocols/gamma/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "GAMMA supply: 100,000,000, no mint function",
+          "target_label": "GAMMA token",
+          "pinned_block": 26453551,
+          "retained_documented_reference": "'Total Supply 100,000,000' (docs.gamma.xyz/gamma/learn/tokenomics.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "gearbox-v3-v3-1",
+      "protocol_name": "Gearbox V3 / V3.1",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xa133C9A92Fb8dDB962Af1cbae58b2723A0bdf23b",
+      "pacta_page_url": "https://pacta.wtf/protocols/gearbox-v3-v3-1/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "LegacyTimelock Delay & InstanceManager Safe Quorum",
+          "target_label": "Gearbox LegacyTimelock",
+          "pinned_block": 26403523,
+          "retained_documented_reference": "docs.gearbox.finance states technical changes are 'behind a 2-day timelock' (172800s) and lists InstanceManager multisig as '4-of-12 (Subject to chain-specific configuration)'; the Veto Guard Safe (0xbb803559B4D58b75E12dd74641AB955e8B0Df40E) is documented at 4-of-12."
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "goldfinch",
+      "protocol_name": "Goldfinch",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xBEb28978B2c755155f20fd3d09Cb37e300A6981f",
+      "pacta_page_url": "https://pacta.wtf/protocols/goldfinch/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Goldfinch multisig: docs state 6-of-10, the Safe is 6-of-12",
+          "target_label": "Goldfinch Council multisig (governance signers of the protocol)",
+          "pinned_block": 26449594,
+          "retained_documented_reference": "'The Goldfinch Council is a 6-of-10 multisig with 10 members who represent all stakeholders of the protocol' (docs.goldfinch.finance/goldfinch/goldfinch-v1/governance.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "gravity-by-galxe-bridge",
+      "protocol_name": "Gravity by Galxe Bridge",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xbD6e434dB90FD8AD4E28d85C133AD34cA6fbfB6D",
+      "pacta_page_url": "https://pacta.wtf/protocols/gravity-by-galxe-bridge/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Gravity by Galxe Bridge multisig: 3-of-6 Safe, as documented",
+          "target_label": "Gravity by Galxe Bridge Safe",
+          "pinned_block": 26440048,
+          "retained_documented_reference": "'**Administration.** Each contract is owned by a 3-of-6 Safe multisig (`0xeF936B0CaaAdfb439dd24F14411949694aB3C507` on Gravity L1, `0xbD6e434dB90FD8AD4E28d85C133AD34cA6fbfB6D` on Ethereum).' (docs.gravity.xyz/llms-full.txt)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "grove-finance",
+      "protocol_name": "Grove Finance",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x491EDFB0B8b608044e227225C715981a30F3A44E",
+      "pacta_page_url": "https://pacta.wtf/protocols/grove-finance/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Role admin over allocator custody: Grove SubProxy (Sky governance)",
+          "target_label": "Grove ALMProxy (custody of allocator funds)",
+          "pinned_block": 26427612,
+          "retained_documented_reference": "docs.grove.finance (allocator permissions, governance addresses): 'DEFAULT_ADMIN_ROLE Grants and revokes all other roles.' / 'Grove SubProxy ( GROVE_PROXY) 0x1369f7b2b38c76B6478c0f0E66D94923421891Ba'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Emergency freeze of relayers: 2-of-5 Freezer Safe",
+          "target_label": "Grove MainnetController (rate-limited relayer operations)",
+          "pinned_block": 26427612,
+          "retained_documented_reference": "docs.grove.finance (FREEZER role, Freezer address): 'FREEZER Emergency role that can revoke any relayer's access, effectively halting all automated operations.' / 'Freezer ( ALM_FREEZER) 0xB0113804960345fd0a245788b3423319c86940e5'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Day-to-day DeFi execution: 4-of-7 Relayer Safe",
+          "target_label": "Grove MainnetController (rate-limited relayer operations)",
+          "pinned_block": 26427612,
+          "retained_documented_reference": "docs.grove.finance (RELAYER role, Relayer address): 'RELAYER Assigned to the ALM Planner's offchain component. Can invoke DeFi operations on the controller' / 'Relayer ( ALM_RELAYER) 0x0eEC86649E756a23CBc68d9EFEd756f16aD5F85f'"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "hakka-finance",
+      "protocol_name": "Hakka Finance",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xF2B8f214Dc81b849ed3BDCAEdA6c8c39625c500A",
+      "pacta_page_url": "https://pacta.wtf/protocols/hakka-finance/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Multi-sig: docs name 3 keyholders; the Safe is 2-of-4 with 1 unnamed owner",
+          "target_label": "Hakka Finance multi-sig (Safe)",
+          "pinned_block": 26453551,
+          "retained_documented_reference": "'The keyholders are as follows.' (hakkafinance.gitbook.io/hakka-wiki/governance/multi-sig.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "hashport",
+      "protocol_name": "Hashport",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x367e59b559283C8506207d75B0c5D8C66c4Cd4B7",
+      "pacta_page_url": "https://pacta.wtf/protocols/hashport/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Diamond (EIP-2535): diamondCut owner-only; owner is a 5-of-9 Safe",
+          "target_label": "Hashport Router (Diamond)",
+          "pinned_block": 26451608,
+          "retained_documented_reference": "'Smart Contracts use [EIP-2535](https://eips.ethereum.org/EIPS/eip-2535).' (raw.githubusercontent.com/LimeChain/hashport-contracts/main/README.md); '`Hashport (Diamond)`: `0x367e59b559283C8506207d75B0c5D8C66c4Cd4B7`' (raw.githubusercontent.com/LimeChain/hashport-contracts/main/Deployment.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "hop-protocol",
+      "protocol_name": "Hop Protocol",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xb8901acB165ed027E32754E0FFe830802919727f",
+      "pacta_page_url": "https://pacta.wtf/protocols/hop-protocol/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "L1 ETH Bridge governance: 24h Timelock whose admin is a 2-of-3 key Safe",
+          "target_label": "Hop L1_ETH_Bridge (Ethereum)",
+          "pinned_block": 26453551,
+          "retained_documented_reference": "'In summary, the Hop DAO controls every aspect of the protocol.' (docs.hop.exchange/governance/into-to-hop-dao); '0xeeA8422a08258e73c139Fc32a25e10410c14bd7a' (docs.hop.exchange/governance/important-links); 'l1Bridge: '0xb8901acB165ed027E32754E0FFe830802919727f'' (raw.githubusercontent.com/hop-protocol/hop/develop/packages/sdk/src/addresses/mainnet.ts)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "idle",
+      "protocol_name": "Idle",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xD6dABBc2b275114a2366555d6C481EF08FDC2556",
+      "pacta_page_url": "https://pacta.wtf/protocols/idle/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Governance Timelock: delay() 172,800 s",
+          "target_label": "Idle governance Timelock (Compound-style)",
+          "pinned_block": 26450616,
+          "retained_documented_reference": "'it is queued in the Timelock and can be implemented after 2 days' (docs.idle.finance/governance/idle.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "inceptionlrt-isolated-restaking",
+      "protocol_name": "InceptionLRT (Isolated Restaking)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x650bD9Dee50E3eE15cbb49749ff6ABcf55A8FB1e",
+      "pacta_page_url": "https://pacta.wtf/protocols/inceptionlrt-isolated-restaking/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Vault upgrades: ProxyAdmins owned by InceptionTimeLock, getMinDelay() 259,200 s",
+          "target_label": "InceptionTimeLock (owner of the vault ProxyAdmins)",
+          "pinned_block": 26451608,
+          "retained_documented_reference": "'The contracts are upgradeable and guarded with the [TimeLockController]' (raw.githubusercontent.com/inceptionlrt/smart-contracts/HEAD/projects/vaults/README.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "index-coop",
+      "protocol_name": "Index Coop",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x0954906da0Bf32d5479e25f46056d22f08464cab",
+      "pacta_page_url": "https://pacta.wtf/protocols/index-coop/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "INDEX supply: 10,000,000, no mint function",
+          "target_label": "INDEX token",
+          "pinned_block": 26452373,
+          "retained_documented_reference": "'There is a maximum supply of 10 million $INDEX tokens.' (docs.indexcoop.com/index-coop-community-handbook/resources/governance/the-index-token.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "infinifi",
+      "protocol_name": "infiniFi",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x3D18480CC32B6AB3B833dCabD80E76CfD41c48a9",
+      "pacta_page_url": "https://pacta.wtf/protocols/infinifi/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Long governance timelock delay: 7 days (Short timelock: 1 day)",
+          "target_label": "infiniFi Long Timelock (GOVERNOR)",
+          "pinned_block": 26425374,
+          "retained_documented_reference": "docs.infinifi.xyz (audits): 'Timelock Policy / 1 day timelock / 7 day timelock'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Team Multisig threshold: 4-of-7",
+          "target_label": "infiniFi Team Multisig (timelock proposer)",
+          "pinned_block": 26425374,
+          "retained_documented_reference": "docs.infinifi.xyz (audits): 'Our Multisig is a 4/7 multisig and may be found here'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "PAUSE / UNPAUSE role admin: MINOR_ROLES_MANAGER, not GOVERNOR",
+          "target_label": "InfiniFiCore role registry",
+          "pinned_block": 26425374,
+          "retained_documented_reference": "docs.infinifi.xyz (roles documentation): 'PAUSE / Pause protocol functions / GOVERNOR / UNPAUSE / Unpause functions / GOVERNOR'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "InfiniFiCore GOVERNANCE_TOKEN_* roles: membership moved to a new holder since #26,425,374",
+          "target_label": "InfiniFiCore",
+          "pinned_block": 26449594,
+          "retained_documented_reference": "'Our Multisig is a 4/7 multisig and may be found here' (docs.infinifi.xyz/audits)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "inverse-finance-firm",
+      "protocol_name": "Inverse Finance (FiRM)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7",
+      "pacta_page_url": "https://pacta.wtf/protocols/inverse-finance-firm/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Policy Committee Safe: 3-of-6 (docs: 5 of 9); 4-of-7 at #26,399,876",
+          "target_label": "Inverse Finance Policy Committee Safe",
+          "pinned_block": 26449594,
+          "retained_documented_reference": "'| **Policy Committee**   | 5 of 9 | Governance guardian role (can cancel proposals), manages reward rate policies, operates as BondsManager                        |' (docs.inverse.finance/inverse-finance/inverse-finance/governance/governance-overview.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "ipor-fusion",
+      "protocol_name": "IPOR Fusion",
+      "chain": "base",
+      "chain_id": 8453,
+      "primary_contract": "0x1455717668fA96534f675856347A973fA907e922",
+      "pacta_page_url": "https://pacta.wtf/protocols/ipor-fusion/",
+      "published_doc_records": [
+        {
+          "record_chain": "base",
+          "surface": "IPOR Fusion ERC1967Proxy: upgradeable (UUPS), as documented",
+          "target_label": "IPOR Fusion ERC1967Proxy",
+          "pinned_block": 58885628,
+          "retained_documented_reference": "'The factory proxy stays at 0x1455717668fA96534f675856347A973fA907e922 ; its implementation is now IporFusionFactoryImpl 0x378fEb2E96082FB965E2BB922AEE484d07c14014 .' (ipor.io/developer-news/smart-contracts-2026-09-28-base)"
+        }
+      ],
+      "chains": [
+        "base"
+      ]
+    },
+    {
+      "protocol_slug": "katana",
+      "protocol_name": "Katana",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xd512543315c95506E4209805b888414EEF15C8C4",
+      "pacta_page_url": "https://pacta.wtf/protocols/katana/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Katana Admin multisig (Ethereum): 3-of-5 Safe (docs: 3-of-5)",
+          "target_label": "Katana Admin multisig (Ethereum Safe)",
+          "pinned_block": 26458556,
+          "retained_documented_reference": "'**3-of-5 multisig**, controlled by major network partners Katana Foundation, GSR, and Polygon Labs.' (docs.katana.network/katana/core-concepts/governance/index.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "kelp-dao-rseth",
+      "protocol_name": "Kelp DAO (rsETH)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x49bD9989E31aD35B0A62c20BE86335196A3135B1",
+      "pacta_page_url": "https://pacta.wtf/protocols/kelp-dao-rseth/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "LRTConfig OPERATOR_ROLE: one operator account revoked since #26,406,106",
+          "target_label": "Kelp LRTConfig",
+          "pinned_block": 26449594,
+          "retained_documented_reference": "'| LRTConfig               | 0x947Cb49334e6571ccBFEF1f1f1178d8469D65ec7     |' (raw.githubusercontent.com/Kelp-DAO/LRT-rsETH/main/README.md)"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "RSETH_OFTAdapter owner(): a 6-of-11 Safe; another address at #26,406,106",
+          "target_label": "Kelp RSETH_OFTAdapter (Ethereum)",
+          "pinned_block": 26451608,
+          "retained_documented_reference": "'| Ethereum RSETH_OFTAdapter    | 0x85d456B2DfF1fd8245387C0BfB64Dfb700e98Ef3     |' (raw.githubusercontent.com/Kelp-DAO/LRT-rsETH/main/README.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "kpk",
+      "protocol_name": "KPK",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x8b884f80B3B839F52b6cE168f133e7a5D1f0A537",
+      "pacta_page_url": "https://pacta.wtf/protocols/kpk/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Security Council Safe (vault owner and sentinel): 5-of-8",
+          "target_label": "KPK Security Council Safe",
+          "pinned_block": 26449594,
+          "retained_documented_reference": "'Security Council Safe (5/8), [`0x8b884f80B3B839F52b6cE168f133e7a5D1f0A537`]' (docs.kpk.io/llms-full.txt)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "kyberswap-classic",
+      "protocol_name": "KyberSwap Classic",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202",
+      "pacta_page_url": "https://pacta.wtf/protocols/kyberswap-classic/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "KyberSwap Classic KyberNetworkTokenV2 proxy: upgradeable (proxy admin), as documented",
+          "target_label": "KyberSwap Classic KyberNetworkTokenV2 proxy",
+          "pinned_block": 26441165,
+          "retained_documented_reference": "'KNC is dynamic and can be upgraded or minted by KyberDAO to better support liquidity and growth.' (docs.kyberswap.com/governance/knc-token.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "lagoon",
+      "protocol_name": "Lagoon",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x707D622cdA4b5459e7DcEe8Ba8E429F154f96A27",
+      "pacta_page_url": "https://pacta.wtf/protocols/lagoon/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Legacy cbBTC vault: immediate beacon upgrades; coverage by the documented 24-hour Opt-in delay is unverified",
+          "target_label": "Lagoon cbBTC vault UpgradeableBeacon",
+          "pinned_block": 26448221,
+          "retained_documented_reference": "'Every upgrade is subject to a mandatory waiting period before it takes effect. This gives investors time to evaluate the incoming change and exit the vault if needed.' and 'The delay window is configurable by the vault admin , within the protocol bounds of 24 hours (minimum) to 30 days (maximum).' (docs.lagoon.finance/vault/upgradability-and-opt-in-proxy)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "layerzero-v2",
+      "protocol_name": "LayerZero V2",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x1a44076050125825900e736c501f859c50fE728c",
+      "pacta_page_url": "https://pacta.wtf/protocols/layerzero-v2/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "EndpointV2: not a proxy; its code cannot be replaced",
+          "target_label": "LayerZero EndpointV2 (Ethereum)",
+          "pinned_block": 26434786,
+          "retained_documented_reference": "docs.layerzero.network (endpoint): 'The LayerZero Endpoint is the immutable, permissionless protocol entrypoint for sending and receiving omnichain messages.' / 'The LayerZero Endpoint is the single, immutable entry and exit point for cross\u2011chain messaging, built on five core modules:'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Endpoint owner: a 5-of-9 LayerZero multisig that sets default libraries",
+          "target_label": "LayerZero EndpointV2 (Ethereum)",
+          "pinned_block": 26434786,
+          "retained_documented_reference": "docs.layerzero.network (defaults): 'You should always set your DVN configuration explicitly. Defaults are placeholder configurations \u2014 they may be Dead DVNs that prevent message delivery, may include only a single DVN, and may change without notice.' / 'This default configuration can vary per channel, changing the placeholder block confirmations, the X\u2011of\u2011Y\u2011of\u2011N thresholds for verification, the Executor, and the message libraries.' / 'Once an application defines its channel\u2019s X\u2011of\u2011Y\u2011of\u2011N security settings, those parameters are enforced at the protocol level indefinitely. Only the application delegate can update these configurations. There is no governance, upgrade mechanism, or external actor that can alter or disable a channel\u2019s configuration once set, guaranteeing that security guarantees persist without relying on LayerZero.'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Ethereum to Base default pathway: send and receive require the same 4 DVNs",
+          "target_label": "LayerZero SendUln302 (Ethereum)",
+          "pinned_block": 26434786,
+          "retained_documented_reference": "docs.layerzero.network (security stack): 'For a configuration to be considered valid, the Send Library configurations on Chain A must match the Receive Library configurations on Chain B.'"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "lido-steth-dual-governance",
+      "protocol_name": "Lido (stETH / Dual Governance)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xCE0425301C85c5Ea2A0873A2dEe44d78E02D2316",
+      "pacta_page_url": "https://pacta.wtf/protocols/lido-steth-dual-governance/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "4-of-7 Safe: holds the one-off, time-limited right to activate emergency mode; signers as listed, one replaced since #26,403,121",
+          "target_label": "Lido Dual Governance Emergency Activation Committee Safe",
+          "pinned_block": 26448221,
+          "retained_documented_reference": "'Quorum: 4/7' (docs.lido.fi/multisigs/committees, activation section)"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "5-of-7 Safe: executes scheduled proposals while emergency mode is active; the activation committee's signers, with a stricter quorum",
+          "target_label": "Lido Dual Governance Emergency Execution Committee Safe",
+          "pinned_block": 26448221,
+          "retained_documented_reference": "'This committee has the same list of participants as Dual Governance Emergency Activation Committee, but the quorum is restricted to 5 of 7 Quorum: 5/7' (docs.lido.fi/multisigs/committees, execution section)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "liquid-collective-lseth",
+      "protocol_name": "Liquid Collective (LsETH)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x8c1BEd5b9a0928467c9B1341Da1D7BD5e10b6549",
+      "pacta_page_url": "https://pacta.wtf/protocols/liquid-collective-lseth/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "River (LsETH) upgrade and admin Firewalls are administered by 4-of-7 Safes",
+          "target_label": "River (LsETH) proxy",
+          "pinned_block": 26422243,
+          "retained_documented_reference": "docs.liquidcollective.io (ETH FAQs): 'An administrative multisig is made up of a variety of Liquid Collective ecosystem participants.'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Protocol service fee = 10.0% of network rewards",
+          "target_label": "River (LsETH) proxy",
+          "pinned_block": 26422243,
+          "retained_documented_reference": "docs.liquidcollective.io (ETH FAQs): 'The Liquid Collective protocol charges a service fee set at 10.0% of network rewards.'"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "liquity-v1-lusd",
+      "protocol_name": "Liquity V1 (LUSD)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xA39739EF8b0231DbFA0DcdA07d7e29faAbCf4bb2",
+      "pacta_page_url": "https://pacta.wtf/protocols/liquity-v1-lusd/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Liquidation thresholds: 110% minimum, 150% in Recovery Mode",
+          "target_label": "Liquity V1 TroveManager",
+          "pinned_block": 26429396,
+          "retained_documented_reference": "docs.liquity.org (Liquity V1, borrowing): 'This is a protocol parameter that is set to `110%`.' / Recovery Mode: 'During Recovery Mode, Troves with a collateral ratio below 150% can be liquidated.'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "No admin: ownership renounced on every core contract, no proxies",
+          "target_label": "Liquity V1 TroveManager",
+          "pinned_block": 26429396,
+          "retained_documented_reference": "docs.liquity.org (Liquity V1, general): 'Liquity as a protocol is non-custodial, immutable, and governance-free.' and 'No. Liquity has no admin key, and nobody can alter the rules of the system in any way. The smart contract code is completely immutable.'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Fees: borrowing 0.5%-5%, redemption floor 0.5%; minimum debt 2,000 LUSD",
+          "target_label": "Liquity V1 TroveManager",
+          "pinned_block": 26429396,
+          "retained_documented_reference": "docs.liquity.org (Liquity V1, borrowing): 'The fee rate is confined to a range between `0.5%` and `5%`' and 'A minimum debt of `2,000 LUSD` is required.' / redemptions: 'Under normal operation, the redemption fee is given by the formula `(baseRate + 0.5%) * ETHdrawn`'"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "lista-lending",
+      "protocol_name": "Lista Lending",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xf820fB4680712CD7263a0D3D024D5b5aEA82Fd70",
+      "pacta_page_url": "https://pacta.wtf/protocols/lista-lending/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Moolah upgrade authority: sole DEFAULT_ADMIN_ROLE member is the Admin TimeLock, 86,400 s",
+          "target_label": "Lista Moolah (Ethereum)",
+          "pinned_block": 26451608,
+          "retained_documented_reference": "'Upgrade authority sits behind an OpenZeppelin `TimelockController`' (docs.bsc.lista.org/for-developer/lista-lending/contract-reference.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "lombard-lbtc",
+      "protocol_name": "Lombard (LBTC)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x055E84e7FE8955E2781010B866f10Ef6E1E77e59",
+      "pacta_page_url": "https://pacta.wtf/protocols/lombard-lbtc/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Sampled Core ProxyAdmin Wiring & 24h TimelockController",
+          "target_label": "Lombard TimelockController",
+          "pinned_block": 26403523,
+          "retained_documented_reference": "docs.lombard.finance/learn/transparency/smart-contracts states 'Each Proxy Upgrade Timelock enforces a 24-hour minimum delay on contract upgrades.'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "GMPBascule validateThreshold() = 0 \u2014 deposit-ID validation on every inbound mint",
+          "target_label": "Lombard GMPBascule",
+          "pinned_block": 26407707,
+          "retained_documented_reference": "docs.lombard.finance/learn/architecture (Bascule Drawbridge): 'Before any mint, Bascule independently verifies that the BTC deposit exists on the Bitcoin network with 6 confirmations. Minting requires valid signatures from both the Consortium and Bascule.'"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "lusd-chickenbonds",
+      "protocol_name": "LUSD ChickenBonds",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xB9D7DdDca9a4AC480991865EfEf82E01273F79C3",
+      "pacta_page_url": "https://pacta.wtf/protocols/lusd-chickenbonds/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "ChickenBondManager not a proxy, no owner; bLUSD and BondNFT owners renounced",
+          "target_label": "bLUSD",
+          "pinned_block": 26453551,
+          "retained_documented_reference": "'After deployment and initialization, no upgrade is possible.' (docs.chickenbonds.org/faq/technical-design.md); '0x57619FE9C539f890b19c61812226F9703ce37137' (docs.chickenbonds.org/llms-full.txt)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "m0-protocol-m",
+      "protocol_name": "M0 Protocol ($M)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x866A2BF4E572CbcF37D5071A7a58503Bfb36be1b",
+      "pacta_page_url": "https://pacta.wtf/protocols/m0-protocol-m/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "MToken: no EIP-1967 proxy slots (immutable core logic)",
+          "target_label": "M0 MToken ($M)",
+          "pinned_block": 26418060,
+          "retained_documented_reference": "docs.m0.org/raw/protocol/m-token.md: 'The MToken contract itself is designed to be immutable, meaning its core logic cannot be upgraded directly.'"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "makina",
+      "protocol_name": "Makina",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x0fCEfa3f1047F35521A49cD8B06faBd588665d7F",
+      "pacta_page_url": "https://pacta.wtf/protocols/makina/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Upgrade role (6): DAO multisig execution delay 172,800 s",
+          "target_label": "Makina AccessManager",
+          "pinned_block": 26449594,
+          "retained_documented_reference": "'`INFRA_UPGRADE_ROLE` is held by the DAO with a **2-day execution delay**' (docs.makina.finance/llms-full.txt) (roles table: INFRA_UPGRADE_ROLE = 6)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "mantle-liquid-staking-meth-cmeth",
+      "protocol_name": "Mantle Liquid Staking (mETH / cmETH)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xc26016f1166bE7b6c5611AAB104122E0f6c2aCE2",
+      "pacta_page_url": "https://pacta.wtf/protocols/mantle-liquid-staking-meth-cmeth/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Core Proxy EIP-1967 Admin Slot & 3-Day UpgradeTimelock",
+          "target_label": "Mantle UpgradeTimelock",
+          "pinned_block": 26403121,
+          "retained_documented_reference": "docs.mantle.xyz/meth/concepts/risk-management/upgradability-and-timelock.md previously noted 'The timelock is configured with a default delay of 0' (live deployment enforces stricter 3-day UpgradeTimelock)."
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "mcdex",
+      "protocol_name": "MCDEX",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x38ca50c6E3391A5bf73c2504bd9Cd9c0b9D89053",
+      "pacta_page_url": "https://pacta.wtf/protocols/mcdex/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "DAO: 4-of-8 Safe, as documented",
+          "target_label": "DAO Safe",
+          "pinned_block": 26441165,
+          "retained_documented_reference": "'DAO uses a multi-sig on each chain, and each multi-sig requires the confirmation of 4 out of 8 owners.' (docs.mux.network/protocol/contracts/contracts-dao.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "meta-pool-eth",
+      "protocol_name": "Meta Pool ETH",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x806F870ee04A2CC8bf2aD053BAa5ed9999A1f182",
+      "pacta_page_url": "https://pacta.wtf/protocols/meta-pool-eth/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "spETH upgrade admin: the documented ProxyAdmin, owned by the DAO Admin Safe (3-of-6)",
+          "target_label": "Meta Pool ProxyAdmin (spETH, Liquid Unstake Pool, MetaPoolETH)",
+          "pinned_block": 26449594,
+          "retained_documented_reference": "'Proxy Admin Address: 0x806F870ee04A2CC8bf2aD053BAa5ed9999A1f182' (docs.metapool.app/llms-full.txt)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "metric-v1",
+      "protocol_name": "Metric V1",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x2a53833cc95548cf52c7b159110e22D3a9018f32",
+      "pacta_page_url": "https://pacta.wtf/protocols/metric-v1/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Protocol fee share: setPoolProtocolFee by the owner, a 3-of-5 Safe, with no delay",
+          "target_label": "MetricOmmPoolFactory",
+          "pinned_block": 26451608,
+          "retained_documented_reference": "'The curator and Metric can each change their share of the spread at any time and with no timelock' (docs.metric.xyz/use-metric/fees.md); 'The core, periphery and extension contracts below are deployed at the same addresses on every chain in this table.' (docs.metric.xyz/reference/supported-chains-and-deployments.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "mev-capital-weth-metamorpho",
+      "protocol_name": "MEV Capital wETH (MetaMorpho)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x9a8bC3B04b7f3D87cfC09ba407dCED575f2d61D8",
+      "pacta_page_url": "https://pacta.wtf/protocols/mev-capital-weth-metamorpho/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "MCwETH: timelock() = 259,200 s (3 days), within Morpho V1's documented 1 day - 2 weeks; guardian set",
+          "target_label": "MEV Capital wETH (MCwETH, MetaMorpho)",
+          "pinned_block": 26458556,
+          "retained_documented_reference": "'After the initial setup, any change to the timelock must set its duration to be between **1 day and 2 weeks**.' (docs.morpho.org/curate/concepts/timelock.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "morpheusai",
+      "protocol_name": "MorpheusAI",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x1FE04BC15Cf2c5A2d41a0b3a96725596676eBa1E",
+      "pacta_page_url": "https://pacta.wtf/protocols/morpheusai/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Ethereum multisig: 5-of-9, owner of the DepositPool",
+          "target_label": "Morpheus Ethereum multisig (Safe)",
+          "pinned_block": 26451608,
+          "retained_documented_reference": "'This setup requires 5 out of 9 key holders to sign transactions' (gitbook.mor.org/smart-contracts/multisig.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "nexus-mutual",
+      "protocol_name": "Nexus Mutual",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xcafea6063d4Ec6b045d9676e58897C1f0882Ca32",
+      "pacta_page_url": "https://pacta.wtf/protocols/nexus-mutual/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Governor: 3 Advisory Board votes + 24h timelock; Registry upgrades every module",
+          "target_label": "Nexus Mutual Governor",
+          "pinned_block": 26421541,
+          "retained_documented_reference": "docs.nexusmutual.io/governance/: 'Three votes in favour carry the proposal, at which point voting closes and the timelock starts.' and 'A 24-hour timelock runs before a carried proposal can be executed.'"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "noon",
+      "protocol_name": "Noon",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xE5e412C212B4FBbF550A94e7BD5e83dB0B315A7F",
+      "pacta_page_url": "https://pacta.wtf/protocols/noon/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "USN upgrade path: ProxyAdmin owned by the Upgrade Timelock, delay() 172,800 s",
+          "target_label": "Noon Upgrade Timelock (owner of the USN ProxyAdmin)",
+          "pinned_block": 26450616,
+          "retained_documented_reference": "'All non-emergency contract upgrades are subjected to a mandatory 48-hour on-chain timelock' (docs.noon.capital/5.-the-security-framework/smart-contract-security-and-audits.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "nuva",
+      "protocol_name": "NUVA",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xDEa75A312b2F99b5A7558c4636897b39C195E241",
+      "pacta_page_url": "https://pacta.wtf/protocols/nuva/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "DedicatedVaultRouter upgrade authority: timelock, getMinDelay() 172,800 s",
+          "target_label": "NUVA TimelockController (owner of the DedicatedVaultRouter)",
+          "pinned_block": 26449594,
+          "retained_documented_reference": "'every upgrade is subject to a 48-hour timelock before it takes effect' (nuva.finance/docs/security-trust)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "obol-network",
+      "protocol_name": "Obol Network",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xCdBf527842Ab04Da548d33EB09d03DB831381Fb0",
+      "pacta_page_url": "https://pacta.wtf/protocols/obol-network/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Governance timelock: 5 days between a passed proposal and execution",
+          "target_label": "Obol TimelockController",
+          "pinned_block": 26433001,
+          "retained_documented_reference": "docs.obol.org (v1.8 Token House governance): 'After the voting period ends, if the proposal passes, there will be a 5-day timelock delay.'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Governor: 30,000 OBOL proposal threshold, 0.84% quorum",
+          "target_label": "ObolGovernor",
+          "pinned_block": 26433001,
+          "retained_documented_reference": "docs.obol.org (v1.8 Token House governance): 'During Week 3, a wallet holding at least 30,000 OBOL in voting power must publish the proposal on the Obol Governance Platform.' / 'The current definition for the OBOL Token House is 0.84% of minted supply.' / 'After publication, there is a 24-hour voting delay, during which the proposal can be canceled if necessary.'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "stOBOL unstaking: no withdrawal delay (WithdrawGate delay 0)",
+          "target_label": "stOBOL WithdrawGate",
+          "pinned_block": 26433001,
+          "retained_documented_reference": "docs.obol.org (unstaking guide): 'You can unstake at any time, there are no lockups' / 'https://etherscan.io/address/0x6590cBBCCbE6B83eF3774Ef1904D86A7B02c2fCC#writeContract'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "OBOL supply: documented cap of 500M, no cap on-chain; a 2-of-3 Safe holds MINTER_ROLE",
+          "target_label": "ObolToken",
+          "pinned_block": 26433001,
+          "retained_documented_reference": "docs.obol.org (token distribution; OBOL token): 'The total supply is capped at 500 million tokens.' / 'The official token contract address of the OBOL Token is 0x0B010000b7624eb9B3DfBC279673C76E9D29D5F7'"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "odyssey-finance",
+      "protocol_name": "Odyssey Finance",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x3F6da0A118B3A0ddfdbaB4690cC96b2cF73B488D",
+      "pacta_page_url": "https://pacta.wtf/protocols/odyssey-finance/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Upgrade governor: docs state a 3/5 multisig; every ProxyAdmin owner is one Safe, 2-of-4 (Ethereum and Base)",
+          "target_label": "PositionRegistry ProxyAdmin (Ethereum)",
+          "pinned_block": 26458556,
+          "retained_documented_reference": "'Control of upgrades and emergency actions rests with a designated **governor**, currently managed through a secure multi-signature wallet **(3/5)**.' (docs.odyssey.finance/architecture/protocol.md); '## Mainnet' (docs.odyssey.finance/resources/contracts.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "ondo-finance-ousg-flux-finance",
+      "protocol_name": "Ondo Finance (OUSG & Flux Finance)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x98Db502215Da1ad9F626D4a0090A8A2f4971003c",
+      "pacta_page_url": "https://pacta.wtf/protocols/ondo-finance-ousg-flux-finance/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "OUSG RateLimiter Global Subscription Limit & Flux 1d Timelock",
+          "target_label": "Ondo RateLimiter",
+          "pinned_block": 26403121,
+          "retained_documented_reference": "docs.ondo.finance/qualified-access-products/ousg/instant-limits.md states 'Instant minting has a $50M Global Limit' and 'Instant redemptions have a $50M Global Limit'; Flux docs specify 1-day Timelock governance."
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "orderly-bridge",
+      "protocol_name": "Orderly Bridge",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xABD4C63d2616A5201454168269031355f4764337",
+      "pacta_page_url": "https://pacta.wtf/protocols/orderly-bridge/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "ORDER supply: 1,000,000,000, no mint function",
+          "target_label": "ORDER token",
+          "pinned_block": 26452373,
+          "retained_documented_reference": "'Maximum supply: 1,000,000,000' (orderly.network/docs/introduction/tokenomics/distribution-and-emission-schedule)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "origin-superoeth-base",
+      "protocol_name": "Origin Protocol (SuperOETHb Base)",
+      "chain": "base",
+      "chain_id": 8453,
+      "primary_contract": "0x92A19381444A001d62cE67BaFF066fA1111d7202",
+      "pacta_page_url": "https://pacta.wtf/protocols/origin-superoeth-base/",
+      "published_doc_records": [
+        {
+          "record_chain": "base",
+          "surface": "Base Admin Safe: 5-of-8, proposer on the vault's timelock",
+          "target_label": "Origin Base Admin Safe",
+          "pinned_block": 59594105,
+          "retained_documented_reference": "'Admin Base/HyperEVM 0x92A19381444A001d62cE67BaFF066fA1111d7202 5-of-8 Safe' (docs.originprotocol.com/llms-full.txt)"
+        }
+      ],
+      "chains": [
+        "base"
+      ]
+    },
+    {
+      "protocol_slug": "panoptic-v2",
+      "protocol_name": "Panoptic V2",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x000000000000ffE5eFdB5AE76b9200263C58b4c0",
+      "pacta_page_url": "https://pacta.wtf/protocols/panoptic-v2/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Panoptic V2 RiskEngineProxy: upgradeable (proxy admin), as documented",
+          "target_label": "Panoptic V2 RiskEngineProxy",
+          "pinned_block": 26449594,
+          "retained_documented_reference": "'Pools retain a fixed RiskEngine proxy address; an authorized implementation upgrade can change their risk policy in place.' (panoptic.xyz/docs/contracts/parameters.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "paypal-usd-pyusd",
+      "protocol_name": "PayPal USD (PYUSD)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x6c3ea9036406852006290770BEdFcAbA0e23A0e8",
+      "pacta_page_url": "https://pacta.wtf/protocols/paypal-usd-pyusd/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Pause and asset-protection roles: one address without contract code, as documented",
+          "target_label": "PayPal USD (PYUSD) AdminUpgradeabilityProxy",
+          "pinned_block": 26431152,
+          "retained_documented_reference": "PYUSD contract README: 'In the event of a critical security threat, Paxos has the ability to pause transfers and approvals of the PYUSD token. The ability to pause is controlled by a single `owner` role,' / 'The `ASSET_PROTECTION_ROLE` can freeze and unfreeze the token balance of any address on chain.' / docs.paxos.com: 'Ethereum Mainnet 0x6c3ea9036406852006290770BEdFcAbA0e23A0e8'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Supply: minting and burning through the separately deployed SupplyControl contract",
+          "target_label": "PayPal USD (PYUSD) AdminUpgradeabilityProxy",
+          "pinned_block": 26431152,
+          "retained_documented_reference": "PYUSD contract README: 'PYUSD uses a separately deployed `SupplyControl` contract to control the token supply.' '`SupplyControl` has a `SUPPLY_CONTROLLER_MANAGER_ROLE` which is responsible for managing addresses with the `SUPPLY_CONTROLLER_ROLE`, referred to as supplyControllers. Only supplyControllers can mint and burn tokens.' / docs.paxos.com (Supply Control Contract Addresses): 'Ethereum Mainnet 0x31d9bDEa6F104606C954f8FE6ba614F1BD347Ec3'"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "peapods-finance",
+      "protocol_name": "Peapods Finance",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x02f92800F57BCD74066F5709F1Daa1A4302Df875",
+      "pacta_page_url": "https://pacta.wtf/protocols/peapods-finance/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "PEAS (Ethereum): 9,936,639.21, no mint function",
+          "target_label": "PEAS token",
+          "pinned_block": 26452373,
+          "retained_documented_reference": "'making sure no additional PEAS are ever coming into circulation when expanding to additional chains' (docs.peapods.finance/links/contract-addresses.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "pendle-finance-v2",
+      "protocol_name": "Pendle Finance V2",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x6d247b1c044fA1E22e6B04fA9F71Baf99EB29A9f",
+      "pacta_page_url": "https://pacta.wtf/protocols/pendle-finance-v2/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Market factory sends 80% of swap fees to the treasury, leaving 20% to LPs",
+          "target_label": "PendleMarketFactory (V7Upg)",
+          "pinned_block": 26422243,
+          "retained_documented_reference": "docs.pendle.finance (fees): '20% of all swap fees are given to LP providers of the pool as yield.'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Yield contract factory takes a 5% fee on YT yield",
+          "target_label": "PendleYieldContractFactory",
+          "pinned_block": 26422243,
+          "retained_documented_reference": "docs.pendle.finance (fees): 'Pendle collects a 5% fee from all yield accrued (including points) by all YT in existence'"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "pickle",
+      "protocol_name": "Pickle",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xbD17B1ce622d73bD438b9E658acA5996dc394b0d",
+      "pacta_page_url": "https://pacta.wtf/protocols/pickle/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "MasterChef admin: owner is a 2-of-6 Safe, the documented 24 h timelock is not in the path",
+          "target_label": "Pickle MasterChef",
+          "pinned_block": 26451608,
+          "retained_documented_reference": "'All key admin functions on the MasterChef contract, which controls the emission of PICKLEs to the Farms are controlled by a 24 hour timelock contract' (docs.pickle.finance/security/audits-and-timelock/timelocks-and-multisig)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "piku-finance",
+      "protocol_name": "Piku Finance",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x2E4039E8E31475d65DC00293C366FDBfBBC02DC3",
+      "pacta_page_url": "https://pacta.wtf/protocols/piku-finance/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "PIKU supply: 500,000,000, no mint function",
+          "target_label": "PIKU token",
+          "pinned_block": 26453551,
+          "retained_documented_reference": "'**Total Token Supply: 500,000,000 PIKU**' (docs.piku.co/piku/pikudao/piku.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "polygon-bridge",
+      "protocol_name": "Polygon Bridge",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xFa7D2a996aC6350f4b56C043112Da0366a59b74c",
+      "pacta_page_url": "https://pacta.wtf/protocols/polygon-bridge/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Polygon Bridge multisig: 5-of-9 Safe, as documented",
+          "target_label": "Polygon Bridge Safe",
+          "pinned_block": 26438867,
+          "retained_documented_reference": "'**$5/9$ Multisig** `0xFa7D2a996aC6350f4b56C043112Da0366a59b74c`' (docs.polygon.technology/pos/reference/commit-chain-multisigs.md)"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "RootChainManager + predicates: upgrades via a 0 s timelock run by the 5-of-9 Safe",
+          "target_label": "Polygon RootChainManagerProxy",
+          "pinned_block": 26449594,
+          "retained_documented_reference": "'The existing multisigs do not have the capability to censor transactions, including bridge transactions.' (docs.polygon.technology/pos/reference/commit-chain-multisigs)"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Custom ChildERC20 mapping Safe: 4-of-13 (docs: 4/8)",
+          "target_label": "Polygon commitchain token-mapping multisig",
+          "pinned_block": 26449594,
+          "retained_documented_reference": "'4/8 Multisig 0x424bDE99FCfB68c5a1218fd3215caFfD031f19C4' (docs.polygon.technology/pos/reference/commit-chain-multisigs)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "pooltogether-v3",
+      "protocol_name": "PoolTogether V3",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x0cEC1A9154Ff802e7934Fc916Ed7Ca50bDE6844e",
+      "pacta_page_url": "https://pacta.wtf/protocols/pooltogether-v3/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "POOL supply: 10,000,000; minter() is the zero address",
+          "target_label": "POOL token",
+          "pinned_block": 26452373,
+          "retained_documented_reference": "'The total supply of POOL tokens is 10 million' (docs.pooltogether.com/pooltogether/pool-token/pool-supply.md); '$POOL Ethereum 0x0cec1a9154ff802e7934fc916ed7ca50bde6844e' (docs.pooltogether.com/pooltogether/pool-token.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "privacy-pools-v1",
+      "protocol_name": "Privacy Pools V1",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x0Eb42804BF897662aF851370eaeAdcDBEC1b97ed",
+      "pacta_page_url": "https://pacta.wtf/protocols/privacy-pools-v1/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Privacy Pools V1 PoolVault proxy: upgradeable (UUPS), as documented",
+          "target_label": "Privacy Pools V1 PoolVault proxy",
+          "pinned_block": 26440048,
+          "retained_documented_reference": "'PoolVault 0x0Eb42804BF897662aF851370eaeAdcDBEC1b97ed (UUPS proxy; implementation 0x5f89cd5c3610c2ad870b1b33126d209fecdb69c7)' (docs.privacypools.com/deployments/mainnet.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "puffer-finance-pufeth",
+      "protocol_name": "Puffer Finance (pufETH)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xD9A442856C234a39a81a089C06451EBAa4306a72",
+      "pacta_page_url": "https://pacta.wtf/protocols/puffer-finance-pufeth/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Timelock delay: 7 days",
+          "target_label": "Puffer Timelock (AccessManager admin role)",
+          "pinned_block": 26425374,
+          "retained_documented_reference": "docs.puffer.fi (multisig): 'The timelock enforces that important function calls and upgrades must go through a 7-day delay before being executed.'"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "railgun",
+      "protocol_name": "RAILGUN",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xFA7093CDD9EE6932B4eb2c9e1cde7CE00B1FA4b9",
+      "pacta_page_url": "https://pacta.wtf/protocols/railgun/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Shield and unshield fees: 0.25% each",
+          "target_label": "RailgunSmartWallet (proxy)",
+          "pinned_block": 26434786,
+          "retained_documented_reference": "docs.railgun.org (deductions / helpful links): 'The smart contracts take a 0.25% deduction per shield and unshield interaction which is then sent to the \u201ctreasury address\u201d.' / 'Protocol deductions (0.25% on shield and unshield interactions) are sent directly on-chain to the treasury contract for that network.'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Delegator owner: the documented Protocol Request (voting) contract",
+          "target_label": "RAILGUN Delegator",
+          "pinned_block": 26434786,
+          "retained_documented_reference": "docs.railgun.org (helpful links): 'https://etherscan.io/address/0xc480f68a3dcc3edd82134fab45c14a0fcf1da3cc'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Protocol requests: a 30-day sponsorship window",
+          "target_label": "RAILGUN Voting",
+          "pinned_block": 26434786,
+          "retained_documented_reference": "docs.railgun.org (protocol governance): 'After submission, a 30-day Sponsorship Period begins where the request must reach a value determined by the smart contract.' / 'This must be done within 30-days of the protocol request going live or the proposal will become stale and unable to be executed.'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Upgrades and pauses: ProxyAdmin owned by the Delegator, owned by the vote",
+          "target_label": "RAILGUN ProxyAdmin",
+          "pinned_block": 26434786,
+          "retained_documented_reference": "docs.railgun.org (protocol governance): 'Any change to the smart contracts (including the governance, treasury, and voting contracts) requires the passing of a protocol request. The decentralized protocol request system is the only way in which upgrades to the RAILGUN protocol can be made.' / 'https://etherscan.io/address/0xfa7093cdd9ee6932b4eb2c9e1cde7ce00b1fa4b9'"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "re",
+      "protocol_name": "Re Protocol (reUSD / reUSDe)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x5086bf358635B81D8C47C66d1C8b9E567Db70c72",
+      "pacta_page_url": "https://pacta.wtf/protocols/re/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "reUSD and reUSDe tokens: admin and upgrades wait 48 hours",
+          "target_label": "reUSD senior-tranche stablecoin token",
+          "pinned_block": 26427612,
+          "retained_documented_reference": "docs.re.xyz (governance and access control): 'a 48-hour TimelockController holds DEFAULT_ADMIN_ROLE and UPGRADER_ROLE on the ShareToken' and 'OpenZeppelin TimelockController enforcing a 2-day (172,800 second) delay between scheduling and executing privileged actions.'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Deposit vault role admin held behind the delay; multisig lacks it",
+          "target_label": "Insurance Capital Layer deposit vault",
+          "pinned_block": 26427612,
+          "retained_documented_reference": "docs.re.xyz (ICL permissions note): 'The Safe holds DEFAULT_ADMIN_ROLE on every ICL (Ethereum reUSD and reUSDe, Avalanche, Arbitrum, Base), alongside the chain's timelock.' and '... so the Safe can grant itself ICL UPGRADER_ROLE with no delay'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Scheduling rights: one 3-of-5 multisig proposes, executes, cancels",
+          "target_label": "Re two-day OpenZeppelin delay contract",
+          "pinned_block": 26427612,
+          "retained_documented_reference": "docs.re.xyz (proposer roles): 'A Gnosis Safe ( 0x8eec10616802Ef639CA55c98ac856553fAdEfBaD) is the sole proposer, executor, and canceller on those timelocks'"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "renzo-protocol-ezeth",
+      "protocol_name": "Renzo Protocol (ezETH)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xf2F305D14DCD8aaef887E0428B3c9534795D0d60",
+      "pacta_page_url": "https://pacta.wtf/protocols/renzo-protocol-ezeth/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "DepositQueue fee parameter: 10,000 bps; effective reward fee and onward distribution are not verified",
+          "target_label": "Renzo DepositQueue",
+          "pinned_block": 26448221,
+          "retained_documented_reference": "'Renzo charges a 10% fee on rewards generated via restaking.' (docs.renzoprotocol.com/docs/products/staking-suite/ezeth)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "reserve-protocol-rtoken",
+      "protocol_name": "Reserve Protocol (eUSD RToken)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xA0d69E286B938e21CBf7E51D71F6A4c8918f482F",
+      "pacta_page_url": "https://pacta.wtf/protocols/reserve-protocol-rtoken/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Long freeze: 1 week, the documented default",
+          "target_label": "Reserve eUSD Main",
+          "pinned_block": 26431152,
+          "retained_documented_reference": "docs.reserve.org (Yield DTF advanced parameters): 'Long freeze duration (s) The number of seconds a long freeze lasts. Long freezes can be disabled by removing all addresses associated with the role. Default value: 604800 = 1 week'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Short freeze: 3 days, the documented default",
+          "target_label": "Reserve eUSD Main",
+          "pinned_block": 26431152,
+          "retained_documented_reference": "docs.reserve.org (Yield DTF advanced parameters): 'Short freeze duration (s) The number of seconds a short freeze lasts. Governance can freeze forever. Default value: 259200 = 3 days'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "RSR unstaking delay: 2 weeks; withdrawal leak 5% (documented mainnet defaults)",
+          "target_label": "Reserve eUSD StRSR",
+          "pinned_block": 26431152,
+          "retained_documented_reference": "docs.reserve.org (Yield DTF advanced parameters): 'Unstaking delay (s) The unstaking delay is the number of seconds that all RSR unstakings must be delayed in order to account for stakers trying to frontrun defaults.' 'Default value: 1209600 = 2 weeks' / 'Default value (mainnet): 5e16 = 5%'"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "resolv-usr-rlp",
+      "protocol_name": "Resolv (USR / RLP)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x66a1E37c9b0eAddca17d3662D6c05F4DECf3e110",
+      "pacta_page_url": "https://pacta.wtf/protocols/resolv-usr-rlp/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "USR Counter SERVICE_ROLE: one service account revoked since #26,403,523",
+          "target_label": "Resolv USR Counter",
+          "pinned_block": 26449594,
+          "retained_documented_reference": "'USR Counter, Ethereum 0xa27a69Ae180e202fDe5D38189a3F24Fe24E55861' (docs.resolv.xyz/litepaper/for-developers/smart-contracts)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "resupply",
+      "protocol_name": "Resupply",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xc07e000044F95655c11fda4cD37F70A94d7e0a7d",
+      "pacta_page_url": "https://pacta.wtf/protocols/resupply/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "On-chain governance: the Voter executes as Core after a 1-day delay",
+          "target_label": "Resupply Core",
+          "pinned_block": 26429396,
+          "retained_documented_reference": "docs.resupply.finance (governance voting): 'All contracts on Resupply will be owned by a main core contract with a separate voter contract that is able to execute any transactions as though it is core.'; live parameters: 'Execution delay after vote passes | 1 day', 'Voting period | 1 week', 'Quorum to pass | 30% of total weight', 'Execution deadline | 3 weeks (after creation)'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Emergency guardian role: the main multisig, through a Core-owned operator proxy",
+          "target_label": "Resupply Guardian (operator proxy)",
+          "pinned_block": 26429396,
+          "retained_documented_reference": "docs.resupply.finance (multisig and admin permissions): 'The following roles are occupied by the Resupply main multisig.' Guardian: 'Can pause the protocol in an emergency'; 'The proxies are owned by `Core` which means that upgrades can be performed only via successful governance vote.'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Main multisig: 3-of-5 signers",
+          "target_label": "Resupply Main Multisig (Safe)",
+          "pinned_block": 26429396,
+          "retained_documented_reference": "docs.resupply.finance (multisig and admin permissions): 'Multisig Members (3 of 4)' / contract addresses: 'Multisig (3-of-4) | `0xFE11a5009f2121622271e7dd0FD470264e076af6`'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Registry owner: Core (changes only through governance)",
+          "target_label": "Resupply Registry",
+          "pinned_block": 26429396,
+          "retained_documented_reference": "docs.resupply.finance (multisig and admin permissions): 'All Resupply contracts are owned by `Core`, which can authorize specific accounts (generically referred to as \"operators\") to call specified functions on protocol or non-protocol assets from the context of Core.' / contract addresses: 'Registry | `0x10101010E0C3171D894B71B3400668aF311e7D94`'"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "rocket-pool-reth",
+      "protocol_name": "Rocket Pool (rETH)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xdA1AB39e62E0A5297AF44C7064E501b0613f0D01",
+      "pacta_page_url": "https://pacta.wtf/protocols/rocket-pool-reth/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "oDAO contract upgrades wait a 1-week upgrade delay (security council veto window)",
+          "target_label": "RocketDAOProtocolSettingsSecurity",
+          "pinned_block": 26422243,
+          "retained_documented_reference": "rpips.rocketpool.net RPIP-60: 'upgrade_delay (initially set to 1 week)'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Oracle DAO proposal quorum = 51% of members",
+          "target_label": "RocketDAONodeTrustedSettingsMembers",
+          "pinned_block": 26422243,
+          "retained_documented_reference": "docs.rocketpool.net (oDAO proposals): 'it is currently set to at least **51%** of the total member pool.'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Security council members.leave.time = 28 days (RPIP-33 bound: < 14 days)",
+          "target_label": "RocketDAOProtocolSettingsSecurity",
+          "pinned_block": 26422243,
+          "retained_documented_reference": "rpips.rocketpool.net RPIP-33 parameter table, members.leave.time: 'How long a member must give notice for before manually leaving the security council' with the bound '< 14 days'"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "seamless-protocol-base",
+      "protocol_name": "Seamless Protocol (Base)",
+      "chain": "base",
+      "chain_id": 8453,
+      "primary_contract": "0xA1b5f2cc9B407177CD8a4ACF1699fa0b99955A22",
+      "pacta_page_url": "https://pacta.wtf/protocols/seamless-protocol-base/",
+      "published_doc_records": [
+        {
+          "record_chain": "base",
+          "surface": "Community Guardian Safe: docs state a 3/6 multi-sig; the Safe is 2-of-3",
+          "target_label": "Seamless Community Guardian Safe (Base)",
+          "pinned_block": 59847352,
+          "retained_documented_reference": "'The Community Guardian Multi-Sig currently has ownership over both the Governance Guardian and Protocol Guardian functions.' (raw.githubusercontent.com/seamless-protocol/gitbook/main/governance/seamless-guardians.md); '>0xA1b5f2cc9B407177CD8a4ACF1699fa0b99955A22<' (raw.githubusercontent.com/seamless-protocol/gitbook/main/technical/smart-contracts.md)"
+        }
+      ],
+      "chains": [
+        "base"
+      ]
+    },
+    {
+      "protocol_slug": "shift-defi",
+      "protocol_name": "Shift DeFi",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x4cC8D45644eCCD8cA77DBF3A8E3eE2dBf4596983",
+      "pacta_page_url": "https://pacta.wtf/protocols/shift-defi/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Shift DeFi multisig: 2-of-6 Safe, as documented",
+          "target_label": "Shift DeFi Safe",
+          "pinned_block": 26449594,
+          "retained_documented_reference": "'The Emergency & Reshuffling Multisig uses Safe v1.4.1 with a 2-of-6 signature threshold and 2 proposers.' (docs.shiftdefi.com/security/multisig-and-timelock.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "sofa-org",
+      "protocol_name": "SOFA.org",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x57B96D4aF698605563A4653D882635da59Bf11AF",
+      "pacta_page_url": "https://pacta.wtf/protocols/sofa-org/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "RCH: mint capped at MAX_SUPPLY = 37,000,000 (totalMinted)",
+          "target_label": "RCH token",
+          "pinned_block": 26453551,
+          "retained_documented_reference": "'Total Supply: Capped at 37,000,000 $RCH.' (docs.sofa.org/en/tokenomics); 'RCH 0x57B96D4aF698605563A4653D882635da59Bf11AF' (docs.sofa.org/en/developer/contracts.html)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "solv-protocol-solvbtc",
+      "protocol_name": "Solv Protocol (SolvBTC)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x7A56E1C57C7475CCf742a1832B028F0456652F97",
+      "pacta_page_url": "https://pacta.wtf/protocols/solv-protocol-solvbtc/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "SolvBTC owner() = 3-of-5 Gnosis Safe (OpenZeppelin Ownable)",
+          "target_label": "Solv SolvBTC",
+          "pinned_block": 26418060,
+          "retained_documented_reference": "docs.solv.finance/llms-full.txt: 'The permission model for updating business parameters (such as adding supported tokens, setting Oracle address, etc.) uses OpenZeppelin\u2019s Ownable implementation, with the permission address being a Gnosis Safe multi-signature address.'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "SolvBTC beacon upgrades behind a 3d TimelockController (docs: timelock 'will be added')",
+          "target_label": "Solv TimelockController",
+          "pinned_block": 26418060,
+          "retained_documented_reference": "docs.solv.finance/llms-full.txt: 'The admin privileges for upgrades are assigned to a Gnosis Safe multi-signature address ... The timelock mechanism will be added to further enhance security by introducing a delay between the upgrade proposal and execution.'"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "sommelier",
+      "protocol_name": "Sommelier",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x2Cbd27E034FEE53f79b607430dA7771B22050741",
+      "pacta_page_url": "https://pacta.wtf/protocols/sommelier/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Registry / PriceRouter: Operations Multisig via a 3-day timelock",
+          "target_label": "Sommelier Registry (Cellars V2)",
+          "pinned_block": 26455787,
+          "retained_documented_reference": "'It should be noted that a MultiSig is used to manage the Registry and PriceRouter smart contracts.' (sommelier-finance.gitbook.io/llms-full.txt)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "sonic-gateway",
+      "protocol_name": "Sonic Gateway",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xa1E2481a9CD0Cb0447EeB1cbc26F1b3fff3bec20",
+      "pacta_page_url": "https://pacta.wtf/protocols/sonic-gateway/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Fail-safe recovery: bridge declared dead after 200 days offline (docs: 14 days, immutable)",
+          "target_label": "Sonic Gateway TokenDeposit (Ethereum)",
+          "pinned_block": 26450616,
+          "retained_documented_reference": "'In the highly unlikely event that the Gateway or the Sonic chain is down for 14 consecutive days, users are able to reclaim their bridged assets on Ethereum.' (docs.soniclabs.com/llms-full.txt)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "sosovalue-basis",
+      "protocol_name": "SoSoValue Basis",
+      "chain": "base",
+      "chain_id": 8453,
+      "primary_contract": "0x624e2e7fDc8903165F64891672267AB0FCB98831",
+      "pacta_page_url": "https://pacta.wtf/protocols/sosovalue-basis/",
+      "published_doc_records": [
+        {
+          "record_chain": "base",
+          "surface": "Base SOSO: mint/burn only by the canonical L2StandardBridge",
+          "target_label": "SOSO token (Base)",
+          "pinned_block": 59699598,
+          "retained_documented_reference": "'SOSO was originally deployed as an ERC-20 token on Ethereum and subsequently made available on Base through the official Base bridge.' (sosovalue-white-paper.gitbook.io/sosovalue-whitepaper/8.-tokennomics/8.3-soso-token-cross-chain-architecture.md)"
+        }
+      ],
+      "chains": [
+        "base"
+      ]
+    },
+    {
+      "protocol_slug": "spark-sky",
+      "protocol_name": "Spark / Sky",
+      "chain": "base",
+      "chain_id": 8453,
+      "primary_contract": "0xbE286431454714F511008713973d3B053A2d38f3",
+      "pacta_page_url": "https://pacta.wtf/protocols/spark-sky/",
+      "published_doc_records": [
+        {
+          "record_chain": "base",
+          "surface": "Base sUSDC: ERC-1967 UUPS proxy (UsdcVaultL2, upgrades by wards), as documented",
+          "target_label": "Spark USDC Vault (sUSDC, Base)",
+          "pinned_block": 59903224,
+          "retained_documented_reference": "'The contract uses the ERC-1822 UUPS pattern for upgradeability and the ERC-1967 proxy storage slots standard.' (docs.spark.fi/llms-full.txt)"
+        }
+      ],
+      "chains": [
+        "base"
+      ]
+    },
+    {
+      "protocol_slug": "spectra-metavaults",
+      "protocol_name": "Spectra MetaVaults",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x16b28223b607B4D90e2eC628fdC1a0AD9Ee1f6B8",
+      "pacta_page_url": "https://pacta.wtf/protocols/spectra-metavaults/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Spectra MetaVaults TransparentUpgradeableProxy: upgradeable (proxy admin), as documented",
+          "target_label": "Spectra MetaVaults TransparentUpgradeableProxy",
+          "pinned_block": 26449594,
+          "retained_documented_reference": "'MetaVault contracts use a proxy pattern \u2014 the addresses below are the proxy addresses that users and integrators should interact with.' (dev.spectra.finance/docs/metavaults/deployed-contracts.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "ssv-network",
+      "protocol_name": "SSV Network",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xDD9BC35aE942eF0cFa76930954a156B3fF30a4E1",
+      "pacta_page_url": "https://pacta.wtf/protocols/ssv-network/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "SSVNetwork and SSVNetworkViews owner: the DAO governance multisig",
+          "target_label": "SSVNetwork (UUPS proxy)",
+          "pinned_block": 26427612,
+          "retained_documented_reference": "docs.ssv.network (governance): 'The first is execution of governance functions controlled by the governance multisig.' / smart contracts: 'SSV DAO Treasury 0xb35096b074fdb9bBac63E3AdaE0Bbde512B2E6b6'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Operator fee increases: 14-day declaration, 7-day execution, 10% cap",
+          "target_label": "SSVNetworkViews",
+          "pinned_block": 26427612,
+          "retained_documented_reference": "docs.ssv.network (operator fees): 'Between these two steps is a waiting period, called the declaration period, set by the DAO.' and 'The network also limits the percentage by which operators can increase their fee in each cycle.'"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "stader-labs-ethx",
+      "protocol_name": "Stader Labs (ETHx)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xAAfb31780e4b9c95Bc920e388f4925A874cd07AF",
+      "pacta_page_url": "https://pacta.wtf/protocols/stader-labs-ethx/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Manager Safe Quorum & 7-Day TimelockController Admin Path",
+          "target_label": "Stader Manager Safe",
+          "pinned_block": 26403676,
+          "retained_documented_reference": "staderlabs.gitbook.io/ethereum states 'The Manager multisig is a 3-of-5 and is tasked with maintaining the protocol' and specifies a 7-day minimum delay on contract upgrades."
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "stake-dao",
+      "protocol_name": "Stake DAO",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xb27afc7844988948FBd6210AeF4E1362bC2d8E6a",
+      "pacta_page_url": "https://pacta.wtf/protocols/stake-dao/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Protocol changes wait 5 days, longer than the documented 48 hours",
+          "target_label": "Stake DAO ProtocolTimelock",
+          "pinned_block": 26429396,
+          "retained_documented_reference": "docs.stakedao.org (timelock): 'Stake DAO's core contracts are protected by a governance timelock that enforces a 48-hour delay on all protocol changes.' and 'A proposer submits the operation with a minimum 48-hour delay'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Executing queued changes: permissioned (EXECUTOR_ROLE held by the governance multisig), not permissionless",
+          "target_label": "Stake DAO ProtocolTimelock",
+          "pinned_block": 26429396,
+          "retained_documented_reference": "docs.stakedao.org (timelock, role structure): Executor 'Can execute operations after delay (permissionless)'; Proposer 'Can schedule operations (governance multisig)'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "ProtocolController owner: the ProtocolTimelock",
+          "target_label": "Stake DAO ProtocolController",
+          "pinned_block": 26429396,
+          "retained_documented_reference": "docs.stakedao.org (timelock): 'The ProtocolTimelock contract owns the ProtocolController and all critical protocol parameters.' / contract addresses: 'PROTOCOL_CONTROLLER | `0x2d8BcE1FaE00a959354aCD9eBf9174337A64d4fb`'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Treasury wallet (Ethereum): a 3-of-5 multisig",
+          "target_label": "Stake DAO Treasury Safe (Ethereum)",
+          "pinned_block": 26429396,
+          "retained_documented_reference": "docs.stakedao.org (treasury): 'All wallets use a 4-of-7 multisig structure.' / 'Ethereum | `0xf930ebbd05ef8b25b1797b9b2109ddc9b0d43063`'"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "stake-link",
+      "protocol_name": "stake.link",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xb72d8F5213b3E52FAf13Aa074b03C4788e78349F",
+      "pacta_page_url": "https://pacta.wtf/protocols/stake-link/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "GovernanceTimelock delay: 48 hours",
+          "target_label": "stake.link GovernanceTimelock (owner of StakingPool, PriorityPool, WithdrawalPool)",
+          "pinned_block": 26425374,
+          "retained_documented_reference": "docs.stake.link (security and audits): '48-hour timelock. Actions executed by the multisig go through the GovernanceTimelock , which gives the community time to review pending changes.'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Gnosis Safe signer threshold: 6-of-8",
+          "target_label": "stake.link Gnosis Safe (timelock proposer / canceller, treasury)",
+          "pinned_block": 26425374,
+          "retained_documented_reference": "docs.stake.link (security and audits): '6-of-8 multisig. Critical operations and treasury funds are controlled by a Gnosis Safe . Every transaction needs six of eight signers.'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Node Operator strategy fees: SDL stakers 15%, node operators 5%",
+          "target_label": "stake.link OperatorVCS (Node Operator Pool strategy)",
+          "pinned_block": 26425374,
+          "retained_documented_reference": "docs.stake.link (FAQ): 'Fee Allocation / Node Operator Pool Strategy / Community Pool Strategy / Node Operators / 5% / 0% / SDL Stakers / 15% / 10%'"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "stakestone-stone",
+      "protocol_name": "StakeStone STONE",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x1D88713b483A8E45cfF0e5CD7c2e15E5Fab4534d",
+      "pacta_page_url": "https://pacta.wtf/protocols/stakestone-stone/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "STO (Ethereum) supply: 1,000,000,000, no mint function",
+          "target_label": "STO token",
+          "pinned_block": 26453551,
+          "retained_documented_reference": "'**Maximum Token Supply** | 1,000,000,000' (docs.stakestone.io/stakestone/additionals/tokenomics.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "stakewise-v3-oseth",
+      "protocol_name": "StakeWise V3 (osETH)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x6B5815467da09DaA7DC83Db21c9239d98Bb487b5",
+      "pacta_page_url": "https://pacta.wtf/protocols/stakewise-v3-oseth/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Sampled Keeper Oracle Quorum, osETH Fee & LTV Configuration",
+          "target_label": "StakeWise V3 Keeper",
+          "pinned_block": 26403676,
+          "retained_documented_reference": "docs.stakewise.io/docs/oracles/intro ('currently 6 of 11 Oracles'), docs/fees/intro ('5% fee on the rewards accumulated by osETH'), and docs/ostoken/how-ostoken-works ('liquidation threshold is set to 92% LTV')."
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "StakeWise V3 (osETH) multisig: 4-of-7 Safe, as documented",
+          "target_label": "StakeWise V3 (osETH) Safe",
+          "pinned_block": 26438867,
+          "retained_documented_reference": "'Rejecting a transaction requires 4 of 7 committee members to co-sign.' (docs.stakewise.io/docs/governance/treasury)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "stargate-v2",
+      "protocol_name": "Stargate V2",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xc026395860Db2d07ee33e05fE50ed7bD583189C7",
+      "pacta_page_url": "https://pacta.wtf/protocols/stargate-v2/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "V2 pool, TokenMessaging & Treasurer owner = 5-of-7 OneSig multisig; planner sets fees",
+          "target_label": "StargatePoolUSDC",
+          "pinned_block": 26421541,
+          "retained_documented_reference": "stargateprotocol.gitbook.io governance model: 'From time to time, a vote may require a change to the Stargate protocol or its treasury that requires action via multisig.'; V2 README: 'A Planner is a trusted entity that can allocate credit between chains off chain'; 'Fees within the Stargate protocol are dynamic, and are set by the AI Planning Module on a per pathway basis.'"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "steakhouse-financial-ethereum",
+      "protocol_name": "Steakhouse Financial (Ethereum)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB",
+      "pacta_page_url": "https://pacta.wtf/protocols/steakhouse-financial-ethereum/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "steakUSDC guardian: its own Aragon DAO (steakusdc-guardian.dao.eth), as announced",
+          "target_label": "Steakhouse USDC (steakUSDC) MetaMorpho vault",
+          "pinned_block": 26433001,
+          "retained_documented_reference": "Steakhouse on the Morpho forum (linked from the docs): 'The new guardians will be the following: - [steakUSDC](https://app.aragon.org/#/daos/ethereum/steakusdc-guardian.dao.eth/dashboard)' / 'Veto Mechanism: Seeking to provide depositors with even more control over their funds and curated vaults, Steakhouse introduced the Aragon DAO guardian to enable vault depositors to veto critical actions made by the curator.'"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "steakhouse-prime-usdc-base",
+      "protocol_name": "Steakhouse Prime USDC (Base)",
+      "chain": "base",
+      "chain_id": 8453,
+      "primary_contract": "0xBEEFE94c8aD530842bfE7d8B397938fFc1cb83b2",
+      "pacta_page_url": "https://pacta.wtf/protocols/steakhouse-prime-usdc-base/",
+      "published_doc_records": [
+        {
+          "record_chain": "base",
+          "surface": "Steakhouse Prime USDC (Base) timelock: 7-day minimum delay, as documented",
+          "target_label": "Steakhouse Prime USDC (Base) MetaMorphoV1_1",
+          "pinned_block": 59025642,
+          "retained_documented_reference": "'Steakhouse vaults 7-day timelocks (above the minimum, protocol-enforced 3-day timelock), forcing a 7-day delay between any proposed market into a Steakhouse vault and the ability to deploy deposited assets into the new market.' (www.steakhouse.financial/docs/risk-management/monitoring/vault-setup-and-controls)"
+        },
+        {
+          "record_chain": "base",
+          "surface": "Steakhouse Prime USDC (Base) MetaMorphoV1_1: a guardian is configured, as documented",
+          "target_label": "Steakhouse Prime USDC (Base) MetaMorphoV1_1",
+          "pinned_block": 59025642,
+          "retained_documented_reference": "'Seeking to provide depositors with even more control over their funds and curated vaults, Steakhouse introduced the Aragon DAO guardian to enable vault depositors to veto critical actions made by the curator.' (www.steakhouse.financial/docs/risk-management/monitoring/vault-setup-and-controls)"
+        }
+      ],
+      "chains": [
+        "base"
+      ]
+    },
+    {
+      "protocol_slug": "steakhouse-usdc-metamorpho-base",
+      "protocol_name": "Steakhouse USDC MetaMorpho (Base)",
+      "chain": "base",
+      "chain_id": 8453,
+      "primary_contract": "0xbeeF010f9cb27031ad51e3333f9aF9C6B1228183",
+      "pacta_page_url": "https://pacta.wtf/protocols/steakhouse-usdc-metamorpho-base/",
+      "published_doc_records": [
+        {
+          "record_chain": "base",
+          "surface": "MetaMorpho timelock() = 7d (604800s)",
+          "target_label": "Steakhouse USDC (steakUSDC) vault on Base",
+          "pinned_block": 57635450,
+          "retained_documented_reference": "steakhouse.financial/docs/llms-full.txt: 'Steakhouse vaults 7-day timelocks (above the minimum, protocol-enforced 3-day timelock)'."
+        }
+      ],
+      "chains": [
+        "base"
+      ]
+    },
+    {
+      "protocol_slug": "strata-markets",
+      "protocol_name": "Strata Markets",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x4be3749a0F6557b8fd98F3967e859DbD7C694eF4",
+      "pacta_page_url": "https://pacta.wtf/protocols/strata-markets/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Strata Markets multisig: 2-of-3 Safe, as documented",
+          "target_label": "Strata Markets Safe",
+          "pinned_block": 26441165,
+          "retained_documented_reference": "'**Operational Multisig** * 2-of-3 Gnosis Safe' (docs.strata.markets/technical-documentation/contracts-details.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "superform-v2-base",
+      "protocol_name": "Superform Core v2 (Base)",
+      "chain": "base",
+      "chain_id": 8453,
+      "primary_contract": "0x10AC0b33e1C4501CF3ec1cB1AE51ebfdbd2d4698",
+      "pacta_page_url": "https://pacta.wtf/protocols/superform-v2-base/",
+      "published_doc_records": [
+        {
+          "record_chain": "base",
+          "surface": "Primary manager change: 7-day timelock (604,800 s); interval changes 3 days",
+          "target_label": "Superform SuperVaultAggregator (Base)",
+          "pinned_block": 59653624,
+          "retained_documented_reference": "'| Primary strategist updates | 7 days |' (docs.superform.xyz/security.md); 'These addresses are the same on both Ethereum and Base.' (docs.superform.xyz/deployment-addresses.md)"
+        }
+      ],
+      "chains": [
+        "base"
+      ]
+    },
+    {
+      "protocol_slug": "superstate-ustb-uscc",
+      "protocol_name": "Superstate (USTB / USCC)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x43415eB6ff9DB7E26A15b704e7A3eDCe97d31C4e",
+      "pacta_page_url": "https://pacta.wtf/protocols/superstate-ustb-uscc/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Sampled USDC Subscription Fee & Fund Supply Alignment",
+          "target_label": "Superstate USTB",
+          "pinned_block": 26403676,
+          "retained_documented_reference": "docs.superstate.com/investors/smart-contracts.md states 'At time of writing, fees are set to 0 and only USDC is supported.'"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "sushiswap-v3",
+      "protocol_name": "SushiSwap V3",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xbACEB8eC6b9355Dfc0269C18bac9d6E2Bdc29C4F",
+      "pacta_page_url": "https://pacta.wtf/protocols/sushiswap-v3/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "V3 factory owner = V3Manager owned by the Operations Multisig (3-of-5)",
+          "target_label": "SushiSwap V3 factory (Ethereum)",
+          "pinned_block": 26454861,
+          "retained_documented_reference": "'Any changes within the core team's purview must pass the Operations Multisig with at least three signatures.' (docs.sushi.com/dao/governance); '[EvmChainId.ETHEREUM]: '0x19b3eb3af5d93b77a5619b047de0eed7115a19e7'' (raw.githubusercontent.com/sushi-labs/sushi/master/src/evm/config/features/operations-multisig.ts); 'ETHEREUM 0xbaceb8ec6b9355dfc0269c18bac9d6e2bdc29c4f' (docs.sushi.com/contracts/clamm)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "synfutures-v3",
+      "protocol_name": "SynFutures V3",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x6e15A54B5EcAc17e58daDedDbe8506a7560252F9",
+      "pacta_page_url": "https://pacta.wtf/protocols/synfutures-v3/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "$F supply: 10,000,000,000, no mint function",
+          "target_label": "SynFutures $F token",
+          "pinned_block": 26452373,
+          "retained_documented_reference": "'**Maximum Supply:** 10,000,000,000' (docs.synfutures.com/llms-full.txt)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "taiko-bridge",
+      "protocol_name": "Taiko Bridge",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x2AffADEb2ef5e1F2a7F58964ee191F1e88317ECd",
+      "pacta_page_url": "https://pacta.wtf/protocols/taiko-bridge/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Emergency Multisig: minApprovals 4 of 5 signers (docs: 6); standard 3 (docs: 5)",
+          "target_label": "Taiko DAO Emergency Multisig plugin",
+          "pinned_block": 26453551,
+          "retained_documented_reference": "'The proposal must receive 6 approvals within 14 days from Security Council members to be executable.' (dao-docs.taiko.xyz/guides/making-an-emergency-proposal); 'The proposal must receive 5 approvals within 14 days from Security Council members to move to the public stage' (dao-docs.taiko.xyz/guides/making-a-standard-proposal); '- Owner (Taiko DAO): `0x9CDf589C941ee81D75F34d3755671d614f7cf261`' (raw.githubusercontent.com/taikoxyz/taiko-mono/main/packages/protocol/deployments/mainnet-contract-logs-L1.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "tangent-finance",
+      "protocol_name": "Tangent Finance",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x214C8A1023B30032a2Eded109146658C6D6F2781",
+      "pacta_page_url": "https://pacta.wtf/protocols/tangent-finance/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Core contracts' owner() = the documented Admin (3-of-5 Safe)",
+          "target_label": "Tangent MarketCreator",
+          "pinned_block": 26453551,
+          "retained_documented_reference": "'| Admin | 0x461B62CB3A7e9Df8f800aE058AE92F855F2c27Ca |' (docs.tangent.finance/docs/faq/contracts.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "tether-usdt",
+      "protocol_name": "Tether USDT",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+      "pacta_page_url": "https://pacta.wtf/protocols/tether-usdt/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Owner: a 3-of-6 MultiSigWallet (multi-signature authorization)",
+          "target_label": "Tether USD (TetherToken)",
+          "pinned_block": 26431152,
+          "retained_documented_reference": "tether.to (FAQ): 'Tether Tokens are created by having multiple Tether private authorization keys sign and broadcast creation transactions on the specific blockchain.' and 'Tether\u2019s multi-signature (or multi-sig) model protects against a single person from authorizing Tether Tokens on their own, which would represent a single point of failure and a security risk.' / supported protocols: 'USD\u20ae contract address: https://etherscan.io/token/0xdac17f958d2ee523a2206206994597c13d831ec7'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Token live (not deprecated); blacklisting, pausing and deprecation sit with the owner multisig",
+          "target_label": "Tether USD (TetherToken)",
+          "pinned_block": 26431152,
+          "retained_documented_reference": "tether.to (terms of service): 'Tether may suspend or terminate your access to the Site or any of the Services, freeze any Tether Tokens held by you, or terminate your Tether Token Wallet'; 'blacklisting any Digital Tokens Address which holds Tether Tokens'"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "the-idols",
+      "protocol_name": "The Idols",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x9416bA76e88D873050A06e5956A3EBF10386b863",
+      "pacta_page_url": "https://pacta.wtf/protocols/the-idols/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "VIRTUE: 99,989,832.94, no mint function",
+          "target_label": "VIRTUE token",
+          "pinned_block": 26452373,
+          "retained_documented_reference": "'The $VIRTUE token is non-mintable and will have a maximum total supply of 100,000,000 tokens.' (docs.theidols.io/llms-full.txt)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "threshold-network-tbtc",
+      "protocol_name": "Threshold Network (tBTC)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x92f2d8b72a7F6a551Be60b9aa4194248E9B4913D",
+      "pacta_page_url": "https://pacta.wtf/protocols/threshold-network-tbtc/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "tBTC TimelockController 1d delay \u2014 public WalletRegistry upgradeAndCall schedule",
+          "target_label": "Threshold Council TimelockController",
+          "pinned_block": 26407707,
+          "retained_documented_reference": "docs.threshold.network contract addresses (Mainnet, tBTC application contracts) list 0x92f2d8b72a7F6a551Be60b9aa4194248E9B4913D as the tBTC 'Timelock Controller'; the docs state no delay for it. The '2-day' timelock in the Governance Process page belongs to the separate Governor Bravo Timelock Controller (0x87F005317692D05BAA4193AB0c961c69e175f45f, getMinDelay() = 172800s at the same block)."
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Timelock operation 0xb6671bbb: executed since #26,407,707; getMinDelay() still 86,400 s",
+          "target_label": "Threshold tBTC TimelockController",
+          "pinned_block": 26449594,
+          "retained_documented_reference": "'Timelock Controller 0x92f2d8b72a7F6a551Be60b9aa4194248E9B4913D' (docs.threshold.network/contract-addresses/tbtc)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "tori-finance",
+      "protocol_name": "Tori Finance",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xd0580192E98eA6CEB9c7b6191Ed2E27560911697",
+      "pacta_page_url": "https://pacta.wtf/protocols/tori-finance/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "trUSD TIMELOCK_ADMIN_ROLE: current documentation names the same 24-hour controller (0xcd3c\u2026667b) as the retained observation",
+          "target_label": "Tori trUSD",
+          "pinned_block": 26451608,
+          "retained_documented_reference": "Prior snapshot: 'It holds the Timelock Admin role on the core contracts' (docs.tori.finance/security/roles.md, captured 19 November 2026, naming 0xA952453E39F77108Ee37C1b92de593F1C59A6ef4). Tori Finance's roles page retrieved 21 November 2026 names 0xcd3c66e73abF927EAAF1238aEB5F251b4f2f667b (86,400 seconds), the controller Pacta observed; pending a fresh finalized-block chain read."
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "treehouse-tree-teth",
+      "protocol_name": "Treehouse (TREE / tETH)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x2225DAbFfC7F862c99477381E971E8B1FDaB467e",
+      "pacta_page_url": "https://pacta.wtf/protocols/treehouse-tree-teth/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "TREE token: a 5-of-7 Safe can blacklist holders with no delay; docs state a 5-day timelock on every contract",
+          "target_label": "TreehouseToken (TREE)",
+          "pinned_block": 26440048,
+          "retained_documented_reference": "'All Treehouse contracts are secured by a 5-day timelock, ensuring no critical action executes immediately and giving everyone a clear window to see and respond to upcoming updates.' (docs.treehouse.finance/protocol/tasset/security/timelock) / 'Token Contract: 0x77146784315Ba81904d654466968e3a7c196d1f3' (docs.treehouse.finance/protocol/tree-token); neither page names a blacklist or freeze role on TREE or the blacklister Safe. Pacta timelock radar brief treehouse-op-0x2f11 decoded the upgrade before it executed."
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "trueo",
+      "protocol_name": "Trueo",
+      "chain": "base",
+      "chain_id": 8453,
+      "primary_contract": "0x8175b0A1e803aC4205aE35F614315Ba801275baA",
+      "pacta_page_url": "https://pacta.wtf/protocols/trueo/",
+      "published_doc_records": [
+        {
+          "record_chain": "base",
+          "surface": "Trueo contract: upgradeable (UUPS), as documented",
+          "target_label": "Trueo contract",
+          "pinned_block": 59594105,
+          "retained_documented_reference": "'Trueo implements a modular, upgradeable architecture with dual-version support for Uniswap V3 and V4 markets, featuring:' (raw.githubusercontent.com/trueo-protocol/trueo-contracts/HEAD/README.md)"
+        }
+      ],
+      "chains": [
+        "base"
+      ]
+    },
+    {
+      "protocol_slug": "umia",
+      "protocol_name": "Umia",
+      "chain": "base",
+      "chain_id": 8453,
+      "primary_contract": "0xD0193fFAF565B6E530C1a6bbBb2FB13243f29177",
+      "pacta_page_url": "https://pacta.wtf/protocols/umia/",
+      "published_doc_records": [
+        {
+          "record_chain": "base",
+          "surface": "Umia timelock: 2-day minimum delay, as documented",
+          "target_label": "Umia timelock",
+          "pinned_block": 58956515,
+          "retained_documented_reference": "'The protocol owner is a timelock with a two-day public delay.' (umia.finance/llms-full.txt)"
+        },
+        {
+          "record_chain": "base",
+          "surface": "UmiaMarketCore proxy: upgradeable (UUPS), as documented",
+          "target_label": "UmiaMarketCore proxy",
+          "pinned_block": 58956515,
+          "retained_documented_reference": "'Our stance is that the core contracts stay upgradeable while the protocol is still being built.' (umia.finance/llms-full.txt)"
+        }
+      ],
+      "chains": [
+        "base"
+      ]
+    },
+    {
+      "protocol_slug": "uniswap-governance-timelock",
+      "protocol_name": "Uniswap V3 & Governance Timelock",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x1F98431c8aD98523631AE4a59f267346ea31F984",
+      "pacta_page_url": "https://pacta.wtf/protocols/uniswap-governance-timelock/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Quorum: 40M UNI",
+          "target_label": "Uniswap GovernorBravoDelegator",
+          "pinned_block": 26431152,
+          "retained_documented_reference": "developers.uniswap.org (governance process): 'If the proposal receives 40M UNI in favor votes and passes, the associated onchain actions are queued for anyone to execute after the timelock period ends.'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Timelock: 2 days before execution",
+          "target_label": "Uniswap Timelock",
+          "pinned_block": 26431152,
+          "retained_documented_reference": "developers.uniswap.org (governance process): '2-day timelock before execution (if passed)' / 'Duration: 2-day waiting period, 7-day voting period, 2-day timelock (if passed)'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "UniswapV3Factory owner: a fee adapter owned by the governance Timelock",
+          "target_label": "UniswapV3Factory",
+          "pinned_block": 26431152,
+          "retained_documented_reference": "developers.uniswap.org (v3 deployments): 'UniswapV3Factory 0x1F98431c8aD98523631AE4a59f267346ea31F984' / governance process: '2-day timelock before execution (if passed)'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Voting period: 40,320 blocks (~5.6 days at 12-second slots), not 7 days",
+          "target_label": "Uniswap GovernorBravoDelegator",
+          "pinned_block": 26431152,
+          "retained_documented_reference": "developers.uniswap.org (governance process): '7-day voting period for the community to vote' / 'Duration: 2-day waiting period, 7-day voting period, 2-day timelock (if passed)'"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "uniswap-v4",
+      "protocol_name": "Uniswap V4",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x000000000004444c5dc75cB358380D2e3dE08A90",
+      "pacta_page_url": "https://pacta.wtf/protocols/uniswap-v4/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Owner: the 2-day governance Timelock run by GovernorBravo",
+          "target_label": "Uniswap V4 PoolManager (Ethereum)",
+          "pinned_block": 26433001,
+          "retained_documented_reference": "developers.uniswap.org (v4 deployments, governance reference): 'Ethereum: 1 Contract Address PoolManager 0x000000000004444c5dc75cB358380D2e3dE08A90' / 'The contracts below are actively deployed on Ethereum mainnet.' / 'Timelock 0x1a9C8182C09F50C8318d769245beA52c32BE35BC' / 'Uniswap Governance has specific controls under its domain, including: Spend funds from the treasury Set and activate the protocol fee'"
+        },
+        {
+          "record_chain": "base",
+          "surface": "Base pools: fees routed to the listed Base V4FeeAdapter (chain 8453)",
+          "target_label": "Uniswap V4 PoolManager (Base)",
+          "pinned_block": 58534152,
+          "retained_documented_reference": "developers.uniswap.org (Base fee contracts): 'Base: 8453 Contract Address Deployer 0x076f84717f3601B8Cd177bb84b217A2679B38b7d TokenJar 0x9bD25e67bF390437C8fAF480AC735a27BcF6168c Releaser (OptimismBridgedResourceFirepit) 0xFf77c0ED0B6b13A20446969107E5867abc46f53a V3OpenFeeAdapter 0xaBEA76658b205696d49B5F91b2a03536cB8A3bE1 V4FeeAdapter 0xc53DD825dedBE7814562528A1A30e8e5BCbB4b55' / 'Base: 8453 Contract Address PoolManager 0x498581ff718922c3f8e6a244956af099b2652b2b' / 'Governance can update which Releaser a TokenJar uses or adjust configuration on Fee Adapters, but the core contracts themselves are immutable.'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Ethereum pools: fees routed to the listed V4FeeAdapter",
+          "target_label": "Uniswap V4 PoolManager (Ethereum)",
+          "pinned_block": 26433001,
+          "retained_documented_reference": "developers.uniswap.org (fee adapter list): 'V4FeeAdapter 0x89A5D5bF00a27D55c02951E49078a5C5771051dB' / 'Ethereum: 1 Contract Address PoolManager 0x000000000004444c5dc75cB358380D2e3dE08A90' / 'Each protocol component that generates fees (v2, v3, v4, UniswapX, Unichain, and others) routes those fees through an associated Fee Adapter contract.'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Who sets v4 protocol fees: the Timelock as owner and feeSetter",
+          "target_label": "Uniswap V4FeeAdapter (Ethereum)",
+          "pinned_block": 26433001,
+          "retained_documented_reference": "developers.uniswap.org (protocol fee overview): 'Governance can update which Releaser a TokenJar uses or adjust configuration on Fee Adapters, but the core contracts themselves are immutable.' / 'V4FeeAdapter 0x89A5D5bF00a27D55c02951E49078a5C5771051dB' / 'Timelock 0x1a9C8182C09F50C8318d769245beA52c32BE35BC'"
+        }
+      ],
+      "chains": [
+        "base",
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "vesper-v1",
+      "protocol_name": "Vesper V1",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x9520b477Aa81180E6DdC006Fc09Fb6d3eb4e807A",
+      "pacta_page_url": "https://pacta.wtf/protocols/vesper-v1/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Pool governor multisig: docs state 3 of 5 signers, the Safe is 3-of-6",
+          "target_label": "Vesper governor Safe",
+          "pinned_block": 26441165,
+          "retained_documented_reference": "'Multisig is a contract where n people vote on transaction before it gets executed. The Vesper multisig has 5 signers and requires 3 yes votes for a transaction to execute.' (docs.vesper.finance/vesper-pools-and-strategies/vespers-modular-pool-architecture)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "vetro",
+      "protocol_name": "VETRO",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xDaD503f8B9d42bb7af3AfC588358D30163e4416F",
+      "pacta_page_url": "https://pacta.wtf/protocols/vetro/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "VETRO contract: upgradeable (proxy admin), as documented",
+          "target_label": "VETRO contract",
+          "pinned_block": 26449594,
+          "retained_documented_reference": "'**Upgradeable proxy patterns** using ERC-7201 namespaced storage for safe upgrade paths' (docs.vetro.org/llms-full.txt)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "wintermute-confidential-wbtc-ethereum",
+      "protocol_name": "Wintermute Confidential WBTC (Ethereum)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x4687E45bB5518a995913a24BB2816fe2031d74D8",
+      "pacta_page_url": "https://pacta.wtf/protocols/wintermute-confidential-wbtc-ethereum/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Wintermute Confidential WBTC (Ethereum) multisig: 3-of-6 Safe, as documented",
+          "target_label": "Wintermute Confidential WBTC (Ethereum) Safe",
+          "pinned_block": 26441165,
+          "retained_documented_reference": "'| Curator | [Safe Multisig 3/6](https://etherscan.io/address/0x4687e45bb5518a995913a24bb2816fe2031d74d8) |' (armitage.wintermute.com/llms-full.txt)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "wormhole-core-ntt",
+      "protocol_name": "Wormhole Core (NTT)",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x98f3c9e6E3fAce36bAAd05FE09d375Ef1464288B",
+      "pacta_page_url": "https://pacta.wtf/protocols/wormhole-core-ntt/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Messages need 13 of the 19 guardians (guardian set 7)",
+          "target_label": "Wormhole Core (Ethereum)",
+          "pinned_block": 26434786,
+          "retained_documented_reference": "wormhole.com/docs (guardians / security): 'Once a sufficient delegate quorum is reached or once Guardians independently observe the event, signatures accumulate until the required 13-of-19 quorum is achieved.' / 'Some chains (such as Ethereum and Solana) are secured by all 19 Guardians.' / 'The Core Contract does not distinguish between chains with direct observation and delegated chains; it verifies only that a valid 13-of-19 VAA has been produced.'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Message fee: 0 (publishing is free)",
+          "target_label": "Wormhole Core (Ethereum)",
+          "pinned_block": 26434786,
+          "retained_documented_reference": "wormhole.com/docs (core contracts): 'There are no fees to publish a message except when publishing on Solana, but this is subject to change in the future.'"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "Upgrades: guardian-signed governance messages only, no admin key",
+          "target_label": "Wormhole Core (Ethereum)",
+          "pinned_block": 26434786,
+          "retained_documented_reference": "wormhole.com/docs (governance / security): 'Governance is the process through which contract upgrades happen. Guardians manually vote on governance proposals that originate inside the Guardian Network and are then submitted to ecosystem contracts.' / 'This means that governance actions are held to the same security standard as the rest of the system. A two-thirds supermajority of the Guardians is required to pass any governance action.' / 'Governance messages can target any of the various wormhole modules, including the core contracts and all currently deployed Wrapped Token Transfers (WTT) contracts. When a Guardian signs such a message, its signature implies a vote on the action in question. Once more than two-thirds of the Guardians have signed, the message and governance action are considered valid.'"
+        },
+        {
+          "record_chain": "base",
+          "surface": "Base core: the same 13-of-19 guardian quorum and governance",
+          "target_label": "Wormhole Core (Base)",
+          "pinned_block": 58641783,
+          "retained_documented_reference": "wormhole.com/docs (core contract addresses / guardians): '0xbebdb6C8ddC678FfA9f8748f85C815C556Dd8ac6' / 'The Core Contract does not distinguish between chains with direct observation and delegated chains; it verifies only that a valid 13-of-19 VAA has been produced.' / 'A two-thirds supermajority of the Guardians is required to pass any governance action.'"
+        }
+      ],
+      "chains": [
+        "base",
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "xdai-stake-bridge",
+      "protocol_name": "xDAI Stake Bridge",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x42F38ec5A75acCEc50054671233dfAC9C0E7A3F6",
+      "pacta_page_url": "https://pacta.wtf/protocols/xdai-stake-bridge/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Bridge Governor Safe: 8-of-15, owners = the 15 documented governors",
+          "target_label": "Gnosis Bridge Governor Multisig (Ethereum)",
+          "pinned_block": 26453551,
+          "retained_documented_reference": "'There are currently 15 Bridge Governors, of which 8-of-15 are required to pass a proposal.' (docs.gnosischain.com/bridges/management); '0x4aa42145Aa6Ebf72e164C9bBC74fbD3788045016' (docs.gnosischain.com/bridges/About%20Token%20Bridges/xdai-bridge)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "yearn-v3",
+      "protocol_name": "Yearn V3",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xb3bd6B2E61753C311EFbCF0111f75D29706D9a41",
+      "pacta_page_url": "https://pacta.wtf/protocols/yearn-v3/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "yChad governance Safe: 6-of-9 threshold retained; signer 0x6F2A\u2026eAD6 rotated to 0x3839\u2026a7F7 41h before pin (docs not yet updated)",
+          "target_label": "yChad Governance Safe",
+          "pinned_block": 26441165,
+          "retained_documented_reference": "'| [0x6F2A8Ee9452ba7d336b3fba03caC27f7818AeAD6](https://etherscan.io/address/0x6F2A8Ee9452ba7d336b3fba03caC27f7818AeAD6) | Mariano Conti (nanexcool.com, prev. MakerDAO) |' (raw.githubusercontent.com/yearn/yearn-devdocs/master/docs/developers/security/multisig.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "yield-basis",
+      "protocol_name": "Yield Basis",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0x01791F726B4103694969820be083196cC7c045fF",
+      "pacta_page_url": "https://pacta.wtf/protocols/yield-basis/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "YB: owner() zero; reserve + supply = 1,000,000,000",
+          "target_label": "YB token",
+          "pinned_block": 26452373,
+          "retained_documented_reference": "'reserve + totalSupply equals 1,000,000,000. Nobody can add a new minter, because the token has no owner.' (docs.yieldbasis.com/user/governance/yb-token)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "yieldnest",
+      "protocol_name": "YieldNest",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xDF51B7843817F76220C0970eF58Ba726630028eF",
+      "pacta_page_url": "https://pacta.wtf/protocols/yieldnest/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "YNSecurityCouncil (contract upgrades, role admin): 3-of-5 Safe, as documented",
+          "target_label": "YNSecurityCouncil Safe",
+          "pinned_block": 26438867,
+          "retained_documented_reference": "'YNSecurityCouncil 3/5 0xfcad670592a3b24869C0b51a6c6FDED4F95D6975' / 'Contract Upgrades, role admin.' (docs.yieldnest.finance/security/roles.md)"
+        },
+        {
+          "record_chain": "ethereum",
+          "surface": "YNDelegator (delegates the eigenpods to the operators): docs state 2-of-3, the Safe is 2-of-4",
+          "target_label": "YNDelegator Safe",
+          "pinned_block": 26438867,
+          "retained_documented_reference": "'YNDelegator 2/3 0xDF51B7843817F76220C0970eF58Ba726630028eF' / 'Delegates the EigenPods to the operators' (docs.yieldnest.finance/security/roles.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "yo-protocol",
+      "protocol_name": "YO Protocol",
+      "chain": "base",
+      "chain_id": 8453,
+      "primary_contract": "0xB4b3F5C964A360bBd7201f72a55D0c48B8aD7021",
+      "pacta_page_url": "https://pacta.wtf/protocols/yo-protocol/",
+      "published_doc_records": [
+        {
+          "record_chain": "base",
+          "surface": "Approval Registry owner: the Admin Multisig directly, not the 48-hour timelock",
+          "target_label": "YoApprovalRegistry",
+          "pinned_block": 58315414,
+          "retained_documented_reference": "docs.yo.xyz (YO V2 Security Framework): 'Approval Registry: Onchain, timelocked caps on how much of each asset a vault may approve to each contract' and 'Every path a dollar can take is written into immutable adapters and timelocked registries'"
+        },
+        {
+          "record_chain": "base",
+          "surface": "Upgrade timelock: 48 hours, scheduled by the 4-of-6 Admin Multisig",
+          "target_label": "YO Timelock",
+          "pinned_block": 58315414,
+          "retained_documented_reference": "docs.yo.xyz (YO V2 Security Framework): '... with a mandatory 48-hour delay and sign-off from a 4-of-6 multi-sig of geographically distributed signers.' / contract addresses: 'YO Timelock 0x38cE5e45D0f5d03E83863bb19B3b1A272C186F48 EVMs Authority that gates contracts upgrades behind a 48 hr timelock.'"
+        },
+        {
+          "record_chain": "base",
+          "surface": "yoETH and yoUSD upgrades: ProxyAdmins owned by the YO Timelock",
+          "target_label": "yoETH ProxyAdmin",
+          "pinned_block": 58315414,
+          "retained_documented_reference": "docs.yo.xyz (contract addresses): 'YO Timelock 0x38cE5e45D0f5d03E83863bb19B3b1A272C186F48 EVMs Authority that gates contracts upgrades behind a 48 hr timelock.' and 'YO Admin Multisig 0x67b6F699F1c8040414032a3C2C88a54db144FCd2 EVMs Overall manager for all yoVaults, including contract upgrades, and whitelisting new protocols and pools.'"
+        }
+      ],
+      "chains": [
+        "base"
+      ]
+    },
+    {
+      "protocol_slug": "zama",
+      "protocol_name": "Zama",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xA12CC123ba206d4031D1c7f6223D1C2Ec249f4f3",
+      "pacta_page_url": "https://pacta.wtf/protocols/zama/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "ZAMA token: not a proxy, no upgrade function",
+          "target_label": "ZAMA token",
+          "pinned_block": 26452373,
+          "retained_documented_reference": "'**Some contracts cannot be upgraded**: $ZAMA token' (docs.zama.org/protocol/protocol-apps/governance/governance.md); '| Zama Token       | [`0xA12CC123ba206d4031D1c7f6223D1C2Ec249f4f3`]' (docs.zama.org/protocol/protocol-apps/addresses/mainnet/ethereum.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    },
+    {
+      "protocol_slug": "zircuit-staking",
+      "protocol_name": "Zircuit Staking",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "primary_contract": "0xC463EaC02572CC964D43D2414023E2c6B62bAF38",
+      "pacta_page_url": "https://pacta.wtf/protocols/zircuit-staking/",
+      "published_doc_records": [
+        {
+          "record_chain": "ethereum",
+          "surface": "Zircuit Staking multisig: docs state 6-of-8, the Safe is 4-of-6",
+          "target_label": "Zircuit Staking Safe",
+          "pinned_block": 26441165,
+          "retained_documented_reference": "'`6/8` means at least six out of eight owners need to sign the message. * Multisig 1: `6/8`' (docs.zircuit.com/info/security/privileged-roles.md)"
+        }
+      ],
+      "chains": [
+        "ethereum"
+      ]
+    }
+  ]
+}
