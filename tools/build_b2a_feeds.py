@@ -18,6 +18,13 @@ import os
 import re
 import sys
 
+
+def _json_file(*a, **k):
+    """json.load on a file that is closed straight away (no ResourceWarning)."""
+    with open(*a, **k) as fh:
+        return json.load(fh)
+
+
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import onboarding_render as OR  # noqa: E402
 
@@ -48,8 +55,8 @@ BOUNTIES_URL = "https://pacta.wtf/bounties/"
 BOUNTIES_DOC = ("Bounties ($100): Pacta Chain-Feed Mismatch Challenge, 4 × $25 USDC = $100 USDC hard cap, 7-day sprint Nov 15 – Nov 22, 2026: "
                 "a verified on-chain control-plane parameter_delta on an unindexed protocol, or live drift on an indexed one, submitted as a PR to "
                 "Fractal-Neurons/pacta. Paid in USDC on Base Mainnet after maintainer merge (not pre-escrowed): " + BOUNTIES_URL)
-_W2 = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "bounty_wave2.json")))
-_W3 = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "bounty_wave3.json")))
+_W2 = _json_file(os.path.join(os.path.dirname(os.path.abspath(__file__)), "bounty_wave2.json"))
+_W3 = _json_file(os.path.join(os.path.dirname(os.path.abspath(__file__)), "bounty_wave3.json"))
 _W2_TVL = {k: f"${v['minTvlUsd'] // 1_000_000}M" for k, v in _W2["categories"].items() if v["minTvlUsd"]}
 LEADERBOARD_URL = "https://pacta.wtf/leaderboard/"
 COMMUNITY_URL, COMMUNITY_QA_URL = _W3["communityUrl"], _W3["communityQaUrl"]
@@ -249,7 +256,7 @@ def proposals(idx, onb):
 def _catalog_counts():
     """Published protocol pages / briefs, read from the committed input feeds (the same sources build_lookup.py uses), so the
     agent docs never carry a stale count: protocols = index.json Sprint protocols + rpc-pinned.json protocols."""
-    rd = lambda n: json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "docs", "api", "v1", n), encoding="utf-8"))
+    rd = lambda n: _json_file(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "docs", "api", "v1", n), encoding="utf-8")
     eas = len({e["protocol"] for e in rd("index.json")["entries"]})
     rpc = len({e["slug"] for e in rd("rpc-pinned.json")["entries"]})
     return {"protocols": eas + rpc, "eas": eas, "rpc": rpc, "briefs": len(rd("onboarding.json")["briefs"]) + len(rd("radar.json")["items"])}

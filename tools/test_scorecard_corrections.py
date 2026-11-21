@@ -15,8 +15,18 @@ import control_diff as CD  # noqa: E402
 import build_site as BS  # noqa: E402
 
 
+def _read(*a, **k):
+    with open(*a, **k) as fh:
+        return fh.read()
+
+
+def _load(*a, **k):
+    with open(*a, **k) as fh:
+        return json.load(fh)
+
+
 def j(*p):
-    return json.load(open(os.path.join(ROOT, "docs", *p), encoding="utf-8"))
+    return _load(os.path.join(ROOT, "docs", *p), encoding="utf-8")
 
 
 CARDS = {c["slug"]: c for c in j("api", "v1", "scorecards.json")["protocols"]}
@@ -51,10 +61,10 @@ class Grades(unittest.TestCase):
             self.assertEqual(c["grade"], "unresolved", s)
             parity = next(f for f in c["factors"] if f["key"] == "parity")
             self.assertEqual(parity["state"], "n", s)                     # hollow: never weak, never strong
-            svg = open(os.path.join(ROOT, "docs", "badges", f"{s}.svg"), encoding="utf-8").read()
+            svg = _read(os.path.join(ROOT, "docs", "badges", f"{s}.svg"), encoding="utf-8")
             self.assertNotIn("Parameter Delta", svg, s)
             self.assertNotIn("Aligned", svg, s)
-            page = open(os.path.join(ROOT, "docs", "protocols", s, "index.html"), encoding="utf-8").read()
+            page = _read(os.path.join(ROOT, "docs", "protocols", s, "index.html"), encoding="utf-8")
             self.assertNotIn('<span class="badge delta">', page, s)
             self.assertNotIn('data-cta="seal_wd"', page, s)
         self.assertEqual(CARDS["tori-finance"]["grade"], "docs_updated")      # v6 A8: its own first-class status
@@ -66,14 +76,14 @@ class Grades(unittest.TestCase):
         parity = next(f for f in c["factors"] if f["key"] == "parity")
         self.assertEqual(parity["state"], "n")
         self.assertIn("re-checked after 72 hours", parity["value"])
-        svg = open(os.path.join(ROOT, "docs", "badges", "yearn-v3.svg"), encoding="utf-8").read()
+        svg = _read(os.path.join(ROOT, "docs", "badges", "yearn-v3.svg"), encoding="utf-8")
         self.assertIn("Changed Recently · Re-Check Pending", svg)
         self.assertNotIn("Parameter Delta", svg)
-        page = open(os.path.join(ROOT, "docs", "protocols", "yearn-v3", "index.html"), encoding="utf-8").read()
+        page = _read(os.path.join(ROOT, "docs", "protocols", "yearn-v3", "index.html"), encoding="utf-8")
         self.assertNotIn('<span class="badge delta">', page)
         self.assertNotIn('data-cta="seal_wd"', page)
         self.assertIn("re-checked after 72 hours", page)
-        meth = open(os.path.join(ROOT, "docs", "methodology", "index.html"), encoding="utf-8").read()
+        meth = _read(os.path.join(ROOT, "docs", "methodology", "index.html"), encoding="utf-8")
         self.assertIn(CORR.recent_change_rule(), meth)
 
     def test_neutral_protocols_never_show_a_delta_status_anywhere(self):
@@ -97,10 +107,10 @@ class Breakdown(unittest.TestCase):
     def test_no_adverse_claim_on_home_radar_scorecards_scan_curators(self):
         for page in (("index.html",), ("radar", "index.html"), ("scorecards", "index.html"), ("scan", "index.html"),
                      ("curators", "index.html"), ("miniapp", "index.html")):
-            t = open(os.path.join(ROOT, "docs", *page), encoding="utf-8").read()
+            t = _read(os.path.join(ROOT, "docs", *page), encoding="utf-8")
             for bad in ("56 adverse", "Adverse: chain looser than docs", "verified adverse", "Verified Adverse", "ADVERSE DELTA", "ADVERSE GAP"):
                 self.assertNotIn(bad, t, (page, bad))
-        radar = open(os.path.join(ROOT, "docs", "radar", "index.html"), encoding="utf-8").read()
+        radar = _read(os.path.join(ROOT, "docs", "radar", "index.html"), encoding="utf-8")
         self.assertIn(CORR.breakdown_text(), radar)
 
 
@@ -122,11 +132,11 @@ class Polish(unittest.TestCase):
         t = "docs.obol.org (token distribution; OBOL token): 'The total supply is capped at 500 million tokens.' / more"
         self.assertIn("capped at 500 million tokens", CD.first_sentence(t))
         self.assertEqual(CD.first_sentence("A b; c d."), "A b;")
-        obol = open(os.path.join(ROOT, "docs", "protocols", "obol-network", "index.html"), encoding="utf-8").read()
+        obol = _read(os.path.join(ROOT, "docs", "protocols", "obol-network", "index.html"), encoding="utf-8")
         self.assertIn("The total supply is capped at 500 million tokens.", obol)
 
     def test_upshift_lead_headline_sits_above_its_scope_sentence(self):
-        page = open(os.path.join(ROOT, "docs", "protocols", "upshift", "index.html"), encoding="utf-8").read()
+        page = _read(os.path.join(ROOT, "docs", "protocols", "upshift", "index.html"), encoding="utf-8")
         lead = page.find("<strong>Vault ProxyAdmin multisig: docs state generally 4 of 6, the Safe is 2-of-3</strong> "
                          '<span class="wd-block mono">(#26,441,165)</span>')
         self.assertGreater(lead, 0)
@@ -137,7 +147,7 @@ NEUTRAL7 = ["concrete", "lagoon", "renzo-protocol-ezeth", "whales-market", "meta
 
 
 def page(slug):
-    return open(os.path.join(ROOT, "docs", "protocols", slug, "index.html"), encoding="utf-8").read()
+    return _read(os.path.join(ROOT, "docs", "protocols", slug, "index.html"), encoding="utf-8")
 
 
 class V4(unittest.TestCase):
@@ -176,7 +186,7 @@ class V4(unittest.TestCase):
         idx = {e["id"]: e for e in j("api", "v1", "index.json")["entries"]}
         import re
         for s in CARDS:
-            t = open(os.path.join(ROOT, "docs", "protocols", s, "index.html"), encoding="utf-8").read()
+            t = _read(os.path.join(ROOT, "docs", "protocols", s, "index.html"), encoding="utf-8")
             box = re.search(r'data-what-differs>.*?</(?:section|div)>', t, re.S)
             if box and "Matched" in box.group(0):
                 self.assertIn("data-wd-matched", box.group(0), s)
@@ -190,7 +200,7 @@ class V4(unittest.TestCase):
         idx = {e["id"]: e for e in j("api", "v1", "index.json")["entries"]}
         feed = {i["slug"]: i for i in j("api", "v1", "x-feed.json")["items"] if i["kind"] != "radar_timelock"}
         reg = CORR.data()["protocols"]
-        self.assertEqual(len(reg), 25)
+        self.assertEqual(len(reg), 28)   # v7: cian-yield-layer and pickle carry scoped timelock rows; v8: bedrock-unibtc emergency
         for s, c in reg.items():
             r = idx[c["leadRecord"]]
             ev = CARDS[s]["evidence"]
@@ -209,14 +219,14 @@ class V4(unittest.TestCase):
         self.assertEqual(CARDS["yearn-v3"]["subtitle"], "Changed on chain 41h before pin (16 Nov 2026); 72h window elapsed — pending fresh chain and docs re-read")
         self.assertEqual(CARDS["yearn-v3"]["grade"], "recent_change")
         self.assertIn("never reinstates Delta", j("api", "v1", "scorecards.json")["recentChangeRule"])
-        meth = open(os.path.join(ROOT, "docs", "methodology", "index.html"), encoding="utf-8").read()
+        meth = _read(os.path.join(ROOT, "docs", "methodology", "index.html"), encoding="utf-8")
         self.assertIn("never reinstates Delta", meth)
 
     def test_6_no_lending_vault_proxy_anywhere(self):
         import glob
         hits = [f for f in glob.glob(os.path.join(ROOT, "docs", "**", "*"), recursive=True)
                 if os.path.isfile(f) and f.endswith((".html", ".json", ".txt", ".xml", ".svg", ".js")) and
-                "lending vault proxy" in open(f, encoding="utf-8", errors="ignore").read().lower()]
+                "lending vault proxy" in _read(f, encoding="utf-8", errors="ignore").lower()]
         self.assertEqual(hits, [])
 
     def test_7_clearance_states_free_self_correction(self):
@@ -226,7 +236,7 @@ class V4(unittest.TestCase):
 
     def test_8_bounties_page_matches_base_apart_from_asset_keys(self):
         # merged candidate (Item 5): /bounties/ deliberately changes from the base: Wave 3 settled in full, 8 public Base payouts
-        now = open(os.path.join(ROOT, "docs", "bounties", "index.html"), encoding="utf-8").read()
+        now = _read(os.path.join(ROOT, "docs", "bounties", "index.html"), encoding="utf-8")
         self.assertEqual(now.count('<span data-slot="badge" data-variant="neutral">Paid on Base</span>'), 8)
         self.assertIn("settled in full on 21 Nov 2026 ($70.00 USDC paid on Base across 8 verified dossiers", now)
         for bad in ("[Wave 3:", "top-up", "in settlement", "verified adverse"):
@@ -254,7 +264,7 @@ class V5(unittest.TestCase):
         import glob
         hits = [f for f in glob.glob(os.path.join(ROOT, "docs", "**", "*"), recursive=True)
                 if os.path.isfile(f) and f.endswith((".html", ".json", ".txt", ".xml", ".js")) and
-                "timelock the documentation does not name" in open(f, encoding="utf-8", errors="ignore").read()]
+                "timelock the documentation does not name" in _read(f, encoding="utf-8", errors="ignore")]
         self.assertEqual(hits, [])
         self.assertIn("At the retained pin, trUSD used a different 24-hour controller from the 19 November documentation snapshot; "
                       "the roles page retrieved 21 November now names that controller, pending a fresh chain read.", page("tori-finance"))
@@ -302,18 +312,18 @@ class V6(unittest.TestCase):
             self.assertTrue(all(CARDS[s].get("deltaSubcategory") == k for s in members), k)
         self.assertEqual(CORR.breakdown_text(), RULINGS["homeRadarSentence"])
         for page_ in (("index.html",), ("radar", "index.html"), ("scorecards", "index.html")):
-            self.assertIn(CORR.breakdown_text(), visible(open(os.path.join(ROOT, "docs", *page_), encoding="utf-8").read()), page_)
+            self.assertIn(CORR.breakdown_text(), visible(_read(os.path.join(ROOT, "docs", *page_), encoding="utf-8")), page_)
 
     def test_c13_tabs_equal_row_counts(self):
         import re
         want = {"delta": 43, "recent_change": 1, "docs_updated": 1, "unresolved": 11, "protective": 7, "aligned": 126, "observed": 127}
-        hub = open(os.path.join(ROOT, "docs", "protocols", "index.html"), encoding="utf-8").read()
+        hub = _read(os.path.join(ROOT, "docs", "protocols", "index.html"), encoding="utf-8")
         rows = Counter_(re.findall(r'<tr data-ptier="([a-z_]+)"', hub))
         tabs = {k: int(n) for k, n in re.findall(r'data-pfilter-status="([a-z_]+)"[^>]*>[^<]+ <span class="num">\((\d+)\)', hub) if k != "all"}
         self.assertEqual(tabs, want)
         self.assertEqual(dict(rows), want)
         for page_ in (("index.html",), ("scorecards", "index.html")):
-            t = open(os.path.join(ROOT, "docs", *page_), encoding="utf-8").read()
+            t = _read(os.path.join(ROOT, "docs", *page_), encoding="utf-8")
             got = {k: int(n) for k, n in re.findall(r'data-sc-f="([a-z_]+)"[^>]*>[^<]+ <span class="num">\((\d+)\)', t) if k != "all"}
             self.assertEqual(got, want, page_)
         for label in ("Deltas (43)", "Changed recently (1)", "Docs updated (1)", "Unresolved (11)"):
@@ -327,7 +337,7 @@ class V6(unittest.TestCase):
             for bad in ('id="seal-cta"', "Fixed this gap?", "Book $99 seal", '<span class="badge delta">', 'class="grade g-delta"',
                         "Delta: docs and chain differ", "Control-plane badge: Parameter Delta"):
                 self.assertNotIn(bad, t, (s, bad))
-            svg = open(os.path.join(ROOT, "docs", "badges", f"{s}.svg"), encoding="utf-8").read()
+            svg = _read(os.path.join(ROOT, "docs", "badges", f"{s}.svg"), encoding="utf-8")
             self.assertNotIn("Parameter Delta", svg, s)
         for s in ("yo-protocol", "infinifi", "hakka-finance", "taiko-bridge", "odyssey-finance", "seamless-protocol-base"):
             w = RULINGS_WORDING[s]
@@ -337,7 +347,7 @@ class V6(unittest.TestCase):
     def test_c13_no_stale_counts(self):
         for page_ in (("index.html",), ("radar", "index.html"), ("scorecards", "index.html"), ("scan", "index.html"),
                       ("curators", "index.html"), ("methodology", "index.html"), ("miniapp", "index.html")):
-            v = visible(open(os.path.join(ROOT, "docs", *page_), encoding="utf-8").read())
+            v = visible(_read(os.path.join(ROOT, "docs", *page_), encoding="utf-8"))
             for bad in ("17 real differences", "13 bookkeeping", "10 unresolved", "Unresolved (6)", "Deltas (49)", "49 Deltas"):
                 self.assertNotIn(bad, v, (page_, bad))
 
@@ -413,7 +423,7 @@ class V6(unittest.TestCase):
         self.assertIn("Docs updated", t)
         self.assertNotIn("Resolved by a documentation change", t)
         for f in glob.glob(os.path.join(ROOT, "docs", "protocols", "*", "index.html")):
-            v = visible(open(f, encoding="utf-8").read())
+            v = visible(_read(f, encoding="utf-8"))
             self.assertNotIn("Evidence: tori-trusd", v, f)
             self.assertNotIn("undocumented-timelock", v, f)
 
@@ -431,7 +441,7 @@ class V6(unittest.TestCase):
                 self.assertFalse(unclosed(txt), (s, txt))
                 self.assertNotRegex(txt, r"docs say .* · chain says")
                 self.assertIsNone(re.search(r"(?<![0-9A-Fa-fx])\d{18,}", txt), (s, txt))
-            t = open(os.path.join(ROOT, "docs", "protocols", s, "index.html"), encoding="utf-8").read()
+            t = _read(os.path.join(ROOT, "docs", "protocols", s, "index.html"), encoding="utf-8")
             i = t.find("data-what-differs")
             if i >= 0:
                 lead = visible(t[i:t.find("</section>", i)])
@@ -441,7 +451,7 @@ class V6(unittest.TestCase):
         import glob
         import re
         for f in glob.glob(os.path.join(ROOT, "docs", "**", "*.html"), recursive=True):
-            v = visible(open(f, encoding="utf-8").read())
+            v = visible(_read(f, encoding="utf-8"))
             self.assertIsNone(re.search(r"\*\*[^*\s][^*]*\*\*", v), f)
             self.assertNotIn("$5/9$", v, f)
 
@@ -453,7 +463,7 @@ class V6(unittest.TestCase):
 
     # ---- E16–E18
     def test_e16_home_showcase(self):
-        home = open(os.path.join(ROOT, "docs", "index.html"), encoding="utf-8").read()
+        home = _read(os.path.join(ROOT, "docs", "index.html"), encoding="utf-8")
         self.assertIn('data-pc-name>Usual Money (USD0 / USD0++)<', home)
         self.assertIn("0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2", home)
         self.assertNotIn('data-pf-slug="yo-protocol"', home)
@@ -462,30 +472,292 @@ class V6(unittest.TestCase):
     def test_e17_ethena(self):
         w = RULINGS_WORDING["ethena-usde-susde"]
         self.assertEqual(CARDS["ethena-usde-susde"]["finding"], f'{w["headline"]} (#26,401,638)')
-        home = open(os.path.join(ROOT, "docs", "index.html"), encoding="utf-8").read()
+        home = _read(os.path.join(ROOT, "docs", "index.html"), encoding="utf-8")
         self.assertNotIn(">Timelock delay:", home)
         self.assertNotIn("Timelock delay: docs", home)
 
     def test_e18_layout_and_footnote(self):
         import glob
-        css = open(os.path.join(ROOT, "docs", "styles.css"), encoding="utf-8").read()
-        home = open(os.path.join(ROOT, "docs", "index.html"), encoding="utf-8").read()
-        # merged candidate: Phase A B1 (a closed item to preserve) keeps the hero placeholder at 30 characters or fewer
-        ph = re.search(r'id="hero-q"[^>]*placeholder="([^"]*)"|placeholder="([^"]*)"[^>]*id="hero-q"', home)
-        ph_ = (ph.group(1) or ph.group(2)) if ph else re.search(r'placeholder="(Aave, Lido or 0x address)"', home).group(1)
-        self.assertLessEqual(len(ph_), 30)
+        css = _read(os.path.join(ROOT, "docs", "styles.css"), encoding="utf-8")
+        home = _read(os.path.join(ROOT, "docs", "index.html"), encoding="utf-8")
+        self.assertIn('placeholder="Protocol or 0x…"', home)       # v8 G3 supersedes the v6 / v7 wording
         self.assertIn('.js #how-it-works [data-tabs-stable] > [data-slot="tabs-content"][data-inactive] { display: none; }', css)
         self.assertIn("overflow-wrap: break-word; word-break: normal;", css)
         self.assertNotIn("table.radar .meta { overflow-wrap: anywhere", css)
-        self.assertIn('<span class="lb-lead"><span class="dot live"', open(os.path.join(ROOT, "docs", "radar", "index.html"), encoding="utf-8").read())
+        self.assertIn('<span class="lb-lead"><span class="dot live"', _read(os.path.join(ROOT, "docs", "radar", "index.html"), encoding="utf-8"))
         self.assertIn(".memo-meta dd .sep { display: none; }", css)
         n_rated = 0
         for f in glob.glob(os.path.join(ROOT, "docs", "protocols", "*", "index.html")):
             s = f.split(os.sep)[-2]
-            has = "parity is <i>uncompared</i> for Observed protocols" in open(f, encoding="utf-8").read()   # merged candidate (Item 11): Observed
+            has = "parity is <i>uncompared</i> for Observed protocols" in _read(f, encoding="utf-8")   # merged candidate (Item 11): Observed
             self.assertEqual(has, CARDS[s]["grade"] == "observed", s)
             n_rated += CARDS[s]["grade"] != "observed"
         self.assertEqual(n_rated, 189)
+
+
+
+class V7(unittest.TestCase):
+    def test_f1_fx_display_title(self):
+        import glob
+        want = "V2 Router (Diamond) owner: docs put queued transactions behind a 3-day timelock (oracle updates excepted); owner() is the 6-of-9 Safe"
+        t = page("f-x-protocol-v2")
+        self.assertIn(f"<h2>{want}</h2>", t.replace("&#x27;", "'"))
+        hits = [f for f in glob.glob(os.path.join(ROOT, "docs", "**", "*"), recursive=True)
+                if os.path.isfile(f) and f.endswith((".html", ".json", ".txt")) and
+                "docs put every transaction behind a 3-day timelock" in _read(f, encoding="utf-8", errors="ignore")]
+        self.assertEqual(hits, [])
+
+    def test_f2_no_record_citations_or_ids_in_visible_prose(self):
+        import glob
+        import re
+        import html as H
+        ids = {e["id"] for e in j("api", "v1", "index.json")["entries"]} | {"tori-finance-control-plane"}
+        id_re = re.compile(r"(?<![a-z0-9-])(" + "|".join(sorted(map(re.escape, ids), key=len, reverse=True)) + r")(?![a-z0-9-])")
+        for f in glob.glob(os.path.join(ROOT, "docs", "**", "*.html"), recursive=True):
+            t = re.sub(r"<script.*?</script>|<style.*?</style>|<code.*?</code>|<pre.*?</pre>", " ", _read(f, encoding="utf-8"), flags=re.S)
+            v = H.unescape(re.sub(r"<[^>]+>", " ", t))
+            self.assertIsNone(re.search(r"\(record\s+[a-z0-9_-]+\)", v), f)
+            self.assertIsNone(id_re.search(v), f)
+        # the attested record text itself is unchanged (the citation is stripped only for display)
+        cap = next(e for e in j("api", "v1", "index.json")["entries"] if "(record cap-1d-timelock-min-delay-s20)" in e["onchain_observed"])
+        self.assertTrue(cap)
+
+    def _f(self, s, k):
+        return next(f for f in CARDS[s]["factors"] if f["key"] == k)
+
+    def test_f3_no_strong_freeze_from_zero_guardian_or_canceller(self):
+        e = self._f("metamorpho-re7-weth-vs-re7-usdt", "emergency")
+        self.assertEqual((e["state"], e["value"], e["evidenceRecordId"]),
+                         ("n", "Re7 WETH has no guardian set (0x0); Re7 USDT assigns an Aragon guardian", "metamorpho-re7-weth-guardian-parity"))
+        e = self._f("seamless-protocol-base", "emergency")
+        self.assertEqual((e["state"], e["value"], e["evidenceRecordId"]),
+                         ("n", "2-of-3 Safe holds timelock CANCELLER_ROLE; pause / freeze binding not in the published records",
+                          "seamless-community-guardian-safe-2-of-3-s35"))
+        # across all 56 reviewed protocols, a Strong freeze rating never rests on an unset guardian or a CANCELLER_ROLE-only record
+        import re
+        idx = {x["id"]: x for x in j("api", "v1", "index.json")["entries"]}
+        for s in RULINGS["partition"]:
+            f = self._f(s, "emergency")
+            if f["state"] == "g" and f.get("evidenceRecordId"):
+                t = idx[f["evidenceRecordId"]]["onchain_observed"]
+                self.assertIsNone(re.search(r"guardian\(\)\s*=\s*0x0{40}\b", t), s)
+                self.assertFalse("CANCELLER_ROLE" in t and not re.search(r"pause|freez|blacklist", t, re.I), s)
+
+    def test_f4_no_floor_from_an_unattached_timelock(self):
+        t = self._f("cian-yield-layer", "timelock")
+        self.assertEqual((t["state"], t["value"], t["evidenceRecordId"]),
+                         ("a", "No timelock in the sampled ownership path (3-of-4 Safe direct; listed 1d TimeLock not wired)",
+                          "cian-yield-layer-allocation-no-timelock-s31"))
+        t = self._f("pickle", "timelock")
+        self.assertEqual((t["state"], t["value"], t["evidenceRecordId"]),
+                         ("a", "No timelock in the sampled MasterChef path (2-of-6 Safe direct; listed 24h Timelock does not own MasterChef)",
+                          "pickle-masterchef-owner-safe-no-timelock-s32"))
+        t = self._f("infinifi", "timelock")
+        self.assertEqual((t["state"], t["value"], t["evidenceRecordId"], t["evidenceCaption"]),
+                         ("b", "Long governance timelock: 7d; Short timelock: 1d (per-surface wiring unverified)", "infinifi-long-timelock-7d-s20",
+                          "Long governance timelock delay: 7 days (Short timelock: 1 day) — Ethereum block #26,425,374"))
+        # no reviewed protocol's positive timelock floor is cited from a record sentence saying the timelock is not on the path
+        import re
+        un = re.compile(r"\bowns neither\b|\bdoes not own\b|\bis not the [\w' ()-]*?owner\b|\bnot in the (?:\w+ )*path\b|\bnot wired\b", re.I)
+        for s in RULINGS["partition"]:
+            f = self._f(s, "timelock")
+            if f["state"] in ("g", "b") and f.get("evidence"):
+                self.assertIsNone(un.search(f["evidence"]), s)
+
+    def test_f5_curator_matrix(self):
+        from collections import Counter
+        m = _load(os.path.join(ROOT, "data", "curator-exposure-matrix.json"), encoding="utf-8")
+        rows = m["all_55_verified_adverse_gaps"]
+        self.assertEqual(len(rows), 56)
+        self.assertEqual(sorted(r["slug"] for r in rows), sorted(RULINGS["partition"]))
+        self.assertEqual(Counter(r["grade"] for r in rows), Counter({"DELTA": 43, "UNRESOLVED": 11, "CHANGED RECENTLY": 1, "DOCS UPDATED": 1}))
+        self.assertEqual(m["all_56_reviewed_comparisons"], rows)
+        raw = json.dumps(m, ensure_ascii=False)
+        cur = _read(os.path.join(ROOT, "docs", "curators", "index.html"), encoding="utf-8")
+        for txt in (raw, cur):
+            self.assertNotIn("Seamless Base (DELTA", txt)
+            self.assertNotIn("yearn-v3-op-0x2a14", txt)
+        self.assertIn("Seamless Base (UNRESOLVED: 2-of-3 Guardian Safe; retained 3-of-6 docs not verified)", raw)
+
+        def walk(x):
+            if isinstance(x, dict):
+                h = x.get("clinical_brief_hook")
+                if isinstance(h, str) and x.get("grade") != "DELTA":
+                    for bad in ("delta", "seal", "re-verification"):
+                        self.assertNotIn(bad, h.lower(), x.get("slug"))
+                for v in x.values():
+                    walk(v)
+            elif isinstance(x, list):
+                for v in x:
+                    walk(v)
+        walk(m)
+
+    def test_f6_placeholder_and_radar_wrap(self):
+        home = _read(os.path.join(ROOT, "docs", "index.html"), encoding="utf-8")
+        self.assertIn('placeholder="Protocol or 0x…"', home)            # v8 G3 supersedes the v7 wording
+        radar = _read(os.path.join(ROOT, "docs", "radar", "index.html"), encoding="utf-8")
+        self.assertIn("EtherfiL1SyncPoolETH.<wbr>setDelegate(<wbr>EtherFiTimelock)", radar)
+        self.assertNotIn("EtherFiTimelo<wbr>", radar)
+
+
+class V8(unittest.TestCase):
+    def _rec(self, rid):
+        return next(e for e in j("api", "v1", "index.json")["entries"] if e["id"] == rid)
+
+    def test_g1_seamless_record_alone_never_rates_freeze(self):
+        import scorecard as SC
+        f = next(x for x in SC.factors([self._rec("seamless-community-guardian-safe-2-of-3-s35")], True, "unresolved") if x["key"] == "emergency")
+        self.assertEqual(f["state"], "n")                         # no controller facts, no post-hoc override
+        e = next(x for x in CARDS["seamless-protocol-base"]["factors"] if x["key"] == "emergency")
+        self.assertEqual((e["state"], e["value"]), ("n", "2-of-3 Safe holds timelock CANCELLER_ROLE; pause / freeze binding not in the published records"))
+
+    def test_g2_infinifi_short_timelock_suffix(self):
+        import glob
+        rec = self._rec("infinifi-long-timelock-7d-s20")["onchain_observed"]
+        self.assertIn("0x4B174afbeD7b98BA01F50E36109EEE5e6d327c32", rec)
+        ev = next(x for x in CARDS["infinifi"]["factors"] if x["key"] == "timelock")["evidence"]
+        self.assertIn("0x4B17…7c32", ev)
+        self.assertTrue("0x4B174afbeD7b98BA01F50E36109EEE5e6d327c32".endswith("7c32"))
+        hits = [f for f in glob.glob(os.path.join(ROOT, "docs", "**", "*"), recursive=True)
+                if os.path.isfile(f) and f.endswith((".html", ".json", ".txt")) and "0x4B17…e88c" in _read(f, encoding="utf-8", errors="ignore")]
+        self.assertEqual(hits, [])
+
+    def test_g3_hero_input_room(self):
+        css = _read(os.path.join(ROOT, "docs", "styles.css"), encoding="utf-8")
+        home = _read(os.path.join(ROOT, "docs", "index.html"), encoding="utf-8")
+        self.assertIn('placeholder="Protocol or 0x…"', home)
+        self.assertIn(".hero .pf-toggle-lbl, .pd-sec-scan .pf-toggle-lbl { display: none; }", css)
+        self.assertIn(".hero .pf-combo > input { padding-right: 46px; }", css)
+        self.assertIn(".pd-sec-scan .pf-combo > input { padding-right: 40px; }", css)
+        self.assertIn('aria-label="Browse', home)                 # the chevron button keeps its accessible name
+
+    def test_g4_bedrock_pause_never_borrows_a_later_safe(self):
+        import scorecard as SC
+        f = next(x for x in SC.factors([self._rec("bedrock-unibtc-secure-mint-precondition-s30")], True, "delta") if x["key"] == "emergency")
+        self.assertEqual(f["state"], "n")
+        self.assertNotIn("3-of-5", f["value"])
+        e = next(x for x in CARDS["bedrock-unibtc"]["factors"] if x["key"] == "emergency")
+        self.assertEqual((e["state"], e["value"], e["evidenceRecordId"]),
+                         ("n", "PAUSER_ROLE held by 0x9251…5aaB (EIP-7702 delegated account; delegation authority not in the published records)",
+                          "bedrock-unibtc-secure-mint-precondition-s30"))
+        self.assertIn("PAUSER_ROLE held by 0x9251…5aaB", page("bedrock-unibtc"))
+
+    def test_g4_no_cross_sentence_pause_quorum_in_reviewed(self):
+        # every Strong freeze rating among the 56 reviewed protocols cites one sentence (or a named-holder continuation) that names
+        # both the pause / freeze power and the quorum it rates
+        import scorecard as SC
+        for s in RULINGS["partition"]:
+            e = next(x for x in CARDS[s]["factors"] if x["key"] == "emergency")
+            if e["state"] != "g":
+                continue
+            ev = e["evidence"].split(": ", 1)[1]
+            self.assertTrue(SC._EMERGENCY.search(ev) and (SC._nofs(ev) or "-of-N Safe" in e["value"]), s)
+
+class V9(unittest.TestCase):
+    INDEX = None
+
+    def _rec(self, rid):
+        if V9.INDEX is None:
+            V9.INDEX = {e["id"]: e for e in j("api", "v1", "index.json")["entries"]}
+        return V9.INDEX[rid]
+
+    def _em(self, rid, g):
+        import scorecard as SC
+        return next(x for x in SC.factors([self._rec(rid)], True, g) if x["key"] == "emergency")
+
+    def test_h1_deprecated_is_not_a_pause_surface(self):
+        # "deprecated" README / docs sentences establish no pause / freeze authority (record-level and on the emitted card)
+        for slug, rid in (("ekubo", "ekubo-core-immutable-starknet-owner-s32"),
+                          ("inceptionlrt-isolated-restaking", "inception-vault-upgrades-timelock-3d-s32")):
+            self.assertIn("deprecated", self._rec(rid)["onchain_observed"])
+            for f in (self._em(rid, "aligned"), next(x for x in CARDS[slug]["factors"] if x["key"] == "emergency")):
+                self.assertEqual((f["state"], f["value"]), ("n", "No pause / freeze authority in the published records"), slug)
+                self.assertNotIn("Pause / freeze authority present", f["value"])
+        # Tether's deprecated() getter sits beside its real pause / blacklist surface, which is kept
+        import scorecard as SC
+        self.assertTrue(SC._EMERGENCY.search("paused() = false") and SC._EMERGENCY.search("blacklist"))
+        self.assertFalse(SC._EMERGENCY.search("The docs mark the V2 EVM deployment deprecated."))
+
+    def test_h1_bare_seamless_canceller_role_establishes_no_presence(self):
+        f = self._em("seamless-community-guardian-safe-2-of-3-s35", "unresolved")
+        self.assertEqual((f["state"], f["value"], f["evidence"]), ("n", "No pause / freeze authority in the published records", None))
+        e = next(x for x in CARDS["seamless-protocol-base"]["factors"] if x["key"] == "emergency")   # emitted override unchanged
+        self.assertEqual((e["state"], e["value"], e["evidenceRecordId"]),
+                         ("n", "2-of-3 Safe holds timelock CANCELLER_ROLE; pause / freeze binding not in the published records",
+                          "seamless-community-guardian-safe-2-of-3-s35"))
+
+    def test_h2_euler_multi_member_pause_role_is_not_strong(self):
+        want = ("n", "PAUSE_GUARDIAN_ROLE held by 3 addresses (one 2-of-6 Safe; 2 other role members not resolved in the published records)")
+        f = self._em("euler-v2-evk-factorygovernor-4d-timelock-s18", "aligned")
+        self.assertEqual((f["state"], f["value"]), want)
+        e = next(x for x in CARDS["euler-v2-evk"]["factors"] if x["key"] == "emergency")
+        self.assertEqual((e["state"], e["value"]), want)
+        for word in ("EOA", "single key", "single-key", "exploit"):
+            self.assertNotIn(word, e["value"])
+
+    def test_h2_no_strong_freeze_rests_on_unresolved_co_holders(self):
+        # every Strong emergency row across all scorecards: no pause / freeze role-holder list in its cited record (a "has N members"
+        # / getRoleMemberCount list, or "held by / granted to / assigned to / holders / pausers are A and B") leaves a holder without a
+        # >= 2-signer Safe quorum or a timelock; addresses before the holder phrase are targets
+        import re
+        import scorecard as SC
+        members = re.compile(r"\b[A-Z][A-Z0-9_]*_ROLE\b[^;()]{0,40}?\bhas (\d+) members(?:\s*\(([^)]*)\))?"
+                             r"|getRoleMemberCount\([^)]*\)\s*(?:=|returns)\s*(\d+)")
+        phrase = re.compile(r"\b(?:held by|assigned to|granted to|holders?\s*(?::|are|is)|pausers?\s+(?:are|is)|members?\s*(?::|are))\s+", re.I)
+        bound = re.compile(r"\b([2-9]|1\d)-of-\d{1,2}\b|[Tt]imelock")
+        addr = re.compile(r"0x[0-9a-fA-F]{40}")
+        strong = [(s, x) for s, c in CARDS.items() for x in c["factors"] if x["key"] == "emergency" and x["state"] == "g"]
+        self.assertEqual(len(CARDS), 316)
+        self.assertEqual(len(strong), 14)
+        for s, x in strong:
+            t = self._rec(x["evidenceRecordId"])["onchain_observed"]
+            for sent in re.split(r";|(?<=[a-z0-9)])\.\s+(?=[A-Z])", t):
+                if not SC._FREEZE_WORDS.search(sent):
+                    continue
+                m = members.search(sent)
+                if m and int(m.group(1) or m.group(3)) > 1:
+                    n = int(m.group(1) or m.group(3))
+                    items = [i for i in (m.group(2) or "").split(",") if i.strip()]
+                    self.assertEqual(len([i for i in items if bound.search(i)]), n, f"{s}: {n}-member pause role with unresolved members")
+                p = phrase.search(sent)
+                if p:
+                    items = []
+                    for it in re.split(r",\s*(?:and\s+)?|\s+and\s+", re.sub(r"\([^()]*\)", lambda q: q.group(0).replace(",", " ").replace(" and ", " "), sent[p.end():])):
+                        if not addr.search(it):
+                            break
+                        items.append(it)
+                    if len({addr.search(i).group(0).lower() for i in items}) > 1:
+                        self.assertTrue(all(bound.search(i) for i in items), f"{s}: Strong freeze rests on unresolved co-holders: {sent[:120]}")
+
+
+class V10(unittest.TestCase):
+    A, B, V = "0x" + "1" * 40, "0x" + "2" * 40, "0x" + "9" * 40
+
+    def _em(self, text):
+        import scorecard as SC
+        r = {"id": "synthetic-v10", "onchain_observed": text, "classification": "aligned_baseline"}
+        return next(x for x in SC.factors([r], True, "aligned") if x["key"] == "emergency")
+
+    def test_h21_members_list_with_an_unbound_member(self):
+        f = self._em(f"PAUSER_ROLE has 2 members (2-of-3 Safe {self.A}, {self.B}).")
+        self.assertEqual((f["state"], f["value"]), ("n", "PAUSER_ROLE held by 2 addresses (one 2-of-3 Safe; 1 other role member not resolved in the published records)"))
+
+    def test_h21_held_by_list_with_an_unbound_holder(self):
+        for t in (f"PAUSER_ROLE is held by 2-of-3 Safe {self.A} and {self.B}.", f"PAUSER_ROLE is granted to 2-of-3 Safe {self.A}, {self.B}.",
+                  f"PAUSER_ROLE is assigned to 2-of-3 Safe {self.A} and {self.B}.", f"PAUSER_ROLE holders: 2-of-3 Safe {self.A}, {self.B}.",
+                  f"The pausers are 2-of-3 Safe {self.A} and {self.B}."):
+            f = self._em(t)
+            self.assertEqual(f["state"], "n", t)
+            self.assertIn("held by 2 addresses (one 2-of-3 Safe; 1 other role member not resolved in the published records)", f["value"], t)
+
+    def test_h21_every_holder_bound_stays_strong(self):
+        f = self._em(f"PAUSER_ROLE is held by 2-of-3 Safe {self.A} and 3-of-5 Safe {self.B}.")
+        self.assertEqual((f["state"], f["value"]), ("g", "Pause / freeze authority scoped behind a multi-signer controller (2-of-3)"))
+        self.assertEqual(self._em(f"PAUSER_ROLE holders: 2-of-3 Safe {self.A}, the TimelockController {self.B}.")["state"], "g")
+
+    def test_h21_target_contract_is_not_a_co_holder(self):
+        f = self._em(f"On Vault {self.V}, PAUSER_ROLE is held by 2-of-3 Safe {self.A}.")
+        self.assertEqual((f["state"], f["value"]), ("g", "Pause / freeze authority scoped behind a multi-signer controller (2-of-3)"))
 
 
 class Wording(unittest.TestCase):
@@ -500,7 +772,7 @@ class Wording(unittest.TestCase):
                 self.assertEqual(CARDS[s]["summary_short"], c["summaryShort"], s)
 
     def test_40_acres_is_never_called_a_vault(self):
-        page = open(os.path.join(ROOT, "docs", "protocols", "40-acres-base", "index.html"), encoding="utf-8").read()
+        page = _read(os.path.join(ROOT, "docs", "protocols", "40-acres-base", "index.html"), encoding="utf-8")
         for bad in ("Lending vault proxy", "40 Acres vault proxy", "lending vault (UUPS)"):
             self.assertNotIn(bad, page)
             self.assertNotIn(bad, json.dumps(j("api", "v1", "lookup.json")))

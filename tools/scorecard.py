@@ -35,6 +35,15 @@ _ZERO_DELAY = re.compile(r"no delay of its own|\(0 ?s\)|needs no timelock|no enf
 _DOC_NOF = re.compile(r"\b(\d{1,2})\s*(?:-of-|/|\s+of\s+)\s*(\d{1,2})\b")
 
 
+_UNATTACHED = re.compile(r"\bowns neither\b|\bdoes not own\b|\bis not the [\w' ()-]*?owner\b|\bnot in the (?:\w+ )*path\b|\bnot wired\b", re.I)
+_ZERO_GUARDIAN = re.compile(r"guardian\(\)\s*=\s*0x0{40}\b")
+_CANCEL_ONLY = re.compile(r"CANCELLER_ROLE")
+_FREEZE_WORDS = re.compile(r"\bpause|\bunpause|\bfreez|\bblacklist|PAUSE_ROLE|PAUSER_ROLE|pauseGuardian|EMERGENCY_ROLE|circuit breaker|emergency[- ]stop", re.I)
+_NAMED_SAFE = re.compile(r"The ([A-Z][\w-]*) is a (?:\d{1,2}-of-\d{1,2} )?Safe\b")
+# a sentence boundary inside a clause: ". " before a capital letter (never a decimal such as 111.1% or a version such as v1.3.0)
+_SENTENCE = re.compile(r"(?<=[A-Za-z0-9)\]%])\.\s+(?=[A-Z0-9(])")
+
+
 def _nofs(text):
     """Every K-of-N quorum in the text, written either as "3-of-6" or as "getThreshold() = 3 of getOwners() = 6"."""
     return sorted(list(_NOF.finditer(text)) + list(_NOF_READS.finditer(text)), key=lambda m: m.start())
@@ -93,7 +102,67 @@ _SUBJECT_OWNS = re.compile(r"^(?:it owns|owner of)\b|\bit owns\b")   # the recor
 _DEFINITE = re.compile(r"\b(?:held by|are|is|owned by|=)\s+the ((?:[A-Za-z]+ )?(?:Timelock|timelock)(?:Controller)?)\b")
 _NAMED = re.compile(r"\b([A-Za-z]\w*)(?:\(\))?\s*(?:=\s*)?\(?(0x[0-9a-fA-F]{40})")
 _WRAPPER = re.compile(r"\b1-of-(\d{1,2})\b([^;]*?)\b(?:shared between|co-owned by|jointly owned by)\b([^;]*)")
-_EMERGENCY = re.compile(r"\bpause|\bblacklist|\bfreez|PAUSE_ROLE|ASSET_PROTECTION|\bdeprecate|\bguardian\b|pauseGuardian", re.I)
+# v9 H1: "deprecated" (a README / docs status word) is not a pause / freeze surface and no longer matches
+_EMERGENCY = re.compile(r"\bpause|\bblacklist|\bfreez|PAUSE_ROLE|ASSET_PROTECTION|\bguardian\b|pauseGuardian", re.I)
+# v9 H2: a pause / freeze role with several members, e.g. "PAUSE_GUARDIAN_ROLE has 3 members (2-of-6 Safe 0x…, 0x…, 0x…)"
+_MEMBERS = re.compile(r"\b([A-Z][A-Z0-9_]*_ROLE)\b[^;()]{0,40}?\bhas (\d+) members(?:\s*\(([^)]*)\))?"
+                      r"|\b([A-Z][A-Z0-9_]*_ROLE)\b[^;()]{0,40}?getRoleMemberCount\([^)]*\)\s*(?:=|returns)\s*(\d+)")
+_NUMWORD = {1: "one", 2: "two", 3: "three", 4: "four", 5: "five", 6: "six"}
+# v10 H2.1: any pause / freeze role-holder list ("held by A and B", "granted to A, B", "holders: A, B", "pausers are A and B");
+# addresses before the phrase (e.g. "On Vault 0x…, PAUSER_ROLE is held by …") are targets, never holders
+_HOLDER_PHRASE = re.compile(r"\b(?:held by|assigned to|granted to|holders?\s*(?::|are|is)|pausers?\s+(?:are|is)|members?\s*(?::|are))\s+", re.I)
+_LIST_SEP = re.compile(r",\s*(?:and\s+)?|\s+and\s+")
+_ROLE = re.compile(r"\b([A-Z][A-Z0-9_]*_ROLE)\b")
+
+
+def _top_level_split(tail):
+    """Split a holder list on ", " / " and " outside parentheses."""
+    out, depth, start, i = [], 0, 0, 0
+    while i < len(tail):
+        ch = tail[i]
+        if ch in "([":
+            depth += 1
+        elif ch in ")]":
+            depth = max(0, depth - 1)
+        elif depth == 0:
+            m = _LIST_SEP.match(tail, i)
+            if m:
+                out.append(tail[start:i])
+                start = i = m.end()
+                continue
+        i += 1
+    out.append(tail[start:])
+    return [x.strip() for x in out if x.strip()]
+
+
+def _holder_of(item):
+    """The role-holder address of one list item: the first address outside parentheses, else the first inside."""
+    bare = re.sub(r"\([^()]*\)", " ", item)
+    a = _ADDR.findall(bare) or _ADDR.findall(item)
+    return a[0].lower() if a else None
+
+
+def role_holders(c):
+    """(role, declared member count, [holder items]) for a pause / freeze clause naming >= 2 role holders, else None."""
+    mm = _MEMBERS.search(c)
+    if mm and int(mm.group(2) or mm.group(5)) > 1:
+        return (mm.group(1) or mm.group(4), int(mm.group(2) or mm.group(5)),
+                [x.strip() for x in (mm.group(3) or "").split(",") if x.strip()])
+    hp = _HOLDER_PHRASE.search(c)
+    if not hp:
+        return None
+    items, seen = [], []
+    for it in _top_level_split(c[hp.end():]):
+        h = _holder_of(it)
+        if h is None:
+            break                                     # the holder list ends at the first item that names no address
+        if h not in seen:
+            seen.append(h)
+            items.append(it)
+    if len(seen) < 2:
+        return None
+    roles = _ROLE.findall(c[:hp.start()])
+    return (roles[-1] if roles else "Pause / freeze authority", len(seen), items)
 
 
 UNRESOLVED_PARITY = "Observed onchain state pinned; a breach of a documented commitment is not established"
@@ -310,7 +379,16 @@ def factors(records, easattested, g, facts=(), parity_text=None):
         for c in clauses(t):
             if _COOLDOWN.search(c):
                 continue
+            off = t.find(c)
             for m in _DELAY.finditer(c):
+                # a timelock the record itself says is not on the sampled path ("owns neither", "does not own MasterChef") sets no floor:
+                # the path it was listed for has no enforced delay (v7 F4)
+                ms, me = (off + m.start(), off + m.end()) if off >= 0 else (0, len(t))
+                a_, b_ = t.rfind(". ", 0, ms), t.find(". ", me)
+                sent = t[a_ + 2 if a_ >= 0 else 0: b_ if b_ >= 0 else len(t)]
+                if _UNATTACHED.search(sent):
+                    delays.append((0, f"{rid}: {_clip(sent)}"))
+                    continue
                 delays.append((int(m.group(1).replace(",", "")), f"{rid}: {_snip(c, m)}"))
         for c in clauses(t):                                      # a role that executes without the delay (e.g. RBACTimelock bypasser)
             if _BYPASS_EXEC.search(c):
@@ -371,15 +449,53 @@ def factors(records, easattested, g, facts=(), parity_text=None):
                          else ("n", "No signer quorum in the published records", None))
     # 4: emergency / freeze scope: the holder named in the pause / freeze clause itself (a Safe fact by address counts)
     safes = {f["address"].lower(): f["safe_threshold"] for f in facts if f.get("safe_threshold") and f.get("address")}
-    held, em = [], None
+    held, em, multi = [], None, []
     for rid, t, _r in texts:
-        cs = clauses(t)
+        # v8 G1: a record that only establishes a timelock CANCELLER_ROLE (no pause / unpause / freeze / circuit-breaker binding anywhere
+        # in it) establishes no pause / freeze holder, whichever of its clauses names a "Guardian"
+        cancel_only = bool(_CANCEL_ONLY.search(t)) and not _FREEZE_WORDS.search(t)
+        # v8 G4: the holder is bound within one sentence: clauses are split again on sentence boundaries, so a Safe quorum named in
+        # a later sentence (e.g. a ProxyAdmin owner) is never borrowed by the pause / freeze holder of an earlier one
+        cs = [u for c0 in clauses(t) for u in _SENTENCE.split(c0) if u.strip()]
         for i, c in enumerate(cs):
             if not _EMERGENCY.search(c):
+                continue
+            # a timelock CANCELLER_ROLE alone establishes neither a pause / freeze holder (v7 F3) nor pause / freeze presence (v9 H1)
+            if cancel_only or (_CANCEL_ONLY.search(c) and not _FREEZE_WORDS.search(c)):
+                continue
+            # an unset guardian (guardian() = 0x0) establishes no pause / freeze holder (v7 F3)
+            if _ZERO_GUARDIAN.search(c):
+                em = em or (rid, c)
                 continue
             em = em or (rid, c)
             if i + 1 < len(cs) and _THAT.match(cs[i + 1]):   # "…hasRole(FREEZER, 0x…) = true; that Safe is 2-of-5"
                 c = f"{c}; {cs[i + 1]}"
+            elif i + 1 < len(cs):
+                # "owner() = Admin … Pauser Proxy …. The Admin is a Safe: getThreshold() = 3 of …": the next sentence describes the
+                # same named holder, so its quorum binds; any other later sentence (e.g. a ProxyAdmin owner) never does
+                nm = _NAMED_SAFE.match(cs[i + 1].strip())
+                if nm and re.search(r"\b" + re.escape(nm.group(1)) + r"\b", c):
+                    c = f"{c}; {cs[i + 1]}"
+            # v9 H2: a multi-member pause / freeze role is rated on its members only when every member resolves to a >= 2-signer
+            # Safe quorum or a timelock; one member's quorum never stands for co-members the published records do not resolve
+            # (v10 H2.1: the same rule for every role-holder list, each holder bound only to its own list item)
+            rh = role_holders(c)
+            if rh:
+                role, n_, items = rh
+                res = []
+                for it in items:
+                    q = [int(a) for a, b in ((x.group(1), x.group(2)) for x in _nofs(it)) if 2 <= int(a) <= int(b)]
+                    q += [safes[a.lower()] for a in _ADDR.findall(it) if safes.get(a.lower(), 0) >= 2]
+                    if q:
+                        res.append(next(f"{x.group(1)}-of-{x.group(2)} Safe" for x in _nofs(it)) if _nofs(it) else f"{min(q)}-of-N Safe")
+                    elif re.search(r"[Tt]imelock", it):
+                        res.append("timelock")
+                if len(res) < n_:
+                    u = n_ - len(res)
+                    parts = [f"{_NUMWORD.get(res.count(x), res.count(x))} {x}" for x in dict.fromkeys(res)]
+                    rest = f"{u} {'other ' if res else ''}role member{'s' if u > 1 else ''} not resolved in the published records"
+                    multi.append((f"{role} held by {n_} addresses ({'; '.join(parts + [rest])})", f"{rid}: {_clip(c)}"))
+                    continue
             ks = [(int(m.group(1)), f"{m.group(1)}-of-{m.group(2)}") for m in _nofs(c) if 1 <= int(m.group(1)) <= int(m.group(2))]
             ks += [(1, "a single key") for _ in _SINGLE.finditer(c)]
             ks += [(safes[a.lower()], f"{safes[a.lower()]}-of-N Safe") for a in _ADDR.findall(c) if a.lower() in safes]
@@ -396,7 +512,10 @@ def factors(records, easattested, g, facts=(), parity_text=None):
         else:
             k, lbl, ev, _z = min(held)
             out["emergency"] = (("a", f"Pause / freeze authority held by {lbl}", ev) if k == 1 else
+                                ("n", multi[0][0], multi[0][1]) if multi else
                                 ("g", f"Pause / freeze authority scoped behind a multi-signer controller ({lbl})", ev))
+    elif multi:
+        out["emergency"] = ("n", multi[0][0], multi[0][1])
     elif em:
         out["emergency"] = ("n", "Pause / freeze authority present; its holder is not determined", f"{em[0]}: {_clip(em[1])}")
     else:

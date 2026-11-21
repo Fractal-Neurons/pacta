@@ -13,6 +13,13 @@ import json
 import os
 import re
 
+
+def _json_file(*a, **k):
+    """json.load on a file that is closed straight away (no ResourceWarning)."""
+    with open(*a, **k) as fh:
+        return json.load(fh)
+
+
 PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "scorecard_corrections.json")
 _DATA = None
 
@@ -20,7 +27,7 @@ _DATA = None
 def data():
     global _DATA
     if _DATA is None:
-        _DATA = json.load(open(PATH, encoding="utf-8"))
+        _DATA = _json_file(PATH, encoding="utf-8")
     return _DATA
 
 

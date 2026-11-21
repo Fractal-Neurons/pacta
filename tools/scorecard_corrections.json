@@ -112,6 +112,11 @@
    "leadRecord": "f-x-protocol-v2-router-owner-safe-s29",
    "factorOverrides": {
     "quorum": "ProtocolTreasury EmergencySafe: 3-of-4 (Ethereum block 26,400,152); V2 Router operational Safe: 6-of-9 (Ethereum block 26,448,221)."
+   },
+   "recordOverrides": {
+    "f-x-protocol-v2-router-owner-safe-s29": {
+     "surface": "V2 Router (Diamond) owner: docs put queued transactions behind a 3-day timelock (oracle updates excepted); owner() is the 6-of-9 Safe"
+    }
    }
   },
   "gearbox-v3-v3-1": {
@@ -280,6 +285,12 @@
     "metamorpho-re7-weth-guardian-parity": {
      "documentedLabel": "Sister vault reference."
     }
+   },
+   "factorOverrides": {
+    "emergency": {
+     "state": "n",
+     "value": "Re7 WETH has no guardian set (0x0); Re7 USDT assigns an Aragon guardian"
+    }
    }
   },
   "moonwell-lending-base": {
@@ -357,7 +368,15 @@
    "headline": "PAUSE and UNPAUSE role administration: MINOR_ROLES_MANAGER at the retained pin",
    "explanatorySentence": "At Ethereum block 26,425,374, MINOR_ROLES_MANAGER administered PAUSE and UNPAUSE, with the Team Multisig and Long Timelock as members; the retained roles-page excerpt names GOVERNOR, but the current page could not be retrieved, so this comparison does not establish a current document breach or a bypass of all governance.",
    "summaryShort": "MINOR_ROLES_MANAGER administers PAUSE/UNPAUSE; current roles page unverified",
-   "rulingsSource": "rulings.json"
+   "rulingsSource": "rulings.json",
+   "factorOverrides": {
+    "timelock": {
+     "state": "b",
+     "value": "Long governance timelock: 7d; Short timelock: 1d (per-surface wiring unverified)",
+     "evidence": "infinifi-long-timelock-7d-s20: Long Timelock 0x3D18…48a9 getMinDelay() = 604,800 s (7d); Short Timelock 0x4B17…7c32 getMinDelay() = 86,400 s (1d)",
+     "evidenceCaption": "Long governance timelock delay: 7 days (Short timelock: 1 day) — Ethereum block #26,425,374"
+    }
+   }
   },
   "hakka-finance": {
    "status": "unresolved",
@@ -397,7 +416,14 @@
    "headline": "Community Guardian Safe: 2-of-3 at the retained Base observation",
    "explanatorySentence": "At Base block 59,847,352, the Community Guardian Safe required 2 of 3 owners and held the short governance timelock cancellation role; the retained documentation describes 3-of-6, but the current guardian page could not be verified, so a current document breach is not established.",
    "summaryShort": "Community Guardian Safe is 2-of-3; current guardian page unverified",
-   "rulingsSource": "rulings.json"
+   "rulingsSource": "rulings.json",
+   "factorOverrides": {
+    "emergency": {
+     "state": "n",
+     "value": "2-of-3 Safe holds timelock CANCELLER_ROLE; pause / freeze binding not in the published records",
+     "evidence": "seamless-community-guardian-safe-2-of-3-s35: Guardian 0xA1b5f2cc9B407177CD8a4ACF1699fa0b99955A22 (Base Safe, the address the smart-contracts page lists): getThreshold() = 2 of getOwners() = 3"
+    }
+   }
   },
   "ethena-usde-susde": {
    "status": "delta",
@@ -408,6 +434,51 @@
    "explanatorySentence": "At Ethereum block 26,401,638, the sampled Ethena admin TimelockController returned a one-day minimum against the key-trust-assumptions statement of seven days for core-function changes; the retained record also cites a July 2026 Risk Committee discussion of one day, so this is not a claim about sUSDe withdrawal cooldown or an undisclosed delay.",
    "summaryShort": "Admin timelock minimum is one day; core-function docs say seven days",
    "rulingsSource": "rulings.json"
+  },
+  "cian-yield-layer": {
+   "status": "delta",
+   "chain": "ethereum",
+   "pinnedBlock": 26450616,
+   "leadRecord": "cian-yield-layer-allocation-no-timelock-s31",
+   "headline": null,
+   "explanatorySentence": null,
+   "summaryShort": null,
+   "factorOverrides": {
+    "timelock": {
+     "state": "a",
+     "value": "No timelock in the sampled ownership path (3-of-4 Safe direct; listed 1d TimeLock not wired)"
+    }
+   }
+  },
+  "pickle": {
+   "status": "delta",
+   "chain": "ethereum",
+   "pinnedBlock": 26451608,
+   "leadRecord": "pickle-masterchef-owner-safe-no-timelock-s32",
+   "headline": null,
+   "explanatorySentence": null,
+   "summaryShort": null,
+   "factorOverrides": {
+    "timelock": {
+     "state": "a",
+     "value": "No timelock in the sampled MasterChef path (2-of-6 Safe direct; listed 24h Timelock does not own MasterChef)"
+    }
+   }
+  },
+  "bedrock-unibtc": {
+   "status": "delta",
+   "chain": "ethereum",
+   "pinnedBlock": 26449594,
+   "leadRecord": "bedrock-unibtc-secure-mint-precondition-s30",
+   "headline": null,
+   "explanatorySentence": null,
+   "summaryShort": null,
+   "factorOverrides": {
+    "emergency": {
+     "state": "n",
+     "value": "PAUSER_ROLE held by 0x9251…5aaB (EIP-7702 delegated account; delegation authority not in the published records)"
+    }
+   }
   }
  },
  "recentChangeRule": {

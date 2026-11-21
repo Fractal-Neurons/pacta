@@ -25,6 +25,13 @@ import re
 import sys
 import urllib.parse
 
+
+def _json_file(*a, **k):
+    """json.load on a file that is closed straight away (no ResourceWarning)."""
+    with open(*a, **k) as fh:
+        return json.load(fh)
+
+
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import onboarding_render as OR  # noqa: E402
 import build_b2a_feeds as B2A  # noqa: E402
@@ -682,7 +689,7 @@ def xlink(chain, kind, value, text):
 
 
 def load_pinned(path=None):
-    p = json.load(open(path or PINNED_SRC))
+    p = _json_file(path or PINNED_SRC)
     assert p["schema"] == PINNED_SCHEMA and p["attestation"]["eas_attested"] is False and p["attestation"]["base_eas_uid"] is None
     for e in p["entries"]:
         assert e["provenance"] == "rpc_pinned" and e["base_eas_uid"] is None and "sprint" not in e and "summary_doc" not in e, e["id"]
@@ -789,11 +796,19 @@ def scorecards(idx, pinned=None, sp=None):
         fs = SC.factors(es, eas, g, facts, parity_text=corr.get("parityText"))
         for f in fs:                                       # a correction's scoped factor wording replaces the derived sentence
             if f["key"] in (corr.get("factorOverrides") or {}):
-                f["value"] = corr["factorOverrides"][f["key"]]
+                o_ = corr["factorOverrides"][f["key"]]
+                # a string replaces the wording; a dict may also scope the state and the cited evidence (v7 F4 infiniFi)
+                if isinstance(o_, dict):
+                    f.update({k_: o_[k_] for k_ in ("state", "value", "evidence") if k_ in o_})
+                else:
+                    f["value"] = o_
             # a human evidence caption (the record's surface, chain and pinned block); the machine record id stays in evidenceRecordId
             rid_ = (f.get("evidence") or "").split(": ", 1)[0]
             ev_r = next((e for e in es if e["id"] == rid_), None)
-            if ev_r is not None:
+            ov_ = (corr.get("factorOverrides") or {}).get(f["key"])
+            if isinstance(ov_, dict) and ov_.get("evidenceCaption"):
+                f["evidenceRecordId"], f["evidenceCaption"] = rid_, ov_["evidenceCaption"]
+            elif ev_r is not None:
                 cap_ = (corr.get("evidenceCaption") if rid_ == corr.get("leadRecord") else None) or (
                     f'{ev_r["surface"]} — {CHAINS[chain_of(ev_r)][0]} block #{int(ev_r["block_number"]):,}')
                 f["evidenceRecordId"], f["evidenceCaption"] = rid_, cap_
@@ -1101,6 +1116,7 @@ ADDR40 = re.compile(r"0x[0-9a-fA-F]{40}")
 
 _MD_BOLD = re.compile(r"\*\*([^*\n]+)\*\*|__([^_\n]+)__")
 _TEX_INLINE = re.compile(r"\$([0-9][0-9/.,+\- ]*)\$")
+_RECORD_CITE = re.compile(r"\s*\(record\s+[a-z0-9_-]+\)")
 _LONG_INT = re.compile(r"(?<![0-9A-Za-z.,])\d{18,}(?![0-9A-Za-z])")
 
 
@@ -1108,11 +1124,19 @@ def plain(text):
     """Visible text from a quoted documentation excerpt: Markdown bold (**x**) and inline TeX ($5/9$) markers are removed; the JSON
     feeds keep the record's text verbatim."""
     t = _TEX_INLINE.sub(lambda m: m.group(1), _MD_BOLD.sub(lambda m: m.group(1) or m.group(2), text or ""))
+    t = _RECORD_CITE.sub("", t)            # "(record cap-1d-timelock-min-delay-s20)": an internal id is never reader prose (v7 F2)
     # a raw 18+-digit integer (a wei amount) is shown digit-grouped (exact value, readable); 0x hex is never touched
     return _LONG_INT.sub(lambda m: f"{int(m.group(0)):,}", t)
 
 
 SEP = '<span class="sep" aria-hidden="true"> · </span>'
+_WBR_AT = re.compile(r"(?<=[A-Za-z0-9_])([.(])(?=[A-Za-z_])")
+
+
+def wbr(text):
+    """Escaped text with a soft wrap opportunity after "." and "(" inside identifier calls (EtherfiL1SyncPoolETH.<wbr>setDelegate(<wbr>
+    EtherFiTimelock)), so a phone wraps at punctuation and never splits a contract name mid-word (v7 F6)."""
+    return _WBR_AT.sub(lambda m: m.group(1) + "<wbr>", E(text))
 
 
 def prose(text):
@@ -1366,7 +1390,7 @@ def radar_section(radar, prefix="", full=False):
         rows.append(
             f'<tr data-radar-row="{st}" data-timelock="{it["timelock"]}" data-chain="{ch}" data-tl-kind="{E(tl_kind)}" data-op-etas="{op_etas}"{" class=" + chr(34) + "is-executed" + chr(34) if st == "executed" else ""}>'
             f'<td>{p_cell}<span class="sub" data-skel>{state_badge(st, it["operations"])}</span></td>'
-            f'<td data-label="Queued operation"><span class="op">{E(it["title"])}</span>' + (f'<span class="sub">{E(it["summary"])}</span>' if full else "") +
+            f'<td data-label="Queued operation"><span class="op">{wbr(it["title"])}</span>' + (f'<span class="sub">{wbr(it["summary"])}</span>' if full else "") +
             f'<span class="meta">{cue}Timelock {tl} · '
             + (f'Operation{"s" if n > 1 else ""} {ops}' if full and not labelled else f'{n} operation{"s" if n > 1 else ""}') + f'</span>{labels}</td>'
             + (f'<td class="nowrap num hide-m" data-label="Delay">{secs(it["min_delay_seconds"])}</td>' if full else "")
@@ -3078,7 +3102,7 @@ EAS_SCHEMA_VIEW = "https://base.easscan.org/schema/view/0x7ff485bc1159dff3c70eef
 EDITORIAL_FIREWALL = "Pacta never sells grades."
 
 
-HERO_PLACEHOLDER = "Aave, Lido or 0x address"   # <= 30 characters; the visible label above names the field
+HERO_PLACEHOLDER = "Protocol or 0x…"   # v8 G3: 15 characters; never clips at 1200 px or 390 px
 
 
 _PROTO_COUNT_CACHE = None
@@ -3862,7 +3886,7 @@ def bounties_page(idx, radar, bounties=None, claims=None, lb=None, claims3=None)
 
 # ---- Wave 3 (2 x $20 USDC Protocol Trajectory & Integrity Dossiers, closed and settled) + Wave 2 ($1 micro-bounties, Completed & Retired) + Wave 1 Archive + /leaderboard/ ----
 WAVE3_SRC = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bounty_wave3.json")
-WAVE3 = json.load(open(WAVE3_SRC))
+WAVE3 = _json_file(WAVE3_SRC)
 WAVE3_REWARD_USDC = WAVE3["rewardUsdc"]            # "20.00"
 WAVE3_REWARD_ATOMIC = WAVE3["rewardAtomic"]        # 20_000_000
 WAVE3_OPEN_SLOTS = WAVE3["openSlots"]              # 2
@@ -3884,7 +3908,7 @@ WAVE3_PAYOUT = (f"Paid in USDC on Base Mainnet within {WAVE3['settlement']['wind
                 "committed in the merged bounties/wave-3 dossier. Funds are held on-chain in the EOA treasury and are not pre-escrowed in an automated contract.")
 
 WAVE2_SRC = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bounty_wave2.json")
-WAVE2 = json.load(open(WAVE2_SRC))
+WAVE2 = _json_file(WAVE2_SRC)
 REWARD_USDC = WAVE2["rewardUsdc"]                  # "1.00"
 REWARD_ATOMIC = WAVE2["rewardAtomic"]              # 1_000_000 (USDC has 6 decimals)
 PROGRAM_CAP_SLOTS = WAVE2["programCapSlots"]       # 1,000-gap program (retired after Epoch 1 closeout)

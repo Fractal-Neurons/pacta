@@ -3,11 +3,11 @@
  "description": "Pacta findings ready to post on X: one item per published protocol (docs-vs-chain delta, changed recently, docs updated, unresolved scope, protective delta, aligned baseline or RPC-observed) plus active timelock operations from the radar. mainPostText has no links; replyPostText carries the receipt page and the Base EAS attestation. feedId is stable: post each id once.",
  "generatedFrom": {
   "site": {
-   "scorecards.json": "af4addfceedf27ec9d7b746c44ba1e5695c648f2e0110752cecb821afae6c3ae",
-   "index.json": "0e3504864e5eec7f29c327fbe072e92b9c8be4ea9e90f366d659183caef54b30",
+   "scorecards.json": "602e07235b9a6ee773ece4b77d10951c66958555c061712c746ca7368ea06983",
+   "index.json": "470978540607242efcac2c69f42e8357d7d6a3334c9da28f347c97867aa9c39a",
    "rpc-pinned.json": "108919b7ce46d2c3e09943bbd5dad4344ee375a275c6056f4b391a57ee11a418",
    "radar.json": "16d9637777dc1df9babb767d0ac31c4e1fe8c339332ea815cc32db745d097e1d",
-   "protocols.json": "5af40b5f5ec0f09153b422bf3a1dc88f3f706ec7da0d64b9a0df33e43af4bcd9"
+   "protocols.json": "8e72053f4b7c7228c342547b1952e44b6863f9732ec1188560d1e5327e90c1b9"
   },
   "xHandles": "7cfe44213e579618486dd28fee3bbc8b9205bb82843823ed2dc931314c1598c3",
   "radarBlock": 26457377,
@@ -529,9 +529,9 @@
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "b",
-     "cue": "M",
-     "value": "1d minimum enforced delay on sampled timelocked surfaces"
+     "state": "a",
+     "cue": "W",
+     "value": "No timelock in the sampled MasterChef path (2-of-6 Safe direct; listed 24h Timelock does not own MasterChef)"
     },
     {
      "key": "quorum",
@@ -589,9 +589,9 @@
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "b",
-     "cue": "M",
-     "value": "1d minimum enforced delay on sampled timelocked surfaces"
+     "state": "a",
+     "cue": "W",
+     "value": "No timelock in the sampled ownership path (3-of-4 Safe direct; listed 1d TimeLock not wired)"
     },
     {
      "key": "quorum",
@@ -843,9 +843,9 @@
     {
      "key": "emergency",
      "label": "Emergency / freeze scope",
-     "state": "g",
-     "cue": "S",
-     "value": "Pause / freeze authority scoped behind a multi-signer controller (3-of-5)"
+     "state": "n",
+     "cue": "—",
+     "value": "PAUSER_ROLE held by 0x9251…5aaB (EIP-7702 delegated account; delegation authority not in the published records)"
     },
     {
      "key": "parity",
@@ -3243,9 +3243,9 @@
     {
      "key": "emergency",
      "label": "Emergency / freeze scope",
-     "state": "g",
-     "cue": "S",
-     "value": "Pause / freeze authority scoped behind a multi-signer controller (2-of-3)"
+     "state": "n",
+     "cue": "—",
+     "value": "2-of-3 Safe holds timelock CANCELLER_ROLE; pause / freeze binding not in the published records"
     },
     {
      "key": "parity",
@@ -3409,9 +3409,9 @@
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "g",
-     "cue": "S",
-     "value": "7d minimum enforced delay on sampled timelocked surfaces"
+     "state": "b",
+     "cue": "M",
+     "value": "Long governance timelock: 7d; Short timelock: 1d (per-surface wiring unverified)"
     },
     {
      "key": "quorum",
@@ -3783,9 +3783,9 @@
     {
      "key": "emergency",
      "label": "Emergency / freeze scope",
-     "state": "g",
-     "cue": "S",
-     "value": "Pause / freeze authority scoped behind a multi-signer controller (2-of-4)"
+     "state": "n",
+     "cue": "—",
+     "value": "Re7 WETH has no guardian set (0x0); Re7 USDT assigns an Aragon guardian"
     },
     {
      "key": "parity",
@@ -5840,7 +5840,7 @@
      "label": "Emergency / freeze scope",
      "state": "n",
      "cue": "—",
-     "value": "Pause / freeze authority present; its holder is not determined"
+     "value": "No pause / freeze authority in the published records"
     },
     {
      "key": "parity",
@@ -5958,9 +5958,9 @@
     {
      "key": "emergency",
      "label": "Emergency / freeze scope",
-     "state": "g",
-     "cue": "S",
-     "value": "Pause / freeze authority scoped behind a multi-signer controller (3-of-5)"
+     "state": "n",
+     "cue": "—",
+     "value": "No pause / freeze authority in the published records"
     },
     {
      "key": "parity",
@@ -10578,9 +10578,9 @@
     {
      "key": "emergency",
      "label": "Emergency / freeze scope",
-     "state": "g",
-     "cue": "S",
-     "value": "Pause / freeze authority scoped behind a multi-signer controller (2-of-3)"
+     "state": "n",
+     "cue": "—",
+     "value": "PAUSE_GUARDIAN_ROLE held by 3 addresses (one 2-of-6 Safe; 2 other role members not resolved in the published records)"
     },
     {
      "key": "parity",
@@ -10638,9 +10638,9 @@
     {
      "key": "emergency",
      "label": "Emergency / freeze scope",
-     "state": "g",
-     "cue": "S",
-     "value": "Pause / freeze authority scoped behind a multi-signer controller (3-of-5)"
+     "state": "n",
+     "cue": "—",
+     "value": "Pause / freeze authority present; its holder is not determined"
     },
     {
      "key": "parity",
