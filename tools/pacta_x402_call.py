@@ -11,10 +11,16 @@ Security guarantees (standard-library Python 3, zero pip installs):
    (0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913) to Pacta's treasury wallet
    0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14, and sends the signed X-PAYMENT header to
    https://api.pacta.wtf/v1/x402/<route> (second official host: https://pacta.fractalneurons.com).
+5. Signs exactly once per run. If the Worker answers HTTP 503 with "settled": true (the payment went through on Base but
+   the Worker could not confirm it yet), the script replays the byte-identical request and X-PAYMENT header (same nonce,
+   same signature) up to 4 times. The same authorization can never be charged twice.
+6. Loads a key only from a regular, non-symlinked file readable by its owner alone (mode 0600), sends the signed request
+   only to one of the two official hosts, never follows an HTTP redirect, and never forwards X-PAYMENT to another origin.
 """
 from __future__ import annotations
 
 import argparse
+import re
 import base64
 import hashlib
 import hmac
@@ -29,11 +35,8 @@ import urllib.parse
 import urllib.request
 
 DEFAULT_HOST = "https://api.pacta.wtf"
-ALLOWED_HOSTS = {
-    "https://api.pacta.wtf",
-    "https://pacta.fractalneurons.com",
-    "https://pacta-x402.pacta.workers.dev",
-}
+# exactly the two official Pacta x402 hostnames (https only, default port, no path)
+ALLOWED_HOSTS = frozenset({"api.pacta.wtf", "pacta.fractalneurons.com"})
 PAY_TO = "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14"
 USDC_BASE = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"
 BASE_CHAIN_ID = 8453
@@ -253,7 +256,29 @@ def run_self_test() -> dict[str, object]:
 
 
 def load_local_key_file(path: str) -> int:
-    raw = open(path, "r", encoding="utf-8").read().strip().removeprefix("0x")
+    if os.name == "posix":
+        # verify the file actually opened (not a path-only check): no symlink, a regular file, owner-only permissions
+        try:
+            # O_NONBLOCK: a FIFO / device with no writer must never block the open before fstat can reject it
+            fd = os.open(path, os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_NONBLOCK", 0))
+        except OSError as e:
+            raise SystemExit(f"ERROR: cannot open --key-file {path} as a regular, non-symlinked file ({e.strerror}).")
+        st = os.fstat(fd)
+        if not stat.S_ISREG(st.st_mode):
+            os.close(fd)
+            raise SystemExit(f"ERROR: --key-file {path} must be a regular file.")
+        if st.st_mode & 0o077:
+            os.close(fd)
+            raise SystemExit(
+                f"ERROR: --key-file {path} is readable or writable by other users (mode {stat.S_IMODE(st.st_mode):04o}). "
+                f"Run: chmod 600 {path}"
+            )
+        import fcntl  # POSIX-only stdlib module: clear O_NONBLOCK now that the file is a verified regular 0600 file
+        fcntl.fcntl(fd, fcntl.F_SETFL, fcntl.fcntl(fd, fcntl.F_GETFL) & ~os.O_NONBLOCK)
+        with os.fdopen(fd, "r", encoding="utf-8") as fh:
+            raw = fh.read().strip().removeprefix("0x")
+    else:
+        raw = open(path, "r", encoding="utf-8").read().strip().removeprefix("0x")
     if len(raw) != 64 or any(c not in "0123456789abcdefABCDEF" for c in raw):
         raise SystemExit("ERROR: --key-file must contain a 64-hex-character secp256k1 private key.")
     val = int(raw, 16)
@@ -270,6 +295,96 @@ def generate_fresh_wallet(path: str) -> str:
     with os.fdopen(fd, "w", encoding="utf-8") as fh:
         fh.write("0x" + priv_int.to_bytes(32, "big").hex() + "\n")
     return privkey_to_address(priv_int)
+
+
+SETTLED_REPLAY_WAITS = (2.5, 4.0, 6.0, 10.0)   # up to 4 replays of the identical signed request (5 attempts in total)
+SETTLED_ERRORS = ("settlement_unconfirmed", "settled_not_recorded")
+SETTLED_EXHAUSTED_MSG = (
+    "If the script ends with HTTP 503 and the answer says settled: true, your payment went through. "
+    "Do not run it again. Use that transaction."
+)
+
+
+def _json_object(text: str) -> dict:
+    try:
+        obj = json.loads(text)
+    except ValueError:
+        return {}
+    return obj if isinstance(obj, dict) else {}
+
+
+_TX_RE = re.compile(r"\A0x[0-9a-fA-F]{64}\Z")   # whole string only: "$" would also accept a trailing newline
+
+
+def _settled_tx(err_json: dict) -> str | None:
+    tx = err_json.get("transaction")
+    return tx if isinstance(tx, str) and _TX_RE.fullmatch(tx) else None
+
+
+def _is_settled_503(code: int, err_json: dict) -> bool:
+    """A 503 whose answer proves the payment already settled on Base: "settled" is exactly true, or "settled" is absent and
+    a settled error name comes with a 0x + 64-hex transaction. "settled": false / null / "true" / 1 never replays."""
+    if code != 503:
+        return False
+    if err_json.get("settled") is True:
+        return True
+    return "settled" not in err_json and err_json.get("error") in SETTLED_ERRORS and _settled_tx(err_json) is not None
+
+
+class _NoRedirectHandler(urllib.request.HTTPRedirectHandler):
+    """Never follow a redirect for a signed payment request: a 301/302/303/307/308 surfaces as an HTTPError."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+
+# dedicated opener for the signed request: no redirects (and no global urllib opener state)
+_payment_opener = urllib.request.build_opener(_NoRedirectHandler())
+
+
+def _pin_payment_header(http_req) -> None:
+    """Keep X-PAYMENT out of any redirected request, whatever opener is used (stdlib never copies unredirected headers)."""
+    pay = http_req.headers.pop("X-payment", None)
+    if pay is not None:
+        http_req.add_unredirected_header("X-PAYMENT", pay)
+
+
+def send_signed_request(http_req, endpoint: str, basescan_hint: str, opener=None, sleep=None):
+    """Send the already-signed request. A settled 503 is replayed with the SAME Request object (byte-identical body and
+    X-PAYMENT header: no new nonce, no new signature) after 2.5 / 4 / 6 / 10 s. Every other HTTP error stops at once.
+    Returns (raw_body, payment_response_header, status_code, settled_tx_from_a_503_or_None)."""
+    opener = opener or _payment_opener.open
+    sleep = sleep or time.sleep
+    _pin_payment_header(http_req)
+    settled_tx = None
+    for attempt in range(len(SETTLED_REPLAY_WAITS) + 1):
+        try:
+            with opener(http_req, timeout=45) as resp:
+                raw_body = resp.read().decode("utf-8")
+                pay_hdr = resp.headers.get("X-PAYMENT-RESPONSE") or resp.headers.get("PAYMENT-RESPONSE") or ""
+                return raw_body, pay_hdr, resp.status, settled_tx
+        except urllib.error.HTTPError as e:
+            err_body = e.read().decode("utf-8", errors="replace")
+            err_json = _json_object(err_body)
+            if not _is_settled_503(e.code, err_json):
+                raise SystemExit(f"HTTP {e.code} from {endpoint}: {err_body}\n{basescan_hint}")
+            settled_tx = _settled_tx(err_json) or settled_tx
+            if attempt == len(SETTLED_REPLAY_WAITS):
+                tx_line = f"Settled Base transaction: {settled_tx}\n" if settled_tx else ""
+                raise SystemExit(
+                    f"HTTP 503 from {endpoint} after {attempt + 1} attempts with the same signed payment: {err_body}\n"
+                    f"{tx_line}{SETTLED_EXHAUSTED_MSG}"
+                )
+            wait = SETTLED_REPLAY_WAITS[attempt]
+            print(
+                f"[retry {attempt + 1}/{len(SETTLED_REPLAY_WAITS)}] payment settled on Base (tx {settled_tx or 'unknown'}); "
+                f"waiting {wait}s for Worker receipt confirmation — no second charge...",
+                file=sys.stderr,
+            )
+            sleep(wait)
+        except Exception as e:
+            raise SystemExit(f"Network/timeout error calling {endpoint}: {e}\n{basescan_hint}")
+    raise SystemExit(f"unreachable retry state calling {endpoint}\n{basescan_hint}")
 
 
 def check_slot_free_on_github(slot_id: str) -> None:
@@ -340,9 +455,15 @@ def main() -> None:
         print(privkey_to_address(priv))
         return
 
-    host = args.host.rstrip("/")
-    if host not in ALLOWED_HOSTS:
-        raise SystemExit(f"ERROR: --host must be an official Pacta x402 host: {sorted(ALLOWED_HOSTS)}")
+    try:
+        hu = urllib.parse.urlsplit(args.host.strip())
+        host_ok = (hu.scheme == "https" and (hu.hostname or "") in ALLOWED_HOSTS and hu.username is None and hu.password is None
+                   and hu.port in (None, 443) and hu.path in ("", "/") and not hu.query and not hu.fragment)
+    except ValueError:
+        host_ok = False
+    if not host_ok:
+        raise SystemExit(f"ERROR: --host must be https://<one of {sorted(ALLOWED_HOSTS)}> (no port, path or credentials).")
+    host = "https://" + hu.hostname
 
     if not args.key_file:
         raise SystemExit("ERROR: --key-file is required (or run --generate-wallet ./fresh-key.txt first).")
@@ -429,16 +550,8 @@ def main() -> None:
         f"if ${route_cfg['usd']} USDC already transferred to {PAY_TO}, DO NOT PAY AGAIN; "
         f"that Base transaction hash is valid for your entry and our checker accepts it."
     )
-    try:
-        with urllib.request.urlopen(http_req, timeout=45) as resp:
-            raw_body = resp.read().decode("utf-8")
-            pay_hdr = resp.headers.get("X-PAYMENT-RESPONSE") or resp.headers.get("PAYMENT-RESPONSE") or ""
-            status_code = resp.status
-    except urllib.error.HTTPError as e:
-        err_body = e.read().decode("utf-8", errors="replace")
-        raise SystemExit(f"HTTP {e.code} from {endpoint}: {err_body}\n{basescan_hint}")
-    except Exception as e:
-        raise SystemExit(f"Network/timeout error calling {endpoint}: {e}\n{basescan_hint}")
+    # The request (body + X-PAYMENT header) was signed exactly once above; a settled 503 replays this same object.
+    raw_body, pay_hdr, status_code, settled_tx = send_signed_request(http_req, endpoint, basescan_hint)
 
     settlement = {}
     if pay_hdr:
@@ -447,6 +560,9 @@ def main() -> None:
             settlement = json.loads(base64.b64decode(pad).decode("utf-8"))
         except Exception:
             settlement = {"raw_header": pay_hdr}
+    if not settlement.get("transaction") and settled_tx:
+        # the 200 came on a replay and carried no payment-response header: keep the transaction the settled 503 named
+        settlement = {**settlement, "transaction": settled_tx, "source": "settled_503_before_replay"}
 
     parsed_resp = json.loads(raw_body)
     observed_only = {k: v for k, v in parsed_resp.items() if k not in ("grade", "riskScore", "oneLineVerdict")}
