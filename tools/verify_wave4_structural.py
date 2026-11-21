@@ -105,6 +105,127 @@ def validate_catalogue(path: Path, data: dict) -> list[str]:
     return errs
 
 
+def validate_watch(path: Path, data: dict) -> list[str]:
+    errs: list[str] = []
+    for bad in FORBIDDEN_GRADE_KEYS:
+        if bad in data:
+            errs.append(f"{bad}: forbidden field — Pacta never sells or publishes grades in Watch entries")
+
+    req_keys = {
+        "protocol_slug",
+        "chain",
+        "watched_address",
+        "prior_pinned_block",
+        "event_block_number",
+        "event_block_hash",
+        "event_tx_hash",
+        "change_kind",
+        "before_state",
+        "after_state",
+        "payment_tx_hash",
+        "contributor_github",
+        "base_payout_address",
+    }
+    missing = sorted(req_keys - set(data.keys()))
+    if missing:
+        errs.append(f"missing required fields: {', '.join(missing)}")
+        return errs
+
+    protocol_slug = data.get("protocol_slug")
+    event_tx_hash = data.get("event_tx_hash")
+    if not isinstance(protocol_slug, str) or not re.match(r"^[a-z0-9]+(?:-[a-z0-9]+)*$", protocol_slug):
+        errs.append("protocol_slug: must be lowercase kebab-case")
+
+    if isinstance(event_tx_hash, str) and HEX32_RE.match(event_tx_hash) and isinstance(protocol_slug, str):
+        tx8 = event_tx_hash[2:10].lower()
+        expected_filename = f"{protocol_slug}-0x{tx8}.json"
+        if path.name != expected_filename:
+            errs.append(f"filename '{path.name}' must equal '{expected_filename}'")
+    elif path.suffix != ".json":
+        errs.append(f"file must have .json extension, got '{path.name}'")
+
+    manifest_file = ROOT / "bounties" / "wave-4" / "watched-addresses.json"
+    if not manifest_file.exists():
+        errs.append("watched-addresses.json manifest not found")
+        return errs
+    try:
+        manifest_data = json.loads(manifest_file.read_text(encoding="utf-8"))
+    except Exception as e:
+        errs.append(f"failed to parse watched-addresses.json: {e}")
+        return errs
+
+    watched_addresses = manifest_data.get("addresses", [])
+    slug = data.get("protocol_slug")
+    chain = data.get("chain")
+    watched_addr = data.get("watched_address")
+    prior_block = data.get("prior_pinned_block")
+
+    matching_slug = [a for a in watched_addresses if a.get("protocol_slug") == slug]
+    if not matching_slug:
+        errs.append(f"protocol_slug '{slug}' is not in watched-addresses.json")
+    else:
+        matching_target = None
+        for a in matching_slug:
+            if (
+                a.get("chain") == chain
+                and isinstance(watched_addr, str)
+                and a.get("address", "").lower() == watched_addr.lower()
+            ):
+                matching_target = a
+                break
+        if matching_target is None:
+            errs.append(
+                f"watched_address '{watched_addr}' on chain '{chain}' is not a registered watched address for '{slug}'"
+            )
+        else:
+            if prior_block != matching_target.get("pinned_block_number"):
+                errs.append(
+                    f"prior_pinned_block must equal {matching_target.get('pinned_block_number')} for {slug} ({watched_addr})"
+                )
+
+    _check_eip55(data.get("watched_address"), "watched_address", errs)
+    _check_eip55(data.get("base_payout_address"), "base_payout_address", errs)
+
+    if not isinstance(prior_block, int) or isinstance(prior_block, bool) or prior_block <= 0:
+        errs.append("prior_pinned_block: must be a positive integer")
+
+    event_block = data.get("event_block_number")
+    if not isinstance(event_block, int) or isinstance(event_block, bool) or event_block <= 0:
+        errs.append("event_block_number: must be a positive integer")
+    elif isinstance(prior_block, int) and not isinstance(prior_block, bool) and event_block <= prior_block:
+        errs.append(
+            f"event_block_number ({event_block}) must be strictly greater than prior_pinned_block ({prior_block})"
+        )
+
+    if not isinstance(data.get("event_block_hash"), str) or not HEX32_RE.match(data["event_block_hash"]):
+        errs.append("event_block_hash: must be 0x + 64 hex chars")
+    if not isinstance(data.get("event_tx_hash"), str) or not HEX32_RE.match(data["event_tx_hash"]):
+        errs.append("event_tx_hash: must be 0x + 64 hex chars")
+
+    allowed_change_kinds = {
+        "implementation_upgrade",
+        "admin_or_role_change",
+        "safe_signer_or_threshold_change",
+        "timelock_delay_or_queued_op",
+    }
+    if data.get("change_kind") not in allowed_change_kinds:
+        errs.append(f"change_kind: must be one of {sorted(allowed_change_kinds)}")
+
+    if not isinstance(data.get("before_state"), str) or not data["before_state"].strip():
+        errs.append("before_state: must be a non-empty string")
+    if not isinstance(data.get("after_state"), str) or not data["after_state"].strip():
+        errs.append("after_state: must be a non-empty string")
+
+    if data.get("chain") not in {"ethereum", "base"}:
+        errs.append("chain: must be 'ethereum' or 'base'")
+    if not isinstance(data.get("payment_tx_hash"), str) or not HEX32_RE.match(data["payment_tx_hash"]):
+        errs.append("payment_tx_hash: must be 0x + 64 hex chars")
+    if not isinstance(data.get("contributor_github"), str) or not GH_HANDLE_RE.match(data["contributor_github"]):
+        errs.append("contributor_github: invalid GitHub handle")
+
+    return errs
+
+
 def validate_generic_wave4(data: dict) -> list[str]:
     errs: list[str] = []
     if not isinstance(data.get("payment_tx_hash"), str) or not HEX32_RE.match(data["payment_tx_hash"]):
@@ -141,6 +262,39 @@ def run_self_test() -> None:
     bad = dict(sample, grade="A")
     assert validate_catalogue(Path("bounties/wave-4/catalogue/ethereum-arbitrum-delayed-bridge.json"), bad) != []
 
+    watch_sample = {
+        "protocol_slug": "morpho-blue-core",
+        "chain": "ethereum",
+        "watched_address": "0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb",
+        "prior_pinned_block": 26401070,
+        "event_block_number": 26465000,
+        "event_block_hash": "0x" + "11" * 32,
+        "event_tx_hash": "0x1a2b3c4d" + "55" * 28,
+        "change_kind": "admin_or_role_change",
+        "before_state": "owner() = 0xcBa28b38103307Ec8dA98377ffF9816C164f9AFa",
+        "after_state": "owner() = 0x2222222222222222222222222222222222222222",
+        "payment_tx_hash": "0x" + "44" * 32,
+        "contributor_github": "alice-researcher",
+        "base_payout_address": "0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf",
+    }
+    watch_path = Path("bounties/wave-4/watch/morpho-blue-core-0x1a2b3c4d.json")
+    assert validate_watch(watch_path, watch_sample) == []
+
+    bad_grade = dict(watch_sample, grade="A")
+    assert validate_watch(watch_path, bad_grade) != []
+
+    bad_block = dict(watch_sample, event_block_number=26401070)
+    assert validate_watch(watch_path, bad_block) != []
+
+    bad_kind = dict(watch_sample, change_kind="invalid_kind")
+    assert validate_watch(watch_path, bad_kind) != []
+
+    bad_filename = Path("bounties/wave-4/watch/wrong-filename.json")
+    assert validate_watch(bad_filename, watch_sample) != []
+
+    bad_prior = dict(watch_sample, prior_pinned_block=12345)
+    assert validate_watch(watch_path, bad_prior) != []
+
 
 def main() -> None:
     ap = argparse.ArgumentParser()
@@ -165,6 +319,8 @@ def main() -> None:
     norm = str(p).replace(os.sep, "/")
     if "/wave-4/catalogue/" in norm or norm.startswith("bounties/wave-4/catalogue/"):
         errs = validate_catalogue(p, data)
+    elif "/wave-4/watch/" in norm or norm.startswith("bounties/wave-4/watch/"):
+        errs = validate_watch(p, data)
     else:
         errs = validate_generic_wave4(data)
     if errs:
