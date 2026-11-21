@@ -42,7 +42,7 @@ gh pr list --repo Fractal-Neurons/pacta --state all --search "Wave 4 watch: <pro
 Open a Pull Request titled `Wave 4 watch: <protocol_slug> 0x<tx8>` adding one file at `bounties/wave-4/watch/<protocol_slug>-0x<tx8>.json` with:
 - `protocol_slug`, `chain` (`"ethereum"` or `"base"`), and `watched_address` (checksummed EIP-55, from `watched-addresses.json`).
 - `prior_pinned_block` (from `watched-addresses.json`), `event_block_number` (`> prior_pinned_block`, finalized), `event_block_hash`, and `event_tx_hash` (`0x` + 64 hex chars).
-- `change_kind` (`"implementation_upgrade"`, `"admin_or_role_change"`, `"safe_signer_or_threshold_change"`, or `"timelock_delay_or_queued_op"`), `before_state`, and `after_state` (plain factual values only — Pacta never sells grades).
+- `change_kind` (`"implementation_upgrade"`, `"admin_or_role_change"`, `"safe_signer_or_threshold_change"`, or `"timelock_delay_or_queued_op"`), `before_state`, and `after_state` (plain factual values only). We do not publish ratings of protocols, and nobody can pay to change a result.
 - `payment_tx_hash` (settled Base USDC transaction from your `$0.02` `/v1/x402/verdict` call, unique to this entry).
 - `contributor_github` and your checksummed 42-character `base_payout_address` (must match the payer of `payment_tx_hash`).
 

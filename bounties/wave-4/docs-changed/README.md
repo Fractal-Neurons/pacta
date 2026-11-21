@@ -39,7 +39,7 @@ Then run `tools/pacta_x402_call.py` with `--route dossier --slug <protocol_slug>
 Open a Pull Request titled `Wave 4 docs-changed: <protocol_slug>` adding one file at `bounties/wave-4/docs-changed/<protocol_slug>.json` with:
 - `protocol_slug` and `chain` (`"ethereum"` or `"base"`, from `docs-changed-protocols.json`).
 - `surface` and `prior_documented_reference` (copied from the matching record in `docs-changed-protocols.json`).
-- `current_official_docs_url` (`https://` official documentation page or official GitHub commit/blob URL returning `HTTP 200`), `current_verbatim_quote` (`<= 400` characters verbatim from that page), and `what_changed` (one plain, neutral factual sentence naming the old vs. new control-plane commitment — Pacta never sells grades).
+- `current_official_docs_url` (`https://` official documentation page or official GitHub commit/blob URL returning `HTTP 200`), `current_verbatim_quote` (`<= 400` characters verbatim from that page), and `what_changed` (one plain, neutral factual sentence naming the old vs. new control-plane commitment). We do not publish ratings of protocols, and nobody can pay to change a result.
 - `archive_url` *(optional, recommended)*: an archived copy of the page (`https://web.archive.org/...` link) is recommended and speeds our check, because documentation pages can change again before we look.
 - `payment_tx_hash` (settled Base USDC transaction from your `$0.05` `/v1/x402/dossier` call, unique to this entry).
 - `contributor_github` and your checksummed 42-character `base_payout_address` (must match the payer of `payment_tx_hash`).
