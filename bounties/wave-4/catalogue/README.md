@@ -23,9 +23,10 @@ Only targets on the **closed Target List** below are eligible (**Ethereum and Ba
 3. **One open Pull Request at a time** per GitHub account across Wave 4.
 4. **At most 3 awards** per GitHub account and per wallet cluster. Exchange withdrawal wallets do not link accounts; a cluster means entries using the same payout address or wallets that fund or transfer between each other.
 5. **Account age:** Your GitHub account must be at least **6 months old** (created on or before `2026-05-21`).
-6. **Pacta's own team and accounts cannot enter.**
-7. **GitHub (`Fractal-Neurons/pacta`) only:** Never open issues, PRs, or comments in any third-party protocol repository.
-8. **Right to refuse:** We refuse entries that break these rules and state why on the Pull Request.
+6. **Payer must be the payout address:** The wallet that pays the x402 call must be the exact same `base_payout_address` that receives the award; pasting another wallet's payment transaction fails our check.
+7. **Pacta's own team and accounts cannot enter.**
+8. **GitHub (`Fractal-Neurons/pacta`) only:** Never open issues, PRs, or comments in any third-party protocol repository.
+9. **Right to refuse:** We refuse entries that break these rules and state why on the Pull Request.
 
 ## What to Submit (Observed facts only)
 We do not publish ratings of protocols, and nobody can pay to change a result. Entries record **pinned on-chain facts only**: no letter grade is accepted or published, and no claims about protocol documentation belong in this track. Accepted entries appear on `pacta.wtf` as **Observed** at the next site update.

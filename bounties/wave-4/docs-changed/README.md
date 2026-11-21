@@ -31,9 +31,10 @@ Then run `tools/pacta_x402_call.py` with `--route dossier --slug <protocol_slug>
 3. **One open Pull Request at a time** per GitHub account across Wave 4.
 4. **At most 3 Documents Changed awards** per GitHub account and per wallet cluster. Exchange withdrawal wallets do not link accounts; a cluster means entries using the same payout address or wallets that fund or transfer between each other.
 5. **Account age:** Your GitHub account must be at least **6 months old** (created on or before `2026-05-21`).
-6. **Pacta's own team and accounts cannot enter.**
-7. **GitHub (`Fractal-Neurons/pacta`) only:** Never open issues, PRs, or comments in any third-party protocol repository.
-8. **Right to refuse:** We refuse entries that break these rules and state why on the Pull Request.
+6. **Payer must be the payout address:** The wallet that pays the x402 call must be the exact same `base_payout_address` that receives the award; pasting another wallet's payment transaction fails our check.
+7. **Pacta's own team and accounts cannot enter.**
+8. **GitHub (`Fractal-Neurons/pacta`) only:** Never open issues, PRs, or comments in any third-party protocol repository.
+9. **Right to refuse:** We refuse entries that break these rules and state why on the Pull Request.
 
 ## What to Submit
 Open a Pull Request titled `Wave 4 docs-changed: <protocol_slug>` adding one file at `bounties/wave-4/docs-changed/<protocol_slug>.json` with:
