@@ -1,0 +1,15 @@
+{
+  "protocol_slug": "ethena-usde-susde",
+  "chain": "ethereum",
+  "watched_address": "0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94",
+  "prior_pinned_block": 26406106,
+  "event_block_number": 26455577,
+  "event_block_hash": "0x3fd63ec6e88a71df7b69b6a0fd41be007cd8d61b920e94506ea07283e2cb1f0b",
+  "event_tx_hash": "0xfa19ea2e043d6afc22d87de328d997e8b233ca3f34c3ae40a8c8188c172b27ee",
+  "change_kind": "timelock_delay_or_queued_op",
+  "before_state": "At block 26455576, getTimestamp(0xa1ca841370380727e4cb104e298dd8e2e231cba25b4009cd1ba31d9b88faebb7) returned 0.",
+  "after_state": "At block 26455577, getTimestamp(0xa1ca841370380727e4cb104e298dd8e2e231cba25b4009cd1ba31d9b88faebb7) returned 1795255283. The batch scheduled four setConfig calls to watched LayerZero endpoint 0x1a44076050125825900e736c501f859c50fE728c.",
+  "contributor_github": "oppo2357",
+  "base_payout_address": "0x979811E3745fF46cbB57066251F1Aee0c1b24055",
+  "payment_tx_hash": "0x905d824ba64d12148897ea2afaf586037b9e3e2bccdd0646a2581ac61ab4cef4"
+}

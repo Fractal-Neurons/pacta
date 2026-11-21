@@ -5,7 +5,7 @@
 ## Read First — Key Safety, Paid Call & Payout
 - **Key safety:** Use a fresh wallet holding only cents, never your main wallet. Our helper script (`tools/pacta_x402_call.py`) runs its cryptographic self-test on every run, reads your key on your own machine, and never sends or prints it. Pacta will never ask for a private key or seed phrase.
 - **One $0.02 paid call per entry:** Every entry needs one paid x402 `verdict` call of **$0.02 USDC** on Base to **`POST https://api.pacta.wtf/v1/x402/verdict`** (`https://pacta.fractalneurons.com` is the second official host; our checker verifies the payment on-chain). Payment goes to Pacta's treasury wallet **`0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14`** on Base and must come **from the same Base wallet address that will receive your $2.00 USDC award**.
-- **The $0.02 is not returned:** Your 2 cents pay for the API call and are never returned, even if someone else wins that event first or your entry fails our check. If the call returns an error or times out, check your wallet on BaseScan before retrying: if 2 cents already left your wallet to `0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14`, do not pay again — that Base transaction hash is valid for your entry and our checker accepts it.
+- **The $0.02 is not returned:** Your 2 cents pay for the API call and are never returned, even if someone else wins that event first or your entry fails our check. **If the script ends with HTTP 503 and the answer says settled: true, your payment went through. Do not run it again. Use that transaction.** If the call returns any other error or times out, check your wallet on BaseScan before retrying: if 2 cents already left your wallet to `0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14`, do not pay again — that Base transaction hash is valid for your entry and our checker accepts it.
 - **Getting 2 cents of USDC on Base:** If your fresh wallet has no USDC on Base, withdraw a small amount of USDC on the Base network from an exchange that supports Base (fees vary by exchange), or swap a few cents of Base ETH into Base USDC (`0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`). Signing the x402 payment itself needs zero Base ETH gas.
 - **Payout within 48 hours:** Each winning entry is paid **$2.00 USDC on Base** within **48 hours** after our check passes and the Pull Request merges.
 
@@ -34,9 +34,10 @@ gh pr list --repo Fractal-Neurons/pacta --state all --search "Wave 4 watch: <pro
 3. **One open Pull Request at a time** per GitHub account across Wave 4.
 4. **At most 3 Watch awards** per GitHub account and per wallet cluster. Exchange withdrawal wallets do not link accounts; a cluster means entries using the same payout address or wallets that fund or transfer between each other.
 5. **Account age:** Your GitHub account must be at least **6 months old** (created on or before `2026-05-21`).
-6. **Pacta's own team and accounts cannot enter.**
-7. **GitHub (`Fractal-Neurons/pacta`) only:** Never open issues, PRs, or comments in any third-party protocol repository.
-8. **Right to refuse:** We refuse entries that break these rules and state why on the Pull Request.
+6. **Payer must be the payout address:** The wallet that pays the x402 call must be the exact same `base_payout_address` that receives the award; pasting another wallet's payment transaction fails our check.
+7. **Pacta's own team and accounts cannot enter.**
+8. **GitHub (`Fractal-Neurons/pacta`) only:** Never open issues, PRs, or comments in any third-party protocol repository.
+9. **Right to refuse:** We refuse entries that break these rules and state why on the Pull Request.
 
 ## What to Submit
 Open a Pull Request titled `Wave 4 watch: <protocol_slug> 0x<tx8>` adding one file at `bounties/wave-4/watch/<protocol_slug>-0x<tx8>.json` with:
@@ -57,7 +58,7 @@ We verify all 42 characters against your PR file and your on-chain payment, and 
 
 - **Watched Address Manifest (567 entries: 501 Ethereum, 66 Base):** [`bounties/wave-4/watched-addresses.json`](https://github.com/Fractal-Neurons/pacta/blob/main/bounties/wave-4/watched-addresses.json)
 - **Local `$0.02` EIP-3009 Paid-Call Helper (stdlib Python 3, self-tested on every run):** [`tools/pacta_x402_call.py`](https://github.com/Fractal-Neurons/pacta/blob/main/tools/pacta_x402_call.py)
-  - **Verify helper SHA-256 before passing a key:** `eb873d21fc64b2c9f3f8f9b8eb057afcbf0e1f89aeb3477aea9b8e68120ab2cf` (`echo "eb873d21fc64b2c9f3f8f9b8eb057afcbf0e1f89aeb3477aea9b8e68120ab2cf  tools/pacta_x402_call.py" | sha256sum -c -`) (step-by-step instructions: [`bounties/wave-4/catalogue/README.md`](https://github.com/Fractal-Neurons/pacta/blob/main/bounties/wave-4/catalogue/README.md#how-to-make-the-002-paid-call-under-5-minutes-key-stays-local))
+  - **Verify helper SHA-256 before passing a key:** `41b208786ce05fa719d92ce9f1f9b11a724eae2065cf2c9bc7f63c177899f0ed` (`echo "41b208786ce05fa719d92ce9f1f9b11a724eae2065cf2c9bc7f63c177899f0ed  tools/pacta_x402_call.py" | sha256sum -c -`) (step-by-step instructions: [`bounties/wave-4/catalogue/README.md`](https://github.com/Fractal-Neurons/pacta/blob/main/bounties/wave-4/catalogue/README.md#how-to-make-the-002-paid-call-under-5-minutes-key-stays-local)) — *The helper was updated; entries made with the earlier version stay valid. Keep the key file in your home folder, mode `600`; on Windows, run it under WSL.*
 
 ### Submission JSON Schema (`bounties/wave-4/watch/<protocol_slug>-0x<tx8>.json`)
 
