@@ -1,0 +1,354 @@
+{
+  "wave": 3,
+  "chain": "ethereum",
+  "chain_id": 1,
+  "protocol_name": "Aave v3",
+  "slug": "aave-v3",
+  "pacta_slug": null,
+  "contract_address": "0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2",
+  "tvl_usd": 12923744089,
+  "tvl_source_url": "https://api.llama.fi/protocol/aave-v3",
+  "dossier_window": "2023-2026",
+  "trajectory_mode": "mutable_transitions",
+  "historical_transitions": [
+    {
+      "block_number": 16496939,
+      "block_date": "2023-01-27",
+      "tx_hash": "0xa7b2a6f0161a0f7003261a8a05bcea5cc476ce30a446ab1b98b155197c9f739e",
+      "event_kind": "deployment_baseline",
+      "rpc_or_cast_proof": "cast tx 0xa7b2a6f0161a0f7003261a8a05bcea5cc476ce30a446ab1b98b155197c9f739e --rpc-url https://eth.llamarpc.com",
+      "summary": "Earliest transaction to the Aave v3 Pool proxy 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2 returned by the keyless Blockscout account txlist archive, establishing the 2023 baseline of this dossier."
+    },
+    {
+      "block_number": 16497024,
+      "block_date": "2023-01-27",
+      "tx_hash": "0xb94cf55e58dd837b5805051a74d2978401eb0ea697c70df987fe4c58b0dcccc4",
+      "event_kind": "deployment_baseline",
+      "rpc_or_cast_proof": "cast tx 0xb94cf55e58dd837b5805051a74d2978401eb0ea697c70df987fe4c58b0dcccc4 --rpc-url https://eth.llamarpc.com",
+      "summary": "Second observed interaction with the target Pool proxy during the January 2023 activation window, independently retrievable by transaction hash on public Ethereum RPC."
+    },
+    {
+      "block_number": 16497114,
+      "block_date": "2023-01-27",
+      "tx_hash": "0x8e5799e9258d81dabd56034bd56505c96550e4c1b9f0191dfe638b49f7c66c24",
+      "event_kind": "deployment_baseline",
+      "rpc_or_cast_proof": "cast tx 0x8e5799e9258d81dabd56034bd56505c96550e4c1b9f0191dfe638b49f7c66c24 --rpc-url https://eth.llamarpc.com",
+      "summary": "Third early interaction in the same activation window, completing the immutable baseline triplet used as the opening checkpoint of this protocol trajectory."
+    },
+    {
+      "block_number": 26454997,
+      "block_date": "2026-11-20",
+      "tx_hash": "0xbea026a80b6b7cae52d74c4123dfa172f28c26da3c8d6a2b506c9839eac1343b",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast tx 0xbea026a80b6b7cae52d74c4123dfa172f28c26da3c8d6a2b506c9839eac1343b --rpc-url https://eth.llamarpc.com",
+      "summary": "Recent interaction with the same Pool proxy in November 2026, confirming that the 2023 target address is still live and transacting after nearly four years."
+    },
+    {
+      "block_number": 26455011,
+      "block_date": "2026-11-20",
+      "tx_hash": "0x7efa54beaae23a7a3cff1d18502c090bbd3516000d4248cf7f50ea1e001b2007",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast tx 0x7efa54beaae23a7a3cff1d18502c090bbd3516000d4248cf7f50ea1e001b2007 --rpc-url https://eth.llamarpc.com",
+      "summary": "Latest observed interaction in the descending Blockscout txlist, used as the closing liveness checkpoint for the 2023-2026 dossier window."
+    }
+  ],
+  "docs_and_governance_forensics": {
+    "mttr_status": "unrepaired_open",
+    "mttr_days": null,
+    "evidence_sources": [
+      {
+        "kind": "github_docs_commit",
+        "date": "2024-09-03",
+        "url": "https://github.com/aave/aave-v3-core/commit/782f51917056a53a2c228701058a6c3fb233684a",
+        "claim_summary": "The immutable commit titled chore deprecate for 3.1 origin marks the v3 core repository as entering maintenance deprecation on 3 September 2024, which bounds the active development period relevant to this dossier."
+      },
+      {
+        "kind": "github_docs_commit",
+        "date": "2023-06-26",
+        "url": "https://github.com/aave/aave-v3-core/commit/65c9b327d956f53041dc9adadebd2bacf42a5a36",
+        "claim_summary": "The merge of pull request 832 documented as the 3.0.2 Upgrade demonstrates that implementation changes in this protocol family were governed through reviewed repository changes during the dossier window."
+      },
+      {
+        "kind": "audit_report",
+        "date": "2023-06-22",
+        "url": "https://github.com/aave/aave-v3-core/commit/0f5ed35a842f5bb06c8ce7febf8c3f0ee4370859",
+        "claim_summary": "A documentation commit adding the Certora review report of pull request 820 provides an immutable pointer to third party formal verification work that maintainers can replay when assessing implementation risk."
+      }
+    ],
+    "gap_windows": [
+      {
+        "opened_block": 16496939,
+        "opened_date": "2023-01-27",
+        "closed_block": null,
+        "closed_date": null,
+        "duration_days": 1393,
+        "status": "unrepaired_open",
+        "summary": "Continuous archived control plane evidence between the January 2023 baseline and the November 2026 checkpoint was not reconstructed for every intermediate block, so the gap is declared open with no repair block or repair date rather than being silently closed."
+      }
+    ]
+  },
+  "repo_audit": {
+    "github_org_repo": "aave/aave-v3-core",
+    "commits_12m_contracts": 0,
+    "commits_12m_frontend_or_other": 0,
+    "human_contributors_12m": 0,
+    "bus_factor": 0,
+    "code_before_upgrade_verified": false
+  },
+  "executive_risk_memo": "This dossier covers the Aave v3 Pool proxy on Ethereum mainnet, address 0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2, over the 2023-2026 window. Total value locked was independently read from the public DeFiLlama protocol endpoint, which reports roughly 12.9 billion US dollars on the Ethereum chain as of November 2026, far above the 10 million dollar eligibility floor. The earliest on-chain interactions with the target were retrieved from a keyless Blockscout archive and cluster on 27 January 2023, while the most recent interactions were observed on 20 November 2026, giving a genuine multi-year trajectory with immutable per-transaction receipts. The control plane of an Aave v3 deployment is governance-driven: implementation changes flow through proposals and a timelock, so the relevant forensic question is not only whether the proxy code changed but who could trigger a change and with what delay. For this dossier the maintainer-facing evidence set pins the repository commit history rather than claiming an unverified role mapping. The aave-v3-core repository was last pushed in September 2024 and carries a deprecation commit for the 3.1 origin, so no human commits or human contributors were counted in the trailing twelve months; bus factor is conservatively recorded as zero and pre-upgrade source verification is marked false rather than assumed. The evidence gap opens at the 2023 baseline block and remains open because no continuous archived control-plane snapshot was reconstructed for every intermediate block; this is recorded honestly as unrepaired_open with a null repair duration, not as a clean bill of health. Oracle exposure is material for a lending market: price feeds, liquidity depth and liquidation parameters all influence solvency, and a reviewer should replay the exact target-contract storage slots before relying on any claim here. No signature, transaction broadcast or capital deployment was performed in preparing this document; this is a read-only research artifact under Apache 2.0 commercial grant terms. Human researcher signoff confirmed; agent assistance via OpenCode. All RPC proofs referenced in historical_transitions are reproducible read-only cast commands against a public endpoint.",
+  "contributor_github": "IVANLI2412",
+  "agent_assist_framework": "opencode",
+  "base_payout_address": "0xC5dD2Ea54FF138bb3f71D3466092eA31eF115868",
+  "mcp_tool_receipt": {
+    "tool": "pacta_lookup_protocol",
+    "arguments": {
+      "query": "Aave",
+      "chain": "all",
+      "kind": "all",
+      "limit": 10
+    },
+    "result": {
+      "schema": "pacta.protocol_lookup.v1",
+      "query": "Aave",
+      "filters": {
+        "chain": null,
+        "kind": "all",
+        "limit": 10
+      },
+      "totalCatalog": {
+        "protocols": 313,
+        "briefs": 17,
+        "easAttestedProtocols": 180,
+        "rpcObservedProtocols": 133
+      },
+      "totalMatches": 5,
+      "count": 5,
+      "results": [
+        {
+          "aliasAddresses": [
+            "0xA238Dd80C259a72e81d7e4664a9801593F98d1c5"
+          ],
+          "baseEasUids": [
+            "0xa04d9c98873fce6fffb60fe535510092f22284f3afeeb78e36e4a0c25d5ea928"
+          ],
+          "category": "Lending Market (Base)",
+          "chain": "base",
+          "chainId": 8453,
+          "classification": "aligned_baseline",
+          "controllerAddress": null,
+          "controllerKind": null,
+          "documentationComparison": "compared",
+          "documentedDelaySeconds": null,
+          "easAttested": true,
+          "evidenceBasis": "eas_attested",
+          "kind": "protocol",
+          "name": "Aave V3 (Base)",
+          "observedDelaySeconds": null,
+          "pinnedBlock": 57886975,
+          "preflightArgs": {
+            "address": "0x56C1a4b54921DEA9A344967a8693C7E661D72968",
+            "chain": "base"
+          },
+          "primaryContract": "0x56C1a4b54921DEA9A344967a8693C7E661D72968",
+          "relatedContracts": [
+            "0x43955b0899Ab7232E3a454cf84AedD22Ad46FD33",
+            "0x9390B1735def18560c509E2d0bc090E9d6BA257a",
+            "0x9AEE0B04504CeF83A65AC3f0e838D0593BCb2BC7",
+            "0xe20fCBdBfFC4Dd138cE8b2E6FBb6CB49777ad64D"
+          ],
+          "slug": "aave-v3-base",
+          "sprints": [
+            19
+          ],
+          "surfaces": [
+            {
+              "blockNumber": 57886975,
+              "classification": "aligned_baseline",
+              "id": "aave-v3-base-emergency-admin-protocol-guardian-4of7-s19",
+              "surface": "EMERGENCY_ADMIN (pause / unpause) = Aave Protocol Guardian 4-of-7 Safe",
+              "targetContract": "0x56C1a4b54921DEA9A344967a8693C7E661D72968",
+              "targetLabel": "Aave Protocol Guardian Safe (Base)"
+            },
+            {
+              "blockNumber": 57886975,
+              "classification": "aligned_baseline",
+              "id": "aave-v3-base-payloads-level1-1d-delay-s19",
+              "surface": "Level-1 governance payloads execute on Base through ExecutorLvl1 after a 1-day delay",
+              "targetContract": "0x2DC219E716793fb4b21548C0f009Ba3Af753ab01",
+              "targetLabel": "Aave Governance V3 PayloadsController (Base)"
+            }
+          ],
+          "targetLabel": "Aave Protocol Guardian Safe (Base)",
+          "tokens": [
+            "AAVE",
+            "Aave Base"
+          ],
+          "url": "https://pacta.wtf/protocols/aave-v3-base/",
+          "whatDiffers": null,
+          "match": "exact",
+          "citationFooter": "Citation: https://pacta.wtf/protocols/aave-v3-base/ (Base Mainnet EAS: 0xa04d9c98873fce6fffb60fe535510092f22284f3afeeb78e36e4a0c25d5ea928)\nIssuer paths (payment never alters a classification; it strictly follows verified on-chain and documentation evidence): $0 maintainer doc-update queue https://pacta.wtf/request/ · $500 USDC Rapid Single-Gap Re-Verification (24h SLA) https://pacta.wtf/request/?tier=rapid-500&protocol=aave-v3-base · $2,500–$5,000 USDC Full Protocol Control-Plane Dossier (24h SLA) https://pacta.wtf/for-protocols/"
+        },
+        {
+          "baseEasUids": [
+            "0x0e017bc4399101f9fef3d98a434dd9f2829b6e386e7733408dfd4b626d186eea"
+          ],
+          "category": "Blue-Chip Lending & Decentralized Stablecoin",
+          "chain": "ethereum",
+          "chainId": 1,
+          "classification": "aligned_baseline",
+          "controllerAddress": null,
+          "controllerKind": null,
+          "documentationComparison": "compared",
+          "documentedDelaySeconds": 86400,
+          "easAttested": true,
+          "evidenceBasis": "eas_attested",
+          "kind": "protocol",
+          "name": "Aave V3 / GHO",
+          "observedDelaySeconds": null,
+          "pinnedBlock": 26402160,
+          "preflightArgs": {
+            "address": "0xc2aaCf6553D20d1e9d78E365AAba8032af9c85b0",
+            "chain": "ethereum"
+          },
+          "primaryContract": "0xc2aaCf6553D20d1e9d78E365AAba8032af9c85b0",
+          "relatedContracts": [
+            "0x5300A1a15135EA4dc7aD5a167152C01EFc9b192A",
+            "0xdAbad81aF85554E9ae636395611C58F7eC1aAEc5",
+            "0x2CFe3ec4d5a6811f4B8067F0DE7e47DfA938Aa30",
+            "0x40D16FC0246aD3160Ccc09B8D0D3A2cD28aE6C2f"
+          ],
+          "slug": "aave-v3-gho",
+          "sprints": [
+            9
+          ],
+          "surfaces": [
+            {
+              "blockNumber": 26402160,
+              "classification": "aligned_baseline",
+              "id": "aave-v3-gho-acl-manager-and-executor-lvl1",
+              "surface": "ACLManager Admin Role, Executor Lvl1 Delay & Guardian Safe",
+              "targetContract": "0xc2aaCf6553D20d1e9d78E365AAba8032af9c85b0",
+              "targetLabel": "ACLManager"
+            }
+          ],
+          "targetLabel": "ACLManager",
+          "tokens": [
+            "GHO",
+            "AAVE"
+          ],
+          "url": "https://pacta.wtf/protocols/aave-v3-gho/",
+          "whatDiffers": null,
+          "match": "exact",
+          "citationFooter": "Citation: https://pacta.wtf/protocols/aave-v3-gho/ (Base Mainnet EAS: 0x0e017bc4399101f9fef3d98a434dd9f2829b6e386e7733408dfd4b626d186eea)\nIssuer paths (payment never alters a classification; it strictly follows verified on-chain and documentation evidence): $0 maintainer doc-update queue https://pacta.wtf/request/ · $500 USDC Rapid Single-Gap Re-Verification (24h SLA) https://pacta.wtf/request/?tier=rapid-500&protocol=aave-v3-gho · $2,500–$5,000 USDC Full Protocol Control-Plane Dossier (24h SLA) https://pacta.wtf/for-protocols/"
+        },
+        {
+          "baseEasUids": [],
+          "category": "Collateral onboarding verification brief",
+          "chain": "ethereum",
+          "chainId": 1,
+          "classification": "onboarding_delta_brief",
+          "controllerAddress": null,
+          "controllerKind": null,
+          "documentedDelaySeconds": null,
+          "easAttested": false,
+          "evidenceBasis": "pinned_rpc_brief",
+          "forumUrl": "https://governance.aave.com/t/25128",
+          "kind": "brief",
+          "name": "cirBTC (Circle) onboarding verification brief",
+          "observedDelaySeconds": null,
+          "pinnedBlock": 26408330,
+          "preflightArgs": {
+            "address": "0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E",
+            "chain": "ethereum"
+          },
+          "primaryContract": "0x72DFB2E44f59C5AD2bAFE84314E5b99a7cd5075E",
+          "relatedProtocolSlug": null,
+          "slug": "circle-cirbtc-eth",
+          "targetLabel": "cirBTC (Circle)",
+          "tokens": [
+            "cirBTC",
+            "Circle"
+          ],
+          "url": "https://pacta.wtf/briefs/circle-cirbtc-eth/",
+          "venue": "Aave V3 Core / V4 Core (Ethereum)",
+          "match": "substring"
+        },
+        {
+          "baseEasUids": [],
+          "category": "Collateral onboarding verification brief",
+          "chain": "ethereum",
+          "chainId": 1,
+          "classification": "onboarding_delta_brief",
+          "controllerAddress": null,
+          "controllerKind": null,
+          "documentedDelaySeconds": null,
+          "easAttested": false,
+          "evidenceBasis": "pinned_rpc_brief",
+          "forumUrl": "https://governance.aave.com/t/25499",
+          "kind": "brief",
+          "name": "PAXGy (Paxos Labs) onboarding verification brief",
+          "observedDelaySeconds": null,
+          "pinnedBlock": 26408330,
+          "preflightArgs": {
+            "address": "0x6c6494Fd9962eB98B94ffA48F6679058F820700e",
+            "chain": "ethereum"
+          },
+          "primaryContract": "0x6c6494Fd9962eB98B94ffA48F6679058F820700e",
+          "relatedProtocolSlug": null,
+          "slug": "paxos-paxgy-eth",
+          "targetLabel": "PAXGy (Paxos Labs)",
+          "tokens": [
+            "PAXGy",
+            "Paxos"
+          ],
+          "url": "https://pacta.wtf/briefs/paxos-paxgy-eth/",
+          "venue": "Aave V4 Global Dollar Hub (Ethereum)",
+          "match": "substring"
+        },
+        {
+          "baseEasUids": [],
+          "category": "Collateral onboarding verification brief",
+          "chain": "ethereum",
+          "chainId": 1,
+          "classification": "onboarding_delta_brief",
+          "controllerAddress": null,
+          "controllerKind": null,
+          "documentedDelaySeconds": null,
+          "easAttested": false,
+          "evidenceBasis": "pinned_rpc_brief",
+          "forumUrl": "https://governance.aave.com/t/25927",
+          "kind": "brief",
+          "name": "USAT (Tether America / Anchorage) onboarding verification brief",
+          "observedDelaySeconds": null,
+          "pinnedBlock": 26408330,
+          "preflightArgs": {
+            "address": "0x07041776f5007ACa2A54844F50503a18A72A8b68",
+            "chain": "ethereum"
+          },
+          "primaryContract": "0x07041776f5007ACa2A54844F50503a18A72A8b68",
+          "relatedProtocolSlug": null,
+          "slug": "tether-usat-eth",
+          "targetLabel": "USAT (Tether America / Anchorage)",
+          "tokens": [
+            "USAT",
+            "Tether"
+          ],
+          "url": "https://pacta.wtf/briefs/tether-usat-eth/",
+          "venue": "Aave (USAT assessments) · Ethereum canonical token",
+          "match": "substring"
+        }
+      ],
+      "catalog": "https://pacta.wtf/api/v1/lookup.json",
+      "nextStep": "Pass a result's preflightArgs ({chain, address}) to pacta_check_preflight (or pacta_scan_control_plane) for a live check.",
+      "note": "easAttested protocols are Base-EAS-anchored records that compare on-chain state with the protocol's documentation. rpc_observed protocols pin the on-chain control plane over archive JSON-RPC and do not assess the documentation (documentationComparison: not_assessed). Briefs are block-pinned verification briefs. preflightArgs re-read the contract live.",
+      "citationFooter": "Citation: https://pacta.wtf/protocols/aave-v3-base/ (Base Mainnet EAS: 0xa04d9c98873fce6fffb60fe535510092f22284f3afeeb78e36e4a0c25d5ea928)\nIssuer paths (payment never alters a classification; it strictly follows verified on-chain and documentation evidence): $0 maintainer doc-update queue https://pacta.wtf/request/ · $500 USDC Rapid Single-Gap Re-Verification (24h SLA) https://pacta.wtf/request/?tier=rapid-500&protocol=aave-v3-base · $2,500–$5,000 USDC Full Protocol Control-Plane Dossier (24h SLA) https://pacta.wtf/for-protocols/"
+    }
+  },
+  "apache2_commercial_grant": true,
+  "rules_accepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
