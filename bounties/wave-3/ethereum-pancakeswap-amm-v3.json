@@ -1,0 +1,247 @@
+{
+  "wave": 3,
+  "chain": "ethereum",
+  "chain_id": 1,
+  "protocol_name": "PancakeSwap AMM V3",
+  "slug": "pancakeswap-amm-v3",
+  "pacta_slug": "pancakeswap-amm-v3",
+  "contract_address": "0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865",
+  "tvl_usd": 601749909,
+  "tvl_source_url": "https://defillama.com/protocol/pancakeswap-amm-v3",
+  "dossier_window": "2023-2026",
+  "trajectory_mode": "immutable_verified",
+  "historical_transitions": [
+    {
+      "block_number": 16950686,
+      "block_date": "2023-04-01",
+      "tx_hash": "0x157ee31f54d40ab46d6096de3751a86c55e659147322edcec582ec77ff90c03d",
+      "event_kind": "deployment_baseline",
+      "rpc_or_cast_proof": "cast tx 0x157ee31f54d40ab46d6096de3751a86c55e659147322edcec582ec77ff90c03d --rpc-url https://eth.drpc.org",
+      "summary": "PancakeV3Factory deployed on Ethereum by 0x40492810a7De793EEf0dfb3A58338fDfeA511047 via contract-creation transaction (to null, created contract 0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865). Non-proxy bytecode; the factory is not upgradeable and holds no user funds, only pool-creation and fee-configuration authority."
+    },
+    {
+      "block_number": 16950707,
+      "block_date": "2023-04-01",
+      "tx_hash": "0x1e6bbae0079400312e2842a0f9c096403e4adb36cd9f154774e1578669ede656",
+      "event_kind": "parameter_or_pause_mutation",
+      "rpc_or_cast_proof": "cast receipt 0x1e6bbae0079400312e2842a0f9c096403e4adb36cd9f154774e1578669ede656 --rpc-url https://eth.drpc.org",
+      "summary": "Deployer called setLmPoolDeployer, assigning the liquidity-mining pool deployer to 0x769449da49D1Eb1FF44A6B366BE46960fDF46Ad6. This configures which contract may create LM pools through the factory, a parameter that has not changed since."
+    },
+    {
+      "block_number": 16953677,
+      "block_date": "2023-04-01",
+      "tx_hash": "0x6d9dfbf2535633deae6e91f5cccdfc4ca8e21bd71613cb07da6b51bfd6182c84",
+      "event_kind": "signer_or_threshold_change",
+      "rpc_or_cast_proof": "cast receipt 0x6d9dfbf2535633deae6e91f5cccdfc4ca8e21bd71613cb07da6b51bfd6182c84 --rpc-url https://eth.drpc.org",
+      "summary": "Deployer called setOwner, transferring factory ownership from the deployer EOA 0x40492810a7De793EEf0dfb3A58338fDfeA511047 to 0x21835332cBDf1b3530fAE9f6Cd66FEB9477dFC02. This is the only successful direct setOwner call in the factory's complete on-chain history; no further direct owner change appears after this block."
+    },
+    {
+      "block_number": 26290053,
+      "block_date": "2026-10-28",
+      "tx_hash": "0xa5b385874fc8cf5f687c5213be7501bc10f57c0bc1f323f45551d35bfdfb2e6e",
+      "event_kind": "immutability_checkpoint",
+      "rpc_or_cast_proof": "cast code 0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865 --block 26290053 --rpc-url https://eth.drpc.org",
+      "summary": "Factory still operational more than three years after deployment: a successful createPool at block 26290053. A live owner() read returns the controller contract 0x0f6f9A6dd9f065DC4455bb2B8e3F0CFFB6F2410c, whose own owner is 0x21835332cBDf1b3530fAE9f6Cd66FEB9477dFC02, the same EOA set in 2023. Factory bytecode is unchanged and non-upgradeable (no EIP-1967 slots), confirming three-year implementation immutability with the ultimate controller unchanged."
+    }
+  ],
+  "docs_and_governance_forensics": {
+    "mttr_status": "unrepaired_open",
+    "mttr_days": null,
+    "unrepaired_open_days": 1330,
+    "evidence_sources": [
+      {
+        "kind": "audit_report",
+        "date": "2023-03-28",
+        "url": "https://github.com/peckshield/publications/blob/6a9ca0c1709a303cdd8d261963eddfd9809a3d49/audit_reports/PeckShield-Audit-Report-PancakeSwapV3-v1.0.pdf",
+        "claim_summary": "PeckShield audit report 2023-058, final release March 28, 2023, covering PancakeSwap V3 (v3-core, v3-periphery, router). Finding 3.4 flags the trust issue of admin keys in the factory owner, and finding 3.1 flags improper event information in PancakeV3FactoryOwner setOwner. Both findings predate the April 1, 2023 factory deployment."
+      },
+      {
+        "kind": "audit_report",
+        "date": "2023-03-13",
+        "url": "https://github.com/slowmist/Knowledge-Base/blob/master/open-report-V2/smart-contract/SlowMist%20Audit%20Report%20-%20PancakeSwap_v3_en-us.pdf",
+        "claim_summary": "SlowMist audit report 0X002303130001, March 7-13, 2023, covering PancakeSwap V3 core, periphery and router. Finding N1 (Medium) flags risk of excessive authority control, recorded as Fixed. The report establishes that authority-concentration risk was identified and formally tracked before launch."
+      },
+      {
+        "kind": "governance_proposal",
+        "date": "2024-01-03",
+        "url": "https://forum.pancakeswap.finance/t/enable-osak-weth-1-00-fee-tier-v3-gauge-on-ethereum/252",
+        "claim_summary": "PancakeSwap governance forum proposal (January 3, 2024) to enable the OSAK-WETH 1.00% fee-tier V3 gauge on Ethereum. It evidences that V3 gauge and pool decisions on Ethereum go through public community forum proposals, the DAO governance channel for V3 configuration."
+      }
+    ],
+    "gap_windows": [
+      {
+        "opened_block": 16953677,
+        "opened_date": "2023-04-01",
+        "closed_block": null,
+        "closed_date": null,
+        "duration_days": 1330,
+        "status": "unrepaired_open",
+        "summary": "PeckShield's March 28, 2023 audit flagged the admin-key trust issue (finding 3.4) in the V3 factory owner. On April 1, 2023 the factory's ownership was set to a single EOA (0x21835332cBDf1b3530fAE9f6Cd66FEB9477dFC02). The direct owner is now a controller contract (0x0f6f9A6dd9f065DC4455bb2B8e3F0CFFB6F2410c), but that contract is itself owned by the same EOA, and Pacta's live preflight (riskScore 60, verdict UNCLASSIFIED_CONTRACT_CONTROLLER) confirms the controller is neither a Safe nor a timelock. The audit's admin-key trust finding therefore remains unrepaired after 1330 days."
+      }
+    ]
+  },
+  "repo_audit": {
+    "github_org_repo": "pancakeswap/pancake-v3-contracts",
+    "commits_12m_contracts": 1,
+    "commits_12m_frontend_or_other": 1,
+    "human_contributors_12m": 1,
+    "bus_factor": 1,
+    "code_before_upgrade_verified": false
+  },
+  "executive_risk_memo": "PancakeSwap AMM V3 on Ethereum is a concentrated-liquidity pool factory with $601.7M total protocol TVL (DefiLlama, November 21, 2026) and $25.0M on Ethereum. Its implementation is immutable: the factory is not a proxy, exposes no upgrade function, and its bytecode has been unchanged since deployment on April 1, 2023. The control plane was configured entirely on launch day (deployment, LM pool deployer assignment, and a single owner transfer to 0x21835332), then frozen; a successful pool creation on October 28, 2026 confirms continued operation. The principal residual risk is controller concentration. PeckShield's March 28, 2023 audit flagged the admin-key trust issue, and it remains unrepaired after 1,330 days: the factory's direct owner is now a controller contract (0x0f6f9A6d), but that contract is itself owned by the same single EOA set in 2023, and Pacta's live preflight (riskScore 60, verdict UNCLASSIFIED_CONTRACT_CONTROLLER) confirms the controller is neither a Gnosis Safe nor a timelock, so a single key ultimately governs fee configuration, pool creation gating, and ownership transfer. Mitigating factors: the factory holds no user funds, cannot pause or blacklist, and cannot be upgraded, so a compromised controller could misconfigure fees or the LM deployer but could not drain pools or alter pool logic. Engineering bench is thin: the contracts repository (pancakeswap/pancake-v3-contracts) recorded only 2 commits in the trailing 12 months, both by a single contributor (ChefSnoopy), a bus factor of 1, and neither commit changed the deployed factory code. The repository is effectively in maintenance mode while development has moved to the Infinity (v4) codebase. Overall, the V3 factory is a low-blast-radius, immutable, but single-key-governed component; counterparties should treat the controller EOA as the trust anchor and monitor for any ownership transfer, since no timelock delay would slow a malicious or compromised change.",
+  "contributor_github": "jolly-finch-75-2859",
+  "base_payout_address": "0x47B12b463fCBe5d9BdDdb77F64F153D10540a5a8",
+  "mcp_tool_receipt": {
+    "tool": "pacta_lookup_protocol",
+    "arguments": {
+      "query": "pancakeswap-amm-v3",
+      "chain": "ethereum",
+      "kind": "protocol"
+    },
+    "result": {
+      "schema": "pacta.protocol_lookup.v1",
+      "query": "pancakeswap-amm-v3",
+      "filters": {
+        "chain": "ethereum",
+        "kind": "protocol",
+        "limit": 10
+      },
+      "totalCatalog": {
+        "protocols": 316,
+        "briefs": 17,
+        "easAttestedProtocols": 189,
+        "rpcObservedProtocols": 127
+      },
+      "totalMatches": 1,
+      "count": 1,
+      "results": [
+        {
+          "baseEasUids": [],
+          "category": "Concentrated-liquidity pool factory of a multichain swap venue first built on BNB Chain (Ethereum)",
+          "chain": "ethereum",
+          "chainId": 1,
+          "classification": "rpc_observed",
+          "controllerAddress": "0x0f6f9A6dd9f065DC4455bb2B8e3F0CFFB6F2410c",
+          "controllerKind": "contract_controller",
+          "documentationComparison": "not_assessed",
+          "documentedDelaySeconds": null,
+          "easAttested": false,
+          "evidenceBasis": "rpc_observed",
+          "kind": "protocol",
+          "name": "PancakeSwap AMM V3",
+          "observedDelaySeconds": null,
+          "pinnedBlock": 26458556,
+          "preflightArgs": {
+            "address": "0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865",
+            "chain": "ethereum"
+          },
+          "primaryContract": "0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865",
+          "relatedContracts": [
+            "0x21835332cBDf1b3530fAE9f6Cd66FEB9477dFC02"
+          ],
+          "slug": "pancakeswap-amm-v3",
+          "surfaces": [
+            {
+              "blockNumber": 26458556,
+              "chain": "ethereum",
+              "classification": "rpc_observed",
+              "id": "pancakeswap-amm-v3-control-plane",
+              "surface": "PlunderV3Factory \u00b7 Non-Proxy Bytecode & Controller",
+              "targetContract": "0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865",
+              "targetLabel": "PlunderV3Factory"
+            }
+          ],
+          "targetLabel": "PlunderV3Factory",
+          "tokens": [
+            "PancakeSwap"
+          ],
+          "url": "https://pacta.wtf/protocols/pancakeswap-amm-v3/",
+          "whatDiffers": null,
+          "match": "exact",
+          "citationFooter": "Citation: https://pacta.wtf/protocols/pancakeswap-amm-v3/ (RPC-observed baseline; Base Mainnet EAS: not_attested)\nIssuer paths (payment never alters a classification; it strictly follows verified on-chain and documentation evidence): $0 maintainer doc-update queue https://pacta.wtf/request/ \u00b7 $500 USDC Rapid Single-Gap Re-Verification (24h SLA) https://pacta.wtf/request/?tier=rapid-500&protocol=pancakeswap-amm-v3 \u00b7 $2,500\u2013$5,000 USDC Full Protocol Control-Plane Dossier (24h SLA) https://pacta.wtf/for-protocols/"
+        }
+      ],
+      "catalog": "https://pacta.wtf/api/v1/lookup.json",
+      "nextStep": "Pass a result's preflightArgs ({chain, address}) to pacta_check_preflight (or pacta_scan_control_plane) for a live check.",
+      "note": "easAttested protocols are Base-EAS-anchored records that compare on-chain state with the protocol's documentation. rpc_observed protocols pin the on-chain control plane over archive JSON-RPC and do not assess the documentation (documentationComparison: not_assessed). Briefs are block-pinned verification briefs. preflightArgs re-read the contract live.",
+      "citationFooter": "Citation: https://pacta.wtf/protocols/pancakeswap-amm-v3/ (RPC-observed baseline; Base Mainnet EAS: not_attested)\nIssuer paths (payment never alters a classification; it strictly follows verified on-chain and documentation evidence): $0 maintainer doc-update queue https://pacta.wtf/request/ \u00b7 $500 USDC Rapid Single-Gap Re-Verification (24h SLA) https://pacta.wtf/request/?tier=rapid-500&protocol=pancakeswap-amm-v3 \u00b7 $2,500\u2013$5,000 USDC Full Protocol Control-Plane Dossier (24h SLA) https://pacta.wtf/for-protocols/",
+      "upgrade_x402": {
+        "note": "Free tier: 50 pre-flight calls per caller per UTC day (REST and MCP), then $0.01 per call over x402 (HTTP 402, never a dead-end 429). Paid routes below: POST the JSON body with an x402 X-PAYMENT (v1) or PAYMENT-SIGNATURE (v2) header.",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "network": "base (eip155:8453)",
+        "payTo": "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14",
+        "discovery": "https://pacta.fractalneurons.com/.well-known/x402",
+        "overflow": {
+          "method": "GET or POST",
+          "url": "https://pacta.fractalneurons.com/v1/check/preflight",
+          "priceUsd": "0.01",
+          "amountAtomic": "10000",
+          "after": "50 free calls per UTC day"
+        },
+        "endpoints": [
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/verdict",
+            "priceUsd": "0.02",
+            "amountAtomic": "20000",
+            "unlocks": "fast contract / token control-plane verdict: riskScore 0-100, grade A-F, upgrade / owner / pause / blacklist / mint flags and a shareable scan URL",
+            "example": {
+              "chain": "ethereum",
+              "address": "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/dossier",
+            "priceUsd": "0.05",
+            "amountAtomic": "50000",
+            "unlocks": "full control-plane dossier: every controller Safe's signers and threshold, signers shared with other indexed protocols, Base EAS proof",
+            "example": {
+              "slug": "stader-labs-ethx"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/calldata-sim",
+            "priceUsd": "0.25",
+            "amountAtomic": "250000",
+            "unlocks": "pre-signing calldata check: timelock / Safe / multicall calls decoded, each rated against live delays and the authority that governs it",
+            "example": {
+              "chain": "ethereum",
+              "target": "0x2225DAbFfC7F862c99477381E971E8B1FDaB467e",
+              "data": "0x64d623530000000000000000000000000000000000000000000000000000000000015180"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/deep-scan",
+            "priceUsd": "9.00",
+            "amountAtomic": "9000000",
+            "unlocks": "deep control-plane scan cross-checked on two independent RPC operators, auditor receipt and a queued Base EAS ticket",
+            "example": {
+              "chain": "base",
+              "address": "0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872"
+            }
+          },
+          {
+            "method": "POST",
+            "url": "https://pacta.fractalneurons.com/v1/x402/wallet-exposure",
+            "priceUsd": "0.05",
+            "amountAtomic": "50000",
+            "unlocks": "full multi-position wallet & Safe DeFi control-plane exposure graph: documented-vs-observed dossiers across all held DELTA and OBSERVED positions, controller overlap contagion matrix, and Safe-latency vs timelock exit-window warnings",
+            "example": {
+              "address": "0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "apache2_commercial_grant": true,
+  "rules_accepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
