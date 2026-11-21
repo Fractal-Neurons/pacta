@@ -515,7 +515,7 @@ async function beaconScenario() {
       res.b_cta_clearance_brief = same(br.kinds, ["free_notify", "clearance", "clearance_invoice"]) && same(br.events, ["cta_click", "cta_click", "cta_click"]);
     }
     const hp = ctaClicks(input.index, "/");
-    res.b_cta_pricing = same(hp.kinds, ["pricing_free", "pricing_mcp", "pricing_scan_9", "pricing_webhook_49", "pricing_seal_99",
+    res.b_cta_pricing = same(hp.kinds, ["pricing_free", "pricing_mcp", "pricing_scan_9", "pricing_watch_free", "pricing_seal_99",
                                         "pricing_x402_verdict", "pricing_x402_dossier", "pricing_x402_wallet_exposure", "pricing_x402_calldata_sim", "pricing_x402_deep_scan",
                                         "pricing_clearance", "pricing_continuous", "pricing_community", "pricing_api_sla"])
       && hp.events.length === 14 && hp.events.every((e) => e === "cta_click");
@@ -1340,8 +1340,9 @@ async function checkoutScenario() {
       && d.querySelector("[data-co-eip681]").getAttribute("href") === eip(C.skus[sku])
       && d.getElementById("co-wallet").hidden === false && !m.hasAttribute("open") && d.getElementById("co-result").hidden === true;
   };
-  res.co_single_sku_pages = shape(page(input.scan, "/scan/").document, "wallet-report-9") && shape(page(input.webhook, "/webhook/").document, "radar-webhook-49")
-    && shape(page(input.seal, "/seal/").document, "reverify-seal-99");
+  const webDoc = page(input.webhook, "/webhook/").document;   // /webhook/ sells nothing: no checkout form, no pay button
+  res.co_single_sku_pages = shape(page(input.scan, "/scan/").document, "wallet-report-9") && shape(page(input.seal, "/seal/").document, "reverify-seal-99")
+    && !webDoc.getElementById("co-form") && !webDoc.querySelector("[data-co-pay]") && !!webDoc.getElementById("watch-free-form");
   // no browser wallet: the primary action checks the order first, then opens the manual transfer drawer (never a dead button)
   calls = [];
   let p = page(input.scan, "/scan/", { fetch: okFetch(200, {}) }), d = p.document;
@@ -1449,37 +1450,32 @@ async function checkoutScenario() {
     && ids3.every((id) => d.getElementById(id).disabled === false) && d.getElementById("co-result").hidden === false;
   res.co_snapshot_and_inputs_locked = locked3 && posts3.length === 1
     && same(b3, { sku: "wallet-report-9", tx_hash: TXH, chain: "base", target_chain: "ethereum", target_address: ADDR, protocol_or_docs: "https://docs.example.invalid/a", webhook_or_contact: "@harness" });
-  // /webhook/: quick picks fill the timelock / Safe and the protocol; the destination is required and must be https; empty fields stay out
+  // /webhook/: the free watchlist ($0). A pick fills the slug and chain; a webhook URL is refused as a contact (the API keeps email,
+  // @telegram or GitHub handles); the one request is exactly the free-queue body; an address becomes <chain>:0x<lowercase hex>
+  const wfSubmit = (d) => { const ev = new Event_("submit"); d.getElementById("watch-free-form").dispatchEvent(ev); return ev; };
   calls = [];
-  p = page(input.webhook, "/webhook/", { fetch: okFetch(200, { order_id: "ord_w49" }) }); d = p.document;
-  const picks = d.querySelectorAll("[data-co-pick]");
-  const ethena = picks.find((b) => b.textContent === "Ethena"), aave = picks.find((b) => b.textContent === "Aave v3");
-  click(ethena);
-  const ethOk = /^0x[0-9a-fA-F]{40}$/.test(ethena.getAttribute("data-address")) && d.getElementById("co-target").value === ethena.getAttribute("data-address")
-    && d.getElementById("co-docs").value === ethena.getAttribute("data-protocol") && ethena.getAttribute("aria-pressed") === "true";
-  // one visible target field: the pick shows the protocol name (never a hex) and the short controller in the hint; typing an
-  // address or a name fills exactly one of the two hidden order fields; a bad address is reported on the visible field
-  const watchEl = d.getElementById("co-watch"), hintEl = d.querySelector("[data-co-watch-hint]");
-  const watchPick = !!watchEl && watchEl.value === ethena.getAttribute("data-protocol") && !/0x[0-9a-fA-F]{40}/.test(watchEl.value)
-    && hintEl.textContent.indexOf(ethena.getAttribute("data-address").slice(0, 6) + "…") !== -1;
-  setField(d, "co-watch", ADDR);
-  const typedAddr = d.getElementById("co-target").value === ADDR && d.getElementById("co-docs").value === "" && ethena.getAttribute("aria-pressed") === "false";
-  setField(d, "co-watch", "Morpho");
-  const typedName = d.getElementById("co-target").value === "" && d.getElementById("co-docs").value === "Morpho";
-  setField(d, "co-watch", "0x12"); setv(d, "co-contact", "https://hooks.example.invalid/x"); setv(d, "co-tx", TXH); submit(d); await flush();
-  const badAddr = calls.length === 0 && d.getElementById("co-target-err").hidden === false && watchEl.getAttribute("aria-invalid") === "true";
-  res.co_webhook_single_target = watchPick && typedAddr && typedName && badAddr
-    && d.getElementById("co-target").getAttribute("type") === "hidden" && d.getElementById("co-docs").getAttribute("type") === "hidden";
-  click(aave);
-  const aaveOk = d.getElementById("co-target").value === "" && d.getElementById("co-docs").value === aave.getAttribute("data-protocol") && ethena.getAttribute("aria-pressed") === "false";
-  setv(d, "co-contact", "http://hooks.example.invalid/x"); setv(d, "co-tx", TXH); submit(d); await flush();
-  const httpRefused = calls.length === 0 && d.getElementById("co-contact-err").hidden === false;
-  setv(d, "co-contact", ""); submit(d); await flush();
-  const contactNeeded = calls.length === 0 && /alerts should go/.test(d.getElementById("co-contact-err").textContent);
-  setv(d, "co-contact", "https://hooks.example.invalid/x"); submit(d); await flush(); await flush();
-  res.co_webhook_picks_and_rules = ethOk && aaveOk && httpRefused && contactNeeded && calls.length === 1
-    && same(JSON.parse(calls[0][1].body), { sku: "radar-webhook-49", tx_hash: TXH, chain: "base", target_chain: "ethereum", protocol_or_docs: aave.getAttribute("data-protocol"),
-                                             webhook_or_contact: "https://hooks.example.invalid/x" });
+  p = page(input.webhook, "/webhook/", { fetch: okFetch(200, { ok: true, request_id: "req_watch1" }) }); d = p.document;
+  const wfApi = d.getElementById("watch-free-form").getAttribute("data-watch-api");
+  const wfEth = d.querySelectorAll("[data-wf-pick]").find((b) => b.textContent === "Ethena");
+  click(wfEth);
+  const wfPick = d.getElementById("wf-target").value === wfEth.getAttribute("data-slug") && wfEth.getAttribute("aria-pressed") === "true";
+  setv(d, "wf-contact", "https://hooks.example.invalid/x"); wfSubmit(d); await flush();
+  const wfHookRefused = calls.length === 0 && d.getElementById("wf-contact-err").hidden === false;
+  setv(d, "wf-contact", ""); wfSubmit(d); await flush();
+  const wfContactNeeded = calls.length === 0 && d.getElementById("wf-contact-err").hidden === false;
+  setv(d, "wf-contact", "@pactaqa"); wfSubmit(d); await flush(); await flush();
+  res.watch_free_posts_exact_body = wfPick && wfHookRefused && wfContactNeeded && calls.length === 1 && calls[0][0] === wfApi
+    && /^https:\/\/pacta-x402\.pacta\.workers\.dev\/v1\/requests$/.test(wfApi) && calls[0][1].method === "POST"
+    && same(JSON.parse(calls[0][1].body), { request_type: "mcp_or_api_feature", target_subject: wfEth.getAttribute("data-slug"),
+                                            requested_capability: "Pilot timelock and signer watchlist request", urgency_track: "community_queue_free",
+                                            contact_handle: "@pactaqa" })
+    && d.querySelector("[data-wf-done]").hidden === false && /req_watch1/.test(d.querySelector("[data-wf-done-msg]").textContent);
+  calls = [];
+  p = page(input.webhook, "/webhook/", { fetch: okFetch(200, { ok: true, request_id: "req_watch2" }) }); d = p.document;
+  setv(d, "wf-chain", "base"); setv(d, "wf-target", "0x12"); setv(d, "wf-contact", "ops@example.invalid"); wfSubmit(d); await flush();
+  const wfBadAddr = calls.length === 0 && d.getElementById("wf-target-err").hidden === false;
+  setv(d, "wf-target", ADDR); wfSubmit(d); await flush(); await flush();
+  res.watch_free_address_subject = wfBadAddr && calls.length === 1 && JSON.parse(calls[0][1].body).target_subject === "base:" + ADDR.toLowerCase();
   // /seal/?protocol=<slug> (the protocol pages' seal link): the indexed contract and name come from the public catalog
   const lkFetch = (url) => {
     const u = String(url);
@@ -1591,7 +1587,7 @@ async function xPixelScenario() {
   await flush();
   const pfLeadOnce = same(pfPage.window.__pactaTwqEvents, [["config", "rjbqn"], ["event", "tw-rjbqn-rjhie", {}]]);
 
-  const ctaWallet = run(input.webhook, input.app, { path: "/webhook/", hostname: "127.0.0.1" });
+  const ctaWallet = run(input.seal, input.app, { path: "/seal/", hostname: "127.0.0.1" });
   click(ctaWallet.document.getElementById("co-wallet"));
   click(ctaWallet.document.getElementById("co-wallet"));
   const walletLeadOnce = same(ctaWallet.window.__pactaTwqEvents, [["config", "rjbqn"], ["event", "tw-rjbqn-rjhie", {}]]);
