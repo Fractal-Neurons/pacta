@@ -48,9 +48,15 @@ def fmt_delay(s):
 
 
 def first_sentence(text):
+    """The first sentence: up to the first '.' or ';' followed by a space (or the end). A ';' inside parentheses never ends it
+    ("(token distribution; OBOL token): '…'" keeps its quote)."""
     t = re.sub(r"\s+", " ", (text or "").strip())
-    m = re.match(r"(.+?[.;])(?:\s|$)", t)
-    t = m.group(1) if m else t
+    depth = 0
+    for i, ch in enumerate(t):
+        depth += (ch == "(") - (ch == ")") if ch in "()" else 0
+        if ch in ".;" and (i + 1 == len(t) or t[i + 1] == " ") and not (ch == ";" and depth > 0) and i > 0:
+            t = t[:i + 1]
+            break
     return t if len(t) <= MAX_TEXT else t[:MAX_TEXT - 1].rstrip() + "…"
 
 

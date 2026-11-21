@@ -109,6 +109,22 @@ class Upgradeability(unittest.TestCase):
         self.assertEqual(bio["value"], "BIO token contract is not a proxy (non-upgradeable); one MINTER_ROLE holder is an ERC-1967 Wormhole NttManager proxy")
 
 
+class Polish(unittest.TestCase):
+    def test_first_sentence_keeps_a_semicolon_inside_parentheses(self):
+        t = "docs.obol.org (token distribution; OBOL token): 'The total supply is capped at 500 million tokens.' / more"
+        self.assertIn("capped at 500 million tokens", CD.first_sentence(t))
+        self.assertEqual(CD.first_sentence("A b; c d."), "A b;")
+        obol = open(os.path.join(ROOT, "docs", "protocols", "obol-network", "index.html"), encoding="utf-8").read()
+        self.assertIn("The total supply is capped at 500 million tokens.", obol)
+
+    def test_upshift_lead_headline_sits_above_its_scope_sentence(self):
+        page = open(os.path.join(ROOT, "docs", "protocols", "upshift", "index.html"), encoding="utf-8").read()
+        lead = page.find("<strong>Vault ProxyAdmin multisig: docs state generally 4 of 6, the Safe is 2-of-3</strong> "
+                         '<span class="wd-block mono">(#26,441,165)</span>')
+        self.assertGreater(lead, 0)
+        self.assertLess(lead, page.find('data-wd-scope>Upshift describes the ProxyAdmin Safe as generally 4-of-6'))
+
+
 class Wording(unittest.TestCase):
     def test_no_aggregate_overstatement(self):
         self.assertNotIn("across control surfaces", json.dumps(j("api", "v1", "scorecards.json")))

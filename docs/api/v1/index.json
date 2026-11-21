@@ -9514,7 +9514,7 @@
       "recentChange": false
     },
     "upshift-proxyadmin-safe-s28": {
-      "headline": null,
+      "headline": "Vault ProxyAdmin multisig: docs state generally 4 of 6, the Safe is 2-of-3",
       "pinnedBlock": 26441165,
       "scope": "Upshift describes the ProxyAdmin Safe as generally 4-of-6 and discloses upgrades without a timelock, while Pacta recorded the ProxyAdmin owner of vault 0xE9B725010A9E419412ed67d0fA5f3A5f40159D32 as 2-of-3 at Ethereum block 26,441,165; the different signer count does not by itself show that one organization can upgrade alone.",
       "unresolved": false,

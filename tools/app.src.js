@@ -797,7 +797,12 @@
   }
   function firstSentence(t) {
     t = String(t || "").replace(/\s+/g, " ").trim();
-    var m = t.match(/^(.+?[.;])(?:\s|$)/); t = m ? m[1] : t;
+    // the first '.' or ';' followed by a space (or the end); a ';' inside parentheses never ends the sentence (mirrors control_diff.py)
+    for (var i = 1, d = 0; i < t.length; i++) {
+      var c = t.charAt(i);
+      if (c === "(") d++; else if (c === ")") d--;
+      if ((c === "." || (c === ";" && d <= 0)) && (i + 1 === t.length || t.charAt(i + 1) === " ")) { t = t.slice(0, i + 1); break; }
+    }
     return t.length <= 220 ? t : t.slice(0, 219).replace(/\s+$/, "") + "…";
   }
   function whatDiffers(e) {

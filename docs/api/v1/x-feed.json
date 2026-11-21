@@ -3,8 +3,8 @@
  "description": "Pacta findings ready to post on X: one item per published protocol (docs-vs-chain delta, changed recently, unresolved scope, protective delta, aligned baseline or RPC-observed) plus active timelock operations from the radar. mainPostText has no links; replyPostText carries the receipt page and the Base EAS attestation. feedId is stable: post each id once.",
  "generatedFrom": {
   "site": {
-   "scorecards.json": "079ec7b8afa38706207fcb16ae7053febc4abc4a10ce70584dd129f9ab361481",
-   "index.json": "dcd3f01f6506793b828761e552dbefa30f3d1005ec29861087dcc70baed0ef73",
+   "scorecards.json": "e460827363b1408b089a0d7b4fafe2edeb4ef157ccba73ccd8f39fd47c08ced3",
+   "index.json": "ca049505a79477531edbf54edab960fc015a29377c841a4af91eb6c568e67d44",
    "rpc-pinned.json": "108919b7ce46d2c3e09943bbd5dad4344ee375a275c6056f4b391a57ee11a418",
    "radar.json": "16d9637777dc1df9babb767d0ac31c4e1fe8c339332ea815cc32db745d097e1d",
    "protocols.json": "79cebfc7f1a25679e57be6f47f952cd0235a5fa5e942dd351f25e0d35463a336"

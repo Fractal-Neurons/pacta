@@ -963,7 +963,7 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "finding": "Voter emergency council and epoch governor: the AerodromeMigration contract: docs say github.com/aerodrome-finance/contracts (README): 'EpochGovernor.sol A simple epoch-based governance contract used exclusively for adjusting emissions.' / SPECIFICATION.md: 'Managed NFTs can be deactivated, a process whi… · chain says Voter 0x16613524e02ad97eDfeF371bC883F2F5d6C480A5: emergencyCouncil() = epochGovernor() = AerodromeMigration 0x22a2F7340a3fB4C7C389D91eE954766B12476721 (Sourcify match;",
+   "finding": "Voter emergency council and epoch governor: the AerodromeMigration contract: docs say github.com/aerodrome-finance/contracts (README): 'EpochGovernor.sol A simple epoch-based governance contract used exclusively for adjusting emissions.' / SPECIFICATION.md: 'Managed NFTs can be deactivated, a process whi… · chain says Voter 0x16613524e02ad97eDfeF371bC883F2F5d6C480A5: emergencyCouncil() = epochGovernor() = AerodromeMigration 0x22a2F7340a3fB4C7C389D91eE954766B12476721 (Sourcify match; MIGRATION_OPEN() = 1792620000), owned by Safe 0x422…",
    "findingClass": "real_difference",
    "grade": "delta",
    "gradeLabel": "DELTA",
@@ -3446,7 +3446,7 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "finding": "BIO mint(): MINTER_ROLE held by a 5-of-11 Safe and a bridge manager; no cap: docs say 'The supply is uncapped, meaning new BIO can be minted for future protocol or network growth. · chain says BIO token 0xcb1592591996765Ec0eFc1f92599A19767ee5ffA (Ethereum, not a proxy;",
+   "finding": "BIO mint(): MINTER_ROLE held by a 5-of-11 Safe and a bridge manager; no cap: docs say 'The supply is uncapped, meaning new BIO can be minted for future protocol or network growth. · chain says BIO token 0xcb1592591996765Ec0eFc1f92599A19767ee5ffA (Ethereum, not a proxy; BioToken, verified source): mint(to, amount) is onlyRole(MINTER_ROLE) and the token has no supply cap.",
    "findingClass": "clear_weaker",
    "grade": "delta",
    "gradeLabel": "DELTA",
@@ -4028,7 +4028,7 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "finding": "Pool Bridge signers: owner can resetSigners after 7-day notice; owner = 3-of-5 EOA governance: docs say 'It is only when nodes with more than ⅔ of the total stake are malicious, that the fund pool will be at risk.' (cbridge-docs.celer.network/print.html) · chain says cBridge Bridge 0x5427FEFA711Eff984124bFBB1AB6fbf5E3DA1820 (Ethereum, not a proxy;",
+   "finding": "Pool Bridge signers: owner can resetSigners after 7-day notice; owner = 3-of-5 EOA governance: docs say 'It is only when nodes with more than ⅔ of the total stake are malicious, that the fund pool will be at risk.' (cbridge-docs.celer.network/print.html) · chain says cBridge Bridge 0x5427FEFA711Eff984124bFBB1AB6fbf5E3DA1820 (Ethereum, not a proxy; verified source): withdraw() and relay() accept a message signed by the stored signer set, and resetSigners(signers, powers) replaces tha…",
    "findingClass": "clear_weaker",
    "grade": "delta",
    "gradeLabel": "DELTA",
@@ -4448,7 +4448,7 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "finding": "GatewayWallet: EOA owner (UUPS upgrade, withdrawal delay) and EOA pauser over withdrawals: docs say 'Users have full control of their deposited assets. · chain says Circle GatewayWallet 0x77777777Dcc4d5A8B6E418Fd04D8997ef11000eE (Ethereum;",
+   "finding": "GatewayWallet: EOA owner (UUPS upgrade, withdrawal delay) and EOA pauser over withdrawals: docs say 'Users have full control of their deposited assets. · chain says Circle GatewayWallet 0x77777777Dcc4d5A8B6E418Fd04D8997ef11000eE (Ethereum; the address the Gateway contract-addresses page lists): UUPS EIP-1967 proxy, implementation 0xF7a6D9D7Df917c072ac8987A820c58aA27A0e798 (GatewayW…",
    "findingClass": "clear_weaker",
    "grade": "delta",
    "gradeLabel": "DELTA",
@@ -10652,7 +10652,7 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "finding": "L1 ETH Bridge governance: 24h Timelock whose admin is a 2-of-3 key Safe: docs say 'In summary, the Hop DAO controls every aspect of the protocol.' (docs.hop.exchange/governance/into-to-hop-dao); · chain says Hop L1_ETH_Bridge 0xb8901acB165ed027E32754E0FFe830802919727f (Ethereum, not a proxy;",
+   "finding": "L1 ETH Bridge governance: 24h Timelock whose admin is a 2-of-3 key Safe: docs say 'In summary, the Hop DAO controls every aspect of the protocol.' (docs.hop.exchange/governance/into-to-hop-dao); · chain says Hop L1_ETH_Bridge 0xb8901acB165ed027E32754E0FFe830802919727f (Ethereum, not a proxy; verified source; the SDK's Ethereum ETH l1Bridge): addBonder(), removeBonder(), setGovernance(), setChallengePeriod(), setChainIdDepos…",
    "findingClass": "real_difference",
    "grade": "delta",
    "gradeLabel": "DELTA",
@@ -16032,7 +16032,7 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "finding": "OBOL supply: documented cap of 500M, no cap on-chain; a 2-of-3 Safe holds MINTER_ROLE: docs say docs.obol.org (token distribution; · chain says ObolToken 0x0B010000b7624eb9B3DfBC279673C76E9D29D5F7 (Sourcify exact match): totalSupply() = 500000000000000103303500000 (500,000,000.0000001033035 OBOL);",
+   "finding": "OBOL supply: documented cap of 500M, no cap on-chain; a 2-of-3 Safe holds MINTER_ROLE: docs say docs.obol.org (token distribution; OBOL token): 'The total supply is capped at 500 million tokens.' / 'The official token contract address of the OBOL Token is 0x0B010000b7624eb9B3DfBC279673C76E9D29D5F7' · chain says ObolToken 0x0B010000b7624eb9B3DfBC279673C76E9D29D5F7 (Sourcify exact match): totalSupply() = 500000000000000103303500000 (500,000,000.0000001033035 OBOL);",
    "findingClass": "clear_weaker",
    "grade": "delta",
    "gradeLabel": "DELTA",
@@ -16114,7 +16114,7 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "finding": "Upgrade governor: docs state a 3/5 multisig; every ProxyAdmin owner is one Safe, 2-of-4 (Ethereum and Base): docs say 'Control of upgrades and emergency actions rests with a designated **governor**, currently managed through a secure multi-signature wallet **(3/5)**.' (docs.odyssey.finance/architecture/protocol.md); · chain says PositionRegistry 0xeE156D8ea7b96a5524CcC3CF9283ab85E80E9534 (Ethereum;",
+   "finding": "Upgrade governor: docs state a 3/5 multisig; every ProxyAdmin owner is one Safe, 2-of-4 (Ethereum and Base): docs say 'Control of upgrades and emergency actions rests with a designated **governor**, currently managed through a secure multi-signature wallet **(3/5)**.' (docs.odyssey.finance/architecture/protocol.md); · chain says PositionRegistry 0xeE156D8ea7b96a5524CcC3CF9283ab85E80E9534 (Ethereum; the contracts page lists it as PositionRegistry_Proxy for Mainnet and Base): TransparentUpgradeableProxy whose EIP-1967 admin slot = 0x3F6da0A118B3A…",
    "findingClass": "unresolved",
    "grade": "delta",
    "gradeLabel": "DELTA",
@@ -24157,7 +24157,7 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "finding": "Vault ProxyAdmin multisig: docs state generally 4 of 6, the Safe is 2-of-3: docs say 'Upgrades to the vault's code are approved by the ProxyAdmin multisig. · chain says Upshift vault 0xE9B725010A9E419412ed67d0fA5f3A5f40159D32 (Ethereum): EIP-1967 admin slot = ProxyAdmin 0xB5fBf201A35327Ddd89986FfA60CF5A675B2bDbc, whose owner() = Safe 0x4107557d726933f0BcA591A4218Afc92978457F7 with getT…",
+   "finding": "Vault ProxyAdmin multisig: docs state generally 4 of 6, the Safe is 2-of-3 (#26,441,165)",
    "findingClass": "real_difference",
    "grade": "delta",
    "gradeLabel": "DELTA",
