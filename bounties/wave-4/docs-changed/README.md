@@ -55,6 +55,7 @@ We verify all 42 characters against your PR file and your on-chain payment, and 
 
 - **Reviewed Protocols & Retained Quotes (160 protocols, 246 quoted records — Ethereum & Base):** [`bounties/wave-4/docs-changed-protocols.json`](https://github.com/Fractal-Neurons/pacta/blob/main/bounties/wave-4/docs-changed-protocols.json)
 - **Local `$0.05` EIP-3009 Paid-Call Helper (`--route dossier`, stdlib Python 3, self-tested on every run):** [`tools/pacta_x402_call.py`](https://github.com/Fractal-Neurons/pacta/blob/main/tools/pacta_x402_call.py)
+  - **Verify helper SHA-256 before passing a key:** `eb873d21fc64b2c9f3f8f9b8eb057afcbf0e1f89aeb3477aea9b8e68120ab2cf` (`echo "eb873d21fc64b2c9f3f8f9b8eb057afcbf0e1f89aeb3477aea9b8e68120ab2cf  tools/pacta_x402_call.py" | sha256sum -c -`)
 
 ### Quick Paid-Call Command (`$0.05` `/v1/x402/dossier`)
 

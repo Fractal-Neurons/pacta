@@ -56,7 +56,8 @@ We verify all 42 characters against your PR file and your on-chain payment, and 
 ## Watched Address List & Paid-Call Helper
 
 - **Watched Address Manifest (567 entries: 501 Ethereum, 66 Base):** [`bounties/wave-4/watched-addresses.json`](https://github.com/Fractal-Neurons/pacta/blob/main/bounties/wave-4/watched-addresses.json)
-- **Local `$0.02` EIP-3009 Paid-Call Helper (stdlib Python 3, self-tested on every run):** [`tools/pacta_x402_call.py`](https://github.com/Fractal-Neurons/pacta/blob/main/tools/pacta_x402_call.py) (step-by-step instructions: [`bounties/wave-4/catalogue/README.md`](https://github.com/Fractal-Neurons/pacta/blob/main/bounties/wave-4/catalogue/README.md#how-to-make-the-002-paid-call-under-5-minutes-key-stays-local))
+- **Local `$0.02` EIP-3009 Paid-Call Helper (stdlib Python 3, self-tested on every run):** [`tools/pacta_x402_call.py`](https://github.com/Fractal-Neurons/pacta/blob/main/tools/pacta_x402_call.py)
+  - **Verify helper SHA-256 before passing a key:** `eb873d21fc64b2c9f3f8f9b8eb057afcbf0e1f89aeb3477aea9b8e68120ab2cf` (`echo "eb873d21fc64b2c9f3f8f9b8eb057afcbf0e1f89aeb3477aea9b8e68120ab2cf  tools/pacta_x402_call.py" | sha256sum -c -`) (step-by-step instructions: [`bounties/wave-4/catalogue/README.md`](https://github.com/Fractal-Neurons/pacta/blob/main/bounties/wave-4/catalogue/README.md#how-to-make-the-002-paid-call-under-5-minutes-key-stays-local))
 
 ### Submission JSON Schema (`bounties/wave-4/watch/<protocol_slug>-0x<tx8>.json`)
 

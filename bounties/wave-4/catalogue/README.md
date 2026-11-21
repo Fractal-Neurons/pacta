@@ -80,6 +80,7 @@ Requires `python3` (`>= 3.10`):
 ```bash
 mkdir pacta-catalogue-run && cd pacta-catalogue-run
 curl -fsSLO https://raw.githubusercontent.com/Fractal-Neurons/pacta/main/tools/pacta_x402_call.py
+echo "eb873d21fc64b2c9f3f8f9b8eb057afcbf0e1f89aeb3477aea9b8e68120ab2cf  pacta_x402_call.py" | sha256sum -c -   # macOS: shasum -a 256 -c -
 python3 pacta_x402_call.py --self-test
 ```
 Read `pacta_x402_call.py` before running it with a key, and verify `--self-test` prints `"self_test": "PASS"`.
