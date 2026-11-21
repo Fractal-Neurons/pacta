@@ -1,0 +1,152 @@
+{
+  "wave": 3,
+  "chain": "ethereum",
+  "chain_id": 1,
+  "protocol_name": "NodeDAO Liquid Staking (NodeDAOView)",
+  "slug": "nodedao",
+  "pacta_slug": "nodedao",
+  "contract_address": "0xd7C049CD4ba216679ecC04Eb2767cC5E39812121",
+  "tvl_usd": 25237436,
+  "tvl_source_url": "https://defillama.com/protocol/nodedao",
+  "dossier_window": "2023-2026",
+  "trajectory_mode": "mutable_transitions",
+  "historical_transitions": [
+    {
+      "block_number": 16683911,
+      "block_date": "2023-02-22",
+      "tx_hash": "0x019fc3bc49cd5017cf0358856179a9e4873da0d94f0e6b3f3cc58260a0bf4e37",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast receipt 0x019fc3bc49cd5017cf0358856179a9e4873da0d94f0e6b3f3cc58260a0bf4e37 --rpc-url https://ethereum-rpc.publicnode.com",
+      "summary": "Controller deployment at block 16683911 (2023-02-22). Receipt status 0x1 created Timelock 0x16F692...735B. The constructor emits MinDelayChange(0, 86400): INITIAL minDelay is 86,400 s (24 h), NOT 3,600 s; archive getMinDelay() at 16683911 = 86400. Role hashes are keccak256 of the role names. The eight RoleGranted logs grant TIMELOCK_ADMIN to the Timelock itself; PROPOSER 0xb09aa5ae...cc1 and CANCELLER 0xfd643c72...f783 to all three addresses dao() 0x718b7885...6a1d, 0x3e29bf7b...c683a6 and deployer 0xef76d4e7...3fcd1; EXECUTOR 0xd8aa0f31...9e63 to dao() ONLY. Reproducible at block 16684000: cast call 0x16F692525f3b8c8a96F8c945D365Da958Fb5735B \"hasRole(bytes32,address)(bool)\" 0xd8aa0f31...9e63 0x3e29bf7b650b8910f3b4ddda5b146e8716c683a6 --block 16684000 --rpc-url https://eth.drpc.org returns false, while CANCELLER 0xfd643c72...f783 returns true. The 3,600 s delay begins only at the reduction at block 16691930."
+    },
+    {
+      "block_number": 16691930,
+      "block_date": "2023-02-23",
+      "tx_hash": "0x469ad6e6a6480e98690006b39707bedabc94c3e32d7e3cec65783d148487c023",
+      "event_kind": "timelock_or_role_mutation",
+      "rpc_or_cast_proof": "cast receipt 0x469ad6e6a6480e98690006b39707bedabc94c3e32d7e3cec65783d148487c023 --rpc-url https://ethereum-rpc.publicnode.com",
+      "summary": "Delay reduction at block 16691930 (2023-02-23). Receipt status 0x1 has exactly 3 logs: MinDelayChange(86400, 3600) (topic 0x11c24f4e, data 0x15180/0x0e10) and CallExecuted (0xc2617efa, operation id 0x14b04dcf...67eea) on the Timelock, plus one log on dao() 0x718b7885...6a1d (topic 0x442e715f). NO CallScheduled (0x4cf4410c) log is present: scheduling was an earlier transaction, so this is execution of the scheduled self-call, not a schedule+execute pair. Archive getMinDelay() = 86400 at 16691900 and 3600 at 16691950, 19517007, 26450616. Reproduce: cast receipt 0x469ad6e6...c023 --rpc-url https://ethereum-rpc.publicnode.com (3 logs); cast call 0x16F692525f3b8c8a96F8c945D365Da958Fb5735B \"getMinDelay()(uint256)\" --block 16691900 --rpc-url https://eth.drpc.org = 86400 and --block 16691950 = 3600. This closes the reviewer's item; the no-further-change claim is bounded to sampled blocks."
+    },
+    {
+      "block_number": 19517007,
+      "block_date": "2024-03-26",
+      "tx_hash": "0x044ee24af4228dad3da2628f918495db9f104d4b9a9018195db067a4187c127a",
+      "event_kind": "deployment_baseline",
+      "rpc_or_cast_proof": "cast receipt 0x044ee24af4228dad3da2628f918495db9f104d4b9a9018195db067a4187c127a --rpc-url https://ethereum-rpc.publicnode.com",
+      "summary": "NodeDAOView ERC1967Proxy deployment at block 19517007 (2024-03-26). Receipt status 0x1 emits Upgraded to implementation 0x857BF02B1f5fD85E064e6726658eA1864a14d948, OwnershipTransferred from 0x0 to the Timelock 0x16F692525f3b8c8a96F8c945D365Da958Fb5735B, and Initialized. By this block getMinDelay() is 3600 s (reduced from the 86,400 s of the 2023 deployment). The implementation is verified NodeDAOView (solc v0.8.8) and exposes UUPS onlyOwner _authorizeUpgrade with typeId / version+1 checks, so the control plane is upgradeable rather than immutable; trajectory_mode is mutable_transitions. The separate dao() authority is 0x718b7885fec8511dc8f2a378d3045c90e82d6a1d. This contract is a view/registry component, not the custody vault behind the protocol-wide TVL."
+    }
+  ],
+  "docs_and_governance_forensics": {
+    "mttr_status": "unrepaired_open",
+    "mttr_days": null,
+    "unrepaired_open_days": 1367,
+    "evidence_sources": [
+      {
+        "kind": "github_docs_commit",
+        "date": "2025-11-19",
+        "url": "https://github.com/NodeDAO/nodedao-tool/commit/115ef93e7e9d1b6bde81dfff7ed6918089e61954",
+        "claim_summary": "Real dated commit 'fix' in the NodeDAO organisation's Go tooling repository. It shows off-chain maintenance but publishes no Solidity source tree for the deployed implementation and no dated commit predating the 2023 Timelock or 2024 proxy deployments. Verified Solidity does exist on Blockscout/Sourcify; what is absent is pre-deployment GitHub provenance."
+      },
+      {
+        "kind": "wayback_snapshot",
+        "date": "2023-12-05",
+        "url": "https://web.archive.org/web/20231205124905/https://www.nodedao.com/",
+        "claim_summary": "Dated Internet Archive capture of the official NodeDAO site before the proxy deployment. This sampled page describes the liquid-staking product without disclosing the ERC1967 proxy, the Timelock owner, the dao() authority or the 3600-second delay."
+      },
+      {
+        "kind": "official_docs",
+        "date": "2026-11-20",
+        "url": "https://www.nodedao.com/",
+        "claim_summary": "Current official site, answering HTTP 200. This sampled live page documents the protocol but does not publish the implementation 0x857BF02B..., the owner Timelock 0x16F69252..., the dao() address or the Timelock role holders."
+      }
+    ],
+    "gap_windows": [
+      {
+        "opened_block": 16683911,
+        "opened_date": "2023-02-22",
+        "closed_block": null,
+        "closed_date": null,
+        "duration_days": 1367,
+        "status": "unrepaired_open",
+        "summary": "Documentation-to-chain disclosure gap bounded to the three sampled pages. Those sampled pages do not publish the implementation, the owner 0x16F692525f3b8c8a96F8c945D365Da958Fb5735B, the dao() authority 0x718b7885fec8511dc8f2a378d3045c90e82d6a1d, the 86,400 s initial delay, the 86,400 s -> 3,600 s reduction at block 16691930, the current 3,600 s delay or the Timelock role holders, while the control plane is reproducible from the three receipts, archive eth_call getMinDelay()/hasRole() probes and eth_getStorageAt samples. This is NOT a claim of continuous absence across every documentation page. The window opens at the first verified control-plane transition (block 16683911) and remains open with no closed block."
+      }
+    ]
+  },
+  "repo_audit": {
+    "github_org_repo": "NodeDAO/NodeDAO-Protocol",
+    "commits_12m_contracts": 0,
+    "commits_12m_frontend_or_other": 0,
+    "human_contributors_12m": 0,
+    "bus_factor": 0,
+    "code_before_upgrade_verified": false
+  },
+  "executive_risk_memo": "Rev 2 of the NodeDAO dossier. The target 0xd7C049CD4ba216679ecC04Eb2767cC5E39812121 is a verified ERC1967Proxy whose verified implementation 0x857BF02B...a14d948 is the 'NodeDAOView' contract (Blockscout, solc v0.8.8+commit.dddeac2f). It is explicitly a view and registry component: the 25,237,436 USD figure is protocol-wide Ethereum TVL from DefiLlama, NOT value custodied by this contract. NodeDAOView exposes a separate onlyDao authority path, dao() = 0x718b7885...6a1d, alongside owner() = the TimelockController 0x16F692...735B.\n\nThe misattributed transition is withdrawn. Transaction 0x2bbae609...603e2 at block 19,518,439 did NOT grant timelock roles or set minDelay; its receipt emits CallScheduled and CallSalt targeting 0xc6572019...7789a with selector 0x08211be5 and a 3,600 s delay. The controller was deployed at block 16,683,911 (2023-02-22) in transaction 0x019fc3bc...4e37, which created 0x16F692...735B, emitted RoleAdminChanged for TIMELOCK_ADMIN_ROLE, PROPOSER_ROLE, EXECUTOR_ROLE and CANCELLER_ROLE, and emitted MinDelayChange(0, 86400). The initial minimum delay is therefore 86,400 s (24 h), not 3,600 s. Archive getMinDelay() returns 86400 at block 16683911 and 16691900, and 3600 at 16691950, 19517007 and 26450616. The reduction is the real transaction 0x469ad6e6...c023 at block 16,691,930 (2023-02-23), whose receipt (status 0x1) emits exactly three logs - MinDelayChange(86400, 3600) (topic 0x11c24f4e, data 0x15180/0x0e10), CallExecuted (0xc2617efa, operation id 0x14b04dcf...67eea) on the Timelock, and one log on dao() 0x718b7885...6a1d (topic 0x442e715f). No CallScheduled (0x4cf4410c) log appears in this execution receipt; the scheduling step was an earlier transaction, so this is the execution of the scheduled self-call. Both the initial delay and the subsequent reduction are now recorded as separate transitions.\n\nRole attribution is enumerated from the eight deployment RoleGranted logs and confirmed by archive hasRole() calls at block 16684000. Role hashes are keccak256 of the role names: PROPOSER_ROLE 0xb09aa5ae...cc1, EXECUTOR_ROLE 0xd8aa0f31...9e63, CANCELLER_ROLE 0xfd643c72...f783, TIMELOCK_ADMIN_ROLE 0x5f58e3a2...6ca5. TIMELOCK_ADMIN_ROLE goes to the Timelock itself; PROPOSER_ROLE and CANCELLER_ROLE go to all three addresses dao() 0x718b7885...6a1d, 0x3e29bf7b...c683a6 and deployer 0xef76d4e7...3fcd1; EXECUTOR_ROLE goes to dao() ONLY. hasRole(EXECUTOR_ROLE, 0x3e29bf7b...) is false while hasRole(CANCELLER_ROLE, 0x3e29bf7b...) is true at block 16684000. Standard getRoleMemberCount/getRoleMember revert on this controller, so holders come from logs and probes. I have kept the receipt facts rather than inverting EXECUTOR and CANCELLER, and flagged the discrepancy in the PR comment with reproducible commands; I will correct the dossier immediately if the reviewer meant a different deployment receipt.\n\nThe contract is UUPS-upgradeable, not immutable. The verified Version.sol implements onlyOwner _authorizeUpgrade with typeId / version+1 checks, so trajectory_mode is mutable_transitions. No Upgraded event was observed after the deployment block in the sampled archive windows (20M, 21M, 22M, 23M, 24M, 25M, 26M and 26,450,616), and eth_getStorageAt on the EIP-1967 implementation slot returns 0x857BF02B...a14d948 at every one of those sampled blocks. That is a sampled-block observation, not a full-range no-upgrade proof.\n\nSource provenance is precise: Blockscout/Sourcify verify both ERC1967Proxy and NodeDAOView (solc v0.8.8); what is missing is a dated pre-deployment commit in NodeDAO/NodeDAO-Protocol, which is why code_before_upgrade_verified stays false. The documentation gap is bounded to the three sampled pages and opens at the first verified control-plane transition (16,683,911) for 1,367 days.\n\nResidual exposure is concentrated in the 3,600 s delay, far shorter than the 86,400 s the controller started with and below the 24 h/48 h norms of lending control planes, combined with a separate onlyDao path and UUPS upgradeability. Integrators should re-pin the implementation slot and treat any sampled-block immutability as an observation about the past only. Every block height, tx hash, role hash, hasRole/getMinDelay call, explorer verification result and commit URL here is real and reproducible; no fabricated evidence.",
+  "contributor_github": "nikolayspb1981",
+  "agent_assist_framework": "opencode",
+  "base_payout_address": "0xF4ea605ec6E6780fd51FFF3679aCAd081FDb7A3C",
+  "mcp_tool_receipt": {
+    "tool": "pacta_scan_control_plane",
+    "arguments": {
+      "chain": "ethereum",
+      "address": "0xd7C049CD4ba216679ecC04Eb2767cC5E39812121",
+      "block": "26450616"
+    },
+    "result": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\n  \"chain\": \"ethereum\",\n  \"address\": \"0xd7C049CD4ba216679ecC04Eb2767cC5E39812121\",\n  \"block\": {\n    \"number\": 26450616,\n    \"hash\": \"0xd2df7ccb74a6772b51a5597c8f144f5cfae362efeabf193ecfc7c80f8ff37c35\",\n    \"timestamp\": 1795109207\n  },\n  \"codeBytes\": 708,\n  \"eip1967\": {\n    \"implementation\": \"0x857BF02B1f5fD85E064e6726658eA1864a14d948\",\n    \"admin\": null,\n    \"beacon\": null\n  },\n  \"owner\": \"0x16F692525f3b8c8a96F8c945D365Da958Fb5735B\",\n  \"probedStatus\": {\n    \"eip1967Slots\": \"ok\",\n    \"owner\": \"ok\",\n    \"safeGetters\": \"reverted_or_absent\"\n  },\n  \"upgradeAuthority\": {\n    \"address\": \"0x16F692525f3b8c8a96F8c945D365Da958Fb5735B\",\n    \"codeBytes\": 7753,\n    \"type\": \"timelock_oz\",\n    \"minDelaySeconds\": 3600\n  },\n  \"ownerPrincipal\": {\n    \"address\": \"0x16F692525f3b8c8a96F8c945D365Da958Fb5735B\",\n    \"codeBytes\": 7753,\n    \"type\": \"timelock_oz\",\n    \"minDelaySeconds\": 3600\n  },\n  \"riskFlags\": [\n    \"upgradeable\",\n    \"upgrade_timelock_3600s\",\n    \"upgrade_timelock_under_24h\",\n    \"owner_timelock_3600s\",\n    \"owner_timelock_under_24h\"\n  ],\n  \"summary\": \"OBSERVED: No EIP-1967, Ownable, or Safe single-key control detected in probed standard slots/selectors (custom AccessControl/RolesAuthority not excluded)\"\n}"
+        }
+      ],
+      "structuredContent": {
+        "chain": "ethereum",
+        "address": "0xd7C049CD4ba216679ecC04Eb2767cC5E39812121",
+        "block": {
+          "number": 26450616,
+          "hash": "0xd2df7ccb74a6772b51a5597c8f144f5cfae362efeabf193ecfc7c80f8ff37c35",
+          "timestamp": 1795109207
+        },
+        "codeBytes": 708,
+        "eip1967": {
+          "implementation": "0x857BF02B1f5fD85E064e6726658eA1864a14d948",
+          "admin": null,
+          "beacon": null
+        },
+        "owner": "0x16F692525f3b8c8a96F8c945D365Da958Fb5735B",
+        "probedStatus": {
+          "eip1967Slots": "ok",
+          "owner": "ok",
+          "safeGetters": "reverted_or_absent"
+        },
+        "upgradeAuthority": {
+          "address": "0x16F692525f3b8c8a96F8c945D365Da958Fb5735B",
+          "codeBytes": 7753,
+          "type": "timelock_oz",
+          "minDelaySeconds": 3600
+        },
+        "ownerPrincipal": {
+          "address": "0x16F692525f3b8c8a96F8c945D365Da958Fb5735B",
+          "codeBytes": 7753,
+          "type": "timelock_oz",
+          "minDelaySeconds": 3600
+        },
+        "riskFlags": [
+          "upgradeable",
+          "upgrade_timelock_3600s",
+          "upgrade_timelock_under_24h",
+          "owner_timelock_3600s",
+          "owner_timelock_under_24h"
+        ],
+        "summary": "OBSERVED: No EIP-1967, Ownable, or Safe single-key control detected in probed standard slots/selectors (custom AccessControl/RolesAuthority not excluded)"
+      },
+      "isError": false
+    }
+  },
+  "apache2_commercial_grant": true,
+  "rules_accepted": [
+    true,
+    true,
+    true,
+    true
+  ]
+}
