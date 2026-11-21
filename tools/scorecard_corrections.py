@@ -39,7 +39,7 @@ def unresolved(slug):
 
 
 # the two neutral statuses: neither Delta nor Aligned, never the amber Parameter Delta badge, never the paid re-check prompt
-NEUTRAL = ("unresolved", "recent_change")
+NEUTRAL = ("unresolved", "recent_change", "docs_updated")
 
 
 def recent_change(slug):
@@ -69,39 +69,56 @@ def recent_change_rule():
     return data()["recentChangeRule"]["text"]
 
 
+def reviewed():
+    """The single table of the 56 reviewed findings (tools/scorecard_corrections.json reviewedFindings, from the verifier's rulings):
+    every count, tab, sentence and feed is computed from it."""
+    return data()["reviewedFindings"]
+
+
 def finding_class(slug):
-    """The class of one of the 56 historically flagged comparisons (clear_weaker / real_difference / bookkeeping / unresolved), or None."""
-    for k, members in data()["findingClasses"]["members"].items():
+    """A reviewed Delta's subcategory (clear_weaker / real_difference / bookkeeping), or None."""
+    for k, members in reviewed()["deltaGroups"].items():
         if slug in members:
             return k
     return None
 
 
+def reviewed_status(slug):
+    """The public status the rulings give a reviewed finding (delta / recent_change / docs_updated / unresolved), or None."""
+    return reviewed()["partition"].get(slug)
+
+
 def breakdown():
-    """{"clearWeaker": 16, "needsExplanation": 17, "bookkeeping": 13, "unresolved": 10} from the registry's class members."""
-    fc = data()["findingClasses"]
-    return {fc["breakdownKeys"][k]: len(v) for k, v in fc["members"].items()}
+    """{"reviewed": 56, "delta": 43, "clearWeaker": 16, "realDifference": 16, "bookkeeping": 11, "recentChange": 1, "docsUpdated": 1,
+    "unresolved": 11}, counted from the partition and the Delta groups (and asserted against the rulings' own counts)."""
+    rv = reviewed()
+    part = rv["partition"]
+    n = lambda st: sum(1 for v in part.values() if v == st)
+    g = {k: len(v) for k, v in rv["deltaGroups"].items()}
+    out = {"reviewed": len(part), "delta": n("delta"), "clearWeaker": g["clear_weaker"], "realDifference": g["real_difference"],
+           "bookkeeping": g["bookkeeping"], "recentChange": n("recent_change"), "docsUpdated": n("docs_updated"), "unresolved": n("unresolved")}
+    assert out["delta"] == sum(g.values()) == rv["counts"]["delta"] and out["unresolved"] == rv["counts"]["unresolved"], out
+    return out
 
 
 def flagged_total():
-    return sum(breakdown().values())
+    return breakdown()["reviewed"]
 
 
-def breakdown_text(sep=", ", last=", and "):
-    """'16 clear cases where the chain looks weaker than documented, 17 real differences needing explanation, 13 bookkeeping
-    differences, and 10 unresolved' (plain words; never 'adverse')."""
-    b = breakdown()
-    parts = [f'{b["clearWeaker"]} clear cases where the chain looks weaker than documented',
-             f'{b["needsExplanation"]} real differences needing explanation', f'{b["bookkeeping"]} bookkeeping differences',
-             f'{b["unresolved"]} unresolved']
-    return sep.join(parts[:-1]) + last + parts[-1]
+def breakdown_text():
+    """The one sentence on Home and Radar, verbatim from the rulings and asserted equal to the counts."""
+    b, t = breakdown(), reviewed()["homeRadarSentence"]
+    want = (f'Of {b["reviewed"]} reviewed findings, {b["delta"]} are Deltas ({b["clearWeaker"]} weaker protections, {b["realDifference"]} other '
+            f'differences and {b["bookkeeping"]} bookkeeping changes), {b["recentChange"]} is Changed recently, {b["docsUpdated"]} is Docs updated '
+            f'and {b["unresolved"]} are Unresolved; these statuses use retained chain observations.')
+    assert t == want, (t, want)
+    return t
 
 
 def breakdown_short():
-    """'16 weaker · 17 needing explanation · 13 bookkeeping · 10 unresolved'."""
+    """'16 weaker protections · 16 other differences · 11 bookkeeping'."""
     b = breakdown()
-    return (f'{b["clearWeaker"]} weaker · {b["needsExplanation"]} needing explanation · {b["bookkeeping"]} bookkeeping · '
-            f'{b["unresolved"]} unresolved')
+    return f'{b["clearWeaker"]} weaker protections · {b["realDifference"]} other differences · {b["bookkeeping"]} bookkeeping'
 
 
 def slug_of(name):
@@ -154,7 +171,7 @@ def check():
     """Structural check of the registry (asserted by the build): known statuses, <= 90-character summaries, no stale wording."""
     errs = []
     for s, c in data()["protocols"].items():
-        if c.get("status") not in ("unresolved", "recent_change", "delta"):
+        if c.get("status") not in ("unresolved", "recent_change", "docs_updated", "delta"):
             errs.append(f"{s}: unknown status {c.get('status')!r}")
         if c.get("summaryShort") and len(c["summaryShort"]) > 90:
             errs.append(f"{s}: summaryShort over 90 characters")
@@ -162,9 +179,17 @@ def check():
             errs.append(f"{s}: pinnedBlock must be the historical block number")
         if re.search(r"across control surfaces", json.dumps(c)):
             errs.append(f"{s}: 'across control surfaces' overstates a sampled surface")
-    members = [x for v in data()["findingClasses"]["members"].values() for x in v]
+    members = [x for v in reviewed()["deltaGroups"].values() for x in v]
     if len(members) != len(set(members)):
-        errs.append("findingClasses: a protocol is in more than one class")
+        errs.append("reviewedFindings: a protocol is in more than one Delta group")
+    part = reviewed()["partition"]
+    if sorted(members) != sorted(k for k, v in part.items() if v == "delta"):
+        errs.append("reviewedFindings: the Delta groups are not the partition's Deltas")
+    for s_, st in part.items():
+        if st != "delta" and status(s_) != st:
+            errs.append(f"{s_}: registry status {status(s_)!r} differs from the rulings' {st!r}")
+        if st == "delta" and status(s_) not in (None, "delta"):
+            errs.append(f"{s_}: the rulings keep it Delta, the registry says {status(s_)!r}")
     for s, c in data()["protocols"].items():
         if not c.get("leadRecord"):
             errs.append(f"{s}: every correction names its leadRecord")

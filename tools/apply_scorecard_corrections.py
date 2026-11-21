@@ -34,7 +34,8 @@ def main(argv):
         c = CORR.get(CORR.slug_of(e["protocol"])) or {}
         if c.get("status") in CORR.NEUTRAL and e["classification"] == "parameter_delta":
             ov[e["id"]] = {"status": c["status"],
-                           "label": c.get("subPill") or ("Unresolved" if c["status"] == "unresolved" else "Changed recently")}
+                           "label": c.get("statusLabel") or c.get("subPill") or {"unresolved": "Unresolved", "recent_change": "Changed recently",
+                                                                                  "docs_updated": "Docs updated"}[c["status"]]}
     ov = dict(sorted(ov.items()))
     if idx.get("scorecard_status_overrides") != ov:
         changed.append("scorecard_status_overrides")
@@ -44,7 +45,8 @@ def main(argv):
         c = CORR.get(CORR.slug_of(e["protocol"])) or {}
         if (c.get("headline") or c.get("explanatorySentence")) and e["classification"] in ("parameter_delta", "protective_delta"):
             wo[e["id"]] = {"headline": c.get("headline"), "pinnedBlock": c["pinnedBlock"], "scope": c.get("explanatorySentence"),
-                           "unresolved": c.get("status") == "unresolved", "recentChange": c.get("status") == "recent_change"}
+                           "unresolved": c.get("status") == "unresolved", "recentChange": c.get("status") == "recent_change",
+                           "docsUpdated": c.get("status") == "docs_updated"}
     wo = dict(sorted(wo.items()))
     if idx.get("scorecard_wording_overrides") != wo:
         changed.append("scorecard_wording_overrides")

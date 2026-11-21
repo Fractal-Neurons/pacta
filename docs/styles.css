@@ -596,6 +596,9 @@ code { overflow-wrap: break-word; }
 @media (min-width: 1024px) { .hiw-agents { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 #how-it-works .legend { margin-top: 16px; }
 #how-it-works [data-slot="tabs-content"] > .s { margin-bottom: 12px; }
+/* v6 E18 (ii): under "How it works" the hidden (taller) audience panel no longer reserves its height, so no blank band follows the
+   active panel; the shared stable-tabs rule still applies to every other tab group */
+.js #how-it-works [data-tabs-stable] > [data-slot="tabs-content"][data-inactive] { display: none; }
 /* v4.7 W4: the closed Wave 1 archive on /bounties/ */
 details.archive-details { margin-top: 40px; border: 1px solid var(--border); border-radius: calc(var(--radius) + 2px); background: var(--card); }
 details.archive-details > summary { display: flex; align-items: center; min-height: 48px; padding: 8px 16px; cursor: pointer; font-weight: 600; list-style: none; }
@@ -726,6 +729,8 @@ tr.sc-drawer > td { padding: 4px 16px 24px; background: color-mix(in srgb, var(-
 .radar-counts { font-size: 1rem; font-weight: 600; }
 .livebar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-bottom: 16px; font-size: 0.875rem; color: var(--muted-foreground); }
 .livebar b { color: var(--foreground); }
+.livebar .lb-lead { display: inline-flex; align-items: baseline; gap: 8px; min-width: 0; }   /* the dot stays with its "Next: …" line */
+.livebar .lb-lead .dot { flex: none; align-self: center; }
 .countdown { font-family: var(--font-sans); font-variant-numeric: tabular-nums; font-size: 0.875rem; color: var(--foreground); }
 .radar td:first-child { width: 11rem; }
 .radar .op { font-weight: 600; }
@@ -1580,7 +1585,7 @@ html:not(.js) [data-scan-upgrade], html:not(.js) [data-co-card] { display: grid 
   table.sc, table.sc tbody, table.sc tr, table.sc td, table.radar, table.radar tbody, table.radar tr, table.radar td { display: block; width: 100%; }
   table.sc thead, table.radar thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
   #scorecards tbody:not([data-all]) tr.sc-row.sc-m { display: none; }   /* v4.5 G-P2-4: 6 cards first; any interaction shows all */
-  table.radar td, table.radar .op, table.radar .sub, table.radar .meta { overflow-wrap: anywhere; word-break: break-word; min-width: 0; }   /* v4.4 R-V2 */
+  table.radar td, table.radar .op, table.radar .sub, table.radar .meta { overflow-wrap: break-word; word-break: normal; min-width: 0; }   /* v4.4 R-V2; v6: never mid-word ("EtherFiTimelock") */
   table.sc tr.sc-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 12px; margin-top: 12px; padding: 16px; border: 1px solid var(--border); border-radius: calc(var(--radius) + 4px); background: var(--card); }
   table.sc tr.sc-row > td { height: auto; padding: 0; border: 0; background: none !important; }
   table.sc tr.sc-row > td:nth-child(1) { grid-column: 1 / -1; }
@@ -1632,3 +1637,11 @@ html:not(.js) [data-scan-upgrade], html:not(.js) [data-co-card] { display: grid 
   .topbar, .copy, .ftr, .toaster, [data-slot="sheet"] { display: none !important; }
   body { background: #fff; color: #000; }
 }
+
+/* v6 E18 (iv): record meta rows wrap as flex items on phones; the "·" separators hide instead of dangling at a line start */
+@media (max-width: 640px) {
+  .memo-meta dd { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 10px; }
+  .memo-meta dd .sep { display: none; }
+}
+/* v6 E18 (i): the hero search keeps room for its button / kbd hint, so the placeholder never clips */
+.hero-pf .checker input { padding-right: 12px; text-overflow: ellipsis; }

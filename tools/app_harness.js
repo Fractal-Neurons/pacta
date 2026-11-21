@@ -828,13 +828,15 @@ async function visitorScenario() {
         matched: [{ parameter: "Timelock delay", value: "7 d" }] } } } };
   go.dispatchEvent(new Event_("click"));
   const pcv = (s) => (pc.querySelector(s) || { textContent: "" }).textContent;
-  const instant = !!pc && pcv("[data-pc-name]") === "Stader ETHx" && pcv("[data-pc-docs]") === "Manager Safe is 3-of-5" && pcv("[data-pc-chain]") === "Manager Safe is 3-of-6"
-    && /^Ethereum #[\d,]+$/.test(pcv("[data-pc-block]")) && pc.querySelector("[data-pc-href]").getAttribute("href") === "protocols/stader-labs-ethx/"
+  // v6 E16: the live receipt leads with Usual Money's settled weaker-protection finding
+  const instant = !!pc && pcv("[data-pc-name]") === "Usual Money (USD0 / USD0++)" && pcv("[data-pc-docs]") === "DEFAULT_ADMIN handover waits three days"
+    && pcv("[data-pc-chain]") === "DEFAULT_ADMIN handover delay: one second (defaultAdminDelay() = 1s)"
+    && /^Ethereum #[\d,]+$/.test(pcv("[data-pc-block]")) && pc.querySelector("[data-pc-href]").getAttribute("href") === "protocols/usual-money-usd0-usd0/"
     && go.getAttribute("aria-pressed") === "true";
   await flush(); await flush(); await flush();
   const t = out.textContent, link = out.querySelectorAll("a").find((a) => a.textContent === "Full record");
   res.v_hero_receipts = rec.length === 3 && instant && rec.every((b) => /^0x[0-9a-fA-F]{40}$/.test(b.getAttribute("data-pf-address") || ""))
-    && rec.map((b) => b.getAttribute("data-r-name")).join("|") === "Stader ETHx|YO Protocol|Moonwell (Base)";
+    && rec.map((b) => b.getAttribute("data-r-name")).join("|") === "Usual Money (USD0 / USD0++)|Treehouse (TREE)|Moonwell (Base)";
   res.v_hero_click_fetches = calls.length === 1 && calls[0].includes("address=" + go.getAttribute("data-pf-address"));
   res.v_assessment_next_to_score = t.includes("Heuristic score") && t.includes("60/100") && t.includes("Confidence medium") && t.includes("Indexed & verified record")
     && t.includes("Limits: riskScore is a heuristic.");
@@ -1020,8 +1022,9 @@ async function tryExampleScenario() {
     const p = run(input.index, input.app, Object.assign({ path: "/", fetch: fetchMock }, loc));
     const d = p.document, form = d.getElementById("pf-form"), out = d.getElementById("pf-out");
     const sel = form.querySelector('select[name="chain"]'), addr = form.querySelector('input[name="address"]'), err = d.getElementById("pf-addr-error");
-    const chips = d.querySelectorAll("[data-receipt]"), yo = chips.find((b) => b.getAttribute("data-r-name") === "YO Protocol");
-    const stader = chips.find((b) => b.getAttribute("data-r-name") === "Stader ETHx");
+    // a Base chip (Moonwell) then an Ethereum chip (Usual Money): chain switching and one live check per click
+    const chips = d.querySelectorAll("[data-receipt]"), yo = chips.find((b) => b.getAttribute("data-r-name") === "Moonwell (Base)");
+    const stader = chips.find((b) => b.getAttribute("data-r-name") === "Usual Money (USD0 / USD0++)");
     calls.length = 0;
     addr.value = "0x123"; form.dispatchEvent(new Event_("submit")); await flush();
     const errShown = addr.getAttribute("aria-invalid") === "true" && err.hidden === false && calls.length === 0;
@@ -1032,11 +1035,11 @@ async function tryExampleScenario() {
       && calls[0].includes("chain=base&address=" + yo.getAttribute("data-pf-address"))
       && !!out.querySelector("[data-pf-result]") && out.textContent.includes("Heuristic score") && out.textContent.includes("MULTISIG_NO_TIMELOCK")
       && out.parentNode === box && kids.indexOf(form) >= 0 && kids.indexOf(form) < kids.indexOf(out)
-      && d.querySelector("[data-pc-name]").textContent === "YO Protocol" && yo.getAttribute("aria-pressed") === "true";
+      && d.querySelector("[data-pc-name]").textContent === "Moonwell (Base)" && yo.getAttribute("aria-pressed") === "true";
     stader.dispatchEvent(new Event_("click")); await flush(); await flush(); await flush();
     const staderOk = sel.value === "ethereum" && addr.value === stader.getAttribute("data-pf-address") && calls.length === 2
       && calls[1].includes("chain=ethereum&address=" + stader.getAttribute("data-pf-address")) && !!out.querySelector("[data-pf-result]")
-      && d.querySelector("[data-pc-name]").textContent === "Stader ETHx" && stader.getAttribute("aria-pressed") === "true"
+      && d.querySelector("[data-pc-name]").textContent === "Usual Money (USD0 / USD0++)" && stader.getAttribute("aria-pressed") === "true"
       && yo.getAttribute("aria-pressed") === "false";
     return { ok: yoOk && staderOk, initErrors: p.initErrors };
   };
@@ -1207,7 +1210,7 @@ async function liveCardScenario() {
   const scrolled = [];
   form.scrollIntoView = (o) => scrolled.push(["form", o && o.block]);
   out.scrollIntoView = (o) => scrolled.push(["out", o && o.block]);
-  const chip = d.querySelectorAll("[data-receipt]").find((b) => b.getAttribute("data-r-name") === "Stader ETHx");
+  const chip = d.querySelectorAll("[data-receipt]").find((b) => b.getAttribute("data-r-name") === "Usual Money (USD0 / USD0++)");
   chip.dispatchEvent(new Event_("click"));
   for (let i = 0; i < 4; i++) await flush();
   const card = out.querySelector("[data-pf-result]"), kids = card ? card.children : [];
@@ -1971,7 +1974,7 @@ async function walletExposureScenario() {
   const b2bBar = d.querySelector("[data-wallet-b2b]");
   const demoOk = coldOk && !!hl && hl.textContent.includes("Found 4 active DeFi positions") && hl.textContent.includes("2 ALIGNED, 2 FLAGGED")
     && !!safeBadge && safeBadge.textContent.includes("Gnosis Safe 3-of-5")
-    && !!topGap && topGap.getAttribute("data-wallet-top-gap") === "yo-protocol"
+    && !!topGap && topGap.getAttribute("data-wallet-top-gap") === "stader-labs-ethx"
     && !!b2bBar && d.getElementById("scan-upgrade").hidden === false
     && d.getElementById("scan-to-guard").getAttribute("href").includes("../webhook/?")
     && d.getElementById("scan-x402-cmd").textContent.includes(demoSafeBtn.getAttribute("data-demo-addr"));

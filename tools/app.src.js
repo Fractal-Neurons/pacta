@@ -287,8 +287,8 @@
   }
   // ---- Website Edge v3: protocol scorecards (#scorecards) ------------------------------------------------------------------
   var SC_STATE = { g: "Strong", b: "Moderate", a: "Weak", n: "Not determined", u: "Uncompared" };
-  var SC_GRADE = { delta: "Delta", recent_change: "Changed recently", unresolved: "Unresolved", protective: "Protective", aligned: "Aligned", observed: "Observed" };
-  var SC_VARIANT = { delta: "warning", recent_change: "info", unresolved: "outline", protective: "info", aligned: "neutral", observed: "outline" };
+  var SC_GRADE = { delta: "Delta", recent_change: "Changed recently", docs_updated: "Docs updated", unresolved: "Unresolved", protective: "Protective", aligned: "Aligned", observed: "Observed" };
+  var SC_VARIANT = { delta: "warning", recent_change: "info", docs_updated: "outline", unresolved: "outline", protective: "info", aligned: "neutral", observed: "outline" };
   var SC_LETTER = { g: "S", b: "M", a: "W", n: "—", u: "—" };
   var SC_RADIUS = { g: 1, b: 0.78, a: 0.56, n: 1, u: 1 };
   var SC_CHAIN = { ethereum: "Ethereum", base: "Base" };
@@ -335,7 +335,9 @@
     (card.factors || []).forEach(function (f) {
       var st = /^[gbanu]$/.test(f.state) ? f.state : "n";
       var dd = el("dd", {}, [el("b", { text: SC_STATE[st] }), " · " + String(f.value || "")]);
-      if (f.evidence) dd.appendChild(el("small", { "class": "ev", text: "Evidence: " + String(f.evidence) }));
+      // a human caption (surface, chain, block) when the build supplies one; never a raw internal record id as visible prose
+      if (f.evidenceCaption) dd.appendChild(el("small", { "class": "ev", "data-record-id": String(f.evidenceRecordId || ""), text: "Evidence: " + String(f.evidenceCaption) }));
+      else if (f.evidence) dd.appendChild(el("small", { "class": "ev", text: "Evidence: " + String(f.evidence) }));
       dl.appendChild(el("div", { "data-factor": String(f.key), "data-state": st }, [
         el("dt", {}, [el("span", { "class": "fdot r-" + st, "aria-hidden": "true", text: SC_LETTER[st] }), String(f.label)]), dd]));
     });
@@ -714,7 +716,7 @@
   // tools/scorecard_corrections.json) shows the neutral status, never "Parameter delta"
   function recBadge(e) {
     var o = DATA && DATA.scorecard_status_overrides ? DATA.scorecard_status_overrides[e.id] : null;
-    return o && (o.status === "unresolved" || o.status === "recent_change")
+    return o && (o.status === "unresolved" || o.status === "recent_change" || o.status === "docs_updated")
       ? el("span", { "class": "badge " + o.status, text: String(o.label || (o.status === "unresolved" ? "Unresolved" : "Changed recently")) })
       : badge(e.classification);
   }
@@ -795,13 +797,22 @@
     for (var i = 0; i < u.length; i++) if (s % u[i][1] === 0) return (s / u[i][1]) + " " + u[i][0];
     return s + " s";
   }
+  // visible text of a quoted documentation excerpt: Markdown bold (**x**) and inline TeX ($5/9$) markers removed (mirrors build_site.plain)
+  function plainText(t) {
+    return String(t || "").replace(/\*\*([^*\n]+)\*\*|__([^_\n]+)__/g, function (m, a, b) { return a || b; })
+      .replace(/\$([0-9][0-9\/.,+\- ]*)\$/g, "$1");
+  }
   function firstSentence(t) {
-    t = String(t || "").replace(/\s+/g, " ").trim();
+    t = plainText(t).replace(/\s+/g, " ").trim();
     // the first '.' or ';' followed by a space (or the end); a ';' inside parentheses never ends the sentence (mirrors control_diff.py)
-    for (var i = 1, d = 0; i < t.length; i++) {
-      var c = t.charAt(i);
+    // ...and never inside an open quotation ('…' / "…"; an apostrophe inside a word is not a quote; mirrors control_diff.py)
+    var Q = { "'": "'", '"': '"', "\u2018": "\u2019", "\u201c": "\u201d" };
+    for (var i = 0, d = 0, q = null; i < t.length; i++) {
+      var c = t.charAt(i), pv = i ? t.charAt(i - 1) : " ", nx = i + 1 < t.length ? t.charAt(i + 1) : " ";
+      if (q) { if (c === Q[q] && !(c === "'" && /[A-Za-z0-9]/.test(nx))) q = null; continue; }
+      if (Q[c] && !/[A-Za-z0-9]/.test(pv) && nx !== " ") { q = c; continue; }
       if (c === "(") d++; else if (c === ")") d--;
-      if ((c === "." || (c === ";" && d <= 0)) && (i + 1 === t.length || t.charAt(i + 1) === " ")) { t = t.slice(0, i + 1); break; }
+      if (i > 0 && (c === "." || (c === ";" && d <= 0)) && (i + 1 === t.length || t.charAt(i + 1) === " ")) { t = t.slice(0, i + 1); break; }
     }
     return t.length <= 220 ? t : t.slice(0, 219).replace(/\s+$/, "") + "…";
   }
@@ -825,8 +836,8 @@
     var wd = whatDiffers(e); if (!wd) return null;
     var co = DATA && DATA.scorecard_wording_overrides ? DATA.scorecard_wording_overrides[e.id] : null;
     if (co) {   // a declarative correction: its headline and pinned block lead, its scope follows; no generic per-parameter lines
-      var cb = el("div", { "class": "whatdiffers" + (co.unresolved ? " unresolved" : co.recentChange ? " recent_change" : ""), "data-what-differs": "" },
-        [el("h2", { "class": "wd-h", text: co.unresolved ? "Verification scope" : co.recentChange ? "Changed recently" : "What differs" })]);
+      var cb = el("div", { "class": "whatdiffers" + (co.unresolved || co.docsUpdated ? " unresolved" : co.recentChange ? " recent_change" : ""), "data-what-differs": "" },
+        [el("h2", { "class": "wd-h", text: co.unresolved ? "Verification scope" : co.docsUpdated ? "Docs updated" : co.recentChange ? "Changed recently" : "What differs" })]);
       if (co.headline) cb.appendChild(el("p", { "class": "wd-lead", "data-wd-headline": "" }, [el("strong", { text: String(co.headline) }), " ",
         el("span", { "class": "wd-block mono", text: "(#" + num(co.pinnedBlock) + ")" })]));
       if (co.scope) cb.appendChild(el("p", { "class": "wd-scope", "data-wd-scope": "", text: String(co.scope) }));
@@ -1690,8 +1701,8 @@
     function renderMaVerdict(ch, addr, pf, catIt) {
       var cls = catIt && catIt.classification;
       // a protocol the corrections registry marks Unresolved / Changed recently is never shown as a documentation difference
-      var neutral = catIt && (catIt.scorecardStatus === "unresolved" || catIt.scorecardStatus === "recent_change");
-      var status = !catIt ? "UNINDEXED" : neutral ? (catIt.scorecardStatus === "unresolved" ? "UNRESOLVED" : "CHANGED RECENTLY")
+      var neutral = catIt && (catIt.scorecardStatus === "unresolved" || catIt.scorecardStatus === "recent_change" || catIt.scorecardStatus === "docs_updated");
+      var status = !catIt ? "UNINDEXED" : neutral ? ({ unresolved: "UNRESOLVED", recent_change: "CHANGED RECENTLY", docs_updated: "DOCS UPDATED" })[catIt.scorecardStatus]
         : (cls === "parameter_delta" || cls === "mixed" ? "DOCUMENTATION DIFFERENCE" : "ALIGNED");
       var tone = status === "ALIGNED" ? "aligned" : status === "DOCUMENTATION DIFFERENCE" ? "delta" : "unindexed";
       if (vSec) vSec.setAttribute("data-ma-status", status);
@@ -2497,7 +2508,7 @@
   }
   function wlToneOf(st) {
     if (st === "DELTA") return { lbl: "FLAGGED", tone: "gap" };
-    if (st === "UNRESOLVED" || st === "CHANGED RECENTLY") return { lbl: st, tone: "observed" };   // neutral, never a gap
+    if (st === "UNRESOLVED" || st === "CHANGED RECENTLY" || st === "DOCS UPDATED") return { lbl: st, tone: "observed" };   // neutral, never a gap
     if (st === "PROTECTIVE") return { lbl: "PROTECTIVE", tone: "protective" };
     if (st === "ALIGNED") return { lbl: "ALIGNED", tone: "aligned" };
     return { lbl: "PINNED", tone: "observed" };
@@ -2641,7 +2652,7 @@
   };
   var FEATURED_COMBO_SLUGS = [
     "inverse-finance-firm", "moonwell-lending-base", "stader-labs-ethx", "ethena-usde-susde",
-    "fluid-instadapp", "curve-finance-crvusd", "sonic-gateway", "yo-protocol",
+    "fluid-instadapp", "curve-finance-crvusd", "sonic-gateway", "usual-money-usd0-usd0",
     "cian-yield-layer", "lagoon", "aave-v3-gho", "lido-steth-dual-governance",
     "pendle-finance-v2", "morpho-blue-core", "spark-sky", "uniswap-v4",
     "circle-usdc", "pancakeswap-amm-v3"
@@ -2695,8 +2706,9 @@
   function protoStatusMeta(x) {
     var g = x.card && x.card.grade ? x.card.grade : "", cl = (x.it && x.it.classification) || "";
     // Unresolved / Changed recently (the corrections registry): neutral, never a GAP, whatever the attested classification
-    if (g === "unresolved" || g === "recent_change" || (x.it && (x.it.scorecardStatus === "unresolved" || x.it.scorecardStatus === "recent_change")))
-      return { label: g === "recent_change" || (x.it && x.it.scorecardStatus === "recent_change") ? "CHANGED RECENTLY" : "UNRESOLVED", tone: "observed", rank: 3 };
+    var ns = (g === "unresolved" || g === "recent_change" || g === "docs_updated") ? g : (x.it && x.it.scorecardStatus) || "";
+    if (ns === "unresolved" || ns === "recent_change" || ns === "docs_updated")
+      return { label: ({ unresolved: "UNRESOLVED", recent_change: "CHANGED RECENTLY", docs_updated: "DOCS UPDATED" })[ns], tone: "observed", rank: 3 };
     if (g === "delta" || cl === "parameter_delta" || cl === "mixed") return { label: "GAP", tone: "gap", rank: 0 };
     if (g === "protective" || cl === "protective_delta") return { label: "PROTECTIVE", tone: "protective", rank: 1 };
     if (g === "aligned" || cl === "aligned_baseline") return { label: "ALIGNED", tone: "aligned", rank: 2 };
@@ -3529,7 +3541,7 @@
       .sort(function (a, b) { return a.r - b.r || (a.x.it.kind === "brief") - (b.x.it.kind === "brief") || (a.x.name < b.x.name ? -1 : a.x.name > b.x.name ? 1 : 0); })
       .slice(0, n).map(function (m) { return m.x; });
   }
-  var GRADE_WORD = { delta: "Delta", recent_change: "Changed recently", unresolved: "Unresolved", protective: "Protective", aligned: "Aligned", observed: "Observed" };
+  var GRADE_WORD = { delta: "Delta", recent_change: "Changed recently", docs_updated: "Docs updated", unresolved: "Unresolved", protective: "Protective", aligned: "Aligned", observed: "Observed" };
   function lkSub(x) {
     var it = x.it, ch = it.chain === "base" ? "Base" : "Ethereum";
     if (it.kind === "brief") return "Brief · " + ch + " · " + String(it.category || "");
@@ -3655,8 +3667,8 @@
   function scEvidence(card) {
     var ev = card.evidence || {}, eas = card.easAttested !== false;
     return el("div", { "class": "sc-ev" }, [
-      el("p", { "class": "sc-full" }, [el("b", { text: "Docs say: " }), String(ev.documented || "")]),
-      el("p", { "class": "sc-full" }, [el("b", { text: eas ? "Chain says: " : "Chain (pinned; docs not compared): " }), String(ev.observed || card.finding || "")])]);
+      el("p", { "class": "sc-full" }, [el("b", { text: "Docs say: " }), plainText(ev.documented)]),
+      el("p", { "class": "sc-full" }, [el("b", { text: eas ? "Chain says: " : "Chain (pinned; docs not compared): " }), plainText(ev.observed || card.finding)])]);
   }
 
   // T1: the radar's state badges stay skeletons until the live re-check settles (success, failure or timeout), then appear once

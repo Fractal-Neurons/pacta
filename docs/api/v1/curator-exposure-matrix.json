@@ -8,9 +8,10 @@
     "base_eas_attested_protocols": 189,
     "grades_breakdown": {
       "ALIGNED": 126,
-      "DELTA_adverse_gaps": 49,
+      "DELTA_adverse_gaps": 43,
       "CHANGED_RECENTLY": 1,
-      "UNRESOLVED": 6,
+      "DOCS_UPDATED": 1,
+      "UNRESOLVED": 11,
       "PROTECTIVE": 7,
       "OBSERVED_rpc_pinned": 127
     },
@@ -19,10 +20,14 @@
     "collateral_contagion_upstream_edges": 7,
     "flagged_comparisons_breakdown": {
       "historically_flagged": 56,
+      "reviewed": 56,
+      "delta": 43,
       "clearWeaker": 16,
-      "needsExplanation": 17,
-      "bookkeeping": 13,
-      "unresolved": 10
+      "realDifference": 16,
+      "bookkeeping": 11,
+      "recentChange": 1,
+      "docsUpdated": 1,
+      "unresolved": 11
     }
   },
   "curators_and_institutional_allocators": [
@@ -330,7 +335,7 @@
             "0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779",
             "0x8965ae6e51a78132a77eb14c0ac1c6cd1be357d6f261253efff28869478ae5b8"
           ],
-          "summary_short": "Timelock delay: docs 7 days · chain 1 day",
+          "summary_short": "Admin timelock minimum is one day; core-function docs say seven days",
           "url": "https://pacta.wtf/protocols/ethena-usde-susde/"
         },
         {
@@ -441,7 +446,7 @@
       "underlying_182_eas_counts": {
         "aligned_or_protective": 7,
         "adverse_gaps_delta": 6,
-        "adverse_gap_share_pct": 42.9,
+        "adverse_gap_share_pct": 46.2,
         "unresolved": 1
       },
       "direct_wrappers": [
@@ -727,7 +732,7 @@
             "0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779",
             "0x8965ae6e51a78132a77eb14c0ac1c6cd1be357d6f261253efff28869478ae5b8"
           ],
-          "summary_short": "Timelock delay: docs 7 days · chain 1 day",
+          "summary_short": "Admin timelock minimum is one day; core-function docs say seven days",
           "url": "https://pacta.wtf/protocols/ethena-usde-susde/"
         },
         {
@@ -800,7 +805,6 @@
       ],
       "underlying_adverse_gap_slugs": [
         "moonwell-lending-base",
-        "seamless-protocol-base",
         "ethena-usde-susde",
         "puffer-finance-pufeth",
         "stader-labs-ethx",
@@ -809,7 +813,7 @@
       "verified_contagion_edges": [
         "Curates risk parameters on Moonwell Base (DELTA: 2-of-4 Pause Guardian vs 3-of-5 Security Council) & Seamless Base (DELTA: 2-of-3 Guardian Safe vs 3-of-6)"
       ],
-      "curator_exposure_insight": "Gauntlet's own treasury product Aera V3 (0x2972...0B4F) is pinned as OBSERVED (timelock-governed, docs unassessed), while two flagship Base lending markets in Gauntlet's curation orbit — Moonwell Base and Seamless Base — carry verified guardian-quorum DELTAs alongside 5 LST/LRT/synthetic collateral DELTAs.",
+      "curator_exposure_insight": "Gauntlet's own treasury product Aera V3 (0x2972...0B4F) is pinned as OBSERVED (timelock-governed, docs unassessed), while two flagship Base lending markets in Gauntlet's curation orbit carry guardian-quorum findings — Moonwell Base a verified DELTA, and Seamless Base Unresolved (its retained 3-of-6 guardian documentation could not be verified against the current page) alongside 4 LST/LRT/synthetic collateral DELTAs (Ethena, Puffer, Stader, Rocket Pool) and an Unresolved Renzo fee comparison.",
       "wrapper_counts": {
         "total": 1,
         "aligned_or_protective": 0,
@@ -819,9 +823,9 @@
       },
       "underlying_182_eas_counts": {
         "aligned_or_protective": 7,
-        "adverse_gaps_delta": 6,
-        "adverse_gap_share_pct": 42.9,
-        "unresolved": 1
+        "adverse_gaps_delta": 5,
+        "adverse_gap_share_pct": 41.7,
+        "unresolved": 2
       },
       "direct_wrappers": [
         {
@@ -1018,26 +1022,6 @@
           "url": "https://pacta.wtf/protocols/moonwell-lending-base/"
         },
         {
-          "slug": "seamless-protocol-base",
-          "name": "Seamless Protocol (Base)",
-          "grade": "DELTA",
-          "easAttested": true,
-          "chains": [
-            "base"
-          ],
-          "pinnedBlock": 59847352,
-          "primaryContract": "0xA1b5f2cc9B407177CD8a4ACF1699fa0b99955A22",
-          "targetLabel": "Seamless Community Guardian Safe (Base)",
-          "tokens": [
-            "SEAM"
-          ],
-          "baseEasUids": [
-            "0xce8821d521758614be8860ac6476e1cec01ae000d81a660644e7bf1260d8cdfd"
-          ],
-          "summary_short": "Seamless's guardian Safe is 2-of-3; docs say a 3/6 multi-sig",
-          "url": "https://pacta.wtf/protocols/seamless-protocol-base/"
-        },
-        {
           "slug": "ethena-usde-susde",
           "name": "Ethena (USDe / sUSDe)",
           "grade": "DELTA",
@@ -1057,7 +1041,7 @@
             "0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779",
             "0x8965ae6e51a78132a77eb14c0ac1c6cd1be357d6f261253efff28869478ae5b8"
           ],
-          "summary_short": "Timelock delay: docs 7 days · chain 1 day",
+          "summary_short": "Admin timelock minimum is one day; core-function docs say seven days",
           "url": "https://pacta.wtf/protocols/ethena-usde-susde/"
         },
         {
@@ -1146,10 +1130,31 @@
           ],
           "summary_short": "DepositQueue feeBasisPoints reads 10,000 bps; effective fee and routing unverified",
           "url": "https://pacta.wtf/protocols/renzo-protocol-ezeth/"
+        },
+        {
+          "slug": "seamless-protocol-base",
+          "name": "Seamless Protocol (Base)",
+          "grade": "UNRESOLVED",
+          "easAttested": true,
+          "chains": [
+            "base"
+          ],
+          "pinnedBlock": 59847352,
+          "primaryContract": "0xA1b5f2cc9B407177CD8a4ACF1699fa0b99955A22",
+          "targetLabel": "Seamless Community Guardian Safe (Base)",
+          "tokens": [
+            "SEAM"
+          ],
+          "baseEasUids": [
+            "0xce8821d521758614be8860ac6476e1cec01ae000d81a660644e7bf1260d8cdfd"
+          ],
+          "summary_short": "Community Guardian Safe is 2-of-3; current guardian page unverified",
+          "url": "https://pacta.wtf/protocols/seamless-protocol-base/"
         }
       ],
       "underlying_unresolved_slugs": [
-        "renzo-protocol-ezeth"
+        "renzo-protocol-ezeth",
+        "seamless-protocol-base"
       ]
     },
     {
@@ -1191,7 +1196,7 @@
       "underlying_182_eas_counts": {
         "aligned_or_protective": 7,
         "adverse_gaps_delta": 6,
-        "adverse_gap_share_pct": 40.0,
+        "adverse_gap_share_pct": 46.2,
         "unresolved": 2
       },
       "direct_wrappers": [
@@ -1390,7 +1395,7 @@
             "0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779",
             "0x8965ae6e51a78132a77eb14c0ac1c6cd1be357d6f261253efff28869478ae5b8"
           ],
-          "summary_short": "Timelock delay: docs 7 days · chain 1 day",
+          "summary_short": "Admin timelock minimum is one day; core-function docs say seven days",
           "url": "https://pacta.wtf/protocols/ethena-usde-susde/"
         },
         {
@@ -1986,7 +1991,7 @@
             "0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779",
             "0x8965ae6e51a78132a77eb14c0ac1c6cd1be357d6f261253efff28869478ae5b8"
           ],
-          "summary_short": "Timelock delay: docs 7 days · chain 1 day",
+          "summary_short": "Admin timelock minimum is one day; core-function docs say seven days",
           "url": "https://pacta.wtf/protocols/ethena-usde-susde/"
         },
         {
@@ -2309,7 +2314,7 @@
             "0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779",
             "0x8965ae6e51a78132a77eb14c0ac1c6cd1be357d6f261253efff28869478ae5b8"
           ],
-          "summary_short": "Timelock delay: docs 7 days · chain 1 day",
+          "summary_short": "Admin timelock minimum is one day; core-function docs say seven days",
           "url": "https://pacta.wtf/protocols/ethena-usde-susde/"
         },
         {
@@ -2350,7 +2355,7 @@
           "baseEasUids": [
             "0x754edd7612258b755ff2e56903243d1f8867bad53c29ce3febb5ed9114005e42"
           ],
-          "summary_short": "LegacyTimelock reads 36 hours; V3.0 technical-change docs describe 2 days",
+          "summary_short": "LegacyTimelock 36h vs 2-day docs; InstanceManager owner is a 4-of-21 Safe",
           "url": "https://pacta.wtf/protocols/gearbox-v3-v3-1/"
         },
         {
@@ -2559,7 +2564,7 @@
           "baseEasUids": [
             "0x61c2970c176b85ab604e6b565c5f050a7176b62e725d449e8d27d700365283d6"
           ],
-          "summary_short": "Supply: docs cap 500M · chain no cap; a 2-of-3 Safe holds the minter role",
+          "summary_short": "OBOL mint has no enforced 500M cap; minter authority is a 2-of-3 Safe",
           "url": "https://pacta.wtf/protocols/obol-network/"
         }
       ]
@@ -2597,7 +2602,7 @@
       "underlying_182_eas_counts": {
         "aligned_or_protective": 3,
         "adverse_gaps_delta": 2,
-        "adverse_gap_share_pct": 33.3,
+        "adverse_gap_share_pct": 40.0,
         "unresolved": 1
       },
       "direct_wrappers": [
@@ -2730,7 +2735,7 @@
             "0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779",
             "0x8965ae6e51a78132a77eb14c0ac1c6cd1be357d6f261253efff28869478ae5b8"
           ],
-          "summary_short": "Timelock delay: docs 7 days · chain 1 day",
+          "summary_short": "Admin timelock minimum is one day; core-function docs say seven days",
           "url": "https://pacta.wtf/protocols/ethena-usde-susde/"
         },
         {
@@ -2817,18 +2822,18 @@
         "2 verified collateral_contagion_upstream edges (Steakhouse Base & Re7 ETH -> morpho-blue-core)",
         "Active Morpho governance RFC morpho-2301 (User-centric DeFi Collateral Transparency Framework - Phase 1)"
       ],
-      "curator_exposure_insight": "Illustrates Pacta's core 'Immutable Core, Mutable Curator' thesis: Morpho Blue Core (0xBBBB...FFCb) and Steakhouse vaults are ALIGNED, whereas YO Protocol on Base (Approval Registry owned directly by the 4-of-6 Admin Safe; vault upgrades keep the 48h timelock) introduces a wrapper-layer DELTA, and Re7 WETH (no guardian, 2-of-4 owner) is Unresolved: no documented promise of matching guardian configurations was verified.",
+      "curator_exposure_insight": "Illustrates Pacta's core 'Immutable Core, Mutable Curator' thesis: Morpho Blue Core (0xBBBB...FFCb) and Steakhouse vaults are ALIGNED, whereas YO Protocol on Base (Approval Registry owned directly by the 4-of-6 Admin Safe; sampled vault upgrades keep 48 hours) is Unresolved: its retained Security Framework quote could not be verified against the current docs, and Re7 WETH (no guardian, 2-of-4 owner) is Unresolved: no documented promise of matching guardian configurations was verified.",
       "wrapper_counts": {
         "total": 7,
         "aligned_or_protective": 4,
-        "delta": 1,
-        "unresolved": 1,
+        "delta": 0,
+        "unresolved": 2,
         "observed": 1
       },
       "underlying_182_eas_counts": {
         "aligned_or_protective": 6,
         "adverse_gaps_delta": 6,
-        "adverse_gap_share_pct": 46.2,
+        "adverse_gap_share_pct": 50.0,
         "unresolved": 1
       },
       "direct_wrappers": [
@@ -2942,7 +2947,7 @@
         {
           "slug": "yo-protocol",
           "name": "YO Protocol",
-          "grade": "DELTA",
+          "grade": "UNRESOLVED",
           "easAttested": true,
           "chains": [
             "base"
@@ -2958,7 +2963,7 @@
           "baseEasUids": [
             "0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5"
           ],
-          "summary_short": "Approval Registry owned by Admin Safe; vault upgrades keep a 48-hour timelock",
+          "summary_short": "Approval Registry owned by the Admin Safe; sampled vault upgrades keep 48 hours",
           "url": "https://pacta.wtf/protocols/yo-protocol/"
         },
         {
@@ -3142,7 +3147,7 @@
             "0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779",
             "0x8965ae6e51a78132a77eb14c0ac1c6cd1be357d6f261253efff28869478ae5b8"
           ],
-          "summary_short": "Timelock delay: docs 7 days · chain 1 day",
+          "summary_short": "Admin timelock minimum is one day; core-function docs say seven days",
           "url": "https://pacta.wtf/protocols/ethena-usde-susde/"
         },
         {
@@ -3318,7 +3323,7 @@
       "underlying_182_eas_counts": {
         "aligned_or_protective": 5,
         "adverse_gaps_delta": 4,
-        "adverse_gap_share_pct": 40.0,
+        "adverse_gap_share_pct": 44.4,
         "unresolved": 1
       },
       "direct_wrappers": [
@@ -3480,7 +3485,7 @@
             "0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779",
             "0x8965ae6e51a78132a77eb14c0ac1c6cd1be357d6f261253efff28869478ae5b8"
           ],
-          "summary_short": "Timelock delay: docs 7 days · chain 1 day",
+          "summary_short": "Admin timelock minimum is one day; core-function docs say seven days",
           "url": "https://pacta.wtf/protocols/ethena-usde-susde/"
         },
         {
@@ -3639,7 +3644,7 @@
             "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
             "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2"
           ],
-          "summary_short": "Sampled RoleManager uses a 7-day timelock; yChad signer roster differs (6-of-9)",
+          "summary_short": "yChad signer roster changed; the Safe keeps its 6-of-9 threshold",
           "url": "https://pacta.wtf/protocols/yearn-v3/"
         },
         {
@@ -4438,7 +4443,7 @@
             "0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779",
             "0x8965ae6e51a78132a77eb14c0ac1c6cd1be357d6f261253efff28869478ae5b8"
           ],
-          "summary_short": "Timelock delay: docs 7 days · chain 1 day",
+          "summary_short": "Admin timelock minimum is one day; core-function docs say seven days",
           "url": "https://pacta.wtf/protocols/ethena-usde-susde/"
         },
         {
@@ -4588,7 +4593,7 @@
       "ecosystem_impact_rationale": "Canonical Ethereum bridge custodying bridged rollup TVL; lower-than-documented council execution threshold affects every downstream Taiko DeFi asset.",
       "clinical_brief_hook": "At Ethereum block #26,453,551, EmergencyMultisig 0x2Aff…7ECd executes zero-duration DAO proposals at 4-of-5 council approvals (standard stage: 3-of-5) rather than the 6 approvals stated in dao-docs.taiko.xyz; updating multisigSettings() or aligning council documentation qualifies for 24h Base-EAS re-verification.",
       "name": "Taiko Bridge",
-      "grade": "DELTA",
+      "grade": "UNRESOLVED",
       "easAttested": true,
       "chains": [
         "ethereum"
@@ -4602,7 +4607,7 @@
       "baseEasUids": [
         "0xc281741a4fb297a9ccb30b5485ca6ef2bcfb69be10236c056e7208301e30d992"
       ],
-      "summary_short": "Taiko emergency proposals execute with 4 of 5 council approvals; docs say 6",
+      "summary_short": "Emergency council 4-of-5, standard route 3 approvals; current guides unverified",
       "url": "https://pacta.wtf/protocols/taiko-bridge/",
       "surface": "Emergency Multisig: minApprovals 4 of 5 signers (docs: 6); standard 3 (docs: 5)",
       "documented_excerpt": "'The proposal must receive 6 approvals within 14 days from Security Council members to be executable.' (dao-docs.taiko.xyz/guides/making-an-emergency-proposal); 'The proposal must receive 5 approvals within 14 days from Security Council members to move to the public stage' (dao-docs.taiko.xyz/guides/making-a-standard-proposal); '- Owner (Taiko DAO): `0x9CDf589C941ee81D75F34d3755671d614f7cf261`' (raw.githubusercontent.com/taikoxyz/taiko-mono/main/packages/protocol/deployments/mainnet-contract-logs-L1.md)",
@@ -4729,7 +4734,7 @@
       "ecosystem_impact_rationale": "Key Base lending & Integrated Liquidity Market protocol where Community Guardian Safe holds CANCELLER_ROLE and guardian powers at 2-of-3 vs documented 3-of-6.",
       "clinical_brief_hook": "At Base block #59,847,352, Seamless Community Guardian Safe 0xA1b5…5A22 (holding CANCELLER_ROLE on short timelock 0x639d…5fee) executes at 2-of-3 owners rather than the 3-of-6 multisig stated in seamless-guardians.md; expanding the Safe signer set or updating GitBook clears the delta for a 24h Base-EAS seal.",
       "name": "Seamless Protocol (Base)",
-      "grade": "DELTA",
+      "grade": "UNRESOLVED",
       "easAttested": true,
       "chains": [
         "base"
@@ -4743,7 +4748,7 @@
       "baseEasUids": [
         "0xce8821d521758614be8860ac6476e1cec01ae000d81a660644e7bf1260d8cdfd"
       ],
-      "summary_short": "Seamless's guardian Safe is 2-of-3; docs say a 3/6 multi-sig",
+      "summary_short": "Community Guardian Safe is 2-of-3; current guardian page unverified",
       "url": "https://pacta.wtf/protocols/seamless-protocol-base/",
       "surface": "Community Guardian Safe: docs state a 3/6 multi-sig; the Safe is 2-of-3",
       "documented_excerpt": "'The Community Guardian Multi-Sig currently has ownership over both the Governance Guardian and Protocol Guardian functions.' (raw.githubusercontent.com/seamless-protocol/gitbook/main/governance/seamless-guardians.md); '>0xA1b5f2cc9B407177CD8a4ACF1699fa0b99955A22<' (raw.githubusercontent.com/seamless-protocol/gitbook/main/technical/smart-contracts.md)",
@@ -4876,7 +4881,7 @@
       "ecosystem_impact_rationale": "High-visibility Base yield vaults routing into Morpho & ERC-4626 adapters; all 6 approval/route registries sit directly under the 4-of-6 Admin Safe with 0s timelock instead of YO Timelock.",
       "clinical_brief_hook": "At Base block #58,315,414, YoApprovalRegistry 0xB4b3…7021 and five sibling route registries for yoETH/yoUSD read owner() = 4-of-6 Admin Safe 0x67b6…FCd2 (0s delay) rather than 48h YO Timelock 0x38cE…6F48; transferring registry ownership to the deployed timelock unlocks a 24h Base-EAS parity seal.",
       "name": "YO Protocol",
-      "grade": "DELTA",
+      "grade": "UNRESOLVED",
       "easAttested": true,
       "chains": [
         "base"
@@ -4892,7 +4897,7 @@
       "baseEasUids": [
         "0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5"
       ],
-      "summary_short": "Approval Registry owned by Admin Safe; vault upgrades keep a 48-hour timelock",
+      "summary_short": "Approval Registry owned by the Admin Safe; sampled vault upgrades keep 48 hours",
       "url": "https://pacta.wtf/protocols/yo-protocol/",
       "surface": "Approval Registry owner: the Admin Multisig directly, not the 48-hour timelock",
       "documented_excerpt": "docs.yo.xyz (YO V2 Security Framework): 'Approval Registry: Onchain, timelocked caps on how much of each asset a vault may approve to each contract' and 'Every path a dollar can take is written into immutable adapters and timelocked registries'",
@@ -5052,7 +5057,7 @@
         "0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779",
         "0x8965ae6e51a78132a77eb14c0ac1c6cd1be357d6f261253efff28869478ae5b8"
       ],
-      "summary_short": "Timelock delay: docs 7 days · chain 1 day",
+      "summary_short": "Admin timelock minimum is one day; core-function docs say seven days",
       "url": "https://pacta.wtf/protocols/ethena-usde-susde/",
       "contagion_note": "On-chain timelock minDelay is 1 day vs 7 days stated in docs (active Aave V3 E-Mode & PT-sUSDe collateral)",
       "surface": "TimelockController MinDelay & Dev Multisig Quorum"
@@ -5332,7 +5337,7 @@
       "baseEasUids": [
         "0x754edd7612258b755ff2e56903243d1f8867bad53c29ce3febb5ed9114005e42"
       ],
-      "summary_short": "LegacyTimelock reads 36 hours; V3.0 technical-change docs describe 2 days",
+      "summary_short": "LegacyTimelock 36h vs 2-day docs; InstanceManager owner is a 4-of-21 Safe",
       "url": "https://pacta.wtf/protocols/gearbox-v3-v3-1/",
       "contagion_note": "On-chain timelock delay reads 36 hours vs 2 days (48h) in docs",
       "surface": "LegacyTimelock Delay & InstanceManager Safe Quorum"
@@ -5568,7 +5573,7 @@
       "baseEasUids": [
         "0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc"
       ],
-      "summary_short": "BIO can be minted on the current contract by a Safe; docs: minting needs a new contract",
+      "summary_short": "Existing BIO contract can mint; docs say growth needs a replacement contract",
       "url": "https://pacta.wtf/protocols/bio-protocol/",
       "category": "Decentralized-science funding layer for biotech projects (Ethereum)",
       "surface": "BIO mint(): MINTER_ROLE held by a 5-of-11 Safe and a bridge manager; no cap",
@@ -5760,7 +5765,7 @@
         "0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779",
         "0x8965ae6e51a78132a77eb14c0ac1c6cd1be357d6f261253efff28869478ae5b8"
       ],
-      "summary_short": "Timelock delay: docs 7 days · chain 1 day",
+      "summary_short": "Admin timelock minimum is one day; core-function docs say seven days",
       "url": "https://pacta.wtf/protocols/ethena-usde-susde/",
       "category": "Synthetic Dollar / Basis Collateral",
       "surface": "TimelockController MinDelay & Dev Multisig Quorum",
@@ -5832,7 +5837,7 @@
       "baseEasUids": [
         "0x754edd7612258b755ff2e56903243d1f8867bad53c29ce3febb5ed9114005e42"
       ],
-      "summary_short": "LegacyTimelock reads 36 hours; V3.0 technical-change docs describe 2 days",
+      "summary_short": "LegacyTimelock 36h vs 2-day docs; InstanceManager owner is a 4-of-21 Safe",
       "url": "https://pacta.wtf/protocols/gearbox-v3-v3-1/",
       "category": "Leveraged Credit & Curated Lending",
       "surface": "LegacyTimelock Delay & InstanceManager Safe Quorum",
@@ -5864,7 +5869,7 @@
     {
       "slug": "hakka-finance",
       "name": "Hakka Finance",
-      "grade": "DELTA",
+      "grade": "UNRESOLVED",
       "easAttested": true,
       "chains": [
         "ethereum"
@@ -5878,7 +5883,7 @@
       "baseEasUids": [
         "0xc281741a4fb297a9ccb30b5485ca6ef2bcfb69be10236c056e7208301e30d992"
       ],
-      "summary_short": "Hakka's multi-sig has 4 signers (2 needed); docs name 3 keyholders",
+      "summary_short": "HAKKA owner Safe is 2-of-4; current documented roster unverified",
       "url": "https://pacta.wtf/protocols/hakka-finance/",
       "category": "Crypto-native hedging instruments: impermanent-loss and interest-rate derivatives (iGain) (Ethereum)",
       "surface": "Multi-sig: docs name 3 keyholders; the Safe is 2-of-4 with 1 unnamed owner",
@@ -5910,7 +5915,7 @@
     {
       "slug": "infinifi",
       "name": "infiniFi",
-      "grade": "DELTA",
+      "grade": "UNRESOLVED",
       "easAttested": true,
       "chains": [
         "ethereum"
@@ -5927,7 +5932,7 @@
         "0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
         "0xe712dd31d79ab492e2e64eb5847396651dee81daa9f895ead45548e97f1a2eb7"
       ],
-      "summary_short": "Pause roles are administered by MINOR_ROLES_MANAGER; docs say GOVERNOR",
+      "summary_short": "MINOR_ROLES_MANAGER administers PAUSE/UNPAUSE; current roles page unverified",
       "url": "https://pacta.wtf/protocols/infinifi/",
       "category": "Yield-Bearing Stablecoin",
       "surface": "PAUSE / UNPAUSE role admin: MINOR_ROLES_MANAGER, not GOVERNOR",
@@ -6100,7 +6105,7 @@
       "baseEasUids": [
         "0x61c2970c176b85ab604e6b565c5f050a7176b62e725d449e8d27d700365283d6"
       ],
-      "summary_short": "Supply: docs cap 500M · chain no cap; a 2-of-3 Safe holds the minter role",
+      "summary_short": "OBOL mint has no enforced 500M cap; minter authority is a 2-of-3 Safe",
       "url": "https://pacta.wtf/protocols/obol-network/",
       "category": "Distributed Validator Infrastructure & Governance Token",
       "surface": "OBOL supply: documented cap of 500M, no cap on-chain; a 2-of-3 Safe holds MINTER_ROLE",
@@ -6278,7 +6283,7 @@
     {
       "slug": "seamless-protocol-base",
       "name": "Seamless Protocol (Base)",
-      "grade": "DELTA",
+      "grade": "UNRESOLVED",
       "easAttested": true,
       "chains": [
         "base"
@@ -6292,7 +6297,7 @@
       "baseEasUids": [
         "0xce8821d521758614be8860ac6476e1cec01ae000d81a660644e7bf1260d8cdfd"
       ],
-      "summary_short": "Seamless's guardian Safe is 2-of-3; docs say a 3/6 multi-sig",
+      "summary_short": "Community Guardian Safe is 2-of-3; current guardian page unverified",
       "url": "https://pacta.wtf/protocols/seamless-protocol-base/",
       "category": "Base Lending & Integrated Liquidity",
       "surface": "Community Guardian Safe: docs state a 3/6 multi-sig; the Safe is 2-of-3",
@@ -6372,7 +6377,7 @@
     {
       "slug": "taiko-bridge",
       "name": "Taiko Bridge",
-      "grade": "DELTA",
+      "grade": "UNRESOLVED",
       "easAttested": true,
       "chains": [
         "ethereum"
@@ -6386,7 +6391,7 @@
       "baseEasUids": [
         "0xc281741a4fb297a9ccb30b5485ca6ef2bcfb69be10236c056e7208301e30d992"
       ],
-      "summary_short": "Taiko emergency proposals execute with 4 of 5 council approvals; docs say 6",
+      "summary_short": "Emergency council 4-of-5, standard route 3 approvals; current guides unverified",
       "url": "https://pacta.wtf/protocols/taiko-bridge/",
       "category": "Canonical bridge into a based contestable ZK rollup (Ethereum)",
       "surface": "Emergency Multisig: minApprovals 4 of 5 signers (docs: 6); standard 3 (docs: 5)",
@@ -6395,7 +6400,7 @@
     {
       "slug": "tori-finance",
       "name": "Tori Finance",
-      "grade": "UNRESOLVED",
+      "grade": "DOCS UPDATED",
       "easAttested": true,
       "chains": [
         "ethereum"
@@ -6409,7 +6414,7 @@
       "baseEasUids": [
         "0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc"
       ],
-      "summary_short": "trUSD timelock: current docs name the same 24-hour controller as observed",
+      "summary_short": "Retrieved roles page names the retained trUSD controller; chain re-read pending",
       "url": "https://pacta.wtf/protocols/tori-finance/",
       "category": "Delta-Neutral Synthetic Dollar (staked strUSD) (Ethereum)",
       "surface": "trUSD TIMELOCK_ADMIN_ROLE: a second ToriTimelock, not the documented timelock",
@@ -6576,7 +6581,7 @@
         "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
         "0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2"
       ],
-      "summary_short": "Sampled RoleManager uses a 7-day timelock; yChad signer roster differs (6-of-9)",
+      "summary_short": "yChad signer roster changed; the Safe keeps its 6-of-9 threshold",
       "url": "https://pacta.wtf/protocols/yearn-v3/",
       "category": "Yield Aggregation Vaults",
       "surface": "Sampled RoleManager.governance() Timelock Wiring",
@@ -6608,7 +6613,7 @@
     {
       "slug": "yo-protocol",
       "name": "YO Protocol",
-      "grade": "DELTA",
+      "grade": "UNRESOLVED",
       "easAttested": true,
       "chains": [
         "base"
@@ -6624,7 +6629,7 @@
       "baseEasUids": [
         "0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5"
       ],
-      "summary_short": "Approval Registry owned by Admin Safe; vault upgrades keep a 48-hour timelock",
+      "summary_short": "Approval Registry owned by the Admin Safe; sampled vault upgrades keep 48 hours",
       "url": "https://pacta.wtf/protocols/yo-protocol/",
       "category": "Cross-Chain Yield Optimizer Vaults",
       "surface": "Approval Registry owner: the Admin Multisig directly, not the 48-hour timelock",

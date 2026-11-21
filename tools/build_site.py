@@ -181,8 +181,9 @@ CHECKOUT = {   # sku -> product page; "tier" is the /request/?tier= alias that f
         "badge": "Free Ethereum & Base Wallet, Safe & Protocol Scanner",
         "h1": "Paste any wallet, Safe, or protocol to scan live DeFi control-plane exposure.",
         "label": "Full Wallet & Safe Exposure Report",
-        "lede": "Instant read-only Multicall3 balanceOf + Safe custody scan across 316 Ethereum & Base protocols (189 Base-EAS attested · 56 historically flagged comparisons: "
-                "16 weaker than documented, 17 needing explanation, 13 bookkeeping, 10 unresolved). "
+        "lede": "Instant read-only Multicall3 balanceOf + Safe custody scan across 316 Ethereum & Base protocols (189 Base-EAS attested · "
+                f'{CORR.breakdown()["reviewed"]} reviewed findings: {CORR.breakdown()["delta"]} Deltas, {CORR.breakdown()["recentChange"]} Changed '
+                f'recently, {CORR.breakdown()["docsUpdated"]} Docs updated, {CORR.breakdown()["unresolved"]} Unresolved). '
                 "Zero wallet connection, zero signature, zero upfront price tags.",
         "cta": "Pay $9 USDC on Base & Unlock Full Report",
         "title": "Free Wallet, Safe & Protocol Control-Plane Exposure Scanner · Pacta", "card": "x-card-scan19-1200x628.png",
@@ -220,6 +221,8 @@ SCAN_CHIPS = [
     ("Circle", "circle-usdc"),
 ]
 CHIP_TICKERS = {
+    "usual-money-usd0-usd0": "USD0",
+    "treehouse-tree-teth": "TREE",
     "moonwell-lending-base": "WELL",
     "aave-v3-gho": "AAVE",
     "lido-steth-dual-governance": "stETH",
@@ -753,12 +756,22 @@ def scorecards(idx, pinned=None, sp=None):
         for f in fs:                                       # a correction's scoped factor wording replaces the derived sentence
             if f["key"] in (corr.get("factorOverrides") or {}):
                 f["value"] = corr["factorOverrides"][f["key"]]
+            # a human evidence caption (the record's surface, chain and pinned block); the machine record id stays in evidenceRecordId
+            rid_ = (f.get("evidence") or "").split(": ", 1)[0]
+            ev_r = next((e for e in es if e["id"] == rid_), None)
+            if ev_r is not None:
+                cap_ = (corr.get("evidenceCaption") if rid_ == corr.get("leadRecord") else None) or (
+                    f'{ev_r["surface"]} — {CHAINS[chain_of(ev_r)][0]} block #{int(ev_r["block_number"]):,}')
+                f["evidenceRecordId"], f["evidenceCaption"] = rid_, cap_
         wd = CD.what_differs(es) if eas else None
         if CORR.finding(v["slug"]):
             finding = CORR.finding(v["slug"])
         elif wd and wd.get("changed"):
             c0 = wd["changed"][0]
-            finding = f'{c0["parameter"]}: docs say {c0["documented"]} · chain says {c0["observed"]}'
+            # a parameter pair (delay / threshold) reads "label: X on chain vs Y in the documentation"; an unpaired record's lead is its
+            # own scoped surface heading (never a raw "docs say … · chain says …" dump of two truncated evidence sentences)
+            finding = (f'{c0["parameter"]}: {c0["observed"]} on chain vs {c0["documented"]} in the documentation' if c0.get("paired")
+                       else c0["parameter"])
         else:
             lead = next((e for e in es if e["classification"] == "parameter_delta"), None) or next(
                 (e for e in es if e["classification"] == "protective_delta"), None) or es[0]
@@ -798,7 +811,7 @@ def scorecards(idx, pinned=None, sp=None):
                     **({"scopeNote": corr["explanatorySentence"]} if corr.get("explanatorySentence") else {}),
                     **({"subPill": corr["subPill"]} if corr.get("subPill") else {}),
                     **({"subtitle": corr["subtitle"]} if corr.get("subtitle") else {}),
-                    **({"findingClass": CORR.finding_class(v["slug"])} if CORR.finding_class(v["slug"]) else {}),
+                    **({"deltaSubcategory": CORR.finding_class(v["slug"])} if CORR.finding_class(v["slug"]) else {}),
                     **({"recentChange": corr["recentChange"]} if corr.get("recentChange") else {}),
                     "pinnedBlock": max(int(e["block_number"]) for e in es),
                     "factors": fs, "rosetteAria": SC.aria(fs, name), "url": f"{BASE_URL}/protocols/{v['slug']}/",
@@ -818,9 +831,11 @@ def scorecards_json(cards):
                           "for every RPC-observed protocol. States: g strong, b moderate, a weak, n not determined, u uncompared.",
            "grades": {g: {"label": SC.GRADES[g][0], "meaning": SC.GRADES[g][1], "protocols": totals[g]} for g in SC.GRADES},
            "factors": [{"key": k, "label": lbl} for k, lbl in SC.FACTORS], "factorCoverage": coverage,
-           # the independent four-way classification of the 56 historically flagged comparisons (not a fresh chain read, not a
-           # severity grade): each flagged protocol's class is its card's "findingClass"
-           "findingBreakdown": CORR.breakdown(), "findingClasses": CORR.data()["findingClasses"]["labels"],
+           # the single table of the 56 reviewed findings (tools/scorecard_corrections.json reviewedFindings, from the verifier's
+           # rulings): its counts, the Delta subcategories and the one sentence Home and Radar show; each reviewed Delta's card carries
+           # its "deltaSubcategory"
+           "findingBreakdown": CORR.breakdown(), "deltaSubcategories": CORR.reviewed()["labels"],
+           "reviewedFindingsSentence": CORR.breakdown_text(),
            "recentChangeRule": CORR.recent_change_rule(),
            "protocols": cards}
     return json.dumps(doc, indent=1, ensure_ascii=False, sort_keys=True) + "\n"
@@ -897,6 +912,8 @@ def record_badge(e):
         return f'<span class="badge unresolved">{E(c.get("subPill") or "Unresolved")}</span>'
     if c.get("status") == "recent_change" and e.get("classification") == "parameter_delta":
         return f'<span class="badge recent_change">{E(c.get("subPill") or "Changed recently")}</span>'
+    if c.get("status") == "docs_updated" and e.get("classification") == "parameter_delta":
+        return f'<span class="badge unresolved">{E(c.get("statusLabel") or "Docs updated")}</span>'
     return badge(e["classification"])
 
 
@@ -970,6 +987,7 @@ def what_differs_html(entries, compact=False, seal_cta=False):
 
     def val(full, short_v):
         """(visible excerpt, full text or "" when the excerpt already is the whole text)"""
+        full, short_v = plain(full), plain(short_v)     # visible text: no Markdown / TeX markers (v6 B11)
         if not short_v.endswith("…") and len(short_v) <= 60:
             return E(short_v), ""
         ex = clean_excerpt(full or short_v)
@@ -993,17 +1011,18 @@ def what_differs_html(entries, compact=False, seal_cta=False):
     protective = all(c.get("classification") == "protective_delta" for c in wd["changed"])
     unres = corr.get("status") == "unresolved"
     recent = corr.get("status") == "recent_change"
+    docs_up = corr.get("status") == "docs_updated"
     wd_cta = (f'<p class="wd-cta">Protocol maintainer and fixed this gap? <a href="#seal-cta" data-cta="seal_wd">Get it re-verified on mainnet in 24h{ARR}</a></p>'
-              if seal_cta and not protective and not unres and not recent else "")
+              if seal_cta and not protective and not unres and not recent and not docs_up else "")
     if corr.get("headline") or corr.get("explanatorySentence"):
         # a declarative correction (tools/scorecard_corrections.json): its headline and pinned block lead, its scope sentence follows,
         # and the generic or overstated per-parameter lines are not repeated
         lead = (f'<p class="wd-lead" data-wd-headline><strong>{E(corr["headline"])}</strong> '
                 f'<span class="wd-block mono">(#{corr["pinnedBlock"]:,})</span></p>' if corr.get("headline") else "")
         scope = f'<p class="wd-scope" data-wd-scope>{E(corr["explanatorySentence"])}</p>' if corr.get("explanatorySentence") else ""
-        cls = " unresolved" if unres else " recent_change" if recent else (" protective" if protective else "")
+        cls = " unresolved" if unres or docs_up else " recent_change" if recent else (" protective" if protective else "")
         return (f'<{tag} class="{"memo-sec " if not compact else ""}whatdiffers{cls}" data-what-differs>'
-                f'<h2 class="wd-h">{"Verification scope" if unres else "Changed recently" if recent else "What differs"}</h2>{lead}{scope}'
+                f'<h2 class="wd-h">{"Verification scope" if unres else "Docs updated" if docs_up else "Changed recently" if recent else "What differs"}</h2>{lead}{scope}'
                 + (f'<p class="wd-l">Matched</p><ul class="wd-matched">{mt}</ul>' if mt else "") + wd_cta + f'</{tag}>\n')
     return (f'<{tag} class="{"memo-sec " if not compact else ""}whatdiffers{" protective" if protective else ""}" data-what-differs><h2 class="wd-h">What differs</h2>'
             f'<p class="wd-l">Changed / discrepant</p><ul class="wd-changed">{"".join(items)}</ul>'
@@ -1045,10 +1064,27 @@ HEX64 = re.compile(r"0x[0-9a-fA-F]{64}(?![0-9a-fA-F])|(?<![0-9A-Za-z])0x[0-9a-fA
 ADDR40 = re.compile(r"0x[0-9a-fA-F]{40}")
 
 
+_MD_BOLD = re.compile(r"\*\*([^*\n]+)\*\*|__([^_\n]+)__")
+_TEX_INLINE = re.compile(r"\$([0-9][0-9/.,+\- ]*)\$")
+_LONG_INT = re.compile(r"(?<![0-9A-Za-z.,])\d{18,}(?![0-9A-Za-z])")
+
+
+def plain(text):
+    """Visible text from a quoted documentation excerpt: Markdown bold (**x**) and inline TeX ($5/9$) markers are removed; the JSON
+    feeds keep the record's text verbatim."""
+    t = _TEX_INLINE.sub(lambda m: m.group(1), _MD_BOLD.sub(lambda m: m.group(1) or m.group(2), text or ""))
+    # a raw 18+-digit integer (a wei amount) is shown digit-grouped (exact value, readable); 0x hex is never touched
+    return _LONG_INT.sub(lambda m: f"{int(m.group(0)):,}", t)
+
+
+SEP = '<span class="sep" aria-hidden="true"> · </span>'
+
+
 def prose(text):
     """Escape record prose for display; 32-byte hashes (tx / op / block ids) are shortened with the full value in a
     tooltip, so a 66-character token can never force a mid-hash wrap. 20-byte addresses stay complete (readers copy
     them) in a no-wrap span sized to fit the column. The JSON feed keeps the full text."""
+    text = plain(text)
     out, last = [], 0
     for m in HEX64.finditer(text):
         out.append(E(text[last:m.start()]))
@@ -1260,11 +1296,8 @@ def radar_counts_text(radar):
 def radar_context(prefix=""):
     """One plain line at the top of the radar: what the live snapshot is, and how Pacta classifies its historical document
     comparisons (the independent four-way breakdown from tools/scorecard_corrections.json; never an "adverse" claim)."""
-    b = CORR.breakdown()
     return (f'<p class="radar-context s" data-radar-context>This radar is a live snapshot of governance changes queued in onchain timelocks. '
-            f'Separately, Pacta classifies its {CORR.flagged_total()} historical document comparisons: {b["clearWeaker"]} clear cases where '
-            f'the chain looks weaker than documented · {b["needsExplanation"]} real differences needing explanation · '
-            f'{b["bookkeeping"]} bookkeeping · {b["unresolved"]} unresolved (<a href="{prefix}scorecards/">scorecards</a>).</p>')
+            f'Separately: <span data-reviewed-sentence>{E(CORR.breakdown_text())}</span> (<a href="{prefix}scorecards/">scorecards</a>).</p>')
 
 
 def radar_section(radar, prefix="", full=False):
@@ -1659,7 +1692,7 @@ def scan_preview(idx, lk):
     """/scan/: a sample unlocked report from Pacta's published Stader ETHx record: the rosette, status pills, the record's own
     role and getter names and the three deliverables. Every value comes from the record; nothing is illustrative."""
     import scorecard as SC
-    r = next(x for x in receipt_data(idx) if x["slug"] == "stader-labs-ethx")
+    r = next(x for x in receipt_data(idx, PREVIEW_RECEIPTS) if x["slug"] == "stader-labs-ethx")
     it, card = lk["stader-labs-ethx"], card_for(idx, "stader-labs-ethx")
     uid = (it.get("baseEasUids") or [""])[0]
     secs = it["observedDelaySeconds"]
@@ -1707,7 +1740,7 @@ def seal_preview(idx, lk):
     demo = card_for(idx, BADGE_DEMO)
     it = lk[BADGE_DEMO]
     uid = (it.get("baseEasUids") or [""])[0]
-    r = next(x for x in receipt_data(idx) if x["slug"] == "stader-labs-ethx")
+    r = next(x for x in receipt_data(idx, PREVIEW_RECEIPTS) if x["slug"] == "stader-labs-ethx")
     label = LK.BADGE_TIERS["aligned"][0]
     width = (len(LK.BADGE_TITLE) + len(label)) * 7 + 24
     stb = ('{\n  "version": "1.0", "chainId": "1",\n  "meta": {"name": "Pacta seal: remaining step"},\n'
@@ -2403,7 +2436,9 @@ def factor_list(card):
     rows = "".join(f'<div data-factor="{f["key"]}" data-state="{f["state"]}"><dt><span class="fdot r-{f["state"]}" aria-hidden="true">'
                    f'{FACTOR_LETTER[f["state"]]}</span>{E(f["label"])}</dt>'
                    f'<dd><b>{E(SC.STATE_LABEL[f["state"]])}</b> · {E(f["value"])}'
-                   + (f'<small class="ev">Evidence: {E(f["evidence"])}</small>' if f["evidence"] else "") + "</dd></div>" for f in card["factors"])
+                   + (f'<small class="ev" data-record-id="{E(f["evidenceRecordId"])}">Evidence: {E(f["evidenceCaption"])}</small>'
+                      if f.get("evidenceCaption") else f'<small class="ev">Evidence: {E(f["evidence"])}</small>' if f["evidence"] else "")
+                   + "</dd></div>" for f in card["factors"])
     return f'<dl class="factors">{rows}</dl>'
 
 
@@ -2438,8 +2473,10 @@ def scorecard_section(card):
                       icon_name="info") +
             f'{factor_list(card)}{recon_trail(card)}'
             f'<p class="s">Each slice is derived only from the pinned records on this page and their controller facts (<a href="../../api/v1/scorecards.json">/api/v1/scorecards.json</a>). '
-            f'A hollow slice is <i>not determined</i> by the published evidence (never a guess); docs-vs-chain parity is <i>uncompared</i> for RPC-observed protocols. '
-            f'<a href="../../methodology/">How to read it</a>.</p></section>\n')
+            f'A hollow slice is <i>not determined</i> by the published evidence (never a guess)'
+            # the uncompared-parity note only where it applies: an RPC-observed page (v6 E18 v)
+            + ('; docs-vs-chain parity is <i>uncompared</i> for RPC-observed protocols. ' if card["grade"] == "observed" else '. ')
+            + f'<a href="../../methodology/">How to read it</a>.</p></section>\n')
 
 
 def badge_embed(name, slug, tier):
@@ -2547,7 +2584,7 @@ def wave2_credits(slug, lb=None, claims=None):
     return out
 
 
-def research_credit_html(slug, credit, wave2=()):
+def research_credit_html(slug, credit, wave2=(), surfaces=None):
     """Provenance section crediting the researchers (EAS-attested pages only; the records stay Pacta's own pinned re-reads): the
     Wave 1 catch (if any) and every Wave 2 catch credited to this protocol."""
     if not credit and not wave2:
@@ -2569,7 +2606,9 @@ def research_credit_html(slug, credit, wave2=()):
         paras.append(f'<p data-research-credit="{E(h)}" data-research-wave="2">Reported by <a href="https://github.com/{E(h)}" target="_blank" rel="noopener">@{E(h)}</a> '
                      f'through the Pacta Wave 2 pool (<a href="{E(REPO)}/pull/{int(pr)}" target="_blank" rel="noopener">PR #{int(pr)}</a>, fixture '
                      f'<code>{E(WAVE2["fixtureDir"])}/{E(c["fixture"])}</code>), merged under the Apache-2.0 commercial grant{paid}; credited on '
-                     f'<a href="#{E(c["record"])}">{E(c["record"])}</a>. {tail}See <a href="../../leaderboard/">the leaderboard</a>.</p>')
+                     # the link names the record's human surface; its machine id stays in the anchor (never visible prose; v6 A8)
+                     f'<a href="#{E(c["record"])}" data-record-id="{E(c["record"])}">{E((surfaces or {}).get(c["record"]) or "the pinned record")}</a>. '
+                     f'{tail}See <a href="../../leaderboard/">the leaderboard</a>.</p>')
     attr = f' data-research-credit="{E(credit["hunter"])}"' if credit else ""
     return (f'<section class="memo-sec" id="provenance"{attr}><h2>Provenance · research credit</h2>' + "".join(paras) + '</section>\n')
 
@@ -2602,8 +2641,9 @@ def protocol_page(name, entries, idx, radar, digest=None, slug=None):
                    CORR.record_display(e["id"]).get("documentedLabel") or "Documented.")
         records += (f'<article class="memo-sec" id="{E(e["id"])}"><h2>{E(e["surface"])}</h2>'
                     f'<dl class="memo-meta"><dt>Status</dt><dd>{record_badge(e)}</dd>'
-                    f'<dt>Target</dt><dd>{E(e["target_label"])} {hexref(e["target_contract"])} · {explorer_link(e, "address")}</dd>'
-                    f'<dt>Pinned block</dt><dd>{ch} <span class="num">#{int(e["block_number"]):,}</span> · {explorer_link(e)} · {prov}</dd>'
+                    # separators are their own spans, hidden when the row wraps on a phone (never a dangling "·"; v6 E18 iv)
+                    f'<dt>Target</dt><dd>{E(e["target_label"])} {hexref(e["target_contract"])}{SEP}{explorer_link(e, "address")}</dd>'
+                    f'<dt>Pinned block</dt><dd>{ch} <span class="num">#{int(e["block_number"]):,}</span>{SEP}{explorer_link(e)}{SEP}{prov}</dd>'
                     f'<dt>Block hash</dt><dd>{hexref(e["block_hash"], 10, 6)}</dd>{eas_dd}{ctrl}</dl>'
                     f'<p><b>Observed onchain.</b> {prose(e["onchain_observed"])}</p>'
                     f'<p><b>{doc_lbl}</b> {prose(e["documented_reference"])}</p>'
@@ -2625,7 +2665,8 @@ def protocol_page(name, entries, idx, radar, digest=None, slug=None):
                       f'Machine-readable: <a href="../../api/v1/rpc-pinned.json">/api/v1/rpc-pinned.json</a>. The Base-EAS-attested Sprint records '
                       f'are in <a href="../../api/v1/index.json">/api/v1/index.json</a>.</p></section>\n')
     else:
-        provenance = research_credit_html(slug, bounty_credit(slug), wave2_credits(slug))
+        provenance = research_credit_html(slug, bounty_credit(slug), wave2_credits(slug),
+                                          {e["id"]: f'{e["surface"]} ({CHAINS[chain_of(e)][0]} block #{int(e["block_number"]):,})' for e in entries})
     surfaces = f'{n} indexed {"surface" if n == 1 else "surfaces"}'
     data_url = f"{BASE_URL}/api/v1/rpc-pinned.json" if pinned else f"{BASE_URL}/api/v1/index.json"
     ld = {"@context": "https://schema.org", "@type": "Dataset", "name": f"{name} control-plane safety record",
@@ -2659,6 +2700,7 @@ def protocol_page(name, entries, idx, radar, digest=None, slug=None):
     tier = ("rpc_observed" if pinned else
             ("docs_updated" if corr_t.get("subPill") else "unresolved") if corr_t.get("status") == "unresolved" else
             "recent_change" if corr_t.get("status") == "recent_change" else
+            "docs_updated" if corr_t.get("status") == "docs_updated" else
             ("aligned" if is_aligned_page(entries) else "parameter_delta"))
     badge_html = badge_section(name, slug, tier)
     if is_aligned_page(entries):
@@ -2725,6 +2767,7 @@ def protocols_index_page(idx, sp=None):
     g = {k: sum(x["grade"] == k for x in cards.values()) for k in GRADE_UI}
     n_chain = {ch: sum(any(e.get("chain", "ethereum") == ch for e in v["entries"]) for v in sp.values()) for ch in ("ethereum", "base")}
     status = [("all", "All", len(sp)), ("delta", "Deltas", g["delta"]), ("recent_change", "Changed recently", g["recent_change"]),
+              ("docs_updated", "Docs updated", g["docs_updated"]),
               ("unresolved", "Unresolved", g["unresolved"]),
               ("protective", "Protective", g["protective"]), ("aligned", "Aligned", g["aligned"]), ("observed", "Observed", g["observed"])]
     chain_pills = [("all", "All chains", len(sp)), ("ethereum", "Ethereum", n_chain["ethereum"]), ("base", "Base", n_chain["base"])]
@@ -2810,16 +2853,19 @@ HOME_SUB = ("Pacta reads who can upgrade, pause or change {n} DeFi protocols on 
             "docs. Every finding is pinned to a block and attested onchain.")
 # v4.7 W1: the homepage previews 8 high-signal protocols, by severity: clearer differences first, then one protective and two aligned
 # references (the grades come from the data; build_site asserts the order). /scorecards/ and /protocols/ keep all of them.
-FLAGSHIP = ["stader-labs-ethx", "yo-protocol", "moonwell-lending-base", "ethena-usde-susde", "axelar-network",
+FLAGSHIP = ["usual-money-usd0-usd0", "stader-labs-ethx", "moonwell-lending-base", "ethena-usde-susde", "axelar-network",
             "ethena-usdtb", "aave-v3-gho", "eigenlayer-core"]
-GRADE_RANK = {"delta": 0, "recent_change": 1, "unresolved": 2, "protective": 3, "aligned": 4, "observed": 5}
+GRADE_RANK = {"delta": 0, "recent_change": 1, "docs_updated": 2, "unresolved": 3, "protective": 4, "aligned": 5, "observed": 6}
 # (slug, record id, label, "docs say", "chain says", tokens asserted in the documented / observed evidence)
 # (slug, record id, label, "docs say", "chain says", tokens asserted in the documented / observed evidence)
+# v6 (E16): the showcase leads with settled weaker-protection (clear_weaker) Deltas, never a bookkeeping or Unresolved finding
 RECEIPTS = [
-    ("stader-labs-ethx", "stader-ethx-manager-safe-and-timelock", "Stader ETHx", "Manager Safe is 3-of-5", "Manager Safe is 3-of-6",
-     ("3-of-5",), ("3-of-6",)),
-    ("yo-protocol", "yo-protocol-approval-registry-owner-admin-safe-s22", "YO Protocol", "Vault caps are timelocked",
-     "Approval Registry: a 4-of-6 Safe, no delay (vault upgrades keep 48h)", ("timelocked",), ("4-of-6", "not the YO Timelock")),
+    ("usual-money-usd0-usd0", "usual-money-registry-access-delay", "Usual Money (USD0 / USD0++)",
+     "DEFAULT_ADMIN handover waits three days", "DEFAULT_ADMIN handover delay: one second (defaultAdminDelay() = 1s)",
+     ("three days",), ("defaultAdminDelay() = 1s",)),
+    ("treehouse-tree-teth", "treehouse-tree-teth-tree-blacklister-safe-s27", "Treehouse (TREE)",
+     "All contracts behind a 5-day timelock", "TREE blacklisting: a 5-of-7 Safe with no delay (owner paths keep 5 days)",
+     ("5-day timelock",), ("no delay of its own", "getMinDelay() = 432000s")),
     ("moonwell-lending-base", "moonwell-pause-guardian-2of4-safe-s18", "Moonwell (Base)", "Older constitution: pause needs a 3-of-5 council",
      "Pause guardian is a 2-of-4 Safe (October MIP-X71 migration)", ("3-of-5",), ("2-of-4",)),
 ]
@@ -2829,7 +2875,7 @@ EAS_SCHEMA_VIEW = "https://base.easscan.org/schema/view/0x7ff485bc1159dff3c70eef
 EDITORIAL_FIREWALL = "Pacta never sells grades."
 
 
-HERO_PLACEHOLDER = "Select or type a protocol / token (Aave, Lido, Pendle, Moonwell…) or paste 0x…"
+HERO_PLACEHOLDER = "Search 316 protocols or 0x address…"   # v6 E18 (i): short enough for the button / kbd hint at 390 px
 
 
 def hero_checker(examples="", prefix="", cap=None, label="Protocol, token or contract address", cta_variant="default", cta_label="Check protocol",
@@ -2873,8 +2919,8 @@ def sc_drawer(c, prefix=""):
     meta = (f'{"Base EAS attested" if c["easAttested"] else "RPC-observed, not EAS-attested"} · {n} {noun} · pinned block #{c["pinnedBlock"]:,}')
     return (f'<tr class="sc-drawer" id="sc-d-{c["slug"]}" hidden><td colspan="5"><div class="sc-dr">'
             f'<div class="sc-ros">{SC.rosette_svg(c["factors"], 72, c["name"], interactive=True)}<span class="sc-meta">Hover or focus a slice</span></div>'
-            f'<div><div class="sc-ev"><p class="sc-full"><b>Docs say: </b>{E(c["evidence"]["documented"])}</p>'
-            f'<p class="sc-full"><b>{"Chain says: " if c["easAttested"] else "Chain (pinned; docs not compared): "}</b>{E(c["evidence"]["observed"])}</p></div>'
+            f'<div><div class="sc-ev"><p class="sc-full"><b>Docs say: </b>{E(plain(c["evidence"]["documented"]))}</p>'
+            f'<p class="sc-full"><b>{"Chain says: " if c["easAttested"] else "Chain (pinned; docs not compared): "}</b>{E(plain(c["evidence"]["observed"]))}</p></div>'
             f'{factor_list(c)}</div>'
             f'<p class="sc-meta">{meta}</p>'
             f'<div class="sc-live" data-probe-chain="{p["chain"]}" data-probe-target="{p["target_contract"]}" data-probe-kind="{p["check_type"]}" '
@@ -2917,6 +2963,7 @@ def scorecards_section(cards, prefix="", full=False, heading="h2"):
     n = len(cards)
     g = {k: sum(c["grade"] == k for c in cards) for k in GRADE_UI}
     filt = [("all", "All", n), ("delta", "Deltas", g["delta"]), ("recent_change", "Changed recently", g["recent_change"]),
+            ("docs_updated", "Docs updated", g["docs_updated"]),
             ("unresolved", "Unresolved", g["unresolved"]), ("protective", "Protective", g["protective"]),
             ("aligned", "Aligned", g["aligned"]), ("observed", "Observed", g["observed"])]
     pills = "".join(f'<button data-slot="toggle-group-item" type="button" data-sc-f="{k}" aria-pressed="{"true" if k == "all" else "false"}">'
@@ -2958,8 +3005,9 @@ def livebar_html(radar):
     r = radar["refreshed_at"]
     later = [it for it in radar["items"] if it["eta"] and it["eta"] > r["block_timestamp"]]
     nxt = min(later or [it for it in radar["items"] if it.get("eta")] or radar["items"], key=lambda it: it.get("eta") or 0)
-    return (f'<div class="livebar" data-etas="{E(livebar_etas(radar))}"><span class="dot live" aria-hidden="true"></span>'
-            f'<span class="lb-next">Next: <span class="lb-p">{E(nxt["protocol"])}</span>, <span class="countdown" data-eta="{nxt["eta"]}">ETA {E(utc(nxt["eta"]))}</span></span> '
+    # the status dot and "Next: …" share one inline-flex group, so the dot is never orphaned on its own line (v6 E18 iii)
+    return (f'<div class="livebar" data-etas="{E(livebar_etas(radar))}"><span class="lb-lead"><span class="dot live" aria-hidden="true"></span>'
+            f'<span class="lb-next">Next: <span class="lb-p">{E(nxt["protocol"])}</span>, <span class="countdown" data-eta="{nxt["eta"]}">ETA {E(utc(nxt["eta"]))}</span></span></span> '
             f'<small class="lb-asof">(pinned snapshot observed <time datetime="{E(utc_iso(r["block_timestamp"]))}" '
             f'data-observed="{r["block_timestamp"]}">{E(r["block_time_utc"])}</time><span class="obs-age" data-age="{r["block_timestamp"]}"></span>)</small></div>')
 
@@ -3072,9 +3120,9 @@ CASES = [
     ("stader-labs-ethx", "stader-ethx-manager-safe-and-timelock", "Stader Labs (ETHx)", "Ethereum",
      "Official GitBook: the Manager multisig is a 3-of-5.", "Finalized Ethereum state: the Manager Safe runs at a 3-of-6 quorum; upgrades still wait the 7-day TimelockController.",
      ("3-of-5",), ("3-of-6", "604800s")),
-    ("yo-protocol", "yo-protocol-approval-registry-owner-admin-safe-s22", "YO Protocol", "Base",
-     "Docs: “Onchain, timelocked caps” on what each vault may approve.", "YoApprovalRegistry.owner() is the 4-of-6 Admin Safe directly, not the 48-hour YO Timelock: no enforced delay on the Approval Registry; yoETH and yoUSD vault upgrades retain the 48-hour timelock.",
-     ("timelocked caps",), ("4-of-6", "not the YO Timelock")),
+    ("usual-money-usd0-usd0", "usual-money-registry-access-delay", "Usual Money (USD0 / USD0++)", "Ethereum",
+     "Docs: three days before DEFAULT_ADMIN is handed to a new address.", "Finalized Ethereum state: RegistryAccess.defaultAdminDelay() returns 1 second, so the DEFAULT_ADMIN handover (not every admin action) waits one second.",
+     ("three days",), ("defaultAdminDelay() = 1s",)),
     ("stake-dao", "stake-dao-protocol-timelock-min-delay-5d-s22", "Stake DAO", "Ethereum",
      "Docs: a 48-hour timelock on all protocol changes; all wallets 4-of-7.", "ProtocolTimelock enforces 5 days (432,000s), stronger than documented (protective); the Treasury Safe is 3-of-5 (delta).",
      ("48-hour",), ("432000s",)),
@@ -4325,12 +4373,17 @@ def site_numbers(idx, cards=None, pinned=None):
     pinned = load_pinned() if pinned is None else pinned
     cards = scorecards(idx, pinned) if cards is None else cards
     c = counts(idx)
-    g = {k: sum(x["grade"] == k for x in cards) for k in ("delta", "recent_change", "unresolved", "protective", "aligned", "observed")}
+    g = {k: sum(x["grade"] == k for x in cards) for k in ("delta", "recent_change", "docs_updated", "unresolved", "protective", "aligned", "observed")}
     eas = sum(1 for x in cards if x["easAttested"])
     n = len(cards)
     assert n == sum(g.values()) == eas + g["observed"], (n, g, eas)
+    # the single source of truth: every reviewed finding's grade is its rulings status, and the catalogue counts are the rulings' counts
+    part = CORR.reviewed()["partition"]
+    bad = [(x["slug"], x["grade"], part[x["slug"]]) for x in cards if x["slug"] in part and x["grade"] != part[x["slug"]]]
+    assert not bad and {k: v for k, v in g.items()} == CORR.reviewed()["fullCatalogueCounts"], (bad, g)
     assert g["observed"] == sum(1 for x in cards if not x["easAttested"]), "observed grade = RPC-observed protocols"
     res = {"protocols": n, "eas_protocols": eas, "observed": g["observed"], "delta": g["delta"], "recent_change": g["recent_change"],
+           "docs_updated": g["docs_updated"],
            "unresolved": g["unresolved"],
            "protective": g["protective"],
            "aligned": g["aligned"], "checks": c["records"], "batches": c["eas_n"], "sprints": c["sprints"],
@@ -4339,7 +4392,8 @@ def site_numbers(idx, cards=None, pinned=None):
     return res
 
 
-GRADE_UI = {"delta": ("Delta", "warning"), "recent_change": ("Changed recently", "info"), "unresolved": ("Unresolved", "outline"),
+GRADE_UI = {"delta": ("Delta", "warning"), "recent_change": ("Changed recently", "info"), "docs_updated": ("Docs updated", "outline"),
+            "unresolved": ("Unresolved", "outline"),
             "protective": ("Protective", "info"),
             "aligned": ("Aligned", "neutral"), "observed": ("Observed", "outline")}
 
@@ -4357,10 +4411,15 @@ def home_desc(n):
     return f"Who can upgrade, pause or change {n} DeFi protocols: checked against their docs, attested onchain."
 
 
-def receipt_data(idx):
+# the /scan/ and /seal/ previews keep their Stader ETHx sample (a published Delta record); the hero showcase uses RECEIPTS only
+PREVIEW_RECEIPTS = [("stader-labs-ethx", "stader-ethx-manager-safe-and-timelock", "Stader ETHx", "Manager Safe is 3-of-5", "Manager Safe is 3-of-6",
+                     ("3-of-5",), ("3-of-6",))]
+
+
+def receipt_data(idx, rows=None):
     by = {e["id"]: e for e in idx["entries"]}
     out = []
-    for slug, rid, label, docs, chain, dtok, ctok in RECEIPTS:
+    for slug, rid, label, docs, chain, dtok, ctok in (RECEIPTS if rows is None else rows):
         e = by[rid]
         assert protocol_slug(e["protocol"]) == slug and e["classification"] == "parameter_delta", rid
         assert all(t in e["documented_reference"] for t in dtok) and all(t in e["onchain_observed"] for t in ctok), rid
@@ -4381,7 +4440,7 @@ def try_chips(idx, prefix=""):
     for r in receipt_data(idx):
         e, ch = r["e"], r["ch"]
         lch, laddr = LIVE_CHECK_TARGET.get(r["slug"], (ch, e["target_contract"]))
-        inner = receipt_inner_html(r["slug"], r["label"], lch, "GAP", "gap", prefix=prefix)
+        inner = receipt_inner_html(r["slug"], r["label"], lch, "Delta", "gap", prefix=prefix)
         sym = CHIP_TICKERS.get(r["slug"], "")
         chips.append(U.button(inner, variant="outline", size="sm", cls="receipt",
                               attrs=(f'data-receipt data-pf-chain="{lch}" data-pf-address="{laddr}" data-r-name="{E(r["label"])}" '
@@ -4415,15 +4474,13 @@ def proof_card(idx, prefix=""):
 def delta_line(s):
     """One line reconciling the tiles: the independent four-way classification of the historically flagged comparisons (from
     tools/scorecard_corrections.json; never "adverse") plus the protective cases (from the data)."""
-    return (f'<p class="delta-line" data-delta-line>Across the {CORR.flagged_total()} historically flagged comparisons: '
-            f'{CORR.breakdown_text()} — plus {s["protective"]} protective cases where the chain is stricter than documented.</p>')
+    return f'<p class="delta-line" data-delta-line>{E(CORR.breakdown_text())}</p>'
 
 
 def stats_cards(idx, cards):
     s = site_numbers(idx, cards)
     items = [(s["protocols"], "Protocols scored", f'{s["eas_protocols"]} Base-EAS attested · {s["observed"]} RPC-observed'),
-             (CORR.breakdown()["clearWeaker"], "Weaker than documented",
-              "Plus " + CORR.breakdown_short().split(" · ", 1)[1]),
+             (CORR.breakdown()["delta"], "Deltas", CORR.breakdown_short()),
              (s["protective"], "Protective", "Chain stricter than the docs"),
              (s["checks"], "Attested checks", f'Across {s["batches"]} Base EAS batch attestations')]
     return ('<div class="stats" data-proof>' + "".join(
@@ -4737,8 +4794,8 @@ def live_checker_note(idx, s):
             f'everything a protocol documents about its control plane with every record Pacta has pinned for it, across many contracts. A '
             f'protocol can be Delta while one of its contracts scores 0, and an Aligned protocol can include a contract a multisig can change. '
             f'Across the catalog, {s["delta"]} of the {s["protocols"]} protocols carry a Delta status ({n_pd} parameter-level differences across '
-            f'{s["checks"]} attested checks); of the {CORR.flagged_total()} historically flagged comparisons, {CORR.breakdown_text()}; and '
-            f'{s["protective"]} carry protective deltas where the chain is stricter than documented.')
+            f'{s["checks"]} attested checks), and {s["protective"]} carry protective deltas where the chain is stricter than documented. '
+            f'{CORR.breakdown_text()}')
 
 
 def methodology_page(idx):
@@ -4937,7 +4994,7 @@ def _effective_wallet_status(it, card):
     cl = (it or {}).get("classification", "")
     changed = ((it or {}).get("whatDiffers") or {}).get("changed") or []
     if g in CORR.NEUTRAL:     # Unresolved / Changed recently: the attested classification stands, never shown as a DELTA gap
-        return ("UNRESOLVED" if g == "unresolved" else "CHANGED RECENTLY"), cl or "parameter_delta"
+        return {"unresolved": "UNRESOLVED", "recent_change": "CHANGED RECENTLY", "docs_updated": "DOCS UPDATED"}[g], cl or "parameter_delta"
     if g == "delta" or cl == "parameter_delta" or any(c.get("classification") == "parameter_delta" for c in changed):
         return "DELTA", "parameter_delta"
     if g == "protective" or cl == "protective_delta" or any(c.get("classification") == "protective_delta" for c in changed):
@@ -4979,7 +5036,7 @@ def wallet_tokens_json(cards, lk):
             "holdings": [
                 {"chain": "base", "address": "0xbeeF010f9cb27031ad51e3333f9aF9C6B1228183", "symbol": "steakUSDC", "slug": "steakhouse-usdc-metamorpho-base", "formattedBalance": "425,000"},
                 {"chain": "ethereum", "address": "0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0", "symbol": "wstETH", "slug": "lido-steth-dual-governance", "formattedBalance": "140.5"},
-                {"chain": "base", "address": "0x0000000f2eB9f69274678c76222B35eEc7588a65", "symbol": "yoUSD", "slug": "yo-protocol", "formattedBalance": "85,000"},
+                {"chain": "ethereum", "address": "0xae78736Cd615f374D3085123A210448E74Fc6393", "symbol": "rETH", "slug": "rocket-pool-reth", "formattedBalance": "38.2"},
                 {"chain": "ethereum", "address": "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b", "symbol": "ETHx", "slug": "stader-labs-ethx", "formattedBalance": "62.0"},
             ],
         },
@@ -4991,7 +5048,7 @@ def wallet_tokens_json(cards, lk):
             "holdings": [
                 {"chain": "base", "address": "0x4e65fE4DbA92790696d040ac24Aa414708F5c0AB", "symbol": "aBasUSDC", "slug": "aave-v3-base", "formattedBalance": "64,200"},
                 {"chain": "base", "address": "0xEdc817A28E8B93B03976FBd4a3dDBc9f7D176c22", "symbol": "mUSDC", "slug": "moonwell-lending-base", "formattedBalance": "28,500"},
-                {"chain": "base", "address": "0x1BCae9292b28b922C9ad2902C07bc25C4F9347E1", "symbol": "SEAM", "slug": "seamless-protocol-base", "formattedBalance": "19,400"},
+                {"chain": "base", "address": "0x940181a94A35A4569E4529A3CDfB74e38FD98631", "symbol": "AERO", "slug": "aerodrome-finance-base", "formattedBalance": "52,000"},
             ],
         },
     }
@@ -5041,7 +5098,7 @@ def _curator_item_row(it, tone="aligned"):
     uid = (it.get("baseEasUids") or [""])[0]
     addr = it.get("primaryContract") or ""
     # Unresolved / Changed recently: never a flagged gap, never aligned: the neutral tone
-    unres = it.get("grade") in ("UNRESOLVED", "CHANGED RECENTLY")
+    unres = it.get("grade") in ("UNRESOLVED", "CHANGED RECENTLY", "DOCS UPDATED")
     pill_lbl = (it["grade"] if unres else "FLAGGED" if tone == "gap" else
                 ("PROTECTIVE" if it.get("grade") == "PROTECTIVE" else ("OBSERVED" if it.get("grade") == "OBSERVED" else "ALIGNED")))
     pill_tone = ("observed" if unres else "gap" if tone == "gap" else
@@ -5093,6 +5150,8 @@ def curators_page(idx):
             w_badges = f'<span class="pf-st-pill" data-tone="aligned">{wc["aligned_or_protective"]} ALIGNED</span>'
             if wc.get("delta", 0) > 0:
                 w_badges += f' <span class="pf-st-pill" data-tone="gap">{wc["delta"]} GAP</span>'
+            if wc.get("docs_updated", 0) > 0:
+                w_badges += f' <span class="pf-st-pill" data-tone="observed">{wc["docs_updated"]} DOCS UPDATED</span>'
             if wc.get("recent_change", 0) > 0:
                 w_badges += f' <span class="pf-st-pill" data-tone="observed">{wc["recent_change"]} CHANGED RECENTLY</span>'
             if wc.get("unresolved", 0) > 0:
@@ -5176,9 +5235,8 @@ def curators_page(idx):
         f'<h1>Wrapper vaults are often Aligned. Collateral risk sits one layer deeper.</h1>'
         f'<p class="lede">Pacta reconciles published security documentation against block-pinned Ethereum &amp; Base storage across '
         f'{totals["indexed_protocols"]} protocols ({totals["base_eas_attested_protocols"]} Base-EAS attested · '
-        f'{CORR.flagged_total()} historically flagged comparisons: {CORR.breakdown()["clearWeaker"]} weaker than documented, '
-        f'{CORR.breakdown()["needsExplanation"]} needing explanation, {CORR.breakdown()["bookkeeping"]} bookkeeping, '
-        f'{CORR.breakdown()["unresolved"]} unresolved). Inspect how direct MetaMorpho, '
+        f'{CORR.breakdown()["reviewed"]} reviewed findings: {CORR.breakdown()["delta"]} Deltas, {CORR.breakdown()["recentChange"]} Changed '
+        f'recently, {CORR.breakdown()["docsUpdated"]} Docs updated, {CORR.breakdown()["unresolved"]} Unresolved). Inspect how direct MetaMorpho, '
         f'BoringVault, ERC-4626, and treasury wrappers compare against their downstream RWA, LST, and lending collateral markets.</p>'
         f'<div class="cur-hero-ctas">'
         + U.button("Scan Any Safe", href="../scan/", variant="default", size="lg", attrs='data-cta="curators_scan"')
@@ -5187,8 +5245,8 @@ def curators_page(idx):
         f'<div class="cur-stats" aria-label="Curator matrix totals">'
         f'<div class="cur-stat"><b>{len(curators)}</b><span>Curator &amp; Allocator Stacks</span></div>'
         f'<div class="cur-stat"><b>{totals["base_eas_attested_protocols"]}</b><span>Base-EAS Attested Protocols</span></div>'
-        f'<div class="cur-stat"><b class="cur-amber">{CORR.breakdown()["clearWeaker"]}</b><span>Weaker Than Documented '
-        f'(of {CORR.flagged_total()} Flagged)</span></div>'
+        f'<div class="cur-stat"><b class="cur-amber">{CORR.breakdown()["delta"]}</b><span>Deltas '
+        f'(of {CORR.breakdown()["reviewed"]} Reviewed Findings)</span></div>'
         f'<div class="cur-stat"><b>0</b><span>Paid Grades · Pure Evidence</span></div>'
         f'</div></div>'
         f'<div class="tbl-wrap cur-tbl-wrap" id="curator-matrix"><table class="tbl cur-tbl">'

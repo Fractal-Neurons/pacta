@@ -6825,10 +6825,10 @@
   },
   {
    "badge": {
-    "label": "Parameter Delta",
+    "label": "Unresolved · Unverified Scope",
     "live": "https://pacta-x402.pacta.workers.dev/v1/badges/hakka-finance.svg",
     "svg": "https://pacta.wtf/badges/hakka-finance.svg",
-    "tier": "parameter_delta"
+    "tier": "unresolved"
    },
    "baseEasUids": [
     "0xc281741a4fb297a9ccb30b5485ca6ef2bcfb69be10236c056e7208301e30d992"
@@ -6855,6 +6855,7 @@
     "0x784e010430a923Ce2a3Ff9846C4010694Bb7BEfb",
     "0x0E29e5AbbB5FD88e28b2d355774e73BD47dE3bcd"
    ],
+   "scorecardStatus": "unresolved",
    "slug": "hakka-finance",
    "sprints": [
     34
@@ -7431,10 +7432,10 @@
   },
   {
    "badge": {
-    "label": "Parameter Delta",
+    "label": "Unresolved · Unverified Scope",
     "live": "https://pacta-x402.pacta.workers.dev/v1/badges/infinifi.svg",
     "svg": "https://pacta.wtf/badges/infinifi.svg",
-    "tier": "parameter_delta"
+    "tier": "unresolved"
    },
    "baseEasUids": [
     "0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
@@ -7460,6 +7461,7 @@
     "0xee529A21Cea25EFDF527e85BB4c597603E14CcfC",
     "0x579B18E60d0245c0F66Fa9463610b15E226Ae8FD"
    ],
+   "scorecardStatus": "unresolved",
    "slug": "infinifi",
    "sprints": [
     20,
@@ -10722,10 +10724,10 @@
   },
   {
    "badge": {
-    "label": "Parameter Delta",
+    "label": "Unresolved · Unverified Scope",
     "live": "https://pacta-x402.pacta.workers.dev/v1/badges/odyssey-finance.svg",
     "svg": "https://pacta.wtf/badges/odyssey-finance.svg",
-    "tier": "parameter_delta"
+    "tier": "unresolved"
    },
    "baseEasUids": [
     "0xa20a0fa97ac80abb3d3f9d4de615018ff3a07f42eb4f124375dc26a216f896a5"
@@ -10749,6 +10751,7 @@
     "0xeE156D8ea7b96a5524CcC3CF9283ab85E80E9534",
     "0xd44A3e93A256c445F17a12f35A0ffEf975ec6817"
    ],
+   "scorecardStatus": "unresolved",
    "slug": "odyssey-finance",
    "sprints": [
     37
@@ -13046,10 +13049,10 @@
   },
   {
    "badge": {
-    "label": "Parameter Delta",
+    "label": "Unresolved · Unverified Scope",
     "live": "https://pacta-x402.pacta.workers.dev/v1/badges/seamless-protocol-base.svg",
     "svg": "https://pacta.wtf/badges/seamless-protocol-base.svg",
-    "tier": "parameter_delta"
+    "tier": "unresolved"
    },
    "baseEasUids": [
     "0xce8821d521758614be8860ac6476e1cec01ae000d81a660644e7bf1260d8cdfd"
@@ -13072,6 +13075,7 @@
    "relatedContracts": [
     "0x639d2dD24304aC2e6A691d8c1cFf4a2665925fee"
    ],
+   "scorecardStatus": "unresolved",
    "slug": "seamless-protocol-base",
    "sprints": [
     35
@@ -15240,10 +15244,10 @@
   },
   {
    "badge": {
-    "label": "Parameter Delta",
+    "label": "Unresolved · Unverified Scope",
     "live": "https://pacta-x402.pacta.workers.dev/v1/badges/taiko-bridge.svg",
     "svg": "https://pacta.wtf/badges/taiko-bridge.svg",
-    "tier": "parameter_delta"
+    "tier": "unresolved"
    },
    "baseEasUids": [
     "0xc281741a4fb297a9ccb30b5485ca6ef2bcfb69be10236c056e7208301e30d992"
@@ -15272,6 +15276,7 @@
     "0x5B0Da2FB08754a5dDf32e28887D2F5437485f085",
     "0x0F95E6968EC1B28c794CF1aD99609431de5179c2"
    ],
+   "scorecardStatus": "unresolved",
    "slug": "taiko-bridge",
    "sprints": [
     34
@@ -15708,8 +15713,7 @@
     "0xA952453E39F77108Ee37C1b92de593F1C59A6ef4",
     "0x0C6Bbfd2d5666d44bf28580eDEec0263692C8316"
    ],
-   "scorecardStatus": "unresolved",
-   "scorecardStatusNote": "Docs updated · pending chain read",
+   "scorecardStatus": "docs_updated",
    "slug": "tori-finance",
    "sprints": [
     32
@@ -17374,10 +17378,10 @@
   },
   {
    "badge": {
-    "label": "Parameter Delta",
+    "label": "Unresolved · Unverified Scope",
     "live": "https://pacta-x402.pacta.workers.dev/v1/badges/yo-protocol.svg",
     "svg": "https://pacta.wtf/badges/yo-protocol.svg",
-    "tier": "parameter_delta"
+    "tier": "unresolved"
    },
    "baseEasUids": [
     "0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5"
@@ -17404,6 +17408,7 @@
     "0x12E81209d180fF0b3FBFbfe8fA9fFdb5990e1073",
     "0xc84a6E01BFF58996540F1ABC22355A9DFE0d78DC"
    ],
+   "scorecardStatus": "unresolved",
    "slug": "yo-protocol",
    "sprints": [
     22
@@ -17757,10 +17762,10 @@
   "badgeTiers": {
    "aligned": 126,
    "docs_updated": 1,
-   "parameter_delta": 56,
+   "parameter_delta": 50,
    "recent_change": 1,
    "rpc_observed": 127,
-   "unresolved": 5
+   "unresolved": 11
   },
   "easAttested": 189,
   "protocols": 316,

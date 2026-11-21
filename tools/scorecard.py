@@ -16,6 +16,7 @@ import re
 
 GRADES = {"delta": ("DELTA", "Docs and chain differ"),
           "recent_change": ("CHANGED RECENTLY", "Changed on chain recently; documents not yet updated"),
+          "docs_updated": ("DOCS UPDATED", "Documentation updated to match retained chain read; pending fresh chain read"),
           "unresolved": ("UNRESOLVED", "Observed on chain; document breach not established"),
           "protective": ("PROTECTIVE", "Chain stronger than documented"),
           "aligned": ("ALIGNED", "Docs and chain match"), "observed": ("OBSERVED", "Chain pinned; docs not assessed")}
@@ -25,11 +26,23 @@ STATE_LABEL = {"g": "Strong", "b": "Moderate", "a": "Weak", "n": "Not determined
 DAY = 86400
 
 _NOF = re.compile(r"\b(\d{1,2})-of-(\d{1,2})\b")
+# "getThreshold() = 3 of getOwners() = 6": the same K-of-N, written as the two Safe reads
+_NOF_READS = re.compile(r"getThreshold\(\)\s*=\s*(\d{1,2})\s+of\s+getOwners\(\)\s*=\s*(\d{1,2})\b")
+# a freeze / pause / blacklist power exercisable with no enforced delay (the record states it)
+_ZERO_DELAY = re.compile(r"no delay of its own|\(0 ?s\)|needs no timelock|no enforced delay|with no delay|exposes no delay", re.I)
+
+
+_DOC_NOF = re.compile(r"\b(\d{1,2})\s*(?:-of-|/|\s+of\s+)\s*(\d{1,2})\b")
+
+
+def _nofs(text):
+    """Every K-of-N quorum in the text, written either as "3-of-6" or as "getThreshold() = 3 of getOwners() = 6"."""
+    return sorted(list(_NOF.finditer(text)) + list(_NOF_READS.finditer(text)), key=lambda m: m.start())
 _DELAY = re.compile(r"\b(?:getMinDelay\(\)|delay\(\)|MINIMUM_DELAY\(\)|MIN_DELAY\(\)|minDelay\(\)|executionDelay\(\)|TIMELOCK_PERIOD\(\)|"
                     r"timelockDelay\(\)|getMinimumDelay\(\))\s*(?:returns\s*|=\s*)([\d,]+)\s*s\b")
 _SINGLE = re.compile(r"no contract code|externally owned|\bEOA\b|\(no code\)|without code")
 _GOVERNOR = re.compile(r"\bGovernor(?:Bravo|Alpha|Omega)?\b|\bDAO governance\b")
-_PROXY = re.compile(r"EIP-1967 (?:admin|implementation) (?:slot )?(?:=|resolves|is)|ProxyAdmin|AdminUpgradeabilityProxy|"
+_PROXY = re.compile(r"EIP-1967 (?:admin|implementation) (?:slot )?(?:=|resolves|is)|ProxyAdmin|AdminUpgradeabilityProxy|BeaconProxy|UpgradeableBeacon|"
                     r"TransparentUpgradeableProxy|ERC-1967 prox|UUPS|zeppelinos\.proxy\.admin|upgradeTo")
 _IMMUTABLE = re.compile(r"\bimmutable\b|ownership renounced|owner\(\) = 0x0\b|not a proxy|no proxies")   # zero EIP-1967 slots alone is not immutability
 _BYPASS_EXEC = re.compile(r"(?:bypasserExecuteBatch|executeOperatorProposal)[^;]*\b(?:immediately|no delay)\b|"
@@ -75,6 +88,7 @@ _EMERGENCY = re.compile(r"\bpause|\bblacklist|\bfreez|PAUSE_ROLE|ASSET_PROTECTIO
 
 
 UNRESOLVED_PARITY = "Observed onchain state pinned; a breach of a documented commitment is not established"
+DOCS_UPDATED_PARITY = "Documentation updated to name the retained observation; a fresh finalized-block chain read is pending"
 RECENT_CHANGE_PARITY = "Changed on chain within 48h of pin; re-checked after 72 hours before counting as a documentation gap"
 
 
@@ -302,7 +316,7 @@ def factors(records, easattested, g, facts=(), parity_text=None):
             if _TLWORD.search(w.group(3)) and (_NOF.search(w.group(3)) or re.search(r"Safe|[Mm]ultisig", w.group(3))):
                 wrapped.add((rid, w.start()))
                 wrappers.update(a.lower() for a in _ADDR.findall(w.group(2)))
-        for m in _NOF.finditer(t):
+        for m in _nofs(t):
             k, nn = int(m.group(1)), int(m.group(2))
             if (rid, m.start()) in wrapped:
                 continue
@@ -316,9 +330,21 @@ def factors(records, easattested, g, facts=(), parity_text=None):
     for f in facts:
         if f.get("safe_threshold") and str(f.get("address", "")).lower() not in wrappers:
             quorum.append((f["safe_threshold"], f'{f["safe_threshold"]}-of-{f.get("safe_owners")}', "controller fact: Safe getThreshold()"))
+    # a flagged record whose observed Safe threshold is below the threshold its documentation states (e.g. 4-of-6 against a
+    # documented 6/8) is never rated Strong on quorum: the breached dimension caps at Moderate and names the documented value
+    weaker = []
+    for rid, t, r_ in texts:
+        if r_.get("classification") != "parameter_delta":
+            continue
+        obs_k = [int(m.group(1)) for m in _nofs(t)]
+        doc = [(int(a), int(b)) for a, b in _DOC_NOF.findall(str(r_.get("documented_reference") or "")) if 1 <= int(a) <= int(b)]
+        if obs_k and doc and min(obs_k) < max(k_ for k_, _ in doc):
+            weaker.append("{}-of-{}".format(*max(doc)))
     if quorum:
         k, lbl, ev = min(quorum, key=lambda q: (q[0], q[1]))
         st = "g" if k >= 3 else "b" if k == 2 else "a"
+        if weaker and st == "g":
+            st, lbl = "b", f"{lbl} (documented {weaker[0]})"
         out["quorum"] = (st, f"Lowest controlling quorum: {lbl}", ev)
     else:
         gov = next(((rid, t, m) for rid, t, _r in texts for m in [_GOVERNOR.search(t)] if m), None)
@@ -335,16 +361,23 @@ def factors(records, easattested, g, facts=(), parity_text=None):
             em = em or (rid, c)
             if i + 1 < len(cs) and _THAT.match(cs[i + 1]):   # "…hasRole(FREEZER, 0x…) = true; that Safe is 2-of-5"
                 c = f"{c}; {cs[i + 1]}"
-            ks = [(int(m.group(1)), f"{m.group(1)}-of-{m.group(2)}") for m in _NOF.finditer(c) if 1 <= int(m.group(1)) <= int(m.group(2))]
+            ks = [(int(m.group(1)), f"{m.group(1)}-of-{m.group(2)}") for m in _nofs(c) if 1 <= int(m.group(1)) <= int(m.group(2))]
             ks += [(1, "a single key") for _ in _SINGLE.finditer(c)]
             ks += [(safes[a.lower()], f"{safes[a.lower()]}-of-N Safe") for a in _ADDR.findall(c) if a.lower() in safes]
             if ks:
                 k, lbl = min(ks)
-                held.append((k, lbl, f"{rid}: {_clip(c)}"))
+                # a flagged record whose freeze / pause / blacklist power has no enforced delay is never "Strong", whatever its quorum
+                zero = _r.get("classification") == "parameter_delta" and bool(_ZERO_DELAY.search(c))
+                held.append((k, lbl, f"{rid}: {_clip(c)}", zero))
     if held:
-        k, lbl, ev = min(held)
-        out["emergency"] = (("a", f"Pause / freeze authority held by {lbl}", ev) if k == 1 else
-                            ("g", f"Pause / freeze authority scoped behind a multi-signer controller ({lbl})", ev))
+        imm = [h for h in held if h[3]]
+        if imm:
+            k, lbl, ev, _z = min(imm)
+            out["emergency"] = ("a", f"Immediate: pause / freeze authority held by {lbl} with no enforced delay", ev)
+        else:
+            k, lbl, ev, _z = min(held)
+            out["emergency"] = (("a", f"Pause / freeze authority held by {lbl}", ev) if k == 1 else
+                                ("g", f"Pause / freeze authority scoped behind a multi-signer controller ({lbl})", ev))
     elif em:
         out["emergency"] = ("n", "Pause / freeze authority present; its holder is not determined", f"{em[0]}: {_clip(em[1])}")
     else:
@@ -354,6 +387,7 @@ def factors(records, easattested, g, facts=(), parity_text=None):
     out["parity"] = (("u", "Uncompared: documentation not assessed (RPC-observed)", None) if not easattested else
                      ("n", parity_text or UNRESOLVED_PARITY, None) if g == "unresolved" else
                      ("n", parity_text or RECENT_CHANGE_PARITY, None) if g == "recent_change" else
+                     ("n", parity_text or DOCS_UPDATED_PARITY, None) if g == "docs_updated" else
                      ("a", "Documentation differs from the chain (parameter delta)", None) if g == "delta" else
                      ("g", "Chain matches or is stronger than the documentation", None))
     return [{"key": k, "label": lbl, "state": out[k][0], "value": out[k][1], "evidence": out[k][2]} for k, lbl in FACTORS]

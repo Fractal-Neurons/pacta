@@ -47,17 +47,40 @@ def fmt_delay(s):
     return f"{s} s"
 
 
+_OPEN_Q = {"'": "'", '"': '"', "\u2018": "\u2019", "\u201c": "\u201d"}
+
+
 def first_sentence(text):
     """The first sentence: up to the first '.' or ';' followed by a space (or the end). A ';' inside parentheses never ends it
-    ("(token distribution; OBOL token): '…'" keeps its quote)."""
+    ("(token distribution; OBOL token): '…'" keeps its quote), and nothing ends inside an open quotation ('…' or "…"; an
+    apostrophe inside a word is not a quote). A sentence clipped to MAX_TEXT closes any quote it opened."""
     t = re.sub(r"\s+", " ", (text or "").strip())
-    depth = 0
+    depth, quote = 0, None
     for i, ch in enumerate(t):
+        prev, nxt = (t[i - 1] if i else " "), (t[i + 1] if i + 1 < len(t) else " ")
+        if quote:
+            if ch == _OPEN_Q[quote] and not (ch == "'" and nxt.isalnum()):
+                quote = None
+            continue
+        if ch in _OPEN_Q and not prev.isalnum() and nxt != " ":
+            quote = ch
+            continue
         depth += (ch == "(") - (ch == ")") if ch in "()" else 0
         if ch in ".;" and (i + 1 == len(t) or t[i + 1] == " ") and not (ch == ";" and depth > 0) and i > 0:
             t = t[:i + 1]
             break
-    return t if len(t) <= MAX_TEXT else t[:MAX_TEXT - 1].rstrip() + "…"
+    if len(t) <= MAX_TEXT:
+        return t
+    t = t[:MAX_TEXT - 1].rstrip()
+    q = None                                      # re-scan the clipped text: close a quote left open by the cut
+    for i, ch in enumerate(t):
+        prev, nxt = (t[i - 1] if i else " "), (t[i + 1] if i + 1 < len(t) else " ")
+        if q:
+            if ch == _OPEN_Q[q] and not (ch == "'" and nxt.isalnum()):
+                q = None
+        elif ch in _OPEN_Q and not prev.isalnum() and nxt != " ":
+            q = ch
+    return t + "…" + (_OPEN_Q[q] if q else "")
 
 
 def _label(e, generic):
@@ -87,7 +110,7 @@ def what_differs(entries):
             o = next((x for x in obs_t if x[0] == d[0] and x not in doc_t), None) or next((x for x in obs_t if x[1] == d[1] and x not in doc_t), None)
             if o:
                 changed.append({"parameter": _label(e, "Safe threshold"), "observed": fmt_threshold(o), "documented": fmt_threshold(d),
-                                "recordId": e["id"], "classification": e["classification"]})
+                                "recordId": e["id"], "classification": e["classification"], "paired": True})
                 paired = True
         od, dd = fmt_delay(e.get("observed_delay_seconds")), fmt_delay(e.get("documented_delay_seconds"))
         if od and dd:
@@ -96,7 +119,7 @@ def what_differs(entries):
                     matched.append({"parameter": _label(e, "Timelock delay"), "value": od, "recordId": e["id"]})
             else:
                 changed.append({"parameter": _label(e, "Timelock delay"), "observed": od, "documented": dd, "recordId": e["id"],
-                                "classification": e["classification"]})
+                                "classification": e["classification"], "paired": True})
                 paired = True
         if not paired:
             changed.append({"parameter": e.get("surface") or e["id"], "observed": first_sentence(e.get("onchain_observed")),

@@ -225,7 +225,7 @@
       "check_type": "eth_call",
       "selector_or_slot": "0x6a42b8f8",
       "onchain_observed": "LegacyTimelock (0xa133C9A92Fb8dDB962Af1cbae58b2723A0bdf23b) delay() = 129600s (36 hours, GIP-104), admin() = LegacyGovernor (0x29B97F37B3E0C704bCFD785F5b7bBa2A0B7df2c7); InstanceManager (0x77777777144339Bdc3aCceE992D8d4D31734CB2e) owner() = 4-of-21 Gnosis Safe (0x1E9ec044853611F4bCD4BBcFE7657508BD1c53D3); Tech (0xA7D5DDc1b8557914F158076b228AA91eF613f1D5, 6-of-12), Veto (0xbb803559B4D58b75E12dd74641AB955e8B0Df40E, 4-of-12), Treasury (0x7b065Fcb0760dF0CEA8CFd144e08554F3CeA73D1, 5-of-10), and Fee (0x3E965117A51186e41c2BB58b729A1e518A715e5F, 5-of-10) Guard Safes match documented thresholds.",
-      "documented_reference": "docs.gearbox.finance states technical changes are 'behind a 2-day timelock' (172800s) and lists InstanceManager multisig as '4-of-12 (Subject to chain-specific configuration)'.",
+      "documented_reference": "docs.gearbox.finance states technical changes are 'behind a 2-day timelock' (172800s) and lists InstanceManager multisig as '4-of-12 (Subject to chain-specific configuration)'; the Veto Guard Safe (0xbb803559B4D58b75E12dd74641AB955e8B0Df40E) is documented at 4-of-12.",
       "observed_delay_seconds": 129600,
       "observed_delay_source": {
         "contract": "0xa133C9A92Fb8dDB962Af1cbae58b2723A0bdf23b",
@@ -426,7 +426,7 @@
       "check_type": "eth_call",
       "selector_or_slot": "0x452a9320",
       "onchain_observed": "Re7 WETH owner() = 0xE86399fE6d7007FdEcb08A2ee1434Ee677a04433 (2-of-4 Safe), timelock() = 259200s (3d), guardian() = 0x0000000000000000000000000000000000000000, pendingGuardian() = (0x0, 0); peer Re7 USDT (0x95EeF579155cd2C5510F312c8fA39208c3Be01a8) sets guardian() = 0x2F80ba89362f86a9acC71BFfE5EcF4997F52BDd4 (Aragon Guardian).",
-      "documented_reference": "Sister vault reference: Re7 USDT (0x95EeF579155cd2C5510F312c8fA39208c3Be01a8) sets an Aragon guardian; no Re7 documentation promising matching vault configurations was verified, so this is a peer-vault configuration comparison, not a broken documentation promise.",
+      "documented_reference": "Re7 USDT (0x95EeF579155cd2C5510F312c8fA39208c3Be01a8) sets an Aragon guardian; no Re7 documentation promising matching vault configurations was verified, so this is a peer-vault configuration comparison, not a broken documentation promise.",
       "observed_delay_seconds": 259200,
       "observed_delay_source": {
         "contract": "0x78Fc2c2eD1A4cDb5402365934aE5648aDAd094d0",
@@ -6473,7 +6473,7 @@
       "sprint": 28,
       "summary_doc": "audits/sprint-28/block-26441165-summary.md",
       "summary_sha256": "0x062632d4abf0411664883823e185de5f974c9e989bf8497c0e8863b557b878bd",
-      "summary_short": "Sampled RoleManager uses a 7-day timelock; yChad signer roster differs (6-of-9)",
+      "summary_short": "yChad signer roster changed; the Safe keeps its 6-of-9 threshold",
       "surface": "yChad governance Safe: 6-of-9 threshold retained; signer 0x6F2A…eAD6 rotated to 0x3839…a7F7 41h before pin (docs not yet updated)",
       "target_contract": "0xFEB4acf3df3cDEA7399794D0869ef76A6EfAff52",
       "target_label": "yChad Governance Safe",
@@ -6726,7 +6726,7 @@
       "id": "renzo-ezeth-deposit-queue-fee-s29",
       "observed_delay_seconds": null,
       "observed_delay_source": null,
-      "onchain_observed": "Renzo DepositQueue 0xf2F305D14DCD8aaef887E0428B3c9534795D0d60 (Ethereum): feeBasisPoints() = 10,000 (100% in basis points) at this pin; 1,500 at Pacta's published pins #26,401,725 and #26,433,001 (record renzo-ezeth-deposit-queue-fee). feeAddress() = 0x10586b9b7Ff0F842913a57539f8167CE143C3011 and the EIP-1967 implementation 0x24Aa958C90b7973DC16c63C9992f69E1767377Ae are the same at both pins.",
+      "onchain_observed": "Renzo DepositQueue 0xf2F305D14DCD8aaef887E0428B3c9534795D0d60 (Ethereum): feeBasisPoints() = 10,000 (100% in basis points) at this pin; 1,500 at Pacta's published pin #26,401,725 (record renzo-ezeth-deposit-queue-fee). feeAddress() = 0x10586b9b7Ff0F842913a57539f8167CE143C3011 and the EIP-1967 implementation 0x24Aa958C90b7973DC16c63C9992f69E1767377Ae are the same at both pins.",
       "protocol": "Renzo Protocol (ezETH)",
       "repro_calldata": "0xb8606eef",
       "rpc_env_var": "$ETH_RPC_URL",
@@ -8082,7 +8082,7 @@
       "sprint": 32,
       "summary_doc": "audits/sprint-32/block-26451608-summary.md",
       "summary_sha256": "0xd743b19a325763801e120af7b3bd48775dec49dd9a3a3888fbe32192d7f20094",
-      "summary_short": "BIO can be minted on the current contract by a Safe; docs: minting needs a new contract",
+      "summary_short": "Existing BIO contract can mint; docs say growth needs a replacement contract",
       "surface": "BIO mint(): MINTER_ROLE held by a 5-of-11 Safe and a bridge manager; no cap",
       "target_contract": "0xcb1592591996765Ec0eFc1f92599A19767ee5ffA",
       "target_label": "BIO token (BioToken)",
@@ -8213,7 +8213,7 @@
       "sprint": 32,
       "summary_doc": "audits/sprint-32/block-26451608-summary.md",
       "summary_sha256": "0xd743b19a325763801e120af7b3bd48775dec49dd9a3a3888fbe32192d7f20094",
-      "summary_short": "trUSD timelock: current docs name the same 24-hour controller as observed",
+      "summary_short": "Retrieved roles page names the retained trUSD controller; chain re-read pending",
       "surface": "trUSD TIMELOCK_ADMIN_ROLE: current documentation names the same 24-hour controller (0xcd3c…667b) as the retained observation",
       "target_contract": "0xd0580192E98eA6CEB9c7b6191Ed2E27560911697",
       "target_label": "Tori trUSD",
@@ -8743,7 +8743,7 @@
       "sprint": 34,
       "summary_doc": "audits/sprint-34/block-26453551-summary.md",
       "summary_sha256": "0x0f68f60a5ab92cd74ca0fe2221ebf9c75e59ce7f9e5cf24d80488fd38eac6c6c",
-      "summary_short": "Taiko emergency proposals execute with 4 of 5 council approvals; docs say 6",
+      "summary_short": "Emergency council 4-of-5, standard route 3 approvals; current guides unverified",
       "surface": "Emergency Multisig: minApprovals 4 of 5 signers (docs: 6); standard 3 (docs: 5)",
       "target_contract": "0x2AffADEb2ef5e1F2a7F58964ee191F1e88317ECd",
       "target_label": "Taiko DAO Emergency Multisig plugin",
@@ -8805,7 +8805,7 @@
       "sprint": 34,
       "summary_doc": "audits/sprint-34/block-26453551-summary.md",
       "summary_sha256": "0x0f68f60a5ab92cd74ca0fe2221ebf9c75e59ce7f9e5cf24d80488fd38eac6c6c",
-      "summary_short": "Hakka's multi-sig has 4 signers (2 needed); docs name 3 keyholders",
+      "summary_short": "HAKKA owner Safe is 2-of-4; current documented roster unverified",
       "surface": "Multi-sig: docs name 3 keyholders; the Safe is 2-of-4 with 1 unnamed owner",
       "target_contract": "0xF2B8f214Dc81b849ed3BDCAEdA6c8c39625c500A",
       "target_label": "Hakka Finance multi-sig (Safe)",
@@ -9099,7 +9099,7 @@
       "sprint": 35,
       "summary_doc": "audits/sprint-35/block-26454861-summary.md",
       "summary_sha256": "0xe3eb4a636bc03802bbbc731b9e019c8046933939089f9bf68ecb743e6569589c",
-      "summary_short": "Seamless's guardian Safe is 2-of-3; docs say a 3/6 multi-sig",
+      "summary_short": "Community Guardian Safe is 2-of-3; current guardian page unverified",
       "surface": "Community Guardian Safe: docs state a 3/6 multi-sig; the Safe is 2-of-3",
       "target_contract": "0xA1b5f2cc9B407177CD8a4ACF1699fa0b99955A22",
       "target_label": "Seamless Community Guardian Safe (Base)",
@@ -9248,7 +9248,7 @@
       "sprint": 37,
       "summary_doc": "audits/sprint-37/block-26458556-summary.md",
       "summary_sha256": "0x14758a8d891e0d55321017f25f0caa9f87eb200875a21cf26e47e43404c7a285",
-      "summary_short": "Odyssey's upgrade governor is a 2-of-4 Safe; docs say 3/5",
+      "summary_short": "Six ProxyAdmins share a 2-of-4 owner Safe; current governor docs unverified",
       "surface": "Upgrade governor: docs state a 3/5 multisig; every ProxyAdmin owner is one Safe, 2-of-4 (Ethereum and Base)",
       "target_contract": "0x3F6da0A118B3A0ddfdbaB4690cC96b2cF73B488D",
       "target_label": "PositionRegistry ProxyAdmin (Ethereum)",
@@ -9385,11 +9385,23 @@
       "status": "unresolved",
       "label": "Unresolved"
     },
+    "hakka-multisig-undocumented-signer-s34": {
+      "status": "unresolved",
+      "label": "Unresolved"
+    },
+    "infinifi-pause-role-admin-minor-roles-s20": {
+      "status": "unresolved",
+      "label": "Unresolved"
+    },
     "lagoon-vault-beacon-upgrade-delay-s29": {
       "status": "unresolved",
       "label": "Unresolved"
     },
     "metamorpho-re7-weth-guardian-parity": {
+      "status": "unresolved",
+      "label": "Unresolved"
+    },
+    "odyssey-finance-governor-safe-2-of-4-vs-3-of-5-s37": {
       "status": "unresolved",
       "label": "Unresolved"
     },
@@ -9401,9 +9413,17 @@
       "status": "unresolved",
       "label": "Unresolved"
     },
-    "tori-trusd-timelock-admin-undocumented-timelock-s32": {
+    "seamless-community-guardian-safe-2-of-3-s35": {
       "status": "unresolved",
-      "label": "Docs updated · pending chain read"
+      "label": "Unresolved"
+    },
+    "taiko-dao-emergency-multisig-4-of-5-s34": {
+      "status": "unresolved",
+      "label": "Unresolved"
+    },
+    "tori-trusd-timelock-admin-undocumented-timelock-s32": {
+      "status": "docs_updated",
+      "label": "Docs updated"
     },
     "whales-market-upgradeability-s28": {
       "status": "unresolved",
@@ -9412,6 +9432,10 @@
     "yearn-v3-ychad-safe-signers-s28": {
       "status": "recent_change",
       "label": "Changed recently"
+    },
+    "yo-protocol-approval-registry-owner-admin-safe-s22": {
+      "status": "unresolved",
+      "label": "Unresolved"
     }
   },
   "scorecard_wording_overrides": {
@@ -9420,140 +9444,232 @@
       "pinnedBlock": 59025642,
       "scope": "40 Acres' introduction page states that smart contracts are immutable and non-upgradeable post-deployment, while Pacta recorded at Base block 59,025,642 that 0x87f18b377e625b62c708D5f6EA96EC193558EFD0 — listed on 40 Acres' contracts page as the AERO USDC Loan contract (distinct from the 0xB99B…7Cf5 Vault) — is a UUPS proxy owned by a 2-of-3 Safe.",
       "unresolved": false,
-      "recentChange": false
+      "recentChange": false,
+      "docsUpdated": false
     },
     "beefy-finance-base-vault-owner-timelock-zero-delay-s22": {
       "headline": "Base vault-owner timelock: zero delay; strategy-owner changes retain six hours",
       "pinnedBlock": 58315414,
-      "scope": "Beefy documents a 6-hour default timelock for strategy changes and upgrades alongside a general timelock assurance; at Base block 58,315,414 the sampled strategyOwner timelock enforces 6 hours while the Base vaultOwner timelock reads getMinDelay() = 0s.",
+      "scope": "At Base block 58,315,414, Beefy's vault-owner TimelockController enforced zero delay against the six-hour governance docs while the strategy-owner TimelockController retained six hours (both proposed by the 3-of-6 dev multisig); the separate Base block 58,885,628 record covers aligned CLM strategy execution.",
       "unresolved": false,
-      "recentChange": false
+      "recentChange": false,
+      "docsUpdated": false
+    },
+    "bio-token-mint-role-safe-no-new-contract-s32": {
+      "headline": "Existing BIO contract can mint; growth-supply documentation requires a replacement contract",
+      "pinnedBlock": 26451608,
+      "scope": "BIO documentation allows uncapped growth but says it requires a new token contract to replace the current one; at Ethereum block 26,451,608 the existing BIO contract already exposed minting to a 5-of-11 Safe and a bridge manager, so the difference concerns the required replacement deployment, not the mere absence of a cap or proof of unauthorized inflation.",
+      "unresolved": false,
+      "recentChange": false,
+      "docsUpdated": false
     },
     "concrete-vault-owner-safe-1of2-s20": {
       "headline": "ctDeltaWeETH: owner and manager roles share a 1-of-2 Safe; single-key full control or draining is not established",
       "pinnedBlock": 26425374,
       "scope": "A 16 November snapshot of Concrete's Risks and Safety page describes separated roles preventing single-key full control or draining, while Pacta recorded ctDeltaWeETH's owner, VAULT_MANAGER and factory-manager authority in one 1-of-2 Safe at Ethereum block 26,425,374; this establishes concentrated manager authority, not a demonstrated single-key drain, and the page's current wording could not be verified. Separate role administrators, ConcreteFactory's 3-of-5 owner Safe and tiered Timelock implementation-approval controls, and strategy custody remain distinct checks.",
       "unresolved": true,
-      "recentChange": false
+      "recentChange": false,
+      "docsUpdated": false
+    },
+    "ethena-admin-timelock-and-dev-safe": {
+      "headline": "Admin timelock: one-day minimum observed; core-function documentation says seven days",
+      "pinnedBlock": 26401638,
+      "scope": "At Ethereum block 26,401,638, the sampled Ethena admin TimelockController returned a one-day minimum against the key-trust-assumptions statement of seven days for core-function changes; the retained record also cites a July 2026 Risk Committee discussion of one day, so this is not a claim about sUSDe withdrawal cooldown or an undisclosed delay.",
+      "unresolved": false,
+      "recentChange": false,
+      "docsUpdated": false
+    },
+    "ethena-minting-rlusd-usat-onboarding-ops": {
+      "headline": "Admin timelock: one-day minimum observed; core-function documentation says seven days",
+      "pinnedBlock": 26401638,
+      "scope": "At Ethereum block 26,401,638, the sampled Ethena admin TimelockController returned a one-day minimum against the key-trust-assumptions statement of seven days for core-function changes; the retained record also cites a July 2026 Risk Committee discussion of one day, so this is not a claim about sUSDe withdrawal cooldown or an undisclosed delay.",
+      "unresolved": false,
+      "recentChange": false,
+      "docsUpdated": false
     },
     "f-x-protocol-v2-router-owner-safe-s29": {
       "headline": "V2 Router owner is the operational Safe; the separate timelock retains three days",
       "pinnedBlock": 26448221,
-      "scope": "f(x) Protocol documents a 3-day public timelock for queued transactions (with an oracle-update exception) and names LongPoolManager and ShortPoolManager for emergency pause; at Ethereum block 26,448,221 the V2 Router Diamond's owner() is the 6-of-9 operational Safe directly while the separate timelock retains three days (ProtocolTreasury role checks are distinct from the Long/ShortPoolManager pause promise).",
+      "scope": "At Ethereum block 26,448,221 the V2 Router (Diamond) owner() was the 6-of-9 operational Safe directly, with no enforced delay, while the separate Timelock retained three days; at Ethereum block 26,400,152 DEFAULT_ADMIN_ROLE on the four v2 ProtocolTreasury proxies was held by that 6-of-9 Safe and the 3-of-4 EmergencySafe, not by the three-day Timelock. f(x) Protocol documents a 3-day public timelock for queued transactions (with an oracle-update exception) and names LongPoolManager and ShortPoolManager for emergency pause.",
       "unresolved": false,
-      "recentChange": false
+      "recentChange": false,
+      "docsUpdated": false
     },
     "fx-protocol-v2-treasury-admin": {
       "headline": "V2 Router owner is the operational Safe; the separate timelock retains three days",
       "pinnedBlock": 26448221,
-      "scope": "f(x) Protocol documents a 3-day public timelock for queued transactions (with an oracle-update exception) and names LongPoolManager and ShortPoolManager for emergency pause; at Ethereum block 26,448,221 the V2 Router Diamond's owner() is the 6-of-9 operational Safe directly while the separate timelock retains three days (ProtocolTreasury role checks are distinct from the Long/ShortPoolManager pause promise).",
+      "scope": "At Ethereum block 26,448,221 the V2 Router (Diamond) owner() was the 6-of-9 operational Safe directly, with no enforced delay, while the separate Timelock retained three days; at Ethereum block 26,400,152 DEFAULT_ADMIN_ROLE on the four v2 ProtocolTreasury proxies was held by that 6-of-9 Safe and the 3-of-4 EmergencySafe, not by the three-day Timelock. f(x) Protocol documents a 3-day public timelock for queued transactions (with an oracle-update exception) and names LongPoolManager and ShortPoolManager for emergency pause.",
       "unresolved": false,
-      "recentChange": false
+      "recentChange": false,
+      "docsUpdated": false
     },
     "gearbox-v3-legacy-timelock-and-instance-safe": {
-      "headline": "LegacyTimelock reads 36 hours; V3.0 technical-change docs describe two days",
+      "headline": "LegacyTimelock: 36 hours versus V3.0's two-day wording; InstanceManager owner: 4-of-21 Safe",
       "pinnedBlock": 26403523,
-      "scope": "Gearbox's V3.0 operational-multisig documentation describes a 2-day timelock for technical changes (with exceptions) and notes chain-specific configuration for the 4-of-12 InstanceManager; at Ethereum block 26,403,523 the sampled LegacyTimelock reads delay() = 129,600s (36 hours per GIP-104).",
+      "scope": "At Ethereum block 26,403,523, LegacyTimelock enforced 36 hours versus the V3.0 technical-change page's two days, and InstanceManager was owned by a 4-of-21 Safe versus the instance-owner page's 4-of-12 example explicitly subject to chain-specific configuration; the separate Veto Guard Safe was 4-of-12 as documented, and the owner-roster difference alone does not establish a breach of that qualified example.",
       "unresolved": false,
-      "recentChange": false
+      "recentChange": false,
+      "docsUpdated": false
+    },
+    "hakka-multisig-undocumented-signer-s34": {
+      "headline": "HAKKA owner Safe: 2 signatures required from 4 owners; current documented roster unverified",
+      "pinnedBlock": 26453551,
+      "scope": "At Ethereum block 26,453,551, the HAKKA token owner was a 2-of-4 Safe whose owners included the three names in the retained documentation and one additional address; the current keyholder page could not be verified, so the additional owner is not labelled currently undocumented or unauthorized.",
+      "unresolved": true,
+      "recentChange": false,
+      "docsUpdated": false
+    },
+    "infinifi-pause-role-admin-minor-roles-s20": {
+      "headline": "PAUSE and UNPAUSE role administration: MINOR_ROLES_MANAGER at the retained pin",
+      "pinnedBlock": 26425374,
+      "scope": "At Ethereum block 26,425,374, MINOR_ROLES_MANAGER administered PAUSE and UNPAUSE, with the Team Multisig and Long Timelock as members; the retained roles-page excerpt names GOVERNOR, but the current page could not be retrieved, so this comparison does not establish a current document breach or a bypass of all governance.",
+      "unresolved": true,
+      "recentChange": false,
+      "docsUpdated": false
     },
     "lagoon-vault-beacon-upgrade-delay-s29": {
       "headline": "Legacy cbBTC vault: immediate beacon upgrades; coverage by the documented 24-hour Opt-in delay is unverified",
       "pinnedBlock": 26448221,
       "scope": "Lagoon's Opt-in/DelayProxyAdmin documentation describes a 24-hour minimum upgrade wait (24 hours to 30 days), while Pacta's snapshot at Ethereum block 26,448,221 records a different, legacy cbBTC beacon-vault design controlled by a 3-of-6 Safe with no enforced wait on the recorded beacon upgrade path; whether that deployment is covered by the documented promise remains unverified.",
       "unresolved": true,
-      "recentChange": false
+      "recentChange": false,
+      "docsUpdated": false
     },
     "maple-v2-syrup-ppm-admin": {
       "headline": "PoolPermissionManager proxy admin is the 4-of-7 DAO Safe, not GovernorTimelock",
       "pinnedBlock": 26401540,
       "scope": "Maple's Governor documentation places PoolPermissionManager implementation changes behind the Governor's delay, while Pacta's snapshot at Ethereum block 26,401,540 records that named proxy's admin as the 4-of-7 DAO Safe; this is a question about that proxy's upgrade route, not evidence that every Maple administrative action bypasses a three-day wait. (GovernorTimelock documentation specifies configurable delays with a 1-day minimum and discloses Security Admin exceptions; Maple's Token Transparency filing on Blockworks, section 3(b), states a 3-day GovernorTimelock for listed governance changes.)",
       "unresolved": false,
-      "recentChange": false
+      "recentChange": false,
+      "docsUpdated": false
     },
     "metamorpho-re7-weth-guardian-parity": {
-      "headline": "Re7 WETH has no guardian; Re7 USDT has an Aragon guardian—no promise of matching configurations was verified",
+      "headline": "Re7 WETH has no guardian; Re7 USDT has an Aragon guardian — no promise of matching configurations was verified",
       "pinnedBlock": 26401405,
       "scope": "At Ethereum block 26,401,405 MetaMorpho Re7 WETH sets guardian() to the zero address under a 2-of-4 owner Safe and 3-day timelock, whereas peer vault Re7 USDT configures an Aragon guardian; Morpho's vault architecture explicitly supports vaults without a guardian and no Re7 documentation promising matching guardian configurations was verified.",
       "unresolved": true,
-      "recentChange": false
+      "recentChange": false,
+      "docsUpdated": false
     },
     "moonwell-pause-guardian-2of4-safe-s18": {
       "headline": "Base pause guardian: 2-of-4 Safe, disclosed in the October governance migration; older constitution says 3-of-5",
       "pinnedBlock": 57842915,
       "scope": "Moonwell's DAO Constitution (section 8.1) states that emergency pause actions require a 3-of-5 Security Council approval (while noting governance may modify council powers), whereas Unitroller.pauseGuardian() on Base resolved to a 2-of-4 Safe at block 57,842,915 — a configuration explicitly described in Moonwell's October 2026 governance forum recap of MIP-X71.",
       "unresolved": false,
-      "recentChange": false
+      "recentChange": false,
+      "docsUpdated": false
+    },
+    "obol-network-token-supply-cap-s24": {
+      "headline": "OBOL minting has no enforced 500-million cap; minter authority is held by a 2-of-3 Safe",
+      "pinnedBlock": 26433001,
+      "scope": "Obol documents a total-supply cap of 500 million tokens, while the retained Ethereum block 26,433,001 record identifies an uncapped mint function with MINTER_ROLE held by a 2-of-3 Safe outside the separate Token House timelock; the finding concerns mint authority and cap enforcement, not an allegation of material inflation from the tiny recorded supply excess.",
+      "unresolved": false,
+      "recentChange": false,
+      "docsUpdated": false
+    },
+    "odyssey-finance-governor-safe-2-of-4-vs-3-of-5-s37": {
+      "headline": "Six Ethereum ProxyAdmins share a 2-of-4 owner Safe; current governor documentation unverified",
+      "pinnedBlock": 26458556,
+      "scope": "At Ethereum block 26,458,556, the six sampled Odyssey ProxyAdmins and PositionRegistry shared the same 2-of-4 owner Safe; the retained protocol-page excerpt describes a 3-of-5 governor, but its current wording could not be verified, so this is a retained authority observation rather than an established current document breach.",
+      "unresolved": true,
+      "recentChange": false,
+      "docsUpdated": false
     },
     "renzo-ezeth-deposit-queue-fee": {
       "headline": "DepositQueue fee parameter: 10,000 bps; effective reward fee and onward distribution are not verified",
       "pinnedBlock": 26448221,
-      "scope": "Renzo documents a 10% restaking-reward fee, split equally between treasury and node operators (alongside separate EigenLayer-reward pass-through language), while Pacta recorded DepositQueue feeBasisPoints at 10,000 at Ethereum block 26,448,221, versus 1,500 at block 26,433,001; that parameter alone does not establish the effective fee on all ezETH rewards or who ultimately retains funds routed to feeAddress.",
+      "scope": "Renzo documents a 10% restaking-reward fee, split equally between treasury and node operators (alongside separate EigenLayer-reward pass-through language), while Pacta recorded DepositQueue feeBasisPoints at 10,000 at Ethereum block 26,448,221, versus 1,500 at Ethereum block 26,401,725; that parameter alone does not establish the effective fee on all ezETH rewards or who ultimately retains funds routed to feeAddress.",
       "unresolved": true,
-      "recentChange": false
+      "recentChange": false,
+      "docsUpdated": false
     },
     "renzo-ezeth-deposit-queue-fee-s29": {
       "headline": "DepositQueue fee parameter: 10,000 bps; effective reward fee and onward distribution are not verified",
       "pinnedBlock": 26448221,
-      "scope": "Renzo documents a 10% restaking-reward fee, split equally between treasury and node operators (alongside separate EigenLayer-reward pass-through language), while Pacta recorded DepositQueue feeBasisPoints at 10,000 at Ethereum block 26,448,221, versus 1,500 at block 26,433,001; that parameter alone does not establish the effective fee on all ezETH rewards or who ultimately retains funds routed to feeAddress.",
+      "scope": "Renzo documents a 10% restaking-reward fee, split equally between treasury and node operators (alongside separate EigenLayer-reward pass-through language), while Pacta recorded DepositQueue feeBasisPoints at 10,000 at Ethereum block 26,448,221, versus 1,500 at Ethereum block 26,401,725; that parameter alone does not establish the effective fee on all ezETH rewards or who ultimately retains funds routed to feeAddress.",
       "unresolved": true,
-      "recentChange": false
+      "recentChange": false,
+      "docsUpdated": false
+    },
+    "seamless-community-guardian-safe-2-of-3-s35": {
+      "headline": "Community Guardian Safe: 2-of-3 at the retained Base observation",
+      "pinnedBlock": 59847352,
+      "scope": "At Base block 59,847,352, the Community Guardian Safe required 2 of 3 owners and held the short governance timelock cancellation role; the retained documentation describes 3-of-6, but the current guardian page could not be verified, so a current document breach is not established.",
+      "unresolved": true,
+      "recentChange": false,
+      "docsUpdated": false
+    },
+    "taiko-dao-emergency-multisig-4-of-5-s34": {
+      "headline": "Council approval settings: emergency 4-of-5; standard proposals need 3 approvals",
+      "pinnedBlock": 26453551,
+      "scope": "At Ethereum block 26,453,551, the emergency council route required 4 of 5 listed signers and the standard route required 3 approvals to enter the public veto stage; retained guide excerpts give 6 and 5 respectively, but the current guides could not be verified, so a current document breach is not established.",
+      "unresolved": true,
+      "recentChange": false,
+      "docsUpdated": false
     },
     "tori-trusd-timelock-admin-undocumented-timelock-s32": {
-      "headline": "trUSD timelock: current documentation names the same 24-hour controller as the retained observation",
+      "headline": "Retrieved roles page names the retained trUSD controller; fresh chain read pending",
       "pinnedBlock": 26451608,
-      "scope": "At Ethereum block 26,451,608 Pacta recorded TIMELOCK_ADMIN_ROLE on trUSD held by 24-hour ToriTimelock 0xcd3c66e73abF927EAAF1238aEB5F251b4f2f667b rather than 0xA952453E39F77108Ee37C1b92de593F1C59A6ef4; Tori Finance's retrieved roles documentation (21 November 2026) now names 0xcd3c66e73abF927EAAF1238aEB5F251b4f2f667b (86,400 seconds), resolving the document-side discrepancy pending a fresh finalized-block chain read.",
-      "unresolved": true,
-      "recentChange": false
+      "scope": "The roles page retrieved on 21 November 2026 names the same 24-hour controller recorded for trUSD at Ethereum block 26,451,608, updating the different controller named in the 19 November snapshot; a fresh chain read is still pending.",
+      "unresolved": false,
+      "recentChange": false,
+      "docsUpdated": true
     },
     "treehouse-tree-teth-tree-blacklister-safe-s27": {
       "headline": "TREE transfer blacklisting: no enforced delay; TREE and tETH owner paths retain five-day timelocks",
       "pinnedBlock": 26440048,
       "scope": "Treehouse's Timelock documentation states that all Treehouse contracts are secured by a 5-day timelock so no critical action executes immediately, while Pacta recorded at Ethereum block 26,440,048 that a 5-of-7 Safe holds blacklister() on the TREE token with no enforced delay; TREE upgrade ownership (#26,406,106) and tETH ownership (#26,407,707) retain 5-day TimelockControllers.",
       "unresolved": false,
-      "recentChange": false
+      "recentChange": false,
+      "docsUpdated": false
     },
     "upshift-proxyadmin-safe-s28": {
       "headline": "Vault ProxyAdmin multisig: docs state generally 4 of 6, the Safe is 2-of-3",
       "pinnedBlock": 26441165,
       "scope": "Upshift describes the ProxyAdmin Safe as generally 4-of-6 and discloses upgrades without a timelock, while Pacta recorded the ProxyAdmin owner of vault 0xE9B725010A9E419412ed67d0fA5f3A5f40159D32 as 2-of-3 at Ethereum block 26,441,165; the different signer count does not by itself show that one organization can upgrade alone.",
       "unresolved": false,
-      "recentChange": false
+      "recentChange": false,
+      "docsUpdated": false
     },
     "usual-money-registry-access-delay": {
       "headline": "DEFAULT_ADMIN handover: one-second delay observed versus three days documented",
       "pinnedBlock": 26401725,
       "scope": "Usual documents three days before transferring DEFAULT_ADMIN to a new address, while Pacta recorded RegistryAccess defaultAdminDelay() as one second at Ethereum block 26,401,725; this finding concerns administrator handover, not a delay on every action by an existing administrator.",
       "unresolved": false,
-      "recentChange": false
+      "recentChange": false,
+      "docsUpdated": false
     },
     "whales-market-upgradeability-s28": {
       "headline": "Sampled Whales Market proxy is upgradeable; coverage by the pre-market escrow immutability promise is unverified",
       "pinnedBlock": 26441165,
       "scope": "Whales Market's pre-market buy guide states that deposited funds are stored in an escrow secured by an immutable smart contract, while Pacta recorded TransparentUpgradeableProxy slots on 0x1eCdB32e59e948C010a189a0798C674a2d0c6603 at Ethereum block 26,441,165; whether that proxy is the contract covered by the pre-market sell-order escrow statement is unverified.",
       "unresolved": true,
-      "recentChange": false
+      "recentChange": false,
+      "docsUpdated": false
     },
     "yearn-v3-role-manager-timelock": {
-      "headline": "Sampled V3 RoleManager uses a seven-day timelock; yChad's documented signer roster differs",
+      "headline": "yChad signer roster changed; the Safe retains its 6-of-9 threshold",
       "pinnedBlock": 26441165,
-      "scope": "At Ethereum block 26,441,165 the yChad Safe retains its 6-of-9 threshold while one address listed on the multisig documentation page is no longer an owner (consistent with an October 28 signer-rotation proposal, not a reduced threshold); separately, at block 26,401,725 a sampled V3 RoleManager points governance() to a 7-day TimelockController whereas Yearn's security overview notes the governance role itself is not behind a timelock.",
+      "scope": "At Ethereum block 26,441,165, yChad retained 6-of-9 while one documented signer had been replaced, whereas the separate V3 RoleManager observation at block 26,401,725 recorded a seven-day timelock; the 72-hour rotation window has elapsed and a fresh chain and documentation recheck remains pending.",
       "unresolved": false,
-      "recentChange": true
+      "recentChange": true,
+      "docsUpdated": false
     },
     "yearn-v3-ychad-safe-signers-s28": {
-      "headline": "Sampled V3 RoleManager uses a seven-day timelock; yChad's documented signer roster differs",
+      "headline": "yChad signer roster changed; the Safe retains its 6-of-9 threshold",
       "pinnedBlock": 26441165,
-      "scope": "At Ethereum block 26,441,165 the yChad Safe retains its 6-of-9 threshold while one address listed on the multisig documentation page is no longer an owner (consistent with an October 28 signer-rotation proposal, not a reduced threshold); separately, at block 26,401,725 a sampled V3 RoleManager points governance() to a 7-day TimelockController whereas Yearn's security overview notes the governance role itself is not behind a timelock.",
+      "scope": "At Ethereum block 26,441,165, yChad retained 6-of-9 while one documented signer had been replaced, whereas the separate V3 RoleManager observation at block 26,401,725 recorded a seven-day timelock; the 72-hour rotation window has elapsed and a fresh chain and documentation recheck remains pending.",
       "unresolved": false,
-      "recentChange": true
+      "recentChange": true,
+      "docsUpdated": false
     },
     "yo-protocol-approval-registry-owner-admin-safe-s22": {
-      "headline": "Approval Registry is owned directly by the Admin Safe; vault upgrades retain a 48-hour timelock",
+      "headline": "Approval Registry is owned directly by the Admin Safe; sampled vault upgrades retain 48 hours",
       "pinnedBlock": 58315414,
-      "scope": "At Base block 58,315,414 YoApprovalRegistry owner() is the 4-of-6 Admin Multisig directly, while yoETH and yoUSD ProxyAdmins sit behind the 48-hour YO Timelock; the retained YO V2 Security Framework quote is from Pacta's Sprint 22 snapshot and was not re-verified against live docs today.",
-      "unresolved": false,
-      "recentChange": false
+      "scope": "At Base block 58,315,414, the Approval Registry was owned directly by the 4-of-6 Admin Safe while yoETH and yoUSD upgrades passed through a 48-hour timelock; the retained V2 Security Framework quote describes timelocked registries, but its current wording could not be verified, so a current document breach is not established.",
+      "unresolved": true,
+      "recentChange": false,
+      "docsUpdated": false
     }
   }
 }

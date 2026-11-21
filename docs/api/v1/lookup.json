@@ -138,7 +138,7 @@
     "changed": [
      {
       "classification": "parameter_delta",
-      "documented": "'40 Acres has completed four independent audits with Sherlock.",
+      "documented": "'40 Acres has completed four independent audits with Sherlock. Smart contracts are immutable and non-upgradeable post-deployment.' (docs.40acres.finance)",
       "observed": "40 Acres AERO USDC Loan proxy 0x87f18b377e625b62c708D5f6EA96EC193558EFD0 (Base): EIP-1967 implementation slot = 0xb43b30c405c61BC330227968635d130994450735;",
       "parameter": "AERO USDC Loan contract (UUPS proxy): docs call the contracts immutable, but it is an upgradeable proxy",
       "recordId": "40-acres-base-upgradeability-s28"
@@ -591,7 +591,7 @@
     "changed": [
      {
       "classification": "parameter_delta",
-      "documented": "github.com/aerodrome-finance/contracts (README): 'EpochGovernor.sol A simple epoch-based governance contract used exclusively for adjusting emissions.' / SPECIFICATION.md: 'Managed NFTs can be deactivated, a process whi…",
+      "documented": "github.com/aerodrome-finance/contracts (README): 'EpochGovernor.sol A simple epoch-based governance contract used exclusively for adjusting emissions.' / SPECIFICATION.md: 'Managed NFTs can be deactivated, a process whi…'",
       "observed": "Voter 0x16613524e02ad97eDfeF371bC883F2F5d6C480A5: emergencyCouncil() = epochGovernor() = AerodromeMigration 0x22a2F7340a3fB4C7C389D91eE954766B12476721 (Sourcify match; MIGRATION_OPEN() = 1792620000), owned by Safe 0x422…",
       "parameter": "Voter emergency council and epoch governor: the AerodromeMigration contract",
       "recordId": "aerodrome-finance-base-emergency-council-migration-s21"
@@ -1895,7 +1895,7 @@
     "changed": [
      {
       "classification": "parameter_delta",
-      "documented": "'Before any minting action occurs, the smart contract automatically checks reserve sufficiency using the on-chain Proof of Reserve feed.",
+      "documented": "'Before any minting action occurs, the smart contract automatically checks reserve sufficiency using the on-chain Proof of Reserve feed. If reserves fall short, the mint transaction reverts.' (docs.bedrock.technology/se…",
       "observed": "Bedrock VaultWithoutNative 0x047D41F2544B7F63A8e991aF2068a363d210d6Da (Ethereum): adequacyRatio() = 900, so checkReserve() evaluates existing supply * 900 / 1000 <= reserves before minting (feeders: reserve 0xc590D9fb8e…",
       "parameter": "Secure Mint precondition: adequacyRatio() 900 (existing supply x 0.9 vs reserves)",
       "recordId": "bedrock-unibtc-secure-mint-precondition-s30"
@@ -1984,7 +1984,7 @@
     "changed": [
      {
       "classification": "parameter_delta",
-      "documented": "docs.bedrock.technology (uniETH contracts): 'Restaking proxy contract: https://etherscan.io/address/0x3f4eaceb930b0edfa78a1dfcbae5c5494e6e9850' / 'Restaking implementation: https://etherscan.io/address/0x9609af0490b96d7…",
+      "documented": "docs.bedrock.technology (uniETH contracts): 'Restaking proxy contract: https://etherscan.io/address/0x3f4eaceb930b0edfa78a1dfcbae5c5494e6e9850' / 'Restaking implementation: https://etherscan.io/address/0x9609af0490b96d7…'",
       "observed": "Restaking proxy 0x3F4eaCeb930b0Edfa78a1DFCbaE5c5494E6e9850: EIP-1967 implementation = 0x1e4D0A963953e7c08Fc7602B01e683547Fc4E518 (Sourcify match), not the documented 0x9609Af0490b96D7AdD7EEa3554b1a944ee440262;",
       "parameter": "Restaking implementation differs from the one the docs list",
       "recordId": "bedrock-unieth-restaking-impl-s25"
@@ -2091,6 +2091,7 @@
       "classification": "parameter_delta",
       "documented": "6 h",
       "observed": "0 s (no delay)",
+      "paired": true,
       "parameter": "Vault owner timelock: no delay (0 seconds)",
       "recordId": "beefy-finance-base-vault-owner-timelock-zero-delay-s22"
      }
@@ -2168,6 +2169,7 @@
       "classification": "parameter_delta",
       "documented": "7 d",
       "observed": "1 d",
+      "paired": true,
       "parameter": "BEND ProxyAdmin owner: BendDAO Timelock 7D, getMinDelay() 86,400 s",
       "recordId": "benddao-timelock-7d-reads-1d-s32"
      }
@@ -2227,7 +2229,7 @@
     "changed": [
      {
       "classification": "parameter_delta",
-      "documented": "'The supply is uncapped, meaning new BIO can be minted for future protocol or network growth.",
+      "documented": "'The supply is uncapped, meaning new BIO can be minted for future protocol or network growth. This requires deploying a new token contract to replace the current BIO token.' (docs.bio.xyz/bio/introduction/bio-token/basi…",
       "observed": "BIO token 0xcb1592591996765Ec0eFc1f92599A19767ee5ffA (Ethereum, not a proxy; BioToken, verified source): mint(to, amount) is onlyRole(MINTER_ROLE) and the token has no supply cap.",
       "parameter": "BIO mint(): MINTER_ROLE held by a 5-of-11 Safe and a bridge manager; no cap",
       "recordId": "bio-token-mint-role-safe-no-new-contract-s32"
@@ -2787,7 +2789,7 @@
     "changed": [
      {
       "classification": "parameter_delta",
-      "documented": "docs.chain.link (CCIP upgradability): 'All proposals originate from a ManyChainMultiSig (MCMS), which requires multiple independent signers to sign off.' / 'For example, you can view the Ethereum mainnet MCMS on Ethersc…",
+      "documented": "docs.chain.link (CCIP upgradability): 'All proposals originate from a ManyChainMultiSig (MCMS), which requires multiple independent signers to sign off.' / 'For example, you can view the Ethereum mainnet MCMS on Ethersc…'",
       "observed": "RBACTimelock 0x44835bBBA9D40DEDa9b64858095EcFB2693c9449: getRoleMemberCount(PROPOSER_ROLE) = 3: ManyChainMultiSig 0xE53289F32c8E690b7173aA33affE9B6B0CB0012F (the MCMS the docs link), GnosisSafeProxy 0xD6597750bf74DCAEC5…",
       "parameter": "Timelock proposers: a 6-of-12 Safe besides the ManyChainMultiSigs (docs: all proposals from an MCMS)",
       "recordId": "chainlink-ccip-timelock-proposers-s24"
@@ -2979,7 +2981,7 @@
     "changed": [
      {
       "classification": "parameter_delta",
-      "documented": "'Users have full control of their deposited assets.",
+      "documented": "'Users have full control of their deposited assets. Funds can only move with their signature, and withdrawals are trustless.' (www.circle.com/gateway)",
       "observed": "Circle GatewayWallet 0x77777777Dcc4d5A8B6E418Fd04D8997ef11000eE (Ethereum; the address the Gateway contract-addresses page lists): UUPS EIP-1967 proxy, implementation 0xF7a6D9D7Df917c072ac8987A820c58aA27A0e798 (GatewayW…",
       "parameter": "GatewayWallet: EOA owner (UUPS upgrade, withdrawal delay) and EOA pauser over withdrawals",
       "recordId": "circle-gateway-wallet-eoa-owner-and-pauser-s32"
@@ -3409,7 +3411,7 @@
     "changed": [
      {
       "classification": "parameter_delta",
-      "documented": "docs.concrete.xyz (risks and safety), 16 November 2026 snapshot: 'Separated roles.",
+      "documented": "docs.concrete.xyz (risks and safety), 16 November 2026 snapshot: 'Separated roles. Vault operations are split across distinct roles. No single key has full control or can drain a vault.' The page's current wording could…",
       "observed": "Safe 0x8F5f1d40243b259cEB7aB44bA421Ff191bCD3381: getThreshold() = 1 with 2 owners;",
       "parameter": "ctDeltaWeETH: owner, VAULT_MANAGER and factory-manager roles share a 1-of-2 Safe; single-key full control or draining is not established",
       "recordId": "concrete-vault-owner-safe-1of2-s20"
@@ -4852,6 +4854,7 @@
       "classification": "protective_delta",
       "documented": "0 s (no delay)",
       "observed": "7 d",
+      "paired": true,
       "parameter": "Dispatcher migration timelock = 7 days (specs: 'no longer used and is set to 0')",
       "recordId": "enzyme-dispatcher-7d-migration-timelock-s18"
      }
@@ -5025,6 +5028,7 @@
       "classification": "parameter_delta",
       "documented": "7 d",
       "observed": "1 d",
+      "paired": true,
       "parameter": "TimelockController MinDelay & Dev Multisig Quorum",
       "recordId": "ethena-admin-timelock-and-dev-safe"
      },
@@ -5032,6 +5036,7 @@
       "classification": "parameter_delta",
       "documented": "7 d",
       "observed": "1 d",
+      "paired": true,
       "parameter": "EthenaTimelockController 1d delay — queued RLUSD & USAT collateral onboarding",
       "recordId": "ethena-minting-rlusd-usat-onboarding-ops"
      }
@@ -5479,6 +5484,7 @@
       "classification": "parameter_delta",
       "documented": "3 d",
       "observed": "0 s (no delay)",
+      "paired": true,
       "parameter": "V2 Router (Diamond) owner: docs put every transaction behind a 3-day timelock; owner() is the 6-of-9 Safe",
       "recordId": "f-x-protocol-v2-router-owner-safe-s29"
      }
@@ -6188,6 +6194,7 @@
       "classification": "parameter_delta",
       "documented": "2 d",
       "observed": "36 h",
+      "paired": true,
       "parameter": "LegacyTimelock Delay & InstanceManager Safe Quorum",
       "recordId": "gearbox-v3-legacy-timelock-and-instance-safe"
      }
@@ -6605,6 +6612,7 @@
     "0x784e010430a923Ce2a3Ff9846C4010694Bb7BEfb",
     "0x0E29e5AbbB5FD88e28b2d355774e73BD47dE3bcd"
    ],
+   "scorecardStatus": "unresolved",
    "slug": "hakka-finance",
    "sprints": [
     34
@@ -7179,6 +7187,7 @@
     "0xee529A21Cea25EFDF527e85BB4c597603E14CcfC",
     "0x579B18E60d0245c0F66Fa9463610b15E226Ae8FD"
    ],
+   "scorecardStatus": "unresolved",
    "slug": "infinifi",
    "sprints": [
     20,
@@ -8058,6 +8067,7 @@
       "classification": "parameter_delta",
       "documented": "1 d",
       "observed": "0 s (no delay)",
+      "paired": true,
       "parameter": "Legacy cbBTC vault: immediate beacon upgrades; coverage by the documented 24-hour Opt-in delay is unverified",
       "recordId": "lagoon-vault-beacon-upgrade-delay-s29"
      }
@@ -8986,6 +8996,7 @@
       "classification": "protective_delta",
       "documented": "0 s (no delay)",
       "observed": "3 d",
+      "paired": true,
       "parameter": "Core Proxy EIP-1967 Admin Slot & 3-Day UpgradeTimelock",
       "recordId": "mantle-lsp-meth-upgrade-timelock"
      }
@@ -9275,7 +9286,7 @@
     "changed": [
      {
       "classification": "parameter_delta",
-      "documented": "Sister vault reference: Re7 USDT (0x95EeF579155cd2C5510F312c8fA39208c3Be01a8) sets an Aragon guardian;",
+      "documented": "Re7 USDT (0x95EeF579155cd2C5510F312c8fA39208c3Be01a8) sets an Aragon guardian;",
       "observed": "Re7 WETH owner() = 0xE86399fE6d7007FdEcb08A2ee1434Ee677a04433 (2-of-4 Safe), timelock() = 259200s (3d), guardian() = 0x0000000000000000000000000000000000000000, pendingGuardian() = (0x0, 0);",
       "parameter": "Re7 WETH has no guardian; Re7 USDT has an Aragon guardian — no promise of matching configurations was verified",
       "recordId": "metamorpho-re7-weth-guardian-parity"
@@ -9572,7 +9583,7 @@
     "changed": [
      {
       "classification": "parameter_delta",
-      "documented": "Moonwell DAO Constitution 8.1: 'The Security Council has the power to execute any pause functionality, or perform other required actions with no delay ...",
+      "documented": "Moonwell DAO Constitution 8.1: 'The Security Council has the power to execute any pause functionality, or perform other required actions with no delay ... Performing any Emergency Action requires a 3-of-5 approval from…'",
       "observed": "Unitroller (0xfBb21d0380beE3312B33c4353c8936a0F13EF26C).pauseGuardian() = 2-of-4 Safe 0x5B710010586C1b728B047c3E42473c700eeA4026 (v1.4.1);",
       "parameter": "Comptroller pauseGuardian = 2-of-4 Safe (Constitution: pause = Security Council 3-of-5)",
       "recordId": "moonwell-pause-guardian-2of4-safe-s18"
@@ -10311,6 +10322,7 @@
     "0xeE156D8ea7b96a5524CcC3CF9283ab85E80E9534",
     "0xd44A3e93A256c445F17a12f35A0ffEf975ec6817"
    ],
+   "scorecardStatus": "unresolved",
    "slug": "odyssey-finance",
    "sprints": [
     37
@@ -11691,7 +11703,7 @@
     "changed": [
      {
       "classification": "protective_delta",
-      "documented": "docs.re.xyz (ICL permissions note): 'The Safe holds DEFAULT_ADMIN_ROLE on every ICL (Ethereum reUSD and reUSDe, Avalanche, Arbitrum, Base), alongside the chain's timelock.' and '...",
+      "documented": "docs.re.xyz (ICL permissions note): 'The Safe holds DEFAULT_ADMIN_ROLE on every ICL (Ethereum reUSD and reUSDe, Avalanche, Arbitrum, Base), alongside the chain's timelock.' and '... so the Safe can grant itself ICL UPGR…'",
       "observed": "ICL 0x4691C475bE804Fa85f91c2D6D0aDf03114de3093 (shareToken() = reUSD): hasRole(DEFAULT_ADMIN_ROLE, Safe 0x8eec10616802Ef639CA55c98ac856553fAdEfBaD) = false;",
       "parameter": "Deposit vault role admin held behind the delay; multisig lacks it",
       "recordId": "re-icl-admin-timelock-not-safe-s21"
@@ -12045,6 +12057,7 @@
       "classification": "parameter_delta",
       "documented": "3-of-4",
       "observed": "3-of-5",
+      "paired": true,
       "parameter": "Main multisig: 3-of-5 signers",
       "recordId": "resupply-main-multisig-3of5-s22"
      }
@@ -12553,6 +12566,7 @@
    "relatedContracts": [
     "0x639d2dD24304aC2e6A691d8c1cFf4a2665925fee"
    ],
+   "scorecardStatus": "unresolved",
    "slug": "seamless-protocol-base",
    "sprints": [
     35
@@ -12827,7 +12841,7 @@
     "changed": [
      {
       "classification": "protective_delta",
-      "documented": "docs.solv.finance/llms-full.txt: 'The admin privileges for upgrades are assigned to a Gnosis Safe multi-signature address ...",
+      "documented": "docs.solv.finance/llms-full.txt: 'The admin privileges for upgrades are assigned to a Gnosis Safe multi-signature address ... The timelock mechanism will be added to further enhance security by introducing a delay betwe…'",
       "observed": "SolvBTC is a beacon proxy: EIP-1967 beacon slot = UpgradeableBeacon 0xFc335FdA7E6a33329A83F4d5F578eC7d8A43DC4A (implementation() = 0xA4b6cf2BAaA235ab7Fe10EADB84b82460165B38F), whose owner() = SolvBTCFactory 0x443628281E…",
       "parameter": "SolvBTC beacon upgrades behind a 3d TimelockController (docs: timelock 'will be added')",
       "recordId": "solv-solvbtc-upgrade-beacon-3d-timelock-s17"
@@ -13333,6 +13347,7 @@
       "classification": "parameter_delta",
       "documented": "3-of-5",
       "observed": "3-of-6",
+      "paired": true,
       "parameter": "Manager Safe Quorum & 7-Day TimelockController Admin Path",
       "recordId": "stader-ethx-manager-safe-and-timelock"
      }
@@ -13475,6 +13490,7 @@
       "classification": "protective_delta",
       "documented": "2 d",
       "observed": "5 d",
+      "paired": true,
       "parameter": "Protocol changes wait 5 days, longer than the documented 48 hours",
       "recordId": "stake-dao-protocol-timelock-min-delay-5d-s22"
      }
@@ -14623,6 +14639,7 @@
     "0x5B0Da2FB08754a5dDf32e28887D2F5437485f085",
     "0x0F95E6968EC1B28c794CF1aD99609431de5179c2"
    ],
+   "scorecardStatus": "unresolved",
    "slug": "taiko-bridge",
    "sprints": [
     34
@@ -15029,8 +15046,7 @@
     "0xA952453E39F77108Ee37C1b92de593F1C59A6ef4",
     "0x0C6Bbfd2d5666d44bf28580eDEec0263692C8316"
    ],
-   "scorecardStatus": "unresolved",
-   "scorecardStatusNote": "Docs updated · pending chain read",
+   "scorecardStatus": "docs_updated",
    "slug": "tori-finance",
    "sprints": [
     32
@@ -15181,6 +15197,7 @@
       "classification": "parameter_delta",
       "documented": "5 d",
       "observed": "0 s (no delay)",
+      "paired": true,
       "parameter": "TREE token: a 5-of-7 Safe can blacklist holders with no delay; docs state a 5-day timelock on every contract",
       "recordId": "treehouse-tree-teth-tree-blacklister-safe-s27"
      }
@@ -15707,7 +15724,7 @@
     "changed": [
      {
       "classification": "parameter_delta",
-      "documented": "'Upgrades to the vault's code are approved by the ProxyAdmin multisig.",
+      "documented": "'Upgrades to the vault's code are approved by the ProxyAdmin multisig. It is generally a 4 of 6 Gnosis Safe with two signers each from the asset issuer, Upshift and the curator, so no single party can upgrade a vault al…'",
       "observed": "Upshift vault 0xE9B725010A9E419412ed67d0fA5f3A5f40159D32 (Ethereum): EIP-1967 admin slot = ProxyAdmin 0xB5fBf201A35327Ddd89986FfA60CF5A675B2bDbc, whose owner() = Safe 0x4107557d726933f0BcA591A4218Afc92978457F7 with getT…",
       "parameter": "Vault ProxyAdmin multisig: docs state generally 4 of 6, the Safe is 2-of-3",
       "recordId": "upshift-proxyadmin-safe-s28"
@@ -15814,6 +15831,7 @@
       "classification": "parameter_delta",
       "documented": "3 d",
       "observed": "1 s",
+      "paired": true,
       "parameter": "OpenZeppelin AccessControlDefaultAdminRules Delay",
       "recordId": "usual-money-registry-access-delay"
      }
@@ -15914,7 +15932,7 @@
     "changed": [
      {
       "classification": "parameter_delta",
-      "documented": "'Multisig is a contract where n people vote on transaction before it gets executed.",
+      "documented": "'Multisig is a contract where n people vote on transaction before it gets executed. The Vesper multisig has 5 signers and requires 3 yes votes for a transaction to execute.' (docs.vesper.finance/vesper-pools-and-strateg…",
       "observed": "Vesper governor Safe 0x9520b477Aa81180E6DdC006Fc09Fb6d3eb4e807A (Ethereum): getThreshold() = 3 of getOwners() = 6 owners (Safe v1.3.0);",
       "parameter": "Pool governor multisig: docs state 3 of 5 signers, the Safe is 3-of-6",
       "recordId": "vesper-v1-governor-safe-s28"
@@ -16481,7 +16499,7 @@
     "changed": [
      {
       "classification": "parameter_delta",
-      "documented": "'| [0x6F2A8Ee9452ba7d336b3fba03caC27f7818AeAD6](https://etherscan.io/address/0x6F2A8Ee9452ba7d336b3fba03caC27f7818AeAD6) | Mariano Conti (nanexcool.com, prev.",
+      "documented": "'| [0x6F2A8Ee9452ba7d336b3fba03caC27f7818AeAD6](https://etherscan.io/address/0x6F2A8Ee9452ba7d336b3fba03caC27f7818AeAD6) | Mariano Conti (nanexcool.com, prev. MakerDAO) |' (raw.githubusercontent.com/yearn/yearn-devdocs/…",
       "observed": "yChad Safe 0xFEB4acf3df3cDEA7399794D0869ef76A6EfAff52 (Ethereum): getThreshold() = 6 of getOwners() = 9 owners;",
       "parameter": "yChad governance Safe: 6-of-9 threshold retained; signer 0x6F2A…eAD6 rotated to 0x3839…a7F7 41h before pin (docs not yet updated)",
       "recordId": "yearn-v3-ychad-safe-signers-s28"
@@ -16490,6 +16508,7 @@
       "classification": "protective_delta",
       "documented": "0 s (no delay)",
       "observed": "7 d",
+      "paired": true,
       "parameter": "Sampled RoleManager.governance() Timelock Wiring",
       "recordId": "yearn-v3-role-manager-timelock"
      }
@@ -16689,6 +16708,7 @@
     "0x12E81209d180fF0b3FBFbfe8fA9fFdb5990e1073",
     "0xc84a6E01BFF58996540F1ABC22355A9DFE0d78DC"
    ],
+   "scorecardStatus": "unresolved",
    "slug": "yo-protocol",
    "sprints": [
     22
@@ -16735,6 +16755,7 @@
       "classification": "parameter_delta",
       "documented": "2 d",
       "observed": "0 s (no delay)",
+      "paired": true,
       "parameter": "Approval Registry owner: the Admin Multisig directly, not the 48-hour timelock",
       "recordId": "yo-protocol-approval-registry-owner-admin-safe-s22"
      }
@@ -16932,7 +16953,7 @@
     "changed": [
      {
       "classification": "parameter_delta",
-      "documented": "'`6/8` means at least six out of eight owners need to sign the message.",
+      "documented": "'`6/8` means at least six out of eight owners need to sign the message. * Multisig 1: `6/8`' (docs.zircuit.com/info/security/privileged-roles.md)",
       "observed": "Zircuit Staking Safe 0xC463EaC02572CC964D43D2414023E2c6B62bAF38 (Ethereum): getThreshold() = 4 of getOwners() = 6 owners (Safe v1.3.0).",
       "parameter": "Zircuit Staking multisig: docs state 6-of-8, the Safe is 4-of-6",
       "recordId": "zircuit-staking-safe-threshold-s28"

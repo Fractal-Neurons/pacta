@@ -389,6 +389,8 @@ def badge_tier(item):
         return "rpc_observed"
     if item.get("scorecardStatus") == "recent_change":      # info: changed on chain recently; documents not yet updated
         return "recent_change"
+    if item.get("scorecardStatus") == "docs_updated":       # neutral: the documentation now names the retained observation
+        return "docs_updated"
     if item.get("scorecardStatus") == "unresolved":         # neutral: a documented breach is not established
         return "docs_updated" if item.get("scorecardStatusNote") else "unresolved"
     return "aligned" if item.get("classification") == "aligned_baseline" else "parameter_delta"

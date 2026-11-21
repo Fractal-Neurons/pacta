@@ -1,22 +1,23 @@
 {
  "schema": "pacta.x_feed.v1",
- "description": "Pacta findings ready to post on X: one item per published protocol (docs-vs-chain delta, changed recently, unresolved scope, protective delta, aligned baseline or RPC-observed) plus active timelock operations from the radar. mainPostText has no links; replyPostText carries the receipt page and the Base EAS attestation. feedId is stable: post each id once.",
+ "description": "Pacta findings ready to post on X: one item per published protocol (docs-vs-chain delta, changed recently, docs updated, unresolved scope, protective delta, aligned baseline or RPC-observed) plus active timelock operations from the radar. mainPostText has no links; replyPostText carries the receipt page and the Base EAS attestation. feedId is stable: post each id once.",
  "generatedFrom": {
   "site": {
-   "scorecards.json": "1b2e606eeb21680a351eeda84464c09e5f21ca5213fcbb3f3ded2889857d05b8",
-   "index.json": "d242472d78a75f73ad689dce8a36930931b5e374dc0e9ebfc354c819d99bbe05",
+   "scorecards.json": "af4addfceedf27ec9d7b746c44ba1e5695c648f2e0110752cecb821afae6c3ae",
+   "index.json": "0e3504864e5eec7f29c327fbe072e92b9c8be4ea9e90f366d659183caef54b30",
    "rpc-pinned.json": "108919b7ce46d2c3e09943bbd5dad4344ee375a275c6056f4b391a57ee11a418",
    "radar.json": "16d9637777dc1df9babb767d0ac31c4e1fe8c339332ea815cc32db745d097e1d",
-   "protocols.json": "5912b044cfc460fa8b3c691ece5e636f07b6bd26650137bc2672f96cee27b33f"
+   "protocols.json": "5af40b5f5ec0f09153b422bf3a1dc88f3f706ec7da0d64b9a0df33e43af4bcd9"
   },
   "xHandles": "7cfe44213e579618486dd28fee3bbc8b9205bb82843823ed2dc931314c1598c3",
   "radarBlock": 26457377,
   "radarBlockBase": 59999187
  },
  "counts": {
-  "adverse_delta": 49,
+  "adverse_delta": 43,
   "recent_change": 1,
-  "unresolved_scope": 6,
+  "docs_updated": 1,
+  "unresolved_scope": 11,
   "protective_delta": 7,
   "radar_timelock": 3,
   "aligned_baseline": 126,
@@ -24,33 +25,93 @@
  },
  "items": [
   {
-   "feedId": "finding:odyssey-finance:S37:adverse_delta",
-   "slug": "odyssey-finance",
-   "protocolName": "Odyssey Finance",
+   "feedId": "finding:hop-protocol:S34:adverse_delta",
+   "slug": "hop-protocol",
+   "protocolName": "Hop Protocol",
    "xHandle": null,
    "xUrl": null,
    "kind": "adverse_delta",
    "chain": "ethereum",
-   "pinnedBlock": 26458556,
-   "blockHash": "0xe258bb1cbcc988e2dfdba4ba173f9f8690520dba3647cdcae18e0651822769d2",
-   "easUid": "0xa20a0fa97ac80abb3d3f9d4de615018ff3a07f42eb4f124375dc26a216f896a5",
-   "sprint": 37,
-   "recordId": "odyssey-finance-governor-safe-2-of-4-vs-3-of-5-s37",
-   "summaryShort": "Odyssey's upgrade governor is a 2-of-4 Safe; docs say 3/5",
+   "pinnedBlock": 26453551,
+   "blockHash": "0x51e9967ffd6a84012d0dad44204d523b8ac43928e69de2801d2e72dbf8767129",
+   "easUid": "0xc281741a4fb297a9ccb30b5485ca6ef2bcfb69be10236c056e7208301e30d992",
+   "sprint": 34,
+   "recordId": "hop-l1-eth-bridge-governance-2-of-3-safe-s34",
+   "summaryShort": "Hop's Bonder whitelist is set by a 2-of-3 key Safe, not the documented DAO",
    "rosette": [
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Immutable or ownership renounced"
     },
     {
      "key": "timelock",
      "label": "Timelock floor",
+     "state": "b",
+     "cue": "M",
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
+    },
+    {
+     "key": "quorum",
+     "label": "Signer quorum",
+     "state": "b",
+     "cue": "M",
+     "value": "Lowest controlling quorum: 2-of-3"
+    },
+    {
+     "key": "emergency",
+     "label": "Emergency / freeze scope",
      "state": "n",
      "cue": "—",
-     "value": "No enforced admin delay in the published records"
+     "value": "No pause / freeze authority in the published records"
+    },
+    {
+     "key": "parity",
+     "label": "Docs-vs-chain parity",
+     "state": "a",
+     "cue": "W",
+     "value": "Documentation differs from the chain (parameter delta)"
+    }
+   ],
+   "docsSay": "the Hop DAO controls every aspect of the protocol, incl. the Bonder whitelist",
+   "chainSays": "bridge governance = Timelock admin'd by a 2-of-3 key Safe",
+   "mainPostText": "Hop Protocol. Docs say: The Hop DAO controls every aspect of the protocol, incl. the Bonder whitelist. On-chain at Ethereum block #26,453,551: Bridge governance = Timelock admin'd by a 2-of-3 key Safe. Docs and chain differ. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/hop-protocol/ · Base attestation: https://base.easscan.org/attestation/view/0xc281741a4fb297a9ccb30b5485ca6ef2bcfb69be10236c056e7208301e30d992",
+   "cardFilename": "hop-protocol.png",
+   "receiptUrl": "https://pacta.wtf/protocols/hop-protocol/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0xc281741a4fb297a9ccb30b5485ca6ef2bcfb69be10236c056e7208301e30d992",
+   "priority": 1
+  },
+  {
+   "feedId": "finding:cbridge:S33:adverse_delta",
+   "slug": "cbridge",
+   "protocolName": "cBridge",
+   "xHandle": null,
+   "xUrl": null,
+   "kind": "adverse_delta",
+   "chain": "ethereum",
+   "pinnedBlock": 26452373,
+   "blockHash": "0x63bfaa16f0019d8b37e757265d351bd135ad41e6ffa46207284198917123c55d",
+   "easUid": "0x897aa17688d627e9d4fdd7a49c8f4c3a9d4b1943e24e03d7c744563895d9d03c",
+   "sprint": 33,
+   "recordId": "cbridge-liquidity-bridge-owner-resets-signers-s33",
+   "summaryShort": "3 cBridge governance keys can replace the pool signers after 7 days; docs: 2/3 stake",
+   "rosette": [
+    {
+     "key": "upgrade",
+     "label": "Upgradeability",
+     "state": "g",
+     "cue": "S",
+     "value": "Immutable or ownership renounced"
+    },
+    {
+     "key": "timelock",
+     "label": "Timelock floor",
+     "state": "g",
+     "cue": "S",
+     "value": "7d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -74,110 +135,50 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "docsSay": "upgrades controlled by a 3/5 multisig governor",
-   "chainSays": "a 2-of-4 Safe owns every ProxyAdmin",
-   "mainPostText": "Odyssey Finance. Docs say: Upgrades controlled by a 3/5 multisig governor. On-chain at Ethereum block #26,458,556: A 2-of-4 Safe owns every ProxyAdmin. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/odyssey-finance/ · Base attestation: https://base.easscan.org/attestation/view/0xa20a0fa97ac80abb3d3f9d4de615018ff3a07f42eb4f124375dc26a216f896a5",
-   "cardFilename": "odyssey-finance.png",
-   "receiptUrl": "https://pacta.wtf/protocols/odyssey-finance/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0xa20a0fa97ac80abb3d3f9d4de615018ff3a07f42eb4f124375dc26a216f896a5",
-   "priority": 1
-  },
-  {
-   "feedId": "finding:seamless-protocol-base:S35:adverse_delta",
-   "slug": "seamless-protocol-base",
-   "protocolName": "Seamless Protocol (Base)",
-   "xHandle": "@SeamlessFi",
-   "xUrl": "https://x.com/SeamlessFi",
-   "kind": "adverse_delta",
-   "chain": "base",
-   "pinnedBlock": 59847352,
-   "blockHash": "0x58e5d7f07aaf27ccbf361f122a24120a821b455bb9dae30f4478a7da1381f3e8",
-   "easUid": "0xce8821d521758614be8860ac6476e1cec01ae000d81a660644e7bf1260d8cdfd",
-   "sprint": 35,
-   "recordId": "seamless-community-guardian-safe-2-of-3-s35",
-   "summaryShort": "Seamless's guardian Safe is 2-of-3; docs say a 3/6 multi-sig",
-   "rosette": [
-    {
-     "key": "upgrade",
-     "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
-    },
-    {
-     "key": "timelock",
-     "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
-    },
-    {
-     "key": "quorum",
-     "label": "Signer quorum",
-     "state": "b",
-     "cue": "M",
-     "value": "Lowest controlling quorum: 2-of-3"
-    },
-    {
-     "key": "emergency",
-     "label": "Emergency / freeze scope",
-     "state": "g",
-     "cue": "S",
-     "value": "Pause / freeze authority scoped behind a multi-signer controller (2-of-N Safe)"
-    },
-    {
-     "key": "parity",
-     "label": "Docs-vs-chain parity",
-     "state": "a",
-     "cue": "W",
-     "value": "Documentation differs from the chain (parameter delta)"
-    }
-   ],
-   "docsSay": "a 3/6 Community Guardian multi-sig",
-   "chainSays": "a 2-of-3 Safe",
-   "mainPostText": "Seamless Protocol (Base) @SeamlessFi. Docs say: A 3/6 Community Guardian multi-sig. On-chain at Base block #59,847,352: A 2-of-3 Safe. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/seamless-protocol-base/ · Base attestation: https://base.easscan.org/attestation/view/0xce8821d521758614be8860ac6476e1cec01ae000d81a660644e7bf1260d8cdfd",
-   "cardFilename": "seamless-protocol-base.png",
-   "receiptUrl": "https://pacta.wtf/protocols/seamless-protocol-base/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0xce8821d521758614be8860ac6476e1cec01ae000d81a660644e7bf1260d8cdfd",
+   "docsSay": "fund pool at risk only if >2/3 of SGN stake is malicious",
+   "chainSays": "signer set replaceable by 3 governance keys after a 7-day notice",
+   "mainPostText": "cBridge. Docs say: Fund pool at risk only if >2/3 of SGN stake is malicious. On-chain at Ethereum block #26,452,373: Signer set replaceable by 3 governance keys after a 7-day notice. Docs and chain differ. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/cbridge/ · Base attestation: https://base.easscan.org/attestation/view/0x897aa17688d627e9d4fdd7a49c8f4c3a9d4b1943e24e03d7c744563895d9d03c",
+   "cardFilename": "cbridge.png",
+   "receiptUrl": "https://pacta.wtf/protocols/cbridge/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0x897aa17688d627e9d4fdd7a49c8f4c3a9d4b1943e24e03d7c744563895d9d03c",
    "priority": 2
   },
   {
-   "feedId": "finding:hakka-finance:S34:adverse_delta",
-   "slug": "hakka-finance",
-   "protocolName": "Hakka Finance",
+   "feedId": "finding:benddao-ape-staking:S32:adverse_delta",
+   "slug": "benddao-ape-staking",
+   "protocolName": "BendDAO APE Staking",
    "xHandle": null,
    "xUrl": null,
    "kind": "adverse_delta",
    "chain": "ethereum",
-   "pinnedBlock": 26453551,
-   "blockHash": "0x51e9967ffd6a84012d0dad44204d523b8ac43928e69de2801d2e72dbf8767129",
-   "easUid": "0xc281741a4fb297a9ccb30b5485ca6ef2bcfb69be10236c056e7208301e30d992",
-   "sprint": 34,
-   "recordId": "hakka-multisig-undocumented-signer-s34",
-   "summaryShort": "Hakka's multi-sig has 4 signers (2 needed); docs name 3 keyholders",
+   "pinnedBlock": 26451608,
+   "blockHash": "0x0266af5bcad519d93b3be78e41b76a62985e22fbe4feef043ac3225f6f217a17",
+   "easUid": "0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
+   "sprint": 32,
+   "recordId": "benddao-timelock-7d-reads-1d-s32",
+   "summaryShort": "BendDAO's 7-day timelock over the BEND token proxy waits 24 hours",
    "rosette": [
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
+     "state": "b",
+     "cue": "M",
+     "value": "Upgradeable behind a 1h–47h delay (1d)"
     },
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
+     "state": "b",
+     "cue": "M",
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
      "label": "Signer quorum",
-     "state": "b",
-     "cue": "M",
-     "value": "Lowest controlling quorum: 2-of-4"
+     "state": "n",
+     "cue": "—",
+     "value": "No signer quorum in the published records"
     },
     {
      "key": "emergency",
@@ -194,13 +195,13 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "docsSay": "three named keyholders/signers",
-   "chainSays": "4 owners (1 unnamed), threshold 2",
-   "mainPostText": "Hakka Finance. Docs say: Three named keyholders/signers. On-chain at Ethereum block #26,453,551: 4 owners (1 unnamed), threshold 2. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/hakka-finance/ · Base attestation: https://base.easscan.org/attestation/view/0xc281741a4fb297a9ccb30b5485ca6ef2bcfb69be10236c056e7208301e30d992",
-   "cardFilename": "hakka-finance.png",
-   "receiptUrl": "https://pacta.wtf/protocols/hakka-finance/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0xc281741a4fb297a9ccb30b5485ca6ef2bcfb69be10236c056e7208301e30d992",
+   "docsSay": "a 7-day timelock",
+   "chainSays": "a 24-hour timelock",
+   "mainPostText": "BendDAO APE Staking. Docs say: A 7-day timelock. On-chain at Ethereum block #26,451,608: A 24-hour timelock. Docs and chain differ. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/benddao-ape-staking/ · Base attestation: https://base.easscan.org/attestation/view/0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
+   "cardFilename": "benddao-ape-staking.png",
+   "receiptUrl": "https://pacta.wtf/protocols/benddao-ape-staking/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
    "priority": 3
   },
   {
@@ -264,86 +265,26 @@
    "priority": 4
   },
   {
-   "feedId": "finding:hop-protocol:S34:adverse_delta",
-   "slug": "hop-protocol",
-   "protocolName": "Hop Protocol",
-   "xHandle": null,
-   "xUrl": null,
+   "feedId": "finding:bio-protocol:S32:adverse_delta",
+   "slug": "bio-protocol",
+   "protocolName": "Bio Protocol",
+   "xHandle": "@bioprotocol",
+   "xUrl": "https://x.com/bioprotocol",
    "kind": "adverse_delta",
    "chain": "ethereum",
-   "pinnedBlock": 26453551,
-   "blockHash": "0x51e9967ffd6a84012d0dad44204d523b8ac43928e69de2801d2e72dbf8767129",
-   "easUid": "0xc281741a4fb297a9ccb30b5485ca6ef2bcfb69be10236c056e7208301e30d992",
-   "sprint": 34,
-   "recordId": "hop-l1-eth-bridge-governance-2-of-3-safe-s34",
-   "summaryShort": "Hop's Bonder whitelist is set by a 2-of-3 key Safe, not the documented DAO",
+   "pinnedBlock": 26451608,
+   "blockHash": "0x0266af5bcad519d93b3be78e41b76a62985e22fbe4feef043ac3225f6f217a17",
+   "easUid": "0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
+   "sprint": 32,
+   "recordId": "bio-token-mint-role-safe-no-new-contract-s32",
+   "summaryShort": "Existing BIO contract can mint; docs say growth needs a replacement contract",
    "rosette": [
     {
      "key": "upgrade",
      "label": "Upgradeability",
      "state": "g",
      "cue": "S",
-     "value": "Immutable or ownership renounced"
-    },
-    {
-     "key": "timelock",
-     "label": "Timelock floor",
-     "state": "b",
-     "cue": "M",
-     "value": "1d minimum enforced delay on sampled timelocked surfaces"
-    },
-    {
-     "key": "quorum",
-     "label": "Signer quorum",
-     "state": "g",
-     "cue": "S",
-     "value": "DAO Governor (token vote)"
-    },
-    {
-     "key": "emergency",
-     "label": "Emergency / freeze scope",
-     "state": "n",
-     "cue": "—",
-     "value": "No pause / freeze authority in the published records"
-    },
-    {
-     "key": "parity",
-     "label": "Docs-vs-chain parity",
-     "state": "a",
-     "cue": "W",
-     "value": "Documentation differs from the chain (parameter delta)"
-    }
-   ],
-   "docsSay": "the Hop DAO controls every aspect of the protocol, incl. the Bonder whitelist",
-   "chainSays": "bridge governance = Timelock admin'd by a 2-of-3 key Safe",
-   "mainPostText": "Hop Protocol. Docs say: The Hop DAO controls every aspect of the protocol, incl. the Bonder whitelist. On-chain at Ethereum block #26,453,551: Bridge governance = Timelock admin'd by a 2-of-3 key Safe. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/hop-protocol/ · Base attestation: https://base.easscan.org/attestation/view/0xc281741a4fb297a9ccb30b5485ca6ef2bcfb69be10236c056e7208301e30d992",
-   "cardFilename": "hop-protocol.png",
-   "receiptUrl": "https://pacta.wtf/protocols/hop-protocol/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0xc281741a4fb297a9ccb30b5485ca6ef2bcfb69be10236c056e7208301e30d992",
-   "priority": 5
-  },
-  {
-   "feedId": "finding:taiko-bridge:S34:adverse_delta",
-   "slug": "taiko-bridge",
-   "protocolName": "Taiko Bridge",
-   "xHandle": "@taikoxyz",
-   "xUrl": "https://x.com/taikoxyz",
-   "kind": "adverse_delta",
-   "chain": "ethereum",
-   "pinnedBlock": 26453551,
-   "blockHash": "0x51e9967ffd6a84012d0dad44204d523b8ac43928e69de2801d2e72dbf8767129",
-   "easUid": "0xc281741a4fb297a9ccb30b5485ca6ef2bcfb69be10236c056e7208301e30d992",
-   "sprint": 34,
-   "recordId": "taiko-dao-emergency-multisig-4-of-5-s34",
-   "summaryShort": "Taiko emergency proposals execute with 4 of 5 council approvals; docs say 6",
-   "rosette": [
-    {
-     "key": "upgrade",
-     "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
+     "value": "BIO token contract is not a proxy (non-upgradeable); one MINTER_ROLE holder is an ERC-1967 Wormhole NttManager proxy"
     },
     {
      "key": "timelock",
@@ -355,9 +296,9 @@
     {
      "key": "quorum",
      "label": "Signer quorum",
-     "state": "n",
-     "cue": "—",
-     "value": "No signer quorum in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Lowest controlling quorum: 5-of-11"
     },
     {
      "key": "emergency",
@@ -374,50 +315,50 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "docsSay": "6 Security Council approvals for an emergency proposal (5 for a standard one)",
-   "chainSays": "4 of 5 signers (standard: 3)",
-   "mainPostText": "Taiko Bridge @taikoxyz. Docs say: 6 Security Council approvals for an emergency proposal (5 for a standard one). On-chain at Ethereum block #26,453,551: 4 of 5 signers (standard: 3). Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/taiko-bridge/ · Base attestation: https://base.easscan.org/attestation/view/0xc281741a4fb297a9ccb30b5485ca6ef2bcfb69be10236c056e7208301e30d992",
-   "cardFilename": "taiko-bridge.png",
-   "receiptUrl": "https://pacta.wtf/protocols/taiko-bridge/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0xc281741a4fb297a9ccb30b5485ca6ef2bcfb69be10236c056e7208301e30d992",
-   "priority": 6
+   "docsSay": "new BIO minted only by a replacement token contract",
+   "chainSays": "mint() on the current contract open to a Safe",
+   "mainPostText": "Bio Protocol @bioprotocol. Docs say: New BIO minted only by a replacement token contract. On-chain at Ethereum block #26,451,608: Mint() on the current contract open to a Safe. Docs and chain differ. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/bio-protocol/ · Base attestation: https://base.easscan.org/attestation/view/0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
+   "cardFilename": "bio-protocol.png",
+   "receiptUrl": "https://pacta.wtf/protocols/bio-protocol/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
+   "priority": 5
   },
   {
-   "feedId": "finding:cbridge:S33:adverse_delta",
-   "slug": "cbridge",
-   "protocolName": "cBridge",
-   "xHandle": null,
-   "xUrl": null,
+   "feedId": "finding:chainlink-ccip:S32:adverse_delta",
+   "slug": "chainlink-ccip",
+   "protocolName": "Chainlink CCIP",
+   "xHandle": "@chainlink",
+   "xUrl": "https://x.com/chainlink",
    "kind": "adverse_delta",
    "chain": "ethereum",
-   "pinnedBlock": 26452373,
-   "blockHash": "0x63bfaa16f0019d8b37e757265d351bd135ad41e6ffa46207284198917123c55d",
-   "easUid": "0x897aa17688d627e9d4fdd7a49c8f4c3a9d4b1943e24e03d7c744563895d9d03c",
-   "sprint": 33,
-   "recordId": "cbridge-liquidity-bridge-owner-resets-signers-s33",
-   "summaryShort": "3 cBridge governance keys can replace the pool signers after 7 days; docs: 2/3 stake",
+   "pinnedBlock": 26433001,
+   "blockHash": "0xa058ec92ccf0024822a76097f183d8e2d344d56e9539038c857e0cdaaa0ee5a7",
+   "easUid": "0x61c2970c176b85ab604e6b565c5f050a7176b62e725d449e8d27d700365283d6",
+   "sprint": 24,
+   "recordId": "chainlink-ccip-timelock-proposers-s24",
+   "summaryShort": "Docs: only the MCMS proposes · chain: a 6-of-12 Safe can also propose",
    "rosette": [
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "g",
-     "cue": "S",
-     "value": "Immutable or ownership renounced"
+     "state": "n",
+     "cue": "—",
+     "value": "Upgrade path not in the published records"
     },
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "g",
-     "cue": "S",
-     "value": "7d minimum enforced delay on sampled timelocked surfaces"
+     "state": "a",
+     "cue": "W",
+     "value": "0s: a bypasser role can execute without waiting the timelock delay"
     },
     {
      "key": "quorum",
      "label": "Signer quorum",
-     "state": "n",
-     "cue": "—",
-     "value": "No signer quorum in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Lowest controlling quorum: 6-of-12"
     },
     {
      "key": "emergency",
@@ -434,13 +375,73 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "docsSay": "fund pool at risk only if >2/3 of SGN stake is malicious",
-   "chainSays": "signer set replaceable by 3 governance keys after a 7-day notice",
-   "mainPostText": "cBridge. Docs say: Fund pool at risk only if >2/3 of SGN stake is malicious. On-chain at Ethereum block #26,452,373: Signer set replaceable by 3 governance keys after a 7-day notice. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/cbridge/ · Base attestation: https://base.easscan.org/attestation/view/0x897aa17688d627e9d4fdd7a49c8f4c3a9d4b1943e24e03d7c744563895d9d03c",
-   "cardFilename": "cbridge.png",
-   "receiptUrl": "https://pacta.wtf/protocols/cbridge/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0x897aa17688d627e9d4fdd7a49c8f4c3a9d4b1943e24e03d7c744563895d9d03c",
+   "docsSay": "only the ManyChainMultiSig proposes timelock changes",
+   "chainSays": "a 6-of-12 Safe can also propose",
+   "mainPostText": "Chainlink CCIP @chainlink. Docs say: Only the ManyChainMultiSig proposes timelock changes. On-chain at Ethereum block #26,433,001: A 6-of-12 Safe can also propose. Docs and chain differ. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/chainlink-ccip/ · Base attestation: https://base.easscan.org/attestation/view/0x61c2970c176b85ab604e6b565c5f050a7176b62e725d449e8d27d700365283d6",
+   "cardFilename": "chainlink-ccip.png",
+   "receiptUrl": "https://pacta.wtf/protocols/chainlink-ccip/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0x61c2970c176b85ab604e6b565c5f050a7176b62e725d449e8d27d700365283d6",
+   "priority": 6
+  },
+  {
+   "feedId": "finding:circle-gateway:S32:adverse_delta",
+   "slug": "circle-gateway",
+   "protocolName": "Circle Gateway",
+   "xHandle": null,
+   "xUrl": null,
+   "kind": "adverse_delta",
+   "chain": "ethereum",
+   "pinnedBlock": 26451608,
+   "blockHash": "0x0266af5bcad519d93b3be78e41b76a62985e22fbe4feef043ac3225f6f217a17",
+   "easUid": "0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
+   "sprint": 32,
+   "recordId": "circle-gateway-wallet-eoa-owner-and-pauser-s32",
+   "summaryShort": "One key can pause Gateway withdrawals, another can upgrade it; docs say trustless",
+   "rosette": [
+    {
+     "key": "upgrade",
+     "label": "Upgradeability",
+     "state": "a",
+     "cue": "W",
+     "value": "Upgradeable with no enforced delay: no timelock in front of upgrades"
+    },
+    {
+     "key": "timelock",
+     "label": "Timelock floor",
+     "state": "a",
+     "cue": "W",
+     "value": "No enforced delay on at least one sampled control surface (0s)"
+    },
+    {
+     "key": "quorum",
+     "label": "Signer quorum",
+     "state": "a",
+     "cue": "W",
+     "value": "Lowest controlling quorum: a single key"
+    },
+    {
+     "key": "emergency",
+     "label": "Emergency / freeze scope",
+     "state": "a",
+     "cue": "W",
+     "value": "Pause / freeze authority held by a single key"
+    },
+    {
+     "key": "parity",
+     "label": "Docs-vs-chain parity",
+     "state": "a",
+     "cue": "W",
+     "value": "Documentation differs from the chain (parameter delta)"
+    }
+   ],
+   "docsSay": "trustless withdrawals",
+   "chainSays": "withdrawals an EOA pauser can halt, in a wallet an EOA owner can upgrade",
+   "mainPostText": "Circle Gateway. Docs say: Trustless withdrawals. On-chain at Ethereum block #26,451,608: Withdrawals an EOA pauser can halt, in a wallet an EOA owner can upgrade. Docs and chain differ. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/circle-gateway/ · Base attestation: https://base.easscan.org/attestation/view/0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
+   "cardFilename": "circle-gateway.png",
+   "receiptUrl": "https://pacta.wtf/protocols/circle-gateway/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
    "priority": 7
   },
   {
@@ -504,9 +505,9 @@
    "priority": 8
   },
   {
-   "feedId": "finding:benddao-ape-staking:S32:adverse_delta",
-   "slug": "benddao-ape-staking",
-   "protocolName": "BendDAO APE Staking",
+   "feedId": "finding:pickle:S32:adverse_delta",
+   "slug": "pickle",
+   "protocolName": "Pickle",
    "xHandle": null,
    "xUrl": null,
    "kind": "adverse_delta",
@@ -515,15 +516,15 @@
    "blockHash": "0x0266af5bcad519d93b3be78e41b76a62985e22fbe4feef043ac3225f6f217a17",
    "easUid": "0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
    "sprint": 32,
-   "recordId": "benddao-timelock-7d-reads-1d-s32",
-   "summaryShort": "BendDAO's 7-day timelock over the BEND token proxy waits 24 hours",
+   "recordId": "pickle-masterchef-owner-safe-no-timelock-s32",
+   "summaryShort": "Pickle's MasterChef admin functions run from a Safe directly; docs: a 24-hour timelock",
    "rosette": [
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "b",
-     "cue": "M",
-     "value": "Upgradeable behind a 1h–47h delay (1d)"
+     "state": "g",
+     "cue": "S",
+     "value": "Immutable or ownership renounced"
     },
     {
      "key": "timelock",
@@ -535,9 +536,9 @@
     {
      "key": "quorum",
      "label": "Signer quorum",
-     "state": "n",
-     "cue": "—",
-     "value": "No signer quorum in the published records"
+     "state": "b",
+     "cue": "M",
+     "value": "Lowest controlling quorum: 2-of-6"
     },
     {
      "key": "emergency",
@@ -554,36 +555,96 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "docsSay": "a 7-day timelock",
-   "chainSays": "a 24-hour timelock",
-   "mainPostText": "BendDAO APE Staking. Docs say: A 7-day timelock. On-chain at Ethereum block #26,451,608: A 24-hour timelock. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/benddao-ape-staking/ · Base attestation: https://base.easscan.org/attestation/view/0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
-   "cardFilename": "benddao-ape-staking.png",
-   "receiptUrl": "https://pacta.wtf/protocols/benddao-ape-staking/",
+   "docsSay": "a 24-hour timelock on MasterChef admin functions",
+   "chainSays": "MasterChef owned by a Safe directly",
+   "mainPostText": "Pickle. Docs say: A 24-hour timelock on MasterChef admin functions. On-chain at Ethereum block #26,451,608: MasterChef owned by a Safe directly. Docs and chain differ. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/pickle/ · Base attestation: https://base.easscan.org/attestation/view/0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
+   "cardFilename": "pickle.png",
+   "receiptUrl": "https://pacta.wtf/protocols/pickle/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
    "priority": 9
   },
   {
-   "feedId": "finding:bio-protocol:S32:adverse_delta",
-   "slug": "bio-protocol",
-   "protocolName": "Bio Protocol",
-   "xHandle": "@bioprotocol",
-   "xUrl": "https://x.com/bioprotocol",
+   "feedId": "finding:cian-yield-layer:S31:adverse_delta",
+   "slug": "cian-yield-layer",
+   "protocolName": "CIAN Yield Layer",
+   "xHandle": "@CIAN_protocol",
+   "xUrl": "https://x.com/CIAN_protocol",
    "kind": "adverse_delta",
    "chain": "ethereum",
-   "pinnedBlock": 26451608,
-   "blockHash": "0x0266af5bcad519d93b3be78e41b76a62985e22fbe4feef043ac3225f6f217a17",
-   "easUid": "0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
-   "sprint": 32,
-   "recordId": "bio-token-mint-role-safe-no-new-contract-s32",
-   "summaryShort": "BIO can be minted on the current contract by a Safe; docs: minting needs a new contract",
+   "pinnedBlock": 26450616,
+   "blockHash": "0xd2df7ccb74a6772b51a5597c8f144f5cfae362efeabf193ecfc7c80f8ff37c35",
+   "easUid": "0x63d29eafa88f7e52cc6a596668ae3f03c8132704108794092dc25710fa8bde77",
+   "sprint": 31,
+   "recordId": "cian-yield-layer-allocation-no-timelock-s31",
+   "summaryShort": "CIAN's stETH vault settings change via a Safe directly; the docs say they are time-locked",
    "rosette": [
     {
      "key": "upgrade",
      "label": "Upgradeability",
+     "state": "n",
+     "cue": "—",
+     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+    },
+    {
+     "key": "timelock",
+     "label": "Timelock floor",
+     "state": "b",
+     "cue": "M",
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
+    },
+    {
+     "key": "quorum",
+     "label": "Signer quorum",
      "state": "g",
      "cue": "S",
-     "value": "BIO token contract is not a proxy (non-upgradeable); one MINTER_ROLE holder is an ERC-1967 Wormhole NttManager proxy"
+     "value": "Lowest controlling quorum: 3-of-4"
+    },
+    {
+     "key": "emergency",
+     "label": "Emergency / freeze scope",
+     "state": "n",
+     "cue": "—",
+     "value": "No pause / freeze authority in the published records"
+    },
+    {
+     "key": "parity",
+     "label": "Docs-vs-chain parity",
+     "state": "a",
+     "cue": "W",
+     "value": "Documentation differs from the chain (parameter delta)"
+    }
+   ],
+   "docsSay": "time-locked fund allocation",
+   "chainSays": "allocation settings changed by a Safe directly",
+   "mainPostText": "CIAN Yield Layer @CIAN_protocol. Docs say: Time-locked fund allocation. On-chain at Ethereum block #26,450,616: Allocation settings changed by a Safe directly. Docs and chain differ. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/cian-yield-layer/ · Base attestation: https://base.easscan.org/attestation/view/0x63d29eafa88f7e52cc6a596668ae3f03c8132704108794092dc25710fa8bde77",
+   "cardFilename": "cian-yield-layer.png",
+   "receiptUrl": "https://pacta.wtf/protocols/cian-yield-layer/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0x63d29eafa88f7e52cc6a596668ae3f03c8132704108794092dc25710fa8bde77",
+   "priority": 10
+  },
+  {
+   "feedId": "finding:sonic-gateway:S31:adverse_delta",
+   "slug": "sonic-gateway",
+   "protocolName": "Sonic Gateway",
+   "xHandle": "@SonicEcosystem",
+   "xUrl": "https://x.com/SonicEcosystem",
+   "kind": "adverse_delta",
+   "chain": "ethereum",
+   "pinnedBlock": 26450616,
+   "blockHash": "0xd2df7ccb74a6772b51a5597c8f144f5cfae362efeabf193ecfc7c80f8ff37c35",
+   "easUid": "0x63d29eafa88f7e52cc6a596668ae3f03c8132704108794092dc25710fa8bde77",
+   "sprint": 31,
+   "recordId": "sonic-gateway-fail-safe-200-days-s31",
+   "summaryShort": "Sonic Gateway's fail-safe opens after 200 days offline, not the documented 14",
+   "rosette": [
+    {
+     "key": "upgrade",
+     "label": "Upgradeability",
+     "state": "n",
+     "cue": "—",
+     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
     },
     {
      "key": "timelock",
@@ -597,7 +658,7 @@
      "label": "Signer quorum",
      "state": "g",
      "cue": "S",
-     "value": "Lowest controlling quorum: 5-of-11"
+     "value": "Lowest controlling quorum: 3-of-4"
     },
     {
      "key": "emergency",
@@ -614,73 +675,13 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "docsSay": "new BIO minted only by a replacement token contract",
-   "chainSays": "mint() on the current contract open to a Safe",
-   "mainPostText": "Bio Protocol @bioprotocol. Docs say: New BIO minted only by a replacement token contract. On-chain at Ethereum block #26,451,608: Mint() on the current contract open to a Safe. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/bio-protocol/ · Base attestation: https://base.easscan.org/attestation/view/0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
-   "cardFilename": "bio-protocol.png",
-   "receiptUrl": "https://pacta.wtf/protocols/bio-protocol/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
-   "priority": 10
-  },
-  {
-   "feedId": "finding:chainlink-ccip:S32:adverse_delta",
-   "slug": "chainlink-ccip",
-   "protocolName": "Chainlink CCIP",
-   "xHandle": "@chainlink",
-   "xUrl": "https://x.com/chainlink",
-   "kind": "adverse_delta",
-   "chain": "ethereum",
-   "pinnedBlock": 26433001,
-   "blockHash": "0xa058ec92ccf0024822a76097f183d8e2d344d56e9539038c857e0cdaaa0ee5a7",
-   "easUid": "0x61c2970c176b85ab604e6b565c5f050a7176b62e725d449e8d27d700365283d6",
-   "sprint": 24,
-   "recordId": "chainlink-ccip-timelock-proposers-s24",
-   "summaryShort": "Docs: only the MCMS proposes · chain: a 6-of-12 Safe can also propose",
-   "rosette": [
-    {
-     "key": "upgrade",
-     "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
-    },
-    {
-     "key": "timelock",
-     "label": "Timelock floor",
-     "state": "a",
-     "cue": "W",
-     "value": "0s: a bypasser role can execute without waiting the timelock delay"
-    },
-    {
-     "key": "quorum",
-     "label": "Signer quorum",
-     "state": "g",
-     "cue": "S",
-     "value": "Lowest controlling quorum: 6-of-12"
-    },
-    {
-     "key": "emergency",
-     "label": "Emergency / freeze scope",
-     "state": "n",
-     "cue": "—",
-     "value": "No pause / freeze authority in the published records"
-    },
-    {
-     "key": "parity",
-     "label": "Docs-vs-chain parity",
-     "state": "a",
-     "cue": "W",
-     "value": "Documentation differs from the chain (parameter delta)"
-    }
-   ],
-   "docsSay": "only the ManyChainMultiSig proposes timelock changes",
-   "chainSays": "a 6-of-12 Safe can also propose",
-   "mainPostText": "Chainlink CCIP @chainlink. Docs say: Only the ManyChainMultiSig proposes timelock changes. On-chain at Ethereum block #26,433,001: A 6-of-12 Safe can also propose. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/chainlink-ccip/ · Base attestation: https://base.easscan.org/attestation/view/0x61c2970c176b85ab604e6b565c5f050a7176b62e725d449e8d27d700365283d6",
-   "cardFilename": "chainlink-ccip.png",
-   "receiptUrl": "https://pacta.wtf/protocols/chainlink-ccip/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0x61c2970c176b85ab604e6b565c5f050a7176b62e725d449e8d27d700365283d6",
+   "docsSay": "a 14-day fail-safe that cannot be altered",
+   "chainSays": "a 200-day fail-safe in owner-upgradeable code",
+   "mainPostText": "Sonic Gateway @SonicEcosystem. Docs say: A 14-day fail-safe that cannot be altered. On-chain at Ethereum block #26,450,616: A 200-day fail-safe in owner-upgradeable code. Docs and chain differ. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/sonic-gateway/ · Base attestation: https://base.easscan.org/attestation/view/0x63d29eafa88f7e52cc6a596668ae3f03c8132704108794092dc25710fa8bde77",
+   "cardFilename": "sonic-gateway.png",
+   "receiptUrl": "https://pacta.wtf/protocols/sonic-gateway/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0x63d29eafa88f7e52cc6a596668ae3f03c8132704108794092dc25710fa8bde77",
    "priority": 11
   },
   {
@@ -744,100 +745,40 @@
    "priority": 12
   },
   {
-   "feedId": "finding:circle-gateway:S32:adverse_delta",
-   "slug": "circle-gateway",
-   "protocolName": "Circle Gateway",
+   "feedId": "finding:abracadabra-spell:S30:adverse_delta",
+   "slug": "abracadabra-spell",
+   "protocolName": "Abracadabra Spell",
    "xHandle": null,
    "xUrl": null,
    "kind": "adverse_delta",
    "chain": "ethereum",
-   "pinnedBlock": 26451608,
-   "blockHash": "0x0266af5bcad519d93b3be78e41b76a62985e22fbe4feef043ac3225f6f217a17",
-   "easUid": "0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
-   "sprint": 32,
-   "recordId": "circle-gateway-wallet-eoa-owner-and-pauser-s32",
-   "summaryShort": "One key can pause Gateway withdrawals, another can upgrade it; docs say trustless",
+   "pinnedBlock": 26449594,
+   "blockHash": "0xbe263d5b378dcb7c3c4e18bd8e388f0cb2dab1adacd83de2be58c9408b377287",
+   "easUid": "0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
+   "sprint": 30,
+   "recordId": "abracadabra-spell-safe-threshold-s30",
+   "summaryShort": "Docs state a 5-of-10 multisig; the Abracadabra Spell Safe is 5-of-11",
    "rosette": [
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "a",
-     "cue": "W",
-     "value": "Upgradeable with no enforced delay: no timelock in front of upgrades"
+     "state": "n",
+     "cue": "—",
+     "value": "Upgrade path not in the published records"
     },
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "a",
-     "cue": "W",
-     "value": "No enforced delay on at least one sampled control surface (0s)"
+     "state": "n",
+     "cue": "—",
+     "value": "No enforced admin delay in the published records"
     },
     {
      "key": "quorum",
      "label": "Signer quorum",
-     "state": "a",
-     "cue": "W",
-     "value": "Lowest controlling quorum: a single key"
-    },
-    {
-     "key": "emergency",
-     "label": "Emergency / freeze scope",
-     "state": "a",
-     "cue": "W",
-     "value": "Pause / freeze authority held by a single key"
-    },
-    {
-     "key": "parity",
-     "label": "Docs-vs-chain parity",
-     "state": "a",
-     "cue": "W",
-     "value": "Documentation differs from the chain (parameter delta)"
-    }
-   ],
-   "docsSay": "trustless withdrawals",
-   "chainSays": "withdrawals an EOA pauser can halt, in a wallet an EOA owner can upgrade",
-   "mainPostText": "Circle Gateway. Docs say: Trustless withdrawals. On-chain at Ethereum block #26,451,608: Withdrawals an EOA pauser can halt, in a wallet an EOA owner can upgrade. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/circle-gateway/ · Base attestation: https://base.easscan.org/attestation/view/0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
-   "cardFilename": "circle-gateway.png",
-   "receiptUrl": "https://pacta.wtf/protocols/circle-gateway/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
-   "priority": 13
-  },
-  {
-   "feedId": "finding:pickle:S32:adverse_delta",
-   "slug": "pickle",
-   "protocolName": "Pickle",
-   "xHandle": null,
-   "xUrl": null,
-   "kind": "adverse_delta",
-   "chain": "ethereum",
-   "pinnedBlock": 26451608,
-   "blockHash": "0x0266af5bcad519d93b3be78e41b76a62985e22fbe4feef043ac3225f6f217a17",
-   "easUid": "0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
-   "sprint": 32,
-   "recordId": "pickle-masterchef-owner-safe-no-timelock-s32",
-   "summaryShort": "Pickle's MasterChef admin functions run from a Safe directly; docs: a 24-hour timelock",
-   "rosette": [
-    {
-     "key": "upgrade",
-     "label": "Upgradeability",
      "state": "g",
      "cue": "S",
-     "value": "Immutable or ownership renounced"
-    },
-    {
-     "key": "timelock",
-     "label": "Timelock floor",
-     "state": "b",
-     "cue": "M",
-     "value": "1d minimum enforced delay on sampled timelocked surfaces"
-    },
-    {
-     "key": "quorum",
-     "label": "Signer quorum",
-     "state": "b",
-     "cue": "M",
-     "value": "Lowest controlling quorum: 2-of-6"
+     "value": "Lowest controlling quorum: 5-of-11"
     },
     {
      "key": "emergency",
@@ -854,29 +795,29 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "docsSay": "a 24-hour timelock on MasterChef admin functions",
-   "chainSays": "MasterChef owned by a Safe directly",
-   "mainPostText": "Pickle. Docs say: A 24-hour timelock on MasterChef admin functions. On-chain at Ethereum block #26,451,608: MasterChef owned by a Safe directly. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/pickle/ · Base attestation: https://base.easscan.org/attestation/view/0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
-   "cardFilename": "pickle.png",
-   "receiptUrl": "https://pacta.wtf/protocols/pickle/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
-   "priority": 14
+   "docsSay": "a 5-of-10 multisig",
+   "chainSays": "a 5-of-11 Safe",
+   "mainPostText": "Abracadabra Spell. Docs say: A 5-of-10 multisig. On-chain at Ethereum block #26,449,594: A 5-of-11 Safe. Docs and chain differ. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/abracadabra-spell/ · Base attestation: https://base.easscan.org/attestation/view/0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
+   "cardFilename": "abracadabra-spell.png",
+   "receiptUrl": "https://pacta.wtf/protocols/abracadabra-spell/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
+   "priority": 13
   },
   {
-   "feedId": "finding:cian-yield-layer:S31:adverse_delta",
-   "slug": "cian-yield-layer",
-   "protocolName": "CIAN Yield Layer",
-   "xHandle": "@CIAN_protocol",
-   "xUrl": "https://x.com/CIAN_protocol",
+   "feedId": "finding:bedrock-unibtc:S30:adverse_delta",
+   "slug": "bedrock-unibtc",
+   "protocolName": "Bedrock (uniBTC)",
+   "xHandle": null,
+   "xUrl": null,
    "kind": "adverse_delta",
    "chain": "ethereum",
-   "pinnedBlock": 26450616,
-   "blockHash": "0xd2df7ccb74a6772b51a5597c8f144f5cfae362efeabf193ecfc7c80f8ff37c35",
-   "easUid": "0x63d29eafa88f7e52cc6a596668ae3f03c8132704108794092dc25710fa8bde77",
-   "sprint": 31,
-   "recordId": "cian-yield-layer-allocation-no-timelock-s31",
-   "summaryShort": "CIAN's stETH vault settings change via a Safe directly; the docs say they are time-locked",
+   "pinnedBlock": 26449594,
+   "blockHash": "0xbe263d5b378dcb7c3c4e18bd8e388f0cb2dab1adacd83de2be58c9408b377287",
+   "easUid": "0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
+   "sprint": 30,
+   "recordId": "bedrock-unibtc-secure-mint-precondition-s30",
+   "summaryShort": "uniBTC mints test 90% of existing supply vs reserves; docs say short reserves revert",
    "rosette": [
     {
      "key": "upgrade",
@@ -888,16 +829,76 @@
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "b",
-     "cue": "M",
-     "value": "1d minimum enforced delay on sampled timelocked surfaces"
+     "state": "n",
+     "cue": "—",
+     "value": "No enforced admin delay in the published records"
     },
     {
      "key": "quorum",
      "label": "Signer quorum",
      "state": "g",
      "cue": "S",
-     "value": "Lowest controlling quorum: 3-of-4"
+     "value": "Lowest controlling quorum: 3-of-5"
+    },
+    {
+     "key": "emergency",
+     "label": "Emergency / freeze scope",
+     "state": "g",
+     "cue": "S",
+     "value": "Pause / freeze authority scoped behind a multi-signer controller (3-of-5)"
+    },
+    {
+     "key": "parity",
+     "label": "Docs-vs-chain parity",
+     "state": "a",
+     "cue": "W",
+     "value": "Documentation differs from the chain (parameter delta)"
+    }
+   ],
+   "docsSay": "a mint that reverts when reserves fall short",
+   "chainSays": "a pre-mint check of 90% of existing supply against reserves",
+   "mainPostText": "Bedrock (uniBTC). Docs say: A mint that reverts when reserves fall short. On-chain at Ethereum block #26,449,594: A pre-mint check of 90% of existing supply against reserves. Docs and chain differ. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/bedrock-unibtc/ · Base attestation: https://base.easscan.org/attestation/view/0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
+   "cardFilename": "bedrock-unibtc.png",
+   "receiptUrl": "https://pacta.wtf/protocols/bedrock-unibtc/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
+   "priority": 14
+  },
+  {
+   "feedId": "finding:goldfinch:S30:adverse_delta",
+   "slug": "goldfinch",
+   "protocolName": "Goldfinch",
+   "xHandle": "@goldfinch_fi",
+   "xUrl": "https://x.com/goldfinch_fi",
+   "kind": "adverse_delta",
+   "chain": "ethereum",
+   "pinnedBlock": 26449594,
+   "blockHash": "0xbe263d5b378dcb7c3c4e18bd8e388f0cb2dab1adacd83de2be58c9408b377287",
+   "easUid": "0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
+   "sprint": 30,
+   "recordId": "goldfinch-safe-threshold-s30",
+   "summaryShort": "Docs state a 6-of-10 multisig; the Goldfinch Safe is 6-of-12",
+   "rosette": [
+    {
+     "key": "upgrade",
+     "label": "Upgradeability",
+     "state": "n",
+     "cue": "—",
+     "value": "Upgrade path not in the published records"
+    },
+    {
+     "key": "timelock",
+     "label": "Timelock floor",
+     "state": "n",
+     "cue": "—",
+     "value": "No enforced admin delay in the published records"
+    },
+    {
+     "key": "quorum",
+     "label": "Signer quorum",
+     "state": "g",
+     "cue": "S",
+     "value": "Lowest controlling quorum: 6-of-12"
     },
     {
      "key": "emergency",
@@ -914,13 +915,13 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "docsSay": "time-locked fund allocation",
-   "chainSays": "allocation settings changed by a Safe directly",
-   "mainPostText": "CIAN Yield Layer @CIAN_protocol. Docs say: Time-locked fund allocation. On-chain at Ethereum block #26,450,616: Allocation settings changed by a Safe directly. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/cian-yield-layer/ · Base attestation: https://base.easscan.org/attestation/view/0x63d29eafa88f7e52cc6a596668ae3f03c8132704108794092dc25710fa8bde77",
-   "cardFilename": "cian-yield-layer.png",
-   "receiptUrl": "https://pacta.wtf/protocols/cian-yield-layer/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0x63d29eafa88f7e52cc6a596668ae3f03c8132704108794092dc25710fa8bde77",
+   "docsSay": "a 6-of-10 multisig",
+   "chainSays": "a 6-of-12 Safe",
+   "mainPostText": "Goldfinch @goldfinch_fi. Docs say: A 6-of-10 multisig. On-chain at Ethereum block #26,449,594: A 6-of-12 Safe. Docs and chain differ. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/goldfinch/ · Base attestation: https://base.easscan.org/attestation/view/0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
+   "cardFilename": "goldfinch.png",
+   "receiptUrl": "https://pacta.wtf/protocols/goldfinch/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
    "priority": 15
   },
   {
@@ -984,47 +985,47 @@
    "priority": 16
   },
   {
-   "feedId": "finding:sonic-gateway:S31:adverse_delta",
-   "slug": "sonic-gateway",
-   "protocolName": "Sonic Gateway",
-   "xHandle": "@SonicEcosystem",
-   "xUrl": "https://x.com/SonicEcosystem",
+   "feedId": "finding:inverse-finance-firm:S30:adverse_delta",
+   "slug": "inverse-finance-firm",
+   "protocolName": "Inverse Finance (FiRM)",
+   "xHandle": "@InverseFinance",
+   "xUrl": "https://x.com/InverseFinance",
    "kind": "adverse_delta",
    "chain": "ethereum",
-   "pinnedBlock": 26450616,
-   "blockHash": "0xd2df7ccb74a6772b51a5597c8f144f5cfae362efeabf193ecfc7c80f8ff37c35",
-   "easUid": "0x63d29eafa88f7e52cc6a596668ae3f03c8132704108794092dc25710fa8bde77",
-   "sprint": 31,
-   "recordId": "sonic-gateway-fail-safe-200-days-s31",
-   "summaryShort": "Sonic Gateway's fail-safe opens after 200 days offline, not the documented 14",
+   "pinnedBlock": 26399876,
+   "blockHash": "0x8bf896b892683ff3267b88b367ab015a70cf5caf53542eb405f4f648f6bcde8a",
+   "easUid": "0x34049a2c64fe3355f8e325481234754c8422a48bb4784fed1d028fa40eb93058",
+   "sprint": 1,
+   "recordId": "inverse-finance-firm-policy-safe",
+   "summaryShort": "sDOLA staleness limit reads 86,500 s, was 0 (check off); docs say typically 1-24 hours",
    "rosette": [
     {
      "key": "upgrade",
      "label": "Upgradeability",
      "state": "n",
      "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "value": "Upgrade path not in the published records"
     },
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
      "label": "Signer quorum",
-     "state": "g",
-     "cue": "S",
-     "value": "Lowest controlling quorum: 3-of-4"
+     "state": "b",
+     "cue": "M",
+     "value": "Lowest controlling quorum: 3-of-6 (documented 5-of-9)"
     },
     {
      "key": "emergency",
      "label": "Emergency / freeze scope",
-     "state": "n",
-     "cue": "—",
-     "value": "No pause / freeze authority in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Pause / freeze authority scoped behind a multi-signer controller (3-of-N Safe)"
     },
     {
      "key": "parity",
@@ -1034,29 +1035,29 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "docsSay": "a 14-day fail-safe that cannot be altered",
-   "chainSays": "a 200-day fail-safe in owner-upgradeable code",
-   "mainPostText": "Sonic Gateway @SonicEcosystem. Docs say: A 14-day fail-safe that cannot be altered. On-chain at Ethereum block #26,450,616: A 200-day fail-safe in owner-upgradeable code. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/sonic-gateway/ · Base attestation: https://base.easscan.org/attestation/view/0x63d29eafa88f7e52cc6a596668ae3f03c8132704108794092dc25710fa8bde77",
-   "cardFilename": "sonic-gateway.png",
-   "receiptUrl": "https://pacta.wtf/protocols/sonic-gateway/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0x63d29eafa88f7e52cc6a596668ae3f03c8132704108794092dc25710fa8bde77",
+   "docsSay": "a 5-of-9 Policy Committee multisig",
+   "chainSays": "a 4-of-7 Policy Committee Safe",
+   "mainPostText": "Inverse Finance (FiRM) @InverseFinance. Docs say: A 5-of-9 Policy Committee multisig. On-chain at Ethereum block #26,399,876: A 4-of-7 Policy Committee Safe. Docs and chain differ. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/inverse-finance-firm/ · Base attestation: https://base.easscan.org/attestation/view/0x34049a2c64fe3355f8e325481234754c8422a48bb4784fed1d028fa40eb93058",
+   "cardFilename": "inverse-finance-firm.png",
+   "receiptUrl": "https://pacta.wtf/protocols/inverse-finance-firm/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0x34049a2c64fe3355f8e325481234754c8422a48bb4784fed1d028fa40eb93058",
    "priority": 17
   },
   {
-   "feedId": "finding:abracadabra-spell:S30:adverse_delta",
-   "slug": "abracadabra-spell",
-   "protocolName": "Abracadabra Spell",
-   "xHandle": null,
-   "xUrl": null,
+   "feedId": "finding:polygon-bridge:S30:adverse_delta",
+   "slug": "polygon-bridge",
+   "protocolName": "Polygon Bridge",
+   "xHandle": "@0xPolygon",
+   "xUrl": "https://x.com/0xPolygon",
    "kind": "adverse_delta",
    "chain": "ethereum",
    "pinnedBlock": 26449594,
    "blockHash": "0xbe263d5b378dcb7c3c4e18bd8e388f0cb2dab1adacd83de2be58c9408b377287",
    "easUid": "0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
    "sprint": 30,
-   "recordId": "abracadabra-spell-safe-threshold-s30",
-   "summaryShort": "Docs state a 5-of-10 multisig; the Abracadabra Spell Safe is 5-of-11",
+   "recordId": "polygon-bridge-mapping-safe-4of13-s30",
+   "summaryShort": "Polygon's 5-of-9 Safe can upgrade the bridge with no delay; docs say it cannot censor",
    "rosette": [
     {
      "key": "upgrade",
@@ -1077,7 +1078,7 @@
      "label": "Signer quorum",
      "state": "g",
      "cue": "S",
-     "value": "Lowest controlling quorum: 5-of-11"
+     "value": "Lowest controlling quorum: 4-of-13"
     },
     {
      "key": "emergency",
@@ -1094,57 +1095,57 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "docsSay": "a 5-of-10 multisig",
-   "chainSays": "a 5-of-11 Safe",
-   "mainPostText": "Abracadabra Spell. Docs say: A 5-of-10 multisig. On-chain at Ethereum block #26,449,594: A 5-of-11 Safe. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/abracadabra-spell/ · Base attestation: https://base.easscan.org/attestation/view/0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
-   "cardFilename": "abracadabra-spell.png",
-   "receiptUrl": "https://pacta.wtf/protocols/abracadabra-spell/",
+   "docsSay": "a 4/8 token-mapping multisig",
+   "chainSays": "a 4-of-13 Safe",
+   "mainPostText": "Polygon Bridge @0xPolygon. Docs say: A 4/8 token-mapping multisig. On-chain at Ethereum block #26,449,594: A 4-of-13 Safe. Docs and chain differ. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/polygon-bridge/ · Base attestation: https://base.easscan.org/attestation/view/0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
+   "cardFilename": "polygon-bridge.png",
+   "receiptUrl": "https://pacta.wtf/protocols/polygon-bridge/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
    "priority": 18
   },
   {
-   "feedId": "finding:bedrock-unibtc:S30:adverse_delta",
-   "slug": "bedrock-unibtc",
-   "protocolName": "Bedrock (uniBTC)",
+   "feedId": "finding:base-bridge:S29:adverse_delta",
+   "slug": "base-bridge",
+   "protocolName": "Base Bridge",
    "xHandle": null,
    "xUrl": null,
    "kind": "adverse_delta",
    "chain": "ethereum",
-   "pinnedBlock": 26449594,
-   "blockHash": "0xbe263d5b378dcb7c3c4e18bd8e388f0cb2dab1adacd83de2be58c9408b377287",
-   "easUid": "0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
-   "sprint": 30,
-   "recordId": "bedrock-unibtc-secure-mint-precondition-s30",
-   "summaryShort": "uniBTC mints test 90% of existing supply vs reserves; docs say short reserves revert",
+   "pinnedBlock": 26448221,
+   "blockHash": "0xa7818c0e1b8807aac0c999c2dc9aeeea40b91b4f19b1b76a62ad02d8d17607c8",
+   "easUid": "0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
+   "sprint": 29,
+   "recordId": "base-bridge-l1-proxyadmin-owner-s29",
+   "summaryShort": "Docs name another L1 ProxyAdmin Owner; owner() is a different 2-of-2 Safe",
    "rosette": [
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "Upgradeable with no enforced delay: upgraded by a Safe directly (a Safe has no delay of its own)"
     },
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
      "label": "Signer quorum",
-     "state": "g",
-     "cue": "S",
-     "value": "Lowest controlling quorum: 3-of-5"
+     "state": "b",
+     "cue": "M",
+     "value": "Lowest controlling quorum: 2-of-2"
     },
     {
      "key": "emergency",
      "label": "Emergency / freeze scope",
-     "state": "g",
-     "cue": "S",
-     "value": "Pause / freeze authority scoped behind a multi-signer controller (3-of-5)"
+     "state": "n",
+     "cue": "—",
+     "value": "No pause / freeze authority in the published records"
     },
     {
      "key": "parity",
@@ -1154,13 +1155,13 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "docsSay": "a mint that reverts when reserves fall short",
-   "chainSays": "a pre-mint check of 90% of existing supply against reserves",
-   "mainPostText": "Bedrock (uniBTC). Docs say: A mint that reverts when reserves fall short. On-chain at Ethereum block #26,449,594: A pre-mint check of 90% of existing supply against reserves. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/bedrock-unibtc/ · Base attestation: https://base.easscan.org/attestation/view/0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
-   "cardFilename": "bedrock-unibtc.png",
-   "receiptUrl": "https://pacta.wtf/protocols/bedrock-unibtc/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
+   "docsSay": "L1 ProxyAdmin Owner 0x5a0A…3d2A",
+   "chainSays": "owner() is a different 2-of-2 Safe",
+   "mainPostText": "Base Bridge. Docs say: L1 ProxyAdmin Owner 0x5a0A…3d2A. On-chain at Ethereum block #26,448,221: Owner() is a different 2-of-2 Safe. Docs and chain differ. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/base-bridge/ · Base attestation: https://base.easscan.org/attestation/view/0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
+   "cardFilename": "base-bridge.png",
+   "receiptUrl": "https://pacta.wtf/protocols/base-bridge/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
    "priority": 19
   },
   {
@@ -1224,19 +1225,139 @@
    "priority": 20
   },
   {
-   "feedId": "finding:goldfinch:S30:adverse_delta",
-   "slug": "goldfinch",
-   "protocolName": "Goldfinch",
-   "xHandle": "@goldfinch_fi",
-   "xUrl": "https://x.com/goldfinch_fi",
+   "feedId": "finding:f-x-protocol-v2:S29:adverse_delta",
+   "slug": "f-x-protocol-v2",
+   "protocolName": "f(x) Protocol v2",
+   "xHandle": null,
+   "xUrl": null,
    "kind": "adverse_delta",
    "chain": "ethereum",
-   "pinnedBlock": 26449594,
-   "blockHash": "0xbe263d5b378dcb7c3c4e18bd8e388f0cb2dab1adacd83de2be58c9408b377287",
-   "easUid": "0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
-   "sprint": 30,
-   "recordId": "goldfinch-safe-threshold-s30",
-   "summaryShort": "Docs state a 6-of-10 multisig; the Goldfinch Safe is 6-of-12",
+   "pinnedBlock": 26448221,
+   "blockHash": "0xa7818c0e1b8807aac0c999c2dc9aeeea40b91b4f19b1b76a62ad02d8d17607c8",
+   "easUid": "0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
+   "sprint": 29,
+   "recordId": "f-x-protocol-v2-router-owner-safe-s29",
+   "summaryShort": "V2 Router owner is the 6-of-9 operational Safe; separate timelock keeps 3 days",
+   "rosette": [
+    {
+     "key": "upgrade",
+     "label": "Upgradeability",
+     "state": "n",
+     "cue": "—",
+     "value": "Upgrade path not in the published records"
+    },
+    {
+     "key": "timelock",
+     "label": "Timelock floor",
+     "state": "a",
+     "cue": "W",
+     "value": "No enforced delay on at least one sampled control surface (0s)"
+    },
+    {
+     "key": "quorum",
+     "label": "Signer quorum",
+     "state": "g",
+     "cue": "S",
+     "value": "ProtocolTreasury EmergencySafe: 3-of-4 (Ethereum block 26,400,152); V2 Router operational Safe: 6-of-9 (Ethereum block 26,448,221)."
+    },
+    {
+     "key": "emergency",
+     "label": "Emergency / freeze scope",
+     "state": "n",
+     "cue": "—",
+     "value": "No pause / freeze authority in the published records"
+    },
+    {
+     "key": "parity",
+     "label": "Docs-vs-chain parity",
+     "state": "a",
+     "cue": "W",
+     "value": "Documentation differs from the chain (parameter delta)"
+    }
+   ],
+   "docsSay": "a 3-day public timelock for queued transactions",
+   "chainSays": "the V2 Router's owner is the 6-of-9 operational Safe directly; the separate timelock keeps 3 days",
+   "mainPostText": "f(x) Protocol v2. Docs say: A 3-day public timelock for queued transactions. On-chain at Ethereum block #26,448,221: The V2 Router's owner is the 6-of-9 operational Safe directly; the separate timelock keeps 3 days. Docs and chain differ. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/f-x-protocol-v2/ · Base attestation: https://base.easscan.org/attestation/view/0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
+   "cardFilename": "f-x-protocol-v2.png",
+   "receiptUrl": "https://pacta.wtf/protocols/f-x-protocol-v2/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
+   "priority": 21
+  },
+  {
+   "feedId": "finding:40-acres-base:S28:adverse_delta",
+   "slug": "40-acres-base",
+   "protocolName": "40 Acres (Base)",
+   "xHandle": null,
+   "xUrl": null,
+   "kind": "adverse_delta",
+   "chain": "base",
+   "pinnedBlock": 59025642,
+   "blockHash": "0x8fc618f8e02aa1fd1c3bcf1300fd25e40291a0fcde351bd39ad8cb61781d5e12",
+   "easUid": "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
+   "sprint": 28,
+   "recordId": "40-acres-base-upgradeability-s28",
+   "summaryShort": "Base AERO USDC Loan contract is upgradeable (2-of-3 Safe); intro says immutable",
+   "rosette": [
+    {
+     "key": "upgrade",
+     "label": "Upgradeability",
+     "state": "n",
+     "cue": "—",
+     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+    },
+    {
+     "key": "timelock",
+     "label": "Timelock floor",
+     "state": "n",
+     "cue": "—",
+     "value": "No enforced admin delay in the published records"
+    },
+    {
+     "key": "quorum",
+     "label": "Signer quorum",
+     "state": "b",
+     "cue": "M",
+     "value": "Lowest controlling quorum: 2-of-3"
+    },
+    {
+     "key": "emergency",
+     "label": "Emergency / freeze scope",
+     "state": "n",
+     "cue": "—",
+     "value": "No pause / freeze authority in the published records"
+    },
+    {
+     "key": "parity",
+     "label": "Docs-vs-chain parity",
+     "state": "a",
+     "cue": "W",
+     "value": "Documentation differs from the chain (parameter delta)"
+    }
+   ],
+   "docsSay": "immutable, non-upgradeable contracts",
+   "chainSays": "the AERO USDC Loan contract is an upgradeable UUPS proxy under a 2-of-3 Safe",
+   "mainPostText": "40 Acres (Base). Docs say: Immutable, non-upgradeable contracts. On-chain at Base block #59,025,642: The AERO USDC Loan contract is an upgradeable UUPS proxy under a 2-of-3 Safe. Docs and chain differ. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/40-acres-base/ · Base attestation: https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
+   "cardFilename": "40-acres-base.png",
+   "receiptUrl": "https://pacta.wtf/protocols/40-acres-base/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
+   "priority": 22
+  },
+  {
+   "feedId": "finding:defi-saver:S28:adverse_delta",
+   "slug": "defi-saver",
+   "protocolName": "DeFi Saver",
+   "xHandle": null,
+   "xUrl": null,
+   "kind": "adverse_delta",
+   "chain": "ethereum",
+   "pinnedBlock": 26441165,
+   "blockHash": "0x5182be2c61af5f48ed2ec43d3c177dedad257c4e966a7e384120829de73901d9",
+   "easUid": "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
+   "sprint": 28,
+   "recordId": "defi-saver-adminvault-owner-safe-s28",
+   "summaryShort": "Docs state a 2/3 Admin multisig; the Safe is 3-of-6",
    "rosette": [
     {
      "key": "upgrade",
@@ -1257,7 +1378,7 @@
      "label": "Signer quorum",
      "state": "g",
      "cue": "S",
-     "value": "Lowest controlling quorum: 6-of-12"
+     "value": "Lowest controlling quorum: 3-of-6"
     },
     {
      "key": "emergency",
@@ -1274,133 +1395,13 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "docsSay": "a 6-of-10 multisig",
-   "chainSays": "a 6-of-12 Safe",
-   "mainPostText": "Goldfinch @goldfinch_fi. Docs say: A 6-of-10 multisig. On-chain at Ethereum block #26,449,594: A 6-of-12 Safe. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/goldfinch/ · Base attestation: https://base.easscan.org/attestation/view/0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
-   "cardFilename": "goldfinch.png",
-   "receiptUrl": "https://pacta.wtf/protocols/goldfinch/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
-   "priority": 21
-  },
-  {
-   "feedId": "finding:infinifi:S30:adverse_delta",
-   "slug": "infinifi",
-   "protocolName": "infiniFi",
-   "xHandle": "@infinifi",
-   "xUrl": "https://x.com/infinifi",
-   "kind": "adverse_delta",
-   "chain": "ethereum",
-   "pinnedBlock": 26425374,
-   "blockHash": "0xfa22e277760f1df7134b0af20499d6305ee4e017219a917a61a78aa76e89382d",
-   "easUid": "0xe712dd31d79ab492e2e64eb5847396651dee81daa9f895ead45548e97f1a2eb7",
-   "sprint": 20,
-   "recordId": "infinifi-pause-role-admin-minor-roles-s20",
-   "summaryShort": "Pause roles are administered by MINOR_ROLES_MANAGER; docs say GOVERNOR",
-   "rosette": [
-    {
-     "key": "upgrade",
-     "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
-    },
-    {
-     "key": "timelock",
-     "label": "Timelock floor",
-     "state": "g",
-     "cue": "S",
-     "value": "7d minimum enforced delay on sampled timelocked surfaces"
-    },
-    {
-     "key": "quorum",
-     "label": "Signer quorum",
-     "state": "g",
-     "cue": "S",
-     "value": "Lowest controlling quorum: 4-of-7"
-    },
-    {
-     "key": "emergency",
-     "label": "Emergency / freeze scope",
-     "state": "g",
-     "cue": "S",
-     "value": "Pause / freeze authority scoped behind a multi-signer controller (4-of-N Safe)"
-    },
-    {
-     "key": "parity",
-     "label": "Docs-vs-chain parity",
-     "state": "a",
-     "cue": "W",
-     "value": "Documentation differs from the chain (parameter delta)"
-    }
-   ],
-   "docsSay": "the governor administers the pause and unpause roles",
-   "chainSays": "a minor-roles manager administers them, not the governor",
-   "mainPostText": "infiniFi @infinifi. Docs say: The governor administers the pause and unpause roles. On-chain at Ethereum block #26,425,374: A minor-roles manager administers them, not the governor. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/infinifi/ · Base attestation: https://base.easscan.org/attestation/view/0xe712dd31d79ab492e2e64eb5847396651dee81daa9f895ead45548e97f1a2eb7",
-   "cardFilename": "infinifi.png",
-   "receiptUrl": "https://pacta.wtf/protocols/infinifi/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0xe712dd31d79ab492e2e64eb5847396651dee81daa9f895ead45548e97f1a2eb7",
-   "priority": 22
-  },
-  {
-   "feedId": "finding:inverse-finance-firm:S30:adverse_delta",
-   "slug": "inverse-finance-firm",
-   "protocolName": "Inverse Finance (FiRM)",
-   "xHandle": "@InverseFinance",
-   "xUrl": "https://x.com/InverseFinance",
-   "kind": "adverse_delta",
-   "chain": "ethereum",
-   "pinnedBlock": 26399876,
-   "blockHash": "0x8bf896b892683ff3267b88b367ab015a70cf5caf53542eb405f4f648f6bcde8a",
-   "easUid": "0x34049a2c64fe3355f8e325481234754c8422a48bb4784fed1d028fa40eb93058",
-   "sprint": 1,
-   "recordId": "inverse-finance-firm-policy-safe",
-   "summaryShort": "sDOLA staleness limit reads 86,500 s, was 0 (check off); docs say typically 1-24 hours",
-   "rosette": [
-    {
-     "key": "upgrade",
-     "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
-    },
-    {
-     "key": "timelock",
-     "label": "Timelock floor",
-     "state": "g",
-     "cue": "S",
-     "value": "2d minimum enforced delay on sampled timelocked surfaces"
-    },
-    {
-     "key": "quorum",
-     "label": "Signer quorum",
-     "state": "g",
-     "cue": "S",
-     "value": "Lowest controlling quorum: 3-of-6"
-    },
-    {
-     "key": "emergency",
-     "label": "Emergency / freeze scope",
-     "state": "g",
-     "cue": "S",
-     "value": "Pause / freeze authority scoped behind a multi-signer controller (3-of-N Safe)"
-    },
-    {
-     "key": "parity",
-     "label": "Docs-vs-chain parity",
-     "state": "a",
-     "cue": "W",
-     "value": "Documentation differs from the chain (parameter delta)"
-    }
-   ],
-   "docsSay": "a 5-of-9 Policy Committee multisig",
-   "chainSays": "a 4-of-7 Policy Committee Safe",
-   "mainPostText": "Inverse Finance (FiRM) @InverseFinance. Docs say: A 5-of-9 Policy Committee multisig. On-chain at Ethereum block #26,399,876: A 4-of-7 Policy Committee Safe. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/inverse-finance-firm/ · Base attestation: https://base.easscan.org/attestation/view/0x34049a2c64fe3355f8e325481234754c8422a48bb4784fed1d028fa40eb93058",
-   "cardFilename": "inverse-finance-firm.png",
-   "receiptUrl": "https://pacta.wtf/protocols/inverse-finance-firm/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0x34049a2c64fe3355f8e325481234754c8422a48bb4784fed1d028fa40eb93058",
+   "docsSay": "a 3/5 Owner multisig",
+   "chainSays": "a 3-of-6 Safe",
+   "mainPostText": "DeFi Saver. Docs say: A 3/5 Owner multisig. On-chain at Ethereum block #26,441,165: A 3-of-6 Safe. Docs and chain differ. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/defi-saver/ · Base attestation: https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
+   "cardFilename": "defi-saver.png",
+   "receiptUrl": "https://pacta.wtf/protocols/defi-saver/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
    "priority": 23
   },
   {
@@ -1464,19 +1465,79 @@
    "priority": 24
   },
   {
-   "feedId": "finding:polygon-bridge:S30:adverse_delta",
-   "slug": "polygon-bridge",
-   "protocolName": "Polygon Bridge",
-   "xHandle": "@0xPolygon",
-   "xUrl": "https://x.com/0xPolygon",
+   "feedId": "finding:upshift:S28:adverse_delta",
+   "slug": "upshift",
+   "protocolName": "Upshift",
+   "xHandle": null,
+   "xUrl": null,
    "kind": "adverse_delta",
    "chain": "ethereum",
-   "pinnedBlock": 26449594,
-   "blockHash": "0xbe263d5b378dcb7c3c4e18bd8e388f0cb2dab1adacd83de2be58c9408b377287",
-   "easUid": "0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
-   "sprint": 30,
-   "recordId": "polygon-bridge-mapping-safe-4of13-s30",
-   "summaryShort": "Polygon's 5-of-9 Safe can upgrade the bridge with no delay; docs say it cannot censor",
+   "pinnedBlock": 26441165,
+   "blockHash": "0x5182be2c61af5f48ed2ec43d3c177dedad257c4e966a7e384120829de73901d9",
+   "easUid": "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
+   "sprint": 28,
+   "recordId": "upshift-proxyadmin-safe-s28",
+   "summaryShort": "Docs say ProxyAdmin is generally 4-of-6 (no timelock disclosed); vault's is 2-of-3",
+   "rosette": [
+    {
+     "key": "upgrade",
+     "label": "Upgradeability",
+     "state": "a",
+     "cue": "W",
+     "value": "Upgradeable with no enforced delay: upgraded by a Safe directly (Upshift's documentation expressly discloses that proxy upgrades have no timelock)"
+    },
+    {
+     "key": "timelock",
+     "label": "Timelock floor",
+     "state": "a",
+     "cue": "W",
+     "value": "No enforced delay on at least one sampled control surface (0s)"
+    },
+    {
+     "key": "quorum",
+     "label": "Signer quorum",
+     "state": "b",
+     "cue": "M",
+     "value": "Lowest controlling quorum: 2-of-3"
+    },
+    {
+     "key": "emergency",
+     "label": "Emergency / freeze scope",
+     "state": "n",
+     "cue": "—",
+     "value": "No pause / freeze authority in the published records"
+    },
+    {
+     "key": "parity",
+     "label": "Docs-vs-chain parity",
+     "state": "a",
+     "cue": "W",
+     "value": "Documentation differs from the chain (parameter delta)"
+    }
+   ],
+   "docsSay": "a ProxyAdmin multisig of generally 4 of 6, with no upgrade timelock",
+   "chainSays": "the sampled vault's ProxyAdmin owner is a 2-of-3 Safe",
+   "mainPostText": "Upshift. Docs say: A ProxyAdmin multisig of generally 4 of 6, with no upgrade timelock. On-chain at Ethereum block #26,441,165: The sampled vault's ProxyAdmin owner is a 2-of-3 Safe. Docs and chain differ. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/upshift/ · Base attestation: https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
+   "cardFilename": "upshift.png",
+   "receiptUrl": "https://pacta.wtf/protocols/upshift/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
+   "priority": 25
+  },
+  {
+   "feedId": "finding:vesper-v1:S28:adverse_delta",
+   "slug": "vesper-v1",
+   "protocolName": "Vesper V1",
+   "xHandle": "@vesperfi",
+   "xUrl": "https://x.com/vesperfi",
+   "kind": "adverse_delta",
+   "chain": "ethereum",
+   "pinnedBlock": 26441165,
+   "blockHash": "0x5182be2c61af5f48ed2ec43d3c177dedad257c4e966a7e384120829de73901d9",
+   "easUid": "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
+   "sprint": 28,
+   "recordId": "vesper-v1-governor-safe-s28",
+   "summaryShort": "Docs state a 3-of-5 Vesper multisig; the governor Safe is 3-of-6",
    "rosette": [
     {
      "key": "upgrade",
@@ -1497,7 +1558,7 @@
      "label": "Signer quorum",
      "state": "g",
      "cue": "S",
-     "value": "Lowest controlling quorum: 4-of-13"
+     "value": "Lowest controlling quorum: 3-of-6"
     },
     {
      "key": "emergency",
@@ -1514,89 +1575,29 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "docsSay": "a 4/8 token-mapping multisig",
-   "chainSays": "a 4-of-13 Safe",
-   "mainPostText": "Polygon Bridge @0xPolygon. Docs say: A 4/8 token-mapping multisig. On-chain at Ethereum block #26,449,594: A 4-of-13 Safe. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/polygon-bridge/ · Base attestation: https://base.easscan.org/attestation/view/0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
-   "cardFilename": "polygon-bridge.png",
-   "receiptUrl": "https://pacta.wtf/protocols/polygon-bridge/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
-   "priority": 25
-  },
-  {
-   "feedId": "finding:base-bridge:S29:adverse_delta",
-   "slug": "base-bridge",
-   "protocolName": "Base Bridge",
-   "xHandle": null,
-   "xUrl": null,
-   "kind": "adverse_delta",
-   "chain": "ethereum",
-   "pinnedBlock": 26448221,
-   "blockHash": "0xa7818c0e1b8807aac0c999c2dc9aeeea40b91b4f19b1b76a62ad02d8d17607c8",
-   "easUid": "0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
-   "sprint": 29,
-   "recordId": "base-bridge-l1-proxyadmin-owner-s29",
-   "summaryShort": "Docs name another L1 ProxyAdmin Owner; owner() is a different 2-of-2 Safe",
-   "rosette": [
-    {
-     "key": "upgrade",
-     "label": "Upgradeability",
-     "state": "a",
-     "cue": "W",
-     "value": "Upgradeable with no enforced delay: upgraded by a Safe directly (a Safe has no delay of its own)"
-    },
-    {
-     "key": "timelock",
-     "label": "Timelock floor",
-     "state": "a",
-     "cue": "W",
-     "value": "No enforced delay on at least one sampled control surface (0s)"
-    },
-    {
-     "key": "quorum",
-     "label": "Signer quorum",
-     "state": "b",
-     "cue": "M",
-     "value": "Lowest controlling quorum: 2-of-2"
-    },
-    {
-     "key": "emergency",
-     "label": "Emergency / freeze scope",
-     "state": "n",
-     "cue": "—",
-     "value": "No pause / freeze authority in the published records"
-    },
-    {
-     "key": "parity",
-     "label": "Docs-vs-chain parity",
-     "state": "a",
-     "cue": "W",
-     "value": "Documentation differs from the chain (parameter delta)"
-    }
-   ],
-   "docsSay": "L1 ProxyAdmin Owner 0x5a0A…3d2A",
-   "chainSays": "owner() is a different 2-of-2 Safe",
-   "mainPostText": "Base Bridge. Docs say: L1 ProxyAdmin Owner 0x5a0A…3d2A. On-chain at Ethereum block #26,448,221: Owner() is a different 2-of-2 Safe. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/base-bridge/ · Base attestation: https://base.easscan.org/attestation/view/0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
-   "cardFilename": "base-bridge.png",
-   "receiptUrl": "https://pacta.wtf/protocols/base-bridge/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
+   "docsSay": "a 3-of-5 multisig",
+   "chainSays": "a 3-of-6 Safe",
+   "mainPostText": "Vesper V1 @vesperfi. Docs say: A 3-of-5 multisig. On-chain at Ethereum block #26,441,165: A 3-of-6 Safe. Docs and chain differ. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/vesper-v1/ · Base attestation: https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
+   "cardFilename": "vesper-v1.png",
+   "receiptUrl": "https://pacta.wtf/protocols/vesper-v1/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
    "priority": 26
   },
   {
-   "feedId": "finding:f-x-protocol-v2:S29:adverse_delta",
-   "slug": "f-x-protocol-v2",
-   "protocolName": "f(x) Protocol v2",
+   "feedId": "finding:zircuit-staking:S28:adverse_delta",
+   "slug": "zircuit-staking",
+   "protocolName": "Zircuit Staking",
    "xHandle": null,
    "xUrl": null,
    "kind": "adverse_delta",
    "chain": "ethereum",
-   "pinnedBlock": 26448221,
-   "blockHash": "0xa7818c0e1b8807aac0c999c2dc9aeeea40b91b4f19b1b76a62ad02d8d17607c8",
-   "easUid": "0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
-   "sprint": 29,
-   "recordId": "f-x-protocol-v2-router-owner-safe-s29",
-   "summaryShort": "V2 Router owner is the 6-of-9 operational Safe; separate timelock keeps 3 days",
+   "pinnedBlock": 26441165,
+   "blockHash": "0x5182be2c61af5f48ed2ec43d3c177dedad257c4e966a7e384120829de73901d9",
+   "easUid": "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
+   "sprint": 28,
+   "recordId": "zircuit-staking-safe-threshold-s28",
+   "summaryShort": "Docs state a 6-of-8 multisig; the Zircuit Staking Safe is 4-of-6",
    "rosette": [
     {
      "key": "upgrade",
@@ -1608,16 +1609,16 @@
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "a",
-     "cue": "W",
-     "value": "No enforced delay on at least one sampled control surface (0s)"
+     "state": "n",
+     "cue": "—",
+     "value": "No enforced admin delay in the published records"
     },
     {
      "key": "quorum",
      "label": "Signer quorum",
-     "state": "g",
-     "cue": "S",
-     "value": "Lowest controlling quorum: 3-of-4"
+     "state": "b",
+     "cue": "M",
+     "value": "Lowest controlling quorum: 4-of-6 (documented 6-of-8)"
     },
     {
      "key": "emergency",
@@ -1634,13 +1635,13 @@
      "value": "Documentation differs from the chain (parameter delta)"
     }
    ],
-   "docsSay": "a 3-day public timelock for queued transactions",
-   "chainSays": "the V2 Router's owner is the 6-of-9 operational Safe directly; the separate timelock keeps 3 days",
-   "mainPostText": "f(x) Protocol v2. Docs say: A 3-day public timelock for queued transactions. On-chain at Ethereum block #26,448,221: The V2 Router's owner is the 6-of-9 operational Safe directly; the separate timelock keeps 3 days. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/f-x-protocol-v2/ · Base attestation: https://base.easscan.org/attestation/view/0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
-   "cardFilename": "f-x-protocol-v2.png",
-   "receiptUrl": "https://pacta.wtf/protocols/f-x-protocol-v2/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
+   "docsSay": "a 6-of-8 multisig",
+   "chainSays": "a 4-of-6 Safe",
+   "mainPostText": "Zircuit Staking. Docs say: A 6-of-8 multisig. On-chain at Ethereum block #26,441,165: A 4-of-6 Safe. Docs and chain differ. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/zircuit-staking/ · Base attestation: https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
+   "cardFilename": "zircuit-staking.png",
+   "receiptUrl": "https://pacta.wtf/protocols/zircuit-staking/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
    "priority": 27
   },
   {
@@ -1704,306 +1705,6 @@
    "priority": 28
   },
   {
-   "feedId": "finding:40-acres-base:S28:adverse_delta",
-   "slug": "40-acres-base",
-   "protocolName": "40 Acres (Base)",
-   "xHandle": null,
-   "xUrl": null,
-   "kind": "adverse_delta",
-   "chain": "base",
-   "pinnedBlock": 59025642,
-   "blockHash": "0x8fc618f8e02aa1fd1c3bcf1300fd25e40291a0fcde351bd39ad8cb61781d5e12",
-   "easUid": "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
-   "sprint": 28,
-   "recordId": "40-acres-base-upgradeability-s28",
-   "summaryShort": "Base AERO USDC Loan contract is upgradeable (2-of-3 Safe); intro says immutable",
-   "rosette": [
-    {
-     "key": "upgrade",
-     "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
-    },
-    {
-     "key": "timelock",
-     "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
-    },
-    {
-     "key": "quorum",
-     "label": "Signer quorum",
-     "state": "b",
-     "cue": "M",
-     "value": "Lowest controlling quorum: 2-of-3"
-    },
-    {
-     "key": "emergency",
-     "label": "Emergency / freeze scope",
-     "state": "n",
-     "cue": "—",
-     "value": "No pause / freeze authority in the published records"
-    },
-    {
-     "key": "parity",
-     "label": "Docs-vs-chain parity",
-     "state": "a",
-     "cue": "W",
-     "value": "Documentation differs from the chain (parameter delta)"
-    }
-   ],
-   "docsSay": "immutable, non-upgradeable contracts",
-   "chainSays": "the AERO USDC Loan contract is an upgradeable UUPS proxy under a 2-of-3 Safe",
-   "mainPostText": "40 Acres (Base). Docs say: Immutable, non-upgradeable contracts. On-chain at Base block #59,025,642: The AERO USDC Loan contract is an upgradeable UUPS proxy under a 2-of-3 Safe. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/40-acres-base/ · Base attestation: https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
-   "cardFilename": "40-acres-base.png",
-   "receiptUrl": "https://pacta.wtf/protocols/40-acres-base/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
-   "priority": 29
-  },
-  {
-   "feedId": "finding:defi-saver:S28:adverse_delta",
-   "slug": "defi-saver",
-   "protocolName": "DeFi Saver",
-   "xHandle": null,
-   "xUrl": null,
-   "kind": "adverse_delta",
-   "chain": "ethereum",
-   "pinnedBlock": 26441165,
-   "blockHash": "0x5182be2c61af5f48ed2ec43d3c177dedad257c4e966a7e384120829de73901d9",
-   "easUid": "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
-   "sprint": 28,
-   "recordId": "defi-saver-adminvault-owner-safe-s28",
-   "summaryShort": "Docs state a 2/3 Admin multisig; the Safe is 3-of-6",
-   "rosette": [
-    {
-     "key": "upgrade",
-     "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
-    },
-    {
-     "key": "timelock",
-     "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
-    },
-    {
-     "key": "quorum",
-     "label": "Signer quorum",
-     "state": "g",
-     "cue": "S",
-     "value": "Lowest controlling quorum: 3-of-6"
-    },
-    {
-     "key": "emergency",
-     "label": "Emergency / freeze scope",
-     "state": "n",
-     "cue": "—",
-     "value": "No pause / freeze authority in the published records"
-    },
-    {
-     "key": "parity",
-     "label": "Docs-vs-chain parity",
-     "state": "a",
-     "cue": "W",
-     "value": "Documentation differs from the chain (parameter delta)"
-    }
-   ],
-   "docsSay": "a 3/5 Owner multisig",
-   "chainSays": "a 3-of-6 Safe",
-   "mainPostText": "DeFi Saver. Docs say: A 3/5 Owner multisig. On-chain at Ethereum block #26,441,165: A 3-of-6 Safe. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/defi-saver/ · Base attestation: https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
-   "cardFilename": "defi-saver.png",
-   "receiptUrl": "https://pacta.wtf/protocols/defi-saver/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
-   "priority": 30
-  },
-  {
-   "feedId": "finding:upshift:S28:adverse_delta",
-   "slug": "upshift",
-   "protocolName": "Upshift",
-   "xHandle": null,
-   "xUrl": null,
-   "kind": "adverse_delta",
-   "chain": "ethereum",
-   "pinnedBlock": 26441165,
-   "blockHash": "0x5182be2c61af5f48ed2ec43d3c177dedad257c4e966a7e384120829de73901d9",
-   "easUid": "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
-   "sprint": 28,
-   "recordId": "upshift-proxyadmin-safe-s28",
-   "summaryShort": "Docs say ProxyAdmin is generally 4-of-6 (no timelock disclosed); vault's is 2-of-3",
-   "rosette": [
-    {
-     "key": "upgrade",
-     "label": "Upgradeability",
-     "state": "a",
-     "cue": "W",
-     "value": "Upgradeable with no enforced delay: upgraded by a Safe directly (Upshift's documentation expressly discloses that proxy upgrades have no timelock)"
-    },
-    {
-     "key": "timelock",
-     "label": "Timelock floor",
-     "state": "a",
-     "cue": "W",
-     "value": "No enforced delay on at least one sampled control surface (0s)"
-    },
-    {
-     "key": "quorum",
-     "label": "Signer quorum",
-     "state": "b",
-     "cue": "M",
-     "value": "Lowest controlling quorum: 2-of-3"
-    },
-    {
-     "key": "emergency",
-     "label": "Emergency / freeze scope",
-     "state": "n",
-     "cue": "—",
-     "value": "No pause / freeze authority in the published records"
-    },
-    {
-     "key": "parity",
-     "label": "Docs-vs-chain parity",
-     "state": "a",
-     "cue": "W",
-     "value": "Documentation differs from the chain (parameter delta)"
-    }
-   ],
-   "docsSay": "a ProxyAdmin multisig of generally 4 of 6, with no upgrade timelock",
-   "chainSays": "the sampled vault's ProxyAdmin owner is a 2-of-3 Safe",
-   "mainPostText": "Upshift. Docs say: A ProxyAdmin multisig of generally 4 of 6, with no upgrade timelock. On-chain at Ethereum block #26,441,165: The sampled vault's ProxyAdmin owner is a 2-of-3 Safe. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/upshift/ · Base attestation: https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
-   "cardFilename": "upshift.png",
-   "receiptUrl": "https://pacta.wtf/protocols/upshift/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
-   "priority": 31
-  },
-  {
-   "feedId": "finding:vesper-v1:S28:adverse_delta",
-   "slug": "vesper-v1",
-   "protocolName": "Vesper V1",
-   "xHandle": "@vesperfi",
-   "xUrl": "https://x.com/vesperfi",
-   "kind": "adverse_delta",
-   "chain": "ethereum",
-   "pinnedBlock": 26441165,
-   "blockHash": "0x5182be2c61af5f48ed2ec43d3c177dedad257c4e966a7e384120829de73901d9",
-   "easUid": "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
-   "sprint": 28,
-   "recordId": "vesper-v1-governor-safe-s28",
-   "summaryShort": "Docs state a 3-of-5 Vesper multisig; the governor Safe is 3-of-6",
-   "rosette": [
-    {
-     "key": "upgrade",
-     "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
-    },
-    {
-     "key": "timelock",
-     "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
-    },
-    {
-     "key": "quorum",
-     "label": "Signer quorum",
-     "state": "g",
-     "cue": "S",
-     "value": "Lowest controlling quorum: 3-of-6"
-    },
-    {
-     "key": "emergency",
-     "label": "Emergency / freeze scope",
-     "state": "n",
-     "cue": "—",
-     "value": "No pause / freeze authority in the published records"
-    },
-    {
-     "key": "parity",
-     "label": "Docs-vs-chain parity",
-     "state": "a",
-     "cue": "W",
-     "value": "Documentation differs from the chain (parameter delta)"
-    }
-   ],
-   "docsSay": "a 3-of-5 multisig",
-   "chainSays": "a 3-of-6 Safe",
-   "mainPostText": "Vesper V1 @vesperfi. Docs say: A 3-of-5 multisig. On-chain at Ethereum block #26,441,165: A 3-of-6 Safe. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/vesper-v1/ · Base attestation: https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
-   "cardFilename": "vesper-v1.png",
-   "receiptUrl": "https://pacta.wtf/protocols/vesper-v1/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
-   "priority": 32
-  },
-  {
-   "feedId": "finding:zircuit-staking:S28:adverse_delta",
-   "slug": "zircuit-staking",
-   "protocolName": "Zircuit Staking",
-   "xHandle": null,
-   "xUrl": null,
-   "kind": "adverse_delta",
-   "chain": "ethereum",
-   "pinnedBlock": 26441165,
-   "blockHash": "0x5182be2c61af5f48ed2ec43d3c177dedad257c4e966a7e384120829de73901d9",
-   "easUid": "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
-   "sprint": 28,
-   "recordId": "zircuit-staking-safe-threshold-s28",
-   "summaryShort": "Docs state a 6-of-8 multisig; the Zircuit Staking Safe is 4-of-6",
-   "rosette": [
-    {
-     "key": "upgrade",
-     "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
-    },
-    {
-     "key": "timelock",
-     "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
-    },
-    {
-     "key": "quorum",
-     "label": "Signer quorum",
-     "state": "g",
-     "cue": "S",
-     "value": "Lowest controlling quorum: 4-of-6"
-    },
-    {
-     "key": "emergency",
-     "label": "Emergency / freeze scope",
-     "state": "n",
-     "cue": "—",
-     "value": "No pause / freeze authority in the published records"
-    },
-    {
-     "key": "parity",
-     "label": "Docs-vs-chain parity",
-     "state": "a",
-     "cue": "W",
-     "value": "Documentation differs from the chain (parameter delta)"
-    }
-   ],
-   "docsSay": "a 6-of-8 multisig",
-   "chainSays": "a 4-of-6 Safe",
-   "mainPostText": "Zircuit Staking. Docs say: A 6-of-8 multisig. On-chain at Ethereum block #26,441,165: A 4-of-6 Safe. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/zircuit-staking/ · Base attestation: https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
-   "cardFilename": "zircuit-staking.png",
-   "receiptUrl": "https://pacta.wtf/protocols/zircuit-staking/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
-   "priority": 33
-  },
-  {
    "feedId": "finding:treehouse-tree-teth:S27:adverse_delta",
    "slug": "treehouse-tree-teth",
    "protocolName": "Treehouse (TREE / tETH)",
@@ -2042,9 +1743,9 @@
     {
      "key": "emergency",
      "label": "Emergency / freeze scope",
-     "state": "g",
-     "cue": "S",
-     "value": "Pause / freeze authority scoped behind a multi-signer controller (5-of-7)"
+     "state": "a",
+     "cue": "W",
+     "value": "Immediate · TREE transfer blacklister() is a 5-of-7 Safe with 0s enforced delay (five-day timelock retained on TREE and tETH owner paths)"
     },
     {
      "key": "parity",
@@ -2061,7 +1762,7 @@
    "cardFilename": "treehouse-tree-teth.png",
    "receiptUrl": "https://pacta.wtf/protocols/treehouse-tree-teth/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x5c12867816bee7d00c13412cf7ec67c00b7d42f3020643ab2a2ca577a28de424",
-   "priority": 34
+   "priority": 29
   },
   {
    "feedId": "finding:beefy-finance-base:S26:adverse_delta",
@@ -2097,7 +1798,7 @@
      "label": "Signer quorum",
      "state": "g",
      "cue": "S",
-     "value": "Lowest controlling quorum: 3-of-6"
+     "value": "3-of-6 dev multisig (TimelockController proposer)"
     },
     {
      "key": "emergency",
@@ -2121,7 +1822,7 @@
    "cardFilename": "beefy-finance-base.png",
    "receiptUrl": "https://pacta.wtf/protocols/beefy-finance-base/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5",
-   "priority": 35
+   "priority": 30
   },
   {
    "feedId": "finding:yieldnest:S26:adverse_delta",
@@ -2181,7 +1882,7 @@
    "cardFilename": "yieldnest.png",
    "receiptUrl": "https://pacta.wtf/protocols/yieldnest/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x6692c36731ecd514fb7a92fe3de0a6770b67f68f55eece26faa669c2c84b3a08",
-   "priority": 36
+   "priority": 31
   },
   {
    "feedId": "finding:axelar-network:S25:adverse_delta",
@@ -2241,7 +1942,7 @@
    "cardFilename": "axelar-network.png",
    "receiptUrl": "https://pacta.wtf/protocols/axelar-network/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x1c379ef9f845a2affa9c42715ba2b1b4b2f750b71b4edf9c50d0e1ae739e11ff",
-   "priority": 37
+   "priority": 32
   },
   {
    "feedId": "finding:bedrock-unieth:S25:adverse_delta",
@@ -2301,7 +2002,7 @@
    "cardFilename": "bedrock-unieth.png",
    "receiptUrl": "https://pacta.wtf/protocols/bedrock-unieth/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x1c379ef9f845a2affa9c42715ba2b1b4b2f750b71b4edf9c50d0e1ae739e11ff",
-   "priority": 38
+   "priority": 33
   },
   {
    "feedId": "finding:obol-network:S24:adverse_delta",
@@ -2316,7 +2017,7 @@
    "easUid": "0x61c2970c176b85ab604e6b565c5f050a7176b62e725d449e8d27d700365283d6",
    "sprint": 24,
    "recordId": "obol-network-token-supply-cap-s24",
-   "summaryShort": "Supply: docs cap 500M · chain no cap; a 2-of-3 Safe holds the minter role",
+   "summaryShort": "OBOL mint has no enforced 500M cap; minter authority is a 2-of-3 Safe",
    "rosette": [
     {
      "key": "upgrade",
@@ -2361,7 +2062,7 @@
    "cardFilename": "obol-network.png",
    "receiptUrl": "https://pacta.wtf/protocols/obol-network/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x61c2970c176b85ab604e6b565c5f050a7176b62e725d449e8d27d700365283d6",
-   "priority": 39
+   "priority": 34
   },
   {
    "feedId": "finding:uniswap-governance-timelock:S23:adverse_delta",
@@ -2421,7 +2122,7 @@
    "cardFilename": "uniswap-governance-timelock.png",
    "receiptUrl": "https://pacta.wtf/protocols/uniswap-governance-timelock/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x435a5212e2490cd6024859f474dbbd897752b24985480413301d7573cb195801",
-   "priority": 40
+   "priority": 35
   },
   {
    "feedId": "finding:stake-dao:S22:adverse_delta",
@@ -2455,9 +2156,9 @@
     {
      "key": "quorum",
      "label": "Signer quorum",
-     "state": "g",
-     "cue": "S",
-     "value": "Lowest controlling quorum: 3-of-5"
+     "state": "b",
+     "cue": "M",
+     "value": "Lowest controlling quorum: 3-of-5 (documented 4-of-7)"
     },
     {
      "key": "emergency",
@@ -2481,67 +2182,7 @@
    "cardFilename": "stake-dao.png",
    "receiptUrl": "https://pacta.wtf/protocols/stake-dao/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5",
-   "priority": 41
-  },
-  {
-   "feedId": "finding:yo-protocol:S22:adverse_delta",
-   "slug": "yo-protocol",
-   "protocolName": "YO Protocol",
-   "xHandle": null,
-   "xUrl": null,
-   "kind": "adverse_delta",
-   "chain": "base",
-   "pinnedBlock": 58315414,
-   "blockHash": "0x5092b494a9f8555faecfaa0f49202536e0edcf26f2bdc6e25a563442258119cd",
-   "easUid": "0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5",
-   "sprint": 22,
-   "recordId": "yo-protocol-approval-registry-owner-admin-safe-s22",
-   "summaryShort": "Approval Registry owned by Admin Safe; vault upgrades keep a 48-hour timelock",
-   "rosette": [
-    {
-     "key": "upgrade",
-     "label": "Upgradeability",
-     "state": "g",
-     "cue": "S",
-     "value": "Upgradeable behind a ≥48h delay (2d)"
-    },
-    {
-     "key": "timelock",
-     "label": "Timelock floor",
-     "state": "a",
-     "cue": "W",
-     "value": "No enforced delay on at least one sampled control surface (0s)"
-    },
-    {
-     "key": "quorum",
-     "label": "Signer quorum",
-     "state": "g",
-     "cue": "S",
-     "value": "Lowest controlling quorum: 4-of-6"
-    },
-    {
-     "key": "emergency",
-     "label": "Emergency / freeze scope",
-     "state": "n",
-     "cue": "—",
-     "value": "No pause / freeze authority in the published records"
-    },
-    {
-     "key": "parity",
-     "label": "Docs-vs-chain parity",
-     "state": "a",
-     "cue": "W",
-     "value": "Documentation differs from the chain (parameter delta)"
-    }
-   ],
-   "docsSay": "timelocked caps on what each vault may approve",
-   "chainSays": "the Approval Registry is owned by the 4-of-6 Admin Safe directly; vault upgrades keep a 48-hour timelock",
-   "mainPostText": "YO Protocol. Docs say: Timelocked caps on what each vault may approve. On-chain at Base block #58,315,414: The Approval Registry is owned by the 4-of-6 Admin Safe directly; vault upgrades keep a 48-hour timelock. Docs and chain differ. Receipt below.",
-   "replyPostText": "Receipt: https://pacta.wtf/protocols/yo-protocol/ · Base attestation: https://base.easscan.org/attestation/view/0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5",
-   "cardFilename": "yo-protocol.png",
-   "receiptUrl": "https://pacta.wtf/protocols/yo-protocol/",
-   "attestationUrl": "https://base.easscan.org/attestation/view/0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5",
-   "priority": 42
+   "priority": 36
   },
   {
    "feedId": "finding:resupply:S22:adverse_delta",
@@ -2601,7 +2242,7 @@
    "cardFilename": "resupply.png",
    "receiptUrl": "https://pacta.wtf/protocols/resupply/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5",
-   "priority": 43
+   "priority": 37
   },
   {
    "feedId": "finding:aerodrome-finance-base:S21:adverse_delta",
@@ -2661,7 +2302,7 @@
    "cardFilename": "aerodrome-finance-base.png",
    "receiptUrl": "https://pacta.wtf/protocols/aerodrome-finance-base/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0xaddd478e0a488405a28720e11fed8d1942853dbb36fc75bb5a0725b83a460ad6",
-   "priority": 44
+   "priority": 38
   },
   {
    "feedId": "finding:puffer-finance-pufeth:S20:adverse_delta",
@@ -2721,7 +2362,7 @@
    "cardFilename": "puffer-finance-pufeth.png",
    "receiptUrl": "https://pacta.wtf/protocols/puffer-finance-pufeth/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0xe712dd31d79ab492e2e64eb5847396651dee81daa9f895ead45548e97f1a2eb7",
-   "priority": 45
+   "priority": 39
   },
   {
    "feedId": "finding:rocket-pool-reth:S19:adverse_delta",
@@ -2781,7 +2422,7 @@
    "cardFilename": "rocket-pool-reth.png",
    "receiptUrl": "https://pacta.wtf/protocols/rocket-pool-reth/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0xa04d9c98873fce6fffb60fe535510092f22284f3afeeb78e36e4a0c25d5ea928",
-   "priority": 46
+   "priority": 40
   },
   {
    "feedId": "finding:moonwell-lending-base:S18:adverse_delta",
@@ -2841,7 +2482,7 @@
    "cardFilename": "moonwell-lending-base.png",
    "receiptUrl": "https://pacta.wtf/protocols/moonwell-lending-base/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x105ea2849a5cd9ef601ae565e6b0adf288884771c8ac82c1c3d0a87aa789eb4f",
-   "priority": 47
+   "priority": 41
   },
   {
    "feedId": "finding:ethena-usde-susde:S14:adverse_delta",
@@ -2856,7 +2497,7 @@
    "easUid": "0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779",
    "sprint": 7,
    "recordId": "ethena-admin-timelock-and-dev-safe",
-   "summaryShort": "Timelock delay: docs 7 days · chain 1 day",
+   "summaryShort": "Admin timelock minimum is one day; core-function docs say seven days",
    "rosette": [
     {
      "key": "upgrade",
@@ -2901,7 +2542,7 @@
    "cardFilename": "ethena-usde-susde.png",
    "receiptUrl": "https://pacta.wtf/protocols/ethena-usde-susde/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x3e0e0e1b62de65b277b1399f9833cd70baf627e5ba69e17f1f4f76be30008779",
-   "priority": 48
+   "priority": 42
   },
   {
    "feedId": "finding:stader-labs-ethx:S12:adverse_delta",
@@ -2961,7 +2602,7 @@
    "cardFilename": "stader-labs-ethx.png",
    "receiptUrl": "https://pacta.wtf/protocols/stader-labs-ethx/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x7caae9c22c86ae171392def07dce83fa5da6fbf904b1ba9b5ff66a5021b16de9",
-   "priority": 49
+   "priority": 43
   },
   {
    "feedId": "finding:curve-finance-crvusd:S11:adverse_delta",
@@ -3021,7 +2662,7 @@
    "cardFilename": "curve-finance-crvusd.png",
    "receiptUrl": "https://pacta.wtf/protocols/curve-finance-crvusd/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x754edd7612258b755ff2e56903243d1f8867bad53c29ce3febb5ed9114005e42",
-   "priority": 50
+   "priority": 44
   },
   {
    "feedId": "finding:gearbox-v3-v3-1:S11:adverse_delta",
@@ -3036,7 +2677,7 @@
    "easUid": "0x754edd7612258b755ff2e56903243d1f8867bad53c29ce3febb5ed9114005e42",
    "sprint": 11,
    "recordId": "gearbox-v3-legacy-timelock-and-instance-safe",
-   "summaryShort": "LegacyTimelock reads 36 hours; V3.0 technical-change docs describe 2 days",
+   "summaryShort": "LegacyTimelock 36h vs 2-day docs; InstanceManager owner is a 4-of-21 Safe",
    "rosette": [
     {
      "key": "upgrade",
@@ -3057,7 +2698,7 @@
      "label": "Signer quorum",
      "state": "g",
      "cue": "S",
-     "value": "Lowest controlling quorum: 4-of-12"
+     "value": "InstanceManager owner Safe: 4-of-21; separate Veto Guard Safe: 4-of-12 (Ethereum block 26,403,523)."
     },
     {
      "key": "emergency",
@@ -3081,7 +2722,7 @@
    "cardFilename": "gearbox-v3-v3-1.png",
    "receiptUrl": "https://pacta.wtf/protocols/gearbox-v3-v3-1/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x754edd7612258b755ff2e56903243d1f8867bad53c29ce3febb5ed9114005e42",
-   "priority": 51
+   "priority": 45
   },
   {
    "feedId": "finding:ondo-finance-ousg-flux-finance:S10:adverse_delta",
@@ -3141,7 +2782,7 @@
    "cardFilename": "ondo-finance-ousg-flux-finance.png",
    "receiptUrl": "https://pacta.wtf/protocols/ondo-finance-ousg-flux-finance/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0xfdd83c8091ef6e8ffe67e8a55a78892fcfbb1092683b21ff2d85f8cc09750e6c",
-   "priority": 52
+   "priority": 46
   },
   {
    "feedId": "finding:usual-money-usd0-usd0:S8:adverse_delta",
@@ -3201,7 +2842,7 @@
    "cardFilename": "usual-money-usd0-usd0.png",
    "receiptUrl": "https://pacta.wtf/protocols/usual-money-usd0-usd0/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0xfd7ce0f2b980da6606c8cd755da45d99f9ae4826e6df1321ff52c2b0f8e6a6c2",
-   "priority": 53
+   "priority": 47
   },
   {
    "feedId": "finding:maple-finance-v2-syrup:S6:adverse_delta",
@@ -3261,7 +2902,7 @@
    "cardFilename": "maple-finance-v2-syrup.png",
    "receiptUrl": "https://pacta.wtf/protocols/maple-finance-v2-syrup/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x749d96e1a3d214a4ab66c528ca12c84dce085fa138dc370dd0eb817d890f09fa",
-   "priority": 54
+   "priority": 48
   },
   {
    "feedId": "finding:fluid-instadapp:S5:adverse_delta",
@@ -3321,7 +2962,7 @@
    "cardFilename": "fluid-instadapp.png",
    "receiptUrl": "https://pacta.wtf/protocols/fluid-instadapp/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x804289d4357b0a8d5a360911ec450c13ca36c4422d1e811c4c7040ef7d2628e5",
-   "priority": 55
+   "priority": 49
   },
   {
    "feedId": "finding:mellow-protocol-lido-earn:S4:adverse_delta",
@@ -3381,7 +3022,7 @@
    "cardFilename": "mellow-protocol-lido-earn.png",
    "receiptUrl": "https://pacta.wtf/protocols/mellow-protocol-lido-earn/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0xa26f81b0e68248c7f286527286b3d2e6b299502d53f4dfbc4397df7d22262986",
-   "priority": 56
+   "priority": 50
   },
   {
    "feedId": "finding:yearn-v3:S28:recent_change",
@@ -3396,7 +3037,7 @@
    "easUid": "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
    "sprint": 28,
    "recordId": "yearn-v3-ychad-safe-signers-s28",
-   "summaryShort": "Sampled RoleManager uses a 7-day timelock; yChad signer roster differs (6-of-9)",
+   "summaryShort": "yChad signer roster changed; the Safe keeps its 6-of-9 threshold",
    "rosette": [
     {
      "key": "upgrade",
@@ -3441,22 +3082,22 @@
    "cardFilename": "yearn-v3.png",
    "receiptUrl": "https://pacta.wtf/protocols/yearn-v3/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
-   "priority": 57
+   "priority": 51
   },
   {
-   "feedId": "finding:tori-finance:S32:unresolved_scope",
+   "feedId": "finding:tori-finance:S32:docs_updated",
    "slug": "tori-finance",
    "protocolName": "Tori Finance",
    "xHandle": "@tori_finance",
    "xUrl": "https://x.com/tori_finance",
-   "kind": "unresolved_scope",
+   "kind": "docs_updated",
    "chain": "ethereum",
    "pinnedBlock": 26451608,
    "blockHash": "0x0266af5bcad519d93b3be78e41b76a62985e22fbe4feef043ac3225f6f217a17",
    "easUid": "0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
    "sprint": 32,
    "recordId": "tori-trusd-timelock-admin-undocumented-timelock-s32",
-   "summaryShort": "trUSD timelock: current docs name the same 24-hour controller as observed",
+   "summaryShort": "Retrieved roles page names the retained trUSD controller; chain re-read pending",
    "rosette": [
     {
      "key": "upgrade",
@@ -3491,32 +3132,92 @@
      "label": "Docs-vs-chain parity",
      "state": "n",
      "cue": "—",
-     "value": "Current documentation names the retained 24-hour controller; pending a fresh chain read"
+     "value": "Documentation updated to name the retained observation; a fresh finalized-block chain read is pending"
     }
    ],
-   "docsSay": "documentation scope not verified; a documented breach is not established",
-   "chainSays": "trUSD timelock: current docs name the same 24-hour controller as observed",
-   "mainPostText": "Tori Finance @tori_finance: TrUSD timelock: current docs name the same 24-hour controller as observed. On-chain at Ethereum block #26,451,608. Observed on chain; a breach of a documented commitment is not established. Receipt below.",
+   "docsSay": "updated to name the controller observed at the retained pin; a fresh chain read is pending",
+   "chainSays": "Retrieved roles page names the retained trUSD controller; chain re-read pending",
+   "mainPostText": "Tori Finance @tori_finance: Retrieved roles page names the retained trUSD controller; chain re-read pending. On-chain at Ethereum block #26,451,608. Docs updated to match the retained chain read; fresh chain read pending. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/tori-finance/ · Base attestation: https://base.easscan.org/attestation/view/0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
    "cardFilename": "tori-finance.png",
    "receiptUrl": "https://pacta.wtf/protocols/tori-finance/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
-   "priority": 58
+   "priority": 52
   },
   {
-   "feedId": "finding:lagoon:S29:unresolved_scope",
-   "slug": "lagoon",
-   "protocolName": "Lagoon",
+   "feedId": "finding:odyssey-finance:S37:unresolved_scope",
+   "slug": "odyssey-finance",
+   "protocolName": "Odyssey Finance",
    "xHandle": null,
    "xUrl": null,
    "kind": "unresolved_scope",
    "chain": "ethereum",
-   "pinnedBlock": 26448221,
-   "blockHash": "0xa7818c0e1b8807aac0c999c2dc9aeeea40b91b4f19b1b76a62ad02d8d17607c8",
-   "easUid": "0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
-   "sprint": 29,
-   "recordId": "lagoon-vault-beacon-upgrade-delay-s29",
-   "summaryShort": "Legacy cbBTC beacon upgrades have no delay; 24h Opt-in doc coverage unverified",
+   "pinnedBlock": 26458556,
+   "blockHash": "0xe258bb1cbcc988e2dfdba4ba173f9f8690520dba3647cdcae18e0651822769d2",
+   "easUid": "0xa20a0fa97ac80abb3d3f9d4de615018ff3a07f42eb4f124375dc26a216f896a5",
+   "sprint": 37,
+   "recordId": "odyssey-finance-governor-safe-2-of-4-vs-3-of-5-s37",
+   "summaryShort": "Six ProxyAdmins share a 2-of-4 owner Safe; current governor docs unverified",
+   "rosette": [
+    {
+     "key": "upgrade",
+     "label": "Upgradeability",
+     "state": "n",
+     "cue": "—",
+     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+    },
+    {
+     "key": "timelock",
+     "label": "Timelock floor",
+     "state": "n",
+     "cue": "—",
+     "value": "No enforced admin delay in the published records"
+    },
+    {
+     "key": "quorum",
+     "label": "Signer quorum",
+     "state": "b",
+     "cue": "M",
+     "value": "Lowest controlling quorum: 2-of-4"
+    },
+    {
+     "key": "emergency",
+     "label": "Emergency / freeze scope",
+     "state": "n",
+     "cue": "—",
+     "value": "No pause / freeze authority in the published records"
+    },
+    {
+     "key": "parity",
+     "label": "Docs-vs-chain parity",
+     "state": "n",
+     "cue": "—",
+     "value": "Observed onchain state pinned; a breach of a documented commitment is not established"
+    }
+   ],
+   "docsSay": "documentation scope not verified; a documented breach is not established",
+   "chainSays": "Six ProxyAdmins share a 2-of-4 owner Safe; current governor docs unverified",
+   "mainPostText": "Odyssey Finance: Six ProxyAdmins share a 2-of-4 owner Safe; current governor docs unverified. On-chain at Ethereum block #26,458,556. Observed on chain; a breach of a documented commitment is not established. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/odyssey-finance/ · Base attestation: https://base.easscan.org/attestation/view/0xa20a0fa97ac80abb3d3f9d4de615018ff3a07f42eb4f124375dc26a216f896a5",
+   "cardFilename": "odyssey-finance.png",
+   "receiptUrl": "https://pacta.wtf/protocols/odyssey-finance/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0xa20a0fa97ac80abb3d3f9d4de615018ff3a07f42eb4f124375dc26a216f896a5",
+   "priority": 53
+  },
+  {
+   "feedId": "finding:seamless-protocol-base:S35:unresolved_scope",
+   "slug": "seamless-protocol-base",
+   "protocolName": "Seamless Protocol (Base)",
+   "xHandle": "@SeamlessFi",
+   "xUrl": "https://x.com/SeamlessFi",
+   "kind": "unresolved_scope",
+   "chain": "base",
+   "pinnedBlock": 59847352,
+   "blockHash": "0x58e5d7f07aaf27ccbf361f122a24120a821b455bb9dae30f4478a7da1381f3e8",
+   "easUid": "0xce8821d521758614be8860ac6476e1cec01ae000d81a660644e7bf1260d8cdfd",
+   "sprint": 35,
+   "recordId": "seamless-community-guardian-safe-2-of-3-s35",
+   "summaryShort": "Community Guardian Safe is 2-of-3; current guardian page unverified",
    "rosette": [
     {
      "key": "upgrade",
@@ -3528,9 +3229,129 @@
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "a",
-     "cue": "W",
-     "value": "0s on the legacy cbBTC vault beacon upgrade path (3-of-6 Safe); whether the documented 24h Opt-in delay covers this vault is unverified"
+     "state": "n",
+     "cue": "—",
+     "value": "No enforced admin delay in the published records"
+    },
+    {
+     "key": "quorum",
+     "label": "Signer quorum",
+     "state": "b",
+     "cue": "M",
+     "value": "Lowest controlling quorum: 2-of-3"
+    },
+    {
+     "key": "emergency",
+     "label": "Emergency / freeze scope",
+     "state": "g",
+     "cue": "S",
+     "value": "Pause / freeze authority scoped behind a multi-signer controller (2-of-3)"
+    },
+    {
+     "key": "parity",
+     "label": "Docs-vs-chain parity",
+     "state": "n",
+     "cue": "—",
+     "value": "Observed onchain state pinned; a breach of a documented commitment is not established"
+    }
+   ],
+   "docsSay": "documentation scope not verified; a documented breach is not established",
+   "chainSays": "Community Guardian Safe is 2-of-3; current guardian page unverified",
+   "mainPostText": "Seamless Protocol (Base) @SeamlessFi: Community Guardian Safe is 2-of-3; current guardian page unverified. On-chain at Base block #59,847,352. Observed on chain; a breach of a documented commitment is not established. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/seamless-protocol-base/ · Base attestation: https://base.easscan.org/attestation/view/0xce8821d521758614be8860ac6476e1cec01ae000d81a660644e7bf1260d8cdfd",
+   "cardFilename": "seamless-protocol-base.png",
+   "receiptUrl": "https://pacta.wtf/protocols/seamless-protocol-base/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0xce8821d521758614be8860ac6476e1cec01ae000d81a660644e7bf1260d8cdfd",
+   "priority": 54
+  },
+  {
+   "feedId": "finding:hakka-finance:S34:unresolved_scope",
+   "slug": "hakka-finance",
+   "protocolName": "Hakka Finance",
+   "xHandle": null,
+   "xUrl": null,
+   "kind": "unresolved_scope",
+   "chain": "ethereum",
+   "pinnedBlock": 26453551,
+   "blockHash": "0x51e9967ffd6a84012d0dad44204d523b8ac43928e69de2801d2e72dbf8767129",
+   "easUid": "0xc281741a4fb297a9ccb30b5485ca6ef2bcfb69be10236c056e7208301e30d992",
+   "sprint": 34,
+   "recordId": "hakka-multisig-undocumented-signer-s34",
+   "summaryShort": "HAKKA owner Safe is 2-of-4; current documented roster unverified",
+   "rosette": [
+    {
+     "key": "upgrade",
+     "label": "Upgradeability",
+     "state": "n",
+     "cue": "—",
+     "value": "Upgrade path not in the published records"
+    },
+    {
+     "key": "timelock",
+     "label": "Timelock floor",
+     "state": "n",
+     "cue": "—",
+     "value": "No enforced admin delay in the published records"
+    },
+    {
+     "key": "quorum",
+     "label": "Signer quorum",
+     "state": "b",
+     "cue": "M",
+     "value": "Lowest controlling quorum: 2-of-4"
+    },
+    {
+     "key": "emergency",
+     "label": "Emergency / freeze scope",
+     "state": "n",
+     "cue": "—",
+     "value": "No pause / freeze authority in the published records"
+    },
+    {
+     "key": "parity",
+     "label": "Docs-vs-chain parity",
+     "state": "n",
+     "cue": "—",
+     "value": "Observed onchain state pinned; a breach of a documented commitment is not established"
+    }
+   ],
+   "docsSay": "documentation scope not verified; a documented breach is not established",
+   "chainSays": "HAKKA owner Safe is 2-of-4; current documented roster unverified",
+   "mainPostText": "Hakka Finance: HAKKA owner Safe is 2-of-4; current documented roster unverified. On-chain at Ethereum block #26,453,551. Observed on chain; a breach of a documented commitment is not established. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/hakka-finance/ · Base attestation: https://base.easscan.org/attestation/view/0xc281741a4fb297a9ccb30b5485ca6ef2bcfb69be10236c056e7208301e30d992",
+   "cardFilename": "hakka-finance.png",
+   "receiptUrl": "https://pacta.wtf/protocols/hakka-finance/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0xc281741a4fb297a9ccb30b5485ca6ef2bcfb69be10236c056e7208301e30d992",
+   "priority": 55
+  },
+  {
+   "feedId": "finding:taiko-bridge:S34:unresolved_scope",
+   "slug": "taiko-bridge",
+   "protocolName": "Taiko Bridge",
+   "xHandle": "@taikoxyz",
+   "xUrl": "https://x.com/taikoxyz",
+   "kind": "unresolved_scope",
+   "chain": "ethereum",
+   "pinnedBlock": 26453551,
+   "blockHash": "0x51e9967ffd6a84012d0dad44204d523b8ac43928e69de2801d2e72dbf8767129",
+   "easUid": "0xc281741a4fb297a9ccb30b5485ca6ef2bcfb69be10236c056e7208301e30d992",
+   "sprint": 34,
+   "recordId": "taiko-dao-emergency-multisig-4-of-5-s34",
+   "summaryShort": "Emergency council 4-of-5, standard route 3 approvals; current guides unverified",
+   "rosette": [
+    {
+     "key": "upgrade",
+     "label": "Upgradeability",
+     "state": "n",
+     "cue": "—",
+     "value": "Upgrade path not in the published records"
+    },
+    {
+     "key": "timelock",
+     "label": "Timelock floor",
+     "state": "n",
+     "cue": "—",
+     "value": "No enforced admin delay in the published records"
     },
     {
      "key": "quorum",
@@ -3555,13 +3376,133 @@
     }
    ],
    "docsSay": "documentation scope not verified; a documented breach is not established",
+   "chainSays": "Emergency council 4-of-5, standard route 3 approvals; current guides unverified",
+   "mainPostText": "Taiko Bridge @taikoxyz: Emergency council 4-of-5, standard route 3 approvals; current guides unverified. On-chain at Ethereum block #26,453,551. Observed on chain; a breach of a documented commitment is not established. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/taiko-bridge/ · Base attestation: https://base.easscan.org/attestation/view/0xc281741a4fb297a9ccb30b5485ca6ef2bcfb69be10236c056e7208301e30d992",
+   "cardFilename": "taiko-bridge.png",
+   "receiptUrl": "https://pacta.wtf/protocols/taiko-bridge/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0xc281741a4fb297a9ccb30b5485ca6ef2bcfb69be10236c056e7208301e30d992",
+   "priority": 56
+  },
+  {
+   "feedId": "finding:infinifi:S30:unresolved_scope",
+   "slug": "infinifi",
+   "protocolName": "infiniFi",
+   "xHandle": "@infinifi",
+   "xUrl": "https://x.com/infinifi",
+   "kind": "unresolved_scope",
+   "chain": "ethereum",
+   "pinnedBlock": 26425374,
+   "blockHash": "0xfa22e277760f1df7134b0af20499d6305ee4e017219a917a61a78aa76e89382d",
+   "easUid": "0xe712dd31d79ab492e2e64eb5847396651dee81daa9f895ead45548e97f1a2eb7",
+   "sprint": 20,
+   "recordId": "infinifi-pause-role-admin-minor-roles-s20",
+   "summaryShort": "MINOR_ROLES_MANAGER administers PAUSE/UNPAUSE; current roles page unverified",
+   "rosette": [
+    {
+     "key": "upgrade",
+     "label": "Upgradeability",
+     "state": "n",
+     "cue": "—",
+     "value": "Upgrade path not in the published records"
+    },
+    {
+     "key": "timelock",
+     "label": "Timelock floor",
+     "state": "g",
+     "cue": "S",
+     "value": "7d minimum enforced delay on sampled timelocked surfaces"
+    },
+    {
+     "key": "quorum",
+     "label": "Signer quorum",
+     "state": "g",
+     "cue": "S",
+     "value": "Lowest controlling quorum: 4-of-7"
+    },
+    {
+     "key": "emergency",
+     "label": "Emergency / freeze scope",
+     "state": "g",
+     "cue": "S",
+     "value": "Pause / freeze authority scoped behind a multi-signer controller (4-of-N Safe)"
+    },
+    {
+     "key": "parity",
+     "label": "Docs-vs-chain parity",
+     "state": "n",
+     "cue": "—",
+     "value": "Observed onchain state pinned; a breach of a documented commitment is not established"
+    }
+   ],
+   "docsSay": "documentation scope not verified; a documented breach is not established",
+   "chainSays": "MINOR_ROLES_MANAGER administers PAUSE/UNPAUSE; current roles page unverified",
+   "mainPostText": "infiniFi @infinifi: MINOR_ROLES_MANAGER administers PAUSE/UNPAUSE; current roles page unverified. On-chain at Ethereum block #26,425,374. Observed on chain; a breach of a documented commitment is not established. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/infinifi/ · Base attestation: https://base.easscan.org/attestation/view/0xe712dd31d79ab492e2e64eb5847396651dee81daa9f895ead45548e97f1a2eb7",
+   "cardFilename": "infinifi.png",
+   "receiptUrl": "https://pacta.wtf/protocols/infinifi/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0xe712dd31d79ab492e2e64eb5847396651dee81daa9f895ead45548e97f1a2eb7",
+   "priority": 57
+  },
+  {
+   "feedId": "finding:lagoon:S29:unresolved_scope",
+   "slug": "lagoon",
+   "protocolName": "Lagoon",
+   "xHandle": null,
+   "xUrl": null,
+   "kind": "unresolved_scope",
+   "chain": "ethereum",
+   "pinnedBlock": 26448221,
+   "blockHash": "0xa7818c0e1b8807aac0c999c2dc9aeeea40b91b4f19b1b76a62ad02d8d17607c8",
+   "easUid": "0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
+   "sprint": 29,
+   "recordId": "lagoon-vault-beacon-upgrade-delay-s29",
+   "summaryShort": "Legacy cbBTC beacon upgrades have no delay; 24h Opt-in doc coverage unverified",
+   "rosette": [
+    {
+     "key": "upgrade",
+     "label": "Upgradeability",
+     "state": "a",
+     "cue": "W",
+     "value": "Upgradeable · Immediate beacon upgrades via 3-of-6 Safe (0s delay on UpgradeableBeacon; coverage by documented 24h Opt-in ProxyDelay unverified)"
+    },
+    {
+     "key": "timelock",
+     "label": "Timelock floor",
+     "state": "a",
+     "cue": "W",
+     "value": "0s on the legacy cbBTC vault beacon upgrade path (3-of-6 Safe); whether the documented 24h Opt-in delay covers this vault is unverified"
+    },
+    {
+     "key": "quorum",
+     "label": "Signer quorum",
+     "state": "g",
+     "cue": "S",
+     "value": "3-of-6 Safe (UpgradeableBeacon owner)"
+    },
+    {
+     "key": "emergency",
+     "label": "Emergency / freeze scope",
+     "state": "n",
+     "cue": "—",
+     "value": "No pause / freeze authority in the published records"
+    },
+    {
+     "key": "parity",
+     "label": "Docs-vs-chain parity",
+     "state": "n",
+     "cue": "—",
+     "value": "Observed onchain state pinned; a breach of a documented commitment is not established"
+    }
+   ],
+   "docsSay": "documentation scope not verified; a documented breach is not established",
    "chainSays": "Legacy cbBTC beacon upgrades have no delay; 24h Opt-in doc coverage unverified",
    "mainPostText": "Lagoon: Legacy cbBTC beacon upgrades have no delay; 24h Opt-in doc coverage unverified. On-chain at Ethereum block #26,448,221. Observed on chain; a breach of a documented commitment is not established. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/lagoon/ · Base attestation: https://base.easscan.org/attestation/view/0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
    "cardFilename": "lagoon.png",
    "receiptUrl": "https://pacta.wtf/protocols/lagoon/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
-   "priority": 59
+   "priority": 58
   },
   {
    "feedId": "finding:renzo-protocol-ezeth:S29:unresolved_scope",
@@ -3621,7 +3562,7 @@
    "cardFilename": "renzo-protocol-ezeth.png",
    "receiptUrl": "https://pacta.wtf/protocols/renzo-protocol-ezeth/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x32400a47c56a0522d26e7e83a45b0743a5b67c1e756672f875f09db0d93dec13",
-   "priority": 60
+   "priority": 59
   },
   {
    "feedId": "finding:whales-market:S28:unresolved_scope",
@@ -3681,6 +3622,66 @@
    "cardFilename": "whales-market.png",
    "receiptUrl": "https://pacta.wtf/protocols/whales-market/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
+   "priority": 60
+  },
+  {
+   "feedId": "finding:yo-protocol:S22:unresolved_scope",
+   "slug": "yo-protocol",
+   "protocolName": "YO Protocol",
+   "xHandle": null,
+   "xUrl": null,
+   "kind": "unresolved_scope",
+   "chain": "base",
+   "pinnedBlock": 58315414,
+   "blockHash": "0x5092b494a9f8555faecfaa0f49202536e0edcf26f2bdc6e25a563442258119cd",
+   "easUid": "0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5",
+   "sprint": 22,
+   "recordId": "yo-protocol-approval-registry-owner-admin-safe-s22",
+   "summaryShort": "Approval Registry owned by the Admin Safe; sampled vault upgrades keep 48 hours",
+   "rosette": [
+    {
+     "key": "upgrade",
+     "label": "Upgradeability",
+     "state": "g",
+     "cue": "S",
+     "value": "Upgradeable behind a ≥48h delay (2d)"
+    },
+    {
+     "key": "timelock",
+     "label": "Timelock floor",
+     "state": "a",
+     "cue": "W",
+     "value": "No enforced delay on at least one sampled control surface (0s)"
+    },
+    {
+     "key": "quorum",
+     "label": "Signer quorum",
+     "state": "g",
+     "cue": "S",
+     "value": "Lowest controlling quorum: 4-of-6"
+    },
+    {
+     "key": "emergency",
+     "label": "Emergency / freeze scope",
+     "state": "n",
+     "cue": "—",
+     "value": "No pause / freeze authority in the published records"
+    },
+    {
+     "key": "parity",
+     "label": "Docs-vs-chain parity",
+     "state": "n",
+     "cue": "—",
+     "value": "Observed onchain state pinned; a breach of a documented commitment is not established"
+    }
+   ],
+   "docsSay": "documentation scope not verified; a documented breach is not established",
+   "chainSays": "Approval Registry owned by the Admin Safe; sampled vault upgrades keep 48 hours",
+   "mainPostText": "YO Protocol: Approval Registry owned by the Admin Safe; sampled vault upgrades keep 48 hours. On-chain at Base block #58,315,414. Observed on chain; a breach of a documented commitment is not established. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/yo-protocol/ · Base attestation: https://base.easscan.org/attestation/view/0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5",
+   "cardFilename": "yo-protocol.png",
+   "receiptUrl": "https://pacta.wtf/protocols/yo-protocol/",
+   "attestationUrl": "https://base.easscan.org/attestation/view/0x50058ab09e446a72e880df68ce0e0ef96bb891ccd689a99ad2cbfc7b469ae9f5",
    "priority": 61
   },
   {
@@ -4090,9 +4091,9 @@
     {
      "key": "quorum",
      "label": "Signer quorum",
-     "state": "n",
-     "cue": "—",
-     "value": "No signer quorum in the published records"
+     "state": "b",
+     "cue": "M",
+     "value": "Lowest controlling quorum: 2-of-3"
     },
     {
      "key": "emergency",
@@ -4210,16 +4211,16 @@
     {
      "key": "quorum",
      "label": "Signer quorum",
-     "state": "n",
-     "cue": "—",
-     "value": "No signer quorum in the published records"
+     "state": "b",
+     "cue": "M",
+     "value": "Lowest controlling quorum: 2-of-5"
     },
     {
      "key": "emergency",
      "label": "Emergency / freeze scope",
-     "state": "n",
-     "cue": "—",
-     "value": "Pause / freeze authority present; its holder is not determined"
+     "state": "g",
+     "cue": "S",
+     "value": "Pause / freeze authority scoped behind a multi-signer controller (2-of-5)"
     },
     {
      "key": "parity",
@@ -4270,9 +4271,9 @@
     {
      "key": "quorum",
      "label": "Signer quorum",
-     "state": "n",
-     "cue": "—",
-     "value": "No signer quorum in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Lowest controlling quorum: 4-of-7"
     },
     {
      "key": "emergency",
@@ -4330,9 +4331,9 @@
     {
      "key": "quorum",
      "label": "Signer quorum",
-     "state": "n",
-     "cue": "—",
-     "value": "No signer quorum in the published records"
+     "state": "b",
+     "cue": "M",
+     "value": "Lowest controlling quorum: 2-of-2"
     },
     {
      "key": "emergency",
@@ -4450,9 +4451,9 @@
     {
      "key": "quorum",
      "label": "Signer quorum",
-     "state": "n",
-     "cue": "—",
-     "value": "No signer quorum in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Lowest controlling quorum: 3-of-5"
     },
     {
      "key": "emergency",
@@ -4510,9 +4511,9 @@
     {
      "key": "quorum",
      "label": "Signer quorum",
-     "state": "n",
-     "cue": "—",
-     "value": "No signer quorum in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Lowest controlling quorum: 3-of-5"
     },
     {
      "key": "emergency",
@@ -4930,16 +4931,16 @@
     {
      "key": "quorum",
      "label": "Signer quorum",
-     "state": "n",
-     "cue": "—",
-     "value": "No signer quorum in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Lowest controlling quorum: 3-of-5"
     },
     {
      "key": "emergency",
      "label": "Emergency / freeze scope",
-     "state": "n",
-     "cue": "—",
-     "value": "Pause / freeze authority present; its holder is not determined"
+     "state": "g",
+     "cue": "S",
+     "value": "Pause / freeze authority scoped behind a multi-signer controller (3-of-5)"
     },
     {
      "key": "parity",

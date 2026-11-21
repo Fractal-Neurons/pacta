@@ -51,7 +51,7 @@ RESULTS = []
 EXPECT = {
     "sprints": 37, "records": 309, "eas_attestations": 37,              # index.json sprints_completed / records_indexed; Base EAS sprint UIDs
     "protocols": 316, "eas_protocols": 189, "rpc_protocols": 127,          # /protocols/ pages = EAS-attested + RPC-pinned; badges = protocols
-    "briefs": 17, "badge_tiers": {"aligned": 126, "parameter_delta": 56, "rpc_observed": 127, "unresolved": 5, "docs_updated": 1, "recent_change": 1},
+    "briefs": 17, "badge_tiers": {"aligned": 126, "parameter_delta": 50, "rpc_observed": 127, "unresolved": 11, "docs_updated": 1, "recent_change": 1},
     "base_records": 38,                                                  # index.json records with chain "base"
     "rpc_by_chain": {"ethereum": 117, "base": 10},                         # rpc-pinned.json records per chain (sum = rpc_protocols)
     "multi_attest_txs": ["1–12", "13–16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37"],                              # attestation_coverage.eas_multi_attest_txs keys
@@ -83,7 +83,7 @@ EXPECT = {
 X = EXPECT
 # sha256 of docs/api/v1/graph-manifest.json: changes only through a deliberate re-pin (a Sprint stage / stamp rewrites it after the
 # rebuild); a merged Wave 2 claim or any site-only change must leave it as is
-GRAPH_MANIFEST_SHA256 = "bbecd1df2082530ab4e765045aac263984c0c36caf1e6b825af677c608050e48"
+GRAPH_MANIFEST_SHA256 = "10091176df7e41b8bce99de3e74eb34a953e1fe097ed0c8fac9050442bb0ede6"
 NON_PROTOCOL_PAGES = 40                                                  # docs/**/*.html pages that are not /protocols/<slug>/ (40: + /curators/ /scan/ /webhook/ /seal/ /miniapp/, + the Cap, Compound V3 and Lista Lending briefs)
 
 
@@ -1615,7 +1615,7 @@ def main(argv=None):
             fu = v["entries"][0].get("governance_url") if v["pinned"] else None
             ok_ = callout_ok(pg, "clearance", name_, v["slug"], fu, dossier="outline") and (bool(cls_ & {"parameter_delta", "rpc_observed", "protective_delta"}))
             # an Unresolved / Changed recently page (tools/scorecard_corrections.json) never asks "Fixed this gap?" (no gap is established)
-            if (__import__("scorecard_corrections").status(v["slug"]) or "") in ("unresolved", "recent_change"):
+            if (__import__("scorecard_corrections").status(v["slug"]) or "") in ("unresolved", "recent_change", "docs_updated"):
                 ok_ = ok_ and 'id="seal-cta"' not in pg and "Fixed this gap?" not in pg and "Book $99 seal" not in pg
         if not ok_:
             proto_bad.append(v["slug"])
@@ -1976,7 +1976,7 @@ def main(argv=None):
     scan_ = pages.get(os.path.join("scan", "index.html"), "")
     chips_v2 = {html.unescape(lbl_): a_ for a_, lbl_ in re.findall(r'data-receipt data-pf-chain="(?:ethereum|base)" data-pf-address="(0x[0-9a-fA-F]{40})" aria-label="Try ([^:]+):', scan_)}
     want_chips = {lbl: BS.LIVE_CHECK_TARGET.get(sl, (lk_v2[sl]["preflightArgs"]["chain"], lk_v2[sl]["preflightArgs"]["address"]))[1] for lbl, sl in BS.SCAN_CHIPS}
-    st_r = next(x_ for x_ in BS.receipt_data(idx) if x_["slug"] == "stader-labs-ethx")
+    st_r = next(x_ for x_ in BS.receipt_data(idx, BS.PREVIEW_RECEIPTS) if x_["slug"] == "stader-labs-ethx")
     web_ = pages.get(os.path.join("webhook", "index.html"), "")
     alert_ = BS.DECODED[BS.ALERT_EXAMPLE]["operations"][0]
     seal_ = pages.get(os.path.join("seal", "index.html"), "")
@@ -2024,7 +2024,7 @@ def main(argv=None):
         pg_ = pages.get(os.path.join("protocols", v["slug"], "index.html"), "")
         has_ = f'href="../../seal/?protocol={v["slug"]}" data-cta="seal_99"' in pg_
         # every flagged page links the $99 seal, except an Unresolved / Changed recently page, which never offers to re-check a "fixed gap"
-        neutral_ = (__import__("scorecard_corrections").status(v["slug"]) or "") in ("unresolved", "recent_change")
+        neutral_ = (__import__("scorecard_corrections").status(v["slug"]) or "") in ("unresolved", "recent_change", "docs_updated")
         if has_ != ('id="issuer-clearance"' in pg_ and not neutral_):
             seal_cta_bad.append(v["slug"])
     req_v2 = read("docs/request/index.html")
@@ -2054,7 +2054,7 @@ def main(argv=None):
         pg_ = pages.get(os.path.join("protocols", v["slug"], "index.html"), "")
         if 'id="issuer-clearance"' not in pg_:
             continue
-        if (__import__("scorecard_corrections").status(v["slug"]) or "") in ("unresolved", "recent_change"):
+        if (__import__("scorecard_corrections").status(v["slug"]) or "") in ("unresolved", "recent_change", "docs_updated"):
             # Unresolved / Changed recently: the issuer callout alone (one convert section), no seal card and no "fixed this gap" pointer
             if not (pg_.count('class="memo-sec convert') == 1 and 'id="seal-cta"' not in pg_ and 'data-cta="seal_wd"' not in pg_
                     and 'data-cta="seal_99"' not in pg_):
@@ -2332,17 +2332,18 @@ def main(argv=None):
                          if re.search("[\u2192\u2197]", re.sub(r"<[^>]+>", "", re.sub(r"<script.*?</script>", "", t[t.find("<body"):], flags=re.S))))
     arrows44 = sum(t.count('<svg class="i ia" viewBox="0 0 24 24" aria-hidden="true">') for t in pages.values())
     v44 = {
-        "R-V1a: 'Try: Stader ETHx' checks the ETHx proxy (EIP-1967, timelocked admin; listed on the Stader record page); YO and Moonwell check their record targets":
-            chips44.get("Stader ETHx") == ("ethereum", BS.HERO_EXAMPLE[2]) == BS.LIVE_CHECK_TARGET["stader-labs-ethx"]
-            and BS.HERO_EXAMPLE[2] in pages[os.path.join("protocols", "stader-labs-ethx", "index.html")]
-            and all(chips44.get(lbl) == (BS.chain_of(idx44[rid]), idx44[rid]["target_contract"]) for slug, rid, lbl, *_ in BS.RECEIPTS if slug not in BS.LIVE_CHECK_TARGET)
-            and len(chips44) == 3,
+        "R-V1a (v6 E16): every 'Try:' chip checks its receipt record's own target (Usual Money, Treehouse, Moonwell); each chip is a settled "
+        "Delta, never a bookkeeping, Unresolved or Docs updated finding, and never labelled GAP":
+            all(chips44.get(lbl) == BS.LIVE_CHECK_TARGET.get(slug, (BS.chain_of(idx44[rid]), idx44[rid]["target_contract"])) for slug, rid, lbl, *_ in BS.RECEIPTS)
+            and len(chips44) == 3 and list(chips44) == [lbl for _s, _r, lbl, *_ in BS.RECEIPTS]
+            and all(__import__("scorecard_corrections").finding_class(slug) in ("clear_weaker", "real_difference") for slug, *_ in BS.RECEIPTS)
+            and BS.RECEIPTS[0][0] == "usual-money-usd0-usd0" and '>GAP<' not in home43,
         "R-V1b: verdict, metrics, then the indexed record with its Docs-vs-chain badge; one visible scope sentence; methodology and limits collapsed (harness)":
             res.get("v44_live_card_verdict_first") is True and "Methodology & single-address scope limits" in app43,
         "R-V3: the Try examples wrap at narrow widths (no swipe row, no clipped chip)":
             "  .try-row { flex-wrap: wrap; gap: 6px 8px; }" in css43 and "scroll-snap-type" not in css43 and "mask-image" not in css43,
         "R-V2: long radar identifiers break inside their mobile card":
-            "  table.radar td, table.radar .op, table.radar .sub, table.radar .meta { overflow-wrap: anywhere; word-break: break-word; min-width: 0; }" in css43,
+            "  table.radar td, table.radar .op, table.radar .sub, table.radar .meta { overflow-wrap: break-word; word-break: normal; min-width: 0; }" in css43,
         "P1-2 / R5: every pre in a card or tab panel wraps (pre-wrap + overflow-wrap: anywhere)":
             '[data-slot="card"] pre, [data-slot="tabs-content"] pre { white-space: pre-wrap; overflow-wrap: anywhere;' in css43
             and "white-space: pre-wrap; overflow-wrap: anywhere;" in css_rule(".term pre"),
@@ -2408,7 +2409,7 @@ def main(argv=None):
                  and all(b[:8] == b"\x89PNG\r\n\x1a\n" and _st45.unpack(">II", b[16:24]) == (1200, 675) for b in cards45.values()))
     try:
         xf45, xh45 = json.loads(read("docs/api/v1/x-feed.json")), json.loads(read("docs/api/v1/x-handles.json"))
-        kind_grade = {"adverse_delta": "delta", "recent_change": "recent_change", "unresolved_scope": "unresolved", "protective_delta": "protective", "aligned_baseline": "aligned",
+        kind_grade = {"adverse_delta": "delta", "recent_change": "recent_change", "docs_updated": "docs_updated", "unresolved_scope": "unresolved", "protective_delta": "protective", "aligned_baseline": "aligned",
                       "rpc_observed": "observed"}
         sc_g45 = {c["slug"]: c["grade"] for c in json.loads(read("docs/api/v1/scorecards.json"))["protocols"]}
         prot_items = [i for i in xf45["items"] if i.get("kind") in kind_grade]
@@ -2456,7 +2457,7 @@ def main(argv=None):
         "G-P2-2: 'Heuristic score' in the checker, limits link to /methodology/#live-checker, which explains the heuristic and the delta counts (+ harness)":
             '"Heuristic score"' in app43 and "Risk score" not in app43 and '<section class="memo-sec" id="live-checker">' in meth43
             and f'{nums45["delta"]} of the {nums45["protocols"]} protocols carry a Delta status' in meth43
-            and (lambda C_: html.escape(f'of the {C_.flagged_total()} historically flagged comparisons, {C_.breakdown_text()}', quote=True) in meth43)(
+            and (lambda C_: html.escape(C_.breakdown_text(), quote=True) in meth43)(
                 __import__("scorecard_corrections"))
             and res.get("v45_live_checker_link") is True,
         "G-P2-3: combobox ranks prefix matches first, matches 0x addresses, a mouse pick closes it (aria-expanded=false) and clears the query (harness)":
@@ -2499,22 +2500,21 @@ def main(argv=None):
     al_col = LK451.BADGE_TIERS["aligned"][1]
     rgb451 = [int(al_col[i:i + 2], 16) for i in (1, 3, 5)]
     n451 = BS.site_numbers(json.loads(read("docs/api/v1/index.json")))
-    C451 = __import__("scorecard_corrections")      # the independent four-way classification of the historically flagged comparisons
-    line451 = html.escape(f'Across the {C451.flagged_total()} historically flagged comparisons: {C451.breakdown_text()} — plus '
-                          f'{n451["protective"]} protective cases where the chain is stricter than documented.', quote=True)
-    line451 = f'<p class="delta-line" data-delta-line>{line451}</p>'
+    C451 = __import__("scorecard_corrections")      # v6 C13: the single table of the 56 reviewed findings (verifier rulings)
+    line451 = f'<p class="delta-line" data-delta-line>{html.escape(C451.breakdown_text(), quote=True)}</p>'
     v451 = {
         "R3-01: every Aligned SVG badge is neutral (no #047857 / green anywhere in the badges; white on the Aligned fill >= 7.5:1)":
             bool(aligned451) and not any("#047857" in t for t in badges451.values())
             and all(f'fill="{al_col}"' in t for t in aligned451) and cr45("#ffffff", al_col) >= 7.5 and max(rgb451) - min(rgb451) <= 40,
         "R3-02: the demo receipt link is >= 24 px tall (inline-flex, min-height 24px; script unchanged)":
             ".live-receipt a { display:inline-flex; align-items:center; min-height:24px;" in demo_css,
-        "the four-way line 'Across the 56 historically flagged comparisons: 16 … weaker …, 17 …, 13 bookkeeping …, and 10 unresolved — plus P "
-        "protective cases …' under the homepage tiles and the /scorecards/ intro (registry + data); no 'adverse' tile":
+        "v6 C13: the rulings sentence 'Of 56 reviewed findings, 43 are Deltas (16 weaker protections, 16 other differences and 11 "
+        "bookkeeping changes), 1 is Changed recently, 1 is Docs updated and 11 are Unresolved; …' (asserted equal to the computed counts) under "
+        "the homepage tiles, on /scorecards/ and on /radar/; the Deltas tile reads 43 with its three subcounts; no 'adverse' tile":
             line451 in home43 and line451 in pages[os.path.join("scorecards", "index.html")]
+            and html.escape(C451.breakdown_text(), quote=False) in pages[os.path.join("radar", "index.html")]
             and home43.find('data-proof>') < home43.find(line451)
-            and (f'<b>{C451.breakdown()["clearWeaker"]}</b><span>Weaker than documented</span><small>Plus '
-                 f'{C451.breakdown_short().split(" · ", 1)[1]}</small>') in home43
+            and (f'<b>{C451.breakdown()["delta"]}</b><span>Deltas</span><small>{C451.breakdown_short()}</small>') in home43
             and "Adverse: chain looser than docs" not in home43 and " adverse, " not in home43,
     }
     check("v4.5.1 polish (R3-01 neutral Aligned badges, R3-02 demo receipt link target, '36 of 90' reconciliation line)", all(v451.values()),
@@ -2954,8 +2954,8 @@ def main(argv=None):
         c_ = CORR_.get(v["slug"]) or {}
         if c_.get("status") == "unresolved":
             return "docs_updated" if c_.get("subPill") else "unresolved"
-        if c_.get("status") == "recent_change":
-            return "recent_change"
+        if c_.get("status") in ("recent_change", "docs_updated"):
+            return c_["status"]
         return "aligned" if BS.is_aligned_page(v["entries"]) else "parameter_delta"
     tier_of = {v["slug"]: _tier(v) for v in sp_lk.values()}
     card_bad = []
@@ -3130,11 +3130,11 @@ def main(argv=None):
         "MCP recipes (Claude Code / OpenAI Agents SDK / LangChain, <= 10 lines) in README + SKILL.md": all(code in read("README.md") and code in read("docs/SKILL.md")
                                                                                                          and len(code.splitlines()) <= 10 for _, _, code in B2AV.MCP_RECIPES)
             and [t for t, _, _ in B2AV.MCP_RECIPES] == ["Claude Code", "OpenAI Agents SDK (Python)", "LangChain (langchain-mcp-adapters)"],
-        "/protocols/ filter: input + Docs vs chain (7), Chain (3) and Basket (5) groups, Clear all, active state, empty-state slot, data attrs on every protocol row":
-            all(f'data-pfilter-status="{k}"' in hub_ for k in ("all", "delta", "recent_change", "unresolved", "protective", "aligned", "observed"))
+        "/protocols/ filter: input + Docs vs chain (8), Chain (3) and Basket (5) groups, Clear all, active state, empty-state slot, data attrs on every protocol row":
+            all(f'data-pfilter-status="{k}"' in hub_ for k in ("all", "delta", "recent_change", "docs_updated", "unresolved", "protective", "aligned", "observed"))
             and all(f'data-pfilter-chain="{k}"' in hub_ for k in ("all", "ethereum", "base"))
             and all(x in hub_ for x in ('id="proto-clear"', 'id="proto-active"', 'id="proto-empty"', 'data-pgroup="status"', 'data-pgroup="chain"'))
-            and 'id="proto-q"' in hub_ and len(re.findall(r'<tr data-ptier="(?:delta|recent_change|unresolved|protective|aligned|observed)" data-pchains="[a-z ]+" data-pbaskets="[a-z_ ]*" data-psearch="[^"]*">', hub_)) == X["protocols"]
+            and 'id="proto-q"' in hub_ and len(re.findall(r'<tr data-ptier="(?:delta|recent_change|docs_updated|unresolved|protective|aligned|observed)" data-pchains="[a-z ]+" data-pbaskets="[a-z_ ]*" data-psearch="[^"]*">', hub_)) == X["protocols"]
             and all(f'data-pfilter-basket="{k}"' in hub_ for k in ["all"] + [b[0] for b in BS.BASKETS]),
         "/protocols/ filter: textContent / hidden only": (lambda m: bool(m) and not re.search(r"innerHTML|outerHTML|insertAdjacentHTML|document\.write|fetch\(", m.group(0)))(
             re.search(r"function initProtocolFilter\(\) \{.*?\n  \}\n", appjs, re.S)),
@@ -3700,7 +3700,7 @@ def main(argv=None):
        "hollow 'u' for every RPC-observed protocol and never 'u' for an attested one; states only g/b/a/n/u; byte-identical rebuild"] = (
         sc_.get("schema") == "pacta.scorecards.v1" and set(cards_) == set(pjp_) and len(cards_) == X["protocols"]
         and all((c_["grade"] == "observed") == (not pjp_[k_]["easAttested"]) for k_, c_ in cards_.items())
-        and all((c_["grade"] in ("delta", "unresolved", "recent_change")) == any(sf_["classification"] == "parameter_delta" for sf_ in pjp_[k_]["surfaces"])
+        and all((c_["grade"] in ("delta", "unresolved", "recent_change", "docs_updated")) == any(sf_["classification"] == "parameter_delta" for sf_ in pjp_[k_]["surfaces"])
                 for k_, c_ in cards_.items())
         # UNRESOLVED <=> tools/scorecard_corrections.json marks the protocol unresolved (a documented breach not established)
         and all((c_["grade"] == "unresolved") == ((__import__("scorecard_corrections").get(k_) or {}).get("status") == "unresolved")
@@ -3710,7 +3710,10 @@ def main(argv=None):
                 for k_, c_ in cards_.items())
         # the four-way breakdown of the historically flagged comparisons is exposed, and each flagged card carries its class
         and sc_.get("findingBreakdown") == __import__("scorecard_corrections").breakdown()
-        and sum(1 for c_ in cards_.values() if c_.get("findingClass")) == sum(sc_["findingBreakdown"].values())
+        # v6 C13: one table: every reviewed finding's grade is its rulings status; each reviewed Delta carries its subcategory
+        and all(cards_[k_]["grade"] == st_ for k_, st_ in __import__("scorecard_corrections").reviewed()["partition"].items())
+        and sum(1 for c_ in cards_.values() if c_.get("deltaSubcategory")) == sc_["findingBreakdown"]["delta"]
+        and {g_: v_["protocols"] for g_, v_ in sc_["grades"].items()} == __import__("scorecard_corrections").reviewed()["fullCatalogueCounts"]
         and all((c_["factors"][4]["state"] == "u") == (not c_["easAttested"]) for c_ in cards_.values())
         and sum(c_["factors"][4]["state"] == "u" for c_ in cards_.values()) == X["rpc_protocols"]
         and all(f_["state"] in ("g", "b", "a", "n", "u") and [x_["key"] for x_ in c_["factors"]] == ["upgrade", "timelock", "quorum", "emergency", "parity"]
@@ -3728,7 +3731,7 @@ def main(argv=None):
     fp_ = pages.get(os.path.join("for-protocols", "index.html"), "")
     e3["/for-protocols/: h1, 4 verified case studies (Stader, YO, Stake DAO, Moonwell), live badge widget over every protocol, 4-question FAQ, $0 / $500 / $2,500-$5,000 CTAs, in the sitemap"] = (
         "<h1>Turn control-plane transparency into allocator trust.</h1>" in fp_
-        and all(f'data-case="{x_}"' in fp_ for x_ in ("stader-labs-ethx", "yo-protocol", "stake-dao", "moonwell-lending-base"))
+        and all(f'data-case="{x_}"' in fp_ for x_ in ("stader-labs-ethx", "usual-money-usd0-usd0", "stake-dao", "moonwell-lending-base"))
         and fp_.count("<option value=") == X["protocols"] and "data-badge-widget" in fp_ and fp_.count("<dt>") >= 4
         and all(f'href="../request/?tier={t_}"' in fp_ for t_ in ("community", "rapid-500", "clearance"))
         and "Re-verification · $500, 24h" in fp_ and "Full dossier · $2,500–$5,000, 24h" in fp_ and f"<loc>{BS.BASE_URL}/for-protocols/</loc>" in read("docs/sitemap.xml"))
@@ -3761,7 +3764,7 @@ def main(argv=None):
         and re.findall(r'<section class="(?:sec|hero hero-v3)" id="([a-z]+)"|<section class="hero hero-v3">', hv_) is not None
         and [m_ for m_ in re.findall(r'<section class="[^"]+"(?: id="([a-z-]+)")?[^>]*>', hv_)] == ["", "how-it-works", "scorecards", "radar", "audiences", "pricing"]
         and '<h1><span class="l">Protocol docs drift.</span><br><span class="l">The chain doesn’t.</span></h1>' in hv_ and 'class="ftr"' in hv_
-        and f'class="stat" data-slot="card"><b>{sc_["findingBreakdown"]["clearWeaker"]}</b><span>Weaker than documented</span>' in hv_
+        and f'class="stat" data-slot="card"><b>{sc_["findingBreakdown"]["delta"]}</b><span>Deltas</span>' in hv_
         and f'class="stat" data-slot="card"><b>{sum(c_["grade"] == "protective" for c_ in cards_.values())}</b><span>Protective</span>' in hv_
         and f'Deltas <span class="num">({sum(c_["grade"] == "delta" for c_ in cards_.values())})</span>' in hv_
         and f'All <span class="num">({X["protocols"]})</span>' in hv_)
@@ -3867,7 +3870,7 @@ def main(argv=None):
     i_try, i_conn, i_pf = home_v.find('class="hero-try"'), home_v.find('id="connect"'), home_v.find('id="preflight"')
     st_v = next(v for v in sp_v.values() if v["slug"] == "stader-labs-ethx")
     st_wd = CDV1.what_differs(st_v["entries"])
-    v1["P1 first success (Edge v3): three receipt pills (Stader / YO / Moonwell) render their pinned, attested receipt instantly and run the live check of the same contract (harness)"] = (
+    v1["P1 first success (Edge v3; v6 E16): three receipt pills (Usual Money / Treehouse / Moonwell) render their pinned, attested receipt instantly and run the live check of the same contract (harness)"] = (
         res.get("v_hero_receipts") is True and res.get("v_hero_click_fetches") is True
         and (st_wd["changed"][0]["observed"], st_wd["changed"][0]["documented"]) == ("3-of-6", "3-of-5"))
     ua_files = {f: read(f) for f in ("docs/index.html", "docs/mcp/index.html", "README.md", "docs/llms.txt", "docs/llms-full.txt", "docs/SKILL.md")}
@@ -3899,7 +3902,8 @@ def main(argv=None):
         # V8 (v4): a short structured value is shown as is; a long one as a whole-word excerpt (never mid-word / mid-address) with the
         # full verbatim record text behind "Show the full ..."
         by_v = {e["id"]: e for e in v["entries"]}
-        ex_ = lambda short_, full_: short_ if (not short_.endswith("…") and len(short_) <= 60) else BS.clean_excerpt(full_ or short_)
+        ex_ = lambda short_, full_: (BS.plain(short_) if (not BS.plain(short_).endswith("…") and len(BS.plain(short_)) <= 60)
+                                     else BS.clean_excerpt(BS.plain(full_) or BS.plain(short_)))
         want = [f'<li data-wd-changed><b>{html.escape(c["parameter"])}</b>: <span class="obs">{html.escape(ex_(c["observed"], by_v[c["recordId"]]["onchain_observed"]))}</span> observed vs '
                 f'<span class="doc">{html.escape(ex_(c["documented"], by_v[c["recordId"]]["documented_reference"]))}</span> documented' for c in wd["changed"]]
         corr_v = __import__("scorecard_corrections").get(v["slug"]) or {}
