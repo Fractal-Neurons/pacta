@@ -9,8 +9,8 @@
   "observed_control_plane": {
     "is_proxy": true,
     "implementation_address": "0xA60f29201Aeae592d9aB95747Ae1cF425dBb036C",
-    "controller_kind": "none",
-    "controller_address": null,
+    "controller_kind": "contract",
+    "controller_address": "0xee2d52477a7c1A7Be0B0347dBe7e3b15185B416F",
     "safe_threshold": null,
     "safe_owners_count": null,
     "timelock_min_delay_seconds": null
