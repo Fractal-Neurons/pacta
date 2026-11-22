@@ -1,0 +1,104 @@
+{
+  "schema": "pacta.wave4.catalogue_targets.v1",
+  "batch": 2,
+  "total_pool_slots": 24,
+  "batch_2_open_slots": 9,
+  "batch_2_held_slots": 3,
+  "chains_allowed": [
+    "ethereum",
+    "base"
+  ],
+  "verification_method": "Every contract_address below was fetched directly from the protocol's own official documentation or official GitHub repository (HTTP 200 literal EIP-55 match), verified to hold live deployed bytecode via eth_getCode on >= 2 independent RPCs, verified absent across all 1,589 addresses in Pacta's catalogue and Batch 1, and verified to agree 100% between live paid verdict and verify_wave4_pr.py v10.",
+  "targets": [
+    {
+      "slot_id": "base-spark-psm3",
+      "chain": "base",
+      "chain_id": 8453,
+      "protocol_name": "Spark Liquidity Layer on Base (PSM3)",
+      "contract_address": "0x1601843c5E9bC251A3272907010AFa41Fa18347E",
+      "defillama_tvl_usd": 144900000,
+      "official_source_url": "https://raw.githubusercontent.com/sparkdotfi/spark-address-registry/master/src/Base.sol",
+      "award_usdc": "1.00"
+    },
+    {
+      "slot_id": "ethereum-zksync-era-bridgehub",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "protocol_name": "zkSync Era Canonical Bridge (Bridgehub)",
+      "contract_address": "0x303a465B659cBB0ab36eE643eA362c509EEb5213",
+      "defillama_tvl_usd": 83600000,
+      "official_source_url": "https://raw.githubusercontent.com/matter-labs/zksync-era/main/etc/env/ecosystems/mainnet.yaml",
+      "award_usdc": "1.00"
+    },
+    {
+      "slot_id": "ethereum-near-erc20-locker",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "protocol_name": "NEAR Rainbow Bridge (ERC20Locker)",
+      "contract_address": "0x23Ddd3e3692d1861Ed57EDE224608875809e127f",
+      "defillama_tvl_usd": 48900000,
+      "official_source_url": "https://raw.githubusercontent.com/aurora-is-near/rainbow-bridge-client/main/packages/client/README.md",
+      "award_usdc": "1.00"
+    },
+    {
+      "slot_id": "ethereum-origin-oeth-vault",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "protocol_name": "Origin Ether (OETHVaultProxy)",
+      "contract_address": "0x39254033945AA2E4809Cc2977E7087BEE48bd7Ab",
+      "defillama_tvl_usd": 36700000,
+      "official_source_url": "https://raw.githubusercontent.com/OriginProtocol/origin-dollar/master/contracts/utils/addresses.js",
+      "award_usdc": "1.00"
+    },
+    {
+      "slot_id": "ethereum-fx-protocol-treasury",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "protocol_name": "f(x) Protocol (FxETHTreasury Proxy)",
+      "contract_address": "0x0e5CAA5c889Bdf053c9A76395f62267E653AFbb0",
+      "defillama_tvl_usd": 29700000,
+      "official_source_url": "https://raw.githubusercontent.com/AladdinDAO/deployments/main/deployments.mainnet.md",
+      "award_usdc": "1.00"
+    },
+    {
+      "slot_id": "base-chainlink-ccip-router",
+      "chain": "base",
+      "chain_id": 8453,
+      "protocol_name": "Chainlink CCIP on Base (Router)",
+      "contract_address": "0x881e3A65B4d4a04dD529061dd0071cf975F58bCD",
+      "defillama_tvl_usd": 25900000,
+      "official_source_url": "https://docs.chain.link/ccip/directory/mainnet/chain/ethereum-mainnet-base-1",
+      "award_usdc": "1.00"
+    },
+    {
+      "slot_id": "ethereum-manta-pacific-portal",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "protocol_name": "Manta Pacific Canonical Bridge (OptimismPortalProxy)",
+      "contract_address": "0x9168765EE952de7C6f8fC6FaD5Ec209B960b7622",
+      "defillama_tvl_usd": 17100000,
+      "official_source_url": "https://raw.githubusercontent.com/Manta-Network/docs/main/docs/manta-pacific/Build%20on%20Manta/Contracts.md",
+      "award_usdc": "1.00"
+    },
+    {
+      "slot_id": "base-fluid-liquidity",
+      "chain": "base",
+      "chain_id": 8453,
+      "protocol_name": "Fluid on Base (FluidLiquidityProxy)",
+      "contract_address": "0x52Aa899454998Be5b000Ad077a46Bbe360F4e497",
+      "defillama_tvl_usd": 16200000,
+      "official_source_url": "https://raw.githubusercontent.com/Instadapp/fluid-contracts-public/main/deployments/deployments.md",
+      "award_usdc": "1.00"
+    },
+    {
+      "slot_id": "ethereum-fraxlend-pair-deployer",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "protocol_name": "Fraxlend on Ethereum (FraxlendPairDeployer)",
+      "contract_address": "0x5d6e79Bcf90140585CE88c7119b7E43CAaA67044",
+      "defillama_tvl_usd": 15900000,
+      "official_source_url": "https://raw.githubusercontent.com/FraxFinance/frax-template/master/src/Constants.sol",
+      "award_usdc": "1.00"
+    }
+  ]
+}
