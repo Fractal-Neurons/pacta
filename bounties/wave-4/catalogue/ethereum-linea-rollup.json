@@ -1,21 +1,21 @@
 {
-  "slot_id": "ethereum-linea-rollup",
-  "chain": "ethereum",
-  "protocol_name": "Linea Rollup and L1 Message Service (LineaRollup)",
-  "contract_address": "0xd19d4B5d358258f05D7B411E21A1460D11B0876F",
-  "official_source_url": "https://raw.githubusercontent.com/Consensys/doc.linea/main/docs/network/build/contracts.mdx",
-  "pinned_block_number": 26471729,
-  "pinned_block_hash": "0x44213b39a9fa47baacce76f0eb6a6efda1429ec2fb8bfc1b9a34d6676f893d47",
-  "observed_control_plane": {
-    "is_proxy": true,
-    "implementation_address": "0x052b73d934e9412045bf731574463fd026d74645",
-    "controller_kind": "timelock",
-    "controller_address": "0xd6B95c960779c72B8C6752119849318E5d550574",
-    "safe_threshold": null,
-    "safe_owners_count": null,
-    "timelock_min_delay_seconds": 0
-  },
-  "payment_tx_hash": "0x05f8b2c7331c69596a6022050bff943a0ac2926fca2aba38978fd2046f70b6eb",
-  "contributor_github": "nycthyraxo-oss",
-  "base_payout_address": "0xfd25cd317FD74585E09F01DA846C430749881A76"
+ "slot_id": "ethereum-linea-rollup",
+ "chain": "ethereum",
+ "protocol_name": "Linea Rollup and L1 Message Service (LineaRollup)",
+ "contract_address": "0xd19d4B5d358258f05D7B411E21A1460D11B0876F",
+ "official_source_url": "https://raw.githubusercontent.com/Consensys/doc.linea/main/docs/network/build/contracts.mdx",
+ "pinned_block_number": 26471729,
+ "pinned_block_hash": "0x44213b39a9fa47baacce76f0eb6a6efda1429ec2fb8bfc1b9a34d6676f893d47",
+ "observed_control_plane": {
+  "is_proxy": true,
+  "implementation_address": "0x052b73d934E9412045Bf731574463Fd026D74645",
+  "controller_kind": "timelock",
+  "controller_address": "0xd6B95c960779c72B8C6752119849318E5d550574",
+  "safe_threshold": null,
+  "safe_owners_count": null,
+  "timelock_min_delay_seconds": 0
+ },
+ "payment_tx_hash": "0x05f8b2c7331c69596a6022050bff943a0ac2926fca2aba38978fd2046f70b6eb",
+ "contributor_github": "nycthyraxo-oss",
+ "base_payout_address": "0xfd25cd317FD74585E09F01DA846C430749881A76"
 }
