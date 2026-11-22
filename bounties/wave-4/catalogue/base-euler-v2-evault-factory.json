@@ -1,0 +1,21 @@
+{
+  "slot_id": "base-euler-v2-evault-factory",
+  "chain": "base",
+  "protocol_name": "Euler V2 on Base (EVaultFactory)",
+  "contract_address": "0x7F321498A801A191a93C840750ed637149dDf8D0",
+  "official_source_url": "https://raw.githubusercontent.com/euler-xyz/euler-interfaces/master/addresses/8453/CoreAddresses.json",
+  "pinned_block_number": 60967221,
+  "pinned_block_hash": "0xea2403fe7b0804369dfb091a4573593d0fa4b27a57527b08bbd66678fb7792be",
+  "observed_control_plane": {
+    "is_proxy": false,
+    "implementation_address": null,
+    "controller_kind": "contract",
+    "controller_address": "0x605Aaf2CAD625dd5F855Bb055625cc1926f10A56",
+    "safe_threshold": null,
+    "safe_owners_count": null,
+    "timelock_min_delay_seconds": null
+  },
+  "payment_tx_hash": "0xaf9da8820a3cb4893c68e809f46f1df42a1c565919be24db69167a7f00dee112",
+  "contributor_github": "random-solver",
+  "base_payout_address": "0x7EDAC178137184cB0a3e291CFAefAcFe138137Bb"
+}
