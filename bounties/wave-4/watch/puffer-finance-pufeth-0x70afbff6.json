@@ -1,0 +1,15 @@
+{
+  "protocol_slug": "puffer-finance-pufeth",
+  "chain": "ethereum",
+  "watched_address": "0x3C28B7c7Ba1A1f55c9Ce66b263B33B204f2126eA",
+  "prior_pinned_block": 26425374,
+  "event_block_number": 26457210,
+  "event_block_hash": "0x6de55dd0b31a287e43380fe14e681205bde5bda38d98b28148c0cb3b4bb1a20e",
+  "event_tx_hash": "0x70afbff631c5875d6044100155d56241c63bf16ad493504ee86fde755f3b1003",
+  "change_kind": "timelock_delay_or_queued_op",
+  "before_state": "queue(0xa5c249b844b0ee4ec7b0b1956237b86cc19c799ad3ada6522560b3b10d713e1b) = 0",
+  "after_state": "queue(0xa5c249b844b0ee4ec7b0b1956237b86cc19c799ad3ada6522560b3b10d713e1b) = 1795793412",
+  "payment_tx_hash": "0xa25ea66ed30cc1496f66d7e1b0f1e23cf47d57831ab9b3edb6e746b8570a4b82",
+  "contributor_github": "VB-Blue",
+  "base_payout_address": "0xe0a3AAe6e7d042f42e82830f4eEbF426cc1270a2"
+}
