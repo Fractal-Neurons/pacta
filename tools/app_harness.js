@@ -1769,6 +1769,71 @@ async function miniAppScenario() {
     && wCalls.slice(callsBefore).length === 0 && maOrderPosts === 0;
 }
 
+// CP-03: /miniapp/ resets its result on every new check and on HTTP / network failure (never a previous contract's fields)
+async function miniAppResetScenario() {
+  if (!input.miniapp) { res.ma_reset_error = "no miniapp input"; return; }
+  const A = "0x" + "a1".repeat(20), B = "0x" + "b2".repeat(20), N = "0x" + "c3".repeat(20);
+  const mode = {};   // lower-case address -> "ok" | "502" | "reject" | "pending"
+  let release = null;
+  const okBody = { verdict: "MULTISIG_NO_TIMELOCK", summary: "Block-pinned authority check.", block: { number: 28000555 },
+    controller: { kind: "multisig_safe", address: "0x" + "33".repeat(20), safeThreshold: 2, safeOwnerCount: 3 } };
+  const fetchFn = (url) => {
+    const u = String(url);
+    if (/api\/v1\/lookup\.json$/.test(u)) return Promise.resolve({ status: 200, ok: true, json: () => Promise.resolve(input.lookupJson) });
+    if (u.includes("/v1/check/preflight")) {
+      const m = mode[new URL(u).searchParams.get("address").toLowerCase()] || "ok";
+      if (m === "reject") return Promise.reject(new TypeError("Failed to fetch"));
+      if (m === "502") return Promise.resolve({ status: 502, ok: false, json: () => Promise.resolve({ error: "upstream_unavailable" }) });
+      if (m === "pending") return new Promise((r) => { release = () => r({ status: 200, ok: true, json: () => Promise.resolve(okBody) }); });
+      return Promise.resolve({ status: 200, ok: true, json: () => Promise.resolve(okBody) });
+    }
+    return Promise.reject(new Error("unexpected fetch " + u));
+  };
+  const p = run(input.miniapp, input.app, { path: "/miniapp/", hostname: "127.0.0.1", win: { parent: { postMessage: () => {} } }, fetch: fetchFn });
+  for (let i = 0; i < 4; i++) await flush();
+  const d = p.document, $ = (id) => d.getElementById(id);
+  const eth = d.querySelectorAll("[data-ma-chain]").find((b) => b.getAttribute("data-ma-chain") === "ethereum");
+  if (eth) click(eth);
+  const sh = (h) => h.slice(0, 6) + "…" + h.slice(-4);
+  const submit = async (addr, flushes) => {
+    $("ma-address").value = addr; $("ma-check-form").dispatchEvent(new Event_("submit"));
+    for (let i = 0; i < (flushes == null ? 6 : flushes); i++) await flush();
+  };
+  const isReset = (addr, status) => $("ma-verdict").getAttribute("data-ma-status") === status
+    && $("ma-v-pill").getAttribute("data-tone") === "unindexed"
+    && $("ma-v-pill").textContent === (status === "CHECKING" ? "Checking…" : "Check unavailable")
+    && $("ma-v-title").textContent === sh(addr) + " · Ethereum"
+    && $("ma-v-badge").hidden === true && !$("ma-v-badge").getAttribute("src")
+    && $("ma-v-target").textContent === "ethereum:" + sh(addr)
+    && $("ma-v-ctrl").textContent === "—" && $("ma-v-delay").textContent === "—" && $("ma-v-prov").textContent === "—";
+  const out = {};
+  // 1. the default catalog example (Moonwell) -> HTTP 502 for an unindexed target
+  const defaultShown = /Moonwell/.test($("ma-v-title").textContent);
+  mode[N.toLowerCase()] = "502"; await submit(N);
+  out.default_moonwell_to_502 = defaultShown && isReset(N, "UNAVAILABLE") && /HTTP 502/.test($("ma-v-summary").textContent)
+    && !/Moonwell/.test($("ma-v-title").textContent);
+  // 2. a successful 2-of-3 Safe A, then a failing B (502)
+  await submit(A);
+  const aShown = $("ma-v-ctrl").textContent === "2-of-3 Safe" && $("ma-v-title").textContent === sh(A) + " · Ethereum";
+  mode[B.toLowerCase()] = "502"; await submit(B);
+  out.success_a_then_502_b = aShown && isReset(B, "UNAVAILABLE") && !/2-of-3/.test($("ma-v-ctrl").textContent)
+    && !/Live RPC read/.test($("ma-v-prov").textContent);
+  // 3. a network rejection
+  mode[N.toLowerCase()] = "reject"; await submit(N);
+  out.network_rejection = isReset(N, "UNAVAILABLE") && /Network error/.test($("ma-v-summary").textContent);
+  // 4. recovery: a successful check renders its own result again
+  await submit(A);
+  out.recovery = $("ma-verdict").getAttribute("data-ma-status") === "UNINDEXED" && $("ma-v-ctrl").textContent === "2-of-3 Safe"
+    && $("ma-v-title").textContent === sh(A) + " · Ethereum" && /Live RPC read/.test($("ma-v-prov").textContent);
+  // 5. the loading state shows THIS check (neutral "Checking…"), then the result
+  mode[B.toLowerCase()] = "pending"; await submit(B, 1);
+  const loading = isReset(B, "CHECKING") && /Reading/.test($("ma-v-summary").textContent);
+  if (release) release();
+  for (let i = 0; i < 6; i++) await flush();
+  out.loading_state = loading && $("ma-v-ctrl").textContent === "2-of-3 Safe" && $("ma-v-title").textContent === sh(B) + " · Ethereum";
+  res.ma_reset_transitions = out;
+}
+
 async function pfComboboxScenario() {
   const pfCalls = [];
   const mockFetch = (url) => {
@@ -2030,6 +2095,7 @@ async function walletExposureScenario() {
   try { await checkoutScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
   try { await xPixelScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
   try { await miniAppScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
+  try { await miniAppResetScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
   try { await liveTimelockScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
   try { await lateLivePayloadScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
   try { await basePathScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }

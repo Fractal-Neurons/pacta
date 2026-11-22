@@ -1982,6 +1982,20 @@
       }
     }
 
+    // CP-03: one reset / status path. A new check (loading) and a failed one (HTTP error or network error) never keep a previous
+    // contract's result: chain + address of THIS check, a neutral status, no catalog badge, unknown controller / delay, no provenance.
+    function maResetResult(ch, a, phase) {
+      var loading = phase === "checking";
+      if (vSec) vSec.setAttribute("data-ma-status", loading ? "CHECKING" : "UNAVAILABLE");
+      if (vPill) { vPill.textContent = loading ? "Checking\u2026" : "Check unavailable"; vPill.setAttribute("data-tone", "unindexed"); }
+      if (vTitle) vTitle.textContent = short(a, 6, 4) + " \u00b7 " + (ch === "base" ? "Base" : "Ethereum");
+      if (vBadge) { vBadge.hidden = true; vBadge.removeAttribute("src"); vBadge.removeAttribute("alt"); }
+      if (vTarget) vTarget.textContent = ch + ":" + short(a, 6, 4);
+      if (vCtrl) vCtrl.textContent = "\u2014";
+      if (vDelay) vDelay.textContent = "\u2014";
+      if (vProv) vProv.textContent = "\u2014";
+    }
+
     function runMaCheck() {
       var a = String((cAddr && cAddr.value) || "").trim(), ch = curChain();
       if (!CO_ADDR.test(a)) {
@@ -1992,6 +2006,7 @@
       showAddrErr("");
       var my = ++checkSeq;
       if (cSub) cSub.disabled = true;
+      maResetResult(ch, a, "checking");
       if (vSum) vSum.textContent = "Reading " + short(a, 6, 4) + " on " + (ch === "base" ? "Base" : "Ethereum") + "…";
       if (typeof window.pactaBeacon === "function") { try { window.pactaBeacon("live_checker_submit", ch + ":" + a.toLowerCase()); } catch (e) { /* ignore */ } }
       xTrackLead();
@@ -2005,6 +2020,7 @@
         var res = pair[0], lk = pair[1] || [];
         var body = res.b || {}, pf = body.verdict ? body : (body.result && body.result.verdict ? body.result : null);
         if (res.s !== 200 || !pf) {
+          maResetResult(ch, a, "unavailable");
           if (vSum) vSum.textContent = "Could not complete live check (HTTP " + res.s + "). Retry in a moment.";
           return;
         }
@@ -2017,6 +2033,7 @@
       }).catch(function () {
         if (my !== checkSeq) return;
         if (cSub) cSub.disabled = false;
+        maResetResult(ch, a, "unavailable");
         if (vSum) vSum.textContent = "Network error while reading the control plane. Check your connection and retry.";
       });
     }

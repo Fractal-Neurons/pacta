@@ -16,7 +16,7 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "docs", "api", "v1", "openapi.json")
-ORIGIN = "https://pacta-x402.pacta.workers.dev"
+ORIGIN = "https://api.pacta.wtf"   # LW-01-R2: the canonical API host, so info.x-service.links.openapi matches https://api.pacta.wtf/openapi.json
 JS = """
 const mod = await import(process.argv[1]);
 const env = JSON.parse(process.argv[2]);

@@ -1888,8 +1888,10 @@ def main(argv=None):
         "agent.json": card_.get("endpoints", {}).get("mcp_remote") in (MCP_, WORKERS_API_ + "/mcp") and card_.get("pricing", {}).get("mode") == "free_read"
                       and card_["pricing"].get("modes", {}).get("/v1/check/preflight") == "metered_50_per_day_then_x402_0.01"
                       and card_["pricing"].get("modes", {}).get("/v1/x402/*") == "x402_paid" and card_["x402"].get("pricingMode") == "per_route"
+                      # LW-01-R2: the two OpenAPI copies are the Worker's verbatim contract (tools/sync_openapi.py), whose pricingMode enum and
+                      # mode descriptions name free_launch; every other agent surface stays free of the label
                       and not any("free_launch" in read(p_) for p_ in ("docs/agent.json", "docs/.well-known/agent.json", "docs/mcp.json", "docs/.well-known/mcp.json",
-                                                                     "docs/openapi.json", "docs/api/v1/openapi.json", "docs/llms.txt", "docs/llms-full.txt",
+                                                                     "docs/llms.txt", "docs/llms-full.txt",
                                                                      "docs/llms/index.html", "docs/api/v1/index.json")) and [k["id"] for k in card_["skills"]][:2] == ["protocol-lookup", "contract-preflight"],
         "SKILL.md": all(n in primary["docs/SKILL.md"] for n in remote_tools),
         "llms.txt": all(n in primary["docs/llms.txt"] for n in remote_tools) and "## API & MCP for agents (free daily tier + Base USDC x402)" in primary["docs/llms.txt"],
@@ -2910,6 +2912,18 @@ def main(argv=None):
           and "$19" not in ma_html and "instant-scan-19" not in ma_html and 'id="ma-manual"' not in ma_html
           and all(res.get(k_) is True for k_ in ma_keys),
           f"ma_png {ma_png_ok}; embeds {valid_fc_embed(ma_html)}/{valid_fc_embed(scan_html)}; failed {[k_ for k_ in ma_keys if res.get(k_) is not True]}")
+    mr_ = res.get("ma_reset_transitions") or {}
+    check("CP-03 /miniapp/: one reset path before the fetch and on HTTP / network failure never keeps a previous contract's result (default "
+          "Moonwell -> 502, 2-of-3 Safe A -> failing B, network rejection, recovery, loading state; harness)",
+          set(mr_) == {"default_moonwell_to_502", "success_a_then_502_b", "network_rejection", "recovery", "loading_state"}
+          and all(v_ is True for v_ in mr_.values()), str(mr_))
+    oa_enum_ = [json.loads(read(f_))["paths"][p_][m_]["responses"]["200"]["content"]["application/json"]["schema"]["properties"]["proxyType"]["enum"]
+                for f_ in ("docs/openapi.json", "docs/api/v1/openapi.json")
+                for p_, m_ in (("/v1/check/preflight", "get"), ("/v1/check/preflight", "post"), ("/v1/sample/preflight", "get"))]
+    check("LW-01-R2: both static OpenAPI copies (the Worker's verbatim 3d92dd59 snapshot, byte-identical to each other) accept zeppelinos and "
+          "compound_unitroller in all 3 preflight proxyType enums and still document NO_CONTROLLER_FOUND",
+          len(oa_enum_) == 6 and all({"zeppelinos", "compound_unitroller"} <= set(e_) for e_ in oa_enum_)
+          and read("docs/openapi.json") == read("docs/api/v1/openapi.json") and "NO_CONTROLLER_FOUND" in read("docs/api/v1/openapi.json"), str(oa_enum_[0]))
 
     # Part 5 (receipts 7147 / 7152): only wallet-report-9 is sold; zero retired SKU ids in HTML or OpenAPI; the four scan routes are
     # free ($0.00) today in llms*, SKILL.md and the MCP server's descriptions
@@ -3852,7 +3866,9 @@ def main(argv=None):
         all(read(f"docs/{a_}") == read(f"docs/{b_}") and isinstance(json.loads(read(f"docs/{a_}")), dict)
             for a_, b_ in (("agent.json", ".well-known/agent.json"), ("mcp.json", ".well-known/mcp.json"), ("openapi.json", "api/v1/openapi.json")))
         and oa_.get("openapi") == "3.1.0" and len(oa_.get("paths", {})) >= 10
-        and [s_.get("url") for s_ in oa_.get("servers", [])] == ["https://pacta.fractalneurons.com", WORKERS_API_])   # custom domain first (Worker 5a37bd4)
+        # LW-01-R2: the snapshot is the Worker's answer on its canonical host https://api.pacta.wtf (tools/sync_openapi.py ORIGIN), which lists
+        # that host first, then the custom domain, then the direct Workers origin (Worker 3d92dd59 openapi servers)
+        and [s_.get("url") for s_ in oa_.get("servers", [])] == ["https://api.pacta.wtf", "https://pacta.fractalneurons.com", WORKERS_API_])
     rendered_ = "".join(pages.values())
     e3["0 'npx @pacta/mcp-server' / 'npx -y @pacta' install commands and 0 third-party list star counts (97.8k, awesome-mcp-servers) in any rendered page"] = (
         # v4 (M4 trust strip): the merged awesome-mcp-servers listing is linked by its PR (#19455), never as a star count
