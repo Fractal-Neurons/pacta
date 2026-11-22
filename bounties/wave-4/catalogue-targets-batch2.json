@@ -2,8 +2,8 @@
   "schema": "pacta.wave4.catalogue_targets.v1",
   "batch": 2,
   "total_pool_slots": 24,
-  "batch_2_open_slots": 9,
-  "batch_2_held_slots": 3,
+  "batch_2_open_slots": 12,
+  "batch_2_held_slots": 0,
   "chains_allowed": [
     "ethereum",
     "base"
@@ -99,6 +99,37 @@
       "defillama_tvl_usd": 15900000,
       "official_source_url": "https://raw.githubusercontent.com/FraxFinance/frax-template/master/src/Constants.sol",
       "award_usdc": "1.00"
+    },
+    {
+      "slot_id": "ethereum-uniswap-v2-factory",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "protocol_name": "Uniswap V2 on Ethereum (UniswapV2Factory)",
+      "contract_address": "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
+      "defillama_tvl_usd": 384600000,
+      "official_source_url": "https://docs.uniswap.org/contracts/v2/reference/smart-contracts/v2-deployments",
+      "award_usdc": "1.00"
+    },
+    {
+      "slot_id": "ethereum-sushiswap-v2-factory",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "protocol_name": "SushiSwap V2 on Ethereum (UniswapV2Factory)",
+      "contract_address": "0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac",
+      "defillama_tvl_usd": 15700000,
+      "official_source_url": "https://raw.githubusercontent.com/sushiswap/sushixswap-v2/master/utils/Constants.sol",
+      "award_usdc": "1.00"
+    },
+    {
+      "slot_id": "base-euler-v2-evault-factory",
+      "chain": "base",
+      "chain_id": 8453,
+      "protocol_name": "Euler V2 on Base (EVaultFactory)",
+      "contract_address": "0x7F321498A801A191a93C840750ed637149dDf8D0",
+      "defillama_tvl_usd": 7300000,
+      "official_source_url": "https://raw.githubusercontent.com/euler-xyz/euler-interfaces/master/addresses/8453/CoreAddresses.json",
+      "award_usdc": "1.00",
+      "note": "Expected verdict on /v1/x402/verdict: UNCLASSIFIED_CONTRACT_CONTROLLER (controllerSummary.kind is 'contract' via upgradeAdmin(); EVaultFactory itself is not a proxy, so observed_control_plane uses is_proxy: false, implementation_address: null, controller_kind: 'contract')."
     }
   ]
 }
