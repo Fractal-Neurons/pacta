@@ -73,6 +73,33 @@ def text(cv, f, s, x, top, size, color):
     cv.text(f, s, x, top + ASC * size, size, color)
 
 
+ROW_WIDTH = 1024   # bx1 - px of render(): the width each docs / chain row wraps to
+
+
+def card_rows(item):
+    """The two text rows a receipt card draws: (label, text). An aligned_baseline card draws its reviewed chainSays when it says more
+    than the default "the same, so docs and chain match" (Scorecard-87 SC87R4-01); otherwise "Matches the docs"."""
+    chain = {"ethereum": "Ethereum", "base": "Base"}[item["chain"]]
+    on = f"On-chain at {chain} block #{item['pinnedBlock']:,}"
+    k = item["kind"]
+    if k == "radar_timelock":
+        return [("Queued change", item["docsSay"]), (on, cap(item["chainSays"]))]
+    if k == "aligned_baseline":
+        cs = (item.get("chainSays") or "").strip()
+        on_txt = "Matches the docs" if not cs or cs.lower() == "the same, so docs and chain match" else cap(cs)
+        return [("Published docs", cap(item["docsSay"])), (on, on_txt)]
+    if k == "rpc_observed":
+        return [("Published docs", "Not compared yet"), (on, cap(item["chainSays"]))]
+    if k in ("unresolved_scope", "recent_change", "docs_updated"):
+        return [("Published docs", cap(item["docsSay"])), (f"Observed at {chain} block #{item['pinnedBlock']:,}", cap(item["chainSays"]))]
+    return [("Published docs", cap(item["docsSay"])), (on, cap(item["chainSays"]))]
+
+
+def drawn_lines(item, F):
+    """[(label, [lines])] exactly as render() draws them (2 lines per row at most; a longer text ends in "…")."""
+    return [(lab, wrap(F(450), txt, 28, ROW_WIDTH, 2)) for lab, txt in card_rows(item)]
+
+
 def render(item, F):
     cv = Canvas(W, H, bg=PAGE)
     x0, y0, x1, y1 = 40, 36, W - 40, H - 36
@@ -94,18 +121,8 @@ def render(item, F):
     text(cv, F(450), (sub + "   " if sub else "") + meta, px, y0 + 150, 24, MUTED)
     top, bx1 = y0 + 204, x1 - 48
     cv.rect(px, top - 1, bx1, top + 1, BORDER)
-    on = f"On-chain at {chain} block #{item['pinnedBlock']:,}"
-    k = item["kind"]
-    if k == "radar_timelock":
-        rows = [("Queued change", item["docsSay"]), (on, cap(item["chainSays"]))]
-    elif k == "aligned_baseline":
-        rows = [("Published docs", cap(item["docsSay"])), (on, "Matches the docs")]
-    elif k == "rpc_observed":
-        rows = [("Published docs", "Not compared yet"), (on, cap(item["chainSays"]))]
-    elif k in ("unresolved_scope", "recent_change", "docs_updated"):
-        rows = [("Published docs", cap(item["docsSay"])), (f"Observed at {chain} block #{item['pinnedBlock']:,}", cap(item["chainSays"]))]
-    else:
-        rows = [("Published docs", cap(item["docsSay"])), (on, cap(item["chainSays"]))]
+    rows = card_rows(item)
+    assert bx1 - px == ROW_WIDTH
     y = top + 18
     for i, (lab, txt) in enumerate(rows):
         text(cv, F(600), lab.upper(), px, y, 19, FAINT)

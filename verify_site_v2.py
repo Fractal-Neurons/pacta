@@ -3899,7 +3899,8 @@ def main(argv=None):
     d1["eigenlayer-core: the 1-of-2 ExecutorMultisig co-owned by the 10d timelock and the CommunityMultisig bypasses the delay (upgrade never 'g'; 'a')"] = (
         st_["eigenlayer-core"]["upgrade"] == "a" and st_["eigenlayer-core"]["timelock"] == "a")
     d1["falcon-finance-usdf-susdf: the user cooldownDuration() never counts as an admin timelock floor"] = (
-        "cooldown" not in str(next(f_ for f_ in cards_["falcon-finance-usdf-susdf"]["factors"] if f_["key"] == "timelock")["evidence"]))
+        # the quoted deciding clause (the cited record's id may name the cooldown it also records; Scorecard-87 cites the proxy-admin clause)
+        "cooldown" not in str(next(f_ for f_ in cards_["falcon-finance-usdf-susdf"]["factors"] if f_["key"] == "timelock")["evidence"]).split(": ", 1)[-1].lower())
     A_ = lambda n_: "0x" + n_ * 40
     proxy_ = {"id": "syn-proxy", "surface": "Vault", "onchain_observed": f"Vault {A_('1')}: EIP-1967 admin = ProxyAdmin {A_('2')}"}
     cooldown_ = {"id": "syn-cooldown", "surface": "Unstaking cooldown: 7 days", "observed_delay_seconds": 604800,

@@ -284,7 +284,7 @@ def _upgrade_path(c, t, known, prev):
     return None
 
 
-def factors(records, easattested, g, facts=(), parity_text=None):
+def factors(records, easattested, g, facts=(), parity_text=None, slug=None):
     """The five factor states (g / b / a / n / u) with the evidence that decided each. records: the protocol's published records
     (index.json or rpc-pinned.json entries); facts: graph_controller_facts entries of its contracts (with "address").
 
@@ -528,6 +528,8 @@ def factors(records, easattested, g, facts=(), parity_text=None):
                      ("n", parity_text or DOCS_UPDATED_PARITY, None) if g == "docs_updated" else
                      ("a", "Documentation differs from the chain (parameter delta)", None) if g == "delta" else
                      ("g", "Chain matches or is stronger than the documentation", None))
+    if slug is not None:
+        _rules_87(slug, records, out)
     return [{"key": k, "label": lbl, "state": out[k][0], "value": out[k][1], "evidence": out[k][2]} for k, lbl in FACTORS]
 
 
@@ -585,3 +587,267 @@ def rosette_svg(fs, size=28, name=None, interactive=False):
 
 def _esc(s):
     return str(s).replace("&", "&amp;").replace('"', "&quot;").replace("<", "&lt;").replace(">", "&gt;")
+
+
+# ================================================================ Scorecard-87 (Business receipt 7462): rules R1-R5
+# Five record-derived rules, applied only to the reviewed (slug, factor) slices below so that no other slice can move. Each rule reads
+# the published records (surface + onchain_observed + observed_delay_seconds / safe_quorum / controller_kind) and returns
+# (state, value, evidence); the value is a template filled from the records (no per-protocol prose). Sharper reviewed wording, when a
+# slice has one, is a value-only entry in scorecard_corrections.json labelOverrides (never its state or evidence).
+RULE_SLICES_87 = frozenset({
+    ("across-protocol-hubpool", "upgrade"), ("angstrom", "upgrade"), ("anvil", "upgrade"), ("aura", "upgrade"),
+    ("avalon-superearn", "timelock"), ("avalon-superearn", "upgrade"), ("axelar-network", "quorum"),
+    ("balancer-v2-vault-timelock", "emergency"), ("bedrock-unibtc", "timelock"), ("bedrock-unibtc", "upgrade"),
+    ("bedrock-unieth", "timelock"), ("bedrock-unieth", "upgrade"), ("beefy-finance-base", "quorum"), ("beefy-finance-base", "upgrade"),
+    ("bmx-freestyle", "timelock"), ("bmx-freestyle", "upgrade"), ("cbridge", "quorum"), ("cbridge", "upgrade"),
+    ("chamber-vaults", "timelock"), ("chamber-vaults", "upgrade"), ("cian-yield-layer", "upgrade"),
+    ("coinbase-wrapped-staked-eth", "timelock"), ("convergence-fi", "timelock"), ("convergence-fi", "upgrade"), ("debridge", "quorum"),
+    ("decentralized-euro", "upgrade"), ("eigenpie", "timelock"), ("eigenpie", "upgrade"), ("falcon-finance-usdf-susdf", "timelock"),
+    ("flokifi-locker", "quorum"), ("hop-protocol", "upgrade"), ("inceptionlrt-isolated-restaking", "upgrade"),
+    ("inverse-finance-firm", "emergency"), ("kine-finance", "timelock"), ("layerzero-v2", "quorum"), ("layerzero-v2", "timelock"),
+    ("layerzero-v2", "upgrade"), ("lendflare", "timelock"), ("lendflare", "upgrade"), ("liquity-v2-bold", "upgrade"),
+    ("m0-protocol-m", "upgrade"), ("makina", "upgrade"), ("maple-finance-v2-syrup", "timelock"), ("mcdex", "timelock"),
+    ("mcdex", "upgrade"), ("meta-pool-eth", "timelock"), ("meta-pool-eth", "upgrade"), ("metric-v1", "upgrade"),
+    ("mev-capital-weth-metamorpho", "emergency"), ("morph-bridge", "upgrade"), ("odyssey-finance", "timelock"),
+    ("odyssey-finance", "upgrade"), ("origin-superoeth-base", "quorum"), ("pickle", "upgrade"), ("polygon-bridge", "timelock"),
+    ("railgun", "timelock"), ("railgun", "upgrade"), ("resupply", "emergency"), ("safe-singleton-core", "upgrade"),
+    ("saturn", "upgrade"), ("sonic-gateway", "timelock"), ("sonic-gateway", "upgrade"), ("stake-dao", "upgrade"),
+    ("stargate-v2", "timelock"), ("steakhouse-financial-ethereum", "emergency"), ("steakhouse-prime-usdc-base", "emergency"),
+    ("steakhouse-usdc-metamorpho-base", "emergency"), ("steer-protocol", "timelock"), ("steer-protocol", "upgrade"),
+    ("superform-v2-base", "upgrade"), ("sushiswap-v3", "timelock"), ("sushiswap-v3", "upgrade"), ("taiko-bridge", "quorum"),
+    ("taiko-bridge", "timelock"), ("team-finance", "timelock"), ("team-finance", "upgrade"), ("tether-usdt", "timelock"),
+    ("threshold-network-tbtc", "upgrade"), ("unitus", "timelock"), ("unitus", "upgrade"), ("usdt0", "timelock"), ("usdt0", "upgrade"),
+    ("world-chain-bridge", "timelock"), ("world-chain-bridge", "upgrade"), ("wormhole-core-ntt", "emergency"), ("yieldfi", "upgrade"),
+    ("yuzu-money", "upgrade"),
+})
+assert len(RULE_SLICES_87) == 87
+
+_R87_FORBIDDEN = re.compile(r"\b(?:immutable|renounced|EOA)\b", re.I)
+_R87_NONPROXY = re.compile(r"\bnot a proxy\b|\bnon-proxy\b|non-EIP-1967")
+_R87_ZEROSLOT = re.compile(r"EIP-1967 (?:implementation )?slots? (?:=|is|are)?\s*(?:0x0{1,40}\b|0x00\.\.\.00|0\b)|EIP-1967 slots 0x0|"
+                           r"implementation and admin storage slots are both zero")
+_R87_UPATH = re.compile(r"ProxyAdmin|EIP-1967 admin|admin slot|AdminUpgradeabilityProxy|\bUUPS\b|upgradeAndCall|_authorizeUpgrade|proxyOwner\(\)|"
+                        r"proxies whose admins|\bproxy admins?\b")
+_R87_TL_INLINE = re.compile(r"timelock \((\d+) ?(d|h|s) delay\)")
+_R87_EXEC_DELAY = re.compile(r"execution delay ([\d,]+) s\b")
+_R87_OFFSET = re.compile(r"EXECUTION_START_OFFSET\(\)\s*=\s*([\d,]+)\s*s\b")
+_R87_MINDELAY = re.compile(r"getMinDelay\(\)\s*(?:=|of)\s*([\d,]+)\s*s\b")
+_R87_UNTIMED = re.compile(r"without a timelock|\bno timelock\b|\bno delay\b|duration 0\b|getMinDelay\(\)\s*=\s*0\b|\(0 ?s delay\)")
+_R87_NOCODE = re.compile(r"externally owned|no contract code|\(no code\)")
+_R87_BURN = re.compile(r"0x0{36}dead\b|0x0{40}\b", re.I)
+_R87_QUORUM = [re.compile(p) for p in (
+    r"signerThreshold\(\)\s*=\s*(\d{1,2})\s+of\s+(\d{1,2})\b",
+    r"\bthreshold\(\)\s*=\s*(\d{1,2})\s+of\s+(?:totalSigners\(\)\s*=\s*)?(\d{1,2})\b",
+    r"getThreshold\(\)\s*=\s*(\d{1,2})\s+of\s+(?:getOwners\(\)\s*=\s*)?(\d{1,2})\b",
+    r"minApprovals\s*(?:\(\)\s*=\s*)?(\d{1,2})\s+of\s+(\d{1,2})\b",
+    r"\bat least (\d{1,2}) of (\d{1,2}) oracle",
+    r"\b(\d{1,2}) of the (\d{1,2}) full-power voters\b",
+    r"\b(\d{1,2})-of-(\d{1,2})\b")]
+_R87_GUARD_CTX = re.compile(r"MetaMorpho|\bGovernor\w*\b[^.;]{0,40}guardian\(\)|guardian\(\) wrapper|guardian set|Guardian VAA|guardian-signed")
+_R87_PAUSE_ENDED = re.compile(r"getPausedState\(\)\s*=\s*\(false\b")
+_R87_EMERG = re.compile(r"\b[Ee]mergency\b[^.;]{0,40}\bguardian\b|\bguardian\b[^.;]{0,40}\b[Ee]mergency\b|[Ee]mergency guardian")
+
+
+def _r87_text(r):
+    return f'{r.get("surface") or ""}. {r.get("onchain_observed") or ""}'
+
+
+def _r87_ev(rid, t, m=None):
+    """'<record id>: <the clause that decided the slice>' (whole-word clipped); the on-chain clause first, the record heading last."""
+    if m is not None:
+        head_, _, obs_ = t.partition(". ")
+        for c in clauses(obs_) + clauses(head_):
+            if m.group(0) in c:
+                return f"{rid}: {_clip(c)}"
+    return f"{rid}: {_clip(t)}"
+
+
+def _r87_path_ev(r, t):
+    """'<record id>: <clause>' for an untimed path: the on-chain clause naming the upgrade path and its holder (never the record heading)."""
+    obs = str(r.get("onchain_observed") or "")
+    cs = clauses(obs) or [obs]
+    for want in (lambda c: _R87_UPATH.search(c) and (_nofs(c) or _R87_NOCODE.search(c)), lambda c: _R87_UPATH.search(c), lambda c: _nofs(c)):
+        c = next((c for c in cs if want(c)), None)
+        if c:
+            return f"{r['id']}: {_clip(c)}"
+    return _r87_ev(r["id"], t)
+
+
+def _r87_secs(n, unit="s"):
+    return int(str(n).replace(",", "")) * {"d": DAY, "h": 3600, "s": 1}[unit]
+
+
+def _r87_upgrade_delay(r, t, records):
+    """The delay gating this record's upgrade path: an inline 'timelock (N d delay)', an execution delay, a getMinDelay() of the
+    timelock that owns the admin, or the delay of the last contract in the ownership chain read from a same-page sibling record."""
+    m = _R87_TL_INLINE.search(t)
+    if m:
+        return _r87_secs(m.group(1), m.group(2)), m
+    m = _R87_EXEC_DELAY.search(t)
+    if m:
+        return _r87_secs(m.group(1)), m
+    d = r.get("observed_delay_seconds")
+    if isinstance(d, int) and re.search(r"ProxyAdmin|\bowns\b|owner\(\) = the timelock|upgradeAndCall|[Uu]pgrade", t) and not _COOLDOWN.search(
+            str(r.get("surface") or "")):
+        m = _R87_MINDELAY.search(t) or re.search(r"\d", t)
+        return d, m
+    # sibling join: "... whose owner() is Voting 0x..." -> that contract's execution offset / min delay in another record
+    chain = re.findall(r"(?:whose owner\(\) is|owner\(\) =)\s+(?:the )?([A-Z]\w*) (0x[0-9a-fA-F]{40})", t)
+    if chain:
+        name, addr = chain[-1]
+        for s in records:
+            if s is r:
+                continue
+            st = _r87_text(s)
+            if addr.lower() in st.lower() or st.lstrip(". ").startswith(name) or str(s.get("onchain_observed") or "").startswith(name + " "):
+                m2 = _R87_OFFSET.search(st) or _R87_MINDELAY.search(st)
+                if m2:
+                    return _r87_secs(m2.group(1)), None
+    return None, None
+
+
+def _r87_holder(r, t):
+    """Who holds the upgrade path when no delay gates it: a K-of-N Safe or an account with no contract code."""
+    q = r.get("safe_quorum")
+    if isinstance(q, str) and re.fullmatch(r"\d{1,2}-of-\d{1,2}", q):
+        return q
+    if r.get("controller_kind") == "eoa" or (_R87_NOCODE.search(t) and re.search(r"admin slot (?:holds|=) (?:externally|0x)", t)):
+        return "nocode"
+    for m in _nofs(t):
+        if m.re is _NOF_READS:
+            return f"{m.group(1)}-of-{m.group(2)}"
+        return f"{m.group(1)}-of-{m.group(2)}"
+    return None
+
+
+def _r87_upgrade_paths(records):
+    """Every record that establishes an upgrade path, scored: a delay on the path (3), a named holder (2), the proxy alone (1)."""
+    out = []
+    for i, r in enumerate(records):
+        t = _r87_text(r)
+        if not _R87_UPATH.search(t) or _R87_NONPROXY.search(t) and not re.search(r"\bUUPS\b|ProxyAdmin", t):
+            continue
+        d, m = _r87_upgrade_delay(r, t, records)
+        h = _r87_holder(r, t) if d is None else None
+        out.append((3 if d is not None else 2 if h else 1, -i, r, t, d, h, m))
+    return sorted(out, key=lambda x: (x[0], x[1]), reverse=True)
+
+
+def _r87_quorum(t):
+    for p in _R87_QUORUM:
+        m = p.search(t)
+        if m and 1 <= int(m.group(1)) <= int(m.group(2)):
+            return int(m.group(1)), int(m.group(2)), m
+    return None
+
+
+def _r87_label(r):
+    lbl = re.sub(r"\s*\((?:Ethereum|Base)[^)]*\)$", "", str(r.get("target_label") or "")).strip()
+    return lbl if lbl and not _R87_FORBIDDEN.search(lbl) else "target contract"
+
+
+def _rule_upgrade(records, base_rid):
+    paths = _r87_upgrade_paths(records)
+    if paths and paths[0][0] >= 2:                                                       # R1: an established upgrade path
+        _, _, r, t, d, h, m = paths[0]
+        if d is not None:
+            st = "g" if d >= 2 * DAY else "b" if d >= 3600 else "a"
+            val = (f"Upgradeable behind a ≥48h delay ({_dur(d)})" if st == "g" else f"Upgradeable behind a 1h–47h delay ({_dur(d)})" if st == "b"
+                   else "Upgradeable with no enforced delay (0s timelock)")
+            return st, val, _r87_ev(r["id"], t, m)
+        holder = "an account with no contract code" if h == "nocode" else f"a {h} Safe"
+        return "a", f"Upgradeable with no enforced delay: upgrade admin held by {holder}", _r87_path_ev(r, t)
+    base = next((r for r in records if r["id"] == base_rid), None)                        # R2: the sampled target is not a proxy
+    for r in ([base] if base else []) + [r for r in records if r is not base]:
+        t = _r87_text(r)
+        z, np_ = _R87_ZEROSLOT.search(t), _R87_NONPROXY.search(t)
+        if np_ or z:
+            lbl = _r87_label(r)
+            if np_ and not re.search(r"EIP-1967 (?:implementation )?slots? (?:=|is)", t):
+                return "n", f"Sampled {lbl} is not a proxy (non-proxy bytecode; other protocol contracts not assessed)", _r87_ev(r["id"], t, np_)
+            return "n", f"Sampled {lbl} has an empty EIP-1967 implementation slot (0x0); other upgrade paths not assessed", _r87_ev(r["id"], t, z or np_)
+    return None
+
+
+def _rule_timelock(records):
+    paths = _r87_upgrade_paths(records)
+    for score, _, r, t, d, h, m in paths:                                                 # R1: an untimed upgrade path is a 0s surface
+        if score == 2:
+            return "a", "No enforced delay on at least one sampled control surface (0s)", _r87_path_ev(r, t)
+    for r in records:                                                                     # R4: explicit untimed execution
+        t = _r87_text(r)
+        m = _R87_UNTIMED.search(t)
+        if m and not _COOLDOWN.search(str(r.get("surface") or "")):
+            return "a", "No enforced delay on at least one sampled control surface (0s)", _r87_ev(r["id"], t, m)
+    for r in records:                                                                     # R1: onlyOwner functions held by a multisig, no delay
+        t = _r87_text(r)
+        m = re.search(r"\bonlyOwner\b", t)
+        if m and _r87_quorum(t) and not (_R87_TL_INLINE.search(t) or _R87_MINDELAY.search(t) or _R87_OFFSET.search(t) or _DELAY.search(t)
+                                          or re.search(r"[Tt]imelock|delay", t)):
+            return "a", "No enforced delay on at least one sampled control surface (0s)", _r87_ev(r["id"], t, m)
+    timed = []                                                                            # R4: explicit enforced delays
+    for i, r in enumerate(records):
+        t = _r87_text(r)
+        for p in (_R87_TL_INLINE, _R87_OFFSET):
+            m = p.search(t)
+            if m:
+                timed.append((_r87_secs(m.group(1), m.group(2)) if p is _R87_TL_INLINE else _r87_secs(m.group(1)), i, r, t, m))
+                break
+    if timed:
+        d, _, r, t, m = min(timed, key=lambda x: (x[0], x[1]))
+        st = "g" if d >= 2 * DAY else "b" if d >= 3600 else "a"
+        return st, f"{_dur(d)} minimum enforced delay on sampled timelocked surfaces", _r87_ev(r["id"], t, m)
+    return None
+
+
+def _rule_quorum(records):
+    for r in records:                                                                     # R5: a burn address holds no quorum
+        t = _r87_text(r)
+        m = re.search(r"owner\(\)[^.;]{0,60}?(0x0{36}dead|0x0{40})\b", t, re.I)
+        if m and not _r87_quorum(t):
+            return "n", "No active signer quorum in the published records (owner() is a burn address)", _r87_ev(r["id"], t, m)
+    best = None                                                                           # R1 / R4: a recorded multi-signer quorum
+    for i, r in enumerate(records):
+        t = _r87_text(r)
+        q = _r87_quorum(str(r.get("onchain_observed") or "")) or _r87_quorum(str(r.get("surface") or ""))
+        if q and (best is None or (q[0], i) < (best[0][0], best[1])):
+            best = (q, i, r, t)
+    if best:
+        (k, n, m), _, r, t = best
+        return ("g" if k >= 3 else "b" if k == 2 else "a"), f"Known controlling quorum: {k}-of-{n}", _r87_ev(r["id"], t, m)
+    return None
+
+
+def _rule_emergency(records, base_rid):
+    r = next((x for x in records if x["id"] == base_rid), None)
+    if r is None:
+        return None
+    t = _r87_text(r)
+    m = _R87_PAUSE_ENDED.search(t)
+    if m:                                                                                 # R3: an ended pause window is no pause power
+        return "n", "Pause window ended before the pinned block (getPausedState() = false)", _r87_ev(r["id"], t, m)
+    m = _R87_GUARD_CTX.search(t)
+    if m:                                                                                 # R3: a non-pause guardian role
+        return ("n", "A guardian role is recorded; no pause / freeze authority is established in the published records",
+                _r87_ev(r["id"], t, m))
+    m = _R87_EMERG.search(t)
+    if m:                                                                                 # R1: the emergency guardian's own quorum
+        holder = re.search(r"guardian\(\)\s*=\s*[\w ]*?(0x[0-9a-fA-F]{40})", t)
+        for s in records:
+            st_ = _r87_text(s)
+            q = _r87_quorum(st_)
+            if holder and holder.group(1).lower() in st_.lower() and q and q[0] >= 2:
+                return ("g", f"Pause / freeze authority scoped behind a multi-signer controller ({q[0]}-of-{q[1]})", _r87_ev(r["id"], t, m))
+    return None
+
+
+def _rules_87(slug, records, out):
+    """Apply R1-R5 to this protocol's reviewed slices only (RULE_SLICES_87); every other factor is left exactly as derived."""
+    keys = [k for k, _ in FACTORS if (slug, k) in RULE_SLICES_87]
+    for k in keys:
+        base_rid = (out.get(k, (None, None, None))[2] or "").split(": ", 1)[0] or None
+        res = (_rule_upgrade(records, base_rid) if k == "upgrade" else _rule_timelock(records) if k == "timelock"
+               else _rule_quorum(records) if k == "quorum" else _rule_emergency(records, base_rid) if k == "emergency" else None)
+        if res is not None:
+            assert not _R87_FORBIDDEN.search(res[1]), (slug, k, res[1])
+            out[k] = res

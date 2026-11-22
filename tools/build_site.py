@@ -769,7 +769,7 @@ def scorecards(idx, pinned=None, sp=None):
         recon = [e for e in es if e.get("reconciledFrom")]
         corr = CORR.get(v["slug"]) or {}
         g = SC.grade(cls, eas, bool(recon), v["slug"])
-        fs = SC.factors(es, eas, g, facts, parity_text=corr.get("parityText"))
+        fs = SC.factors(es, eas, g, facts, parity_text=corr.get("parityText"), slug=v["slug"])
         # a correction's factor overrides, plus wording-35 r4 label overrides for protocols without a correction status
         fo_ = {**(((CORR.data().get("labelOverrides") or {}).get("factorOverrides") or {}).get(v["slug"]) or {}), **(corr.get("factorOverrides") or {})}
         for f in fs:                                       # a correction's scoped factor wording replaces the derived sentence
@@ -790,6 +790,11 @@ def scorecards(idx, pinned=None, sp=None):
                 cap_ = (corr.get("evidenceCaption") if rid_ == corr.get("leadRecord") else None) or (
                     f'{ev_r["surface"]} — {CHAINS[chain_of(ev_r)][0]} block #{int(ev_r["block_number"]):,}')
                 f["evidenceRecordId"], f["evidenceCaption"] = rid_, cap_
+            # Scorecard-87: a factor that joins same-page sibling records cites them too (data-additional-record-ids on its one evidence tag)
+            if isinstance(ov_, dict) and ov_.get("additionalEvidenceRecordIds"):
+                ids_ = list(ov_["additionalEvidenceRecordIds"])
+                assert all(any(e["id"] == i_ for e in es) for i_ in ids_) and rid_ not in ids_, (v["slug"], f["key"], ids_)
+                f["additionalEvidenceRecordIds"] = ids_
         wd = CD.what_differs(es) if eas else None
         if CORR.finding(v["slug"]):
             finding = CORR.finding(v["slug"])
@@ -2735,13 +2740,36 @@ def grade_pill(card):
             f'{lbl}</span>{sub}')
 
 
+# SC87-01: on the 87 Scorecard-87 pages, each cited record in an evidence caption is a link to that record's row (#<record id>); one
+# segment per cited record ("<primary> + <additional> ... — <chain and block>"). The visible text is unchanged, the other 229 pages are
+# untouched (no link markup), and styles.css / app.js are not edited (inline 24 px target, underline; the global :focus-visible ring).
+CHANGED_87_SLUGS = frozenset(e["slug"] for e in _json_file(os.path.join(ROOT, "tools", "scorecard87_expected_136.json"), encoding="utf-8")["entries"])
+EV_LINK_STYLE = "display:inline-flex;align-items:center;min-height:24px;padding:2px 0;text-decoration:underline"
+
+
+def ev_caption_links(card, f):
+    """The evidence caption of a changed card as citation links: one per cited record, then the pinned block suffix as text."""
+    prim, add = f["evidenceRecordId"], list(f.get("additionalEvidenceRecordIds") or [])
+    cap = f["evidenceCaption"]
+    head, pin = cap.rsplit(" — ", 1) if " — " in cap else (cap, None)
+    segs = head.split(" + ") if add else [head]
+    assert len(segs) == 1 + len(add), (card["slug"], f["key"], segs, add)
+    links = " + ".join(f'<a href="/protocols/{E(card["slug"])}/#{E(r_)}" style="{EV_LINK_STYLE}">{E(s_)}</a>' for s_, r_ in zip(segs, [prim] + add))
+    out = links + (f" — {E(pin)}" if pin is not None else "")
+    assert re.sub(r"<[^>]+>", "", out) == E(cap), (card["slug"], f["key"])   # the visible text is exactly the caption
+    return out
+
+
 def factor_list(card):
     """A1: every factor carries a letter (S / M / W / —) next to its colour, and its state in words."""
     import scorecard as SC
+    linked = card.get("slug") in CHANGED_87_SLUGS
     rows = "".join(f'<div data-factor="{f["key"]}" data-state="{f["state"]}"><dt><span class="fdot r-{f["state"]}" aria-hidden="true">'
                    f'{FACTOR_LETTER[f["state"]]}</span>{E(f["label"])}</dt>'
                    f'<dd><b>{E(SC.STATE_LABEL[f["state"]])}</b> · {E(f["value"])}'
-                   + (f'<small class="ev" data-record-id="{E(f["evidenceRecordId"])}">Evidence: {E(f["evidenceCaption"])}</small>'
+                   + (f'<small class="ev" data-record-id="{E(f["evidenceRecordId"])}"'
+                      + (f' data-additional-record-ids="{E(",".join(f["additionalEvidenceRecordIds"]))}"' if f.get("additionalEvidenceRecordIds") else "")
+                      + f'>Evidence: {ev_caption_links(card, f) if linked and f.get("evidenceRecordId") else E(f["evidenceCaption"])}</small>'
                       if f.get("evidenceCaption") else f'<small class="ev">Evidence: {E(f["evidence"])}</small>' if f["evidence"] else "")
                    + "</dd></div>" for f in card["factors"])
     return f'<dl class="factors">{rows}</dl>'
