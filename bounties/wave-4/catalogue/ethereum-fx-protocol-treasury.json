@@ -1,0 +1,21 @@
+{
+  "slot_id": "ethereum-fx-protocol-treasury",
+  "chain": "ethereum",
+  "protocol_name": "f(x) Protocol (FxETHTreasury Proxy)",
+  "contract_address": "0x0e5CAA5c889Bdf053c9A76395f62267E653AFbb0",
+  "official_source_url": "https://raw.githubusercontent.com/AladdinDAO/deployments/main/deployments.mainnet.md",
+  "pinned_block_number": 26471978,
+  "pinned_block_hash": "0xd6bde8e29c8b2fa33d62c30e2863a980cc2ce0ae8bca8e549c3fe1456d043f21",
+  "observed_control_plane": {
+    "is_proxy": true,
+    "implementation_address": "0x969fCABb703052155c4CC3B24458e77b2D56b29a",
+    "controller_kind": "timelock",
+    "controller_address": "0x68863fb8855b04509a835082478D6E3D0bE4E61a",
+    "safe_threshold": null,
+    "safe_owners_count": null,
+    "timelock_min_delay_seconds": 259200
+  },
+  "payment_tx_hash": "0x0820b6f96c90a3bfb9982a678a95138c8cb672b7267b2bdf0f419e55cd6cde2f",
+  "contributor_github": "G317394754",
+  "base_payout_address": "0x8114ecB579270283CE21683E0Bb7F94C9c9492b1"
+}
