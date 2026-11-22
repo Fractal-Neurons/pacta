@@ -680,7 +680,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Upgradeable proxy no readable owner or admin; docs not assessed",
+      "summary_short": "Upgradeable proxy, AccessControl-gated (holders not enumerable); docs not assessed",
       "url": "https://pacta.wtf/protocols/adi-bridge/",
       "source": "lookup_primary"
     },
@@ -693,7 +693,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Upgradeable proxy no readable owner or admin; docs not assessed",
+      "summary_short": "Upgradeable proxy, AccessControl-gated (holders not enumerable); docs not assessed",
       "url": "https://pacta.wtf/protocols/adi-bridge/",
       "source": "lookup_related"
     },
@@ -869,7 +869,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Non-proxy contract no readable owner or admin; docs not assessed",
+      "summary_short": "Non-proxy contract, wards-gated (holders not enumerable); docs not assessed",
       "url": "https://pacta.wtf/protocols/anemoy-capital/",
       "source": "lookup_primary"
     },
@@ -882,7 +882,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Non-proxy contract no readable owner or admin; docs not assessed",
+      "summary_short": "Non-proxy contract, minter() is a timelock; docs not assessed",
       "url": "https://pacta.wtf/protocols/angle/",
       "source": "lookup_primary"
     },
@@ -951,7 +951,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Upgradeable proxy no readable owner or admin; docs not assessed",
+      "summary_short": "Upgradeable proxy, upgrade path in the implementation (gate not resolved read-only); docs not assessed",
       "url": "https://pacta.wtf/protocols/ao-bridge/",
       "source": "lookup_primary"
     },
@@ -964,7 +964,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Upgradeable proxy no readable owner or admin; docs not assessed",
+      "summary_short": "Upgradeable proxy, upgrade path in the implementation (gate not resolved read-only); docs not assessed",
       "url": "https://pacta.wtf/protocols/ao-bridge/",
       "source": "lookup_related"
     },
@@ -977,7 +977,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Non-proxy contract no readable owner or admin; docs not assessed",
+      "summary_short": "Non-proxy contract, onlyMinter-gated (holder not readable); docs not assessed",
       "url": "https://pacta.wtf/protocols/apex-pro/",
       "source": "lookup_primary"
     },
@@ -1431,7 +1431,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Non-proxy contract no readable owner or admin; docs not assessed",
+      "summary_short": "Non-proxy contract, controller() is a contract; docs not assessed",
       "url": "https://pacta.wtf/protocols/badger-dao/",
       "source": "lookup_primary"
     },
@@ -1927,7 +1927,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Non-proxy contract no readable owner or admin; docs not assessed",
+      "summary_short": "Non-proxy contract, AccessControl-gated (holders not enumerable); docs not assessed",
       "url": "https://pacta.wtf/protocols/brickken/",
       "source": "lookup_primary"
     },
@@ -3034,7 +3034,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Non-proxy contract no readable owner or admin; docs not assessed",
+      "summary_short": "Non-proxy contract, issuer() is a contract; docs not assessed",
       "url": "https://pacta.wtf/protocols/derivadex/",
       "source": "lookup_primary"
     },
@@ -3114,7 +3114,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Non-proxy contract no readable owner or admin; docs not assessed",
+      "summary_short": "Non-proxy contract, strategy() is a contract; docs not assessed",
       "url": "https://pacta.wtf/protocols/drakewell-usddw/",
       "source": "lookup_primary"
     },
@@ -3127,7 +3127,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Non-proxy contract no readable owner or admin; docs not assessed",
+      "summary_short": "Non-proxy contract, canMint-gated (holder not readable), hasMintPermission-gated (holder not readable); docs not assessed",
       "url": "https://pacta.wtf/protocols/dxsale/",
       "source": "lookup_primary"
     },
@@ -3213,7 +3213,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Upgradeable proxy no readable owner or admin; docs not assessed",
+      "summary_short": "Upgradeable proxy, AccessControl-gated (holders not enumerable); docs not assessed",
       "url": "https://pacta.wtf/protocols/edgex-bridge/",
       "source": "lookup_primary"
     },
@@ -3226,7 +3226,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Upgradeable proxy no readable owner or admin; docs not assessed",
+      "summary_short": "Upgradeable proxy, AccessControl-gated (holders not enumerable); docs not assessed",
       "url": "https://pacta.wtf/protocols/edgex-bridge/",
       "source": "lookup_related"
     },
@@ -4086,7 +4086,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Non-proxy contract no readable owner or admin; docs not assessed",
+      "summary_short": "Non-proxy contract, manager-gated (holder not readable), onlyManager-gated (holder not readable); docs not assessed",
       "url": "https://pacta.wtf/protocols/fermiswap/",
       "source": "lookup_primary"
     },
@@ -4558,7 +4558,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Non-proxy contract no readable owner or admin; docs not assessed",
+      "summary_short": "Non-proxy contract, onlyMinter-gated (holder not readable), onlyPauser-gated (holder not readable); docs not assessed",
       "url": "https://pacta.wtf/protocols/geth/",
       "source": "lookup_primary"
     },
@@ -4805,7 +4805,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Non-proxy contract no readable owner or admin; docs not assessed",
+      "summary_short": "Non-proxy contract, governance() is a safe; docs not assessed",
       "url": "https://pacta.wtf/protocols/harvest-finance/",
       "source": "lookup_primary"
     },
@@ -4949,7 +4949,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Non-proxy contract no readable owner or admin; docs not assessed",
+      "summary_short": "Non-proxy contract, minter() is a safe; docs not assessed",
       "url": "https://pacta.wtf/protocols/ichi/",
       "source": "lookup_primary"
     },
@@ -5544,7 +5544,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Upgradeable proxy no readable owner or admin; docs not assessed",
+      "summary_short": "Upgradeable proxy, governor() is a safe; docs not assessed",
       "url": "https://pacta.wtf/protocols/king-protocol/",
       "source": "lookup_primary"
     },
@@ -5557,7 +5557,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Upgradeable proxy no readable owner or admin; docs not assessed",
+      "summary_short": "Upgradeable proxy, governor() is a safe; docs not assessed",
       "url": "https://pacta.wtf/protocols/king-protocol/",
       "source": "lookup_related"
     },
@@ -5898,7 +5898,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Non-proxy contract no readable owner or admin; docs not assessed",
+      "summary_short": "Non-proxy contract, roleManager.owner() is a safe; docs not assessed",
       "url": "https://pacta.wtf/protocols/lazy/",
       "source": "lookup_primary"
     },
@@ -7017,7 +7017,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Non-proxy contract no readable owner or admin; docs not assessed",
+      "summary_short": "Non-proxy contract, operator() is a timelock; docs not assessed",
       "url": "https://pacta.wtf/protocols/monolith-market/",
       "source": "lookup_primary"
     },
@@ -7729,7 +7729,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Upgradeable proxy no readable owner or admin; docs not assessed",
+      "summary_short": "Upgradeable proxy, AccessControl-gated (holders not enumerable); docs not assessed",
       "url": "https://pacta.wtf/protocols/paradex-bridge/",
       "source": "lookup_primary"
     },
@@ -7742,7 +7742,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Upgradeable proxy no readable owner or admin; docs not assessed",
+      "summary_short": "Upgradeable proxy, AccessControl-gated (holders not enumerable); docs not assessed",
       "url": "https://pacta.wtf/protocols/paradex-bridge/",
       "source": "lookup_related"
     },
@@ -8010,7 +8010,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Non-proxy contract no readable owner or admin; docs not assessed",
+      "summary_short": "Non-proxy contract, AccessControl-gated (holders not enumerable); docs not assessed",
       "url": "https://pacta.wtf/protocols/pirex/",
       "source": "lookup_primary"
     },
@@ -8450,7 +8450,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Non-proxy contract no readable owner or admin; docs not assessed",
+      "summary_short": "Non-proxy contract, AccessControl-gated (holders not enumerable); docs not assessed",
       "url": "https://pacta.wtf/protocols/ribbon/",
       "source": "lookup_primary"
     },
@@ -8463,7 +8463,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Non-proxy contract no readable owner or admin; docs not assessed",
+      "summary_short": "Non-proxy contract, isGuardian-gated (holder not readable), onlyGovernor-gated (holder not readable), onlyGuardianOrGovernor-gated (holder not readable); docs not assessed",
       "url": "https://pacta.wtf/protocols/ring-few/",
       "source": "lookup_primary"
     },
@@ -8532,7 +8532,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Upgradeable proxy no readable owner or admin; docs not assessed",
+      "summary_short": "Upgradeable proxy, AccessControl / authority-gated (hasRole/canCall; holders not enumerable); docs not assessed",
       "url": "https://pacta.wtf/protocols/royco-v2/",
       "source": "lookup_primary"
     },
@@ -8545,7 +8545,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Upgradeable proxy no readable owner or admin; docs not assessed",
+      "summary_short": "Upgradeable proxy, AccessControl / authority-gated (hasRole/canCall; holders not enumerable); docs not assessed",
       "url": "https://pacta.wtf/protocols/royco-v2/",
       "source": "lookup_related"
     },
@@ -8588,7 +8588,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Non-proxy contract no readable owner or admin; docs not assessed",
+      "summary_short": "Non-proxy contract, governance() is an EOA; docs not assessed",
       "url": "https://pacta.wtf/protocols/saffron-vaults/",
       "source": "lookup_primary"
     },
@@ -9020,7 +9020,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Upgradeable proxy no readable owner or admin; docs not assessed",
+      "summary_short": "Upgradeable proxy, AccessControl-gated (holders not enumerable); docs not assessed",
       "url": "https://pacta.wtf/protocols/stablehodl/",
       "source": "lookup_primary"
     },
@@ -9033,7 +9033,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Upgradeable proxy no readable owner or admin; docs not assessed",
+      "summary_short": "Upgradeable proxy, AccessControl-gated (holders not enumerable); docs not assessed",
       "url": "https://pacta.wtf/protocols/stablehodl/",
       "source": "lookup_related"
     },
@@ -9121,7 +9121,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Non-proxy contract no readable owner or admin; docs not assessed",
+      "summary_short": "Non-proxy contract, AccessControl-gated (holders not enumerable); docs not assessed",
       "url": "https://pacta.wtf/protocols/stafi/",
       "source": "lookup_primary"
     },
@@ -9408,7 +9408,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Non-proxy contract no readable owner or admin; docs not assessed",
+      "summary_short": "Non-proxy contract, AccessControl-gated (holders not enumerable); docs not assessed",
       "url": "https://pacta.wtf/protocols/starknet-bridge/",
       "source": "lookup_primary"
     },
@@ -10417,7 +10417,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Non-proxy contract no readable owner or admin; docs not assessed",
+      "summary_short": "Non-proxy contract, governance() is a contract; docs not assessed",
       "url": "https://pacta.wtf/protocols/tornado-cash/",
       "source": "lookup_primary"
     },
@@ -10481,7 +10481,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Upgradeable proxy no readable owner or admin; docs not assessed",
+      "summary_short": "Upgradeable proxy, AccessControl-gated (holders not enumerable); docs not assessed",
       "url": "https://pacta.wtf/protocols/ultrayield-vaults/",
       "source": "lookup_primary"
     },
@@ -10494,7 +10494,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Upgradeable proxy no readable owner or admin; docs not assessed",
+      "summary_short": "Upgradeable proxy, AccessControl-gated (holders not enumerable); docs not assessed",
       "url": "https://pacta.wtf/protocols/ultrayield-vaults/",
       "source": "lookup_related"
     },
@@ -11381,7 +11381,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Upgradeable proxy no readable owner or admin; docs not assessed",
+      "summary_short": "Upgradeable proxy, AccessControl-gated (holders not enumerable); docs not assessed",
       "url": "https://pacta.wtf/protocols/ztln-p/",
       "source": "lookup_primary"
     },
@@ -11394,7 +11394,7 @@
       "easAttested": false,
       "pinnedBlock": 26454861,
       "baseEasUids": [],
-      "summary_short": "Upgradeable proxy no readable owner or admin; docs not assessed",
+      "summary_short": "Upgradeable proxy, AccessControl-gated (holders not enumerable); docs not assessed",
       "url": "https://pacta.wtf/protocols/ztln-p/",
       "source": "lookup_related"
     }
@@ -12551,7 +12551,7 @@
       "easAttested": false,
       "pinnedBlock": 59847352,
       "baseEasUids": [],
-      "summary_short": "Non-proxy contract no readable owner or admin; docs not assessed",
+      "summary_short": "Non-proxy contract, contracts() is a contract, AccessControl-gated (holders not enumerable); docs not assessed",
       "url": "https://pacta.wtf/protocols/mortgagefi/",
       "source": "lookup_primary"
     },
@@ -12712,7 +12712,7 @@
       "easAttested": false,
       "pinnedBlock": 59847352,
       "baseEasUids": [],
-      "summary_short": "Upgradeable proxy no readable owner or admin; docs not assessed",
+      "summary_short": "Upgradeable proxy, AccessControl-gated (holders not enumerable); docs not assessed",
       "url": "https://pacta.wtf/protocols/sport-fun/",
       "source": "lookup_primary"
     },
@@ -12725,7 +12725,7 @@
       "easAttested": false,
       "pinnedBlock": 59847352,
       "baseEasUids": [],
-      "summary_short": "Upgradeable proxy no readable owner or admin; docs not assessed",
+      "summary_short": "Upgradeable proxy, AccessControl-gated (holders not enumerable); docs not assessed",
       "url": "https://pacta.wtf/protocols/sport-fun/",
       "source": "lookup_related"
     },

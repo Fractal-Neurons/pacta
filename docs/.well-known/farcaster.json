@@ -33,7 +33,7 @@
     "heroImageUrl": "https://pacta.wtf/miniapp-preview.png",
     "tagline": "Docs drift. The chain doesn't.",
     "ogTitle": "Pacta Control-Plane Check",
-    "ogDescription": "Instant Base & Ethereum control-plane verdicts + 1-tap Base USDC deep scans.",
+    "ogDescription": "Free Base & Ethereum control-plane verdicts: proxy admins, Safes and timelock delays.",
     "ogImageUrl": "https://pacta.wtf/miniapp-preview.png"
   },
   "frame": {
@@ -58,7 +58,7 @@
     "heroImageUrl": "https://pacta.wtf/miniapp-preview.png",
     "tagline": "Docs drift. The chain doesn't.",
     "ogTitle": "Pacta Control-Plane Check",
-    "ogDescription": "Instant Base & Ethereum control-plane verdicts + 1-tap Base USDC deep scans.",
+    "ogDescription": "Free Base & Ethereum control-plane verdicts: proxy admins, Safes and timelock delays.",
     "ogImageUrl": "https://pacta.wtf/miniapp-preview.png"
   }
 }

@@ -23,6 +23,16 @@ WAD = 10 ** 18
 
 # Editorial frame only. Figures in the key-figure tiles are computed from the JSON in kpis() below.
 EDITORIAL = {
+    "umia-op-0x3d35": {
+        "title": "Pacta Governance Radar · Pre-Execution Brief — Umia Op 0x3d35 on Base",
+        "h1": "Umia on Base — One 9-Call Batch Upgrades <code>UmiaHub</code> and <code>UmiaMarketCore</code>",
+        "lede": ("Pre-execution decode of one Base Mainnet timelock operation: two UUPS upgrades, three rotated periphery contracts, a new "
+                 "spot migrator, an externally owned account as activeLiquidityKeeper and two new launch parameters, executable from "
+                 "23 Nov 2026 10:30:40 UTC."),
+        "badges": [("badge-cyan", "Pre-execution brief"), ("badge-amber", "Two core upgrades in one batch"),
+                   ("badge-amber", "Keeper role to an EOA")],
+        "state_title": "UmiaHub and UmiaMarketCore: current vs queued",
+    },
     "lombard-ops-0xceee-0x2f2a-0x6404": {
         "title": "Pacta Governance Radar · Pre-Execution Brief — Lombard LBTC Ops 0xceee, 0x2f2a, 0x6404",
         "h1": "Lombard <code>LBTC</code> — Three Queued Proxy Upgrades Add a Per-Mint Deposit Fee",
@@ -208,7 +218,7 @@ def render(b, item, bs):
     pin = b["pinned_block"]
     tl = item["timelock"]                      # EIP-55 form from radar.json
     tl_l = tl.lower()
-    tl_name = b["timelock"]["verified"]["sourcify"]["name"]
+    tl_name = (b["timelock"]["verified"].get("sourcify") or {}).get("name") or b["timelock"].get("name", "Timelock")
     names = {tl_l: f"{tl_name} (this timelock)"}
     names.update(target_names(b))
 
@@ -360,6 +370,8 @@ def target_names(b):
 def call_effect(b, o, c, E):
     """One plain-language clause per decoded call, from the decoder's own annotations."""
     d = b["decoded"]
+    if "umiaEffect" in c:
+        return f" — {E(c['umiaEffect'])}"
     if "change" in c and "from" in c["change"]:
         ch = c["change"]
         return f' — {E(c.get("asset", "Global"))}: {E(ch["from"])} to {E(ch["to"])} {E(ch["unit"])}'
@@ -414,6 +426,13 @@ def kpis(b, F):
     """(label, value, sub-line, ok) for the four key-figure tiles; numbers from the JSON."""
     d, ops = b["decoded"], b["operations"]
     slug = b["slug"]
+    if slug.startswith("umia-"):
+        calls = [c for o in ops for c in o["calls"]]
+        ups = sum(1 for c in calls if c["function"].startswith("upgradeToAndCall"))
+        return [("Calls", f"{len(calls)} in one batch", f"{ups} upgradeToAndCall + {len(calls) - ups} setters", False),
+                ("Timelock delay", F["delay"], f"ETA {F['eta']}", False),
+                ("Unverified new code", "3 contracts", "Oracle, spot migrator, LBP factory", False),
+                ("Keeper role", "EOA", "activeLiquidityKeeper · no code at the pin", False)]
     if slug == "lombard-op-0xd07f":
         ch = {c["lombardChange"]["parameter"] + (c["lombardChange"]["tokenSymbol"] or ""): c["lombardChange"] for o in ops for c in o["calls"]}
         lo, hi = d["router"]["depositFeeOperatorRange"]
@@ -744,7 +763,33 @@ def state_lista(b, item, bs, xa, E):
     return out
 
 
-STATE = {"lombard-ops-0xceee-0x2f2a-0x6404": state_lombard, "beefy-base-op-0x3302": state_beefy,
+def state_umia(b, item, bs, xa, E):
+    d = b["decoded"]
+    u = d["umia"]
+    cur = u["current"]
+    calls = b["operations"][0]["calls"]
+    rows = []
+    for up in d["upgrades"]:
+        c0, n0 = up["currentImplementation"], up["newImplementation"]
+        rows.append(f'<dt>{E(up["proxyName"])} implementation</dt><dd>{xa(c0["address"])} · Sourcify {E(c0["sourcify"]["match"])} to queued '
+                    f'{xa(n0["address"])} · {E(n0["sourcify"]["name"])} · Sourcify {E(n0["sourcify"]["match"])} '
+                    f'(verified {E(n0["sourcify"]["verifiedAt"][:10])}) · no initializer</dd>')
+    for g, i, k in (("conditionalMarketOracle()", 2, "oracle"), ("defaultGovernanceExecutor()", 3, "executor"), ("lbpStrategyFactory()", 8, "factory")):
+        rows.append(f'<dt><code>{E(g)}</code></dt><dd>{xa(cur[g])} to queued {xa(calls[i]["args"][k])}</dd>')
+    for g, i, k in (("spotMigrator()", 4, "spotMigrator"), ("activeLiquidityKeeper()", 5, "keeper")):
+        rows.append(f'<dt><code>{E(g)}</code></dt><dd>reverts on the current implementation to queued {xa(calls[i]["args"][k])}</dd>')
+    for g, i, k, unit in (("launchAnchorBps()", 6, "bps", "bps"), ("launchActiveHalfWidthTicks()", 7, "ticks", "ticks")):
+        rows.append(f'<dt><code>{E(g)}</code></dt><dd>reverts on the current implementation to queued {calls[i]["args"][k]:,} {unit}</dd>')
+    cr = u["credit"]
+    return [f'<h3>UmiaHub {xa(u["hub"], "UmiaHub")} and UmiaMarketCore {xa(u["marketCore"], "UmiaMarketCore")}</h3>', '<dl class="memo-meta">', *rows, '</dl>',
+            '<div class="card">',
+            f'  <p class="s">Research credit: this queued operation was reported by <a href="https://github.com/{E(cr["github"])}" target="_blank" '
+            f'rel="noopener">@{E(cr["github"])}{bs.EXT}</a> in the {E(cr["entry"])} entry <a href="{E(cr["prUrl"])}" target="_blank" rel="noopener">'
+            f'Fractal-Neurons/pacta#{cr["pr"]}{bs.EXT}</a>. Pacta re-read every value on this page at the pinned block on two RPC endpoints.</p>',
+            '</div>']
+
+
+STATE = {"umia-op-0x3d35": state_umia, "lombard-ops-0xceee-0x2f2a-0x6404": state_lombard, "beefy-base-op-0x3302": state_beefy,
          "ethena-ops-0xb028-0xca05-0x108e-0x070a": state_ethena, "yearn-v3-op-0x2a14": state_yearn,
          "etherfi-liquid-op-0xf0fb": state_etherfi_liquid, "lombard-op-0xd07f": state_lombard_fees,
          "cap-op-0x3397": state_cap, "compound-v3-op-0x86b4": state_compound, "lista-lending-op-0x21df": state_lista}

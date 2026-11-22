@@ -339,13 +339,54 @@
    "chain": "ethereum",
    "pinnedBlock": 26433001,
    "headline": "OBOL minting has no enforced 500-million cap; minter authority is held by a 2-of-3 Safe",
-   "explanatorySentence": "Obol documents a total-supply cap of 500 million tokens, while the retained Ethereum block 26,433,001 record identifies an uncapped mint function with MINTER_ROLE held by a 2-of-3 Safe outside the separate Token House timelock; the finding concerns mint authority and cap enforcement, not an allegation of material inflation from the tiny recorded supply excess.",
+   "explanatorySentence": "Obol documents a total-supply cap of 500 million tokens, while the retained Ethereum block 26,433,001 record identifies an uncapped mint function with MINTER_ROLE held by a 2-of-3 Safe (Token House governance is paused in current v1.11 documentation); the finding concerns mint authority and cap enforcement, not an allegation of material inflation from the tiny recorded supply excess.",
    "summaryShort": "OBOL mint has no enforced 500M cap; minter authority is a 2-of-3 Safe",
    "factorOverrides": {
-    "timelock": "5d Token House governance timelock (getMinDelay() = 432,000s); OBOL MINTER_ROLE sits with a separate 2-of-3 Safe outside this timelock"
+    "timelock": {
+     "state": "n",
+     "value": "5d TimelockController on chain (getMinDelay() = 432,000 s); Token House governance is paused in current v1.11 docs (uncompared)",
+     "evidence": "obol-network-governance-timelock-delay-s24: getMinDelay() = 432000s (5 days); Token House governance paused in v1.11 docs",
+     "evidenceCaption": "Obol TimelockController: 5-day on-chain delay (Token House governance paused in v1.11 docs) — Ethereum block #26,433,001"
+    }
    },
    "leadRecord": "obol-network-token-supply-cap-s24",
-   "rulingsSource": "rulings.json"
+   "rulingsSource": "rulings.json",
+   "recordOverrides": {
+    "obol-network-governance-timelock-delay-s24": {
+     "surface": "Obol TimelockController: 5-day on-chain delay (Token House governance paused in v1.11 docs)",
+     "documented_reference": "docs.obol.org/community-and-governance/governance (v1.11 default): 'Governance within Obol is currently paused and undergoing a transition phase.' (Sprint 24 had cited archived v1.8 Token House docs; no active numeric timelock commitment is stated in v1.11.)"
+    },
+    "obol-network-governor-thresholds-s24": {
+     "surface": "ObolGovernor: 30,000 OBOL proposal threshold, 0.84% quorum (Token House governance paused in v1.11 docs)",
+     "documented_reference": "docs.obol.org/community-and-governance/governance (v1.11 default): 'Governance within Obol is currently paused and undergoing a transition phase.' (Sprint 24 had cited archived v1.8 Token House docs; no active proposal threshold or quorum commitment is stated in v1.11.)"
+    }
+   },
+   "recordDisplay": {
+    "obol-network-governance-timelock-delay-s24": {
+     "badge": "observed",
+     "badgeLabel": "Observed / Uncompared",
+     "documentedLabel": "Current documentation (paused governance, not compared).",
+     "whatDiffersNote": "governance paused in v1.11 documentation (not compared)"
+    },
+    "obol-network-governor-thresholds-s24": {
+     "badge": "observed",
+     "badgeLabel": "Observed / Uncompared",
+     "documentedLabel": "Current documentation (paused governance, not compared).",
+     "whatDiffersNote": "governance paused in v1.11 documentation (not compared)"
+    }
+   },
+   "wave4Credit": {
+    "hunter": "dankezo",
+    "pr": 171,
+    "fixture": "bounties/wave-4/docs-changed/obol-network.json",
+    "usdc": "2.00",
+    "payoutTxHash": "0x6abc04029b748bcf01964fe65d3ffe05a27b219bea8dbc77c32ef5cb4abf248a",
+    "records": [
+     "obol-network-governance-timelock-delay-s24",
+     "obol-network-governor-thresholds-s24"
+    ],
+    "text": "reported that Pacta's Sprint 24 record had cited Obol's archived v1.8 Token House governance documentation, whereas Obol's default v1.11 governance documentation states that governance is paused. Obol updated those governance pages in August 2026, before Sprint 24; the two governance rows are now shown as observed and not compared."
+   }
   },
   "bio-protocol": {
    "status": "delta",
@@ -623,6 +664,70 @@
    "clear_weaker": "Weaker protection than documented",
    "real_difference": "Other difference needing explanation",
    "bookkeeping": "Bookkeeping change"
+  }
+ },
+ "labelOverrides": {
+  "description": "Wording-35 r4 label corrections for protocols that carry no correction status: a record's published surface (applied to index.json by apply_scorecard_corrections.py like recordOverrides) and a scorecard factor's label (applied by build_site.py like factorOverrides). Never a grade or status change. controllerText: the Controller line of an RPC-pinned record with no controller address (the gates its verified source names), replacing the generic 'no single-key owner' sentence. factorOverrides also carry Part 6D's two signer-quorum readings (Wormhole 13-of-19 guardians, Centrifuge's known 4-of-9 via the ProtocolGuardian ward; other ward holders not enumerable).",
+  "recordOverrides": {
+   "wormhole-core-ntt-eth-upgrade-governance-s25": {
+    "surface": "Upgrades: guardian-signed governance messages only, EIP-1967 admin slot = 0x0 (upgrades governed by 13-of-19 Guardian VAA via submitContractUpgrade)"
+   }
+  },
+  "factorOverrides": {
+   "centrifuge-liquidity-pools-base": {
+    "upgrade": {
+     "state": "g",
+     "value": "Non-proxy bytecode (no EIP-1967/beacon slot; state wards-gated, holders not enumerable)"
+    },
+    "quorum": {
+     "state": "g",
+     "value": "Known controlling quorum: 4-of-9 via ProtocolGuardian; other ward holders are not enumerable",
+     "evidence": "centrifuge-liquidity-pools-base-protocol-guardian-s24: Root 0x7Ed48C31f2fdC40d37407cBaBf0870B2b688368f (Base, block #58534152): wards(ProtocolGuardian 0xCEb7eD5d5B3bAD3088f6A1697738B60d829635c6) = 1; ProtocolGuardian (Sourcify match) root() = Root, safe() = Safe 0x9711730060C73Ee7Fcfe1890e8A0993858a7D225 (4-of-9, v1.4.1); the Safes are not direct wards.",
+     "evidenceCaption": "ProtocolGuardian: a ward of Root, controlled by the Protocol Safe — Base block #58,534,152"
+    }
+   },
+   "wormhole-core-ntt": {
+    "quorum": {
+     "state": "g",
+     "value": "Lowest controlling quorum: 13-of-19",
+     "evidence": "wormhole-core-ntt-eth-guardian-quorum-s25: Wormhole core 0x98f3c9e6E3fAce36bAAd05FE09d375Ef1464288B: getCurrentGuardianSetIndex() = 7; getGuardianSet(7) = 19 keys, expirationTime 0; quorum(19) = 13.",
+     "evidenceCaption": "Messages need 13 of the 19 guardians (guardian set 7) — Ethereum block #26,434,786"
+    }
+   }
+  },
+  "controllerText": {
+   "adi-bridge-control-plane": "Upgradeable EIP-1967 proxy (implementation = 0x9cb8142aEBBcdc60AF7c97Af897A67A8f3CA71C2), EIP-1967 admin slot = 0x0; verified implementation source gates grantRole/rescueERC20Token/rescueNativeToken/revokeRole/initialize via OpenZeppelin AccessControl (hasRole/onlyRole); role holders not enumerable read-only; owner()/admin() absent",
+   "anemoy-capital-control-plane": "Non-proxy contract (Tranche); verified source gates burn/deny/file/mint/rely via wards (rely/deny); ward holders not enumerable read-only; owner()/admin() absent",
+   "angle-control-plane": "Non-proxy contract (ANGLE); minter() = 0x09D81464c7293C774203E46E3C921559c8E9D53f (timelock, gates mint/setMinter); owner()/admin() absent",
+   "ao-bridge-control-plane": "Upgradeable EIP-1967 proxy (implementation = 0x76488832A88475AF0aC223d8FD4d053177A012cc), EIP-1967 admin slot = 0x0; owner() returns the zero address; admin() reverted in the pinned reads; upgrade path sits in the implementation; its gate was not resolved read-only",
+   "apex-pro-control-plane": "Non-proxy contract (ApeXToken); verified source gates mint via onlyMinter; holder kept in storage without a public getter (not readable read-only); owner() returns the zero address; admin() reverted in the pinned reads",
+   "badger-dao-control-plane": "Non-proxy contract (MiniMeToken); controller() = 0xdDB2dfad74F64F14bb1A1cbaB9C03bc0eed74493 (contract, gates transferFrom); owner()/admin() absent",
+   "brickken-control-plane": "Non-proxy contract (Brickken); verified source gates burn/burnFrom/grantRole/mint/revokeRole via OpenZeppelin AccessControl (hasRole/onlyRole); role holders not enumerable read-only; owner()/admin() absent",
+   "derivadex-control-plane": "Non-proxy contract (DDX); issuer() = 0x6Fb8aa6fc6f27e591423009194529aE126660027 (contract, gates mint/transferOwnershipToDerivaDEXProxy); owner()/admin() absent",
+   "drakewell-usddw-control-plane": "Non-proxy contract (AccountableAsyncRedeemVault); strategy() = 0x4c376DF2f5182F5373502ccAB12700c479d8A128 (contract, gates forceTransferShares, burnShares, mintShares, setAllowed, setSharesTransferable, setSigner, lockAssets, releaseAssets); owner()/admin() absent",
+   "dxsale-control-plane": "Non-proxy contract (MainToken); verified source gates finishMinting/mint/mintAndFreeze via canMint; holder kept in storage without a public getter (not readable read-only); verified source gates mint via hasMintPermission; holder kept in storage without a public getter (not readable read-only); owner() returns the zero address; admin() reverted in the pinned reads",
+   "edgex-bridge-control-plane": "Upgradeable EIP-1967 proxy (implementation = 0x9406dD76452c172B3CC77092B42398e87daB3161), EIP-1967 admin slot = 0x0; verified implementation source gates grantRole/revokeRole/initialize/renounceRole via OpenZeppelin AccessControl (hasRole/onlyRole); role holders not enumerable read-only; owner()/admin() absent",
+   "fermiswap-control-plane": "Non-proxy contract (FermiSwapper); verified source gates executeGeneral/executeGeneralMulti/setFermi/setTraderVault via manager; holder kept in storage without a public getter (not readable read-only); verified source gates executeGeneral/executeGeneralMulti/setFermi/setTraderVault via onlyManager; holder kept in storage without a public getter (not readable read-only); owner()/admin() absent",
+   "geth-control-plane": "Non-proxy contract (StakeToken); verified source gates addMinter/mint/multiMint via onlyMinter; holder kept in storage without a public getter (not readable read-only); verified source gates addPauser/pause/unpause via onlyPauser; holder kept in storage without a public getter (not readable read-only); owner()/admin() absent",
+   "harvest-finance-control-plane": "Non-proxy contract (RewardToken); governance() = 0xF066789028fE31D4f53B69B81b328B8218Cc0641 (safe, gates addMinter/setStorage); owner()/admin() absent",
+   "ichi-control-plane": "Non-proxy contract (IchiV2); minter() = 0x94A5980d5634533551dcB7108322f6C4f2a80E6B (safe, gates mint/setConversionFee/setMinter); owner()/admin() absent",
+   "king-protocol-control-plane": "Upgradeable EIP-1967 proxy (implementation = 0x1cB489ef513E1Cc35C4657c91853A2E6fF1957dE), EIP-1967 admin slot = 0x0; governor() = 0xF46D3734564ef9a5a16fC3B1216831a28f78e2B5 (safe, gates setAdminImpl/transferGovernance); owner()/admin() absent",
+   "lazy-control-plane": "Non-proxy contract (LazyUSDVault); roleManager.owner() = 0x0FBCe7F3678467f7F7313fcB2C9D1603431Ad666 (safe); owner()/admin() absent",
+   "monolith-market-control-plane": "Non-proxy contract (Factory); operator() = 0x926dF14a23BE491164dCF93f4c468A50ef659D5B (timelock, gates setCustomFeeBps/setFeeBps/setFeeRecipient/setPendingOperator); owner()/admin() absent",
+   "mortgagefi-control-plane": "Non-proxy contract (mortgagefipoolusdcweth); contracts() = 0xaB825F45E9e5d2459Fb7a1527A8d0ca082C582F4 (contract, gates earlyRepayContractInFull/finishContract); verified source gates grantRole/revokeRole/setConversionVault/setFeeReceiver/renounceRole via OpenZeppelin AccessControl (hasRole/onlyRole); role holders not enumerable read-only; owner()/admin() absent",
+   "paradex-bridge-control-plane": "Upgradeable EIP-1967 proxy (implementation = 0x515244B743dde07925d2D9e6478930528AE5e3Fc), EIP-1967 admin slot = 0x0; verified implementation source gates grantRole/mint/pause/revokeRole/unpause via OpenZeppelin AccessControl (hasRole/onlyRole); role holders not enumerable read-only; owner()/admin() absent",
+   "pirex-control-plane": "Non-proxy contract (BTRFLYV2); verified source gates grantRole/mint/revokeRole/renounceRole via OpenZeppelin AccessControl (hasRole/onlyRole); role holders not enumerable read-only; owner()/admin() absent",
+   "ribbon-control-plane": "Non-proxy contract (RibbonToken); verified source gates grantRole/mint/revokeRole/setTransfersAllowed/renounceRole via OpenZeppelin AccessControl (hasRole/onlyRole); role holders not enumerable read-only; owner()/admin() absent",
+   "ring-few-control-plane": "Non-proxy contract (FewFactory); verified source gates pause/unpause via isGuardian; holder kept in storage without a public getter (not readable read-only); verified source gates setCore via onlyGovernor; holder kept in storage without a public getter (not readable read-only); verified source gates pause/unpause via onlyGuardianOrGovernor; holder kept in storage without a public getter (not readable read-only); owner()/admin() absent",
+   "royco-v2-control-plane": "Upgradeable EIP-1967 proxy (implementation = 0x34DB2f4215e55ec8e2c3dE0a826935EBF158be77), EIP-1967 admin slot = 0x0; verified implementation source gates execute/schedule via canCall and hasRole, and gates grantRole/revokeRole/setRoleAdmin/setTargetFunctionRole/updateAuthority via onlyAuthorized (hasRole); role holders not enumerable read-only; owner()/admin() absent",
+   "saffron-vaults-control-plane": "Non-proxy contract (SFI); governance() = 0x2885402C22fBd63952f759aD380402b63D0355Ea (eoa, gates erc_sweep/set_governance/set_minter); owner()/admin() absent",
+   "sport-fun-control-plane": "Upgradeable EIP-1967 proxy (implementation = 0x14ad363A292a2d837dFf864556663ec9Fa958Cb6), EIP-1967 admin slot = 0x0; verified implementation source gates grantRole/revokeRole/initialize/renounceRole via OpenZeppelin AccessControl (hasRole/onlyRole); role holders not enumerable read-only; owner()/admin() absent",
+   "stablehodl-control-plane": "Upgradeable EIP-1967 proxy (implementation = 0xc34DF695167aA2F9571976fFD5e3E0E95A53E470), EIP-1967 admin slot = 0x0; verified implementation source gates grantRole/revokeRole/setMasterAddress/setWhitelistToken/emergencyWithdraw via OpenZeppelin AccessControl (hasRole/onlyRole); role holders not enumerable read-only; owner()/admin() absent",
+   "stafi-control-plane": "Non-proxy contract (FISToken); verified source gates grantRole/mint/pause/revokeRole/unpause via OpenZeppelin AccessControl (hasRole/onlyRole); role holders not enumerable read-only; owner()/admin() absent",
+   "starknet-bridge-control-plane": "Non-proxy contract (StarkNetToken); verified source gates grantRole/mint/revokeRole/renounceRole via OpenZeppelin AccessControl (hasRole/onlyRole); role holders not enumerable read-only; owner()/admin() absent",
+   "tornado-cash-control-plane": "Non-proxy contract (TORN); governance() = 0x5efda50f22d34F262c29268506C5Fa42cB56A1Ce (contract, gates addToAllowedList/changeTransferability/removeFromAllowedList/rescueTokens); owner()/admin() absent",
+   "ultrayield-vaults-control-plane": "Upgradeable EIP-1967 proxy (implementation = 0xE66f6a37C807F71591854e22075b3A613B46abe2), EIP-1967 admin slot = 0x0; verified implementation source gates grantRole/pause/revokeRole/setFeeRecipient/setFees via OpenZeppelin AccessControl (hasRole/onlyRole); role holders not enumerable read-only; owner()/admin() absent",
+   "ztln-p-control-plane": "Upgradeable EIP-1967 proxy (implementation = 0xf5429683A15340a859dFdbD1B2De37b1ea77c2d5), EIP-1967 admin slot = 0x0; verified implementation source gates burnFrom/grantRole/mint/pause/revokeRole via OpenZeppelin AccessControl (hasRole/onlyRole); role holders not enumerable read-only; owner()/admin() absent"
   }
  }
 }

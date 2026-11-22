@@ -4261,14 +4261,14 @@
           "chains": [
             "ethereum"
           ],
-          "pinnedBlock": 26458556,
+          "pinnedBlock": 26466974,
           "primaryContract": "0x8ECC0B419dfe3AE197BC96f2a03636b5E1BE91db",
           "targetLabel": "Stable Gain Vault (UUPSProxy)",
           "tokens": [
             "sbUSD"
           ],
           "baseEasUids": [],
-          "summary_short": "Upgradeable proxy no readable owner or admin; docs not assessed",
+          "summary_short": "Upgradeable proxy, AccessControl-gated (holders not enumerable); docs not assessed",
           "url": "https://pacta.wtf/protocols/ultrayield-vaults/"
         }
       ],

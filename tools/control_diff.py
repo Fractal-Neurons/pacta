@@ -124,8 +124,15 @@ def what_differs(entries):
         if not paired:
             changed.append({"parameter": e.get("surface") or e["id"], "observed": first_sentence(e.get("onchain_observed")),
                             "documented": first_sentence(e.get("documented_reference")), "recordId": e["id"], "classification": e["classification"]})
+    uncompared = []
+    import scorecard_corrections as _CORR          # lazy: scorecard_corrections is shared with this module's importers
     for e in entries:
         if e.get("classification") == "aligned_baseline":
+            rd = _CORR.record_display(e["id"])
+            if rd.get("badge") == "observed":          # shown as Observed / Uncompared: never "matches the documentation"
+                uncompared.append({"parameter": e.get("surface") or e["id"], "value": rd.get("whatDiffersNote") or "not compared",
+                                   "recordId": e["id"]})
+                continue
             matched.append({"parameter": e.get("surface") or e["id"], "value": "matches the documentation", "recordId": e["id"]})
     seen_c, changed_u = set(), []
     for c in changed:
@@ -140,4 +147,4 @@ def what_differs(entries):
         if k not in seen:
             seen.add(k)
             uniq.append(m)
-    return {"changed": changed, "matched": uniq}
+    return {"changed": changed, "matched": uniq, **({"uncompared": uncompared} if uncompared else {})}

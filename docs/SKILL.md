@@ -17,7 +17,7 @@ or a live collateral onboarding proposal. Pacta publishes 309 attested checks ac
 ## Pre-execution API (free daily tier, no API key; deep routes paid in Base USDC)
 - Remote MCP, zero install: `https://api.pacta.wtf/mcp` (Streamable HTTP). Claude Code: `claude mcp add --transport http pacta https://api.pacta.wtf/mcp`.
   Tools (7 read-only inspection tools + 1 opt-in coverage/feature request tool (pacta_submit_request)): `pacta_lookup_protocol`, `pacta_check_preflight`, `pacta_scan_wallet_exposure`, `pacta_scan_control_plane`, `pacta_scan_timelock_op`, `pacta_scan_proposal_diff`, `pacta_get_live_timelocks`, `pacta_submit_request`.
-- Name lookup first: if you only have a protocol or token name (e.g. Aave, Ethena, USDe, Moonwell, kUSD), call pacta_lookup_protocol (or GET https://api.pacta.wtf/v1/protocols/lookup?q=<name>) to resolve its verified record: canonical slug and page URL, checksummed primary contract and controller, classification with its evidence basis (eas_attested: Base-EAS-attested, documentation compared; rpc_observed: on-chain control plane pinned over JSON-RPC, documentationComparison not_assessed; briefs), and preflightArgs {chain, address} for pacta_check_preflight. 316 protocols + 17 briefs, answered in memory with no RPC; free in every pricing mode; an empty query lists the catalog. Catalog: https://pacta.wtf/api/v1/lookup.json.
+- Name lookup first: if you only have a protocol or token name (e.g. Aave, Ethena, USDe, Moonwell, kUSD), call pacta_lookup_protocol (or GET https://api.pacta.wtf/v1/protocols/lookup?q=<name>) to resolve its verified record: canonical slug and page URL, checksummed primary contract and controller, classification with its evidence basis (eas_attested: Base-EAS-attested, documentation compared; rpc_observed: on-chain control plane pinned over JSON-RPC, documentationComparison not_assessed; briefs), and preflightArgs {chain, address} for pacta_check_preflight. 316 protocols + 18 briefs, answered in memory with no RPC; free in every pricing mode; an empty query lists the catalog. Catalog: https://pacta.wtf/api/v1/lookup.json.
 - Opt-in demand intake: when a result carries coverage_gap_hint (lookup miss, unindexed or unclassified pre-flight target, unsupported chain), ask the user, then call pacta_submit_request (or POST https://api.pacta.wtf/v1/requests) with request_type (missing_protocol | unsupported_chain | missing_check_surface | doc_or_data_discrepancy | mcp_or_api_feature), target_subject, requested_capability and urgency_track (community_queue_free | active_due_diligence | issuer_24h_clearance_5k (issuer clearance, by arrangement) | api_high_volume_sla), plus optional caller_agent / requester_role / caller_purpose. It returns request_id (REQ-2026-xxxxxxxx), status (queued | upvoted_existing), demand_votes and fast_track_url; an identical request upvotes the existing one. Free in every pricing mode, 5 per hour; never opens a GitHub issue. contact_handle only when the user explicitly asks for follow-up or an invoice: it is stored privately and never published.
 - Bounties Wave 4 (OPEN through Sunday 29 November 2026, 23:59 UTC): issue #158 Observed Catalogue, 24 awards of $1.00 USDC; issue #159 Control-Plane Watch, 10 awards of $2.00 USDC; issue #161 Documents Changed, 5 awards of $2.00 USDC; each paid on Base within 48 hours of the merged, checked entry. Paid-call rule: every entry needs one settled x402 call on https://api.pacta.wtf ($0.02 POST /v1/x402/verdict for #158 and #159, $0.05 POST /v1/x402/dossier for #161; helper tools/pacta_x402_call.py) and its Base USDC payment_tx_hash; the call fee is never returned: https://pacta.wtf/bounties/#wave-4
 - Free MCP tier: tools/call takes three OPTIONAL, non-personal attribution fields: caller_agent (a lowercase slug naming the calling agent, IDE or framework, e.g. claude-code, cursor, coinbase-agentkit; never a name, e-mail, IP, URL, address or secret), requester_role (autonomous_agent | defi_developer | risk_curator_analyst | security_researcher | protocol_team | institutional_allocator | individual_user) and caller_purpose (pre_trade_safety | collateral_due_diligence | yield_allocation | security_audit | governance_monitoring | integration_testing | general_research). Omitted, blank or invalid attribution fields never block a call (invalid values are silently dropped and never stored; unattributed MCP calls infer a known client slug from X-MCP-Client-Name / User-Agent or count as unspecified). Over REST they are optional query or body parameters. Location is never asked: only the Cloudflare edge country is counted; no IP is stored.
@@ -26,7 +26,8 @@ or a live collateral onboarding proposal. Pacta publishes 309 attested checks ac
 - One call: `curl -s -A "my-agent/1.0" "https://api.pacta.wtf/v1/check/preflight?chain=ethereum&address=0x..."` (HTTP clients: curl and python-requests work with their default User-Agent. For the Python standard library, send any User-Agent header (urllib.request.Request(url, headers={"User-Agent": "my-agent/1.0"})) or read the static JSON on pacta.wtf.) returns `verdict`, `riskScore` (0-100), proxy /
   implementation (EIP-1967, EIP-1822 or beacon), `controller` (eoa, multisig_safe, timelock, contract,
   access_control_enumerable, access_control or none), `canUpgradeZeroDelay`, `capabilities` (pause, blacklist, upgrade) and
-  `pinnedBlock` + `pinnedBlockHash`. Verdicts: `IMMUTABLE_NO_ADMIN`, `TIMELOCK_PROTECTED`, `ZERO_DELAY_TIMELOCK_RISK` (0 s
+  `pinnedBlock` + `pinnedBlockHash`, and `checksRun` (every read run). Verdicts: `NO_CONTROLLER_FOUND` (no controller found by our
+  checks; custom or unprobed control paths may still exist; riskScore null), `TIMELOCK_PROTECTED`, `ZERO_DELAY_TIMELOCK_RISK` (0 s
   timelock: no exit window), `MULTISIG_NO_TIMELOCK`, `INSTANT_EOA_ADMIN_RISK`, `UNDEPLOYED_OR_EOA`,
   `UNCLASSIFIED_CONTRACT_CONTROLLER` (never treat it as safe).
 - OpenAPI 3.1: `https://api.pacta.wtf/openapi.json`. Every route takes GET query parameters or a POST JSON body. 60 requests / minute per caller.
@@ -67,7 +68,7 @@ async def main(model):
 
 ## Feeds (no key, no paywall)
 - `https://pacta.wtf/api/v1/index.json`: Block-pinned control-plane index (every record: target, call, block, block hash, classification, Base EAS UID)
-- `https://pacta.wtf/api/v1/lookup.json`: Protocol / token lookup catalog: 316 protocols + 17 briefs with slug, aliases, checksummed contracts, evidence basis and preflightArgs
+- `https://pacta.wtf/api/v1/lookup.json`: Protocol / token lookup catalog: 316 protocols + 18 briefs with slug, aliases, checksummed contracts, evidence basis and preflightArgs
 - `https://pacta.wtf/api/v1/protocols.json`: Every published protocol: badge tier + URLs, evidence basis (189 EAS-attested / 127 RPC-observed), batch attestation IDs, EAS UIDs, controller, pinned surfaces
 - `https://pacta.wtf/api/v1/onboarding.json`: Onboarding verification scans: every check with call, calldata, raw result, decoded value; role maps
 - `https://pacta.wtf/api/v1/proposals.json`: Live governance proposals (Aave, Euler, Morpho, Sky) mapped to block-pinned observations
@@ -96,12 +97,12 @@ publication_pending: @pacta/mcp-server is not yet published to npm or the MCP re
 - `pacta_get_anchoring` (free): Base EAS anchoring: PactaCommitmentRegistry, schema, batch attestation UIDs
 - `pacta_list_proposals` (free): Governance proposals feed (forum, topic_id, chain, limit, include_repro)
 - `pacta_x402_discover` (free): x402 gateway status and discovery manifest (only when PACTA_X402_URL is set)
-- `pacta_check_preflight` (x402 $0.01): Pre-execution check of a contract: verdict, 0-100 risk score, proxy / admin / timelock, capabilities (chain, address, block)
+- `pacta_check_preflight` (x402 $0.01): Pre-execution check of a contract: verdict, 0-100 risk score (null when there is no contract or no controller was found), checks run, proxy / admin / timelock, capabilities (chain, address, block)
 - `pacta_scan_wallet_exposure` (x402 $0.01): Read-only Multicall3 Ethereum + Base wallet or Safe exposure summary across indexed DeFi protocols (address, chain; shares 50/day free quota, zero wallet-address logging)
-- `pacta_scan_control_plane` (x402 $0.10): Live control-plane scan of a contract (chain, address)
-- `pacta_scan_timelock_op` (x402 $0.25): Live TimelockController operation state (timelock, opId)
-- `pacta_live_timelocks` (x402 $0.10): Live state of tracked queued timelock operations
-- `pacta_scan_proposal_diff` (x402 $0.15): Re-run a tracked governance proposal's pinned reads live, pinned-vs-live diffs (forum, topicId)
+- `pacta_scan_control_plane` (free, $0.00): Live control-plane scan of a contract (chain, address)
+- `pacta_scan_timelock_op` (free, $0.00): Live TimelockController operation state (timelock, opId)
+- `pacta_live_timelocks` (free, $0.00): Live state of tracked queued timelock operations
+- `pacta_scan_proposal_diff` (free, $0.00): Re-run a tracked governance proposal's pinned reads live, pinned-vs-live diffs (forum, topicId)
 - `pacta_submit_request` (free): Opt-in (the only tool that writes): queue or upvote a coverage / feature request after a coverage_gap_hint, with the user's consent; forwards to POST /v1/requests (only when PACTA_X402_URL is set)
 
 Environment (all optional, none secret):
@@ -117,13 +118,13 @@ Environment (all optional, none secret):
 - No API key. Paid today: only the five /v1/x402/* routes ($0.02 to $9.00 USDC on Base, paid to the Pacta Treasury EOA 0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14; x402 v1 X-PAYMENT or v2 PAYMENT-SIGNATURE). /v1/check/preflight and /v1/check/wallet-exposure are free for 50 calls per caller per UTC day, then $0.01 USDC per call via x402 to the same treasury. Every other route (protocol lookup, control-plane, timelock-op and proposal-diff scans, live-timelocks briefs, samples and the remote MCP read tools) is free at $0.00 (60 requests / minute per caller).
 - The local stdio MCP server's scan tools are opt-in: set `PACTA_X402_URL=https://api.pacta.wtf` to enable them.
 - Base (8453), scheme `exact`, USDC `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`, payTo `0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14` (the Pacta Treasury EOA), `maxTimeoutSeconds` 60. Never sign for any other `payTo`.
-- Routes and their x402_paid prices (GET query or POST JSON body with the same names; default client cap $1.00):
-  - `https://api.pacta.wtf/v1/check/preflight` ($0.01, `10000` atomic USDC): `?chain=ethereum|base&address=0x…`
-  - `https://api.pacta.wtf/v1/check/wallet-exposure` ($0.01, `10000` atomic USDC): `?address=0x…&chain=ethereum|base|all`
-  - `https://api.pacta.wtf/v1/scan/control-plane` ($0.10, `100000` atomic USDC): `?chain=ethereum|base&address=0x…`
-  - `https://api.pacta.wtf/v1/scan/timelock-op` ($0.25, `250000` atomic USDC): `?chain=ethereum|base&timelock=0x…&opId=0x…`
-  - `https://api.pacta.wtf/v1/scan/proposal-diff` ($0.15, `150000` atomic USDC): `?forum=aave|euler|morpho|sky&topicId=<id>`
-  - `https://api.pacta.wtf/v1/briefs/live-timelocks` ($0.10, `100000` atomic USDC)
+- Gateway routes (GET query or POST JSON body with the same names; default client cap $1.00):
+  - `https://api.pacta.wtf/v1/check/preflight` (50 free calls per caller per UTC day, then $0.01 = `10000` atomic USDC via x402): `?chain=ethereum|base&address=0x…`
+  - `https://api.pacta.wtf/v1/check/wallet-exposure` (50 free calls per caller per UTC day, then $0.01 = `10000` atomic USDC via x402): `?address=0x…&chain=ethereum|base|all`
+  - `https://api.pacta.wtf/v1/scan/control-plane` (free, $0.00 today: no wallet, no payment): `?chain=ethereum|base&address=0x…`
+  - `https://api.pacta.wtf/v1/scan/timelock-op` (free, $0.00 today: no wallet, no payment): `?chain=ethereum|base&timelock=0x…&opId=0x…`
+  - `https://api.pacta.wtf/v1/scan/proposal-diff` (free, $0.00 today: no wallet, no payment): `?forum=aave|euler|morpho|sky&topicId=<id>`
+  - `https://api.pacta.wtf/v1/briefs/live-timelocks` (free, $0.00 today: no wallet, no payment)
 - `x402Versions: [1, 2]`, `networks: ["base", "eip155:8453"]`:
   - x402 v1: 402 JSON body (`x402Version: 1`, `network: "base"`, `maxAmountRequired`), pay with `X-PAYMENT`, receipt `X-PAYMENT-RESPONSE`.
   - x402 v2: `PAYMENT-REQUIRED` header (base64 JSON, `x402Version: 2`, `network: "eip155:8453"`, `amount`, `extensions.bazaar` with a JSON Schema draft 2020-12 schema), pay with `PAYMENT-SIGNATURE`, receipt `PAYMENT-RESPONSE`.

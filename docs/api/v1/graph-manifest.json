@@ -14,9 +14,9 @@
  ],
  "sources": {
   "sha256": {
-   "protocols.json": "fe3fff2e9fe73963d5cd8ae2c0eb55e6151b13d459de5cb487de816ab3955dab",
-   "index.json": "44e8a79e8bc725e380bdcfbb512522c0ccd1dee7672ec86b16d198661cd95444",
-   "rpc-pinned.json": "108919b7ce46d2c3e09943bbd5dad4344ee375a275c6056f4b391a57ee11a418",
+   "protocols.json": "0942fd21b9dfe8bffed7d542132f1c595768994e3ad04a8728e7d6960ab90413",
+   "index.json": "321b0452e18218fa3ebdcf471cc52cd8ac806d98d9c84ba64045b755bc482fdb",
+   "rpc-pinned.json": "383d09fabf7242d3429b20cccd909bb38a5524913d0d023e8061f73f0310ae59",
    "graph_dependencies.json": "c32f718b692f497f33bd8e50e300b883ae1ce3316215fb5e2d01f2c235bff4fa",
    "graph_controller_facts.json": "8bf0299b9aaf52211fccdc5ced9e9b60603b877b7942b19c9e0afe82d10a9ddf"
   },
@@ -2123,7 +2123,7 @@
   {
    "id": "pacta-ctrl-ethereum-98f3c9e6",
    "kind": "controller",
-   "text": "Wormhole Core (Ethereum) 0x98f3..288B [1, primary/checked] Messages need 13 of the 19 guardians (guardian set 7); Message fee: 0 (publishing is free); Upgrades: guardian-signed governance messages only, no admin key; getGuardianSet(uint32); documented in wormhole.com/docs (guardians / security): / /; messageFee() selector 1a90a219; documented in wormhole.com/docs (core contracts); documented in wormhole.com/docs (governance / security): / /."
+   "text": "Wormhole Core (Ethereum) 0x98f3..288B [1, primary/checked] Messages need 13 of the 19 guardians (guardian set 7); Message fee: 0 (publishing is free); Upgrades: guardian-signed governance messages only, EIP-1967 admin slot = 0x0 (upgrades governed by 13-of-19 Guardian VAA via submitContractUpgrade); getGuardianSet(uint32); documented in wormhole.com/docs (guardians / security): / /; messageFee() selector 1a90a219; documented in wormhole.com/docs (core contracts); documented in wormhole.com/docs (governance / security): / /."
   },
   {
    "id": "pacta-ctrl-ethereum-9a8bc3b0",
@@ -41193,5 +41193,5 @@
    "content_hash": "05ef371295b62fdb44d9ca5283d2bb88c8b04b97efbd3cd97341b187a3797141"
   }
  ],
- "manifest_sha256": "a5fc82eaa0101bfaf581847dc8c6053e556523160b9eabe7ea28284f8bb441de"
+ "manifest_sha256": "ca24978eea293ea542acbd0b2d179502ca9c2d41a0e87ce53feff163bfac40dd"
 }

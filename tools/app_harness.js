@@ -677,9 +677,11 @@ async function liveTimelockScenario() {
     keep = keep && badge(x.d).textContent === "Window open" && !x.d.querySelectorAll("img").some((i) => i.getAttribute("onerror") !== null);
   }
   res.live_failures_keep_static = keep;
-  // homepage #radar: the Ethena row badge updates; pages without data-live-timelocks never fetch
-  x = await runWith(input.index, "/", { status: 200, body: { operations: ids.map((i) => op(i, { status: "done", isOperationDone: true })) } });
-  const row = x.d.querySelectorAll("#radar [data-ops]").find((b) => b.getAttribute("data-ops") === ids.join(" "));
+  // homepage #radar (the active queue): an active row's badge updates; pages without data-live-timelocks never fetch
+  const hb = run(input.index, input.app, { path: "/", fetch: () => Promise.reject(new Error("offline")) }).document.querySelectorAll("#radar [data-ops]")[0];
+  const hids = hb ? (hb.getAttribute("data-ops") || "").split(/\s+/).filter(Boolean) : [];
+  x = await runWith(input.index, "/", { status: 200, body: { operations: hids.map((i) => op(i, { status: "done", isOperationDone: true })) } });
+  const row = hids.length ? x.d.querySelectorAll("#radar [data-ops]").find((b) => b.getAttribute("data-ops") === hids.join(" ")) : null;
   res.live_radar_row = !!row && row.textContent === "Executed" && x.calls.filter((c) => /live-timelocks/.test(c.url)).length === 1
     && x.calls.filter((c) => /live-timelocks/.test(c.url))[0].url === LIVE;
   x = await runWith(input.request, "/request/", { status: 200, body: { operations: [] } });
@@ -1005,6 +1007,18 @@ async function liveRpcScenario() {
   // V7: the immutable result is neutral (never the amber warning badge); the score still says it rates this one address
   res.pp3_immutable_headline = !!vt && vt.textContent === "No standard upgrade or admin authority detected" && !!vb && vb.getAttribute("data-variant") === "neutral"
     && !out.textContent.includes("/100") && !!out.querySelector("[data-pf-scope]") && !out.textContent.includes("cannot be changed");
+  // NO_CONTROLLER_FOUND (Worker 6c78f406): neutral, "No controller found by our checks", riskScore null, the checks run listed
+  await submit({ ...PF_EXAMPLE, verdict: "NO_CONTROLLER_FOUND", riskScore: null, isProxy: false, implementation: null, hasAdminSlot: false,
+    controller: { address: null, kind: "none" }, capabilities: {}, assessment: { confidence: "low", coverage: "unindexed_bytecode_heuristic" },
+    summary: "No controller found by our checks (see checksRun); custom or unprobed control paths may still exist.",
+    checksRun: ["eth_getCode(target)", "EIP-1967 implementation slot", "owner()", "upgradeAdmin()", "committee()"] });
+  const nt = out.querySelector(".pf-verdict"), nb = out.querySelector("[data-pf-badge]"), nc = out.querySelector("[data-pf-checks]");
+  res.ncf_verdict_checks_run = !!nt && nt.textContent === "No controller found by our checks" && !!nb && nb.getAttribute("data-variant") === "neutral"
+    && !!nc && nc.getAttribute("data-pf-checks") === "5" && nc.textContent.includes("Checks run (5)") && nc.textContent.includes("committee()")
+    && out.textContent.includes("custom or unprobed control paths may still exist") && out.textContent.includes("low")
+    && !out.textContent.includes("/100") && !/immutable/i.test(out.textContent)
+    && !out.querySelectorAll(".pf-dl dd, .pf-metrics dd").some((dd) => dd.textContent === "null");   // the raw JSON drawer may show null fields
+  // legacy: IMMUTABLE_NO_ADMIN (verified-source records only) still renders its own headline (pp3_immutable_headline above)
   log.length = 0;
   const ot = await clickLive(out);
   res.pp3_preflight_live_rpc_owner = !!ot && m("eth_call").length === 1 && m("eth_call")[0].params[0].data === "0x8da5cb5b"
@@ -1657,6 +1671,7 @@ async function miniAppScenario() {
   if (!input.miniapp || !input.checkout) { res.ma_error = "no miniapp input"; return; }
   const C = input.checkout;
   const UNIDX = "0x" + "77".repeat(20), TX19 = "0x" + "19".repeat(32), TX99 = "0x" + "99".repeat(32);
+  let maOrderPosts = 0;
   const postedMsgs = [];
   const fakeParent = { postMessage: (msg, origin) => { postedMsgs.push([msg, origin]); } };
 
@@ -1695,8 +1710,9 @@ async function miniAppScenario() {
       });
     }
     if (u === C.api) {
+      maOrderPosts++;
       const body = JSON.parse(opts.body);
-      const oid = body.sku === "instant-scan-19" ? "ord_ma_19" : "ord_ma_99";
+      const oid = "ord_ma_" + String(body.sku || "");
       return Promise.resolve({
         status: 200,
         ok: true,
@@ -1738,25 +1754,19 @@ async function miniAppScenario() {
 
   res.ma_instant_verdicts = alignedOk && deltaOk && unidxOk;
 
-  // 3. 1-Tap Base USDC upgrades ($19 Scan & $99 Seal -> 0x2105 switch -> exact USDC transfer -> /v1/orders/verify -> X Purchase)
-  click(p.document.getElementById("ma-buy-scan"));
-  for (let i = 0; i < 8; i++) await flush();
-  const scanUnlocked = p.document.getElementById("ma-receipt").hidden === false
-    && p.document.getElementById("ma-r-order").textContent === "ord_ma_19";
-
-  // $99 Seal requires contact first, then succeeds when contact is filled
-  click(p.document.getElementById("ma-buy-seal"));
-  const sealNeedsContact = p.document.getElementById("ma-contact-err").hidden === false;
-  p.document.getElementById("ma-contact").value = "@founder";
-  click(p.document.getElementById("ma-buy-seal"));
-  for (let i = 0; i < 8; i++) await flush();
-  const sealUnlocked = p.document.getElementById("ma-r-order").textContent === "ord_ma_99";
-  const txCalls = wCalls.filter((x) => x.method === "eth_sendTransaction");
-
-  res.ma_wallet_upgrade_19_and_99 = scanUnlocked && sealNeedsContact && sealUnlocked && txCalls.length === 2
-    && txCalls[0].params[0].to === C.usdc && txCalls[1].params[0].to === C.usdc
-    && p.window.__pactaTwqEvents.some((e) => e[1] === "tw-rjbqn-rjhif" && e[2].value === 19 && e[2].conversion_id === "ord_ma_19")
-    && p.window.__pactaTwqEvents.some((e) => e[1] === "tw-rjbqn-rjhif" && e[2].value === 99 && e[2].conversion_id === "ord_ma_99");
+  // 3. Deeper diligence (Part 5): the mini app sells nothing itself; its primary CTA is a plain link to the $9 report on /scan/,
+  // the secondary one the by-arrangement request form; clicking either sends no wallet transaction and posts no order
+  const upScan = p.document.getElementById("ma-buy-scan"), upSeal = p.document.getElementById("ma-buy-seal");
+  const callsBefore = wCalls.length;
+  if (upScan) click(upScan);
+  if (upSeal) click(upSeal);
+  for (let i = 0; i < 6; i++) await flush();
+  res.ma_upgrade_link_9 = !!upScan && !!upSeal && upScan.tagName === "A"
+    && upScan.getAttribute("href") === "../scan/" && upScan.getAttribute("data-sku") === "wallet-report-9"
+    && /Full Wallet (&|&amp;) Safe Exposure Report \(\$9 USDC\)/.test(upScan.textContent)
+    && upSeal.tagName === "A" && upSeal.getAttribute("href") === "../request/?tier=clearance"
+    && !p.document.getElementById("ma-manual") && !p.document.getElementById("ma-receipt") && !p.document.getElementById("ma-tx")
+    && wCalls.slice(callsBefore).length === 0 && maOrderPosts === 0;
 }
 
 async function pfComboboxScenario() {

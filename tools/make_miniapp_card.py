@@ -19,7 +19,6 @@ D_INK = "#e8eaed"
 D_MUTED = "#9aa0aa"
 D_LINE = "#23262c"
 D_ACCENT = "#a3b8ec"
-D_GREEN_BG, D_GREEN_FG = "#0d2818", "#6ee7b7"
 D_AMBER_BG, D_AMBER_FG = "#2c1f0b", "#fcd34d"
 D_BLUE_BG, D_BLUE_FG = "#132038", "#93c5fd"
 
@@ -61,7 +60,7 @@ def render_miniapp_card(font_dir, out_path):
     # Clinical terminal card
     cv.rounded(X, 396, R, 636, 12, D_CARD, border=D_LINE, bw=1.0)
     px = X + 28
-    px = pill(cv, mono_md, px, 422, "ALIGNED · DOCS = CHAIN", D_GREEN_BG, D_GREEN_FG, "#1b4d30")
+    px = pill(cv, mono_md, px, 422, "ALIGNED · DOCS = CHAIN", "#1a1d24", "#e8eaed", "#323744")   # NS-02: neutral Aligned (never safety-green)
     px = pill(cv, mono_md, px + 14, 422, "DOCS DIFFER · 0s MULTISIG", D_AMBER_BG, D_AMBER_FG, "#5c3f14")
     pill(cv, mono_md, px + 14, 422, "BASE EAS ATTESTED", D_BLUE_BG, D_BLUE_FG, "#26406e")
 
@@ -70,8 +69,8 @@ def render_miniapp_card(font_dir, out_path):
     cv.text(mono, "EIP-1967 implementation + ProxyAdmin / UUPS authority", X + 250, 520, 18, D_INK)
     cv.text(mono_md, "CONTROLLER", X + 28, 560, 18, D_MUTED)
     cv.text(mono, "Safe M-of-N signers · TimelockController minDelay()", X + 250, 560, 18, D_INK)
-    cv.text(mono_md, "1-TAP UPGRADE", X + 28, 600, 18, D_MUTED)
-    cv.text(mono_md, "$19 Full Deep-Scan  ·  $99 24h Mainnet EAS Seal (Base USDC)", X + 250, 600, 18, D_ACCENT)
+    cv.text(mono_md, "FULL REPORT", X + 28, 600, 18, D_MUTED)
+    cv.text(mono_md, "$9 Wallet & Safe Exposure Report (Base USDC)", X + 250, 600, 18, D_ACCENT)
 
     # Bottom CTA pill + reassurance
     cta = "pacta.wtf/miniapp"

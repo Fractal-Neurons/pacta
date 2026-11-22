@@ -17,9 +17,9 @@ export const ALLOWED_PAY_TO = Object.freeze([
 /** Default per-payment cap: 1_000_000 atomic USDC = $1.00. Override with PACTA_X402_MAX_ATOMIC / maxAtomic. */
 export const DEFAULT_MAX_ATOMIC = "1000000";
 /**
- * Hard ceiling for the cap: 5_000_000 atomic = $5.00, i.e. 20x the most expensive route ($0.25). No option or env var
- * can raise the cap above this, so a typo'd / hostile environment cannot turn one tool call into a large transfer.
- * In practice the per-route price (<= 250000) is the binding limit; the cap is defence in depth.
+ * Hard ceiling for the cap: 5_000_000 atomic = $5.00. No option or env var can raise the cap above this, so a typo'd /
+ * hostile environment cannot turn one tool call into a large transfer. In practice the per-route ceiling below is the
+ * binding limit; the cap is defence in depth.
  */
 export const HARD_MAX_ATOMIC = "5000000";
 /** Upper bound for maxTimeoutSeconds in a challenge and for (validBefore - now) in an X-PAYMENT. */
@@ -70,12 +70,15 @@ export const X402_DEFAULTS = Object.freeze({
   }),
 });
 
+// Gateway routes. maxAmountRequired is the per-route ceiling this client will ever sign for a 402 challenge on that route (a limit, not a
+// price). Today the four scan routes (control-plane, live-timelocks, timelock-op, proposal-diff) are free ($0.00) and answer without a
+// challenge; /v1/check/preflight and /v1/check/wallet-exposure give 50 free calls per caller per UTC day, then $0.01 Base USDC via x402.
 export const PAID_ROUTES = Object.freeze({
   checkPreflight: Object.freeze({
     path: "/v1/check/preflight",
     priceUsdc: "0.01",
     maxAmountRequired: "10000",
-    description: "One-call pre-execution safety check: verdict, 0-100 risk score, proxy / controller breakdown, pause / blacklist / upgrade capabilities, pinned block.",
+    description: "One-call pre-execution safety check: verdict, 0-100 risk score (null when there is no contract or no controller was found), proxy / controller breakdown, pause / blacklist / upgrade capabilities, pinned block.",
   }),
   scanWalletExposure: Object.freeze({
     path: "/v1/check/wallet-exposure",

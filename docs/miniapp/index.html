@@ -2,18 +2,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Pacta Control-Plane Check · Base &amp; Farcaster Mini-App</title>
-<meta name="description" content="Instant Base and Ethereum DeFi control-plane verdicts: check proxy upgradeability, Safe thresholds, and timelock delays, with 1-tap Base USDC deep-scans.">
+<meta name="description" content="Instant Base and Ethereum DeFi control-plane verdicts: check proxy upgradeability, Safe thresholds, and timelock delays, free.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Pacta by Fractal Neurons">
 <meta property="og:title" content="Pacta Control-Plane Check">
-<meta property="og:description" content="Instant Base and Ethereum DeFi control-plane verdicts: check proxy upgradeability, Safe thresholds, and timelock delays, with 1-tap Base USDC deep-scans.">
+<meta property="og:description" content="Instant Base and Ethereum DeFi control-plane verdicts: check proxy upgradeability, Safe thresholds, and timelock delays, free.">
 <meta property="og:url" content="https://pacta.wtf/miniapp/">
 <meta property="og:image" content="https://pacta.wtf/miniapp-preview.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="800">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Pacta Control-Plane Check">
-<meta name="twitter:description" content="Instant Base and Ethereum DeFi control-plane verdicts: check proxy upgradeability, Safe thresholds, and timelock delays, with 1-tap Base USDC deep-scans.">
+<meta name="twitter:description" content="Instant Base and Ethereum DeFi control-plane verdicts: check proxy upgradeability, Safe thresholds, and timelock delays, free.">
 <meta name="twitter:image" content="https://pacta.wtf/miniapp-preview.png">
 <meta name="twitter:site" content="@pacta_fractal">
 <link rel="canonical" href="https://pacta.wtf/miniapp/">
@@ -26,11 +26,11 @@
 <meta name="theme-color" content="#0a0b0d" media="(prefers-color-scheme: dark)">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self';script-src 'self' https://static.ads-twitter.com;style-src 'self' 'unsafe-inline';img-src 'self' data: https://analytics.twitter.com https://t.co;font-src 'self';connect-src 'self' https://api.pacta.wtf https://pacta.fractalneurons.com https://pacta-x402.pacta.workers.dev https://ethereum-rpc.publicnode.com https://base-rpc.publicnode.com https://eth.drpc.org https://mainnet.base.org https://analytics.twitter.com https://t.co;object-src 'none';base-uri 'self'">
 <link rel="preload" href="../fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="../styles.css?v=a55610cc">
+<link rel="stylesheet" href="../styles.css?v=083a3265">
 <link rel="alternate" type="text/markdown" href="../llms.txt">
 <link rel="alternate" type="text/html" href="../llms/">
 <script src="../theme.js?v=897ade0d"></script>
-<script src="../app.js?v=8c54fbd8" defer></script>
+<script src="../app.js?v=8f33e4af" defer></script>
 <script src="../b.js" defer></script>
 </head>
 <body>
@@ -40,7 +40,7 @@
 <main id="main">
 <section class="sec ma-sec">
 <div class="wrap ma-wrap">
-<div class="ma-shell" id="ma-root" data-miniapp data-api="https://api.pacta.wtf" data-verify-api="https://api.pacta.wtf/v1/orders/verify" data-lookup="../api/v1/lookup.json" data-badges="../badges/">
+<div class="ma-shell" id="ma-root" data-miniapp data-api="https://api.pacta.wtf" data-lookup="../api/v1/lookup.json" data-badges="../badges/">
   <header class="ma-head">
     <div class="ma-topline">
       <span data-slot="badge" data-variant="info">Base · Farcaster Mini-App</span>
@@ -88,55 +88,20 @@
     </dl>
   </section>
 
-  <section class="ma-card ma-upgrade" id="ma-upgrade" aria-label="1-tap Base USDC upgrades">
+  <section class="ma-card ma-upgrade" id="ma-upgrade" aria-label="Deeper diligence">
     <div class="ma-up-head">
       <h2>Need deeper diligence?</h2>
-      <span class="mono ma-up-net">Base USDC · Chain 8453</span>
     </div>
     <div class="ma-up-btns">
-      <button type="button" class="ma-buy-btn ma-buy-primary" id="ma-buy-scan" data-ma-buy="instant-scan-19">
-        <span class="ma-buy-t">Unlock Full Scan ($19 Base USDC)</span>
-        <span class="ma-buy-s">2-RPC proxy, Safe signer &amp; role report + Base EAS ticket</span>
-      </button>
+      <a class="ma-buy-btn ma-buy-primary" id="ma-buy-scan" href="../scan/" data-sku="wallet-report-9">
+        <span class="ma-buy-t">Full Wallet &amp; Safe Exposure Report ($9 USDC)</span>
+        <span class="ma-buy-s">Free wallet and Safe scan on the scan page; the full report is a one-time $9 USDC payment on Base there</span>
+      </a>
       <a class="ma-buy-btn ma-buy-secondary" id="ma-buy-seal" href="../request/?tier=clearance">
         <span class="ma-buy-t">Priority re-verification &amp; Base EAS re-attestation</span>
         <span class="ma-buy-s">By arrangement via the request form or pacta@dri.network; the free doc-update queue stays $0</span>
       </a>
     </div>
-    <div class="ma-contact-row" id="ma-contact-row">
-      <label for="ma-contact">Delivery @telegram, email or webhook <span class="opt">(optional)</span></label>
-      <input id="ma-contact" type="text" maxlength="200" spellcheck="false" placeholder="@handle or team@protocol.xyz">
-      <p class="form-message" id="ma-contact-err" data-slot="form-message" hidden></p>
-    </div>
-    <p class="ma-quote" id="ma-quote">Deterministic quote: exact USDC transfer on Base to Pacta Treasury <span class="addr-pill mono" title="0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14">0x4348…Ed14</span> · zero approvals.</p>
-    <p class="req-status" id="ma-pay-status" role="status" aria-live="polite"></p>
-
-    <div class="co-result" id="ma-receipt" tabindex="-1" hidden>
-      <div class="co-r-head"><span data-slot="badge" data-variant="success">Verified on Base</span><b id="ma-r-sku">Instant Scan · 19.00 USDC</b></div>
-      <dl class="co-r-dl">
-        <div><dt>Order</dt><dd class="mono" id="ma-r-order">—</dd></div>
-        <div><dt>Settlement</dt><dd id="ma-r-tx">—</dd></div>
-      </dl>
-      <pre class="pv-pre" id="ma-r-json"></pre>
-    </div>
-
-    <details class="co-manual ma-manual" id="ma-manual">
-      <summary>No injected wallet or paid from Safe/CLI? Open in Base Wallet or verify tx hash</summary>
-      <div class="co-manual-b">
-        <div class="co-dl-btns">
-          <a class="co-dl-btn" href="https://go.cb-wallet.com/dapp?cb_url=https%3A%2F%2Fpacta.wtf%2Fminiapp%2F" rel="noopener" data-ma-coinbase data-cta="wallet_coinbase"><span>Open in Coinbase Wallet</span><svg class="i ia" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v10M7 17 17 7"/></svg></a>
-          <a class="co-dl-btn" href="https://metamask.app.link/dapp/pacta.wtf/miniapp/" rel="noopener" data-ma-metamask data-cta="wallet_metamask"><span>Open in MetaMask</span><svg class="i ia" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v10M7 17 17 7"/></svg></a>
-        </div>
-        <div class="ma-tx-row">
-          <label class="sr-only" for="ma-tx">Base USDC transaction hash</label>
-          <input id="ma-tx" type="text" class="mono" maxlength="68" spellcheck="false" placeholder="0x… 64-hex Base payment tx hash">
-          <select id="ma-manual-sku" aria-label="Order tier">
-            <option value="instant-scan-19">$19 Scan</option>
-          </select>
-          <button data-slot="button" data-variant="outline" data-size="sm" type="button" id="ma-verify-btn">Verify tx</button>
-        </div>
-      </div>
-    </details>
   </section>
 </div>
 </div>

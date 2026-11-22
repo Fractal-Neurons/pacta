@@ -4103,6 +4103,297 @@
         "cast call 0xbafb0b5b70a9844fb9f132ba1c28f888dd113b34 \"getRoleMember(bytes32,uint256)(address)\" $(cast keccak \"MANAGER\") 0 --block 26447998 --rpc-url $ETH_RPC_URL",
         "cast call 0xbafb0b5b70a9844fb9f132ba1c28f888dd113b34 \"getRoleAdmin(bytes32)(bytes32)\" $(cast keccak \"PAUSER\") --block 26447998 --rpc-url $ETH_RPC_URL"
       ]
+    },
+    {
+      "slug": "umia-op-0x3d35",
+      "protocol": "Umia",
+      "protocol_slug": "umia",
+      "chain_id": 8453,
+      "brief": "briefs/umia-op-0x3d35/",
+      "radar_title": "Umia — 9-call Base timelock batch upgrading UmiaHub and UmiaMarketCore",
+      "timelock": {
+        "address": "0xd0193ffaf565b6e530c1a6bbbb2fb13243f29177",
+        "getMinDelay": 172800,
+        "name": "TimelockController",
+        "verified": {
+          "address": "0xd0193ffaf565b6e530c1a6bbbb2fb13243f29177",
+          "codeKeccak": "0x990785ccbefb6a448c11db18bad7f65b01f307ec4593c3c508f9ee92a0763f7a",
+          "codeBytes": 5448,
+          "sourcify": null
+        }
+      },
+      "operations": [
+        {
+          "op_id": "0x3d35aa49667160b739348b62ec2731b782669aaeb0a869328883bbd68c523788",
+          "label": "9-call batch upgrading UmiaHub and UmiaMarketCore",
+          "eta": 1795429840,
+          "eta_utc": "2026-11-23 10:30:40 UTC",
+          "status": {
+            "isOperation": true,
+            "isOperationPending": true,
+            "isOperationReady": false,
+            "isOperationDone": false,
+            "getTimestamp": 1795429840
+          },
+          "ready": false,
+          "predecessor": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "delay": 172800,
+          "scheduled": {
+            "block": 60333323,
+            "tx": "0x6c30153b867f3b5839284d3ff4a6fb9bea66b1a15862e9d681a2ffb548c99c26",
+            "from": "0x46565eedb0bb948ae787dd105cce300f736da28e",
+            "to": "0x781388759eacb9892f60d77d9a99c9be2f7f4ada",
+            "function": "0x710a9f68",
+            "logIndexes": [
+              30,
+              31,
+              32,
+              33,
+              34,
+              35,
+              36,
+              37,
+              38
+            ]
+          },
+          "calls": [
+            {
+              "index": 0,
+              "target": "0x120dbcdd58bb787309573e29159fe6d37a1983f6",
+              "value": 0,
+              "selector": "0x4f1ef286",
+              "function": "upgradeToAndCall(address,bytes)",
+              "args": {
+                "newImplementation": "0x0291F5d57196fd61E49AAbB5294AcAfD5081f0a1",
+                "data": "0x"
+              },
+              "calldata": "0x4f1ef2860000000000000000000000000291f5d57196fd61e49aabb5294acafd5081f0a100000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000",
+              "cast_decode": "cast calldata-decode \"upgradeToAndCall(address,bytes)\" 0x4f1ef2860000000000000000000000000291f5d57196fd61e49aabb5294acafd5081f0a100000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000",
+              "umiaEffect": "UmiaHub (UUPS) from implementation 0xBE6C…A22c (UmiaHub, Sourcify exact_match) to 0x0291…f0a1 (UmiaHub, 19,750 bytes, Sourcify match); no initializer (empty data)"
+            },
+            {
+              "index": 1,
+              "target": "0x55975e430cc54c63dff03b1e6d27be574ce229f6",
+              "value": 0,
+              "selector": "0x4f1ef286",
+              "function": "upgradeToAndCall(address,bytes)",
+              "args": {
+                "newImplementation": "0xA9cf1380967Fb3cBDf68F81938D32670332Ce2C0",
+                "data": "0x"
+              },
+              "calldata": "0x4f1ef286000000000000000000000000a9cf1380967fb3cbdf68f81938d32670332ce2c000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000",
+              "cast_decode": "cast calldata-decode \"upgradeToAndCall(address,bytes)\" 0x4f1ef286000000000000000000000000a9cf1380967fb3cbdf68f81938d32670332ce2c000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000",
+              "umiaEffect": "UmiaMarketCore (UUPS) from implementation 0xBc35…c653 (Sourcify match) to 0xA9cf…e2C0 (UmiaMarketCore, 18,696 bytes, Sourcify match); no initializer (empty data)"
+            },
+            {
+              "index": 2,
+              "target": "0x120dbcdd58bb787309573e29159fe6d37a1983f6",
+              "value": 0,
+              "selector": "0x0558f597",
+              "function": "setConditionalMarketOracle(address)",
+              "args": {
+                "oracle": "0x1a18a80fb9DfA37B07606DB90632D8FD67F3A524"
+              },
+              "calldata": "0x0558f5970000000000000000000000001a18a80fb9dfa37b07606db90632d8fd67f3a524",
+              "cast_decode": "cast calldata-decode \"setConditionalMarketOracle(address)\" 0x0558f5970000000000000000000000001a18a80fb9dfa37b07606db90632d8fd67f3a524",
+              "umiaEffect": "conditionalMarketOracle 0x114C…1d34 to 0x1a18…A524 (5,219 bytes of code; not verified on Sourcify v2)"
+            },
+            {
+              "index": 3,
+              "target": "0x120dbcdd58bb787309573e29159fe6d37a1983f6",
+              "value": 0,
+              "selector": "0xe25442a1",
+              "function": "setDefaultGovernanceExecutor(address)",
+              "args": {
+                "executor": "0x9CC1F561C1b866Cb6b9961f4510Ed669448f8f39"
+              },
+              "calldata": "0xe25442a10000000000000000000000009cc1f561c1b866cb6b9961f4510ed669448f8f39",
+              "cast_decode": "cast calldata-decode \"setDefaultGovernanceExecutor(address)\" 0xe25442a10000000000000000000000009cc1f561c1b866cb6b9961f4510ed669448f8f39",
+              "umiaEffect": "defaultGovernanceExecutor 0x0Ba8…7E01 to 0x9CC1…8f39 (GovernanceExecutor, 8,083 bytes, Sourcify match)"
+            },
+            {
+              "index": 4,
+              "target": "0x120dbcdd58bb787309573e29159fe6d37a1983f6",
+              "value": 0,
+              "selector": "0xf33eb5e0",
+              "function": "setSpotMigrator(address)",
+              "args": {
+                "spotMigrator": "0xB4D848B175e4A828E6563d8f867a27bfdd20a40c"
+              },
+              "calldata": "0xf33eb5e0000000000000000000000000b4d848b175e4a828e6563d8f867a27bfdd20a40c",
+              "cast_decode": "cast calldata-decode \"setSpotMigrator(address)\" 0xf33eb5e0000000000000000000000000b4d848b175e4a828e6563d8f867a27bfdd20a40c",
+              "umiaEffect": "spotMigrator() reverts on the current implementation (added by call 1); the new migrator 0xB4D8…a40c has 11,680 bytes of code, not verified on Sourcify v2"
+            },
+            {
+              "index": 5,
+              "target": "0x120dbcdd58bb787309573e29159fe6d37a1983f6",
+              "value": 0,
+              "selector": "0xff99823a",
+              "function": "setActiveLiquidityKeeper(address)",
+              "args": {
+                "keeper": "0xEcAe1CF1b9258fE4d241d5Ac46cE083C9ef3d5B6"
+              },
+              "calldata": "0xff99823a000000000000000000000000ecae1cf1b9258fe4d241d5ac46ce083c9ef3d5b6",
+              "cast_decode": "cast calldata-decode \"setActiveLiquidityKeeper(address)\" 0xff99823a000000000000000000000000ecae1cf1b9258fe4d241d5ac46ce083c9ef3d5b6",
+              "umiaEffect": "activeLiquidityKeeper() reverts on the current implementation (added by call 1); the new keeper 0xEcAe…d5B6 has no code at the pin (an externally owned account)"
+            },
+            {
+              "index": 6,
+              "target": "0x120dbcdd58bb787309573e29159fe6d37a1983f6",
+              "value": 0,
+              "selector": "0x649bc2ea",
+              "function": "setLaunchAnchorBps(uint16)",
+              "args": {
+                "bps": 7500
+              },
+              "calldata": "0x649bc2ea0000000000000000000000000000000000000000000000000000000000001d4c",
+              "cast_decode": "cast calldata-decode \"setLaunchAnchorBps(uint16)\" 0x649bc2ea0000000000000000000000000000000000000000000000000000000000001d4c",
+              "umiaEffect": "launchAnchorBps() reverts on the current implementation (added by call 1); set to 7,500 bps (75.00%)"
+            },
+            {
+              "index": 7,
+              "target": "0x120dbcdd58bb787309573e29159fe6d37a1983f6",
+              "value": 0,
+              "selector": "0x5a057599",
+              "function": "setLaunchActiveHalfWidthTicks(int24)",
+              "args": {
+                "ticks": 10980
+              },
+              "calldata": "0x5a0575990000000000000000000000000000000000000000000000000000000000002ae4",
+              "cast_decode": "cast calldata-decode \"setLaunchActiveHalfWidthTicks(int24)\" 0x5a0575990000000000000000000000000000000000000000000000000000000000002ae4",
+              "umiaEffect": "launchActiveHalfWidthTicks() reverts on the current implementation (added by call 1); set to 10,980 ticks"
+            },
+            {
+              "index": 8,
+              "target": "0x120dbcdd58bb787309573e29159fe6d37a1983f6",
+              "value": 0,
+              "selector": "0x999288a5",
+              "function": "setLbpStrategyFactory(address)",
+              "args": {
+                "factory": "0x588F74E5A9630a8E5998fD10eC7Aa7De08300181"
+              },
+              "calldata": "0x999288a5000000000000000000000000588f74e5a9630a8e5998fd10ec7aa7de08300181",
+              "cast_decode": "cast calldata-decode \"setLbpStrategyFactory(address)\" 0x999288a5000000000000000000000000588f74e5a9630a8e5998fd10ec7aa7de08300181",
+              "umiaEffect": "lbpStrategyFactory 0x8E6A…Ad1b to 0x588F…0181 (1,824 bytes of code; not verified on Sourcify v2)"
+            }
+          ]
+        }
+      ],
+      "decoded": {
+        "upgrades": [
+          {
+            "op_id": "0x3d35aa49667160b739348b62ec2731b782669aaeb0a869328883bbd68c523788",
+            "proxy": "0x120dbcdd58bb787309573e29159fe6d37a1983f6",
+            "proxyName": "UmiaHub",
+            "proxyAdmin": null,
+            "initCalldataBytes": 0,
+            "currentImplementation": {
+              "address": "0xbe6c0762906cbc81f7f488902426076d512ca22c",
+              "sourcify": {
+                "name": "UmiaHub",
+                "fullyQualifiedName": "src/core/UmiaHub.sol:UmiaHub",
+                "match": "exact_match",
+                "verifiedAt": "2026-08-26T16:39:24Z"
+              }
+            },
+            "newImplementation": {
+              "address": "0x0291f5d57196fd61e49aabb5294acafd5081f0a1",
+              "codeBytes": 19750,
+              "sourcify": {
+                "name": "UmiaHub",
+                "fullyQualifiedName": "src/core/UmiaHub.sol:UmiaHub",
+                "match": "match",
+                "verifiedAt": "2026-11-20T22:30:05Z"
+              }
+            }
+          },
+          {
+            "op_id": "0x3d35aa49667160b739348b62ec2731b782669aaeb0a869328883bbd68c523788",
+            "proxy": "0x55975e430cc54c63dff03b1e6d27be574ce229f6",
+            "proxyName": "UmiaMarketCore",
+            "proxyAdmin": null,
+            "initCalldataBytes": 0,
+            "currentImplementation": {
+              "address": "0xbc35cb6ccc4be46aa491960ebf5281cd5310c653",
+              "sourcify": {
+                "name": "UmiaMarketCore",
+                "fullyQualifiedName": "src/core/UmiaMarketCore.sol:UmiaMarketCore",
+                "match": "match",
+                "verifiedAt": "2026-08-27T06:11:17Z"
+              }
+            },
+            "newImplementation": {
+              "address": "0xa9cf1380967fb3cbdf68f81938d32670332ce2c0",
+              "codeBytes": 18696,
+              "sourcify": {
+                "name": "UmiaMarketCore",
+                "fullyQualifiedName": "src/core/UmiaMarketCore.sol:UmiaMarketCore",
+                "match": "match",
+                "verifiedAt": "2026-11-20T22:30:55Z"
+              }
+            }
+          }
+        ],
+        "umia": {
+          "hub": "0x120dbcdd58bb787309573e29159fe6d37a1983f6",
+          "marketCore": "0x55975e430cc54c63dff03b1e6d27be574ce229f6",
+          "current": {
+            "UmiaHub implementation": "0xBE6C0762906CBc81F7F488902426076d512CA22c",
+            "UmiaMarketCore implementation": "0xBc35cB6cCc4BE46AA491960EBf5281cD5310c653",
+            "conditionalMarketOracle()": "0x114C446Ce246b6C5c432Eb001fBeB17864Fc1d34",
+            "defaultGovernanceExecutor()": "0x0Ba8b80Cc8B7E9804860f4D67b2E8051d1FD7E01",
+            "lbpStrategyFactory()": "0x8E6A262e4FdfAC98565C08a2aE6fc6D16253Ad1b",
+            "spotMigrator()": null,
+            "activeLiquidityKeeper()": null,
+            "launchAnchorBps()": null,
+            "launchActiveHalfWidthTicks()": null
+          },
+          "newCodeBytes": {
+            "0x0291F5d57196fd61E49AAbB5294AcAfD5081f0a1": 19750,
+            "0xA9cf1380967Fb3cBDf68F81938D32670332Ce2C0": 18696,
+            "0x1a18a80fb9DfA37B07606DB90632D8FD67F3A524": 5219,
+            "0x9CC1F561C1b866Cb6b9961f4510Ed669448f8f39": 8083,
+            "0xB4D848B175e4A828E6563d8f867a27bfdd20a40c": 11680,
+            "0xEcAe1CF1b9258fE4d241d5Ac46cE083C9ef3d5B6": 0,
+            "0x588F74E5A9630a8E5998fD10eC7Aa7De08300181": 1824
+          },
+          "credit": {
+            "github": "dankezo",
+            "entry": "Wave 4 Watch",
+            "pr": 172,
+            "prUrl": "https://github.com/Fractal-Neurons/pacta/pull/172"
+          }
+        }
+      },
+      "risk_notes": [
+        "Both core proxies, UmiaHub and UmiaMarketCore, are upgraded in the same batch; the queued implementations are verified on Sourcify v2 (match), as are the current ones.",
+        "Three new periphery contracts are not verified on Sourcify v2 at the pin: the conditional-market oracle, the spot migrator and the LBP strategy factory.",
+        "The activeLiquidityKeeper role goes to an address with no code (an externally owned account): once executed, one key holds that role.",
+        "spotMigrator(), activeLiquidityKeeper(), launchAnchorBps() and launchActiveHalfWidthTicks() revert on the current implementation; they exist only after call 1 upgrades UmiaHub, so the batch only works as one unit.",
+        "The timelock contract is not verified on Sourcify v2; getMinDelay() reads 172,800 s (48 hours) on both RPC endpoints, and the operation is executable from 2026-11-23 10:30:40 UTC."
+      ],
+      "reproduce": [
+        "cast logs --from-block 60333323 --to-block 60333323 --address 0xd0193ffaf565b6e530c1a6bbbb2fb13243f29177 \"CallScheduled(bytes32 indexed id,uint256 indexed index,address target,uint256 value,bytes data,bytes32 predecessor,uint256 delay)\" 0x3d35aa49667160b739348b62ec2731b782669aaeb0a869328883bbd68c523788 --rpc-url $BASE_RPC_URL",
+        "cast receipt 0x6c30153b867f3b5839284d3ff4a6fb9bea66b1a15862e9d681a2ffb548c99c26 --rpc-url $BASE_RPC_URL",
+        "cast call 0xd0193ffaf565b6e530c1a6bbbb2fb13243f29177 \"getMinDelay()(uint256)\" --block 60607726 --rpc-url $BASE_RPC_URL",
+        "cast call 0xd0193ffaf565b6e530c1a6bbbb2fb13243f29177 \"getTimestamp(bytes32)(uint256)\" 0x3d35aa49667160b739348b62ec2731b782669aaeb0a869328883bbd68c523788 --block 60607726 --rpc-url $BASE_RPC_URL",
+        "cast call 0xd0193ffaf565b6e530c1a6bbbb2fb13243f29177 \"isOperationPending(bytes32)(bool)\" 0x3d35aa49667160b739348b62ec2731b782669aaeb0a869328883bbd68c523788 --block 60607726 --rpc-url $BASE_RPC_URL",
+        "cast call 0xd0193ffaf565b6e530c1a6bbbb2fb13243f29177 \"isOperationDone(bytes32)(bool)\" 0x3d35aa49667160b739348b62ec2731b782669aaeb0a869328883bbd68c523788 --block 60607726 --rpc-url $BASE_RPC_URL",
+        "cast storage 0x120dbcdd58bb787309573e29159fe6d37a1983f6 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc --block 60607726 --rpc-url $BASE_RPC_URL",
+        "cast storage 0x55975e430cc54c63dff03b1e6d27be574ce229f6 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc --block 60607726 --rpc-url $BASE_RPC_URL",
+        "cast call 0x120dbcdd58bb787309573e29159fe6d37a1983f6 \"conditionalMarketOracle()(address)\" --block 60607726 --rpc-url $BASE_RPC_URL",
+        "cast call 0x120dbcdd58bb787309573e29159fe6d37a1983f6 \"defaultGovernanceExecutor()(address)\" --block 60607726 --rpc-url $BASE_RPC_URL",
+        "cast call 0x120dbcdd58bb787309573e29159fe6d37a1983f6 \"lbpStrategyFactory()(address)\" --block 60607726 --rpc-url $BASE_RPC_URL",
+        "cast code 0xecae1cf1b9258fe4d241d5ac46ce083c9ef3d5b6 --block 60607726 --rpc-url $BASE_RPC_URL"
+      ],
+      "pinned_block": {
+        "block_number": 60607726,
+        "block_hash": "0x5648c1eb98972e3ea5cc4afe5f062c1e0f2953d1e10b5ac332bcbc67de87e6ba",
+        "block_timestamp": 1795311920,
+        "block_time_utc": "2026-11-22 01:45 UTC",
+        "tag": "finalized",
+        "rpcs_cross_checked": 2
+      }
     }
   ],
   "recheck": [
@@ -4183,10 +4474,10 @@
     }
   ],
   "counts": {
-    "briefs": 9,
-    "operations": 14,
-    "calls": 61,
-    "radarItems": 12,
-    "radarOps": 18
+    "briefs": 10,
+    "operations": 15,
+    "calls": 70,
+    "radarItems": 15,
+    "radarOps": 35
   }
 }

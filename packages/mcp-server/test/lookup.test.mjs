@@ -14,7 +14,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const DOCS = join(HERE, "..", "..", "..", "docs", "api", "v1");
 const GW = "https://gateway.example.test";
 // PUBLISHED-COUNTS (the one line a Sprint stamp rewrites; equals pacta-github-repo verify_site_v2.EXPECT)
-const PUBLISHED = Object.freeze({ protocols: 316, briefs: 17, easAttestedProtocols: 189, rpcObservedProtocols: 127 });
+const PUBLISHED = Object.freeze({ protocols: 316, briefs: 18, easAttestedProtocols: 189, rpcObservedProtocols: 127 });   // + the Umia radar brief
 const rec = (reply) => {
   const calls = [];
   const f = async (url) => { calls.push(String(url)); return reply(String(url)); };
@@ -123,16 +123,18 @@ test("catalog parity with docs/api/v1 (index.json, rpc-pinned.json, onboarding.j
   assert.equal(surf.size, idx.entries.length);
   for (const e of idx.entries) {
     const { x, s } = surf.get(e.id);
-    assert.deepEqual([s.classification, s.targetContract, x.baseEasUids.includes(e.base_eas_uid)], [e.classification, e.target_contract, true], e.id);
+    // an aligned record the site shows as Observed / Uncompared (recordDisplay) is published as observed_uncompared; nothing else is relabelled
+    const want = s.classification === "observed_uncompared" && e.classification === "aligned_baseline" ? "observed_uncompared" : e.classification;
+    assert.deepEqual([s.classification, s.targetContract, x.baseEasUids.includes(e.base_eas_uid)], [want, e.target_contract, true], e.id);
   }
   assert.equal(new Set([...surf.values()].map((v) => v.x.slug)).size, PUBLISHED.easAttestedProtocols);
   const briefs = LOOKUP_CATALOG.filter((x) => x.kind === "brief").map((x) => x.slug).sort();
-  assert.deepEqual(briefs, [...onb.briefs.map((b) => b.slug), ...radar.items.map((i) => i.brief.replace(/\/$/, "").split("/").pop())].sort());
+  assert.deepEqual(briefs, [...onb.briefs.map((b) => b.slug), ...radar.items.filter((i) => i.brief).map((i) => i.brief.replace(/\/$/, "").split("/").pop())].sort());   // radar items without a decoded brief (brief null) are not catalog briefs
 });
 
 // ---- 0.1.5 citation + clearance footer (protocolCitationFooter, shared with the worker's LOOKUP block)
-const CLEAR = "Issuer paths (payment never alters a classification; it strictly follows verified on-chain and documentation evidence): $0 maintainer doc-update queue https://pacta.wtf/request/ · $500 USDC Rapid Single-Gap Re-Verification (24h SLA) https://pacta.wtf/request/?tier=rapid-500&protocol=";
-const TAIL = " · $2,500–$5,000 USDC Full Protocol Control-Plane Dossier (24h SLA) https://pacta.wtf/for-protocols/";
+const CLEAR = "Issuer paths (payment never alters a classification; it strictly follows verified on-chain and documentation state): free doc-update queue ($0, typically 6–8 weeks) or re-verification by arrangement: https://pacta.wtf/request/?tier=clearance&protocol=";
+const TAIL = " · protocol overview: https://pacta.wtf/for-protocols/ (contact: pacta@dri.network)";
 const easFooter = (slug, uid) => `Citation: https://pacta.wtf/protocols/${slug}/ (Base Mainnet EAS: ${uid})\n${CLEAR}${slug}${TAIL}`;
 const rpcFooter = (slug) => `Citation: https://pacta.wtf/protocols/${slug}/ (RPC-observed baseline; Base Mainnet EAS: not_attested)\n${CLEAR}${slug}${TAIL}`;
 

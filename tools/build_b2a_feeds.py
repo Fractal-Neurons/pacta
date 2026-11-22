@@ -27,6 +27,7 @@ def _json_file(*a, **k):
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import onboarding_render as OR  # noqa: E402
+import scorecard_corrections as CORR  # noqa: E402
 
 BASE = "https://pacta.wtf"
 REGISTRY = "0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872"
@@ -268,7 +269,7 @@ def _catalog_counts():
     rd = lambda n: _json_file(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "docs", "api", "v1", n), encoding="utf-8")
     eas = len({e["protocol"] for e in rd("index.json")["entries"]})
     rpc = len({e["slug"] for e in rd("rpc-pinned.json")["entries"]})
-    return {"protocols": eas + rpc, "eas": eas, "rpc": rpc, "briefs": len(rd("onboarding.json")["briefs"]) + len(rd("radar.json")["items"])}
+    return {"protocols": eas + rpc, "eas": eas, "rpc": rpc, "briefs": len(rd("onboarding.json")["briefs"]) + sum(1 for it in rd("radar.json")["items"] if it.get("brief"))}
 
 
 CAT = _catalog_counts()
@@ -292,12 +293,12 @@ MCP_TOOLS = [("pacta_lookup_protocol", "free", "Resolve a protocol or token name
              ("pacta_get_anchoring", "free", "Base EAS anchoring: PactaCommitmentRegistry, schema, batch attestation UIDs"),
              ("pacta_list_proposals", "free", "Governance proposals feed (forum, topic_id, chain, limit, include_repro)"),
              ("pacta_x402_discover", "free", "x402 gateway status and discovery manifest (only when PACTA_X402_URL is set)"),
-             ("pacta_check_preflight", "x402 $0.01", "Pre-execution check of a contract: verdict, 0-100 risk score, proxy / admin / timelock, capabilities (chain, address, block)"),
+             ("pacta_check_preflight", "x402 $0.01", "Pre-execution check of a contract: verdict, 0-100 risk score (null when there is no contract or no controller was found), checks run, proxy / admin / timelock, capabilities (chain, address, block)"),
              ("pacta_scan_wallet_exposure", "x402 $0.01", "Read-only Multicall3 Ethereum + Base wallet or Safe exposure summary across indexed DeFi protocols (address, chain; shares 50/day free quota, zero wallet-address logging)"),
-             ("pacta_scan_control_plane", "x402 $0.10", "Live control-plane scan of a contract (chain, address)"),
-             ("pacta_scan_timelock_op", "x402 $0.25", "Live TimelockController operation state (timelock, opId)"),
-             ("pacta_live_timelocks", "x402 $0.10", "Live state of tracked queued timelock operations"),
-             ("pacta_scan_proposal_diff", "x402 $0.15", "Re-run a tracked governance proposal's pinned reads live, pinned-vs-live diffs (forum, topicId)"),
+             ("pacta_scan_control_plane", "free, $0.00", "Live control-plane scan of a contract (chain, address)"),
+             ("pacta_scan_timelock_op", "free, $0.00", "Live TimelockController operation state (timelock, opId)"),
+             ("pacta_live_timelocks", "free, $0.00", "Live state of tracked queued timelock operations"),
+             ("pacta_scan_proposal_diff", "free, $0.00", "Re-run a tracked governance proposal's pinned reads live, pinned-vs-live diffs (forum, topicId)"),
              ("pacta_submit_request", "free", "Opt-in (the only tool that writes): queue or upvote a coverage / feature request after a coverage_gap_hint, with the user's consent; forwards to POST /v1/requests (only when PACTA_X402_URL is set)")]
 X402_ROUTES = [("/v1/check/preflight?chain=ethereum|base&address=0x…", "10000", "$0.01"),
                ("/v1/check/wallet-exposure?address=0x…&chain=ethereum|base|all", "10000", "$0.01"),
@@ -345,9 +346,11 @@ def llms_full(idx, radar, prop, onb, pinned=None):
          f"- {CALLER_FIELDS_DOC}",
          f"- One call: `curl -s -A \"my-agent/1.0\" \"{X402_URL}/v1/check/preflight?chain=ethereum&address=0x...\"`. {UA_DOC} Every response carries "
          "`assessment` (coverage indexed_verified | unindexed_bytecode_heuristic, confidence high | medium | low, method, limits) next to the 0-100 "
-         "`riskScore`, plus `catalogMatch` (slug, classification, Base EAS UIDs, pinned block, whatDiffers) when the address is an indexed protocol "
-         "contract; if live RPC is unavailable for an indexed address, the answer is the pinned catalog record (`source: pinned_catalog_fallback`) "
-         "instead of a 502.",
+         "`riskScore` and the `checksRun` array (every read run, in order), plus `catalogMatch` (slug, classification, Base EAS UIDs, pinned block, "
+         "whatDiffers) when the address is an indexed protocol contract. When none of the reads in `checksRun` finds a controller, the verdict is "
+         "`NO_CONTROLLER_FOUND` with `riskScore: null` and `grade: null` (not determined): no controller found by our checks (custom or unprobed "
+         "control paths may still exist); it never means immutable. If live RPC is unavailable for an indexed address, the answer is the pinned "
+         "catalog record (`source: pinned_catalog_fallback`) instead of a 502.",
          f"- {protocols_line(idx, pinned)}",
          f"- {LOOKUP_DOC}",
          f"- {REQUEST_DOC}",
@@ -372,7 +375,10 @@ def llms_full(idx, radar, prop, onb, pinned=None):
          f"- Bare probe: {X402_BARE_PROBE}",
          f"- Settlement: {X402_RECEIPT_NOTE}",
          f"- Gateway settlement guard: {X402_GATEWAY_GUARD_NOTE}",
-         "- Paid routes (GET query or POST JSON body with the same names):"] + [f"  - GET {X402_URL}{r}: {atomic} atomic USDC ({usd})" for r, atomic, usd in X402_ROUTES] + [
+         "- Gateway GET routes (GET query or POST JSON body with the same names):"] + [
+             (f"  - GET {X402_URL}{r}: {FREE_DAILY_QUOTA} free calls per caller per UTC day, then {usd} ({atomic} atomic USDC) per call via x402"
+              if r.split("?")[0] in METERED_PATHS else f"  - GET {X402_URL}{r}: free ($0.00) today, no wallet or payment ({RATE_LIMIT_PER_MIN} requests / minute per caller)")
+             for r, atomic, usd in X402_ROUTES] + [
          "- Free: " + ", ".join(f"GET {X402_URL}{p}" for p in X402_FREE) + " (/.well-known/x402 is the Bazaar discovery manifest, discoverable: true).", "",
          "## On-chain anchoring (Base, chain id 8453)",
          f"- PactaCommitmentRegistry {REGISTRY} (Sourcify verified); attester pacta.base.eth {a['attester_eoa']}.",
@@ -395,7 +401,7 @@ def llms_full(idx, radar, prop, onb, pinned=None):
         L.append(f"- {it['protocol']}: {it['title']}{on} · timelock {it['timelock']} ({it['min_delay_seconds']}s) · {ops}")
     L += ["", "## Indexed records (from /api/v1/index.json)"]
     for e in sorted(idx["entries"], key=lambda e: (-e["sprint"], e["id"])):
-        L.append(f"- {e['id']} [{e['classification']}] {e['protocol']} — {e['surface']} · Batch {e['sprint']} · block {e['block_number']} "
+        L.append(f"- {e['id']} [{CORR.surface_class(e)}] {e['protocol']} — {e['surface']} · Batch {e['sprint']} · block {e['block_number']} "
                  f"({e['block_hash']}) · target {e['target_contract']} · {e['onchain_observed']}")
     if pinned:
         L += ["", "## RPC-pinned records (from /api/v1/rpc-pinned.json; NOT EAS-attested)",
@@ -498,7 +504,7 @@ def mcp_manifest(idx, onb):
         "openapi": OPENAPI_URL,
         "lookup": {"tool": "pacta_lookup_protocol", "http": LOOKUP_URL, "catalog": f"{BASE}/api/v1/lookup.json", "free": True, "note": LOOKUP_DOC},
         "environment": [{"name": n, "required": False, "secret": False, "description": d} for n, d in MCP_ENV],
-        "tools": [{"name": n, "access": "free" if p == "free" else (METERED_MODE if n in METERED_TOOLS else PRICING_MODE), "price": None if p == "free" else p.split(" ")[1],
+        "tools": [{"name": n, "access": "free" if p.startswith("free") else (METERED_MODE if n in METERED_TOOLS else PRICING_MODE), "price": None if p.startswith("free") else p.split(" ")[1],
                    "effectivePriceUsd": "0.00", "readOnly": n != REQUEST_TOOL, "description": d} for n, p, d in MCP_TOOLS],
         "toolSummary": {"remote": REMOTE_TOOLS_DOC, "stdio": STDIO_TOOLS_DOC, "requestTool": REQUEST_TOOL, "requestsEndpoint": REQUESTS_URL},
         "disambiguation": DISAMBIGUATION,
@@ -558,7 +564,8 @@ or a live collateral onboarding proposal. Pacta publishes {m['records_indexed']}
 - One call: `curl -s -A "my-agent/1.0" "{X402_URL}/v1/check/preflight?chain=ethereum&address=0x..."` ({UA_DOC}) returns `verdict`, `riskScore` (0-100), proxy /
   implementation (EIP-1967, EIP-1822 or beacon), `controller` (eoa, multisig_safe, timelock, contract,
   access_control_enumerable, access_control or none), `canUpgradeZeroDelay`, `capabilities` (pause, blacklist, upgrade) and
-  `pinnedBlock` + `pinnedBlockHash`. Verdicts: `IMMUTABLE_NO_ADMIN`, `TIMELOCK_PROTECTED`, `ZERO_DELAY_TIMELOCK_RISK` (0 s
+  `pinnedBlock` + `pinnedBlockHash`, and `checksRun` (every read run). Verdicts: `NO_CONTROLLER_FOUND` (no controller found by our
+  checks; custom or unprobed control paths may still exist; riskScore null), `TIMELOCK_PROTECTED`, `ZERO_DELAY_TIMELOCK_RISK` (0 s
   timelock: no exit window), `MULTISIG_NO_TIMELOCK`, `INSTANT_EOA_ADMIN_RISK`, `UNDEPLOYED_OR_EOA`,
   `UNCLASSIFIED_CONTRACT_CONTROLLER` (never treat it as safe).
 - OpenAPI 3.1: `{OPENAPI_URL}`. Every route takes GET query parameters or a POST JSON body. {RATE_LIMIT_PER_MIN} requests / minute per caller.
@@ -593,8 +600,10 @@ Environment (all optional, none secret):
 - {FREE_LAUNCH_NOTE}
 - The local stdio MCP server's scan tools are opt-in: set `PACTA_X402_URL={X402_URL}` to enable them.
 - Base (8453), scheme `exact`, USDC `{USDC_BASE}`, payTo `{PAY_TO}` (the Pacta Treasury EOA), `maxTimeoutSeconds` {X402_MAX_TIMEOUT_S}. Never sign for any other `payTo`.
-- Routes and their x402_paid prices (GET query or POST JSON body with the same names; default client cap $1.00):
-""" + "\n".join(f"  - `{X402_URL}{r.split('?')[0]}` ({usd}, `{atomic}` atomic USDC)" + (f": `?{r.split('?')[1]}`" if "?" in r else "")
+- Gateway routes (GET query or POST JSON body with the same names; default client cap $1.00):
+""" + "\n".join(f"  - `{X402_URL}{r.split('?')[0]}` (" + (f"{FREE_DAILY_QUOTA} free calls per caller per UTC day, then {usd} = `{atomic}` atomic USDC via x402"
+                                                       if r.split("?")[0] in METERED_PATHS else "free, $0.00 today: no wallet, no payment")
+                + ")" + (f": `?{r.split('?')[1]}`" if "?" in r else "")
                 for r, atomic, usd in X402_ROUTES) + f"""
 - `x402Versions: [1, 2]`, `networks: ["base", "{X402_NETWORK_V2}"]`:
   - x402 v1: 402 JSON body (`x402Version: 1`, `network: "base"`, `maxAmountRequired`), pay with `X-PAYMENT`, receipt `X-PAYMENT-RESPONSE`.

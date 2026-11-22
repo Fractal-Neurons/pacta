@@ -214,7 +214,8 @@ test("callX402Resource v2: 402 -> PAYMENT-SIGNATURE template; paid call forwards
 
 test("pacta_scan_proposal_diff: listed with the Worker contract, GET /v1/scan/proposal-diff?forum=&topicId=, $0.15 challenge, v2 payment", async () => {
   const tool = PAID_TOOLS.find((t) => t.name === "pacta_scan_proposal_diff");
-  assert.ok(tool && /\$0\.15/.test(tool.description));
+  // free ($0.00) today: the description carries no metered figure; the client still answers a $0.15 challenge if one is ever issued
+  assert.ok(tool && /Free \(\$0\.00\) today/.test(tool.description) && !/\$0\.1[05]|\$0\.25|when metered/.test(tool.description));
   assert.deepEqual(tool.inputSchema.required, ["forum", "topicId"]);
   assert.ok(CALLER_REQ.every((f) => tool.inputSchema.properties[f]), "caller fields documented as optional");
   assert.deepEqual(tool.inputSchema.properties.forum.enum, ["aave", "euler", "morpho", "sky"]);
@@ -243,7 +244,7 @@ test("pacta_scan_proposal_diff: listed with the Worker contract, GET /v1/scan/pr
 
 test("pacta_check_preflight: Worker contract GET /v1/check/preflight?chain=&address=[&block=], $0.01 challenge when metered, free-launch 200 as unpaid data", async () => {
   const tool = PAID_TOOLS.find((t) => t.name === "pacta_check_preflight");
-  assert.ok(tool && /\$0\.01/.test(tool.description) && /Free during the launch/.test(tool.description));
+  assert.ok(tool && /50 free calls per caller per UTC day, then \$0\.01 Base USDC per call via x402/.test(tool.description) && !/when metered/.test(tool.description));
   assert.equal(PAID_TOOLS[0].name, "pacta_check_preflight");
   assert.deepEqual(tool.inputSchema.required, ["chain", "address"]);
   assert.ok(CALLER_REQ.every((f) => tool.inputSchema.properties[f]), "caller fields documented as optional");

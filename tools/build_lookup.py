@@ -23,6 +23,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from onboarding_scan import eip55  # noqa: E402  (pure keccak / EIP-55 helper; importing never touches the network)
 import control_diff as CD  # noqa: E402  ("What differs": changed vs matched parameters of flagged records)
 import re  # noqa: E402
+import scorecard_corrections as CORR  # noqa: E402  recordDisplay (Observed / Uncompared rows)
 
 ADDR_RE = re.compile(r"\b0x[0-9a-fA-F]{40}\b")
 RELATED_MAX = 16
@@ -148,7 +149,7 @@ TOKENS = {
     "lombard-ops-0xceee-0x2f2a-0x6404": ["LBTC", "BTC.b"], "beefy-base-op-0x3302": ["cowAeroBaseUSDC-VVV", "VVV"],
     "ethena-ops-0xb028-0xca05-0x108e-0x070a": ["USDe", "USDm"], "yearn-v3-op-0x2a14": ["yvUSDC-1", "yvUSD", "yvWETH-1", "yvFlexUSDC"],
     "etherfi-liquid-op-0xf0fb": ["liquidUSD", "liquidETH", "liquidBTC"], "lombard-op-0xd07f": ["LBTC", "BTC.b", "AssetRouter"],
-    "cap-op-0x3397": ["cUSD", "Cap", "EigenServiceManager"], "compound-v3-op-0x86b4": ["cWETHv3", "Comet", "Linea"],
+    "umia-op-0x3d35": ["Umia", "UmiaHub", "UmiaMarketCore"], "cap-op-0x3397": ["cUSD", "Cap", "EigenServiceManager"], "compound-v3-op-0x86b4": ["cWETHv3", "Comet", "Linea"],
     "lista-lending-op-0x21df": ["Lista", "Moolah", "Liquidator", "EmergencySwitchHub"],
 }
 
@@ -184,12 +185,12 @@ CONVERTED_CONTINUITY = {
     "uniswap-governance-timelock": {"primaryContract": "0x1F98431c8aD98523631AE4a59f267346ea31F984", "targetLabel": "UniswapV3Factory",
                                     "controllerAddress": "0xf2371551Fe3937Db7c750f4DfABe5c2fFFdcBf5A", "controllerKind": "contract_controller"},
     "reserve-protocol-rtoken": {"primaryContract": "0xA0d69E286B938e21CBf7E51D71F6A4c8918f482F", "targetLabel": "ReserveRToken_eUSD",
-                                "controllerAddress": None, "controllerKind": "immutable_or_role_governed"},
+                                "controllerAddress": None, "controllerKind": "access_control"},
     # Sprint 24 conversions (values from the published RPC-pinned lookup items)
     "synthetix-v3-core": {"primaryContract": "0xffffffaEff0B96Ea8e4f94b2253f31abdD875847", "targetLabel": "SynthetixCoreProxy",
                           "controllerAddress": "0xEb3107117FEAd7de89Cd14D463D340A2E6917769", "controllerKind": "multisig_safe"},
     "centrifuge-liquidity-pools-base": {"primaryContract": "0x7Ed48C31f2fdC40d37407cBaBf0870B2b688368f", "targetLabel": "CentrifugeRoot_Base",
-                                        "controllerAddress": None, "controllerKind": "immutable_or_role_governed"},
+                                        "controllerAddress": None, "controllerKind": "access_control"},
     # Sprint 25 conversions: published primary contracts and controllers kept (the published graph only grows). Bedrock's label is
     # corrected by the Sprint 25 scan: the primary contract is the uniETH token proxy, whose owner() is the published Safe 0xAeE0..721A
     # (also the Staking / Restaking admin); its upgrade path (ProxyAdmin 0xa5F2..89C6, owned by a second Safe) is in the Sprint 25
@@ -263,10 +264,13 @@ def _protocol_item(name, v):
     return {"kind": "protocol", "slug": v["slug"], "name": name, "tokens": TOKENS[v["slug"]], "category": first["category"],
             "chain": chain, "chainId": CHAIN_IDS[chain], "primaryContract": primary, "targetLabel": label,
             "controllerAddress": ctrl, "controllerKind": ctrl_kind,
-            "observedDelaySeconds": first.get("observed_delay_seconds"), "documentedDelaySeconds": first.get("documented_delay_seconds"),
+            "observedDelaySeconds": first.get("observed_delay_seconds"),
+            # no documented delay when the documentation that stated it is shown as Observed / Uncompared (Obol: v1.11 governance paused)
+            "documentedDelaySeconds": (None if any(CORR.record_display(e_["id"]).get("badge") == "observed" and e_.get("documented_delay_seconds")
+                                                   for e_ in es) else first.get("documented_delay_seconds")),
             **basis,
             **_corrected_status(v["slug"], pinned),
-            "surfaces": [{"id": e["id"], "surface": e["surface"], "classification": e["classification"],
+            "surfaces": [{"id": e["id"], "surface": e["surface"], "classification": CORR.surface_class(e),
                           "targetContract": _addr(e["target_contract"]), "targetLabel": e["target_label"], "chain": e.get("chain", "ethereum"),
                           "blockNumber": int(e["block_number"])} for e in es],
             "pinnedBlock": max(int(e["block_number"]) for e in es),
@@ -306,7 +310,7 @@ def _radar_item(it, related):
 def build_items(sp, onb, radar, brief_protocol):
     """sp = build_site.site_protocols(idx, pinned); brief_protocol = build_site.BRIEF_PROTOCOL."""
     protocols = sorted((_protocol_item(n, v) for n, v in sp.items()), key=lambda x: x["slug"])
-    briefs = sorted([_onboarding_item(b) for b in onb["briefs"]] + [_radar_item(it, brief_protocol) for it in radar["items"]],
+    briefs = sorted([_onboarding_item(b) for b in onb["briefs"]] + [_radar_item(it, brief_protocol) for it in radar["items"] if it.get("brief")],
                     key=lambda x: x["slug"])
     items = protocols + briefs
     slugs = [x["slug"] for x in items]
@@ -359,7 +363,7 @@ def write_all(root, docs, sp, onb, radar, brief_protocol):
     t = totals(items)
     n_pin = sum(v["pinned"] for v in sp.values())          # counts follow the feeds; verify_site_v2.EXPECT pins the published numbers
     assert (t["protocols"], t["briefs"], t["easAttestedProtocols"], t["rpcObservedProtocols"]) == (
-        len(sp), len(onb["briefs"]) + len(radar["items"]), len(sp) - n_pin, n_pin), t
+        len(sp), len(onb["briefs"]) + sum(1 for it in radar["items"] if it.get("brief")), len(sp) - n_pin, n_pin), t
     with open(os.path.join(docs, "api", "v1", "lookup.json"), "w", encoding="utf-8") as fh:
         fh.write(catalog_json(items))
     sync_module(os.path.join(root, "packages", "mcp-server", "src", "lookup.mjs"), items)
@@ -447,7 +451,7 @@ def protocols_json(sp, items):
         tier = badge_tier(x)
         surf = []
         for e in v["entries"]:
-            surf.append({"id": e["id"], "surface": e["surface"], "classification": e["classification"], "targetContract": _addr(e["target_contract"]),
+            surf.append({"id": e["id"], "surface": e["surface"], "classification": CORR.surface_class(e), "targetContract": _addr(e["target_contract"]),
                          "targetLabel": e["target_label"], "chain": e.get("chain", "ethereum"), "blockNumber": int(e["block_number"]),
                          "blockHash": e["block_hash"], "baseEasUid": e.get("base_eas_uid"), "sprint": e.get("sprint")})
         out.append({"slug": x["slug"], "name": name, "category": x["category"], "chain": x["chain"], "chainId": x["chainId"],

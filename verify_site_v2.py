@@ -51,7 +51,7 @@ RESULTS = []
 EXPECT = {
     "sprints": 37, "records": 309, "eas_attestations": 37,              # index.json sprints_completed / records_indexed; Base EAS sprint UIDs
     "protocols": 316, "eas_protocols": 189, "rpc_protocols": 127,          # /protocols/ pages = EAS-attested + RPC-pinned; badges = protocols
-    "briefs": 17, "badge_tiers": {"aligned": 126, "parameter_delta": 50, "rpc_observed": 127, "unresolved": 11, "docs_updated": 1, "recent_change": 1},
+    "briefs": 18, "badge_tiers": {"aligned": 126, "parameter_delta": 50, "rpc_observed": 127, "unresolved": 11, "docs_updated": 1, "recent_change": 1},
     "base_records": 38,                                                  # index.json records with chain "base"
     "rpc_by_chain": {"ethereum": 117, "base": 10},                         # rpc-pinned.json records per chain (sum = rpc_protocols)
     "multi_attest_txs": ["1–12", "13–16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37"],                              # attestation_coverage.eas_multi_attest_txs keys
@@ -83,8 +83,10 @@ EXPECT = {
 X = EXPECT
 # sha256 of docs/api/v1/graph-manifest.json: changes only through a deliberate re-pin (a Sprint stage / stamp rewrites it after the
 # rebuild); a merged Wave 2 claim or any site-only change must leave it as is
-GRAPH_MANIFEST_SHA256 = "f0e86d8c9c8d31975c054b5262e1c6252c663d439e52e34aecb1a0bbcefb2905"   # re-pinned (merged candidate v10): v10 protocols.json + index.json quarantine_policy without the referral clause
-NON_PROTOCOL_PAGES = 40                                                  # docs/**/*.html pages that are not /protocols/<slug>/ (40: + /curators/ /scan/ /webhook/ /seal/ /miniapp/, + the Cap, Compound V3 and Lista Lending briefs)
+GRAPH_MANIFEST_SHA256 = "98763a1c308125730e6d544022692eb3ab79a190b446460f9807093ade77d3e5"   # re-pinned (Part 6B): Obol's two Observed / Uncompared surfaces
+R4_REREAD_HEADS = {"ethereum": (26466974, "0x9265e0f25e8ff2d7358bb5edd03a563a6fa469772bad21dafbadec78d4bc4bdd"),   # wording-35 r4 re-read pins
+                   "base": (60576992, "0x7780084ed01a331b77f78611578e99cb273c3a3dbad940d8205563f5068cfc30")}
+NON_PROTOCOL_PAGES = 41                                                  # docs/**/*.html pages that are not /protocols/<slug>/ (40: + /curators/ /scan/ /webhook/ /seal/ /miniapp/, + the Cap, Compound V3 and Lista Lending briefs)
 
 
 def check(name, ok, detail=""):
@@ -944,7 +946,7 @@ def ready_fixture_brief(idx):
     rad = json.loads(read("docs/api/v1/radar.json"))
     ts = rad["refreshed_at"]["block_timestamp"]
     for it in rad["items"]:
-        if it["brief"].endswith("ethena-ops-0x0ca0-0x1fe5/"):
+        if (it.get("brief") or "").endswith("ethena-ops-0x0ca0-0x1fe5/"):
             it["eta"] = ts - 3600
             for o in it["operations"]:
                 o.update(pending=True, ready=True, done=False, eta=ts - 3600)
@@ -1276,9 +1278,13 @@ def main(argv=None):
     # radar
     radar = json.loads(read("docs/api/v1/radar.json"))
     etas = {str(i["eta"]) for i in radar["items"] if i.get("eta")}         # an executed item has no ETA (isOperationDone): shown as Executed
-    shown = set(re.findall(r'data-eta="(\d+)"', page))
+    radar_page = read("docs/radar/index.html")                              # every item; the homepage lists the active queue only
+    shown = set(re.findall(r'data-eta="(\d+)"', radar_page))
+    shown_home = set(re.findall(r'data-eta="(\d+)"', page))
+    assert shown_home <= shown, (shown_home, shown)
     check("executed radar items (eta null) render 'Executed' with isOperationDone, never an ETA",
-          all(f'isOperationDone = true at block #{radar["refreshed_at"]["block_number"]:,}' in page for i in radar["items"] if not i.get("eta"))
+          all(f'isOperationDone = true at block #{radar["refreshed_at"]["block_number"]:,}' in radar_page for i in radar["items"] if not i.get("eta"))
+          and 'data-radar-row="executed"' not in page and "data-radar-executed>" in page
           and all(o.get("done") for i in radar["items"] if not i.get("eta") for o in i["operations"]))
     r = radar["refreshed_at"]
     check("radar ETAs on the page match radar.json", etas == shown, f"{sorted(etas)} vs {sorted(shown)}")
@@ -1620,7 +1626,7 @@ def main(argv=None):
                 and "the result can still be Delta" in pg and "Aligned Maintenance" not in pg
                 and f'<a href="../../request/?{q}&amp;settlement=invoice" data-cta="dossier_invoice">Invoice option</a>' in pg)
     brief_bad = []
-    radar_items = {it["brief"].rstrip("/").split("/")[-1]: it for it in json.loads(read("docs/api/v1/radar.json"))["items"]}
+    radar_items = {it["brief"].rstrip("/").split("/")[-1]: it for it in json.loads(read("docs/api/v1/radar.json"))["items"] if it.get("brief")}
     for slug_ in BS.BRIEFS:
         pg = pages.get(os.path.join("briefs", slug_, "index.html"), "")
         if not callout_ok(pg, "clearance", radar_items[slug_]["protocol"], BS.BRIEF_PROTOCOL[slug_]):
@@ -1751,7 +1757,10 @@ def main(argv=None):
         h = heads.get(e["chain"], {})
         if e.get("base_eas_uid") is not None or e.get("provenance") != "rpc_pinned" or any(k in e for k in ("sprint", "summary_doc", "summary_sha256")):
             pin_bad.append(f'{e["id"]}: attestation fields')
-        if (e["block_number"], e["block_hash"]) != (h.get("block_number"), h.get("block_hash")) or e["chain_id"] != h.get("chain_id"):
+        # wording-35 r4 re-read 32 records at one later head per chain (code byte count + keccak equal at both pins); every other record
+        # stays on the chain's pinned head
+        if ((e["block_number"], e["block_hash"]) not in {(h.get("block_number"), h.get("block_hash")), R4_REREAD_HEADS.get(e["chain"])}
+                or e["chain_id"] != h.get("chain_id")):
             pin_bad.append(f'{e["id"]}: block != pinned head')
         if not all(eip55_ok(a) for a in (e["target_contract"], e.get("controller_address"), e.get("upstream_controller"), e.get("paired_contract")) if a):
             pin_bad.append(f'{e["id"]}: EIP-55')
@@ -1915,7 +1924,8 @@ def main(argv=None):
         "regenerates byte-identically": BL.catalog_json(BL.build_items(sp_lk, onb_lk, rad_lk, BS.BRIEF_PROTOCOL)) == read("docs/api/v1/lookup.json"),
         "protocol slugs == /protocols/ pages": sorted(x["slug"] for x in items_lk if x["kind"] == "protocol") == sorted(v["slug"] for v in sp_lk.values()),
         "every index.json record -> its EAS protocol (uid, classification, target)": len(surf_lk) == len(idx_lk["entries"]) and all(
-            e["id"] in surf_lk and surf_lk[e["id"]][1]["classification"] == e["classification"] and surf_lk[e["id"]][1]["targetContract"] == e["target_contract"]
+            e["id"] in surf_lk and surf_lk[e["id"]][1]["classification"] == __import__("scorecard_corrections").surface_class(e)   # Part 6B: Observed / Uncompared rows
+            and surf_lk[e["id"]][1]["targetContract"] == e["target_contract"]
             and e["base_eas_uid"] in surf_lk[e["id"]][0]["baseEasUids"] for e in idx_lk["entries"]),
         "every rpc-pinned record: rpc_observed, not EAS, not_assessed": all(
             e["slug"] in by_lk and by_lk[e["slug"]]["primaryContract"] == e["target_contract"] and by_lk[e["slug"]]["controllerAddress"] == e["controller_address"]
@@ -1924,7 +1934,7 @@ def main(argv=None):
         "rpc_observed never aligned / parameter_delta": not [x["slug"] for x in items_lk if not x.get("easAttested") and x["classification"] in
                                                              ("aligned_baseline", "parameter_delta", "protective_delta", "mixed")],
         f"{X['briefs']} briefs (onboarding + radar)": sorted(x["slug"] for x in items_lk if x["kind"] == "brief") == sorted(
-            [b["slug"] for b in onb_lk["briefs"]] + [i["brief"].rstrip("/").split("/")[-1] for i in rad_lk["items"]]),
+            [b["slug"] for b in onb_lk["briefs"]] + [i["brief"].rstrip("/").split("/")[-1] for i in rad_lk["items"] if i.get("brief")]),
         "EIP-55 + preflightArgs": all(eip55_ok(x["primaryContract"]) and (x["controllerAddress"] is None or eip55_ok(x["controllerAddress"]))
                                       and x["preflightArgs"] == {"chain": x["chain"], "address": x["primaryContract"]} for x in items_lk),
         "search probes": lk.get("probes") == {"ethena": [["ethena-usde-susde", "prefix"], ["ethena-usdtb", "prefix"]],
@@ -2068,14 +2078,15 @@ def main(argv=None):
     req_v2 = read("docs/request/index.html")
     launch_ok = ('<nav class="launcher" aria-label="Instant self-serve checks" data-launcher>' in req_v2 and "<h1>Request a dossier</h1>" in req_v2
                  and all(f'href="../{v_["route"]}/" data-sku="{k_}"' in req_v2 for k_, v_ in BS.CHECKOUT.items() if v_.get("live", True))
-                 and 'href="../request/?tier=clearance" data-sku="reverify-seal-99"' in req_v2   # Section 6: by arrangement, not a checkout
+                 and 'href="../request/?tier=clearance" data-sku="clearance"' in req_v2   # Section 6: by arrangement, not a checkout (no retired SKU id)
                  and req_v2.find("data-launcher") < req_v2.find('id="req-form"'))
     co_src = read("tools/app.src.js")
     co_js = co_src[co_src.find("var CO_TREASURY"):co_src.find("function initLauncher")]
     co_js_ok = (f'var CO_TREASURY = "{BS.CHECKOUT_TREASURY}", CO_USDC = "{BS.USDC["Base"]}", CO_CHAIN = "0x2105";' in co_js
                 and hex(BS.CHECKOUT_CHAIN_ID) == "0x2105"
-                and all(f'"{k_}": {{ atomic: {v_["atomic"]}, amount: "{v_["amount"]}", route: "{v_["route"]}"' in co_js for k_, v_ in BS.CHECKOUT.items())
-                and all(f'"{v_["tier"]}": "{k_}"' in co_js for k_, v_ in BS.CHECKOUT.items())
+                and all(f'"{k_}": {{ atomic: {v_["atomic"]}, amount: "{v_["amount"]}", route: "{v_["route"]}"' in co_js for k_, v_ in BS.CHECKOUT.items() if v_.get("live", True))
+                and all(f'"{v_["tier"]}": "{k_}"' in co_js for k_, v_ in BS.CHECKOUT.items() if v_.get("live", True))
+                and re.findall(r'^    "([a-z0-9-]+)": \{ atomic:', co_js, re.M) == ["wallet-report-9"]   # Part 5: CO_SKU mirrors ORDER_SKUS
                 and '"0xa9059cbb" + coPad(CO_TREASURY.slice(2).toLowerCase()) + coPad(Number(atomic).toString(16))' in co_js
                 and co_js.count('method: "eth_sendTransaction"') == 1 and "0x095ea7b3" not in co_src and "increaseAllowance" not in co_src
                 and not re.search(r'method:\s*"(?:eth_sign|personal_sign|eth_signTypedData\w*)"', co_src)
@@ -2180,11 +2191,12 @@ def main(argv=None):
     script_el_ok = len(re.findall(r'createElement\(\s*"script"', appjs)) == 1 and 'X_UWT_SRC = "https://static.ads-twitter.com/uwt.js"' in appjs
     data_api = set(re.findall(r'data-api="([^"]+)"', "".join(pages.values())))
     app_fetch = len(re.findall(r"\bfetch\(", appjs))
-    # 14 = live 658f1364's 13 (incl. the free watchlist POST on /webhook/) + the dormant opt-in pilot helper postPilotEndpoint (0 pages render its forms)
+    # 14 = live 658f1364's 13 (incl. the free watchlist POST on /webhook/) + the dormant opt-in pilot helper postPilotEndpoint (0 pages render its forms);
+    # 13 since Part 5: the mini app's order POST (fetch(verifyApi, ...)) is gone with its $19 checkout
     check("page script boundaries: b.js/theme.js touch zero cookies/storage/third-party scripts; app.js uses localStorage only for pacta-theme + pacta-x-purchased dedup + opt-in pacta_internal QA tag, injects only host-gated uwt.js, and fetch() calls only this site's JSON, data-api, data-live-timelocks, and the four allow-listed public RPCs",
           not js_bad and script_el_ok and ls_vars == {"THEME_KEY", "X_PURCHASE_KEY", "INTERNAL_QA_KEY"} and ls_keys == {"pacta-theme", "pacta-x-purchased", "pacta_internal"} and appjs.count("localStorage") == 8 and data_api <= {API_, API_ + "/v1/requests", API_ + "/v1/orders/verify"}
-          and app_fetch == 14 and appjs[appjs.find("function initWatchFree()"):appjs.find("function initLauncher")].count("fetch(api, {") == 1
-          and appjs[appjs.find("function initCheckout()"):appjs.find("function initWatchFree")].count("fetch(api, opts)") == 1 and "fetch(pfUrl," in appjs[appjs.find("function initMiniApp()"):] and "fetch(verifyApi," in appjs[appjs.find("function initMiniApp()"):] and 'j(root + "api/v1/lookup.json")' in appjs and 'j(root + "api/v1/scorecards.json")' in appjs and 'fetch(api, init)' in appjs[appjs.find("function initRequest()"):] and "REQ_API_RE.test(api)" in appjs and 'fetch(document.documentElement.getAttribute("data-api") || "api/v1/index.json")' in appjs
+          and app_fetch == 13 and appjs[appjs.find("function initWatchFree()"):appjs.find("function initLauncher")].count("fetch(api, {") == 1
+          and appjs[appjs.find("function initCheckout()"):appjs.find("function initWatchFree")].count("fetch(api, opts)") == 1 and "fetch(pfUrl," in appjs[appjs.find("function initMiniApp()"):] and "fetch(verifyApi," not in appjs and "startMaUpgrade" not in appjs and 'j(root + "api/v1/lookup.json")' in appjs and 'j(root + "api/v1/scorecards.json")' in appjs and 'fetch(api, init)' in appjs[appjs.find("function initRequest()"):] and "REQ_API_RE.test(api)" in appjs and 'fetch(document.documentElement.getAttribute("data-api") || "api/v1/index.json")' in appjs
           and 'fetch(body.getAttribute("data-src") || "api/v1/scorecards.json")' in appjs
           # the user-initiated "Verify live on RPC" + Multicall3 wallet-exposure fallback, POSTing JSON-RPC only to the four allow-listed public RPCs
           and "      return fetch(url, opts).then(function (res) { return res.json(); })" in appjs
@@ -2343,8 +2355,8 @@ def main(argv=None):
             and "position: absolute;" in css_rule('.plan > [data-slot="badge"]') and "background: var(--card);" in css_rule('.plan > [data-slot="badge"]'),
         "N4: the audience cards do not stretch to equal height (align-items: start)": "align-items: start;" in css_rule(".aud"),
         "N5: radar counts 'Executed (N ops)' (never '(N operations)'); the radar header cites only the finalized read (one block per chain) (+ harness)":
-            BS.radar_counts_text(rad43) in rhead and "operations)" not in rhead
-            and ("Executed (" in BS.radar_counts_text(rad43)) == executed43
+            BS.radar_counts_text({**rad43, "items": [it for it in rad43["items"] if BS.item_state(it) != "executed"]}) in rhead and "operations)" not in rhead
+            and "Executed (" not in rhead and ("Executed (" in BS.radar_counts_text(rad43)) == executed43
             and sorted(re.findall(r"\d{1,3}(?:,\d{3}){2,}", rhead_txt)) == sorted(f'{p_["block_number"]:,}' for _, p_ in BS.radar_pins(rad43))   # v4.6: one per chain
             and f'finalized block <a href="https://etherscan.io/block/{rad43["refreshed_at"]["block_number"]}"' in rhead
             and res.get("v43_n5_radar_header_one_block") is True and res.get("pp2_radar_counts") is True,
@@ -2569,7 +2581,7 @@ def main(argv=None):
     home46, radar46 = pages["index.html"], pages[os.path.join("radar", "index.html")]
     base46 = [it for it in rad46["items"] if it.get("chain_id") == 8453]
     new46 = ["lombard-ops-0xceee-0x2f2a-0x6404", "beefy-base-op-0x3302", "ethena-ops-0xb028-0xca05-0x108e-0x070a", "yearn-v3-op-0x2a14",
-             "etherfi-liquid-op-0xf0fb", "lombard-op-0xd07f", "cap-op-0x3397", "compound-v3-op-0x86b4", "lista-lending-op-0x21df"]
+             "etherfi-liquid-op-0xf0fb", "lombard-op-0xd07f", "cap-op-0x3397", "compound-v3-op-0x86b4", "lista-lending-op-0x21df", "umia-op-0x3d35"]
     dec46 = json.loads(read("tools/briefs_decoded.json"))
     dec_by46 = {b_["slug"]: b_ for b_ in dec46["briefs"]}
     briefs46 = {sl: pages.get(os.path.join("briefs", sl, "index.html"), "") for sl in new46}
@@ -2584,22 +2596,28 @@ def main(argv=None):
         return {**it_, "eta": None if st_ == "executed" else it_["eta"],
                 "operations": [{**o_, "done": st_ == "executed", "pending": st_ != "executed", "ready": st_ == "ready"} for o_ in it_["operations"]]}
     v46 = {
-        "radar.json: 12 items / 18 ops (Sprint 36 refresh: 0 ready, 3 pending (ether.fi 0x244e, Compound V3 0x86b4, Yearn V3 0x2a14; 3 ops), 0 mixed, executed (15 ops), Beefy on Base + Treehouse, the Lombard upgrades, both Ethena items, ether.fi Liquid, Cap, Lombard 0xd07f and Lista executed); refreshed_at (Ethereum) + refreshed_at_base (Base)":
-            len(rad46["items"]) == 12 and sum(len(it["operations"]) for it in rad46["items"]) == 18
-            and [BS.item_state(it) for it in rad46["items"]].count("ready") == 0 and [BS.item_state(it) for it in rad46["items"]].count("pending") == 3
-            and sum(len(it["operations"]) for it in rad46["items"] if BS.item_state(it) == "ready") == 0
-            and sum(len(it["operations"]) for it in rad46["items"] if BS.item_state(it) == "pending") == 3
+        "radar.json: 15 items / 35 ops (next-site-build refresh: 2 ready (ether.fi 0x244e, Ethena 0xa1ca; 2 ops), 3 pending (Inverse Finance FiRM 15-call proposal, Umia 0x3d35 on Base, Yearn V3 0x2a14; 17 ops), 0 mixed, 10 items executed (16 ops)); the two Wave 4 Watch items without a decoded brief carry brief null; refreshed_at (Ethereum) + refreshed_at_base (Base)":
+            len(rad46["items"]) == 15 and sum(len(it["operations"]) for it in rad46["items"]) == 35
+            and {it["protocol_slug"] for it in rad46["items"] if BS.item_state(it) == "ready"} == {"ether-fi-core-eeth-weeth", "ethena-usde-susde"}
+            and sum(len(it["operations"]) for it in rad46["items"] if BS.item_state(it) == "ready") == 2
+            and {it["protocol_slug"] for it in rad46["items"] if BS.item_state(it) == "pending"} == {"inverse-finance-firm", "umia", "yearn-v3"}
+            and sum(len(it["operations"]) for it in rad46["items"] if BS.item_state(it) == "pending") == 17
             and [BS.item_state(it) for it in rad46["items"]].count("mixed") == 0
-            and sum(len(it["operations"]) for it in rad46["items"] if BS.item_state(it) == "executed") == 15
-            and {it["brief"] for it in rad46["items"] if BS.item_state(it) == "pending"} == {"briefs/etherfi-op-0x244e/", "briefs/compound-v3-op-0x86b4/", "briefs/yearn-v3-op-0x2a14/"}
-            and all(BS.item_state(it) == "executed" for it in base46)
-            and r46["tag"] == rb46.get("tag") == "finalized" and len(base46) == 1 and all(it.get("protocol_slug") and it.get("chain_id") in (1, 8453) for it in rad46["items"]),
-        "counts text '3 waiting · Executed (15 ops)' on / and /radar/":
-            BS.radar_counts_text(rad46) == "3 waiting · Executed (15 ops)"
-            and all("data-radar-counts>3 waiting · Executed (15 ops)</span>" in t for t in (home46, radar46)),
+            and sum(len(it["operations"]) for it in rad46["items"] if BS.item_state(it) == "executed") == 16
+            and sorted(it["protocol_slug"] for it in rad46["items"] if it.get("brief") is None) == ["ethena-usde-susde", "inverse-finance-firm"]
+            and sorted((it["protocol_slug"], BS.item_state(it)) for it in base46) == [("beefy-finance-base", "executed"), ("umia", "pending")]
+            and r46["tag"] == rb46.get("tag") == "finalized" and all(it.get("protocol_slug") and it.get("chain_id") in (1, 8453) for it in rad46["items"]),
+        "counts text: /radar/ '2 window open · 3 waiting (17 ops) · Executed (16 ops)'; / lists the active queue '2 window open · 3 waiting (17 ops)' and links the 16 executed ops on /radar/":
+            BS.radar_counts_text(rad46) == "2 window open · 3 waiting (17 ops) · Executed (16 ops)"
+            and "data-radar-counts>2 window open · 3 waiting (17 ops) · Executed (16 ops)</span>" in radar46
+            and "data-radar-counts>2 window open · 3 waiting (17 ops)</span>" in home46
+            and "data-radar-executed>16 executed operations (10 items) are listed on" in home46 and "data-radar-executed" not in radar46,
+        "radar rows without a decoded brief link their protocol scorecard (never /briefs/None/) on / and /radar/; Umia links its brief":
+            all('/briefs/None' not in t_ and 'href="protocols/inverse-finance-firm/">Scorecard' in t_.replace("../protocols/", "protocols/") for t_ in (home46, radar46))
+            and all('briefs/umia-op-0x3d35/">Read brief' in t_ for t_ in (home46, radar46)),
         "Base items link Basescan (never Etherscan) for the timelock on / and /radar/, carry a 'Base' tag, and the Base brief has 0 etherscan.io links":
             all(f'https://basescan.org/address/{it["timelock"]}' in t and f'etherscan.io/address/{it["timelock"]}' not in t and f'etherscan.io/address/{it["timelock"].lower()}' not in t
-                and '<span class="chain-tag">Base</span>' in t for it in base46 for t in (home46, radar46))
+                and '<span class="chain-tag">Base</span>' in t for it in base46 for t in ((home46, radar46) if BS.item_state(it) != "executed" else (radar46,)))
             and beefy46.count("https://basescan.org/") >= 10 and "etherscan.io" not in beefy46
             and "Base Mainnet (chain id 8453)" in beefy46 and "Scanner-pinned (Base finalized)" in beefy46
             and f"Executed on Base by Finalized Block #{rb46['block_number']:,}" in beefy46
@@ -2613,7 +2631,7 @@ def main(argv=None):
                 and f"Executed on Base by Finalized Block #{rb46['block_number']:,}" in BS.post_eta_banner(ann46(it, "executed"), rb46, "base")
                 and "on L1" not in BS.post_eta_banner(ann46(it, "ready"), rb46, "base") for it in base46)
             and "on L1" not in beefy46,
-        "9 decoded briefs: rendered from tools/briefs_decoded.json (every op id, call, risk note and reproduce command), in BRIEFS / BRIEF_PROTOCOL, sitemap, llms.txt, lookup.json + lookup.mjs":
+        "10 decoded briefs: rendered from tools/briefs_decoded.json (every op id, call, risk note and reproduce command), in BRIEFS / BRIEF_PROTOCOL, sitemap, llms.txt, lookup.json + lookup.mjs":
             dec46["schema"] == "pacta.decoded_briefs.v1" and sorted(dec_by46) == sorted(new46)
             and all(sl in BS.BRIEFS and BS.BRIEF_PROTOCOL[sl] == dec_by46[sl]["protocol_slug"] for sl in new46)
             and all(all(o_["op_id"] in briefs46[sl] for o_ in dec_by46[sl]["operations"])
@@ -2632,7 +2650,7 @@ def main(argv=None):
         "app.js keeps live blocks per chain (an Ethereum block is never compared with a Base block) (harness)":
             "blk[ch] = Math.floor(n)" in appjs and res.get("v46_live_blocks_per_chain") is True,
     }
-    check(f"v4.6 multi-chain radar (12 items / 18 ops, Basescan for chain id 8453, two-chain provenance, 'on Base' wording), 9 decoded briefs, {X['protocols'] + rad46n} cards",
+    check(f"v4.6 multi-chain radar (15 items / 35 ops, Basescan for chain id 8453, two-chain provenance, 'on Base' wording), 10 decoded briefs, {X['protocols'] + rad46n} cards",
           all(v46.values()), str([k for k, x in v46.items() if not x]))
 
     # v4.7 W1-W5 (external UX evaluation quick wins)
@@ -2689,7 +2707,7 @@ def main(argv=None):
             and res.get("v47_w5_theme_label") is True,
         "radar refreshed at current finalized blocks (Ethereum + Base, after the Beefy ETA); counts from the data":
             rad47["refreshed_at"]["block_number"] > 26436571 and rad47["refreshed_at_base"]["block_number"] > 58747369
-            and f'data-radar-counts>{html.escape(BS.radar_counts_text(rad47))}</span>' in home47,
+            and f'data-radar-counts>{html.escape(BS.radar_counts_text({**rad47, "items": [it for it in rad47["items"] if BS.item_state(it) != "executed"]}))}</span>' in home47,
     }
     check("v4.7 quick wins (W1 8-row preview + radar strip, W2 audience tabs, W3 Cmd+K search + hero names, W4 freshness pill + Wave 1 archive, "
           "W5 labelled theme toggle) + refreshed radar", all(v47.values()), str([k for k, x in v47.items() if not x]))
@@ -2879,18 +2897,44 @@ def main(argv=None):
         return (d_.get("version") == "1" and d_.get("imageUrl") == f"{BS.BASE_URL}/miniapp-preview.png"
                 and (d_.get("button") or {}).get("title") == "Check Contract Safety"
                 and act_.get("type") == "launch_miniapp" and act_.get("url") == f"{BS.BASE_URL}/miniapp/")
-    ma_keys = ["ma_frame_ready_handshake", "ma_instant_verdicts", "ma_wallet_upgrade_19_and_99"]
+    ma_keys = ["ma_frame_ready_handshake", "ma_instant_verdicts", "ma_upgrade_link_9"]
     check("Base & Farcaster Mini-App: /.well-known/farcaster.json v1 manifest, 1200x800 (3:2 <=500KB) miniapp-preview.png, valid fc:miniapp meta on /miniapp/ & /scan/, "
-          "embedded ready() postMessage + ALIGNED / DOCUMENTATION DIFFERENCE / UNRESOLVED / CHANGED RECENTLY / UNINDEXED checks + 1-tap $19/$99 Base USDC upgrades (harness)",
+          "embedded ready() postMessage + ALIGNED / DOCUMENTATION DIFFERENCE / UNRESOLVED / CHANGED RECENTLY / UNINDEXED checks + the plain $9 report link (no checkout on the mini app; harness)",
           isinstance(fc_ma, dict) and fc_ma.get("version") == "1" and fc_ma.get("name") == "Pacta Control-Plane Check"
           and fc_ma.get("homeUrl") == f"{BS.BASE_URL}/miniapp/" and fc_ma.get("splashBackgroundColor") == "#0a0b0d"
           and fc_ma.get("subtitle") == "Docs vs Chain DeFi Verdicts" and fc_ma.get("primaryCategory") == "developer-tools"
           and fc_ma.get("tags") == ["defi", "security", "base", "timelock", "x402"]
           and isinstance(fc_aa, dict) and set(fc_aa.keys()) >= {"header", "payload", "signature"}
           and ma_png_ok and valid_fc_embed(ma_html) and valid_fc_embed(scan_html)
-          and 'id="ma-buy-scan"' in ma_html and 'id="ma-buy-seal"' in ma_html
+          and 'id="ma-buy-scan" href="../scan/" data-sku="wallet-report-9"' in ma_html and 'id="ma-buy-seal" href="../request/?tier=clearance"' in ma_html
+          and "$19" not in ma_html and "instant-scan-19" not in ma_html and 'id="ma-manual"' not in ma_html
           and all(res.get(k_) is True for k_ in ma_keys),
           f"ma_png {ma_png_ok}; embeds {valid_fc_embed(ma_html)}/{valid_fc_embed(scan_html)}; failed {[k_ for k_ in ma_keys if res.get(k_) is not True]}")
+
+    # Part 5 (receipts 7147 / 7152): only wallet-report-9 is sold; zero retired SKU ids in HTML or OpenAPI; the four scan routes are
+    # free ($0.00) today in llms*, SKILL.md and the MCP server's descriptions
+    retired5 = ("instant-scan-19", "radar-webhook-49", "reverify-seal-99", "rapid-500", "dossier-2500")
+    oa5 = [json.loads(read(f_)) for f_ in ("docs/openapi.json", "docs/api/v1/openapi.json")]
+    ov5 = [o_["paths"]["/v1/orders/verify"]["post"] for o_ in oa5]
+    html5 = [k_ for k_, t_ in pages.items() if not k_.startswith(os.path.join("demos", "swapio-x402")) and any(r_ in t_ for r_ in retired5)]
+    free5 = ("pacta_scan_control_plane", "pacta_scan_timelock_op", "pacta_live_timelocks", "pacta_scan_proposal_diff")
+    skill5, full5, srv5 = read("docs/SKILL.md"), read("docs/llms-full.txt"), read("packages/mcp-server/src/server.mjs")
+    price5 = re.compile(r"\$0\.(?:10|15|25)\b")
+    p5_bad = {
+        "openapi": [list(o_["x-skus"]) for o_ in ov5] + [o_["requestBody"]["content"]["application/json"]["schema"]["properties"]["sku"]["enum"] for o_ in ov5]
+                   if any(list(o_["x-skus"]) != ["wallet-report-9"] or o_["requestBody"]["content"]["application/json"]["schema"]["properties"]["sku"]["enum"] != ["wallet-report-9"]
+                          or any(r_ in json.dumps(o_) for r_ in retired5) for o_ in ov5) or read("docs/openapi.json") != read("docs/api/v1/openapi.json") else [],
+        "html": html5,
+        "miniapp": [x_ for x_ in ("$19", "$99", "instant-scan-19", "eth_sendTransaction") if x_ in pages.get(os.path.join("miniapp", "index.html"), "")],
+        "tools": [n_ for n_ in free5 if f"- `{n_}` (free, $0.00):" not in skill5 or f"  - {n_} (free, $0.00):" not in full5],
+        "routes": [l_ for l_ in (skill5 + full5 + read("docs/llms.txt")).splitlines()
+                   if any(r_ in l_ for r_ in ("/v1/scan/control-plane", "/v1/scan/timelock-op", "/v1/scan/proposal-diff", "/v1/briefs/live-timelocks"))
+                   and price5.search(l_) and "/v1/x402/" not in l_],
+        "mcp": [x_ for x_ in ("when metered", "FREE_LAUNCH_HINT") if x_ in srv5] + price5.findall(srv5)
+               + ([] if srv5.count("FREE_ROUTE_HINT,") == 4 and srv5.count("METERED_HINT,") == 2 else ["hints"]),
+    }
+    check("Part 5: only wallet-report-9 in OpenAPI (both copies) and the mini app; zero retired SKU ids in HTML; the four scan routes / tools free ($0.00) in SKILL.md, llms*, MCP",
+          not any(p5_bad.values()), json.dumps(p5_bad)[:600])
 
     ads_expected = (
         ("pacta-hypelab-728x90.png", (728, 90)),
@@ -2959,7 +3003,7 @@ def main(argv=None):
             if not (m.group(1) == m.group(2) == exp and html.unescape(m.group(4)) == BS.OP_STATE_LABEL[exp]):
                 badge_bad.append(rel)
     eth = pages.get(os.path.join("briefs", "ethena-ops-0x0ca0-0x1fe5", "index.html"), "")
-    eth_ready = all(want_state[o["op_id"]] == "ready" for it in rad["items"] if it["brief"].endswith("ethena-ops-0x0ca0-0x1fe5/") for o in it["operations"])
+    eth_ready = all(want_state[o["op_id"]] == "ready" for it in rad["items"] if (it.get("brief") or "").endswith("ethena-ops-0x0ca0-0x1fe5/") for o in it["operations"])
     banner = re.search(r'<div class="poststatus (\w+)" id="post-eta-status".*?</div>', eth, re.S)
     live_keys = ["live_static_ready", "live_flips_executed", "live_mixed", "live_ready_kept", "live_failures_keep_static", "live_radar_row", "live_no_fetch_elsewhere",
                  # T1 (v4.1): a payload or JSON body resolving after the 9 s fallback leaves badges, counts and status unchanged; the guard aborts
@@ -3169,7 +3213,8 @@ def main(argv=None):
         "mcp.json lists 8 remote tools + readOnly flags": man_["transport"]["tools"] == B2AV.REMOTE_TOOLS and len(B2AV.REMOTE_TOOLS) == 8
             and [t["name"] for t in man_["tools"] if not t["readOnly"]] == ["pacta_submit_request"],
         "radar: live note + each timelock on its own chain's explorer (Etherscan / Basescan)": "Block-pinned timelock queue — auto-rechecked via RPC in your browser" in home
-            and all(f'{BS.EXPLORERS[BS.radar_chain(it, rad)][1]}/address/{it["timelock"]}' in home for it in rad["items"])
+            and all(f'{BS.EXPLORERS[BS.radar_chain(it, rad)][1]}/address/{it["timelock"]}' in (home if BS.item_state(it) != "executed" else read("docs/radar/index.html"))
+                    for it in rad["items"])
             and f'https://etherscan.io/block/{rad["refreshed_at"]["block_number"]}' in home,
         "GitHub repo link in every header": all(re.search(r'<a class="gh"[^>]*href="' + re.escape(BS.REPO) + '"', t) for r, t in pages.items() if 'class="topbar"' in t),
         "MCP recipes (Claude Code / OpenAI Agents SDK / LangChain, <= 10 lines) in README + SKILL.md": all(code in read("README.md") and code in read("docs/SKILL.md")
@@ -3627,8 +3672,10 @@ def main(argv=None):
                 for r, t in all_pages.items() if r.startswith("protocols" + os.sep) and 'id="issuer-clearance"' in t))
     rad_p = json.loads(read("docs/api/v1/radar.json"))
     pp["F03: radar header = pending vs executed counts (executed ops never counted as queued); executed rows badged and de-emphasised (+ harness)"] = (
-        f"<span class=\"radar-counts\" data-radar-counts>{html.escape(BS.radar_counts_text(rad_p))}</span>" in home_p
-        and home_p.count('data-radar-row="executed"') == sum(1 for it in rad_p["items"] if all(o.get("done") for o in it["operations"]))
+        f"<span class=\"radar-counts\" data-radar-counts>{html.escape(BS.radar_counts_text({**rad_p, 'items': [it for it in rad_p['items'] if BS.item_state(it) != 'executed']}))}</span>" in home_p
+        and f"<span class=\"radar-counts\" data-radar-counts>{html.escape(BS.radar_counts_text(rad_p))}</span>" in read("docs/radar/index.html")
+        and home_p.count('data-radar-row="executed"') == 0
+        and read("docs/radar/index.html").count('data-radar-row="executed"') == sum(1 for it in rad_p["items"] if all(o.get("done") for o in it["operations"]))
         and res.get("pp2_radar_counts") is True)
     n_el = len(re.findall(r"<[a-zA-Z]", home_p))
     pp[f"V04 + Edge v3: slim homepage: {len(home_p.encode())} bytes < 150,000 and {n_el} elements < 2,200; 8 high-signal scorecards static; every protocol hydrates from /api/v1/scorecards.json on search / filter (harness); all {X['protocols']} /protocols/<slug>/ pages static"] = (
@@ -3643,7 +3690,8 @@ def main(argv=None):
     pp[f"V01 + Edge v3: the contract checker sits in the hero under the h1 (before the proof bar: {X['protocols']} protocols · {X['eas_protocols']} Base-EAS attested · {X['records']} block-pinned checks); radar counts never say 'queued' for executed operations"] = (
         0 < i_h1 < i_pf < i_proof and f'class="stat" data-slot="card"><b>{X["protocols"]}</b><span>Protocols scored</span><small>{X["eas_protocols"]} Base-EAS attested · {X["rpc_protocols"]} Observed</small>' in home_p
         and f'class="stat" data-slot="card"><b>{X["records"]}</b><span>Attested checks</span>' in home_p
-        and f'data-radar-counts>{html.escape(BS.radar_counts_text(rad_p))}</span>' in home_p and "timelock operations queued" not in home_p)
+        and f'data-radar-counts>{html.escape(BS.radar_counts_text({**rad_p, "items": [it for it in rad_p["items"] if BS.item_state(it) != "executed"]}))}</span>' in home_p
+        and "timelock operations queued" not in home_p)
     pp["V03 + R3: below 640 px the radar is a stack of cards and /protocols/ keeps Protocol, Chain and Docs vs chain (other columns hidden, tables fit: no blind sideways scroll)"] = (
         # v4 (R3): the radar becomes stacked cards below 640 px; /protocols/ keeps Protocol, Chain and Docs vs chain
         "table.sc, table.sc tbody, table.sc tr, table.sc td, table.radar, table.radar tbody, table.radar tr, table.radar td { display: block; width: 100%; }" in css_p
@@ -3693,7 +3741,7 @@ def main(argv=None):
         and 'UNCLASSIFIED_CONTRACT_CONTROLLER: "Controller needs further review"' in app_p
         and 'IMMUTABLE_NO_ADMIN: "No standard upgrade or admin authority detected"' in app_p and "cannot be changed" not in app_p
         and res.get("pp2_verdict_plain") is True
-        and all(res.get(k) is True for k in ("pp3_inspector_live_rpc", "pp3_preflight_live_rpc_proxy", "pp3_immutable_headline",
+        and all(res.get(k) is True for k in ("pp3_inspector_live_rpc", "pp3_preflight_live_rpc_proxy", "pp3_immutable_headline", "ncf_verdict_checks_run",
                                              "pp3_preflight_live_rpc_owner", "pp3_live_rpc_failure")))
     pp["S02 + V07 (v4.4 wording): 'Runs when you press Check or pick an example below' (nothing runs on page load: harness) + honest telemetry/conversion note; /bounties/ pill leads with funded slots open now"] = (
         "Runs when you press Check or pick an example below." in home_p and res.get("pf_no_fetch_on_load") is True

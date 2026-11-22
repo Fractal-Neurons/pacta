@@ -1479,13 +1479,11 @@
   //      is written as text. The payee, token, chain and amounts are constants here; the page's data-* never decide where money goes.
   var CO_TREASURY = "0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14", CO_USDC = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", CO_CHAIN = "0x2105";
   var CO_SKU = {
-    "wallet-report-9": { atomic: 9000000, amount: "9.00", route: "scan", label: "Full Wallet & Safe Exposure Report", needTarget: true, needContact: false },
-    "instant-scan-19": { atomic: 19000000, amount: "19.00", route: "scan", label: "Instant Contract & Safe Deep-Scan", needTarget: true, needContact: false },
-    "reverify-seal-99": { atomic: 99000000, amount: "99.00", route: "seal", label: "Re-Verification (by arrangement)", needTarget: true, needContact: true,
-                          contactMissing: "Enter a team contact so the verifiers can reach you." }
-  };
-  // webhook-49 / wallet-guard-49 now forward to the free watchlist door (no paid webhook is sold)
-  var CO_TIER = { "wallet-9": "wallet-report-9", "wallet-guard-49": "radar-watch-free", "instant-19": "instant-scan-19", "webhook-49": "radar-watch-free", "seal-99": "reverify-seal-99" };
+    "wallet-report-9": { atomic: 9000000, amount: "9.00", route: "scan", label: "Full Wallet & Safe Exposure Report", needTarget: true, needContact: false }
+  };   // mirrors the Worker's ORDER_SKUS: wallet-report-9 is the one product sold (the retired SKUs are refused there)
+  // legacy ?tier= links: webhook-49 / wallet-guard-49 forward to the free watchlist door (no paid webhook is sold), instant-19 to the
+  // $9 report on /scan/, seal-99 to the by-arrangement re-verification page (nothing else is sold)
+  var CO_TIER = { "wallet-9": "wallet-report-9", "wallet-guard-49": "radar-watch-free", "instant-19": "wallet-report-9", "webhook-49": "radar-watch-free", "seal-99": "seal" };
   // the Worker's order codes (POST /v1/orders/verify, OpenAPI): CO_RETRY are polled with the same frozen order; the rest are final
   var CO_ERR = {
     tx_already_used: "This transaction hash already unlocked another order.",
@@ -1754,7 +1752,7 @@
       lookupData().then(function (d) {
         var hit = (d || []).filter(function (x) { return x.slug === pf.protocol; })[0], it = hit && hit.it;
         if (!it || busy) return;
-        var a = k === "radar-webhook-49" ? it.controllerAddress : ((it.preflightArgs && it.preflightArgs.address) || it.primaryContract);
+        var a = (it.preflightArgs && it.preflightArgs.address) || it.primaryContract;
         var ch = fld("target_chain"), t = fld("target_address"), dd = fld("protocol_or_docs");
         if (ch && !val("target_address")) ch.value = it.chain === "base" ? "base" : "ethereum";
         if (t && !t.value && CO_ADDR.test(String(a || ""))) t.value = String(a);
@@ -1853,9 +1851,9 @@
     var bar = $("[data-launcher]"), k = coSkuFrom(location.search); if (!bar || !k) return;
     var p = readPrefill(location.search), qs = p.protocol ? "?protocol=" + encodeURIComponent(p.protocol) : "";
     var a = $('a[data-sku="' + k + '"]', bar);
-    var href = k === "reverify-seal-99" ? "../seal/" + qs   // legacy ?tier=seal-99: the by-arrangement re-verification page
+    var href = k === "seal" ? "../seal/" + qs   // legacy ?tier=seal-99: the by-arrangement re-verification page
       : a ? a.getAttribute("href") + qs
-      : (k === "wallet-report-9" || k === "instant-scan-19") ? "../scan/" + qs : "";
+      : k === "wallet-report-9" ? "../scan/" + qs : "";
     if (!href) return;
     if (a) a.setAttribute("aria-current", "true");
     try { location.replace(href); } catch (e) { /* the highlighted product link stays */ }
@@ -1865,16 +1863,11 @@
   function initMiniApp() {
     var root = $("#ma-root"); if (!root) return;
     var api = (root.getAttribute("data-api") || "").replace(/\/+$/, "");
-    var verifyApi = root.getAttribute("data-verify-api") || "";
     var badgeBase = root.getAttribute("data-badges") || "../badges/";
     var wPill = $("#ma-wallet-pill", root), cForm = $("#ma-check-form", root), cHid = $("#ma-chain", root), cAddr = $("#ma-address", root);
     var cSub = $("#ma-submit", root), cErr = $("#ma-addr-err", root), segBtns = $$("[data-ma-chain]", root), presets = $$("[data-ma-preset]", root);
     var vSec = $("#ma-verdict", root), vPill = $("#ma-v-pill", root), vTitle = $("#ma-v-title", root), vBadge = $("#ma-v-badge", root);
     var vSum = $("#ma-v-summary", root), vTarget = $("#ma-v-target", root), vCtrl = $("#ma-v-ctrl", root), vDelay = $("#ma-v-delay", root), vProv = $("#ma-v-prov", root);
-    var bScan = $("#ma-buy-scan", root), bSeal = $("#ma-buy-seal", root), mContact = $("#ma-contact", root), mContactErr = $("#ma-contact-err", root);
-    var pStatus = $("#ma-pay-status", root), rBox = $("#ma-receipt", root), rSku = $("#ma-r-sku", root), rOrd = $("#ma-r-order", root);
-    var rTx = $("#ma-r-tx", root), rJson = $("#ma-r-json", root), mDrawer = $("#ma-manual", root), mTx = $("#ma-tx", root);
-    var mSku = $("#ma-manual-sku", root), mVerify = $("#ma-verify-btn", root), dlCb = $("[data-ma-coinbase]", root), dlMm = $("[data-ma-metamask]", root);
     var provider = null, busy = false, checkSeq = 0;
 
     // 1. Lightweight Farcaster Mini-App / Frame v2 ready() handshake (zero external CDN script)
@@ -1917,19 +1910,10 @@
       var v = ch === "ethereum" ? "ethereum" : "base";
       if (cHid) cHid.value = v;
       segBtns.forEach(function (b) { b.setAttribute("aria-checked", String(b.getAttribute("data-ma-chain") === v)); });
-      syncMaLinks();
-    }
-    function syncMaLinks() {
-      var a = String((cAddr && cAddr.value) || "").trim(), ch = curChain();
-      var qs = CO_ADDR.test(a) ? "?chain=" + ch + "&address=" + a : "";
-      var canon = "/miniapp/" + qs;
-      if (dlMm) dlMm.setAttribute("href", "https://metamask.app.link/dapp/pacta.wtf" + canon);
-      if (dlCb) dlCb.setAttribute("href", "https://go.cb-wallet.com/dapp?cb_url=" + encodeURIComponent("https://pacta.wtf" + canon));
     }
     segBtns.forEach(function (b) {
       b.addEventListener("click", function () { if (!busy) setChain(b.getAttribute("data-ma-chain")); });
     });
-    if (cAddr) cAddr.addEventListener("input", syncMaLinks);
 
     // Optional ?chain=&address= URL prefill
     try {
@@ -1937,7 +1921,6 @@
       if (qCh === "ethereum" || qCh === "base") setChain(qCh);
       if (cAddr && CO_ADDR.test(String(qAd || ""))) { cAddr.value = String(qAd); cAddr.setAttribute("value", String(qAd)); }
     } catch (e) { /* ignore */ }
-    syncMaLinks();
 
     function showAddrErr(msg) {
       if (cErr) { cErr.textContent = msg || ""; cErr.hidden = !msg; }
@@ -1977,16 +1960,18 @@
       var ctlTxt = ctl.kind === "multisig_safe" && ctl.safeThreshold ? ctl.safeThreshold + "-of-" + ctl.safeOwnerCount + " Safe"
         : ctl.kind === "timelock" ? "Timelock" + (ctl.address ? " " + short(ctl.address, 6, 4) : "")
         : ctl.kind === "eoa" ? "EOA" + (ctl.address ? " " + short(ctl.address, 6, 4) : "")
-        : pf && pf.verdict === "IMMUTABLE_NO_ADMIN" ? "No upgrade/admin slot" : (ctl.kind || "Contract");
+        : pf && pf.verdict === "NO_CONTROLLER_FOUND" ? "No controller found"
+        : pf && pf.verdict === "IMMUTABLE_NO_ADMIN" ? "No upgrade/admin slot" : (ctl.kind || "Contract");   // legacy / verified-source records only
       var dSec = ctl.timelockDelaySec != null ? ctl.timelockDelaySec : (pf && pf.timelockDelaySec != null ? pf.timelockDelaySec : null);
       var hScore = "";   // Ben 19:01Z: no numeric score or grade in the free public checker (paid answers only)
       if (vSum) {
-        vSum.textContent = (pf && (pf.summary || pf.oneLineVerdict) ? String(pf.summary || pf.oneLineVerdict)
+        vSum.textContent = (pf && (pf.summary || pf.oneLineVerdict) ? humanSummary(pf.summary || pf.oneLineVerdict, 0)
           : "Block-pinned control-plane read completed.") + hScore;
       }
       if (vTarget) vTarget.textContent = ch + ":" + short(addr, 6, 4) + (pf && pf.block && pf.block.number ? " @ #" + pf.block.number : "");
       if (vCtrl) vCtrl.textContent = ctlTxt;
-      if (vDelay) vDelay.textContent = dSec != null ? fmtDelaySec(dSec) : (pf && pf.verdict === "IMMUTABLE_NO_ADMIN" ? "Immutable" : "0 s (no timelock)");
+      if (vDelay) vDelay.textContent = dSec != null ? fmtDelaySec(dSec) : (pf && pf.verdict === "NO_CONTROLLER_FOUND" ? "Not determined (no controller found)"
+        : pf && pf.verdict === "IMMUTABLE_NO_ADMIN" ? "Immutable" : "0 s (no timelock)");
       if (vProv) {
         vProv.textContent = "";
         if (catIt && catIt.slug) {
@@ -2005,7 +1990,6 @@
         return;
       }
       showAddrErr("");
-      syncMaLinks();
       var my = ++checkSeq;
       if (cSub) cSub.disabled = true;
       if (vSum) vSum.textContent = "Reading " + short(a, 6, 4) + " on " + (ch === "base" ? "Base" : "Ethereum") + "…";
@@ -2047,129 +2031,20 @@
       });
     });
 
-    // 3. 1-tap Base USDC upgrade -> Base 0x2105 USDC transfer -> /v1/orders/verify
-    function setPayStatus(msg, bad) {
-      if (!pStatus) return;
-      pStatus.textContent = msg || "";
-      if (bad) pStatus.setAttribute("data-bad", ""); else pStatus.removeAttribute("data-bad");
-    }
-    function setMaBusy(on) {
-      busy = on;
-      [bScan, bSeal, cSub, mVerify, cAddr, mContact, mTx, mSku].concat(segBtns).concat(presets).forEach(function (x) { if (x) x.disabled = on; });
-    }
-    function verifyMaOrder(order, skuObj, retries) {
-      setPayStatus("Verifying Base USDC receipt…");
-      fetch(verifyApi, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(order) })
-        .then(function (r) {
-          var replay = !!(r.headers && typeof r.headers.get === "function" && r.headers.get("Pacta-Idempotent-Replay") === "true");
-          return r.text().then(function (t) { var j = null; try { j = JSON.parse(t); } catch (e) { j = null; } return { s: r.status, j: j, replay: replay }; });
-        })
-        .then(function (x) {
-          if (x.s === 200 && x.j && typeof x.j === "object") {
-            setMaBusy(false);
-            var oid = x.j.order_id || x.j.orderId || x.j.id || "—";
-            if (rSku) rSku.textContent = skuObj.label + " · " + skuObj.amount + " USDC";
-            if (rOrd) rOrd.textContent = String(oid).slice(0, 80);
-            if (rTx) {
-              rTx.textContent = "";
-              rTx.appendChild(arrowLink({ href: "https://basescan.org/tx/" + order.tx_hash, target: "_blank", rel: "noopener" }, "tx " + short(order.tx_hash, 6, 4), "up-right"));
-            }
-            if (rJson) rJson.textContent = JSON.stringify(x.j, null, 2);
-            if (rBox) rBox.hidden = false;
-            setPayStatus("Verified on Base. Your deliverable receipt is unlocked below.");
-            xTrackPurchase(x.j, skuObj, x.replay, order.tx_hash);
-            return;
-          }
-          var code = x.j && typeof x.j.error === "string" ? x.j.error : "";
-          if (retries > 0 && (x.s === 202 || x.s === 425 || CO_RETRY.test(code))) {
-            setPayStatus("Waiting for Base confirmation…");
-            setTimeout(function () { verifyMaOrder(order, skuObj, retries - 1); }, 4000);
-            return;
-          }
-          setMaBusy(false);
-          setPayStatus(CO_ERR[code] || ("Verification returned HTTP " + x.s + (code ? " (" + code + ")" : "") + "."), true);
-        })
-        .catch(function () {
-          setMaBusy(false);
-          setPayStatus("Could not reach the verifier. Keep your transaction hash and press Verify tx.", true);
-        });
-    }
-
-    function startMaUpgrade(skuKey) {
-      if (busy || !own(CO_SKU, skuKey)) return;
-      var skuObj = CO_SKU[skuKey];
-      var a = String((cAddr && cAddr.value) || "").trim(), ct = cleanText(String((mContact && mContact.value) || "").trim(), 200);
-      if (!CO_ADDR.test(a)) { showAddrErr("Enter a 0x contract address above first."); if (cAddr && cAddr.focus) cAddr.focus(); return; }
-      showAddrErr("");
-      var ctErr = ct ? (coContactOk(ct) ? "" : "Use an https:// webhook, email, or @handle.") : (skuObj.needContact ? skuObj.contactMissing : "");
-      if (mContactErr) { mContactErr.textContent = ctErr; mContactErr.hidden = !ctErr; }
-      if (ctErr) { if (mContact && mContact.focus) mContact.focus(); return; }
-
-      xTrackLead();
-      var eth = provider || (window.ethereum && typeof window.ethereum.request === "function" ? window.ethereum : null);
-      if (!eth) {
-        if (mDrawer) mDrawer.setAttribute("open", "");
-        if (mSku) mSku.value = skuKey;
-        setPayStatus("Open in Coinbase / Base Wallet below, or send " + skuObj.amount + " Base USDC and paste the tx hash.");
-        if (mTx && mTx.focus) mTx.focus();
-        return;
-      }
-      var order = { sku: skuKey, chain: "base", target_chain: curChain(), target_address: a };
-      if (ct) order.webhook_or_contact = ct;
-      var from = "";
-      setMaBusy(true);
-      if (rBox) rBox.hidden = true;
-      setPayStatus("Confirm " + skuObj.amount + " USDC on Base in your wallet…");
-      eth.request({ method: "eth_requestAccounts" }).then(function (accs) {
-        from = accs && accs[0] ? String(accs[0]) : "";
-        if (!CO_ADDR.test(from)) throw new Error("no account");
-        return eth.request({ method: "eth_chainId" });
-      }).then(function (cid) {
-        if (String(cid).toLowerCase() === CO_CHAIN) return cid;
-        return eth.request({ method: "wallet_switchEthereumChain", params: [{ chainId: CO_CHAIN }] }).then(function () { return eth.request({ method: "eth_chainId" }); });
-      }).then(function (cid) {
-        if (String(cid).toLowerCase() !== CO_CHAIN) throw new Error("wrong chain");
-        return eth.request({ method: "eth_sendTransaction", params: [{ from: from, to: CO_USDC, value: "0x0", data: coTransferData(skuObj.atomic) }] });
-      }).then(function (txh) {
-        if (!TX_RE.test(String(txh || ""))) throw new Error("no hash");
-        order.tx_hash = String(txh);
-        if (mTx) mTx.value = String(txh);
-        if (mSku) mSku.value = skuKey;
-        verifyMaOrder(order, skuObj, 15);
-      }).catch(function (e) {
-        setMaBusy(false);
-        var code = e && e.code;
-        setPayStatus(code === 4001 ? "Cancelled in wallet. Nothing was sent." : "Wallet transfer did not complete; you can also verify a manual tx below.", true);
-      });
-    }
-
-    if (bScan) bScan.addEventListener("click", function () { startMaUpgrade("instant-scan-19"); });
-    if (bSeal) bSeal.addEventListener("click", function () { startMaUpgrade("reverify-seal-99"); });
-    if (dlCb) dlCb.addEventListener("click", xTrackLead);
-    if (dlMm) dlMm.addEventListener("click", xTrackLead);
-    if (mVerify) mVerify.addEventListener("click", function () {
-      if (busy) return;
-      var skuKey = (mSku && own(CO_SKU, mSku.value)) ? mSku.value : "instant-scan-19";
-      var skuObj = CO_SKU[skuKey];
-      var a = String((cAddr && cAddr.value) || "").trim(), txh = String((mTx && mTx.value) || "").trim();
-      var ct = cleanText(String((mContact && mContact.value) || "").trim(), 200);
-      if (!CO_ADDR.test(a)) { showAddrErr("Enter a 0x contract address above."); return; }
-      if (!TX_RE.test(txh)) { setPayStatus("Paste a 64-hex 0x Base transaction hash.", true); return; }
-      if (skuObj.needContact && !ct) { setPayStatus(skuObj.contactMissing, true); return; }
-      xTrackLead();
-      var order = { sku: skuKey, tx_hash: txh, chain: "base", target_chain: curChain(), target_address: a };
-      if (ct) order.webhook_or_contact = ct;
-      setMaBusy(true);
-      verifyMaOrder(order, skuObj, 5);
-    });
+    // 3. Deeper diligence: plain links (the $9 report on /scan/, re-verification by arrangement); the mini app sells nothing itself
   }
   // ---- live pre-flight checker (free API; runs only on an explicit submit / preset click) ---------------
   var ADDR_RE = /^0x[0-9a-fA-F]{40}$/;
   var SLOT_IMPL = "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc";
   var SLOT_BEACON = "0xa3f0ad74e5423aebfd80d3ef4346578335a9a72aeaee59ff6cb3582b35133d50";
   var SLOT_PROXIABLE = "0xc5f16f0fcc639fa48a6947836d9850f504798523bf8c9a3a87d5876cf622bcf7";
+  /** A verdict summary for people: the API's "(see checksRun)" becomes a pointer to the list shown (or, without one, to the checks run). */
+  function humanSummary(s, nChecks) {
+    return String(s).replace(/\(see checksRun\)/g, nChecks > 0 ? "(see the list of checks below)" : "(see the list of checks run)")
+      .replace(/\(see checksRun; /g, nChecks > 0 ? "(see the list of checks below; " : "(see the list of checks run; ");
+  }
   // V7: amber is for warnings only; neutral and good verdicts get the neutral badge
-  var VERDICT_VARIANT = { IMMUTABLE_NO_ADMIN: "neutral", TIMELOCK_PROTECTED: "neutral", UNDEPLOYED_OR_EOA: "neutral", ZERO_DELAY_TIMELOCK_RISK: "warning",
+  var VERDICT_VARIANT = { NO_CONTROLLER_FOUND: "neutral", IMMUTABLE_NO_ADMIN: "neutral", TIMELOCK_PROTECTED: "neutral", UNDEPLOYED_OR_EOA: "neutral", ZERO_DELAY_TIMELOCK_RISK: "warning",
     MULTISIG_NO_TIMELOCK: "warning", INSTANT_EOA_ADMIN_RISK: "warning", UNCLASSIFIED_CONTRACT_CONTROLLER: "warning" };
   function pfCasts(r) {
     var rpc = r.chain === "base" ? "$BASE_RPC_URL" : "$ETH_RPC_URL", b = " --block " + r.pinnedBlock + " --rpc-url " + rpc, c = [];
@@ -2190,7 +2065,10 @@
     return c;
   }
   // Plain-English verdicts (the raw enum stays one click away, with the full JSON)
-  var VERDICT_TEXT = { IMMUTABLE_NO_ADMIN: "No standard upgrade or admin authority detected", TIMELOCK_PROTECTED: "Changes wait behind a timelock",
+  // NO_CONTROLLER_FOUND (Worker 6c78f406): the RPC reads found no controller; never called immutable (IMMUTABLE_NO_ADMIN stays for
+  // legacy / verified-source records only)
+  var VERDICT_TEXT = { NO_CONTROLLER_FOUND: "No controller found by our checks", IMMUTABLE_NO_ADMIN: "No standard upgrade or admin authority detected",
+    TIMELOCK_PROTECTED: "Changes wait behind a timelock",
     ZERO_DELAY_TIMELOCK_RISK: "Timelock with a zero delay: changes can land instantly", MULTISIG_NO_TIMELOCK: "A multisig can change it with no delay",
     INSTANT_EOA_ADMIN_RISK: "A single key can change it instantly", UNCLASSIFIED_CONTRACT_CONTROLLER: "Controller needs further review",
     UNDEPLOYED_OR_EOA: "No contract code at this address (EOA or not deployed)" };
@@ -2372,7 +2250,9 @@
     pfMatch(card, r.catalogMatch);
     card.appendChild(el("p", { "class": "pf-scope", "data-pf-scope": "", text: "The verdict covers only this one contract address"
       + (addr ? " (" + short(addr, 6, 4) + ")" : "") + ", not the whole protocol." }));
-    if (r.summary) card.appendChild(el("p", { "class": "s", text: String(r.summary) }));
+    // Part 6D-3: visitors read plain English, not the API field name (the API keeps "(see checksRun)")
+    var nChecks = Array.isArray(r.checksRun) ? r.checksRun.filter(function (c) { return typeof c === "string" && c; }).length : 0;
+    if (r.summary) card.appendChild(el("p", { "class": "s", text: humanSummary(r.summary, nChecks) }));
     card.appendChild(el("dl", { "class": "pf-dl" }, [
       pfRow("Chain / block", (r.chain === "base" ? "Base" : "Ethereum") + " · block " + num(r.pinnedBlock)),
       pfRow("Contract", pfAddr(r.address)),
@@ -2392,6 +2272,13 @@
       "How the heuristic score differs from Docs vs chain")]));
     acc.appendChild(el("details", { "class": "acc pf-limits", "data-slot": "accordion-item", "data-pf-limits": "" },
       [el("summary", { "data-slot": "accordion-trigger", text: "Methodology & single-address scope limits" }), lim]));
+    // the reads behind the verdict (checksRun: plain strings, in read order)
+    var checks = Array.isArray(r.checksRun) ? r.checksRun.filter(function (c) { return typeof c === "string" && c; }) : [];
+    if (checks.length)
+      acc.appendChild(el("details", { "class": "acc pf-checks", "data-slot": "accordion-item", "data-pf-checks": String(checks.length) },
+        [el("summary", { "data-slot": "accordion-trigger", text: "Checks run (" + checks.length + ")" }),
+         el("div", { "data-slot": "accordion-content" }, [el("ul", { "class": "pf-checks-list" },
+           checks.map(function (c) { return el("li", { text: c }); }))])]));
     if (r.isContract !== false && addr && /^\d+$/.test(String(r.pinnedBlock)))
       acc.appendChild(accItem("Reproduce with cast (pinned block)", [term(pfCasts(r).join("\n"), "Foundry cast", "Copy the cast commands for " + addr)]));
     acc.appendChild(rawDetails(r));

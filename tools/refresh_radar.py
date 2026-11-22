@@ -22,6 +22,7 @@ import argparse
 import json
 import os
 import time
+import urllib.error
 import urllib.request
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "docs", "api", "v1", "radar.json")
@@ -121,6 +122,39 @@ OPS = [
                 "a 1-of-15 Safe and the EmergencySwitchHub, and MANAGER to the hub. One signer can pause liquidations; unpause needs MANAGER.",
      "timelock": "0xa18ae79AEDA3e711E0CD64cfe1Cd06402d400D61", "brief": "briefs/lista-lending-op-0x21df/",
      "ops": [("0x21dffafc9876aca6c919e6897271e72805f3a4a986b3b7ac22d71950c7da7ebd", None)]},
+    # Wave 4 Watch (hunter-caught live queued operations, 21-22 Nov 2026)
+    {"protocol": "Umia", "protocol_slug": "umia", "chain_id": 8453,
+     "title": "Umia — 9-call Base timelock batch upgrading UmiaHub and UmiaMarketCore",
+     "summary": "One 9-call batch behind Umia's 48-hour Base timelock (executable 23 Nov 10:30 UTC): upgrades UmiaHub and UmiaMarketCore (UUPS), "
+                "rotates three periphery contracts, adds a spotMigrator, and sets an EOA as activeLiquidityKeeper.",
+     "timelock": "0xD0193fFAF565B6E530C1a6bbBb2FB13243f29177", "brief": "briefs/umia-op-0x3d35/",
+     "ops": [("0x3d35aa49667160b739348b62ec2731b782669aaeb0a869328883bbd68c523788", None)]},
+    {"protocol": "Inverse Finance", "protocol_slug": "inverse-finance-firm", "chain_id": 1, "kind": "compound", "queue_block": 26461811,
+     "title": "Inverse Finance FiRM — 15-call governance proposal queued in Timelock",
+     "summary": "One 15-call governance proposal queued behind Inverse's 48-hour Timelock (executable 23 Nov 06:53 UTC), including setDailyLimit, "
+                "setStalenessThreshold and setMinDebt on the FiRM BorrowController. Reported via Wave 4 Watch (@VB-Blue, PR #166).",
+     "timelock": "0x926dF14a23BE491164dCF93f4c468A50ef659D5B", "brief": None,
+     "ops": [("0x88f3ea76863aafef1d82e0457d59e04c239aca7279272c54d5aa69d0138affaa", "DBR addMarket"),
+             ("0x402eb0346f1e1653ff24139ac65416bdf0bdddf1ebdcbdef867f8a68c6d3a365", "Market setBorrowController"),
+             ("0x64c48218552f11ac3d15ea16a3a4b56722bf7da2bcc7bda3b0ea0844e23f8c6f", "FiRM BorrowController setDailyLimit"),
+             ("0xc1a72f9a18ca57b9d637f48d4b09b37f504898a815fca0b750c6157359beac62", "FiRM BorrowController setStalenessThreshold"),
+             ("0xd09136c2466ad4852cfb0ea4005ddd68cd62782237a6faba27c9babe838e0e3d", "FiRM BorrowController setMinDebt"),
+             ("0x7403e1649161094373d8ef1ac925e97a5b35c80a299174c7687c9032f4d5fa9c", "Oracle setFeed"),
+             ("0x04b88542a16e17a53f1c60ba0a8cfdde6fe4b8e234e143c9a1bca6359e680d81", "Fed allowMarket"),
+             ("0xd030676bb887626c1553b9645b20afef09cbd16e3ac395b667b993bec951a4cc", "Fed changeMarketCeiling"),
+             ("0x9d4fe57e5bd66a9e298c3411398cc3c80ad9c8288dc413ff17ced7c1db6f8df6", "Market setCollateralFactorBps"),
+             ("0xbbf44bc2242cb4327bf31a2cc2f4ff69ba7ac6ce6a4f7ced0862cf0287144c31", "Market setLiquidationFactorBps"),
+             ("0x08ce4420bdbfb32428205847a3bec4a128f71aeac1395d0ce58db826db46f5f6", "Market setLiquidationIncentiveBps"),
+             ("0x47d3a49ed31061320061342d5e8cdb974da4131612f140337a10d1f794be2d88", "Market setReplenismentIncentiveBps"),
+             ("0xc57618a56878be344eecc3516c14f64c183ce310cc5bf15822950512c9d4bf80", "Controller setMarket (bool)"),
+             ("0x938bf759b3e496894a0a69a3e4cd0958b7bd25275abdc80c1ae5a9214bedba2f", "Controller setMarket (caps)"),
+             ("0x6a45e785eeafd77b74d65f15d113e76228723c5360773a599c6e25e6163e7379", "Registry approveMarket")]},
+    {"protocol": "Ethena", "protocol_slug": "ethena-usde-susde", "chain_id": 1,
+     "title": "Ethena — 4-call LayerZero EndpointV2 setConfig batch",
+     "summary": "One 4-call batch on Ethena's 1-day timelock calling setConfig on LayerZero EndpointV2 (0x1a44…728c) for USDe/sUSDe cross-chain "
+                "messaging. Reported via Wave 4 Watch (@oppo2357, PR #170).",
+     "timelock": "0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94", "brief": None,
+     "ops": [("0xa1ca841370380727e4cb104e298dd8e2e231cba25b4009cd1ba31d9b88faebb7", None)]},
 ]
 RANK = {"ready": 0, "pending": 1, "mixed": 2, "unknown": 3, "executed": 4}
 
@@ -128,8 +162,15 @@ RANK = {"ready": 0, "pending": 1, "mixed": 2, "unknown": 3, "executed": 4}
 def rpc(url, method, params):
     req = urllib.request.Request(url, data=json.dumps({"jsonrpc": "2.0", "id": 1, "method": method, "params": params}).encode(),
                                  headers={"Content-Type": "application/json", "User-Agent": "pacta-site-radar/1.1"})
-    with urllib.request.urlopen(req, timeout=20) as r:
-        resp = json.loads(r.read())
+    for attempt in range(6):   # public endpoints rate-limit bursts (HTTP 429): back off and retry the same read
+        try:
+            with urllib.request.urlopen(req, timeout=20) as r:
+                resp = json.loads(r.read())
+            break
+        except urllib.error.HTTPError as e:
+            if e.code != 429 or attempt == 5:
+                raise
+            time.sleep(1.5 * (attempt + 1))
     if resp.get("id") != 1 or "error" in resp:
         raise RuntimeError(f"{method}: {resp.get('error')}")
     return resp["result"]

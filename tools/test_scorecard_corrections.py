@@ -787,5 +787,59 @@ class Wording(unittest.TestCase):
                 self.assertEqual(wd["changed"][0]["classification"], "parameter_delta", v["slug"])
 
 
+
+class ObolNeutralGovernance(unittest.TestCase):
+    """Next site build Part 2: Obol keeps its Delta on the 500M cap; the archived v1.8 governance rows and the Timelock floor are neutral."""
+
+    def test_obol_timelock_floor_and_two_rows_neutral_with_credit(self):
+        sc = json.load(open(os.path.join(ROOT, "docs", "api", "v1", "scorecards.json"), encoding="utf-8"))
+        ob = next(p for p in sc["protocols"] if p["slug"] == "obol-network")
+        tl = next(f for f in ob["factors"] if f["key"] == "timelock")
+        self.assertEqual(ob["grade"], "delta")
+        self.assertEqual(tl["state"], "n")
+        page = open(os.path.join(ROOT, "docs", "protocols", "obol-network", "index.html"), encoding="utf-8").read()
+        for rid in ("obol-network-governance-timelock-delay-s24", "obol-network-governor-thresholds-s24"):
+            sec = page[page.index(f'id="{rid}"'):]
+            sec = sec[:sec.index("</article>")]
+            self.assertIn('<span class="badge observed">Observed / Uncompared</span>', sec)
+            self.assertNotIn("badge aligned", sec)
+            self.assertIn("Current documentation (paused governance, not compared).", sec)
+            self.assertIn("Governance within Obol is currently paused and undergoing a transition phase.", sec.replace("&#x27;", "'"))
+        self.assertIn('data-research-wave="4"', page)
+        self.assertIn("https://github.com/dankezo", page)
+        self.assertIn("/pull/171", page)
+        self.assertIn("Obol updated those governance pages in August 2026, before Sprint 24", page)
+        low = page.lower()
+        for bad in ("in response to pacta", "after pacta", "because of pacta", "following pacta", "prompted by"):
+            self.assertNotIn(bad, low)
+        self.assertNotIn("0xf8d0", low)
+
+    def test_obol_uncompared_rows_never_matched_or_aligned_in_derived_surfaces(self):
+        rows = ("obol-network-governance-timelock-delay-s24", "obol-network-governor-thresholds-s24")
+        page = open(os.path.join(ROOT, "docs", "protocols", "obol-network", "index.html"), encoding="utf-8").read()
+        wd = page[page.index("data-what-differs"):]
+        wd = wd[:wd.index("</section>")]
+        self.assertEqual(wd.count("<li data-wd-matched>"), 1)
+        self.assertIn("stOBOL unstaking", wd)
+        self.assertEqual(wd.count("<li data-wd-uncompared>"), 2)
+        self.assertIn("governance paused in v1.11 documentation (not compared)", wd)
+        lk = json.load(open(os.path.join(ROOT, "docs", "api", "v1", "lookup.json"), encoding="utf-8"))
+        ob = next(i for i in lk["items"] if i["slug"] == "obol-network")
+        self.assertIsNone(ob["documentedDelaySeconds"])
+        self.assertEqual(ob["observedDelaySeconds"], 432000)
+        self.assertFalse({m["recordId"] for m in ob["whatDiffers"]["matched"]} & set(rows))
+        self.assertEqual({m["recordId"] for m in ob["whatDiffers"]["uncompared"]}, set(rows))
+        pr = json.load(open(os.path.join(ROOT, "docs", "api", "v1", "protocols.json"), encoding="utf-8"))
+        for doc in (ob, next(p for p in pr["protocols"] if p["slug"] == "obol-network")):
+            cls = {s["id"]: s["classification"] for s in doc["surfaces"]}
+            self.assertEqual({r: cls[r] for r in rows}, {r: "observed_uncompared" for r in rows})
+        full = open(os.path.join(ROOT, "docs", "llms-full.txt"), encoding="utf-8").read()
+        for r in rows:
+            self.assertIn(f"- {r} [observed_uncompared] ", full)
+            self.assertNotIn(f"- {r} [aligned_baseline] ", full)
+        ix = json.load(open(os.path.join(ROOT, "docs", "api", "v1", "index.json"), encoding="utf-8"))
+        self.assertEqual({e["classification"] for e in ix["entries"] if e["id"] in rows}, {"aligned_baseline"})   # attested data untouched
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -64,6 +64,12 @@ def lead_record(slug):
     return c.get("leadRecord") if c else None
 
 
+def surface_class(e):
+    """A record's classification as derived surfaces state it: 'observed_uncompared' when recordDisplay shows it as Observed /
+    Uncompared (the attested index.json classification itself is never rewritten)."""
+    return "observed_uncompared" if record_display(e.get("id")).get("badge") == "observed" else e.get("classification")
+
+
 def record_display(record_id):
     """Display-only wording for one record card (e.g. {"documentedLabel": "Sister vault reference."}); never written to index.json."""
     for c in data()["protocols"].values():
@@ -138,6 +144,7 @@ def apply_record_overrides(entries):
     """A copy of the record list with each correction's recordOverrides applied (field replacement, or "replace" substring pairs
     inside onchain_observed / documented_reference / surface). The input list is not modified."""
     over = {rid: o for c in data()["protocols"].values() for rid, o in (c.get("recordOverrides") or {}).items()}
+    over.update((data().get("labelOverrides") or {}).get("recordOverrides") or {})   # wording-35 r4 labels (no correction status)
     out = []
     for e in entries:
         o = dict(over.get(e.get("id")) or {})

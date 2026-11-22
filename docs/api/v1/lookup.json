@@ -404,7 +404,7 @@
    "kind": "protocol",
    "name": "ADI Bridge",
    "observedDelaySeconds": null,
-   "pinnedBlock": 26458556,
+   "pinnedBlock": 26466974,
    "preflightArgs": {
     "address": "0x8B1484d57abBE239bB280661377363b03c89CaEa",
     "chain": "ethereum"
@@ -416,7 +416,7 @@
    "slug": "adi-bridge",
    "surfaces": [
     {
-     "blockNumber": 26458556,
+     "blockNumber": 26466974,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "adi-bridge-control-plane",
@@ -721,7 +721,7 @@
    "kind": "protocol",
    "name": "Anemoy Capital",
    "observedDelaySeconds": null,
-   "pinnedBlock": 26458556,
+   "pinnedBlock": 26466974,
    "preflightArgs": {
     "address": "0x8c213ee79581Ff4984583C6a801e5263418C4b86",
     "chain": "ethereum"
@@ -731,7 +731,7 @@
    "slug": "anemoy-capital",
    "surfaces": [
     {
-     "blockNumber": 26458556,
+     "blockNumber": 26466974,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "anemoy-capital-control-plane",
@@ -762,17 +762,19 @@
    "kind": "protocol",
    "name": "Angle",
    "observedDelaySeconds": null,
-   "pinnedBlock": 26458556,
+   "pinnedBlock": 26466974,
    "preflightArgs": {
     "address": "0x31429d1856aD1377A8A0079410B297e1a9e214c2",
     "chain": "ethereum"
    },
    "primaryContract": "0x31429d1856aD1377A8A0079410B297e1a9e214c2",
-   "relatedContracts": [],
+   "relatedContracts": [
+    "0x09D81464c7293C774203E46E3C921559c8E9D53f"
+   ],
    "slug": "angle",
    "surfaces": [
     {
-     "blockNumber": 26458556,
+     "blockNumber": 26466974,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "angle-control-plane",
@@ -945,7 +947,7 @@
    "kind": "protocol",
    "name": "AO Bridge",
    "observedDelaySeconds": null,
-   "pinnedBlock": 26458556,
+   "pinnedBlock": 26466974,
    "preflightArgs": {
     "address": "0xfE08D40Eee53d64936D3128838867c867602665c",
     "chain": "ethereum"
@@ -957,7 +959,7 @@
    "slug": "ao-bridge",
    "surfaces": [
     {
-     "blockNumber": 26458556,
+     "blockNumber": 26466974,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "ao-bridge-control-plane",
@@ -988,7 +990,7 @@
    "kind": "protocol",
    "name": "ApeX Pro",
    "observedDelaySeconds": null,
-   "pinnedBlock": 26458556,
+   "pinnedBlock": 26466974,
    "preflightArgs": {
     "address": "0x52A8845DF664D76C69d2EEa607CD793565aF42B8",
     "chain": "ethereum"
@@ -998,7 +1000,7 @@
    "slug": "apex-pro",
    "surfaces": [
     {
-     "blockNumber": 26458556,
+     "blockNumber": 26466974,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "apex-pro-control-plane",
@@ -1607,17 +1609,19 @@
    "kind": "protocol",
    "name": "Badger DAO",
    "observedDelaySeconds": null,
-   "pinnedBlock": 26458556,
+   "pinnedBlock": 26466974,
    "preflightArgs": {
     "address": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
     "chain": "ethereum"
    },
    "primaryContract": "0x3472A5A71965499acd81997a54BBA8D852C6E53d",
-   "relatedContracts": [],
+   "relatedContracts": [
+    "0xdDB2dfad74F64F14bb1A1cbaB9C03bc0eed74493"
+   ],
    "slug": "badger-dao",
    "surfaces": [
     {
-     "blockNumber": 26458556,
+     "blockNumber": 26466974,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "badger-dao-control-plane",
@@ -2431,7 +2435,7 @@
    "kind": "protocol",
    "name": "Brickken",
    "observedDelaySeconds": null,
-   "pinnedBlock": 26458556,
+   "pinnedBlock": 26466974,
    "preflightArgs": {
     "address": "0x0A638F07ACc6969abF392bB009f216D22aDEa36d",
     "chain": "ethereum"
@@ -2441,7 +2445,7 @@
    "slug": "brickken",
    "surfaces": [
     {
-     "blockNumber": 26458556,
+     "blockNumber": 26466974,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "brickken-control-plane",
@@ -2632,7 +2636,7 @@
    "chainId": 8453,
    "classification": "aligned_baseline",
    "controllerAddress": null,
-   "controllerKind": "immutable_or_role_governed",
+   "controllerKind": "access_control",
    "documentationComparison": "compared",
    "documentedDelaySeconds": null,
    "easAttested": true,
@@ -4109,17 +4113,19 @@
    "kind": "protocol",
    "name": "DerivaDEX",
    "observedDelaySeconds": null,
-   "pinnedBlock": 26458556,
+   "pinnedBlock": 26466974,
    "preflightArgs": {
     "address": "0x3A880652F47bFaa771908C07Dd8673A787dAEd3A",
     "chain": "ethereum"
    },
    "primaryContract": "0x3A880652F47bFaa771908C07Dd8673A787dAEd3A",
-   "relatedContracts": [],
+   "relatedContracts": [
+    "0x6Fb8aa6fc6f27e591423009194529aE126660027"
+   ],
    "slug": "derivadex",
    "surfaces": [
     {
-     "blockNumber": 26458556,
+     "blockNumber": 26466974,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "derivadex-control-plane",
@@ -4367,17 +4373,19 @@
    "kind": "protocol",
    "name": "Drakewell USDdw",
    "observedDelaySeconds": null,
-   "pinnedBlock": 26458556,
+   "pinnedBlock": 26466974,
    "preflightArgs": {
     "address": "0x2B5895b716311A1eaC8f93fB88C56aF9eC8C1A69",
     "chain": "ethereum"
    },
    "primaryContract": "0x2B5895b716311A1eaC8f93fB88C56aF9eC8C1A69",
-   "relatedContracts": [],
+   "relatedContracts": [
+    "0x4c376DF2f5182F5373502ccAB12700c479d8A128"
+   ],
    "slug": "drakewell-usddw",
    "surfaces": [
     {
-     "blockNumber": 26458556,
+     "blockNumber": 26466974,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "drakewell-usddw-control-plane",
@@ -4408,7 +4416,7 @@
    "kind": "protocol",
    "name": "DxSale",
    "observedDelaySeconds": null,
-   "pinnedBlock": 26458556,
+   "pinnedBlock": 26466974,
    "preflightArgs": {
     "address": "0xF063fE1aB7a291c5d06a86e14730b00BF24cB589",
     "chain": "ethereum"
@@ -4418,7 +4426,7 @@
    "slug": "dxsale",
    "surfaces": [
     {
-     "blockNumber": 26458556,
+     "blockNumber": 26466974,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "dxsale-control-plane",
@@ -4586,7 +4594,7 @@
    "kind": "protocol",
    "name": "edgeX Bridge",
    "observedDelaySeconds": null,
-   "pinnedBlock": 26458556,
+   "pinnedBlock": 26466974,
    "preflightArgs": {
     "address": "0xB0076DE78Dc50581770BBa1D211dDc0aD4F2a241",
     "chain": "ethereum"
@@ -4598,7 +4606,7 @@
    "slug": "edgex-bridge",
    "surfaces": [
     {
-     "blockNumber": 26458556,
+     "blockNumber": 26466974,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "edgex-bridge-control-plane",
@@ -5600,7 +5608,7 @@
    "kind": "protocol",
    "name": "FermiSwap",
    "observedDelaySeconds": null,
-   "pinnedBlock": 26458556,
+   "pinnedBlock": 26466974,
    "preflightArgs": {
     "address": "0xb1076fE3AB5e28005C7c323Bac5AC06a680d452e",
     "chain": "ethereum"
@@ -5610,7 +5618,7 @@
    "slug": "fermiswap",
    "surfaces": [
     {
-     "blockNumber": 26458556,
+     "blockNumber": 26466974,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "fermiswap-control-plane",
@@ -6217,7 +6225,7 @@
    "kind": "protocol",
    "name": "GETH",
    "observedDelaySeconds": null,
-   "pinnedBlock": 26458556,
+   "pinnedBlock": 26466974,
    "preflightArgs": {
     "address": "0x3802c218221390025BCEABBaD5D8C59F40eB74B8",
     "chain": "ethereum"
@@ -6227,7 +6235,7 @@
    "slug": "geth",
    "surfaces": [
     {
-     "blockNumber": 26458556,
+     "blockNumber": 26466974,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "geth-control-plane",
@@ -6661,17 +6669,19 @@
    "kind": "protocol",
    "name": "Harvest Finance",
    "observedDelaySeconds": null,
-   "pinnedBlock": 26458556,
+   "pinnedBlock": 26466974,
    "preflightArgs": {
     "address": "0xa0246c9032bC3A600820415aE600c6388619A14D",
     "chain": "ethereum"
    },
    "primaryContract": "0xa0246c9032bC3A600820415aE600c6388619A14D",
-   "relatedContracts": [],
+   "relatedContracts": [
+    "0xF066789028fE31D4f53B69B81b328B8218Cc0641"
+   ],
    "slug": "harvest-finance",
    "surfaces": [
     {
-     "blockNumber": 26458556,
+     "blockNumber": 26466974,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "harvest-finance-control-plane",
@@ -6942,17 +6952,19 @@
    "kind": "protocol",
    "name": "ICHI",
    "observedDelaySeconds": null,
-   "pinnedBlock": 26458556,
+   "pinnedBlock": 26466974,
    "preflightArgs": {
     "address": "0x111111517e4929D3dcbdfa7CCe55d30d4B6BC4d6",
     "chain": "ethereum"
    },
    "primaryContract": "0x111111517e4929D3dcbdfa7CCe55d30d4B6BC4d6",
-   "relatedContracts": [],
+   "relatedContracts": [
+    "0x94A5980d5634533551dcB7108322f6C4f2a80E6B"
+   ],
    "slug": "ichi",
    "surfaces": [
     {
-     "blockNumber": 26458556,
+     "blockNumber": 26466974,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "ichi-control-plane",
@@ -7843,19 +7855,20 @@
    "kind": "protocol",
    "name": "King Protocol",
    "observedDelaySeconds": null,
-   "pinnedBlock": 26458556,
+   "pinnedBlock": 26466974,
    "preflightArgs": {
     "address": "0x8F08B70456eb22f6109F57b8fafE862ED28E6040",
     "chain": "ethereum"
    },
    "primaryContract": "0x8F08B70456eb22f6109F57b8fafE862ED28E6040",
    "relatedContracts": [
-    "0x1cB489ef513E1Cc35C4657c91853A2E6fF1957dE"
+    "0x1cB489ef513E1Cc35C4657c91853A2E6fF1957dE",
+    "0xF46D3734564ef9a5a16fC3B1216831a28f78e2B5"
    ],
    "slug": "king-protocol",
    "surfaces": [
     {
-     "blockNumber": 26458556,
+     "blockNumber": 26466974,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "king-protocol-control-plane",
@@ -8209,17 +8222,19 @@
    "kind": "protocol",
    "name": "Lazy",
    "observedDelaySeconds": null,
-   "pinnedBlock": 26458556,
+   "pinnedBlock": 26466974,
    "preflightArgs": {
     "address": "0xd53B68fB4eb907c3c1E348CD7d7bEDE34f763805",
     "chain": "ethereum"
    },
    "primaryContract": "0xd53B68fB4eb907c3c1E348CD7d7bEDE34f763805",
-   "relatedContracts": [],
+   "relatedContracts": [
+    "0x0FBCe7F3678467f7F7313fcB2C9D1603431Ad666"
+   ],
    "slug": "lazy",
    "surfaces": [
     {
-     "blockNumber": 26458556,
+     "blockNumber": 26466974,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "lazy-control-plane",
@@ -9494,17 +9509,19 @@
    "kind": "protocol",
    "name": "Monolith Market",
    "observedDelaySeconds": null,
-   "pinnedBlock": 26458556,
+   "pinnedBlock": 26466974,
    "preflightArgs": {
     "address": "0x6D961c9DCF1AD73566822BA4B087892e3839B849",
     "chain": "ethereum"
    },
    "primaryContract": "0x6D961c9DCF1AD73566822BA4B087892e3839B849",
-   "relatedContracts": [],
+   "relatedContracts": [
+    "0x926dF14a23BE491164dCF93f4c468A50ef659D5B"
+   ],
    "slug": "monolith-market",
    "surfaces": [
     {
-     "blockNumber": 26458556,
+     "blockNumber": 26466974,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "monolith-market-control-plane",
@@ -9758,17 +9775,19 @@
    "kind": "protocol",
    "name": "MortgageFi",
    "observedDelaySeconds": null,
-   "pinnedBlock": 60070202,
+   "pinnedBlock": 60576992,
    "preflightArgs": {
     "address": "0x1bE87D273d47C3832Ab7853812E9A995A4DE9EEA",
     "chain": "base"
    },
    "primaryContract": "0x1bE87D273d47C3832Ab7853812E9A995A4DE9EEA",
-   "relatedContracts": [],
+   "relatedContracts": [
+    "0xaB825F45E9e5d2459Fb7a1527A8d0ca082C582F4"
+   ],
    "slug": "mortgagefi",
    "surfaces": [
     {
-     "blockNumber": 60070202,
+     "blockNumber": 60576992,
      "chain": "base",
      "classification": "rpc_observed",
      "id": "mortgagefi-control-plane",
@@ -10200,7 +10219,7 @@
    "controllerAddress": "0xCdBf527842Ab04Da548d33EB09d03DB831381Fb0",
    "controllerKind": "timelock",
    "documentationComparison": "compared",
-   "documentedDelaySeconds": 432000,
+   "documentedDelaySeconds": null,
    "easAttested": true,
    "evidenceBasis": "eas_attested",
    "kind": "protocol",
@@ -10225,18 +10244,18 @@
     {
      "blockNumber": 26433001,
      "chain": "ethereum",
-     "classification": "aligned_baseline",
+     "classification": "observed_uncompared",
      "id": "obol-network-governance-timelock-delay-s24",
-     "surface": "Governance timelock: 5 days between a passed proposal and execution",
+     "surface": "Obol TimelockController: 5-day on-chain delay (Token House governance paused in v1.11 docs)",
      "targetContract": "0xCdBf527842Ab04Da548d33EB09d03DB831381Fb0",
      "targetLabel": "Obol TimelockController"
     },
     {
      "blockNumber": 26433001,
      "chain": "ethereum",
-     "classification": "aligned_baseline",
+     "classification": "observed_uncompared",
      "id": "obol-network-governor-thresholds-s24",
-     "surface": "Governor: 30,000 OBOL proposal threshold, 0.84% quorum",
+     "surface": "ObolGovernor: 30,000 OBOL proposal threshold, 0.84% quorum (Token House governance paused in v1.11 docs)",
      "targetContract": "0xcB1622185A0c62A80494bEde05Ba95ef29Fbf85c",
      "targetLabel": "ObolGovernor"
     },
@@ -10278,19 +10297,21 @@
     ],
     "matched": [
      {
-      "parameter": "Governance timelock: 5 days between a passed proposal and execution",
-      "recordId": "obol-network-governance-timelock-delay-s24",
-      "value": "matches the documentation"
-     },
-     {
-      "parameter": "Governor: 30,000 OBOL proposal threshold, 0.84% quorum",
-      "recordId": "obol-network-governor-thresholds-s24",
-      "value": "matches the documentation"
-     },
-     {
       "parameter": "stOBOL unstaking: no withdrawal delay (WithdrawGate delay 0)",
       "recordId": "obol-network-stobol-withdraw-delay-s24",
       "value": "matches the documentation"
+     }
+    ],
+    "uncompared": [
+     {
+      "parameter": "Obol TimelockController: 5-day on-chain delay (Token House governance paused in v1.11 docs)",
+      "recordId": "obol-network-governance-timelock-delay-s24",
+      "value": "governance paused in v1.11 documentation (not compared)"
+     },
+     {
+      "parameter": "ObolGovernor: 30,000 OBOL proposal threshold, 0.84% quorum (Token House governance paused in v1.11 docs)",
+      "recordId": "obol-network-governor-thresholds-s24",
+      "value": "governance paused in v1.11 documentation (not compared)"
      }
     ]
    }
@@ -10790,7 +10811,7 @@
    "kind": "protocol",
    "name": "Paradex Bridge",
    "observedDelaySeconds": null,
-   "pinnedBlock": 26458556,
+   "pinnedBlock": 26466974,
    "preflightArgs": {
     "address": "0xb32E10022FFBeDfE10bc818a1C7e67D9d87e0fa7",
     "chain": "ethereum"
@@ -10802,7 +10823,7 @@
    "slug": "paradex-bridge",
    "surfaces": [
     {
-     "blockNumber": 26458556,
+     "blockNumber": 26466974,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "paradex-bridge-control-plane",
@@ -11171,7 +11192,7 @@
    "kind": "protocol",
    "name": "Pirex",
    "observedDelaySeconds": null,
-   "pinnedBlock": 26458556,
+   "pinnedBlock": 26466974,
    "preflightArgs": {
     "address": "0xc55126051B22eBb829D00368f4B12Bde432de5Da",
     "chain": "ethereum"
@@ -11181,7 +11202,7 @@
    "slug": "pirex",
    "surfaces": [
     {
-     "blockNumber": 26458556,
+     "blockNumber": 26466974,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "pirex-control-plane",
@@ -11855,7 +11876,7 @@
    "chainId": 1,
    "classification": "aligned_baseline",
    "controllerAddress": null,
-   "controllerKind": "immutable_or_role_governed",
+   "controllerKind": "access_control",
    "documentationComparison": "compared",
    "documentedDelaySeconds": null,
    "easAttested": true,
@@ -12096,7 +12117,7 @@
    "kind": "protocol",
    "name": "Ribbon",
    "observedDelaySeconds": null,
-   "pinnedBlock": 26458556,
+   "pinnedBlock": 26466974,
    "preflightArgs": {
     "address": "0x6123B0049F904d730dB3C36a31167D9d4121fA6B",
     "chain": "ethereum"
@@ -12106,7 +12127,7 @@
    "slug": "ribbon",
    "surfaces": [
     {
-     "blockNumber": 26458556,
+     "blockNumber": 26466974,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "ribbon-control-plane",
@@ -12137,7 +12158,7 @@
    "kind": "protocol",
    "name": "Ring Few",
    "observedDelaySeconds": null,
-   "pinnedBlock": 26458556,
+   "pinnedBlock": 26466974,
    "preflightArgs": {
     "address": "0x7D86394139bf1122E82FDF45Bb4e3b038A4464DD",
     "chain": "ethereum"
@@ -12147,7 +12168,7 @@
    "slug": "ring-few",
    "surfaces": [
     {
-     "blockNumber": 26458556,
+     "blockNumber": 26466974,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "ring-few-control-plane",
@@ -12310,7 +12331,7 @@
    "kind": "protocol",
    "name": "Royco V2",
    "observedDelaySeconds": null,
-   "pinnedBlock": 26458556,
+   "pinnedBlock": 26466974,
    "preflightArgs": {
     "address": "0x7cC6fB28eC7b5e7afC3cB3986141797ffc27253C",
     "chain": "ethereum"
@@ -12322,7 +12343,7 @@
    "slug": "royco-v2",
    "surfaces": [
     {
-     "blockNumber": 26458556,
+     "blockNumber": 26466974,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "royco-v2-control-plane",
@@ -12429,17 +12450,19 @@
    "kind": "protocol",
    "name": "Saffron Vaults",
    "observedDelaySeconds": null,
-   "pinnedBlock": 26458556,
+   "pinnedBlock": 26466974,
    "preflightArgs": {
     "address": "0xb753428af26E81097e7fD17f40c88aaA3E04902c",
     "chain": "ethereum"
    },
    "primaryContract": "0xb753428af26E81097e7fD17f40c88aaA3E04902c",
-   "relatedContracts": [],
+   "relatedContracts": [
+    "0x2885402C22fBd63952f759aD380402b63D0355Ea"
+   ],
    "slug": "saffron-vaults",
    "surfaces": [
     {
-     "blockNumber": 26458556,
+     "blockNumber": 26466974,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "saffron-vaults-control-plane",
@@ -13159,7 +13182,7 @@
    "kind": "protocol",
    "name": "Sport.fun",
    "observedDelaySeconds": null,
-   "pinnedBlock": 60070202,
+   "pinnedBlock": 60576992,
    "preflightArgs": {
     "address": "0x16EE7ecAc70d1028E7712751E2Ee6BA808a7dd92",
     "chain": "base"
@@ -13171,7 +13194,7 @@
    "slug": "sport-fun",
    "surfaces": [
     {
-     "blockNumber": 60070202,
+     "blockNumber": 60576992,
      "chain": "base",
      "classification": "rpc_observed",
      "id": "sport-fun-control-plane",
@@ -13259,7 +13282,7 @@
    "kind": "protocol",
    "name": "StableHodl",
    "observedDelaySeconds": null,
-   "pinnedBlock": 26458556,
+   "pinnedBlock": 26466974,
    "preflightArgs": {
     "address": "0x109D3042a3c682F94107b3818e93b3aDE2A47544",
     "chain": "ethereum"
@@ -13271,7 +13294,7 @@
    "slug": "stablehodl",
    "surfaces": [
     {
-     "blockNumber": 26458556,
+     "blockNumber": 26466974,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "stablehodl-control-plane",
@@ -13370,7 +13393,7 @@
    "kind": "protocol",
    "name": "Stafi",
    "observedDelaySeconds": null,
-   "pinnedBlock": 26458556,
+   "pinnedBlock": 26466974,
    "preflightArgs": {
     "address": "0xef3A930e1FfFFAcd2fc13434aC81bD278B0ecC8d",
     "chain": "ethereum"
@@ -13380,7 +13403,7 @@
    "slug": "stafi",
    "surfaces": [
     {
-     "blockNumber": 26458556,
+     "blockNumber": 26466974,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "stafi-control-plane",
@@ -13751,7 +13774,7 @@
    "kind": "protocol",
    "name": "Starknet Bridge",
    "observedDelaySeconds": null,
-   "pinnedBlock": 26458556,
+   "pinnedBlock": 26466974,
    "preflightArgs": {
     "address": "0xCa14007Eff0dB1f8135f4C25B34De49AB0d42766",
     "chain": "ethereum"
@@ -13761,7 +13784,7 @@
    "slug": "starknet-bridge",
    "surfaces": [
     {
-     "blockNumber": 26458556,
+     "blockNumber": 26466974,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "starknet-bridge-control-plane",
@@ -15095,17 +15118,19 @@
    "kind": "protocol",
    "name": "Tornado Cash",
    "observedDelaySeconds": null,
-   "pinnedBlock": 26458556,
+   "pinnedBlock": 26466974,
    "preflightArgs": {
     "address": "0x77777FeDdddFfC19Ff86DB637967013e6C6A116C",
     "chain": "ethereum"
    },
    "primaryContract": "0x77777FeDdddFfC19Ff86DB637967013e6C6A116C",
-   "relatedContracts": [],
+   "relatedContracts": [
+    "0x5efda50f22d34F262c29268506C5Fa42cB56A1Ce"
+   ],
    "slug": "tornado-cash",
    "surfaces": [
     {
-     "blockNumber": 26458556,
+     "blockNumber": 26466974,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "tornado-cash-control-plane",
@@ -15279,7 +15304,7 @@
    "kind": "protocol",
    "name": "UltraYield Vaults",
    "observedDelaySeconds": null,
-   "pinnedBlock": 26458556,
+   "pinnedBlock": 26466974,
    "preflightArgs": {
     "address": "0x8ECC0B419dfe3AE197BC96f2a03636b5E1BE91db",
     "chain": "ethereum"
@@ -15291,7 +15316,7 @@
    "slug": "ultrayield-vaults",
    "surfaces": [
     {
-     "blockNumber": 26458556,
+     "blockNumber": 26466974,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "ultrayield-vaults-control-plane",
@@ -16321,7 +16346,7 @@
      "chain": "ethereum",
      "classification": "aligned_baseline",
      "id": "wormhole-core-ntt-eth-upgrade-governance-s25",
-     "surface": "Upgrades: guardian-signed governance messages only, no admin key",
+     "surface": "Upgrades: guardian-signed governance messages only, EIP-1967 admin slot = 0x0 (upgrades governed by 13-of-19 Guardian VAA via submitContractUpgrade)",
      "targetContract": "0x98f3c9e6E3fAce36bAAd05FE09d375Ef1464288B",
      "targetLabel": "Wormhole Core (Ethereum)"
     },
@@ -17018,7 +17043,7 @@
    "kind": "protocol",
    "name": "ZTLN-P",
    "observedDelaySeconds": null,
-   "pinnedBlock": 26458556,
+   "pinnedBlock": 26466974,
    "preflightArgs": {
     "address": "0xfEd3D6557Dc46A1B25d0A6F666513Cb33835864B",
     "chain": "ethereum"
@@ -17030,7 +17055,7 @@
    "slug": "ztln-p",
    "surfaces": [
     {
-     "blockNumber": 26458556,
+     "blockNumber": 26466974,
      "chain": "ethereum",
      "classification": "rpc_observed",
      "id": "ztln-p-control-plane",
@@ -17146,7 +17171,7 @@
    "controllerKind": "timelock",
    "documentedDelaySeconds": null,
    "easAttested": false,
-   "eta": 1795201103,
+   "eta": null,
    "evidenceBasis": "pinned_rpc_brief",
    "kind": "brief",
    "name": "Compound V3 — all 25.94 WETH of reserves on Linea's cWETHv3 withdrawn and bridged to the Ethereum Timelock",
@@ -17531,6 +17556,36 @@
   {
    "baseEasUids": [],
    "category": "Timelock radar brief (queued operations)",
+   "chain": "base",
+   "chainId": 8453,
+   "classification": "timelock_radar_brief",
+   "controllerAddress": "0xD0193fFAF565B6E530C1a6bbBb2FB13243f29177",
+   "controllerKind": "timelock",
+   "documentedDelaySeconds": null,
+   "easAttested": false,
+   "eta": 1795429840,
+   "evidenceBasis": "pinned_rpc_brief",
+   "kind": "brief",
+   "name": "Umia — 9-call Base timelock batch upgrading UmiaHub and UmiaMarketCore",
+   "observedDelaySeconds": 172800,
+   "preflightArgs": {
+    "address": "0xD0193fFAF565B6E530C1a6bbBb2FB13243f29177",
+    "chain": "base"
+   },
+   "primaryContract": "0xD0193fFAF565B6E530C1a6bbBb2FB13243f29177",
+   "relatedProtocolSlug": "umia",
+   "slug": "umia-op-0x3d35",
+   "targetLabel": "Umia timelock",
+   "tokens": [
+    "Umia",
+    "UmiaHub",
+    "UmiaMarketCore"
+   ],
+   "url": "https://pacta.wtf/briefs/umia-op-0x3d35/"
+  },
+  {
+   "baseEasUids": [],
+   "category": "Timelock radar brief (queued operations)",
    "chain": "ethereum",
    "chainId": 1,
    "classification": "timelock_radar_brief",
@@ -17573,9 +17628,9 @@
   "https://pacta.wtf/api/v1/radar.json"
  ],
  "totals": {
-  "briefs": 17,
+  "briefs": 18,
   "easAttestedProtocols": 189,
-  "items": 333,
+  "items": 334,
   "protocols": 316,
   "rpcObservedProtocols": 127
  }

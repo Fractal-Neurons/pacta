@@ -275,85 +275,106 @@
    "id": "https://pacta.wtf/briefs/etherfi-op-0x244e/#radar",
    "title": "ether.fi timelock: pending · ether.fi — LayerZero V2 delegate moved behind the 10-day timelock",
    "url": "https://pacta.wtf/briefs/etherfi-op-0x244e/",
-   "date_published": "2026-11-20T16:03:35Z",
-   "content_text": "EtherfiL1SyncPoolETH.setDelegate(EtherFiTimelock): protective hardening of the OApp's messaging configuration. Read at finalized Ethereum block #26,457,377."
+   "date_published": "2026-11-22T01:52:23Z",
+   "content_text": "EtherfiL1SyncPoolETH.setDelegate(EtherFiTimelock): protective hardening of the OApp's messaging configuration. Read at finalized Ethereum block #26,467,485."
   },
   {
-   "id": "https://pacta.wtf/briefs/compound-v3-op-0x86b4/#radar",
-   "title": "Compound V3 timelock: pending · Compound V3 — all 25.94 WETH of reserves on Linea's cWETHv3 withdrawn and bridged to the Ethereum Timelock",
-   "url": "https://pacta.wtf/briefs/compound-v3-op-0x86b4/",
-   "date_published": "2026-11-20T16:03:35Z",
-   "content_text": "Proposal 625: the Ethereum Timelock sends one Linea message (L1 MessageService.sendMessage). On Linea the bridge receiver queues three calls behind the 1-day Linea Timelock: withdrawReserves of 25.942 WETH from Compound WETH (cWETHv3), WETH.withdraw, and L2 MessageService.sendMessage of 25.952 ETH (0.01 ETH fee) back to the Ethereum Timelock. Read at finalized Ethereum block #26,457,377."
+   "id": "https://pacta.wtf/radar/#op-0xa1ca8413",
+   "title": "Ethena timelock: pending · Ethena — 4-call LayerZero EndpointV2 setConfig batch",
+   "url": "https://pacta.wtf/protocols/ethena-usde-susde/",
+   "date_published": "2026-11-22T01:52:23Z",
+   "content_text": "One 4-call batch on Ethena's 1-day timelock calling setConfig on LayerZero EndpointV2 (0x1a44…728c) for USDe/sUSDe cross-chain messaging. Reported via Wave 4 Watch (@oppo2357, PR #170). Read at finalized Ethereum block #26,467,485."
+  },
+  {
+   "id": "https://pacta.wtf/radar/#op-0x88f3ea76",
+   "title": "Inverse Finance timelock: pending · Inverse Finance FiRM — 15-call governance proposal queued in Timelock",
+   "url": "https://pacta.wtf/protocols/inverse-finance-firm/",
+   "date_published": "2026-11-22T01:52:23Z",
+   "content_text": "One 15-call governance proposal queued behind Inverse's 48-hour Timelock (executable 23 Nov 06:53 UTC), including setDailyLimit, setStalenessThreshold and setMinDebt on the FiRM BorrowController. Reported via Wave 4 Watch (@VB-Blue, PR #166). Read at finalized Ethereum block #26,467,485."
+  },
+  {
+   "id": "https://pacta.wtf/briefs/umia-op-0x3d35/#radar",
+   "title": "Umia timelock: pending · Umia — 9-call Base timelock batch upgrading UmiaHub and UmiaMarketCore",
+   "url": "https://pacta.wtf/briefs/umia-op-0x3d35/",
+   "date_published": "2026-11-22T01:45:20Z",
+   "content_text": "One 9-call batch behind Umia's 48-hour Base timelock (executable 23 Nov 10:30 UTC): upgrades UmiaHub and UmiaMarketCore (UUPS), rotates three periphery contracts, adds a spotMigrator, and sets an EOA as activeLiquidityKeeper. Read at finalized Base block #60,607,726."
   },
   {
    "id": "https://pacta.wtf/briefs/yearn-v3-op-0x2a14/#radar",
    "title": "Yearn V3 timelock: pending · Yearn V3 — 8 new strategies added to 6 vaults with max-debt caps",
    "url": "https://pacta.wtf/briefs/yearn-v3-op-0x2a14/",
-   "date_published": "2026-11-20T16:03:35Z",
-   "content_text": "One 16-call batch: add_strategy(strategy, add_to_queue=false) then update_max_debt_for_strategy on yvUSDC-1, yvUSD, yvWETH-1, yvWETH-2, yvFlexUSDC and yvFlexWETH (Flex siUSD and wstETH lenders / loopers, USDC-to-yvUSDS-1 depositors). Caps range from 10,000 WETH to 10B USDC (yvFlexUSDC, effectively uncapped). Read at finalized Ethereum block #26,457,377."
+   "date_published": "2026-11-22T01:52:23Z",
+   "content_text": "One 16-call batch: add_strategy(strategy, add_to_queue=false) then update_max_debt_for_strategy on yvUSDC-1, yvUSD, yvWETH-1, yvWETH-2, yvFlexUSDC and yvFlexWETH (Flex siUSD and wstETH lenders / loopers, USDC-to-yvUSDS-1 depositors). Caps range from 10,000 WETH to 10B USDC (yvFlexUSDC, effectively uncapped). Read at finalized Ethereum block #26,467,485."
   },
   {
    "id": "https://pacta.wtf/briefs/treehouse-op-0x2f11/#radar",
    "title": "Treehouse timelock: executed · Treehouse TREE — UUPS upgrade adding Blacklistable",
    "url": "https://pacta.wtf/briefs/treehouse-op-0x2f11/",
-   "date_published": "2026-11-20T16:03:35Z",
-   "content_text": "Upgrades the TREE governance token (not tETH) and installs a 5-of-7 Safe as blacklister: a zero-delay transfer-freeze role after execution. Read at finalized Ethereum block #26,457,377."
+   "date_published": "2026-11-22T01:52:23Z",
+   "content_text": "Upgrades the TREE governance token (not tETH) and installs a 5-of-7 Safe as blacklister: a zero-delay transfer-freeze role after execution. Read at finalized Ethereum block #26,467,485."
   },
   {
    "id": "https://pacta.wtf/briefs/lombard-ops-0xceee-0x2f2a-0x6404/#radar",
    "title": "Lombard timelock: executed · Lombard — AssetRouter, BTC.b and LBTC upgrades adding a fixed deposit fee",
    "url": "https://pacta.wtf/briefs/lombard-ops-0xceee-0x2f2a-0x6404/",
-   "date_published": "2026-11-20T16:03:35Z",
-   "content_text": "Three ProxyAdmin.upgradeAndCall ops (no init call) upgrade AssetRouter, BTC.b (NativeLBTC) and LBTC (StakedLBTC): a per-token deposit fee is split off every proof mint to treasury (OPERATOR_ROLE may set 100-1,000 sats, the timelock anything up to half the minimum), a router-wide minRequestAmount replaces depositMinAmount, and unpauseTransfers moves from DEFAULT_ADMIN_ROLE to MANAGER_ROLE. Read at finalized Ethereum block #26,457,377."
+   "date_published": "2026-11-22T01:52:23Z",
+   "content_text": "Three ProxyAdmin.upgradeAndCall ops (no init call) upgrade AssetRouter, BTC.b (NativeLBTC) and LBTC (StakedLBTC): a per-token deposit fee is split off every proof mint to treasury (OPERATOR_ROLE may set 100-1,000 sats, the timelock anything up to half the minimum), a router-wide minRequestAmount replaces depositMinAmount, and unpauseTransfers moves from DEFAULT_ADMIN_ROLE to MANAGER_ROLE. Read at finalized Ethereum block #26,467,485."
   },
   {
    "id": "https://pacta.wtf/briefs/beefy-base-op-0x3302/#radar",
    "title": "Beefy Finance (Base) timelock: executed · Beefy CLM USDC-VVV on Aerodrome — calm-check tolerance widened from 9 to 25 ticks",
    "url": "https://pacta.wtf/briefs/beefy-base-op-0x3302/",
-   "date_published": "2026-11-20T15:56:53Z",
-   "content_text": "setDeviation(25) on the cowAeroBaseUSDC-VVV strategy (owned by the timelock): maxTickDeviation 9 -> 25 ticks, the tolerance between the pool tick and its 120 s TWAP before the strategy acts, on a tick-spacing-50 Aerodrome pool. No code change. Read at finalized Base block #59,999,187."
+   "date_published": "2026-11-22T01:45:20Z",
+   "content_text": "setDeviation(25) on the cowAeroBaseUSDC-VVV strategy (owned by the timelock): maxTickDeviation 9 -> 25 ticks, the tolerance between the pool tick and its 120 s TWAP before the strategy acts, on a tick-spacing-50 Aerodrome pool. No code change. Read at finalized Base block #60,607,726."
   },
   {
    "id": "https://pacta.wtf/briefs/ethena-ops-0xb028-0xca05-0x108e-0x070a/#radar",
    "title": "Ethena timelock: executed · Ethena USDe — mint caps cut to 50M per block, USDm delisted, a custodian added",
    "url": "https://pacta.wtf/briefs/ethena-ops-0xb028-0xca05-0x108e-0x070a/",
-   "date_published": "2026-11-20T16:03:35Z",
-   "content_text": "Four ops: global and per-asset maxMintPerBlock 200M -> 50M USDe on 8 assets; removeSupportedAsset(USDm); addCustodianAddress for an EOA not yet a custodian; USDe OFT adapter setRateLimits to 25M per hour on LayerZero eids 30339 (was 10M) and 30383 (was 30M). Read at finalized Ethereum block #26,457,377."
+   "date_published": "2026-11-22T01:52:23Z",
+   "content_text": "Four ops: global and per-asset maxMintPerBlock 200M -> 50M USDe on 8 assets; removeSupportedAsset(USDm); addCustodianAddress for an EOA not yet a custodian; USDe OFT adapter setRateLimits to 25M per hour on LayerZero eids 30339 (was 10M) and 30383 (was 30M). Read at finalized Ethereum block #26,467,485."
   },
   {
    "id": "https://pacta.wtf/briefs/ethena-ops-0x0ca0-0x1fe5/#radar",
    "title": "Ethena timelock: executed · Ethena USDe — RLUSD & USAT collateral onboarding",
    "url": "https://pacta.wtf/briefs/ethena-ops-0x0ca0-0x1fe5/",
-   "date_published": "2026-11-20T16:03:35Z",
-   "content_text": "Two queued EthenaMinting.addSupportedAsset calls onboard RLUSD and USAT at 200M / 20M USDe-per-block caps (stablesDeltaLimit = 0 bps). Read at finalized Ethereum block #26,457,377."
+   "date_published": "2026-11-22T01:52:23Z",
+   "content_text": "Two queued EthenaMinting.addSupportedAsset calls onboard RLUSD and USAT at 200M / 20M USDe-per-block caps (stablesDeltaLimit = 0 bps). Read at finalized Ethereum block #26,467,485."
   },
   {
    "id": "https://pacta.wtf/briefs/etherfi-liquid-op-0xf0fb/#radar",
    "title": "ether.fi Liquid timelock: executed · ether.fi Liquid — strategist Merkle roots rotated on liquidUSD, liquidETH and liquidBTC",
    "url": "https://pacta.wtf/briefs/etherfi-liquid-op-0xf0fb/",
-   "date_published": "2026-11-20T16:03:35Z",
-   "content_text": "One 5-call batch of setManageRoot on the Veda ManagerWithMerkleVerification contracts of three Liquid vaults: four live strategist roots replaced (a Safe on all three vaults, an EOA on liquidETH) and the liquidUSD manager's own root set to zero. The new roots' leaves are not onchain. Read at finalized Ethereum block #26,457,377."
+   "date_published": "2026-11-22T01:52:23Z",
+   "content_text": "One 5-call batch of setManageRoot on the Veda ManagerWithMerkleVerification contracts of three Liquid vaults: four live strategist roots replaced (a Safe on all three vaults, an EOA on liquidETH) and the liquidUSD manager's own root set to zero. The new roots' leaves are not onchain. Read at finalized Ethereum block #26,467,485."
   },
   {
    "id": "https://pacta.wtf/briefs/cap-op-0x3397/#radar",
    "title": "Cap timelock: executed · Cap — EigenLayer service-manager upgrade: slashes paid out only after EigenLayer's resolution delay",
    "url": "https://pacta.wtf/briefs/cap-op-0x3397/",
-   "date_published": "2026-11-20T16:03:35Z",
-   "content_text": "upgradeToAndCall (no initializer) on Cap's EigenServiceManager (UUPS): a slash now queues the payout, valued at slash time, and anyone completes it once EigenLayer's slash resolution delay has passed (completeSlash); rewards become USDC-only and USDC can no longer be registered as collateral. Storage is appended only (pendingSlashes). Read at finalized Ethereum block #26,457,377."
+   "date_published": "2026-11-22T01:52:23Z",
+   "content_text": "upgradeToAndCall (no initializer) on Cap's EigenServiceManager (UUPS): a slash now queues the payout, valued at slash time, and anyone completes it once EigenLayer's slash resolution delay has passed (completeSlash); rewards become USDC-only and USDC can no longer be registered as collateral. Storage is appended only (pendingSlashes). Read at finalized Ethereum block #26,467,485."
+  },
+  {
+   "id": "https://pacta.wtf/briefs/compound-v3-op-0x86b4/#radar",
+   "title": "Compound V3 timelock: executed · Compound V3 — all 25.94 WETH of reserves on Linea's cWETHv3 withdrawn and bridged to the Ethereum Timelock",
+   "url": "https://pacta.wtf/briefs/compound-v3-op-0x86b4/",
+   "date_published": "2026-11-22T01:52:23Z",
+   "content_text": "Proposal 625: the Ethereum Timelock sends one Linea message (L1 MessageService.sendMessage). On Linea the bridge receiver queues three calls behind the 1-day Linea Timelock: withdrawReserves of 25.942 WETH from Compound WETH (cWETHv3), WETH.withdraw, and L2 MessageService.sendMessage of 25.952 ETH (0.01 ETH fee) back to the Ethereum Timelock. Read at finalized Ethereum block #26,467,485."
   },
   {
    "id": "https://pacta.wtf/briefs/lombard-op-0xd07f/#radar",
    "title": "Lombard timelock: executed · Lombard — LBTC and BTC.b deposit fees set to 2,000 sats; minimum request doubled",
    "url": "https://pacta.wtf/briefs/lombard-op-0xd07f/",
-   "date_published": "2026-11-20T16:03:35Z",
-   "content_text": "One 5-call batch on the upgraded AssetRouter: minRequestAmount 2,000 -> 4,000 sats, a 2,000-sat deposit fee on every LBTC and BTC.b proof mint (half the new minimum, above the operator range), and LBTC's redeem charge moved from redeemFee (10,000 -> 0 sats) to toNativeCommission on redeems to Bitcoin (0 -> 10,000 sats). Read at finalized Ethereum block #26,457,377."
+   "date_published": "2026-11-22T01:52:23Z",
+   "content_text": "One 5-call batch on the upgraded AssetRouter: minRequestAmount 2,000 -> 4,000 sats, a 2,000-sat deposit fee on every LBTC and BTC.b proof mint (half the new minimum, above the operator range), and LBTC's redeem charge moved from redeemFee (10,000 -> 0 sats) to toNativeCommission on redeems to Bitcoin (0 -> 10,000 sats). Read at finalized Ethereum block #26,467,485."
   },
   {
    "id": "https://pacta.wtf/briefs/lista-lending-op-0x21df/#radar",
    "title": "Lista Lending timelock: executed · Lista Lending — four liquidator upgrades add an emergency pause; PAUSER to a 1-of-15 Safe and the EmergencySwitchHub",
    "url": "https://pacta.wtf/briefs/lista-lending-op-0x21df/",
-   "date_published": "2026-11-20T16:03:35Z",
-   "content_text": "One 16-call batch: upgradeToAndCall (no initializer) moves Lista's Liquidator, BrokerLiquidator, V3Liquidator and PublicLiquidator (UUPS) to implementations that add OpenZeppelin Pausable (storage layout unchanged), then grants PAUSER to a 1-of-15 Safe and the EmergencySwitchHub, and MANAGER to the hub. One signer can pause liquidations; unpause needs MANAGER. Read at finalized Ethereum block #26,457,377."
+   "date_published": "2026-11-22T01:52:23Z",
+   "content_text": "One 16-call batch: upgradeToAndCall (no initializer) moves Lista's Liquidator, BrokerLiquidator, V3Liquidator and PublicLiquidator (UUPS) to implementations that add OpenZeppelin Pausable (storage layout unchanged), then grants PAUSER to a 1-of-15 Safe and the EmergencySwitchHub, and MANAGER to the hub. One signer can pause liquidations; unpause needs MANAGER. Read at finalized Ethereum block #26,467,485."
   }
  ]
 }

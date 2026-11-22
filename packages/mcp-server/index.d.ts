@@ -135,9 +135,11 @@ export interface PreflightCheck {
   pinnedBlock: number;
   pinnedBlockHash?: string;
   blockTimestamp?: number;
-  verdict: "IMMUTABLE_NO_ADMIN" | "TIMELOCK_PROTECTED" | "ZERO_DELAY_TIMELOCK_RISK" | "MULTISIG_NO_TIMELOCK" | "INSTANT_EOA_ADMIN_RISK" | "UNCLASSIFIED_CONTRACT_CONTROLLER" | "UNDEPLOYED_OR_EOA";
+  verdict: "NO_CONTROLLER_FOUND" | "IMMUTABLE_NO_ADMIN" | "TIMELOCK_PROTECTED" | "ZERO_DELAY_TIMELOCK_RISK" | "MULTISIG_NO_TIMELOCK" | "INSTANT_EOA_ADMIN_RISK" | "UNCLASSIFIED_CONTRACT_CONTROLLER" | "UNDEPLOYED_OR_EOA";
   /** 0..100; null when there is no contract. */
   riskScore: number | null;
+  /** Every proxy slot, getter, AccessControl read, controller probe and bytecode selector scan run at the pinned block. */
+  checksRun?: string[];
   isContract: boolean;
   isProxy: boolean;
   proxyType?: "eip1967" | "eip1967_beacon" | "eip1822" | null;

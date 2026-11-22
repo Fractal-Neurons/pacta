@@ -275,14 +275,16 @@ export const FREE_TOOLS = Object.freeze([
 ].map(readOnlyTool));
 
 const BLOCK_RE = /^(latest|0x[0-9a-fA-F]{1,14}|0|[1-9][0-9]{0,15})$/;
-const FREE_LAUNCH_HINT = "Free during the launch (the live gateway answers $0, no payment); x402 price applies only if metering is switched on.";
+// The four scan tools are free ($0.00) today; preflight and wallet exposure carry the free daily quota, then the $0.01 x402 overflow.
+const FREE_ROUTE_HINT = "Free ($0.00) today: rate-limited, no wallet or payment required.";
+const METERED_HINT = "50 free calls per caller per UTC day, then $0.01 Base USDC per call via x402.";
 
 export const PAID_TOOLS = Object.freeze([
   {
     name: "pacta_check_preflight",
     description:
-      "Gateway tool (requires PACTA_X402_URL; x402 $0.01 Base USDC when metered). One-call pre-execution safety check of a contract before an agent interacts with it: verdict (IMMUTABLE_NO_ADMIN / TIMELOCK_PROTECTED / ZERO_DELAY_TIMELOCK_RISK / MULTISIG_NO_TIMELOCK / INSTANT_EOA_ADMIN_RISK / UNCLASSIFIED_CONTRACT_CONTROLLER / UNDEPLOYED_OR_EOA), 0-100 risk score, proxy + implementation, controller kind, zero-delay upgradeability, pause / blacklist / upgrade capabilities, pinned block. " +
-      FREE_LAUNCH_HINT,
+      "Gateway tool (requires PACTA_X402_URL). One-call pre-execution safety check of a contract before an agent interacts with it: verdict (NO_CONTROLLER_FOUND / TIMELOCK_PROTECTED / ZERO_DELAY_TIMELOCK_RISK / MULTISIG_NO_TIMELOCK / INSTANT_EOA_ADMIN_RISK / UNCLASSIFIED_CONTRACT_CONTROLLER / UNDEPLOYED_OR_EOA), 0-100 risk score (null when there is no contract or no controller was found), the checks run (checksRun), proxy + implementation, controller kind, zero-delay upgradeability, pause / blacklist / upgrade capabilities, pinned block. " +
+      METERED_HINT,
     inputSchema: gatewaySchema(
       {
         chain: CHAIN_PROP,
@@ -296,8 +298,8 @@ export const PAID_TOOLS = Object.freeze([
   {
     name: "pacta_scan_wallet_exposure",
     description:
-      "Gateway tool (requires PACTA_X402_URL; x402 $0.01 Base USDC when metered). Read-only Multicall3 wallet & Gnosis Safe DeFi control-plane exposure scan across Ethereum and Base: Safe custody detection, ERC-20 / ERC-4626 / MetaMorpho balanceOf + symbol/decimals verification across 313 indexed protocols, 0-100 risk score, shortest exit window, position roster, and #1 adverse gap preview. " +
-      FREE_LAUNCH_HINT,
+      "Gateway tool (requires PACTA_X402_URL). Read-only Multicall3 wallet & Gnosis Safe DeFi control-plane exposure scan across Ethereum and Base: Safe custody detection, ERC-20 / ERC-4626 / MetaMorpho balanceOf + symbol/decimals verification across 313 indexed protocols, 0-100 risk score, shortest exit window, position roster, and #1 adverse gap preview. " +
+      METERED_HINT,
     inputSchema: gatewaySchema(
       {
         address: { type: "string" },
@@ -309,17 +311,17 @@ export const PAID_TOOLS = Object.freeze([
   },
   {
     name: "pacta_scan_control_plane",
-    description: "Gateway tool (requires PACTA_X402_URL; x402 $0.10 Base USDC when metered): pinned-block EVM control-plane scan. " + FREE_LAUNCH_HINT,
+    description: "Gateway tool (requires PACTA_X402_URL): pinned-block EVM control-plane scan. " + FREE_ROUTE_HINT,
     inputSchema: gatewaySchema({ chain: CHAIN_PROP, address: { type: "string" }, ...PAID_AUTH_PROPS }, ["chain", "address"]),
   },
   {
     name: "pacta_live_timelocks",
-    description: "Gateway tool (requires PACTA_X402_URL; x402 $0.10 Base USDC when metered): live tracked DeFi TimelockController operations. " + FREE_LAUNCH_HINT,
+    description: "Gateway tool (requires PACTA_X402_URL): live tracked DeFi TimelockController operations. " + FREE_ROUTE_HINT,
     inputSchema: gatewaySchema({ ...PAID_AUTH_PROPS }),
   },
   {
     name: "pacta_scan_timelock_op",
-    description: "Gateway tool (requires PACTA_X402_URL; x402 $0.25 Base USDC when metered): pinned-block OZ TimelockController operation state. " + FREE_LAUNCH_HINT,
+    description: "Gateway tool (requires PACTA_X402_URL): pinned-block OZ TimelockController operation state. " + FREE_ROUTE_HINT,
     inputSchema: gatewaySchema(
       { chain: CHAIN_PROP, timelock: { type: "string" }, opId: { type: "string" }, ...PAID_AUTH_PROPS },
       ["timelock", "opId"]
@@ -328,8 +330,8 @@ export const PAID_TOOLS = Object.freeze([
   {
     name: "pacta_scan_proposal_diff",
     description:
-      "Gateway tool (requires PACTA_X402_URL; x402 $0.15 Base USDC when metered): re-run a tracked governance proposal's pinned control-plane reads live and return pinned-vs-live diffs. The proposal must be listed in https://pacta.wtf/api/v1/proposals.json as <forum>-<topicId>. " +
-      FREE_LAUNCH_HINT,
+      "Gateway tool (requires PACTA_X402_URL): re-run a tracked governance proposal's pinned control-plane reads live and return pinned-vs-live diffs. The proposal must be listed in https://pacta.wtf/api/v1/proposals.json as <forum>-<topicId>. " +
+      FREE_ROUTE_HINT,
     inputSchema: gatewaySchema(
       {
         forum: { type: "string", enum: [...PROPOSAL_FORUMS] },

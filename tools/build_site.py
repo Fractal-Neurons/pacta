@@ -86,6 +86,8 @@ PREFLIGHT_PRESETS = [("USDC on Base", "base", "0x833589fCD6eDb6E08f4c7C32D4f71b5
                      ("USDC on Ethereum", "ethereum", "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"),
                      ("Stader ETHx", "ethereum", "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b")]
 BRIEFS = {
+    "umia-op-0x3d35": "Pre-execution brief: one 9-call Umia timelock batch on Base upgrades UmiaHub and UmiaMarketCore (UUPS), rotates three "
+                      "periphery contracts and sets an EOA as activeLiquidityKeeper (48-hour delay; ETA 2026-11-23 10:30:40 UTC).",
     "ethena-ops-0x0ca0-0x1fe5": "Pre-execution brief: two queued Ethena timelock operations onboard RLUSD and USAT to EthenaMinting "
                                 "at 200M / 20M USDe-per-block caps (1-day delay; ETAs 2026-11-14 10:20–10:22 UTC).",
     "etherfi-op-0x244e": "Pre-execution brief: ether.fi operation 0x244e…359f moves the EtherfiL1SyncPoolETH LayerZero V2 "
@@ -768,9 +770,11 @@ def scorecards(idx, pinned=None, sp=None):
         corr = CORR.get(v["slug"]) or {}
         g = SC.grade(cls, eas, bool(recon), v["slug"])
         fs = SC.factors(es, eas, g, facts, parity_text=corr.get("parityText"))
+        # a correction's factor overrides, plus wording-35 r4 label overrides for protocols without a correction status
+        fo_ = {**(((CORR.data().get("labelOverrides") or {}).get("factorOverrides") or {}).get(v["slug"]) or {}), **(corr.get("factorOverrides") or {})}
         for f in fs:                                       # a correction's scoped factor wording replaces the derived sentence
-            if f["key"] in (corr.get("factorOverrides") or {}):
-                o_ = corr["factorOverrides"][f["key"]]
+            if f["key"] in fo_:
+                o_ = fo_[f["key"]]
                 # a string replaces the wording; a dict may also scope the state and the cited evidence (v7 F4 infiniFi)
                 if isinstance(o_, dict):
                     f.update({k_: o_[k_] for k_ in ("state", "value", "evidence") if k_ in o_})
@@ -779,7 +783,7 @@ def scorecards(idx, pinned=None, sp=None):
             # a human evidence caption (the record's surface, chain and pinned block); the machine record id stays in evidenceRecordId
             rid_ = (f.get("evidence") or "").split(": ", 1)[0]
             ev_r = next((e for e in es if e["id"] == rid_), None)
-            ov_ = (corr.get("factorOverrides") or {}).get(f["key"])
+            ov_ = fo_.get(f["key"])
             if isinstance(ov_, dict) and ov_.get("evidenceCaption"):
                 f["evidenceRecordId"], f["evidenceCaption"] = rid_, ov_["evidenceCaption"]
             elif ev_r is not None:
@@ -932,6 +936,9 @@ def record_badge(e):
     """A record's status badge: the neutral "Unresolved" (or the correction's sub-pill) for a flagged record of a protocol
     tools/scorecard_corrections.json marks unresolved, never "Delta"; otherwise its classification badge."""
     c = CORR.get(protocol_slug(e["protocol"])) or {}
+    rd_ = CORR.record_display(e["id"])
+    if rd_.get("badge") == "observed":
+        return f'<span class="badge observed">{E(rd_.get("badgeLabel") or "Observed / Uncompared")}</span>'
     if c.get("status") == "unresolved" and e.get("classification") == "parameter_delta":
         return f'<span class="badge unresolved">{E(c.get("subPill") or "Unresolved")}</span>'
     if c.get("status") == "recent_change" and e.get("classification") == "parameter_delta":
@@ -1031,6 +1038,8 @@ def what_differs_html(entries, compact=False, seal_cta=False):
     # Changed recently) record never reads as "matched"; with none left, the subheading is omitted
     ok_cls = {e["id"]: e.get("classification") in ("aligned_baseline", "protective_delta") for e in entries}
     mt = "".join(f'<li data-wd-matched>{E(m["parameter"])}: {E(m["value"])}</li>' for m in wd["matched"] if ok_cls.get(m.get("recordId")))
+    nc = "".join(f'<li data-wd-uncompared>{E(m["parameter"])}: {E(m["value"])}</li>' for m in wd.get("uncompared") or [])
+    nc_html = f'<p class="wd-l">Observed / not compared</p><ul class="wd-matched wd-uncompared">{nc}</ul>' if nc else ""
     tag = "div" if compact else "section"
     protective = all(c.get("classification") == "protective_delta" for c in wd["changed"])
     unres = corr.get("status") == "unresolved"
@@ -1047,10 +1056,10 @@ def what_differs_html(entries, compact=False, seal_cta=False):
         cls = " unresolved" if unres or docs_up else " recent_change" if recent else (" protective" if protective else "")
         return (f'<{tag} class="{"memo-sec " if not compact else ""}whatdiffers{cls}" data-what-differs>'
                 f'<h2 class="wd-h">{"Verification scope" if unres else "Docs updated" if docs_up else "Changed recently" if recent else "What differs"}</h2>{lead}{scope}'
-                + (f'<p class="wd-l">Matched</p><ul class="wd-matched">{mt}</ul>' if mt else "") + wd_cta + f'</{tag}>\n')
+                + (f'<p class="wd-l">Matched</p><ul class="wd-matched">{mt}</ul>' if mt else "") + nc_html + wd_cta + f'</{tag}>\n')
     return (f'<{tag} class="{"memo-sec " if not compact else ""}whatdiffers{" protective" if protective else ""}" data-what-differs><h2 class="wd-h">What differs</h2>'
             f'<p class="wd-l">Changed / discrepant</p><ul class="wd-changed">{"".join(items)}</ul>'
-            + (f'<p class="wd-l">Matched</p><ul class="wd-matched">{mt}</ul>' if mt else "") + wd_cta + f'</{tag}>\n')
+            + (f'<p class="wd-l">Matched</p><ul class="wd-matched">{mt}</ul>' if mt else "") + nc_html + wd_cta + f'</{tag}>\n')
 
 
 def editorial_box():
@@ -1242,7 +1251,7 @@ def onboarding_page(b, idx):
     body = f"""<body>
 {topbar("../../")}
 <main id="main" class="memo-wrap">
-<nav class="crumbs breadcrumb" aria-label="Breadcrumb"><a href="../../">Pacta</a><span aria-hidden="true">/</span><a href="../../#onboarding">Onboarding briefs</a><span aria-hidden="true">/</span><span>{E(b["slug"])}</span></nav>
+<nav class="crumbs breadcrumb" aria-label="Breadcrumb"><a href="../../">Pacta</a><span aria-hidden="true">/</span><a href="../../protocols/#onboarding">Onboarding briefs</a><span aria-hidden="true">/</span><span>{E(b["slug"])}</span></nav>
 <article class="memo">
 {content}</article>
 <div class="memo-foot"><span>Read-only on-chain analysis. Not investment advice. Exploit-sensitive vulnerabilities are never published here; they go through Immunefi or Cantina bounty programmes.</span><a href="../../request/?tier=clearance">Request a suite dossier · {E(CLEARANCE_PRICE)}{ARR}</a></div>
@@ -1346,7 +1355,11 @@ def radar_section(radar, prefix="", full=False):
     r = radar["refreshed_at"]
     pins = radar_pins(radar)
     rows = []
-    for it in radar["items"]:
+    # the homepage lists the active queue (window open / waiting) within its page budget; executed items stay on /radar/
+    shown = radar["items"] if full else [it for it in radar["items"] if item_state(it) != "executed"]
+    n_exec_items = len(radar["items"]) - len(shown)
+    n_exec_ops = sum(len(it["operations"]) for it in radar["items"] if item_state(it) == "executed")
+    for it in shown:
         ch, pin = radar_chain(it, radar), radar_pin(it, radar)
         n = len(it["operations"])
         st = item_state(it)
@@ -1372,7 +1385,8 @@ def radar_section(radar, prefix="", full=False):
                + ("" if full else f' · {secs(it["min_delay_seconds"])} delay') + '</span></td>'
                if it.get("eta") else
                f'<td data-label="Execution window"><span class="sub">Executed: isOperationDone = true at {where}block #{pin["block_number"]:,}</span></td>') +
-            f'<td class="r nowrap" data-label="Brief"><a href="{prefix}{E(it["brief"])}">Read brief{ARR}</a></td></tr>')
+            (f'<td class="r nowrap" data-label="Brief"><a href="{prefix}{E(it["brief"])}">Read brief{ARR}</a></td></tr>' if it.get("brief") else
+             f'<td class="r nowrap" data-label="Brief"><a href="{prefix}protocols/{E(it["protocol_slug"])}/">Scorecard{ARR}</a></td></tr>'))
     seen, tls = set(), ""
     for it in radar["items"] if full else []:
         ch = radar_chain(it, radar)
@@ -1401,11 +1415,12 @@ def radar_section(radar, prefix="", full=False):
     return f"""<section class="sec" id="radar" data-live-timelocks="{E(LIVE_TIMELOCKS_URL)}"><div class="wrap">
 <div class="sec-head"><{"h1" if full else "h2"}>Queued timelock radar</{"h1" if full else "h2"}><p class="aside">Governance changes waiting in onchain timelocks, and when each one can execute.</p></div>
 {radar_context(prefix)}
-<div class="radar-head"><span class="radar-counts" data-radar-counts>{E(radar_counts_text(radar))}</span><span class="live-status" data-live-status><span class="spinner" aria-hidden="true" hidden></span><span data-live-status-text>Pinned snapshot</span></span><a href="{prefix}feed.xml" data-feed-subscribe>Subscribe (RSS / JSON Feed)</a></div>
+<div class="radar-head"><span class="radar-counts" data-radar-counts>{E(radar_counts_text(radar if full else {**radar, "items": shown}))}</span><span class="live-status" data-live-status><span class="spinner" aria-hidden="true" hidden></span><span data-live-status-text>Pinned snapshot</span></span><a href="{prefix}feed.xml" data-feed-subscribe>Subscribe (RSS / JSON Feed)</a></div>
 {livebar_html(radar)}
 {live_note}
 <div class="tbl-wrap"><table class="tbl radar"><caption class="sr-only">Queued timelock operations: protocol and state, operation, {"minimum delay, execution window" if full else "execution window with minimum delay"} and brief.</caption><thead><tr><th scope="col">Protocol</th><th scope="col">Queued operation</th>{'<th scope="col" class="hide-m">Delay</th>' if full else ""}<th scope="col">Execution window</th><th scope="col" class="r">Brief</th></tr></thead>
 <tbody data-live-pending>{"".join(rows)}</tbody></table></div>
+{"" if full or not n_exec_items else f'<p class="s" data-radar-executed>{n_exec_ops} executed operation{"s" if n_exec_ops != 1 else ""} ({n_exec_items} item{"s" if n_exec_items != 1 else ""}) are listed on <a href="{prefix}radar/">the full radar{ARR}</a>.</p>'}
 <div class="prov"><span class="badge final" data-prov-pill>{E(pill)}</span><span data-snapshot-pinned>Snapshot pinned at {E(r["block_time_utc"])}<span class="obs-age" data-age="{r["block_timestamp"]}"></span></span><span data-last-recheck>Last live re-check: not yet</span>{U.button("Refresh", variant="outline", size="sm", attrs="data-radar-refresh")}<span class="snap-fallback" data-snapshot-fallback>Showing pinned historical snapshot</span><span>Pinned snapshot · observed {E(r["block_time_utc"])} (Mainnet finalized block #{r["block_number"]:,}) on {r.get("rpcs_cross_checked", 2)} independent RPCs.{prov_more} Ready means the delay has elapsed and the operation is still unexecuted.</span><span class="live-line" data-live-line></span></div>
 {explain}</div></section>"""
 
@@ -1535,11 +1550,12 @@ def watch_pilot_box(prefix="", default_target="", heading=None, sub=None, id_att
 
 def launcher_links(home):
     """/request/: the three self-serve doors above the dossier builder (?tier=wallet-9 | webhook-49 | seal-99 forwards there; webhook-49
-    now lands on the free watchlist, since automated paid webhook delivery is not active)."""
+    now lands on the free watchlist, since automated paid webhook delivery is not active; re-verification is by arrangement, so its door
+    carries data-sku="clearance", never a retired SKU id)."""
     doors = (("wallet-report-9", "scan", "Instant scan", "$9", "multi-position"),
              ("radar-watch-free", "webhook", "Pilot watchlist", "$0", "RSS + free sign-up"),
-             ("reverify-seal-99", "seal", "Re-Verification", "By arrangement", "scope by email"))
-    return "".join(f'<a class="launch" href="{home + "request/?tier=clearance" if k == "reverify-seal-99" else f"{home}{route}/"}" data-sku="{k}" data-cta="launch_{route}"><span class="l-n">{name}{ARR}</span>'
+             ("clearance", "seal", "Re-Verification", "By arrangement", "scope by email"))
+    return "".join(f'<a class="launch" href="{home + "request/?tier=clearance" if k == "clearance" else f"{home}{route}/"}" data-sku="{k}" data-cta="launch_{route}"><span class="l-n">{name}{ARR}</span>'
                    f'<span class="l-p"><b>{price}</b><small>{sub}</small></span></a>' for k, route, name, price, sub in doors)
 
 
@@ -2325,7 +2341,7 @@ def farcaster_manifest_json():
         "heroImageUrl": f"{BASE_URL}/miniapp-preview.png",
         "tagline": "Docs drift. The chain doesn't.",
         "ogTitle": "Pacta Control-Plane Check",
-        "ogDescription": "Instant Base & Ethereum control-plane verdicts + 1-tap Base USDC deep scans.",
+        "ogDescription": "Free Base & Ethereum control-plane verdicts: proxy admins, Safes and timelock delays.",
         "ogImageUrl": f"{BASE_URL}/miniapp-preview.png",
     }
     doc = {
@@ -2359,14 +2375,12 @@ def miniapp_page(idx):
         f'<button type="button" class="ma-chip" data-ma-preset data-chain="{ch}" data-address="{addr}" data-slug="{slug}">{E(lbl)}</button>'
         for lbl, ch, addr, slug in MINIAPP_PRESETS
     )
-    mm_init = "https://metamask.app.link/dapp/pacta.wtf/miniapp/"
-    cb_init = "https://go.cb-wallet.com/dapp?cb_url=" + urllib.parse.quote("https://pacta.wtf/miniapp/", safe="")
     body = f"""<body>
 {topbar("../", "miniapp/")}
 <main id="main">
 <section class="sec ma-sec">
 <div class="wrap ma-wrap">
-<div class="ma-shell" id="ma-root" data-miniapp data-api="{E(API)}" data-verify-api="{E(ORDERS_VERIFY_API)}" data-lookup="../api/v1/lookup.json" data-badges="../badges/">
+<div class="ma-shell" id="ma-root" data-miniapp data-api="{E(API)}" data-lookup="../api/v1/lookup.json" data-badges="../badges/">
   <header class="ma-head">
     <div class="ma-topline">
       <span data-slot="badge" data-variant="info">Base · Farcaster Mini-App</span>
@@ -2414,55 +2428,20 @@ def miniapp_page(idx):
     </dl>
   </section>
 
-  <section class="ma-card ma-upgrade" id="ma-upgrade" aria-label="1-tap Base USDC upgrades">
+  <section class="ma-card ma-upgrade" id="ma-upgrade" aria-label="Deeper diligence">
     <div class="ma-up-head">
       <h2>Need deeper diligence?</h2>
-      <span class="mono ma-up-net">Base USDC · Chain 8453</span>
     </div>
     <div class="ma-up-btns">
-      <button type="button" class="ma-buy-btn ma-buy-primary" id="ma-buy-scan" data-ma-buy="instant-scan-19">
-        <span class="ma-buy-t">Unlock Full Scan ($19 Base USDC)</span>
-        <span class="ma-buy-s">2-RPC proxy, Safe signer &amp; role report + Base EAS ticket</span>
-      </button>
+      <a class="ma-buy-btn ma-buy-primary" id="ma-buy-scan" href="../scan/" data-sku="wallet-report-9">
+        <span class="ma-buy-t">Full Wallet &amp; Safe Exposure Report ($9 USDC)</span>
+        <span class="ma-buy-s">Free wallet and Safe scan on the scan page; the full report is a one-time $9 USDC payment on Base there</span>
+      </a>
       <a class="ma-buy-btn ma-buy-secondary" id="ma-buy-seal" href="../request/?tier=clearance">
         <span class="ma-buy-t">Priority re-verification &amp; Base EAS re-attestation</span>
         <span class="ma-buy-s">By arrangement via the request form or pacta@dri.network; the free doc-update queue stays $0</span>
       </a>
     </div>
-    <div class="ma-contact-row" id="ma-contact-row">
-      <label for="ma-contact">Delivery @telegram, email or webhook <span class="opt">(optional)</span></label>
-      <input id="ma-contact" type="text" maxlength="200" spellcheck="false" placeholder="@handle or team@protocol.xyz">
-      <p class="form-message" id="ma-contact-err" data-slot="form-message" hidden></p>
-    </div>
-    <p class="ma-quote" id="ma-quote">Deterministic quote: exact USDC transfer on Base to Pacta Treasury <span class="addr-pill mono" title="{CHECKOUT_TREASURY}">0x4348…Ed14</span> · zero approvals.</p>
-    <p class="req-status" id="ma-pay-status" role="status" aria-live="polite"></p>
-
-    <div class="co-result" id="ma-receipt" tabindex="-1" hidden>
-      <div class="co-r-head"><span data-slot="badge" data-variant="success">Verified on Base</span><b id="ma-r-sku">Instant Scan · 19.00 USDC</b></div>
-      <dl class="co-r-dl">
-        <div><dt>Order</dt><dd class="mono" id="ma-r-order">—</dd></div>
-        <div><dt>Settlement</dt><dd id="ma-r-tx">—</dd></div>
-      </dl>
-      <pre class="pv-pre" id="ma-r-json"></pre>
-    </div>
-
-    <details class="co-manual ma-manual" id="ma-manual">
-      <summary>No injected wallet or paid from Safe/CLI? Open in Base Wallet or verify tx hash</summary>
-      <div class="co-manual-b">
-        <div class="co-dl-btns">
-          <a class="co-dl-btn" href="{E(cb_init)}" rel="noopener" data-ma-coinbase data-cta="wallet_coinbase"><span>Open in Coinbase Wallet</span>{EXT}</a>
-          <a class="co-dl-btn" href="{E(mm_init)}" rel="noopener" data-ma-metamask data-cta="wallet_metamask"><span>Open in MetaMask</span>{EXT}</a>
-        </div>
-        <div class="ma-tx-row">
-          <label class="sr-only" for="ma-tx">Base USDC transaction hash</label>
-          <input id="ma-tx" type="text" class="mono" maxlength="68" spellcheck="false" placeholder="0x… 64-hex Base payment tx hash">
-          <select id="ma-manual-sku" aria-label="Order tier">
-            <option value="instant-scan-19">$19 Scan</option>
-          </select>
-          <button data-slot="button" data-variant="outline" data-size="sm" type="button" id="ma-verify-btn">Verify tx</button>
-        </div>
-      </div>
-    </details>
   </section>
 </div>
 </div>
@@ -2473,7 +2452,7 @@ def miniapp_page(idx):
 """
     return head(
         "Pacta Control-Plane Check · Base & Farcaster Mini-App",
-        "Instant Base and Ethereum DeFi control-plane verdicts: check proxy upgradeability, Safe thresholds, and timelock delays, with 1-tap Base USDC deep-scans.",
+        "Instant Base and Ethereum DeFi control-plane verdicts: check proxy upgradeability, Safe thresholds, and timelock delays, free.",
         f"{BASE_URL}/miniapp/",
         prefix="../",
         og_title="Pacta Control-Plane Check",
@@ -2656,7 +2635,9 @@ def controller_dd(e):
     """Who controls an RPC-pinned record's target, as observed (kind, address, Safe quorum, owner of a controller contract)."""
     a, k, q, up = e.get("controller_address"), e.get("controller_kind"), e.get("safe_quorum"), e.get("upstream_controller")
     if not a:
-        return "No single-key owner or admin getter (immutable or role-scoped modules)"
+        # wording-35 r4: the record's own gate description when one is published (scorecard_corrections.json labelOverrides.controllerText)
+        txt = ((CORR.data().get("labelOverrides") or {}).get("controllerText") or {}).get(e.get("id"))
+        return E(txt) if txt else "No single-key owner or admin getter (immutable or role-scoped modules)"
     lbl = f"{q} Safe" if k == "multisig_safe" and q else CONTROLLER_KIND.get(k, "Contract")
     out = f"{E(lbl)} {hexref(a)}"
     if up:
@@ -2671,7 +2652,7 @@ def controller_dd(e):
 # (closed enums, sanitised text, .value only). Aligned records never get a delta-remediation pitch.
 SLUG_RE = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
 # radar briefs -> the protocol page of the issuer they concern (the request builder checks that protocol)
-BRIEF_PROTOCOL = {"ethena-ops-0x0ca0-0x1fe5": "ethena-usde-susde", "etherfi-op-0x244e": "ether-fi-core-eeth-weeth",
+BRIEF_PROTOCOL = {"umia-op-0x3d35": "umia", "ethena-ops-0x0ca0-0x1fe5": "ethena-usde-susde", "etherfi-op-0x244e": "ether-fi-core-eeth-weeth",
                   "treehouse-op-0x2f11": "treehouse-tree-teth", "lombard-ops-0xceee-0x2f2a-0x6404": "lombard-lbtc",
                   "beefy-base-op-0x3302": "beefy-finance-base", "ethena-ops-0xb028-0xca05-0x108e-0x070a": "ethena-usde-susde",
                   "yearn-v3-op-0x2a14": "yearn-v3", "etherfi-liquid-op-0xf0fb": "ether-fi-liquid-veda-boringvault",
@@ -2910,8 +2891,9 @@ def wave2_credits(slug, lb=None, claims=None):
 
 def research_credit_html(slug, credit, wave2=(), surfaces=None):
     """Provenance section crediting the researchers (EAS-attested pages only; the records stay Pacta's own pinned re-reads): the
-    Wave 1 catch (if any) and every Wave 2 catch credited to this protocol."""
-    if not credit and not wave2:
+    Wave 1 catch (if any), every Wave 2 catch credited to this protocol, and a Wave 4 Documents Changed report (corrections JSON)."""
+    w4 = (CORR.get(slug) or {}).get("wave4Credit")
+    if not credit and not wave2 and not w4:
         return ""
     tail = (f'Pacta then re-read every value below on two independent RPCs at its own Sprint pin and compared it with the '
             f'documentation; the classifications and the Base EAS attestation are Pacta\'s. ')
@@ -2933,7 +2915,14 @@ def research_credit_html(slug, credit, wave2=(), surfaces=None):
                      # the link names the record's human surface; its machine id stays in the anchor (never visible prose; v6 A8)
                      f'<a href="#{E(c["record"])}" data-record-id="{E(c["record"])}">{E((surfaces or {}).get(c["record"]) or "the pinned record")}</a>. '
                      f'{tail}See <a href="../../leaderboard/">the leaderboard</a>.</p>')
-    attr = f' data-research-credit="{E(credit["hunter"])}"' if credit else ""
+    if w4:
+        h, pr, tx = w4["hunter"], w4["pr"], w4["payoutTxHash"]
+        recs = " and ".join(f'<a href="#{E(r)}" data-record-id="{E(r)}">{E((surfaces or {}).get(r) or "the pinned record")}</a>' for r in w4["records"])
+        paras.append(f'<p data-research-credit="{E(h)}" data-research-wave="4">Wave 4 Documents Changed: <a href="https://github.com/{E(h)}" target="_blank" '
+                     f'rel="noopener">@{E(h)}</a> {E(w4["text"])} (<a href="{E(REPO)}/pull/{int(pr)}" target="_blank" rel="noopener">PR #{int(pr)}</a>, fixture '
+                     f'<code>{E(w4["fixture"])}</code>, paid ${E(w4["usdc"])} USDC: <a href="https://basescan.org/tx/{E(tx)}" target="_blank" rel="noopener" '
+                     f'data-basescan-tx>tx {E(short(tx, 6, 4))}{EXT}</a>). Records: {recs}.</p>')
+    attr = f' data-research-credit="{E(credit["hunter"])}"' if credit else (f' data-research-credit="{E(w4["hunter"])}"' if w4 else "")
     return (f'<section class="memo-sec" id="provenance"{attr}><h2>Provenance · research credit</h2>' + "".join(paras) + '</section>\n')
 
 
@@ -2977,7 +2966,8 @@ def protocol_page(name, entries, idx, radar, digest=None, slug=None):
         lis = "".join(f'<li><code class="mono">{E(o["op_id"])}</code> · {"ETA " + E(utc(o["eta"], True)) if o.get("eta") else "executed onchain (isOperationDone = true)"} · {state_badge(op_state(o), [o])}</li>'
                       for o in it["operations"])
         ops += (f'<article class="memo-sec"><h2>Queued timelock operations</h2><p>{E(it["title"])}. {E(it["summary"])}</p>'
-                f'<p>Timelock {hexref(it["timelock"])} · {secs(it["min_delay_seconds"])} minimum delay · <a href="../../{E(it["brief"])}">Pre-execution brief{ARR}</a></p>'
+                f'<p>Timelock {hexref(it["timelock"])} · {secs(it["min_delay_seconds"])} minimum delay'
+                + (f' · <a href="../../{E(it["brief"])}">Pre-execution brief{ARR}</a>' if it.get("brief") else "") + '</p>'
                 f'<ul>{lis}</ul></article>\n')
     provenance = ""
     if pinned:
@@ -3620,7 +3610,7 @@ DECODED = DB.load()   # v4.6: slug -> decoded brief (tools/briefs_decoded.json, 
 
 
 def brief_page(slug, desc, idx, radar):
-    item = next((it for it in radar["items"] if it["brief"].rstrip("/").endswith(slug)), None)
+    item = next((it for it in radar["items"] if (it.get("brief") or "").rstrip("/").endswith(slug)), None)
     if slug in DECODED:   # v4.6: every address, amount, block and transaction comes from the decoder's JSON
         DB.check_against_radar(DECODED[slug], item, BRIEF_PROTOCOL[slug])
         title, content = DB.render(DECODED[slug], item, sys.modules[__name__])
@@ -4399,7 +4389,8 @@ def wave4_issue_md_html(body):
 
 # Batch-1 slots with a merged catalogue entry on main (bounties/wave-4/catalogue/<slot_id>.json) and the PR that merged it
 WAVE4_WON_PR = {"base-morpho-blue-singleton": 160, "base-uniswap-v2-factory": 164, "ethereum-compound-v2-unitroller": 165,
-                "ethereum-mantle-l1-bridge": 169, "base-uniswap-v3-factory": 173, "ethereum-arbitrum-delayed-bridge": 174}
+                "ethereum-mantle-l1-bridge": 169, "base-uniswap-v3-factory": 173, "ethereum-arbitrum-delayed-bridge": 174,
+                "ethereum-op-mainnet-portal": 175, "ethereum-ink-optimism-portal": 176}
 
 
 def wave4_won():
@@ -4944,7 +4935,7 @@ def llms(idx, radar):
         "- " + B2A.X402_DOC,
         "- " + B2A.protocols_line(idx, load_pinned()),
         "- " + protocol_status_line(idx),
-        f"- One call: `{CURL} \"{API}/v1/check/preflight?chain=ethereum&address=0x...\"` returns a verdict (IMMUTABLE_NO_ADMIN, TIMELOCK_PROTECTED, ZERO_DELAY_TIMELOCK_RISK, MULTISIG_NO_TIMELOCK, INSTANT_EOA_ADMIN_RISK, UNDEPLOYED_OR_EOA, UNCLASSIFIED_CONTRACT_CONTROLLER), a 0-100 risk score, proxy / admin / timelock breakdown and pause / blacklist / upgrade capabilities, pinned to a block hash.",
+        f"- One call: `{CURL} \"{API}/v1/check/preflight?chain=ethereum&address=0x...\"` returns a verdict (NO_CONTROLLER_FOUND, TIMELOCK_PROTECTED, ZERO_DELAY_TIMELOCK_RISK, MULTISIG_NO_TIMELOCK, INSTANT_EOA_ADMIN_RISK, UNDEPLOYED_OR_EOA, UNCLASSIFIED_CONTRACT_CONTROLLER), a 0-100 risk score (null when there is no contract or no controller was found), the checks run (checksRun), proxy / admin / timelock breakdown and pause / blacklist / upgrade capabilities, pinned to a block hash. NO_CONTROLLER_FOUND means no controller found by our checks; custom or unprobed control paths may still exist (RPC reads never call a contract immutable).",
         f"- [{B2A.LOOKUP_URL}?q=ethena]({B2A.LOOKUP_URL}?q=ethena): free protocol / token name lookup (MCP tool pacta_lookup_protocol). {B2A.LOOKUP_DOC}",
         f"- {B2A.REQUEST_DOC}",
         f"- [{BASE_URL}/bounties/]({BASE_URL}/bounties/): {B2A.BOUNTIES_DOC}",
@@ -4996,7 +4987,7 @@ def llms(idx, radar):
         f"- Settlement, Option B (direct express): USDC on Base (`{USDC['Base']}`) or Ethereum (`{USDC['Ethereum']}`) to the Pacta treasury (direct settlement EOA) `{a['treasury_admin']}` (an externally owned account; the same address on both chains).",
         f"- Request: {BASE_URL}/request/ (builds a scope brief; opens a pre-filled GitHub intake issue or Gmail compose, or copies the brief). Prefill: `?tier=community|clearance|api_sla&protocol=<slug>&forum=<https URL>&settlement=invoice|direct`.", "",
         "## x402 API (live for AI agents & programmatic callers)",
-        f"- Free daily quota + pay-per-call x402 overflow: {B2A.FREE_DAILY_QUOTA} free preflight and wallet-exposure checks per caller per UTC day (`GET /v1/check/preflight`, `GET /v1/check/wallet-exposure`, MCP `pacta_check_preflight`, `pacta_scan_wallet_exposure`), then $0.01 per call over x402 (never a dead-end 429). Dedicated POST JSON x402 agent endpoints on `{API}` (`{B2A.X402_URL}`): `POST /v1/x402/verdict` ($0.02), `POST /v1/x402/dossier` ($0.05), `POST /v1/x402/wallet-exposure` ($0.05), `POST /v1/x402/calldata-sim` ($0.25), `POST /v1/x402/deep-scan` ($9.00); metered live check routes (50 free calls/day per caller, then $0.01 USDC via x402 on Base): `GET /v1/check/preflight`, `GET /v1/check/wallet-exposure`; free live scan routes (no key, {RATE_LIMIT}): `GET /v1/scan/control-plane`, `GET /v1/scan/proposal-diff`, `GET /v1/scan/timelock-op`, `GET /v1/briefs/live-timelocks`; free `/health`, `/.well-known/x402` (Bazaar discovery), `/v1/sample/control-plane`, `/v1/sample/preflight`. Wire: x402Versions [1, 2] (v1 network `base` with `X-PAYMENT` / `X-PAYMENT-RESPONSE`, v2 network `{B2A.X402_NETWORK_V2}` with `PAYMENT-REQUIRED` / `PAYMENT-SIGNATURE` / `PAYMENT-RESPONSE`; USDC on Base, payTo `{B2A.PAY_TO}`, maxTimeoutSeconds {B2A.X402_MAX_TIMEOUT_S}).",
+        f"- Free daily quota + pay-per-call x402 overflow: {B2A.FREE_DAILY_QUOTA} free preflight and wallet-exposure checks per caller per UTC day (`GET /v1/check/preflight`, `GET /v1/check/wallet-exposure`, MCP `pacta_check_preflight`, `pacta_scan_wallet_exposure`), then $0.01 per call over x402 (never a dead-end 429). Dedicated POST JSON x402 agent endpoints on `{API}` (`{B2A.X402_URL}`): `POST /v1/x402/verdict` ($0.02), `POST /v1/x402/dossier` ($0.05), `POST /v1/x402/wallet-exposure` ($0.05), `POST /v1/x402/calldata-sim` ($0.25), `POST /v1/x402/deep-scan` ($9.00); metered live check routes (50 free calls/day per caller, then $0.01 USDC via x402 on Base): `GET /v1/check/preflight`, `GET /v1/check/wallet-exposure`; free live scan routes ($0.00 today: no key, no wallet, {RATE_LIMIT}): `GET /v1/scan/control-plane`, `GET /v1/scan/proposal-diff`, `GET /v1/scan/timelock-op`, `GET /v1/briefs/live-timelocks`; free `/health`, `/.well-known/x402` (Bazaar discovery), `/v1/sample/control-plane`, `/v1/sample/preflight`. Wire: x402Versions [1, 2] (v1 network `base` with `X-PAYMENT` / `X-PAYMENT-RESPONSE`, v2 network `{B2A.X402_NETWORK_V2}` with `PAYMENT-REQUIRED` / `PAYMENT-SIGNATURE` / `PAYMENT-RESPONSE`; USDC on Base, payTo `{B2A.PAY_TO}`, maxTimeoutSeconds {B2A.X402_MAX_TIMEOUT_S}).",
         f"- Remote MCP: {MCP_URL} (free, no install). Local stdio server (from a clone of the repo; npm publication pending): set `PACTA_X402_URL={B2A.X402_URL}` to enable the scan tools; in x402_paid mode pay with `xPaymentHeader` (v1) or `paymentSignatureHeader` (v2). The MCP client does not re-check receipts on-chain (onchainReceiptVerified: false); the gateway does.",
         f"- Gateway settlement guard: {B2A.X402_GATEWAY_GUARD_NOTE}", "",
         "## Contact",
@@ -5056,8 +5047,10 @@ def feed_items(idx, radar):
     for it in radar["items"]:
         r, ch = radar_pin(it, radar), radar_chain(it, radar)
         done = all(o.get("done") for o in it["operations"])
-        out.append((f"{BASE_URL}/{it['brief'].strip('/')}/#radar", f"{it['protocol']} timelock: {'executed' if done else 'pending'} · {it['title']}",
-                    f"{BASE_URL}/{it['brief'].strip('/')}/", iso(r["block_timestamp"]),
+        fid = f"{BASE_URL}/{it['brief'].strip('/')}/#radar" if it.get("brief") else f"{BASE_URL}/radar/#op-{it['operations'][0]['op_id'][:10]}"
+        furl = f"{BASE_URL}/{it['brief'].strip('/')}/" if it.get("brief") else f"{BASE_URL}/protocols/{it['protocol_slug']}/"
+        out.append((fid, f"{it['protocol']} timelock: {'executed' if done else 'pending'} · {it['title']}",
+                    furl, iso(r["block_timestamp"]),
                     f"{it['summary']} Read at finalized {CHAINS[ch][0]} block #{r['block_number']:,}."))
     return out
 
@@ -5619,7 +5612,8 @@ def methodology_page(idx):
                                   ("a", "Short red slice: weak or no protection."),
                                   ("n", "Hollow dashed slice: the published evidence does not decide it. Pacta never guesses."),
                                   ("u", "Hollow dashed slice: docs-vs-chain parity is not compared (Observed protocols).")))
-    verdicts = [("No standard upgrade or admin authority detected", "Neutral. No proxy admin, owner or role with upgrade power was found at this address."),
+    verdicts = [("No controller found by our checks", "Neutral, not graded. None of the checks run (listed as checksRun in the API response) found a proxy admin, owner, role or authority "
+                 "getter at this address; custom or unprobed control paths may still exist. The live check never calls a contract immutable, and returns no risk score or grade here."),
                 ("Changes wait behind a timelock", "Neutral. Privileged changes go through an enforced delay."),
                 ("A multisig can change it with no delay", "Warning. A Safe can change the contract without a waiting period."),
                 ("A single key can change it instantly", "Warning. One externally owned account controls it."),
@@ -5644,7 +5638,7 @@ def methodology_page(idx):
          'information, so the graphic never relies on colour alone; hover or focus a slice to read it.</p>'
          + tbl("Control-strength factors", ["Factor", "What it measures"], factors) + tbl("Control-strength states", ["State", "How it looks"], states)),
         ("live-checker", "The live contract check", f'<p>{live_checker_note(idx, s)}</p><p>The checker on the homepage and <code>/v1/check/preflight</code> read <b>one contract address</b> '
-         'at the latest block. Its verdict rates that single address, not the whole protocol (API callers also receive a 0–100 heuristic score; the webpage checker shows no score or grade): a protocol can be Delta '
+         'at the latest block. Its verdict rates that single address, not the whole protocol (API callers also receive a 0–100 heuristic score, null when no controller was found, and the list of checks run; the webpage checker shows no score or grade): a protocol can be Delta '
          'while one of its token contracts has no admin at all. Confidence says whether the address is an indexed, verified record or a bytecode '
          'heuristic.</p>' + tbl("Live check verdicts", ["Verdict", "Meaning"], vt)
          + '<p class="s">Amber is reserved for warnings everywhere on the site. Neutral and good results are never amber.</p>'),

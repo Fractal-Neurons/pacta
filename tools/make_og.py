@@ -6,8 +6,8 @@ is the official Pacta logo (docs/logo.svg) drawn by pacta_raster.draw_pacta_logo
 Social cards (X Website cards crop anything that is not 1.91:1 and lay a headline pill over the bottom-left ~96 px):
   docs/og-preview.png                              sitewide og:image / twitter:image
   docs/cards/x-card-scorecards-1200x628.png        /scorecards/
-  docs/cards/x-card-scan19-1200x628.png            /scan/ ($19 USDC instant deep-scan) and /request/
-  docs/cards/x-card-seal99-1200x628.png            /seal/ ($99 USDC 24h mainnet control-plane seal)
+  docs/cards/x-card-scan19-1200x628.png            /scan/ ($9 USDC wallet & Safe report) and /request/
+  docs/cards/x-card-seal99-1200x628.png            /seal/ (mainnet re-verification by arrangement)
 Every card keeps >= 96 px clear on the left and right and >= 120 px clear at the bottom: nothing (text, badge or border) is drawn
 there, and render() refuses to write a card that touches a safe zone.
 
@@ -110,14 +110,15 @@ def cards(fonts):
             fonts, "PROTOCOL SCORECARDS", ("Who can upgrade, pause or change", f"{n} DeFi protocols?"),
             "Docs vs. chain for every protocol: proxy admins, Safes, timelocks and roles, block-pinned and attested on Base.",
             "pacta.wtf/scorecards"),
+        # file names kept so the published og:image URLs stay valid; the copy is the $9 report and re-verification by arrangement
         "cards/x-card-scan19-1200x628.png": offer(
-            fonts, "INSTANT CONTRACT / SAFE DEEP-SCAN", ("$19 USDC · a live report", "in under 60 seconds"),
-            "Paste any Ethereum or Base address: proxy admin, Safe owners and threshold, timelock delay and roles, unlocked on the page.",
+            fonts, "WALLET & SAFE EXPOSURE REPORT", ("$9 USDC · full wallet & Safe report", "on Ethereum and Base"),
+            "Paste any wallet, Safe or contract address: free instant preflight check first, or $9 USDC full multi-position report.",
             "pacta.wtf/scan"),
         "cards/x-card-seal99-1200x628.png": offer(
-            fonts, "24H MAINNET CONTROL-PLANE SEAL", ("$99 USDC · intro for the first 5 teams", "regular $500 · save 80%"),
-            "Fixed a flagged gap? A maintainer and an independent verifier re-check it on mainnet within 24h, with a Base EAS attestation.",
-            "pacta.wtf/seal"),
+            fonts, "MAINNET CONTROL-PLANE RE-VERIFICATION", ("Independent mainnet re-check", "and Base EAS attestation"),
+            "Fixed a flagged gap or need a custom protocol dossier? Scoped and scheduled by arrangement at pacta@dri.network.",
+            "pacta.wtf/request"),
     }
 
 
