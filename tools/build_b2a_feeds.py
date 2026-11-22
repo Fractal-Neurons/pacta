@@ -5,7 +5,7 @@ Writes (called from tools/build_site.py; never hand-edited):
                                   proposals mapped to block-pinned control-plane observations
   docs/llms-full.txt              single-file reference corpus for LLM, coding and DeFi agents
   docs/.well-known/agent.json     A2A Agent Card (skills, feeds, Base EAS anchor, x402 payment descriptor)
-  docs/.well-known/mcp.json       MCP discovery manifest for @pacta/mcp-server (io.github.Fractal-Neurons/pacta)
+  docs/.well-known/mcp.json       MCP discovery manifest for io.github.Fractal-Neurons/pacta (remote; no npm package)
   docs/SKILL.md                   portable agent skill (YAML frontmatter)
 
 Determinism: no wall-clock input. Every timestamp is taken from the source feeds, every list is sorted by a stable key,
@@ -152,7 +152,6 @@ TREASURY_USE = ("Pacta treasury (an externally owned account, not a smart-contra
                 "$0.01 overflow, the $9 Full Wallet & Safe Exposure Report checkout (https://pacta.wtf/scan/#checkout), and Option B direct "
                 "on-chain settlement of engagements by arrangement (Option A is a formal commercial invoice).")
 MCP_NAME = "io.github.Fractal-Neurons/pacta"
-MCP_PACKAGE = "@pacta/mcp-server"
 MCP_VERSION = "0.1.5"
 CALLER_FIELDS_DOC = 'Free MCP tier: tools/call takes three OPTIONAL, non-personal attribution fields: caller_agent (a lowercase slug naming the calling agent, IDE or framework, e.g. claude-code, cursor, coinbase-agentkit; never a name, e-mail, IP, URL, address or secret), requester_role (autonomous_agent | defi_developer | risk_curator_analyst | security_researcher | protocol_team | institutional_allocator | individual_user) and caller_purpose (pre_trade_safety | collateral_due_diligence | yield_allocation | security_audit | governance_monitoring | integration_testing | general_research). Omitted, blank or invalid attribution fields never block a call (invalid values are silently dropped and never stored; unattributed MCP calls infer a known client slug from X-MCP-Client-Name / User-Agent or count as unspecified). Over REST they are optional query or body parameters. Location is never asked: only the Cloudflare edge country is counted; no IP is stored.'                                            # @pacta/mcp-server package.json version (SKILL.md is shipped in it)
 MCP_ENV = [("PACTA_INDEX_PATH", "Local snapshot of /api/v1/index.json (offline use)"),
@@ -312,8 +311,9 @@ SENTINEL = ("PactaSentinelTripwire.sol: an ownerless, immutable contract granted
             "deallocates min(allocation, liquid assets), and sweepRemaining(ruleId) drains the rest as liquidity returns. Zero custody. "
             "Predicates: " + ", ".join(PREDICATES) + ". Status: built and tested (Foundry, 107 tests incl. invariants and fork tests); "
             "not audited, not deployed.")
-MCP_STATUS = (f"publication_pending: @pacta/mcp-server is not yet published to npm or the MCP registry. Use the remote MCP server now "
-              f"(no install): {MCP_REMOTE_URL}. The stdio server runs from a clone of the repository: {STDIO_FROM_SOURCE}.")
+# no npm package is published or advertised: only the registry name, the remote endpoint and the clone command
+MCP_STATUS = (f"registry_remote: {MCP_NAME} is published in the official MCP Registry as a remote Streamable HTTP server (no install): "
+              f"{MCP_REMOTE_URL}. Local stdio server: git clone https://github.com/Fractal-Neurons/pacta.git, then {STDIO_FROM_SOURCE}.")
 
 
 def protocols_line(idx, pinned):
@@ -339,7 +339,7 @@ def llms_full(idx, radar, prop, onb, pinned=None):
          "1. Take the record's target, call signature and arguments, block number and block hash.",
          "2. Run the listed `cast call … --block N` (or eth_call with EIP-1898 {blockHash, requireCanonical: true}) on any archive node.",
          "3. Run `cast block N --field hash` and compare with the recorded block hash.", "",
-         "## MCP server", f"- Name: {MCP_NAME} · package {MCP_PACKAGE} v{MCP_VERSION} · transport stdio.", f"- Status: {MCP_STATUS}",
+         "## MCP server", f"- Name: {MCP_NAME} · remote Streamable HTTP {MCP_REMOTE_URL} (no install) · local stdio from a clone.", f"- Status: {MCP_STATUS}",
          f"- Remote MCP (primary, zero install, Streamable HTTP): {MCP_REMOTE_URL} · Claude Code: `claude mcp add --transport http pacta {MCP_REMOTE_URL}` · "
          f"MCP client config: {{\"mcpServers\": {{\"pacta\": {{\"url\": \"{MCP_REMOTE_URL}\"}}}}}} · remote tools ({REMOTE_TOOLS_DOC}): {', '.join(REMOTE_TOOLS)}.",
          f"- Local stdio server (from a clone; npm publication pending): `{STDIO_FROM_SOURCE}`. OpenAPI 3.1: {OPENAPI_URL}.",
@@ -493,7 +493,7 @@ def agent_card(prop, onb, idx):
 
 def mcp_manifest(idx, onb):
     return {
-        "name": MCP_NAME, "title": "Pacta by Fractal Neurons", "package": MCP_PACKAGE, "packageVersion": MCP_VERSION,
+        "name": MCP_NAME, "title": "Pacta by Fractal Neurons",
         "description": "Block-pinned DeFi control-plane commitments, Base EAS attestations and governance proposals for agents.",
         "version": max(idx["generated_at"], onb["generated_at"])[:10].replace("-", "."), "homepage": f"{BASE}/", "documentation": f"{BASE}/llms-full.txt",
         "status": MCP_STATUS,

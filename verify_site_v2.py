@@ -959,13 +959,35 @@ def ready_fixture_brief(idx):
 # MCP package version: 0.1.5 on Commit 1 (published), 0.1.6 on Commit 2 (the registry bump). The package's own files must agree with
 # packages/mcp-server/package.json; site documents may still name the published 0.1.5 until Commit 2 ships.
 MCP_VERSIONS_OK = {"0.1.5", "0.1.6"}
+# packages/mcp-server/SKILL.md vs docs/SKILL.md (tools/build_site.package_skill writes the package copy on every build). From package
+# 0.1.6: an undated bounties pointer, and the MCP status line names only io.github.Fractal-Neurons/pacta, the remote endpoint and the
+# clone command (MCP_STATUS_LINE), whatever the site copy still says. Below 0.1.6 (the frozen 0.1.5 package files): once the site copy
+# carries MCP_STATUS_LINE, the package copy keeps its old status line.
+PKG_SKILL_BOUNTIES = '- Bounties: active verification waves, open slots, and current submission rules are published at https://pacta.wtf/bounties/'
+MCP_STATUS_LINE = 'registry_remote: io.github.Fractal-Neurons/pacta is published in the official MCP Registry as a remote Streamable HTTP server (no install): https://api.pacta.wtf/mcp. Local stdio server: git clone https://github.com/Fractal-Neurons/pacta.git, then node packages/mcp-server/bin/pacta-mcp.mjs.'
+PKG_SKILL_STATUS_015 = 'publication_pending: @pacta/mcp-server is not yet published to npm or the MCP registry. Use the remote MCP server now (no install): https://api.pacta.wtf/mcp. The stdio server runs from a clone of the repository: node packages/mcp-server/bin/pacta-mcp.mjs.'
 
 
 def skill_copy_ok(site_skill, pkg_skill, pkg_json):
-    """docs/SKILL.md and packages/mcp-server/SKILL.md are identical except the frontmatter version line, which in the package copy
-    is the package's own version (package.json)."""
-    norm = lambda t: re.sub(r'^version: "[^"]*"$', 'version: ""', t, count=1, flags=re.M)
-    return norm(site_skill) == norm(pkg_skill) and f'version: "{json.loads(pkg_json)["version"]}"' in pkg_skill
+    """docs/SKILL.md and packages/mcp-server/SKILL.md are identical line for line except the frontmatter version line (the package's
+    own version, package.json) and the package-only lines above. Any other difference fails."""
+    ver = json.loads(pkg_json)["version"]
+    if f'version: "{ver}"' not in pkg_skill:
+        return False
+    v016 = tuple(int(x) for x in re.findall(r"\d+", ver)[:3]) >= (0, 1, 6)
+    a, b = site_skill.split("\n"), pkg_skill.split("\n")
+    if len(a) != len(b):
+        return False
+    vline = next((i for i, s in enumerate(a) if re.fullmatch(r'version: "[^"]*"', s)), None)
+    for i, (s, p) in enumerate(zip(a, b)):
+        if s == p or (i == vline and p == f'version: "{ver}"'):
+            continue
+        if v016 and ((s.startswith("- Bounties") and p == PKG_SKILL_BOUNTIES) or (s.startswith("publication_pending: ") and p == MCP_STATUS_LINE)):
+            continue
+        if not v016 and s == MCP_STATUS_LINE and p == PKG_SKILL_STATUS_015:
+            continue
+        return False
+    return not (v016 and re.search(r"^- Bounties Wave|^publication_pending:|" + re.escape("@pacta/") + "mcp-server", pkg_skill, re.M))
 
 
 def main(argv=None):
@@ -1493,7 +1515,7 @@ def main(argv=None):
           and card["x402"]["payTo"] == B2A.PAY_TO and card["x402"]["asset"] == B2A.USDC_BASE and card["x402"]["chainId"] == 8453
           and man["name"] == "io.github.Fractal-Neurons/pacta" and man["transport"]["type"] == "streamable-http" and man["transport"]["url"] == "https://api.pacta.wtf/mcp"
           and {t_["type"] for t_ in man.get("transports", [])} >= {"streamable-http", "stdio"} and "pacta_list_proposals" in {t["name"] for t in man["tools"]}
-          and man["status"].startswith("publication_pending") and not unresolved, f"unresolved {unresolved[:3]}")
+          and man["status"] == MCP_STATUS_LINE and not ({"package", "packageVersion"} & set(man)) and not unresolved, f"unresolved {unresolved[:3]}")
     skill = read("docs/SKILL.md")
     fm = re.match(r"---\n(.*?)\n---\n", skill, re.S)
     check("SKILL.md: YAML frontmatter (name pacta-protocol-commitments, one-line description), feed URLs, verification recipe",
@@ -1711,6 +1733,16 @@ def main(argv=None):
     no_remote = [k for k, t in primary.items() if (MCP_ not in t and (WORKERS_API_ + "/mcp") not in t) or "/v1/check/preflight" not in t]
     check("unshipped npm install removed: 0 'npx @pacta/mcp-server' strings on the site, feeds, README, server.json, glama.json, smithery.yaml; remote MCP + /v1/check/preflight on every primary surface",
           not dead and not no_remote and len(npx_scope) > 50, f"{len(npx_scope)} files scanned; dead npx in {dead}; missing remote/preflight in {no_remote}")
+    # no npm name on the site: nothing is published on npm, so no public file advertises one (.well-known included: os.walk sees dot dirs)
+    npm_scope = sorted(os.path.relpath(os.path.join(d_, f_), ROOT) for d_, _, fs_ in os.walk(DOCS) for f_ in fs_
+                       if f_.endswith((".json", ".txt", ".md", ".html", ".xml", ".js", ".webmanifest")))
+    npm_hits = [f for f in npm_scope if "@pacta/" + "mcp-server" in read(f)]
+    man_nn = [json.loads(read(f)) for f in ("docs/mcp.json", "docs/.well-known/mcp.json")]
+    check("no npm package name on the site: 0 '@pacta/mcp-server' in every public file under docs/ (json, .well-known, llms*.txt, SKILL.md, html); "
+          "mcp.json / .well-known/mcp.json carry no package / packageVersion and the registry_remote status",
+          not npm_hits and len(npm_scope) > 300 and "docs/.well-known/mcp.json" in npm_scope and "docs/SKILL.md" in npm_scope
+          and all(not ({"package", "packageVersion"} & set(m_)) and m_["status"] == MCP_STATUS_LINE for m_ in man_nn),
+          f"{len(npm_scope)} files scanned; hits {npm_hits[:5]}")
 
     idx_ = json.load(open(os.path.join(DOCS, "api", "v1", "index.json")))
     radar_ = json.load(open(os.path.join(DOCS, "api", "v1", "radar.json")))
@@ -1796,9 +1828,11 @@ def main(argv=None):
         "defined in llms.txt + llms-full.txt": all("rpc_observed (on-chain control plane pinned at an archive block height" in read(f) or
                                                    "Classification rpc_observed: on-chain control plane pinned at an archive block height" in read(f)
                                                    for f in ("docs/llms.txt", "docs/llms-full.txt")),
-        "mcp.json packageVersion 0.1.5": json.loads(read("docs/.well-known/mcp.json")).get("packageVersion") in MCP_VERSIONS_OK
+        "mcp.json: no npm package / packageVersion keys; package.json 0.1.5 / 0.1.6": not ({"package", "packageVersion"} & set(json.loads(read("docs/.well-known/mcp.json"))))
                                          and json.loads(read("packages/mcp-server/package.json"))["version"] in MCP_VERSIONS_OK,
-        "llms-full names v0.1.5": any(f"@pacta/mcp-server v{v_}" in read("docs/llms-full.txt") for v_ in MCP_VERSIONS_OK),
+        "llms-full names io.github.Fractal-Neurons/pacta, the remote endpoint and the clone command (no npm package)": (
+            "- Name: io.github.Fractal-Neurons/pacta · remote Streamable HTTP https://api.pacta.wtf/mcp (no install) · local stdio from a clone." in read("docs/llms-full.txt")
+            and "- Status: " + MCP_STATUS_LINE in read("docs/llms-full.txt")),
     }
     check(f"Codex F1: all {X['rpc_protocols']} RPC-pinned records are classification rpc_observed with documentation linked but not compared (no 'publishes' claim, no documented delays); their pages and /protocols/ rows show only the neutral 'RPC-observed baseline' badge; rpc_observed defined in llms.txt + llms-full.txt; mcp.json packageVersion 0.1.5; llms-full names v0.1.5",
           all(f1_ok.values()), str([k for k, v in f1_ok.items() if not v]))
@@ -1949,9 +1983,10 @@ def main(argv=None):
                                                  for f in ("docs/SKILL.md", "docs/llms.txt", "docs/llms-full.txt"))
             and card_["endpoints"].get("lookup") in (API_ + "/v1/protocols/lookup", WORKERS_API_ + "/v1/protocols/lookup") and man_.get("lookup", {}).get("tool") == "pacta_lookup_protocol"
             and "pacta_lookup_protocol" in read("docs/llms/index.html") and f"{BS.BASE_URL}/api/v1/lookup.json" in read("docs/sitemap.xml"),
-        "@pacta/mcp-server 0.1.5 everywhere": {json.loads(read("packages/mcp-server/package.json"))["version"], json.loads(read("packages/mcp-server/server.json"))["version"],
-                                               json.loads(read("packages/mcp-server/server.json"))["packages"][0]["version"], json.loads(read("packages/mcp-server/server.remote.json"))["version"],
-                                               man_.get("packageVersion")} <= MCP_VERSIONS_OK
+        "MCP server 0.1.5 / 0.1.6 everywhere (an npm entry or packageVersion only while still present)": {
+            json.loads(read("packages/mcp-server/package.json"))["version"], json.loads(read("packages/mcp-server/server.json"))["version"],
+            *[p_["version"] for p_ in json.loads(read("packages/mcp-server/server.json")).get("packages", [])],
+            json.loads(read("packages/mcp-server/server.remote.json"))["version"], *([man_["packageVersion"]] if "packageVersion" in man_ else [])} <= MCP_VERSIONS_OK
             and json.loads(read("packages/mcp-server/package.json"))["version"] == json.loads(read("packages/mcp-server/server.json"))["version"]
             and any(f'version: "{v_}"' in read("docs/SKILL.md") for v_ in MCP_VERSIONS_OK)
             and f'version: "{json.loads(read("packages/mcp-server/package.json"))["version"]}"' in read("packages/mcp-server/src/server.mjs"),
