@@ -157,9 +157,9 @@ test("SKILL.md: frontmatter, feed URLs, tool list, pinned addresses, and Treasur
 });
 
 test("canonical live x402 gateway URL is published in SKILL.md, README.md and server.json, but stays opt-in", () => {
-  const U = "https://pacta-x402.pacta.workers.dev";
-  assert.ok(SKILL.includes(U), "SKILL.md");
-  assert.ok(SKILL.includes("PACTA_X402_URL=" + U), "SKILL.md shows the opt-in");
+  const U = "https://pacta-x402.pacta.workers.dev", API = "https://api.pacta.wtf";
+  assert.ok(SKILL.includes(API), "SKILL.md");
+  assert.ok(SKILL.includes("PACTA_X402_URL=" + API), "SKILL.md shows the opt-in");
   assert.ok(README.includes("PACTA_X402_URL=" + U), "README.md shows the opt-in");
   const ev = SERVER.packages.flatMap((p) => p.environmentVariables || []).find((e) => e.name === "PACTA_X402_URL");
   assert.ok(ev && ev.description.includes(U), "server.json PACTA_X402_URL description");
