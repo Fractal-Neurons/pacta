@@ -1,0 +1,15 @@
+{
+  "protocol_slug": "infinifi",
+  "chain": "ethereum",
+  "watched_address": "0x4B174afbeD7b98BA01F50E36109EEE5e6d327c32",
+  "prior_pinned_block": 26425374,
+  "event_block_number": 26457047,
+  "event_block_hash": "0x07b7e10d92947cbe6e2855faef26c7441b4d56505dad91c19403f7dfe74f84c2",
+  "event_tx_hash": "0x54d3d19b44e7ada5471e5967ecd0ec08351b4ccc1e1eb499b7674ba25ba71fbb",
+  "change_kind": "timelock_delay_or_queued_op",
+  "before_state": "At block 26457046, getTimestamp(0x9e6d6266d4aaa72ec0cdbc313edfb0177da1539f2df49520dca5b1c79f15f7d4) returned 0.",
+  "after_state": "At block 26457047, getTimestamp(0x9e6d6266d4aaa72ec0cdbc313edfb0177da1539f2df49520dca5b1c79f15f7d4) returned 1795273055 (CallScheduled queued on infiniFi Timelock controller).",
+  "payment_tx_hash": "0xa73d5d1beb9f755c9fd54d4cf282f67abb681fb22a1cf61c264a265fefc6c132",
+  "contributor_github": "kinshu7777",
+  "base_payout_address": "0x10CF9160AB30828b2c43a22157B74403b0CBC51A"
+}
