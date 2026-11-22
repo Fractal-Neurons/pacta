@@ -1,0 +1,21 @@
+{
+  "slot_id": "base-chainlink-ccip-router",
+  "chain": "base",
+  "protocol_name": "Chainlink CCIP on Base (Router)",
+  "contract_address": "0x881e3A65B4d4a04dD529061dd0071cf975F58bCD",
+  "official_source_url": "https://docs.chain.link/ccip/directory/mainnet/chain/ethereum-mainnet-base-1",
+  "pinned_block_number": 60797656,
+  "pinned_block_hash": "0x038c165f3d70bd94d80c48a8ef8f56cc4023b30827cd7a5d7127d7e06db1841e",
+  "observed_control_plane": {
+    "is_proxy": false,
+    "implementation_address": null,
+    "controller_kind": "timelock",
+    "controller_address": "0x7B0328745A01634c32eFAf041d91432a075B308D",
+    "safe_threshold": null,
+    "safe_owners_count": null,
+    "timelock_min_delay_seconds": 10800
+  },
+  "payment_tx_hash": "0xf82394675f5fb772558b7b604b7adceabaac99ecf5e4898ee2ecce612751cef3",
+  "contributor_github": "G317394754",
+  "base_payout_address": "0x8114ecB579270283CE21683E0Bb7F94C9c9492b1"
+}
