@@ -1,0 +1,15 @@
+{
+  "protocol_slug": "beefy-finance-base",
+  "chain": "base",
+  "watched_address": "0x3B60F7f25b09E71356cdFFC6475c222A466a2AC9",
+  "prior_pinned_block": 58315414,
+  "event_block_number": 58721421,
+  "event_block_hash": "0x0b9830097f44d5c61a7f0d14f0066e62c2835ef4a2b7114b4903d1ca819fa6a9",
+  "event_tx_hash": "0xf00a23c8d9e6dc48ecc57452e642bb258b7b4d625db07dcad4234dc5d1721944",
+  "change_kind": "timelock_delay_or_queued_op",
+  "before_state": "getTimestamp(0x3302750e18a4bff9508c6e93386a406df9aa8d36992188e76a08ecc76bfce208) = 0",
+  "after_state": "getTimestamp(0x3302750e18a4bff9508c6e93386a406df9aa8d36992188e76a08ecc76bfce208) = 1794956259",
+  "payment_tx_hash": "0x5b56c86f7623017e3301e49bf4e831845fa2b02e8225ecf60b1d9ccc1e099017",
+  "contributor_github": "VB-Blue",
+  "base_payout_address": "0xe0a3AAe6e7d042f42e82830f4eEbF426cc1270a2"
+}
