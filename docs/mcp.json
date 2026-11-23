@@ -212,7 +212,7 @@
     "packages/mcp-server/bin/pacta-mcp.mjs"
    ],
    "command": "node",
-   "install": "from a clone of the repository (npm publication pending)",
+   "install": "from a clone of the repository",
    "type": "stdio"
   }
  ],

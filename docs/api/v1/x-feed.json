@@ -8135,7 +8135,7 @@
    ],
    "docsSay": "Steakhouse vaults use a 7-day timelock and an Aragon DAO guardian to veto critical curator actions",
    "chainSays": "Vault timelock() = 7 days; guardian() = 0x894d…6D33 (a contract; Aragon identity not resolved in this read)",
-   "mainPostText": "Steakhouse Prime USDC (Base): docs describe a 7-day timelock and Aragon DAO guardian veto; on-chain vault timelock() is 7 days and guardian() is contract 0x894d…6D33 (Aragon identity not resolved in this read). Checked at Base block #59,025,642, attested on Base. Receipt below.",
+   "mainPostText": "Steakhouse Prime USDC (Base): docs describe a 7-day timelock and Aragon DAO guardian veto; on-chain vault timelock() is 7 days and guardian() is a contract (Aragon identity not resolved in this read). Checked at Base block #59,025,642, attested on Base. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/steakhouse-prime-usdc-base/ · Base attestation: https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
    "cardFilename": "steakhouse-prime-usdc-base.png",
    "receiptUrl": "https://pacta.wtf/protocols/steakhouse-prime-usdc-base/",
@@ -9035,7 +9035,7 @@
    ],
    "docsSay": "EndpointV2 is documented as a non-upgradeable entrypoint with configurable default message libraries",
    "chainSays": "EndpointV2 has an empty EIP-1967 proxy slot (not a proxy); a 5-of-9 OneSig sets default libraries",
-   "mainPostText": "LayerZero V2 @layerzero_core: docs and chain match. EndpointV2 has an empty EIP-1967 proxy slot (not a proxy); a 5-of-9 OneSig sets default message libraries. Checked at Ethereum block #26,434,786, attested on Base. Receipt below.",
+   "mainPostText": "LayerZero V2 @layerzero_core: docs and chain match. EndpointV2 has an empty proxy implementation slot (not a proxy); a 5-of-9 OneSig sets default message libraries. Checked at Ethereum block #26,434,786, attested on Base. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/layerzero-v2/ · Base attestation: https://base.easscan.org/attestation/view/0x1c379ef9f845a2affa9c42715ba2b1b4b2f750b71b4edf9c50d0e1ae739e11ff",
    "cardFilename": "layerzero-v2.png",
    "receiptUrl": "https://pacta.wtf/protocols/layerzero-v2/",
@@ -9095,7 +9095,7 @@
    ],
    "docsSay": "0.25% shield and unshield fees; protocol upgrades require the on-chain governance vote (30-day sponsorship window)",
    "chainSays": "0.25% shield/unshield fees, 30-day sponsorship window; ProxyAdmin behind Voting's 7-day execution offset (direct pause not verified)",
-   "mainPostText": "RAILGUN: docs and chain match on 0.25% shield/unshield fees, 30-day sponsorship window, and governance-vote upgrades; on-chain Voting also enforces a 7-day execution start offset (direct pause function not verified). Checked at Ethereum block #26,434,786, attested on Base. Receipt below.",
+   "mainPostText": "RAILGUN: docs and chain match on 0.25% shield/unshield fees, 30-day sponsorship window, and governance-vote upgrades; on-chain Voting enforces a 7-day execution offset (direct pause not verified). Checked at Ethereum block #26,434,786, attested on Base. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/railgun/ · Base attestation: https://base.easscan.org/attestation/view/0x1c379ef9f845a2affa9c42715ba2b1b4b2f750b71b4edf9c50d0e1ae739e11ff",
    "cardFilename": "railgun.png",
    "receiptUrl": "https://pacta.wtf/protocols/railgun/",
@@ -10835,7 +10835,7 @@
    ],
    "docsSay": "MToken core logic is documented as non-upgradeable and TTG Registrar lists the three governors",
    "chainSays": "MToken and TTG Registrar have empty EIP-1967 proxy slots; Registrar governors match the docs",
-   "mainPostText": "M0 Protocol ($M): docs and chain match. MToken and TTG Registrar have empty EIP-1967 proxy slots and Registrar governors match the docs. Checked at Ethereum block #26,418,060, attested on Base. Receipt below.",
+   "mainPostText": "M0 Protocol ($M): docs and chain match. MToken and TTG Registrar have empty proxy implementation slots and Registrar governors match the docs. Checked at Ethereum block #26,418,060, attested on Base. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/m0-protocol-m/ · Base attestation: https://base.easscan.org/attestation/view/0xbeb412dfc350f879f816a5cb001b53257a3ee03c12cf1d8e2c15a070141ed8c7",
    "cardFilename": "m0-protocol-m.png",
    "receiptUrl": "https://pacta.wtf/protocols/m0-protocol-m/",
@@ -11167,9 +11167,9 @@
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
+     "state": "b",
+     "cue": "M",
+     "value": "1d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -11375,7 +11375,7 @@
    ],
    "docsSay": "Liquity V2 core contracts are documented as non-upgradeable",
    "chainSays": "Sampled CollateralRegistry EIP-1967 slot and BOLD / Governance owner() read 0x0",
-   "mainPostText": "Liquity V2 (BOLD): docs describe non-upgradeable core contracts; on-chain sampled CollateralRegistry EIP-1967 slot and BOLD / Governance owner() read 0x0. Checked at Ethereum block #26,401,540, attested on Base. Receipt below.",
+   "mainPostText": "Liquity V2 (BOLD): docs describe non-upgradeable core contracts; on-chain sampled CollateralRegistry proxy implementation slot and BOLD / Governance owner() read 0x0. Checked at Ethereum block #26,401,540, attested on Base. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/liquity-v2-bold/ · Base attestation: https://base.easscan.org/attestation/view/0x749d96e1a3d214a4ab66c528ca12c84dce085fa138dc370dd0eb817d890f09fa",
    "cardFilename": "liquity-v2-bold.png",
    "receiptUrl": "https://pacta.wtf/protocols/liquity-v2-bold/",
@@ -11610,7 +11610,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -11670,7 +11670,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -11730,7 +11730,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -11790,7 +11790,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -11850,7 +11850,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -11910,7 +11910,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -11970,7 +11970,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -12030,7 +12030,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -12090,7 +12090,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -12150,7 +12150,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -12210,7 +12210,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -12270,7 +12270,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -12390,7 +12390,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -12450,7 +12450,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -12510,7 +12510,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -12570,7 +12570,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -12630,7 +12630,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -12750,7 +12750,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -12870,7 +12870,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -12930,7 +12930,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -13050,7 +13050,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -13110,7 +13110,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -13170,7 +13170,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -13230,7 +13230,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -13290,7 +13290,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -13350,7 +13350,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -13410,7 +13410,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -13470,7 +13470,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -13530,7 +13530,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -13590,7 +13590,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -13650,7 +13650,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -13710,7 +13710,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -13770,7 +13770,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -13890,7 +13890,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -13950,7 +13950,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -14010,7 +14010,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -14070,7 +14070,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -14130,7 +14130,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -14250,7 +14250,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -14310,7 +14310,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -14363,14 +14363,14 @@
      "label": "Emergency / freeze scope",
      "state": "n",
      "cue": "—",
-     "value": "No pause / freeze authority in the published records"
+     "value": "Pause / freeze authority present; its holder is not determined"
     },
     {
      "key": "parity",
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -14430,7 +14430,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -14490,7 +14490,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -14550,7 +14550,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -14610,7 +14610,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -14670,7 +14670,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -14730,7 +14730,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -14790,7 +14790,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -14850,7 +14850,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -14910,7 +14910,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -14970,7 +14970,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -15030,7 +15030,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -15090,7 +15090,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -15150,7 +15150,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -15270,7 +15270,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -15330,7 +15330,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -15390,7 +15390,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -15450,7 +15450,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -15510,7 +15510,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -15630,7 +15630,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -15690,7 +15690,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -15750,7 +15750,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -15810,7 +15810,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -15930,7 +15930,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -15990,7 +15990,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -16050,7 +16050,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -16110,7 +16110,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -16170,7 +16170,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -16230,7 +16230,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -16290,7 +16290,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -16350,7 +16350,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -16410,7 +16410,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -16470,7 +16470,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -16530,7 +16530,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -16590,7 +16590,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -16643,14 +16643,14 @@
      "label": "Emergency / freeze scope",
      "state": "n",
      "cue": "—",
-     "value": "No pause / freeze authority in the published records"
+     "value": "Pause / freeze authority present; its holder is not determined"
     },
     {
      "key": "parity",
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -16710,7 +16710,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -16770,7 +16770,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -16830,7 +16830,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -16890,7 +16890,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -16950,7 +16950,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -17003,14 +17003,14 @@
      "label": "Emergency / freeze scope",
      "state": "n",
      "cue": "—",
-     "value": "No pause / freeze authority in the published records"
+     "value": "Pause / freeze authority present; its holder is not determined"
     },
     {
      "key": "parity",
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -17070,7 +17070,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -17130,7 +17130,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -17190,7 +17190,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -17250,7 +17250,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -17370,7 +17370,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -17430,7 +17430,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -17490,7 +17490,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -17550,7 +17550,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -17603,14 +17603,14 @@
      "label": "Emergency / freeze scope",
      "state": "n",
      "cue": "—",
-     "value": "No pause / freeze authority in the published records"
+     "value": "Pause / freeze authority present; its holder is not determined"
     },
     {
      "key": "parity",
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -17670,7 +17670,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -17790,7 +17790,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -17850,7 +17850,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -17910,7 +17910,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -17970,7 +17970,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -18090,7 +18090,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -18150,7 +18150,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -18210,7 +18210,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -18263,14 +18263,14 @@
      "label": "Emergency / freeze scope",
      "state": "n",
      "cue": "—",
-     "value": "No pause / freeze authority in the published records"
+     "value": "Pause / freeze authority present; its holder is not determined"
     },
     {
      "key": "parity",
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -18330,7 +18330,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -18450,7 +18450,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -18570,7 +18570,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -18630,7 +18630,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -18690,7 +18690,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -18750,7 +18750,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -18870,7 +18870,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -19050,7 +19050,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -19110,7 +19110,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -19163,14 +19163,14 @@
      "label": "Emergency / freeze scope",
      "state": "n",
      "cue": "—",
-     "value": "No pause / freeze authority in the published records"
+     "value": "Pause / freeze authority present; its holder is not determined"
     },
     {
      "key": "parity",
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",

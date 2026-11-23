@@ -1743,6 +1743,12 @@ def main(argv=None):
           not npm_hits and len(npm_scope) > 300 and "docs/.well-known/mcp.json" in npm_scope and "docs/SKILL.md" in npm_scope
           and all(not ({"package", "packageVersion"} & set(m_)) and m_["status"] == MCP_STATUS_LINE for m_ in man_nn),
           f"{len(npm_scope)} files scanned; hits {npm_hits[:5]}")
+    # nor is anything pending there: the stdio server runs from a clone, so no public file (any type) says "npm publication pending"
+    pend_scope = sorted(os.path.relpath(os.path.join(d_, f_), ROOT) for d_, _, fs_ in os.walk(DOCS) for f_ in fs_)
+    pend_hits = [f for f in pend_scope if b"npm publication pending" in read(f, "rb").lower()]
+    check("no 'npm publication pending' on the site: 0 hits (case-insensitive) in every public file under docs/ (.well-known included)",
+          not pend_hits and len(pend_scope) > 300 and "docs/.well-known/mcp.json" in pend_scope and "docs/llms/index.html" in pend_scope,
+          f"{len(pend_scope)} files scanned; hits {pend_hits[:5]}")
 
     idx_ = json.load(open(os.path.join(DOCS, "api", "v1", "index.json")))
     radar_ = json.load(open(os.path.join(DOCS, "api", "v1", "radar.json")))

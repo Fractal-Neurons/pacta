@@ -112,7 +112,7 @@ MCP_RECIPES = [
         "    out = await agent.ainvoke({\"messages\": \"Who can upgrade the Ethena timelock, and how fast?\"})",
         "    print(out[\"messages\"][-1].content)"])),
 ]
-STDIO_FROM_SOURCE = "node packages/mcp-server/bin/pacta-mcp.mjs"  # from a clone of the repository (npm publication pending)
+STDIO_FROM_SOURCE = "node packages/mcp-server/bin/pacta-mcp.mjs"  # from a clone of the repository
 FREE_LAUNCH_NOTE = (f"No API key. Paid today: only the five /v1/x402/* routes ($0.02 to $9.00 USDC on Base, paid to the Pacta Treasury EOA {PAY_TO}; "
                     "x402 v1 X-PAYMENT or v2 PAYMENT-SIGNATURE). /v1/check/preflight and /v1/check/wallet-exposure are free for 50 calls per caller "
                     "per UTC day, then $0.01 USDC per call via x402 to the same treasury. Every other route (protocol lookup, control-plane, timelock-op "
@@ -342,7 +342,7 @@ def llms_full(idx, radar, prop, onb, pinned=None):
          "## MCP server", f"- Name: {MCP_NAME} · remote Streamable HTTP {MCP_REMOTE_URL} (no install) · local stdio from a clone.", f"- Status: {MCP_STATUS}",
          f"- Remote MCP (primary, zero install, Streamable HTTP): {MCP_REMOTE_URL} · Claude Code: `claude mcp add --transport http pacta {MCP_REMOTE_URL}` · "
          f"MCP client config: {{\"mcpServers\": {{\"pacta\": {{\"url\": \"{MCP_REMOTE_URL}\"}}}}}} · remote tools ({REMOTE_TOOLS_DOC}): {', '.join(REMOTE_TOOLS)}.",
-         f"- Local stdio server (from a clone; npm publication pending): `{STDIO_FROM_SOURCE}`. OpenAPI 3.1: {OPENAPI_URL}.",
+         f"- Local stdio server (from a clone of the repository): `{STDIO_FROM_SOURCE}`. OpenAPI 3.1: {OPENAPI_URL}.",
          f"- {CALLER_FIELDS_DOC}",
          f"- One call: `curl -s -A \"my-agent/1.0\" \"{X402_URL}/v1/check/preflight?chain=ethereum&address=0x...\"`. {UA_DOC} Every response carries "
          "`assessment` (coverage indexed_verified | unindexed_bytecode_heuristic, confidence high | medium | low, method, limits) next to the 0-100 "
@@ -500,7 +500,7 @@ def mcp_manifest(idx, onb):
         "transport": {"type": "streamable-http", "url": MCP_REMOTE_URL, "tools": REMOTE_TOOLS, "auth": "none", "pricingMode": PRICING_MODE, "pricingModes": PRICING_MODES},
         "transports": [{"type": "streamable-http", "url": MCP_REMOTE_URL, "tools": REMOTE_TOOLS, "install": "none"},
                        {"type": "stdio", "command": "node", "args": ["packages/mcp-server/bin/pacta-mcp.mjs"],
-                        "install": "from a clone of the repository (npm publication pending)"}],
+                        "install": "from a clone of the repository"}],
         "openapi": OPENAPI_URL,
         "lookup": {"tool": "pacta_lookup_protocol", "http": LOOKUP_URL, "catalog": f"{BASE}/api/v1/lookup.json", "free": True, "note": LOOKUP_DOC},
         "environment": [{"name": n, "required": False, "secret": False, "description": d} for n, d in MCP_ENV],
