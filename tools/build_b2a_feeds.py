@@ -60,7 +60,7 @@ DISAMBIGUATION = ("Disambiguation: Pacta, by Fractal Neurons (https://pacta.wtf,
                   "(climate assessment).")
 BOUNTIES_URL = "https://pacta.wtf/bounties/"
 BOUNTIES_DOC = ("Bounties Wave 4 (OPEN through Sunday 29 November 2026, 23:59 UTC): issue #158 Observed Catalogue, 24 awards of $1.00 USDC; "
-                "issue #159 Control-Plane Watch, 10 awards of $2.00 USDC; issue #161 Documents Changed, 5 awards of $2.00 USDC; each paid on Base "
+                "issue #159 Control-Plane Watch, 15 awards of $2.00 USDC; issue #161 Documents Changed, 5 awards of $2.00 USDC; each paid on Base "
                 "within 48 hours of the merged, checked entry. Paid-call rule: every entry needs one settled x402 call on https://api.pacta.wtf "
                 "($0.02 POST /v1/x402/verdict for #158 and #159, $0.05 POST /v1/x402/dossier for #161; helper tools/pacta_x402_call.py) and "
                 "its Base USDC payment_tx_hash; the call fee is never returned: " + BOUNTIES_URL + "#wave-4")

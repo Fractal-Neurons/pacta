@@ -4151,30 +4151,165 @@ def main(argv=None):
     check("no private / quarantined identifiers (SHA-256 token deny-list)", not leaks, f"{len(scope)} files scanned; leaks in: {leaks}")
 
     # merged candidate: the open Wave 4 section on /bounties/ is generated from the live GitHub issue #158 (verbatim copy), cross-checked
-    # against bounties/wave-4/catalogue-targets-batch1.json; the canonical API origin api.pacta.wtf is in the CSP
+    # against bounties/wave-4/catalogue-targets-batch1.json + catalogue-targets-batch2.json (24 places); the canonical API origin
+    # api.pacta.wtf is in the CSP
     import build_site as BS_w4
     w4_ = BS_w4.wave4()
     bnt_w4 = read("docs/bounties/index.html")
     sec_w4 = bnt_w4.split('id="wave-4"', 1)[1].split("</section>", 1)[0] if 'id="wave-4"' in bnt_w4 else ""
-    tg_w4 = json.load(open(os.path.join(ROOT, "bounties", "wave-4", "catalogue-targets-batch1.json")))["targets"]
-    iss_w4 = json.load(open(os.path.join(ROOT, "tools", "bounty_wave4_issues.json")))["158"]
+    tg_w4 = [dict(t_, batch=b_) for b_ in (1, 2)
+             for t_ in json.load(open(os.path.join(ROOT, "bounties", "wave-4", f"catalogue-targets-batch{b_}.json")))["targets"]]
+    iss_all_w4 = json.load(open(os.path.join(ROOT, "tools", "bounty_wave4_issues.json")))
+    iss_w4 = iss_all_w4["158"]
+    lk_w4 = BS_w4.lookup_items()
     check("Wave 4 (/bounties/#wave-4): rendered from GitHub issue #158 (heading in prose, no raw bracket title), 24 x $1.00 USDC pool, "
-          "12 Batch 1 targets = the checker's closed list, $0.02 POST https://api.pacta.wtf/v1/x402/verdict, 29 Nov 2026 23:59 UTC close; "
+          "24 targets (Batch 1: 12 + Batch 2: 12) = the checker's closed lists in their order, $0.02 POST https://api.pacta.wtf/v1/x402/verdict, "
+          "29 Nov 2026 23:59 UTC close; a logo + ticker only for indexed protocols (ticker from that protocol's own tokens); "
           "issue text word for word; api.pacta.wtf in CSP connect-src",
           iss_w4["number"] == 158 and iss_w4["html_url"] == "https://github.com/Fractal-Neurons/pacta/issues/158"
-          and "<h2>Wave 4 — $1.00 USDC Observed Catalogue Bounty (Batch 1 Open · 12 Slots)</h2>" in sec_w4
+          and "<h2>Wave 4 — $1.00 USDC Observed Catalogue Bounty (Batch 1 + Batch 2 · 24 Slots · " in sec_w4
           and "[Wave 4" not in bnt_w4 and not re.search(r"\$10(?![0-9,M])", bnt_w4)
           and "24 awards of $1.00 USDC on Base ($24.00 USDC held in the bounty wallet" in sec_w4
-          and [m_ for m_ in re.findall(r'data-wave4-slot="([a-z0-9-]+)"', sec_w4)] == [t_["slot_id"] for t_ in tg_w4] and len(tg_w4) == 12
-          and all(t_["contract_address"] in sec_w4 for t_ in tg_w4)
+          and re.findall(r'data-wave4-slot="([a-z0-9-]+)" data-wave4-batch="(\d)"', sec_w4) == [(t_["slot_id"], str(t_["batch"])) for t_ in tg_w4]
+          and len(tg_w4) == 24 and [t_["batch"] for t_ in tg_w4].count(2) == 12
+          and all(t_["contract_address"] in sec_w4 and f'<a href="{t_["official_source_url"]}"' in sec_w4 for t_ in tg_w4)
+          and all(f'data-wave4-targets="{b_}"' in sec_w4 and f"catalogue-targets-batch{b_}.json" in sec_w4 for b_ in (1, 2))
           and "One $0.02 USDC x402 call to <code class=\"mono\">POST https://api.pacta.wtf/v1/x402/verdict</code>" in sec_w4
           and "never refunded" in sec_w4 and "Sunday 29 November 2026 at 23:59 UTC, or when all open slots are filled" in sec_w4
-          and 'href="https://github.com/Fractal-Neurons/pacta/issues/158"' in sec_w4 and sec_w4.count('class="pid-logo"') == 4
+          and 'href="https://github.com/Fractal-Neurons/pacta/issues/158"' in sec_w4 and sec_w4.count('class="pid-logo"') == 12
+          and all(s_ in {t_["slot_id"] for t_ in tg_w4} and sl_ in lk_w4 and (tk_ in (lk_w4[sl_].get("tokens") or [])
+                                                                              or tk_ in BS_w4.proto_ident(sl_)[1].split(" · "))
+                  for s_, (sl_, tk_) in BS_w4.WAVE4_IDENT.items())
           and w4_["heading"] in bnt_w4 and "Wave 4 catalogue: &lt;slot_id&gt;" in sec_w4 and 'data-wave4-issue-text' in sec_w4
           and "connect-src 'self' https://api.pacta.wtf https://pacta.fractalneurons.com" in read("docs/index.html")
           and all(f'data-wave4-track="{n_}"' in sec_w4 + bnt_w4 and f'href="https://github.com/Fractal-Neurons/pacta/issues/{n_}"' in bnt_w4 for n_ in (159, 161))
-          and "never sells grades" not in bnt_w4,
+          and "never sells grades" not in bnt_w4 and "Batch-1" not in bnt_w4 and "Open at build" not in bnt_w4,
           f"slots {len(re.findall('data-wave4-slot=', sec_w4))}; logos {sec_w4.count('class=\"pid-logo\"')}")
+
+    # Batch 1 + Batch 2 won / open at snapshot, 0 disagreement: the page's status per slot == the merged catalogue entries on main (one
+    # bounties/wave-4/catalogue/<slot_id>.json per won slot, naming that target's chain + contract) == Issue #158's "Open slots right now"
+    # line (open list + settled count; it may lag the merged entries, never lead them: each slot it still lists open but merged on main
+    # is a merge after its last update, named in build_site.WAVE4_MERGED_AFTER_ISSUE); every won slot links the pull request that merged
+    # it (build_site.WAVE4_WON_PR, one per merged entry); the facts, snapshot line and lede print the same counts; the llms / SKILL
+    # bounty line carries each issue's own pool size
+    cat_w4 = os.path.join(ROOT, "bounties", "wave-4", "catalogue")
+    merged_w4 = {f_[:-5]: json.load(open(os.path.join(cat_w4, f_))) for f_ in sorted(os.listdir(cat_w4)) if f_.endswith(".json")}
+    tgt_w4 = {t_["slot_id"]: t_ for t_ in tg_w4}
+    open_m_w4 = re.search(r"\*\*Open slots right now \(updated after every paid award — (\d+) of (\d+) slots open; (\d+) settled\):\*\*([^\n]*)", iss_w4["body"])
+    iss_open_w4 = re.findall(r"`([a-z0-9-]+)`", open_m_w4.group(4)) if open_m_w4 else None
+    rows_w4 = {s_: (st_, cell_) for s_, st_, cell_ in
+               re.findall(r'<tr data-wave4-slot="([a-z0-9-]+)" data-wave4-batch="\d" data-wave4-status="(won|open)">(.*?)</tr>', sec_w4)}
+    page_won_w4 = {s_ for s_, (st_, _) in rows_w4.items() if st_ == "won"}
+    page_open_w4 = {s_ for s_, (st_, _) in rows_w4.items() if st_ == "open"}
+    lede_m_w4 = re.search(r'<p class="lede" data-bounty-lede>(.*?)</p>', bnt_w4)
+    lede_w4 = lede_m_w4.group(1) if lede_m_w4 else ""
+    n_open_w4 = len(tgt_w4) - len(merged_w4)
+    ahead_w4 = set(iss_open_w4 or ()) & set(merged_w4)      # merged on main after the issue's last update (its status line lags)
+    pools_w4 = {k_: re.search(r"\*\*Pool:\*\* \*\*(\d+ awards of \$\d+\.\d\d USDC)\*\*", iss_all_w4[k_]["body"]) for k_ in ("158", "159", "161")}
+    doc_w4 = BS_w4.B2A.BOUNTIES_DOC
+    check("Wave 4 Batch 1 + Batch 2 (24 places) won / open at snapshot: 0 disagreement between /bounties/, Issue #158's open-slots line, "
+          "catalogue-targets-batch1.json + batch2.json and the merged bounties/wave-4/catalogue/*.json entries (the issue may lag them only "
+          "by merges after its last update, each named with its merge time); every won slot links its merged pull request; "
+          "llms.txt / llms-full.txt / SKILL.md bounty line = each issue's pool",
+          len(rows_w4) == len(tgt_w4) == 24 and open_m_w4 is not None and int(open_m_w4.group(2)) == 24
+          and set(merged_w4) <= set(tgt_w4)
+          and all(m_["slot_id"] == s_ and m_["chain"] == tgt_w4[s_]["chain"] and m_["contract_address"] == tgt_w4[s_]["contract_address"]
+                  for s_, m_ in merged_w4.items())
+          and page_won_w4 == set(merged_w4) and page_open_w4 == set(tgt_w4) - set(merged_w4) == set(iss_open_w4) - set(merged_w4)
+          and len(iss_open_w4) == int(open_m_w4.group(1)) == n_open_w4 + len(ahead_w4)
+          and int(open_m_w4.group(3)) + len(ahead_w4) == len(merged_w4)
+          and {BS_w4.WAVE4_WON_PR.get(s_) for s_ in ahead_w4} == set(BS_w4.WAVE4_MERGED_AFTER_ISSUE)
+          and all(t_ > iss_w4["updated_at"] for t_ in BS_w4.WAVE4_MERGED_AFTER_ISSUE.values())
+          and set(BS_w4.WAVE4_WON_PR) == set(merged_w4)
+          and all(f'data-w4-won="{BS_w4.WAVE4_WON_PR[s_]}">Won · <a href="https://github.com/Fractal-Neurons/pacta/pull/{BS_w4.WAVE4_WON_PR[s_]}"'
+                  in rows_w4[s_][1] and "data-w4-open" not in rows_w4[s_][1] for s_ in page_won_w4)
+          and all("data-w4-open>Open — check PRs before paying<" in rows_w4[s_][1] and "data-w4-won" not in rows_w4[s_][1] for s_ in page_open_w4)
+          and f"{len(merged_w4)} won, {n_open_w4} open on {w4_['as_of']}" in sec_w4
+          and f"<b>{len(merged_w4)} of 24 slots won, {n_open_w4} open on {w4_['as_of']}</b>" in sec_w4
+          and "(24 slots in Batch 1 and Batch 2, $1.00 USDC each; " + f"{n_open_w4} open on {w4_['as_of']})" in lede_w4
+          and all(f"Batch {b_} closed target list (12 slots · " in sec_w4 for b_ in (1, 2))
+          and all(p_ is not None for p_ in pools_w4.values())
+          and all(f"issue #{k_} {lbl_}, {pools_w4[k_].group(1)};" in doc_w4
+                  for k_, lbl_ in (("158", "Observed Catalogue"), ("159", "Control-Plane Watch"), ("161", "Documents Changed")))
+          and all(doc_w4 in read(f_) for f_ in ("docs/llms.txt", "docs/llms-full.txt", "docs/SKILL.md")),
+          f"won {len(page_won_w4)} (merged entries {len(merged_w4)}, PR links {len(BS_w4.WAVE4_WON_PR)}); open {sorted(page_open_w4)}; "
+          f"issue open {iss_open_w4}; merged after the issue's last update {sorted(ahead_w4)}; "
+          f"issue-side notes (quoted in the verbatim snapshot label): {w4_['issue_notes']}")
+
+    # #158's heading counts the merged catalogue entries instead while its status line lags them (merges after its last update; the
+    # newest one's merge time is the snapshot time, and its verbatim label says the status line has not caught up).
+    # R2 (B24-01 / B24-02): every Wave 4 heading takes its total and open-at-snapshot from that issue's own status line ("Open slots /
+    # awards right now (updated after every paid award — N of M … open; K settled …)") with the issue's last update as an explicit UTC
+    # snapshot time, and none echoes the count in the issue's own title line ("5 Open Now", "5 Open Awards"); each verbatim <details> is
+    # labelled as a snapshot at that time, names the status line the heading follows and quotes the older lines that lag behind it,
+    # with the issue text (title line included) word for word and the live issue linked; #161's text carries a $10 figure the page may
+    # not print, so it stays a rules list + link (no #wave-4-161-issue); the quoted tables wrap on desktop through one page-local
+    # <style> scoped to the verbatim blocks (no hidden overflow, no truncation; docs/styles.css untouched); llms lines keep each pool
+    st_rx_w4 = (r"\*\*Open (?:slots|awards) right now \(updated after every paid award — (\d+) of (\d+) (?:Watch )?(slots|awards) open; "
+                r"(\d+) settled")
+    lag_rx_w4 = r"\b\d+ (?:More )?(?:Awards? |Slots? )?Open (?:Now|Awards?|Slots?)\b"
+    sts_w4, ats_w4 = {}, {}
+    for k_ in ("158", "159", "161"):
+        m_ = re.search(st_rx_w4, iss_all_w4[k_]["body"])
+        sts_w4[k_] = (int(m_.group(1)), int(m_.group(2)), m_.group(3), int(m_.group(4))) if m_ else None
+        t_ = dt.datetime.strptime(iss_all_w4[k_]["updated_at"], "%Y-%m-%dT%H:%M:%SZ")
+        ats_w4[k_] = f"{t_.day} {t_:%b %Y}, {t_:%H:%M} UTC"
+    ok_st_w4 = all(v_ is not None and v_[0] + v_[3] == v_[1] == int(pools_w4[k_].group(1).split()[0]) for k_, v_ in sts_w4.items())
+    exp_h_w4 = {k_: f"Wave 4 — $2.00 USDC {nm_} Bounty ({sts_w4[k_][1]} Awards · {sts_w4[k_][0]} Open as of {ats_w4[k_]})" if ok_st_w4 else None
+                for k_, nm_ in (("159", "Control-Plane Watch"), ("161", "Documents Changed"))}
+    prs_ahead_w4 = sorted(BS_w4.WAVE4_MERGED_AFTER_ISSUE)
+    t_ = dt.datetime.strptime(max(BS_w4.WAVE4_MERGED_AFTER_ISSUE.values()) if ahead_w4 else iss_w4["updated_at"], "%Y-%m-%dT%H:%M:%SZ")
+    cat_at_w4 = f"{t_.day} {t_:%b %Y}, {t_:%H:%M} UTC"
+    exp_h_w4["158"] = (f"Wave 4 — $1.00 USDC Observed Catalogue Bounty (Batch 1 + Batch 2 · {sts_w4['158'][1]} Slots · {n_open_w4} "
+                       f"Open as of {cat_at_w4})") if ok_st_w4 else None
+    out_w4 = re.sub(r"(?s)<details.*?</details>", "", sec_w4)      # the curated part of #wave-4 (outside the verbatim snapshots)
+    heads_w4 = re.findall(r"<(h[23])>(.*?)</h[23]>", out_w4)
+    h3_w4 = {n_: re.findall(rf'<div class="w4-track" id="wave-4-{n_}" data-wave4-track="{n_}"><h3>(.*?)</h3>', sec_w4) for n_ in ("159", "161")}
+    dets_w4 = re.findall(r'<details class="archive-details" id="(wave-4(?:-\d+)?-issue)" data-wave4-issue-text(?:="\d+")?>'
+                         r'<summary><span>(.*?)</span></summary>', sec_w4)
+    css_w4 = re.findall(r"<style>(.*?)</style>", bnt_w4, re.S)
+    sel_w4 = re.findall(r"([^{}]+)\{[^{}]*\}", css_w4[0].replace("@media (min-width:768px){", "", 1)) if len(css_w4) == 1 else []
+
+    def note_w4(k_):
+        o_, t_, u_, s_ = sts_w4[k_]
+        if k_ == "158" and ahead_w4:
+            fol_ = (f"The heading and summary above follow the merged catalogue entries on main ({len(merged_w4)} won, {n_open_w4} open as of "
+                    f"{cat_at_w4}, after pull request{'s' if len(prs_ahead_w4) > 1 else ''} {', '.join(f'#{p_}' for p_ in prs_ahead_w4)} merged); "
+                    f"its own status line ({o_} of {t_} {u_} open, {s_} settled) has not caught up with that yet")
+        else:
+            fol_ = f"The heading and summary above follow its own status line ({o_} of {t_} {u_} open, {s_} settled)"
+        return (f'data-wave4-verbatim-note="{k_}">The issue text word for word, as it stood at the issue&#x27;s last update ({ats_w4[k_]}). '
+                f"{fol_}; older lines inside the quoted text lag behind it: ")
+    llms_w4 = [read(f_) for f_ in ("docs/llms.txt", "docs/llms-full.txt", "docs/llms/index.html")]
+    check("Wave 4 R2: headings = each issue's status line (total · open as of the issue's last update, UTC; #158: the merged catalogue "
+          "entries as of the newest merge while its status line lags them) and never the title line's own count; verbatim <details> labelled "
+          "as snapshots at that time with the lagging lines quoted; quoted tables wrap on desktop "
+          "via one page-local <style> (no hidden overflow, styles.css untouched); llms: #159 = 15 awards, 0 'npm publication pending'",
+          ok_st_w4 and sts_w4["158"][1] == 24 and sts_w4["159"][1] == 15 and sts_w4["161"][1] == 5
+          and heads_w4[0] == ("h2", exp_h_w4["158"]) and w4_["heading"] == exp_h_w4["158"]
+          and h3_w4 == {"159": [exp_h_w4["159"]], "161": [exp_h_w4["161"]]}
+          and not any(re.search(lag_rx_w4, h_) or "Open Now" in h_ for _, h_ in heads_w4)
+          and not re.search(lag_rx_w4, out_w4) and len(re.findall(lag_rx_w4, sec_w4)) >= 3
+          and dets_w4 == [("wave-4-issue", f"Verbatim snapshot: GitHub issue #158 as of {ats_w4['158']}"),
+                          ("wave-4-159-issue", f"Verbatim snapshot: GitHub issue #159 as of {ats_w4['159']}")]
+          and 'id="wave-4-161-issue"' not in bnt_w4 and re.search(r"\$10(?![0-9,M])", iss_all_w4["161"]["body"])
+          and all(note_w4(k_) in sec_w4 for k_ in ("158", "159"))
+          and "the title line says “15 Total Awards · 5 Open Now on Base”" in sec_w4
+          and "a later sentence says 18 settled, 6 open" in sec_w4
+          and all(f"the heading “Batch {b_} Closed Target List (12 Open Slots — Ethereum &amp; Base)”;" in sec_w4 for b_ in (1, 2))
+          and all(BS_w4.wave4_issue_md_html(iss_all_w4[k_]["body"]) in sec_w4 for k_ in ("158", "159"))
+          and sec_w4.count('<p class="w4-quote-title" data-wave4-issue-title><b>') == 2
+          and all(f'data-wave4-status="{k_}">Source: <a href="https://github.com/Fractal-Neurons/pacta/issues/{k_}" target="_blank" rel="noopener">'
+                  f"GitHub issue #{k_}" in sec_w4 and f"Its status line at {ats_w4[k_]}: <b>{sts_w4[k_][0]} of {sts_w4[k_][1]} awards open, "
+                  f"{sts_w4[k_][3]} settled</b>." in sec_w4 for k_ in ("159", "161"))
+          and f"(snapshot {ats_w4['158']})" in sec_w4
+          and len(css_w4) == 1 and css_w4[0].count("@media (min-width:768px){") == 1 and "overflow-wrap:anywhere" in css_w4[0]
+          and "#wave-4 [data-wave4-issue-text] pre.term-pre{white-space:break-spaces;overflow-wrap:anywhere}" in css_w4[0]
+          and bool(sel_w4) and all(p_.strip().startswith("#wave-4 [data-wave4-issue-text] ") for x_ in sel_w4 for p_ in x_.split(","))
+          and not re.search(r"overflow(?:-x)?:\s*(?:hidden|clip)|text-overflow|display:\s*none|white-space:\s*nowrap|max-height", css_w4[0])
+          and BS_w4.WAVE4_QUOTE_CSS == f"<style>{css_w4[0]}</style>" and "<style>" not in read("docs/styles.css")
+          and all("issue #159 Control-Plane Watch, 15 awards of $2.00 USDC;" in t_ and "npm publication pending" not in t_ for t_ in llms_w4),
+          f"h2 {heads_w4[:1]}; h3 {h3_w4}; details {dets_w4}; css selectors {len(sel_w4)}")
 
     graph_manifest_checks(cli)
 
