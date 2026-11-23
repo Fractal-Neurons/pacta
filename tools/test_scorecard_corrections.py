@@ -850,8 +850,9 @@ class ObolNeutralGovernance(unittest.TestCase):
 
 class Scorecard87(unittest.TestCase):
     """Business receipt 7462: one round, exactly 130 factor slices on 87 pages (87 rule-derived + 43 reviewed); everything else
-    byte-identical to f7ea61a7."""
-    BASE = "f7ea61a757dc00749dee639105bda3e83b907408"
+    byte-identical to BASE (main 7cdc9a96; the scorecard commit b80f21eb was cut on f7ea61a7)."""
+    BASE = "7cdc9a96bd59a2c0b77fb8a46dacc93c12cac814"
+    CUT = ("f7ea61a757dc00749dee639105bda3e83b907408", "b80f21ebd9e478d68dd0f60cac9cd7e414b6cdcb")
     EXP = {e["slice_id"]: e for e in _load(os.path.join(HERE, "scorecard87_expected_136.json"), encoding="utf-8")["entries"]}
     FORBIDDEN = re.compile(r"\b(?:immutable|renounced|EOA)\b", re.I)
 
@@ -965,10 +966,19 @@ class Scorecard87(unittest.TestCase):
 
     def test_attested_rows_js_css_and_mcp_untouched(self):
         paths = ["docs/api/v1/index.json", "docs/api/v1/rpc-pinned.json", "docs/api/v1/onboarding.json", "docs/api/v1/radar.json", "audits/",
-                 "docs/styles.css", "docs/app.js", "tools/app.src.js", "tools/pacta_x402_call.py", "packages/mcp-server/", ".github/workflows/"]
+                 "docs/styles.css", "docs/app.js", "tools/app.src.js", "tools/pacta_x402_call.py", ".github/workflows/"]
+        # packages/mcp-server/ equals BASE while the package is still 0.1.5; the 0.1.6 package is its own later push
+        if _load(os.path.join(ROOT, "packages", "mcp-server", "package.json"), encoding="utf-8")["version"] == "0.1.5":
+            paths.append("packages/mcp-server/")
         out = subprocess.run(["git", "-c", "safe.directory=*", "-C", ROOT, "diff", self.BASE, "--", *paths], capture_output=True)
         self.assertEqual(out.returncode, 0)
         self.assertEqual(out.stdout, b"")
+        # the scorecard commit itself never touches packages/mcp-server/ (checked whenever f7ea61a7..b80f21eb is in the history)
+        if all(subprocess.run(["git", "-c", "safe.directory=*", "-C", ROOT, "merge-base", "--is-ancestor", c, "HEAD"], capture_output=True).returncode == 0
+               for c in self.CUT):
+            out = subprocess.run(["git", "-c", "safe.directory=*", "-C", ROOT, "diff", f"{self.CUT[0]}..{self.CUT[1]}", "--", "packages/mcp-server/"],
+                                 capture_output=True)
+            self.assertEqual((out.returncode, out.stdout), (0, b""))
 
     def test_joined_rows_cite_their_siblings_on_one_evidence_tag(self):
         joined = {sid: e["after"]["additionalEvidenceRecordIds"] for sid, e in self.EXP.items() if e["after"]["additionalEvidenceRecordIds"]}
