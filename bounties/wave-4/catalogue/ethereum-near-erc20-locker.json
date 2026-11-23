@@ -9,7 +9,7 @@
   "observed_control_plane": {
     "is_proxy": false,
     "implementation_address": null,
-    "controller_kind": "multisig_safe",
+    "controller_kind": "safe",
     "controller_address": "0x2468603819Bf09Ed3Fb6f3EFeff24B1955f3CDE1",
     "safe_threshold": 3,
     "safe_owners_count": 5,
