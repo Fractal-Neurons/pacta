@@ -1,0 +1,15 @@
+{
+  "protocol_slug": "nuva",
+  "chain": "ethereum",
+  "watched_address": "0xDEa75A312b2F99b5A7558c4636897b39C195E241",
+  "prior_pinned_block": 26449594,
+  "event_block_number": 26480216,
+  "event_block_hash": "0x833b307c7c5cc24f9c9d439b3444ccdbfa35e1c67b5f473a0bb51713f138ab30",
+  "event_tx_hash": "0xd038f0f42ec97de3306be308c89b944509b95f2737e8f967856e83cbf23d80ee",
+  "change_kind": "timelock_delay_or_queued_op",
+  "before_state": "Timelock delay = 172800 seconds on 0xDEa75A312b2F99b5A7558c4636897b39C195E241.",
+  "after_state": "CallScheduled on 0xDEa75A312b2F99b5A7558c4636897b39C195E241 with id 0x637bdd6ac29f2bb38c1a02e4e2691dba7798598bcee51ea98106509e9e54cf2c, index 0, target 0x72c044c5995c20a17117c236d340848538e8bfac, value 0, and delay = 172800 seconds.",
+  "payment_tx_hash": "0xcc233b09a02ab4c241b4a6e3a29d3b17a4bc56a06bd69dd054d30c521b57a170",
+  "contributor_github": "shandrila2-pixel",
+  "base_payout_address": "0x95b4338a3FcE74C1B8CCbc9e17a6c323F7795059"
+}
