@@ -1,0 +1,15 @@
+{
+  "protocol_slug": "compound-v3-comet",
+  "chain": "ethereum",
+  "watched_address": "0x6d903f6003cca6255D85CcA4D3B5E5146dC33925",
+  "prior_pinned_block": 26402160,
+  "event_block_number": 26468081,
+  "event_block_hash": "0x19fdda6f52f837ea2189487f33f8fbc57bed1902341cecb2c0739cce5c6fa386",
+  "event_tx_hash": "0xf8bfadae3fafcc0690000b80e5d088dcf6a519efb5d7c425e2cebc1aa518fdb8",
+  "change_kind": "timelock_delay_or_queued_op",
+  "before_state": "Timelock delay = 172800 seconds on 0x6d903f6003cca6255D85CcA4D3B5E5146dC33925; txHash 0xa63f3d70ad15535bb74e8df7af6af54852ea2eb1f4d3491d844b7d35245b3a50 was not yet queued.",
+  "after_state": "QueueTransaction on 0x6d903f6003cca6255D85CcA4D3B5E5146dC33925 with txHash 0xa63f3d70ad15535bb74e8df7af6af54852ea2eb1f4d3491d844b7d35245b3a50, target 0x6774Bcbd5ceCeF1336b5300fb5186a12DDD8b367, eta = 1795492307, and delay = 172800 seconds.",
+  "payment_tx_hash": "0xcf90bf4ffddce39b0fe83165bf25f24bd14319020d06781addee3cda952636fd",
+  "contributor_github": "jeffrey-graham",
+  "base_payout_address": "0x3FFf807B33695a45707F381cdd60bF1D8Deb8353"
+}
