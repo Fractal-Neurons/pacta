@@ -1,0 +1,15 @@
+{
+  "protocol_slug": "inverse-finance-firm",
+  "chain": "ethereum",
+  "watched_address": "0x926dF14a23BE491164dCF93f4c468A50ef659D5B",
+  "prior_pinned_block": 26449594,
+  "event_block_number": 26475710,
+  "event_block_hash": "0x85e4d47995043dfebf2a80436ff745d9a6eff18e55b2055b174345c965e78e64",
+  "event_tx_hash": "0x04c4571ec663ccb80c03a8f82babdf00dfd53ea2344bb6a782d53c1672af5627",
+  "change_kind": "timelock_delay_or_queued_op",
+  "before_state": "Timelock delay = 172800 seconds on 0x926dF14a23BE491164dCF93f4c468A50ef659D5B; txHash 0x090e432ae07ef873451b8de7c8c7ad019540ad184c3db0134fa23db6deb8bd0f was not yet queued.",
+  "after_state": "QueueTransaction on 0x926dF14a23BE491164dCF93f4c468A50ef659D5B with txHash 0x090e432ae07ef873451b8de7c8c7ad019540ad184c3db0134fa23db6deb8bd0f, target 0x01ECA33e20a4c379Bd8A5361f896A7dd2bAE4ce8, eta = 1795584131, and delay = 172800 seconds.",
+  "payment_tx_hash": "0x1e920c7b6cb0d22310725ed5d183660bfe39b6ace86330887be642b6a0846faa",
+  "contributor_github": "lingxiansen2",
+  "base_payout_address": "0x459216Fb900eE93FD391F669a0571Cf08f949522"
+}
