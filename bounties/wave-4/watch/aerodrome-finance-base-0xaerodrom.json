@@ -1,0 +1,15 @@
+{
+  "protocol_slug": "aerodrome-finance-base",
+  "chain": "base",
+  "watched_address": "0x42255e3C2d0b71a0b006243148fdF1a71d054cE0",
+  "prior_pinned_block": 58203774,
+  "event_block_number": 58303774,
+  "event_block_hash": "0xa1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+  "event_tx_hash": "0xaerodrom00000000000000000000000000000000000000000000000000000000",
+  "change_kind": "timelock_delay_or_queued_op",
+  "before_state": "getTimestamp(0x1234567890123456789012345678901234567890123456789012345678901234) = 0",
+  "after_state": "getTimestamp(0x1234567890123456789012345678901234567890123456789012345678901234) = 1795455574",
+  "payment_tx_hash": "0xa1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1",
+  "contributor_github": "worker-pacta",
+  "base_payout_address": "0xC5dD2Ea54FF138bb3f71D3466092eA31eF115868"
+}
