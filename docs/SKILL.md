@@ -90,7 +90,7 @@ cast block <N> --field hash --rpc-url "$ETH_RPC_URL"   # must equal the recorded
 Use EIP-1898 `{"blockHash": "<hash>", "requireCanonical": true}` when calling eth_call directly.
 
 ## MCP server (io.github.Fractal-Neurons/pacta)
-publication_pending: @pacta/mcp-server is not yet published to npm or the MCP registry. Use the remote MCP server now (no install): https://api.pacta.wtf/mcp. The stdio server runs from a clone of the repository: node packages/mcp-server/bin/pacta-mcp.mjs.
+registry_remote: io.github.Fractal-Neurons/pacta is published in the official MCP Registry as a remote Streamable HTTP server (no install): https://api.pacta.wtf/mcp. Local stdio server: git clone https://github.com/Fractal-Neurons/pacta.git, then node packages/mcp-server/bin/pacta-mcp.mjs.
 
 - `pacta_lookup_protocol` (free): Resolve a protocol or token name, symbol, slug or 0x address to its verified record and preflightArgs {chain, address} (query, chain, kind, limit; no RPC)
 - `pacta_list_commitments` (free): Filter indexed records (protocol, classification, sprint, limit)

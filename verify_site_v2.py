@@ -1515,7 +1515,7 @@ def main(argv=None):
           and card["x402"]["payTo"] == B2A.PAY_TO and card["x402"]["asset"] == B2A.USDC_BASE and card["x402"]["chainId"] == 8453
           and man["name"] == "io.github.Fractal-Neurons/pacta" and man["transport"]["type"] == "streamable-http" and man["transport"]["url"] == "https://api.pacta.wtf/mcp"
           and {t_["type"] for t_ in man.get("transports", [])} >= {"streamable-http", "stdio"} and "pacta_list_proposals" in {t["name"] for t in man["tools"]}
-          and man["status"].startswith("publication_pending") and not unresolved, f"unresolved {unresolved[:3]}")
+          and man["status"] == MCP_STATUS_LINE and not ({"package", "packageVersion"} & set(man)) and not unresolved, f"unresolved {unresolved[:3]}")
     skill = read("docs/SKILL.md")
     fm = re.match(r"---\n(.*?)\n---\n", skill, re.S)
     check("SKILL.md: YAML frontmatter (name pacta-protocol-commitments, one-line description), feed URLs, verification recipe",
@@ -1733,6 +1733,16 @@ def main(argv=None):
     no_remote = [k for k, t in primary.items() if (MCP_ not in t and (WORKERS_API_ + "/mcp") not in t) or "/v1/check/preflight" not in t]
     check("unshipped npm install removed: 0 'npx @pacta/mcp-server' strings on the site, feeds, README, server.json, glama.json, smithery.yaml; remote MCP + /v1/check/preflight on every primary surface",
           not dead and not no_remote and len(npx_scope) > 50, f"{len(npx_scope)} files scanned; dead npx in {dead}; missing remote/preflight in {no_remote}")
+    # no npm name on the site: nothing is published on npm, so no public file advertises one (.well-known included: os.walk sees dot dirs)
+    npm_scope = sorted(os.path.relpath(os.path.join(d_, f_), ROOT) for d_, _, fs_ in os.walk(DOCS) for f_ in fs_
+                       if f_.endswith((".json", ".txt", ".md", ".html", ".xml", ".js", ".webmanifest")))
+    npm_hits = [f for f in npm_scope if "@pacta/" + "mcp-server" in read(f)]
+    man_nn = [json.loads(read(f)) for f in ("docs/mcp.json", "docs/.well-known/mcp.json")]
+    check("no npm package name on the site: 0 '@pacta/mcp-server' in every public file under docs/ (json, .well-known, llms*.txt, SKILL.md, html); "
+          "mcp.json / .well-known/mcp.json carry no package / packageVersion and the registry_remote status",
+          not npm_hits and len(npm_scope) > 300 and "docs/.well-known/mcp.json" in npm_scope and "docs/SKILL.md" in npm_scope
+          and all(not ({"package", "packageVersion"} & set(m_)) and m_["status"] == MCP_STATUS_LINE for m_ in man_nn),
+          f"{len(npm_scope)} files scanned; hits {npm_hits[:5]}")
 
     idx_ = json.load(open(os.path.join(DOCS, "api", "v1", "index.json")))
     radar_ = json.load(open(os.path.join(DOCS, "api", "v1", "radar.json")))
@@ -1818,9 +1828,11 @@ def main(argv=None):
         "defined in llms.txt + llms-full.txt": all("rpc_observed (on-chain control plane pinned at an archive block height" in read(f) or
                                                    "Classification rpc_observed: on-chain control plane pinned at an archive block height" in read(f)
                                                    for f in ("docs/llms.txt", "docs/llms-full.txt")),
-        "mcp.json packageVersion 0.1.5": json.loads(read("docs/.well-known/mcp.json")).get("packageVersion") in MCP_VERSIONS_OK
+        "mcp.json: no npm package / packageVersion keys; package.json 0.1.5 / 0.1.6": not ({"package", "packageVersion"} & set(json.loads(read("docs/.well-known/mcp.json"))))
                                          and json.loads(read("packages/mcp-server/package.json"))["version"] in MCP_VERSIONS_OK,
-        "llms-full names v0.1.5": any(f"@pacta/mcp-server v{v_}" in read("docs/llms-full.txt") for v_ in MCP_VERSIONS_OK),
+        "llms-full names io.github.Fractal-Neurons/pacta, the remote endpoint and the clone command (no npm package)": (
+            "- Name: io.github.Fractal-Neurons/pacta · remote Streamable HTTP https://api.pacta.wtf/mcp (no install) · local stdio from a clone." in read("docs/llms-full.txt")
+            and "- Status: " + MCP_STATUS_LINE in read("docs/llms-full.txt")),
     }
     check(f"Codex F1: all {X['rpc_protocols']} RPC-pinned records are classification rpc_observed with documentation linked but not compared (no 'publishes' claim, no documented delays); their pages and /protocols/ rows show only the neutral 'RPC-observed baseline' badge; rpc_observed defined in llms.txt + llms-full.txt; mcp.json packageVersion 0.1.5; llms-full names v0.1.5",
           all(f1_ok.values()), str([k for k, v in f1_ok.items() if not v]))
