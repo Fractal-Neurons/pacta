@@ -1,0 +1,15 @@
+{
+  "protocol_slug": "compound-v3-comet",
+  "chain": "ethereum",
+  "watched_address": "0x6d903f6003cca6255D85CcA4D3B5E5146dC33925",
+  "prior_pinned_block": 26402160,
+  "event_block_number": 26443894,
+  "event_block_hash": "0x285d71358c2548031763de34733cbf343b60262207c39754fb9f774f610380f7",
+  "event_tx_hash": "0x949a364cfd692d52a4f5217cae22f1e72a822967c6e6ee5fec8b238af144a2ef",
+  "change_kind": "timelock_delay_or_queued_op",
+  "before_state": "Timelock delay = 172800 seconds on 0x6d903f6003cca6255D85CcA4D3B5E5146dC33925; txHash 0x86b41fd84764a2e73ccd29c1e33c93497a70d7e84b7445804752980fa039fee0 was not yet queued.",
+  "after_state": "QueueTransaction on 0x6d903f6003cca6255D85CcA4D3B5E5146dC33925 with txHash 0x86b41fd84764a2e73ccd29c1e33c93497a70d7e84b7445804752980fa039fee0, target 0xd19d4b5d358258f05d7b411e21a1460d11b0876f, eta = 1795201103, and delay = 172800 seconds.",
+  "payment_tx_hash": "0xe38c22647dd6cbe1d32167969e88e55771b5524ba10ede9668807ba88aa19fc1",
+  "contributor_github": "G317394754",
+  "base_payout_address": "0x8114ecB579270283CE21683E0Bb7F94C9c9492b1"
+}
