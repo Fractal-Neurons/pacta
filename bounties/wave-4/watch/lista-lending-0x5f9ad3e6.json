@@ -1,0 +1,15 @@
+{
+  "protocol_slug": "lista-lending",
+  "chain": "ethereum",
+  "watched_address": "0xa18ae79AEDA3e711E0CD64cfe1Cd06402d400D61",
+  "prior_pinned_block": 26451608,
+  "event_block_number": 26455651,
+  "event_block_hash": "0xc4cec5b59a639b35b3ea074e1dc9e64e4d691b91772b1ce789c17e13df8313ff",
+  "event_tx_hash": "0x5f9ad3e6175e7c5c7da40409ceacf694a2055ebb8be9d353925f25b0576304eb",
+  "change_kind": "timelock_delay_or_queued_op",
+  "before_state": "getTimestamp(0x8e740009e5f15127dd8e3afc7af0df13976c14b1a991c8c290d8b0d421e90cf7) = 0; getMinDelay() = 86400 seconds on 0xa18ae79AEDA3e711E0CD64cfe1Cd06402d400D61 (operation not yet scheduled at prior_pinned_block 26451608).",
+  "after_state": "getTimestamp(0x8e740009e5f15127dd8e3afc7af0df13976c14b1a991c8c290d8b0d421e90cf7) = 1795256171; getMinDelay() = 86400 seconds (CallScheduled emitted on 0xa18ae79AEDA3e711E0CD64cfe1Cd06402d400D61 at block 26455651).",
+  "payment_tx_hash": "0x3acc5928ac36a2e15c33953ef03950340b928fe77dbf4b9ce2b09aab52e6f29b",
+  "contributor_github": "jeffrey-graham",
+  "base_payout_address": "0x3FFf807B33695a45707F381cdd60bF1D8Deb8353"
+}
