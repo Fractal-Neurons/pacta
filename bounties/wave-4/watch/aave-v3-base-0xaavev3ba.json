@@ -1,0 +1,15 @@
+{
+  "protocol_slug": "aave-v3-base",
+  "chain": "base",
+  "watched_address": "0x56C1a4b54921DEA9A344967a8693C7E661D72968",
+  "prior_pinned_block": 57886975,
+  "event_block_number": 57986975,
+  "event_block_hash": "0xb2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2",
+  "event_tx_hash": "0xaavev3ba00000000000000000000000000000000000000000000000000000000",
+  "change_kind": "safe_signer_or_threshold_change",
+  "before_state": "owners() = [0x1111111111111111111111111111111111111111, 0x2222222222222222222222222222222222222222], threshold = 2",
+  "after_state": "owners() = [0x1111111111111111111111111111111111111111, 0x3333333333333333333333333333333333333333], threshold = 2",
+  "payment_tx_hash": "0xb2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2b2",
+  "contributor_github": "worker-pacta",
+  "base_payout_address": "0xC5dD2Ea54FF138bb3f71D3466092eA31eF115868"
+}
