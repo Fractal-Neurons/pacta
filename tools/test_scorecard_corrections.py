@@ -850,7 +850,8 @@ class ObolNeutralGovernance(unittest.TestCase):
 
 class Scorecard87(unittest.TestCase):
     """Business receipt 7462: one round, exactly 130 factor slices on 87 pages (87 rule-derived + 43 reviewed); everything else
-    byte-identical to BASE (main 7cdc9a96; the scorecard commit b80f21eb was cut on f7ea61a7)."""
+    byte-identical to BASE (main 7cdc9a96; the scorecard commit b80f21eb was cut on f7ea61a7), apart from the x-feed rosette repair
+    (REPAIRED / REDRAWN below)."""
     BASE = "7cdc9a96bd59a2c0b77fb8a46dacc93c12cac814"
     CUT = ("f7ea61a757dc00749dee639105bda3e83b907408", "b80f21ebd9e478d68dd0f60cac9cd7e414b6cdcb")
     EXP = {e["slice_id"]: e for e in _load(os.path.join(HERE, "scorecard87_expected_136.json"), encoding="utf-8")["entries"]}
@@ -923,7 +924,14 @@ class Scorecard87(unittest.TestCase):
             if f"{key[0]}:{key[1]}" not in self.EXP:
                 self.assertEqual(f, self.B[key], key)
 
-    def test_clean_pages_cards_and_feed_items_byte_identical(self):
+    # x-feed repair on 5392279b: the feed rosettes of the 229 clean protocols had stayed at BASE while their scorecards moved on, 117
+    # entries on 111 items: 110 parity values ("(RPC-observed)" -> "(Observed)"), 6 emergency values (pause / freeze authority present,
+    # holder not determined) and aave-v3-gho's timelock ("—" not determined -> "M" medium, 1d floor). Every rosette now follows its
+    # scorecard; a card draws only the cue and state word of each entry (never the value), so aave-v3-gho.png is the one redrawn card.
+    REPAIRED = {("parity", "value"): 110, ("emergency", "value"): 6, ("timelock", "state"): 1, ("timelock", "cue"): 1, ("timelock", "value"): 1}
+    REDRAWN = {"aave-v3-gho"}
+
+    def test_clean_pages_and_cards_byte_identical_and_every_feed_rosette_follows_its_scorecard(self):
         clean = sorted(set(CARDS) - self.pages)
         self.assertEqual(len(clean), 229)
         for s in clean:
@@ -931,22 +939,32 @@ class Scorecard87(unittest.TestCase):
             self.assertEqual(_read(os.path.join(ROOT, p), "rb"), self._git(p, binary=True), s)
             c = os.path.join("docs", "cards", f"{s}.png")
             if os.path.exists(os.path.join(ROOT, c)):
-                self.assertEqual(_read(os.path.join(ROOT, c), "rb"), self._git(c, binary=True), s)
+                (self.assertNotEqual if s in self.REDRAWN else self.assertEqual)(_read(os.path.join(ROOT, c), "rb"), self._git(c, binary=True), s)
         base_feed = {i["feedId"]: i for i in json.loads(self._git("docs/api/v1/x-feed.json"))["items"]}
         feed = {i["feedId"]: i for i in j("api", "v1", "x-feed.json")["items"]}
         self.assertEqual(set(base_feed), set(feed))
+        cue = {"g": "S", "b": "M", "a": "W", "n": "—", "u": "—"}
+        repaired, items = Counter_(), set()
         for fid, it in feed.items():
+            # all five rosette entries of every item (316 protocols + the radar operations) follow its scorecard (parity included)
+            s = it.get("protocolSlug") or it["slug"]
+            self.assertEqual([(r["key"], r["label"], r["state"], r["cue"], r["value"]) for r in it["rosette"]],
+                             [(f["key"], f["label"], f["state"], cue[f["state"]], f["value"]) for f in CARDS[s]["factors"]], fid)
             if it["slug"] not in self.pages:
-                self.assertEqual(it, base_feed[fid], fid)
+                # a clean item keeps every other field of BASE
+                b = base_feed[fid]
+                self.assertEqual({k: v for k, v in it.items() if k != "rosette"}, {k: v for k, v in b.items() if k != "rosette"}, fid)
+                for r, rb in zip(it["rosette"], b["rosette"]):
+                    for k in ("state", "cue", "value"):
+                        if r[k] != rb[k]:
+                            repaired[(r["key"], k)] += 1
+                            items.add(fid)
             else:
-                # R2: all five rosette entries of a changed protocol follow its scorecard (parity included)
-                cue = {"g": "S", "b": "M", "a": "W", "n": "—", "u": "—"}
-                for r in it["rosette"]:
-                    f = self.N[(it["slug"], r["key"])]
-                    self.assertEqual((r["state"], r["cue"], r["value"]), (f["state"], cue[f["state"]], f["value"]), fid)
                 if it["slug"] in ("layerzero-v2", "m0-protocol-m", "flokifi-locker"):
                     prose = " ".join(str(it.get(k, "")) for k in ("summaryShort", "docsSay", "chainSays", "mainPostText"))
                     self.assertNotRegex(prose, self.FORBIDDEN, fid)
+        self.assertEqual(dict(repaired), self.REPAIRED)
+        self.assertEqual(len(items), 111)
 
     def test_cards_rerendered_only_where_a_state_changed(self):
         import struct
@@ -955,14 +973,68 @@ class Scorecard87(unittest.TestCase):
         diff = {os.path.basename(p)[:-4] for p in out.stdout.split()}
         # R2: plus the changed protocols whose card text (docsSay / chainSays) changed in x-feed.json (m0-protocol-m)
         base_feed = {i["feedId"]: i for i in json.loads(self._git("docs/api/v1/x-feed.json"))["items"]}
-        texted = {i["slug"] for i in j("api", "v1", "x-feed.json")["items"]
-                  if any(i.get(k) != base_feed[i["feedId"]].get(k) for k in ("docsSay", "chainSays"))}
+        feed = j("api", "v1", "x-feed.json")["items"]
+        texted = {i["slug"] for i in feed if any(i.get(k) != base_feed[i["feedId"]].get(k) for k in ("docsSay", "chainSays"))}
         self.assertTrue(texted <= self.pages, sorted(texted - self.pages))
-        self.assertEqual(diff, moved | texted, sorted(diff ^ (moved | texted)))
+        # x-feed repair: a clean protocol's card is redrawn only where a drawn rosette field (cue / state word) moved: aave-v3-gho alone
+        redrawn = {i["slug"] for i in feed if i["slug"] not in self.pages
+                   and any((r["state"], r["cue"]) != (rb["state"], rb["cue"]) for r, rb in zip(i["rosette"], base_feed[i["feedId"]]["rosette"]))}
+        self.assertEqual(redrawn, self.REDRAWN)
+        self.assertEqual(diff, moved | texted | redrawn, sorted(diff ^ (moved | texted | redrawn)))
         for s in diff:
             b = _read(os.path.join(ROOT, "docs", "cards", f"{s}.png"), "rb")
             self.assertEqual(b[:8], b"\x89PNG\r\n\x1a\n", s)
             self.assertEqual(struct.unpack(">II", b[16:24]), (1200, 675), s)
+
+    @staticmethod
+    def _png_rows(b):
+        """stdlib PNG decode (8-bit RGB / RGBA, not interlaced): width, bytes per pixel and the unfiltered scanlines."""
+        import struct
+        import zlib
+        assert b[:8] == b"\x89PNG\r\n\x1a\n"
+        pos, idat, hdr = 8, [], None
+        while pos < len(b):
+            n, t = struct.unpack(">I4s", b[pos:pos + 8])
+            if t == b"IHDR":
+                hdr = struct.unpack(">IIBBBBB", b[pos + 8:pos + 8 + n])
+            elif t == b"IDAT":
+                idat.append(b[pos + 8:pos + 8 + n])
+            pos += 12 + n
+        w, h, depth, ctype, _c, _f, interlace = hdr
+        assert depth == 8 and ctype in (2, 6) and interlace == 0, hdr
+        bpp = 3 if ctype == 2 else 4
+        raw, stride, rows, prev = zlib.decompress(b"".join(idat)), w * bpp, [], bytearray(w * bpp)
+        for y in range(h):
+            f, line = raw[y * (stride + 1)], bytearray(raw[y * (stride + 1) + 1:(y + 1) * (stride + 1)])
+            if f == 1:
+                for i in range(bpp, stride):
+                    line[i] = (line[i] + line[i - bpp]) & 255
+            elif f == 2:
+                line = bytearray((x + u) & 255 for x, u in zip(line, prev))
+            elif f == 3:
+                for i in range(stride):
+                    line[i] = (line[i] + ((line[i - bpp] if i >= bpp else 0) + prev[i]) // 2) & 255
+            elif f == 4:
+                for i in range(stride):
+                    a, u, c = (line[i - bpp] if i >= bpp else 0), prev[i], (prev[i - bpp] if i >= bpp else 0)
+                    p = a + u - c
+                    pa, pb, pc = abs(p - a), abs(p - u), abs(p - c)
+                    line[i] = (line[i] + (a if pa <= pb and pa <= pc else u if pb <= pc else c)) & 255
+            rows.append(bytes(line))
+            prev = line
+        return w, bpp, rows
+
+    def test_redrawn_card_changes_only_its_timelock_cell(self):
+        # aave-v3-gho.png against BASE: every changed pixel lies inside the timelock cell of the rosette (cue box + state word; card
+        # layout: rosette top y1 - 150 = 489, five 204.8 px cells from x 88), and the cell does change
+        new = _read(os.path.join(ROOT, "docs", "cards", "aave-v3-gho.png"), "rb")
+        w, bpp, a = self._png_rows(new)
+        w0, bpp0, b = self._png_rows(self._git("docs/cards/aave-v3-gho.png", binary=True))
+        self.assertEqual((w, bpp, len(a)), (w0, bpp0, len(b)))
+        ys = [y for y in range(len(a)) if a[y] != b[y]]
+        xs = [x for y in ys for x in range(w) if a[y][x * bpp:(x + 1) * bpp] != b[y][x * bpp:(x + 1) * bpp]]
+        self.assertTrue(ys)
+        self.assertTrue(292 <= min(xs) and max(xs) < 498 and 489 <= ys[0] and ys[-1] < 545, (min(xs), ys[0], max(xs), ys[-1]))
 
     def test_attested_rows_js_css_and_mcp_untouched(self):
         paths = ["docs/api/v1/index.json", "docs/api/v1/rpc-pinned.json", "docs/api/v1/onboarding.json", "docs/api/v1/radar.json", "audits/",
