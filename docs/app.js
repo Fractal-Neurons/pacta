@@ -3679,7 +3679,7 @@ requester_role: ["protocol_team", "risk_curator_analyst", "institutional_allocat
 caller_purpose: ["collateral_due_diligence", "governance_monitoring", "security_audit", "pre_trade_safety", "yield_allocation", "integration_testing", "general_research"],
 request_type: ["doc_or_data_discrepancy", "missing_protocol", "missing_check_surface", "unsupported_chain", "mcp_or_api_feature"]
 };
-var URGENCY = { community: "community_queue_free", clearance: "issuer_24h_clearance_5k", api_sla: "api_high_volume_sla" };
+var URGENCY = { community: "community_queue_free", clearance: "issuer_urgent_review", api_sla: "api_high_volume_sla" };
 var REQ_API_RE = /^https:\/\/(?:api\.pacta\.wtf|pacta\.fractalneurons\.com|pacta-x402\.pacta\.workers\.dev)\/v1\/requests$/;
 var PILOT_API_RE = /^https:\/\/(?:api\.pacta\.wtf|pacta\.fractalneurons\.com|pacta-x402\.pacta\.workers\.dev)\/v1\/(?:pilot\/watch|requests)$/;
 var EMAIL_RE = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/, TG_RE = /^@[A-Za-z0-9_]{3,32}$/, GH_RE = /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$/;
@@ -3748,6 +3748,7 @@ else if (ev.key === "ArrowUp") { ev.preventDefault(); setActive(Math.max(0, acti
 else if (ev.key === "Enter") { ev.preventDefault(); if (!list.hidden && v[active]) toggle(v[active]); }
 else if (ev.key === "Escape") { if (!list.hidden) { ev.preventDefault(); close(); } }
 else if (ev.key === "Backspace" && !input.value && selected.length) toggle(selected[selected.length - 1]);
+else if (ev.key === "Tab") { close(); }
 });
 list.addEventListener("mousedown", function (ev) { ev.preventDefault(); });
 list.addEventListener("click", function (ev) {
@@ -3755,6 +3756,10 @@ var it = ev.target && ev.target.closest ? ev.target.closest('[role="option"]') :
 toggle(it); input.value = ""; filter(); close();
 });
 document.addEventListener("click", function (ev) { if (!root.contains(ev.target)) close(); });
+root.addEventListener("focusout", function (ev) {
+if (ev.relatedTarget && !root.contains(ev.relatedTarget)) close();
+else setTimeout(function () { if (!root.contains(document.activeElement)) close(); }, 0);
+});
 return {
 input: input,
 values: function () { return selected.map(function (it) { return { name: it.getAttribute("data-name") || "", slug: it.getAttribute("data-slug") || "" }; }); },

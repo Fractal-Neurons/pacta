@@ -851,11 +851,44 @@ class ObolNeutralGovernance(unittest.TestCase):
 class Scorecard87(unittest.TestCase):
     """Business receipt 7462: one round, exactly 130 factor slices on 87 pages (87 rule-derived + 43 reviewed); everything else
     byte-identical to BASE (main 7cdc9a96; the scorecard commit b80f21eb was cut on f7ea61a7), apart from the x-feed rosette repair
-    (REPAIRED / REDRAWN below)."""
+    (REPAIRED / REDRAWN below), the request form's issuer track (URGENCY_MOVE), the button focus outline (FOCUS_MOVE) and the
+    protocol combobox's Tab / focus-leave dismissal (COMBO_MOVES)."""
     BASE = "7cdc9a96bd59a2c0b77fb8a46dacc93c12cac814"
     CUT = ("f7ea61a757dc00749dee639105bda3e83b907408", "b80f21ebd9e478d68dd0f60cac9cd7e414b6cdcb")
+    # service cleanup: the request form posts the Worker's renamed issuer track, the one moved line of tools/app.src.js and
+    # docs/app.js; the app.js?v= stamp of every page moves with app.js (_unstamp). Nothing else of either file or any page moved.
+    URGENCY_MOVE = ('clearance: "issuer_24h_clearance_5k"', 'clearance: "issuer_urgent_review"')
+    # SC-FOCUS-01: docs/styles.css gains one rule after the button variants (a 2 px --ring outline on :focus-visible over a
+    # page-colour gap); the styles.css?v= stamp of every page moves with it (_unstamp). Nothing else of the stylesheet moved.
+    FOCUS_ANCHOR = '[data-slot="button"] svg, .btn svg { width: 16px; height: 16px; flex: none; }\n'
+    FOCUS_MOVE = (FOCUS_ANCHOR, FOCUS_ANCHOR + '[data-slot="button"]:focus-visible, .btn:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px;'
+                  ' box-shadow: 0 0 0 2px var(--background); }   /* SC-FOCUS-01: after the variant rules, several of which reset the box-shadow'
+                  ' ring; the page-colour gap keeps the ring visible on the dark code blocks */\n')
+    # SC-FOCUS-02: initCombo closes the protocol list on Tab / Shift+Tab from its search input and when focus leaves the combobox
+    # (one keydown branch, one focusout listener) in tools/app.src.js and, minified, in docs/app.js. Nothing else of either file moved.
+    _BKSP = 'else if (ev.key === "Backspace" && !input.value && selected.length) toggle(selected[selected.length - 1]);\n'
+    _TAB = 'else if (ev.key === "Tab") { close(); }'
+    _CLICK = 'document.addEventListener("click", function (ev) { if (!root.contains(ev.target)) close(); });\n'
+    _LEAVE = ('root.addEventListener("focusout", function (ev) {\n', 'if (ev.relatedTarget && !root.contains(ev.relatedTarget)) close();\n',
+              'else setTimeout(function () { if (!root.contains(document.activeElement)) close(); }, 0);\n', '});\n')
+    COMBO_MOVES = {
+        "tools/app.src.js": (
+            ("      " + _BKSP + "    });\n",
+             "      " + _BKSP + "      " + _TAB + "   // SC-FOCUS-02: no preventDefault; the list is hidden before Tab / Shift+Tab moves focus on\n"
+             "    });\n"),
+            ("    " + _CLICK,
+             "    " + _CLICK + "    // SC-FOCUS-02: focus leaving the combobox (from the input or a chip Remove button) closes the list, so it never"
+             " covers the next field\n    " + _LEAVE[0] + "      " + _LEAVE[1] + "      " + _LEAVE[2] + "    " + _LEAVE[3])),
+        "docs/app.js": (
+            (_BKSP + "});\n", _BKSP + _TAB + "\n});\n"),
+            (_CLICK, _CLICK + "".join(_LEAVE))),
+    }
     EXP = {e["slice_id"]: e for e in _load(os.path.join(HERE, "scorecard87_expected_136.json"), encoding="utf-8")["entries"]}
     FORBIDDEN = re.compile(r"\b(?:immutable|renounced|EOA)\b", re.I)
+
+    @staticmethod
+    def _unstamp(b):
+        return re.sub(rb"((?:app\.js|styles\.css)\?v=)[0-9a-f]{8}\b", rb"\1", b)
 
     @classmethod
     def _git(cls, path, binary=False):
@@ -936,7 +969,7 @@ class Scorecard87(unittest.TestCase):
         self.assertEqual(len(clean), 229)
         for s in clean:
             p = os.path.join("docs", "protocols", s, "index.html")
-            self.assertEqual(_read(os.path.join(ROOT, p), "rb"), self._git(p, binary=True), s)
+            self.assertEqual(self._unstamp(_read(os.path.join(ROOT, p), "rb")), self._unstamp(self._git(p, binary=True)), s)
             c = os.path.join("docs", "cards", f"{s}.png")
             if os.path.exists(os.path.join(ROOT, c)):
                 (self.assertNotEqual if s in self.REDRAWN else self.assertEqual)(_read(os.path.join(ROOT, c), "rb"), self._git(c, binary=True), s)
@@ -1038,13 +1071,27 @@ class Scorecard87(unittest.TestCase):
 
     def test_attested_rows_js_css_and_mcp_untouched(self):
         paths = ["docs/api/v1/index.json", "docs/api/v1/rpc-pinned.json", "docs/api/v1/onboarding.json", "docs/api/v1/radar.json", "audits/",
-                 "docs/styles.css", "docs/app.js", "tools/app.src.js", "tools/pacta_x402_call.py", ".github/workflows/"]
+                 "tools/pacta_x402_call.py", ".github/workflows/"]
         # packages/mcp-server/ equals BASE while the package is still 0.1.5; the 0.1.6 package is its own later push
         if _load(os.path.join(ROOT, "packages", "mcp-server", "package.json"), encoding="utf-8")["version"] == "0.1.5":
             paths.append("packages/mcp-server/")
         out = subprocess.run(["git", "-c", "safe.directory=*", "-C", ROOT, "diff", self.BASE, "--", *paths], capture_output=True)
         self.assertEqual(out.returncode, 0)
         self.assertEqual(out.stdout, b"")
+        # app.src.js / app.js: BASE with the request form's issuer track renamed (URGENCY_MOVE) and the protocol combobox's Tab /
+        # focus-leave dismissal (COMBO_MOVES), byte for byte otherwise
+        for p in ("tools/app.src.js", "docs/app.js"):
+            base = self._git(p)
+            self.assertEqual(base.count(self.URGENCY_MOVE[0]), 1, p)
+            want = base.replace(*self.URGENCY_MOVE)
+            for a, b in self.COMBO_MOVES[p]:
+                self.assertEqual(want.count(a), 1, (p, a))
+                want = want.replace(a, b)
+            self.assertEqual(_read(os.path.join(ROOT, p), encoding="utf-8"), want, p)
+        # styles.css: BASE plus the one focus rule after the button variants (FOCUS_MOVE), byte for byte otherwise
+        base = self._git("docs/styles.css")
+        self.assertEqual(base.count(self.FOCUS_MOVE[0]), 1)
+        self.assertEqual(_read(os.path.join(ROOT, "docs", "styles.css"), encoding="utf-8"), base.replace(*self.FOCUS_MOVE))
         # the scorecard commit itself never touches packages/mcp-server/ (checked whenever f7ea61a7..b80f21eb is in the history)
         if all(subprocess.run(["git", "-c", "safe.directory=*", "-C", ROOT, "merge-base", "--is-ancestor", c, "HEAD"], capture_output=True).returncode == 0
                for c in self.CUT):

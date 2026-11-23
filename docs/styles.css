@@ -227,6 +227,7 @@ main > .sec:last-child, main > section:last-child { padding-bottom: 80px; }
 [data-slot="button"][data-size="icon-sm"] { width: 32px; height: 32px; padding: 0; }
 [data-slot="button"]:disabled, .btn:disabled, [data-slot="button"][aria-disabled="true"] { opacity: 0.6; pointer-events: none; }
 [data-slot="button"] svg, .btn svg { width: 16px; height: 16px; flex: none; }
+[data-slot="button"]:focus-visible, .btn:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; box-shadow: 0 0 0 2px var(--background); }   /* SC-FOCUS-01: after the variant rules, several of which reset the box-shadow ring; the page-colour gap keeps the ring visible on the dark code blocks */
 .btn .arr { display: none; }
 .copy { margin-left: 4px; vertical-align: middle; font-weight: 500; }
 .copy.done, [data-slot="button"].done { color: var(--success); }
