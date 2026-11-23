@@ -1928,8 +1928,8 @@ def main(argv=None):
         "agent.json": card_.get("endpoints", {}).get("mcp_remote") in (MCP_, WORKERS_API_ + "/mcp") and card_.get("pricing", {}).get("mode") == "free_read"
                       and card_["pricing"].get("modes", {}).get("/v1/check/preflight") == "metered_50_per_day_then_x402_0.01"
                       and card_["pricing"].get("modes", {}).get("/v1/x402/*") == "x402_paid" and card_["x402"].get("pricingMode") == "per_route"
-                      # LW-01-R2: the two OpenAPI copies are the Worker's verbatim contract (tools/sync_openapi.py), whose pricingMode enum and
-                      # mode descriptions name free_launch; every other agent surface stays free of the label
+                      # LW-01-R2: the two OpenAPI copies are the Worker's verbatim contract (tools/sync_openapi.py); no agent surface
+                      # names the internal free_launch routing label
                       and not any("free_launch" in read(p_) for p_ in ("docs/agent.json", "docs/.well-known/agent.json", "docs/mcp.json", "docs/.well-known/mcp.json",
                                                                      "docs/llms.txt", "docs/llms-full.txt",
                                                                      "docs/llms/index.html", "docs/api/v1/index.json")) and [k["id"] for k in card_["skills"]][:2] == ["protocol-lookup", "contract-preflight"],
@@ -2958,7 +2958,10 @@ def main(argv=None):
           "Moonwell -> 502, 2-of-3 Safe A -> failing B, network rejection, recovery, loading state; harness)",
           set(mr_) == {"default_moonwell_to_502", "success_a_then_502_b", "network_rejection", "recovery", "loading_state"}
           and all(v_ is True for v_ in mr_.values()), str(mr_))
-    oa_enum_ = [json.loads(read(f_))["paths"][p_][m_]["responses"]["200"]["content"]["application/json"]["schema"]["properties"]["proxyType"]["enum"]
+    # a preflight 200 is oneOf [the live verdict, PreflightCatalogFallback] (an RPC outage on an indexed target answers the pinned catalog
+    # record); proxyType lives on the live verdict
+    oa_live_ = lambda s_: s_["oneOf"][0] if "oneOf" in s_ else s_
+    oa_enum_ = [oa_live_(json.loads(read(f_))["paths"][p_][m_]["responses"]["200"]["content"]["application/json"]["schema"])["properties"]["proxyType"]["enum"]
                 for f_ in ("docs/openapi.json", "docs/api/v1/openapi.json")
                 for p_, m_ in (("/v1/check/preflight", "get"), ("/v1/check/preflight", "post"), ("/v1/sample/preflight", "get"))]
     check("LW-01-R2: both static OpenAPI copies (the Worker's verbatim 3d92dd59 snapshot, byte-identical to each other) accept zeppelinos and "

@@ -83,13 +83,30 @@ LEADERBOARD_DOC = ("Hunter leaderboard & verified researcher credentials: verifi
                    "per hunter and agent framework, and permanent shareable credentials at /leaderboard/#<hunter> + /badges/hunters/<handle>.svg: " + LEADERBOARD_URL)
 UA_DOC = ('HTTP clients: curl and python-requests work with their default User-Agent. For the Python standard library, send any '
           'User-Agent header (urllib.request.Request(url, headers={"User-Agent": "my-agent/1.0"})) or read the static JSON on pacta.wtf.')
-REQUEST_DOC = ("Opt-in demand intake: when a result carries coverage_gap_hint (lookup miss, unindexed or unclassified pre-flight target, unsupported chain), "
-               "ask the user, then call pacta_submit_request (or POST " + REQUESTS_URL + ") with request_type "
-               "(missing_protocol | unsupported_chain | missing_check_surface | doc_or_data_discrepancy | mcp_or_api_feature), target_subject, "
-               "requested_capability and urgency_track (community_queue_free | active_due_diligence | issuer_24h_clearance_5k (issuer clearance, by arrangement) | api_high_volume_sla), plus optional caller_agent / requester_role / caller_purpose. "
-               "It returns request_id (REQ-2026-xxxxxxxx), status (queued | upvoted_existing), demand_votes and fast_track_url; an identical request "
-               "upvotes the existing one. Free in every pricing mode, 5 per hour; never opens a GitHub issue. contact_handle only when the user "
-               "explicitly asks for follow-up or an invoice: it is stored privately and never published.")
+URGENCY_DOC = "community_queue_free | active_due_diligence | issuer_urgent_review (issuer re-verification, by arrangement) | api_high_volume_sla"
+REQUEST_DOC_FMT = ("Opt-in demand intake: when a result carries coverage_gap_hint (lookup miss, unindexed or unclassified pre-flight target, unsupported chain), "
+                   "ask the user, then call pacta_submit_request (or POST " + REQUESTS_URL + ") with request_type "
+                   "(missing_protocol | unsupported_chain | missing_check_surface | doc_or_data_discrepancy | mcp_or_api_feature), target_subject, "
+                   "requested_capability and urgency_track ({urgency}), plus optional caller_agent / requester_role / caller_purpose. "
+                   "It returns request_id (REQ-2026-xxxxxxxx), status (queued | upvoted_existing), demand_votes and fast_track_url; an identical request "
+                   "upvotes the existing one. Free in every pricing mode, 5 per hour; never opens a GitHub issue. contact_handle only when the user "
+                   "explicitly asks for follow-up or an invoice: it is stored privately and never published.")
+REQUEST_DOC = REQUEST_DOC_FMT.format(urgency=URGENCY_DOC)
+
+
+def package_urgency_doc():
+    """The urgency ids the published MCP stdio package validates locally (URGENCY_TRACKS in packages/mcp-server/src/lookup.mjs).
+    SKILL.md ships in that package and changes only with an MCP release, so it documents the package's own ids; the Worker
+    accepts the package's retired issuer id as an alias of issuer_urgent_review. Read only when SKILL.md is built (never at import:
+    the bounty PR gate imports these tools from a checkout of tools/ alone)."""
+    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "packages", "mcp-server", "src", "lookup.mjs"), encoding="utf-8") as fh:
+        m = re.search(r"^export const URGENCY_TRACKS = Object\.freeze\((\[[^\]\n]*\])\);$", fh.read(), re.M)
+    if not m:
+        raise SystemExit("build_b2a_feeds: URGENCY_TRACKS not found in packages/mcp-server/src/lookup.mjs")
+    return " | ".join(t + (" (issuer clearance, by arrangement)" if t.startswith("issuer_") and t != "issuer_urgent_review"
+                           else " (issuer re-verification, by arrangement)" if t == "issuer_urgent_review" else "") for t in json.loads(m.group(1)))
+
+
 # Copy-paste MCP recipes (receipt/1818): Claude Code, OpenAI Agents SDK, LangChain (each <= 10 lines).
 MCP_RECIPES = [
     ("Claude Code", "bash", "claude mcp add --transport http pacta https://api.pacta.wtf/mcp"),
@@ -536,6 +553,7 @@ X402_DOC = "Pay per call with x402 (USDC on Base, POST JSON, X-PAYMENT v1 or PAY
 
 def skill_md(prop, idx):
     m = idx["summary_metrics"]
+    skill_request_doc = REQUEST_DOC_FMT.format(urgency=package_urgency_doc())
     return f"""---
 name: pacta-protocol-commitments
 description: Run Pacta's free pre-execution check on any Ethereum or Base contract before an agent approves, deposits into or calls it (who can upgrade, pause or blacklist it, how fast), query the free block-pinned DeFi control-plane feeds, verify any value on an archive node, and map live Aave / Euler / Morpho / Sky governance proposals to on-chain state.
@@ -556,7 +574,7 @@ or a live collateral onboarding proposal. Pacta publishes {m['records_indexed']}
 - Remote MCP, zero install: `{MCP_REMOTE_URL}` (Streamable HTTP). Claude Code: `claude mcp add --transport http pacta {MCP_REMOTE_URL}`.
   Tools ({REMOTE_TOOLS_DOC}): {", ".join(f"`{t}`" for t in REMOTE_TOOLS)}.
 - {LOOKUP_DOC}
-- {REQUEST_DOC}
+- {skill_request_doc}
 - {BOUNTIES_DOC}
 - {CALLER_FIELDS_DOC}
 - {FREE_TIER_DOC}

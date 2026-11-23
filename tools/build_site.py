@@ -5706,7 +5706,7 @@ REQUEST_API = f"{API}/v1/requests"
 
 
 # U6: the request form posts this exact wire schema (additionalProperties false at the Worker). urgency_track per track:
-URGENCY = {"community": "community_queue_free", "clearance": "issuer_24h_clearance_5k",
+URGENCY = {"community": "community_queue_free", "clearance": "issuer_urgent_review",
            "api_sla": "api_high_volume_sla"}
 
 
