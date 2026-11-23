@@ -1,0 +1,21 @@
+{
+  "slot_id": "ethereum-fraxlend-pair-deployer",
+  "chain": "ethereum",
+  "protocol_name": "Fraxlend on Ethereum (FraxlendPairDeployer)",
+  "contract_address": "0x5d6e79Bcf90140585CE88c7119b7E43CAaA67044",
+  "official_source_url": "https://raw.githubusercontent.com/FraxFinance/frax-template/master/src/Constants.sol",
+  "pinned_block_number": 26481171,
+  "pinned_block_hash": "0x9c62df93b8709198fe76e8a12d98625c9a0479939e497c50b38743eea5672418",
+  "observed_control_plane": {
+    "is_proxy": false,
+    "implementation_address": null,
+    "controller_kind": "safe",
+    "controller_address": "0x168200cF227D4543302686124ac28aE0eaf2cA0B",
+    "safe_threshold": 3,
+    "safe_owners_count": 6,
+    "timelock_min_delay_seconds": null
+  },
+  "payment_tx_hash": "0x952d3186c7feefdcd58c8d928f9d06ce1f335a538849bbaa25803ac19fab6924",
+  "contributor_github": "zColdWater",
+  "base_payout_address": "0x4Ac77B91D00E4E7707868FfAbeF8a544637FE6b0"
+}
