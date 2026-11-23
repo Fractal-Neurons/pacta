@@ -1,0 +1,15 @@
+{
+  "protocol_slug": "infinifi",
+  "chain": "ethereum",
+  "watched_address": "0x3D18480CC32B6AB3B833dCabD80E76CfD41c48a9",
+  "prior_pinned_block": 26449594,
+  "event_block_number": 26477183,
+  "event_block_hash": "0xbf90b1d0a72570e59d616d3e77d75bb530fa6bd30992b1c12a926532e5d8cfd4",
+  "event_tx_hash": "0x15c60674e55cda4eeb3f8bb63fb953079b636250912f12b622ffd22fa8ef0afc",
+  "change_kind": "timelock_delay_or_queued_op",
+  "before_state": "At block 26477182, getTimestamp(0x3ecd554f437399b5960bd0ef77e9b6a174f8f7c267d3d89c9c5ca9e00402ec39) returned 0.",
+  "after_state": "At block 26477183, getTimestamp(0x3ecd554f437399b5960bd0ef77e9b6a174f8f7c267d3d89c9c5ca9e00402ec39) returned 1796033855 (2026-11-30T10:17:35+00:00). The new batch emitted three CallScheduled logs for two setRoleAdmin calls and one grantRole call, all targeting watched InfiniFiCore 0xF6d48735EcCf12bDC1DF2674b1ce3fcb3bD25490.",
+  "contributor_github": "oppo2357",
+  "base_payout_address": "0x979811E3745fF46cbB57066251F1Aee0c1b24055",
+  "payment_tx_hash": "0x516a381ce24b6262f897db69ddffbbccd841111e7e40a31508824c591f75a079"
+}
