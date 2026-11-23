@@ -1,0 +1,15 @@
+{
+  "protocol_slug": "umia",
+  "chain": "base",
+  "watched_address": "0x55975E430Cc54C63dff03B1E6d27Be574Ce229F6",
+  "prior_pinned_block": 58956515,
+  "event_block_number": 61262105,
+  "event_block_hash": "0x585f6836a9f01fdd6942ee082882d09f256ab7b28aed45b065bef7407100242f",
+  "event_tx_hash": "0xb4662fe272c8cb0328f962411ed2dbf57812fde5bac970985e1b5a1371e10ecd",
+  "change_kind": "implementation_upgrade",
+  "before_state": "EIP-1967 implementation slot = 0xbc35cb6ccc4be46aa491960ebf5281cd5310c653",
+  "after_state": "EIP-1967 implementation slot = 0xa9cf1380967fb3cbdf68f81938d32670332ce2c0",
+  "payment_tx_hash": "0x16fce16fe3e98ea818324d21ee9750073c64d417fd874898df2efd4823e8e786",
+  "contributor_github": "oppo2357",
+  "base_payout_address": "0x979811E3745fF46cbB57066251F1Aee0c1b24055"
+}
