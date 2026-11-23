@@ -1,9 +1,15 @@
 {
-  "name": "@pacta/mcp-server",
-  "version": "0.1.5",
+  "name": "pacta-mcp-server",
+  "private": true,
+  "version": "0.1.6",
   "mcpName": "io.github.Fractal-Neurons/pacta",
-  "description": "Zero-dependency MCP server for Pacta DeFi control-plane telemetry, Base EAS commitments, and x402 Base USDC live scans.",
+  "description": "Zero-dependency MCP server for Pacta, by Fractal Neurons: contract checks for 316 DeFi protocols on Ethereum & Base (189 Base-EAS attested), with optional x402 Base USDC live scans.",
   "license": "MIT",
+  "author": {
+    "name": "Fractal Neurons",
+    "url": "https://fractalneurons.com",
+    "email": "pacta@dri.network"
+  },
   "type": "module",
   "main": "./src/server.mjs",
   "types": "./index.d.ts",
@@ -34,7 +40,11 @@
     "url": "https://github.com/Fractal-Neurons/pacta.git",
     "directory": "packages/mcp-server"
   },
-  "homepage": "https://pacta.wtf/",
+  "homepage": "https://pacta.wtf",
+  "bugs": {
+    "url": "https://github.com/Fractal-Neurons/pacta/issues",
+    "email": "pacta@dri.network"
+  },
   "keywords": [
     "mcp",
     "model-context-protocol",

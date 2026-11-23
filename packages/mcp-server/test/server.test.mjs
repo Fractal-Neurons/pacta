@@ -22,6 +22,7 @@ import "./proposals.test.mjs";
 import "./registry-skill.test.mjs";
 import "./x402-v2.test.mjs";
 import "./submit.test.mjs";
+import "./lookup.test.mjs";
 
 // Tests must not depend on the caller's environment.
 for (const k of ["PACTA_X402_URL", "PACTA_X402_MAX_ATOMIC", "PACTA_X402_TIMEOUT_MS", "PACTA_INDEX_PATH", "PACTA_PROPOSALS_PATH", "PACTA_SPEC_PATH"]) {
@@ -71,7 +72,7 @@ const mockJson = (status, body, headers = {}) => {
 
 test("default mode (PACTA_X402_URL unset) exposes only free tools and disables paid x402 gateway", async () => {
   assert.equal(X402_DEFAULTS.defaultBaseUrl, null);
-  assert.equal(X402_DEFAULTS.gatewayUrl, "https://pacta-x402.pacta.workers.dev");
+  assert.equal(X402_DEFAULTS.gatewayUrl, "https://api.pacta.wtf");
   assert.equal(X402_DEFAULTS.deploymentStatus, "live_opt_in");
   const srv = new PactaMcpServer({
     indexData: FIXTURE,
@@ -92,9 +93,9 @@ test("default mode (PACTA_X402_URL unset) exposes only free tools and disables p
   assert.equal(disc.enabled, false);
   assert.equal(disc.x402Url, null);
   assert.equal(disc.baseUrlEnvVar, "PACTA_X402_URL");
-  assert.equal(disc.x402_gateway_url, "https://pacta-x402.pacta.workers.dev", "live gateway published for discovery");
-  assert.ok(disc.enableHint.includes("PACTA_X402_URL=https://pacta-x402.pacta.workers.dev"));
-  assert.equal(disc.x402Defaults.gatewayUrl, "https://pacta-x402.pacta.workers.dev");
+  assert.equal(disc.x402_gateway_url, "https://api.pacta.wtf", "live gateway published for discovery");
+  assert.ok(disc.enableHint.includes("PACTA_X402_URL=https://api.pacta.wtf"));
+  assert.equal(disc.x402Defaults.gatewayUrl, "https://api.pacta.wtf");
 
   const paidAttempt = await srv.handleMessage({
     jsonrpc: "2.0",
@@ -104,7 +105,7 @@ test("default mode (PACTA_X402_URL unset) exposes only free tools and disables p
   });
   assert.equal(paidAttempt.result.isError, true);
   assert.match(paidAttempt.result.content[0].text, /PACTA_X402_URL/);
-  assert.ok(paidAttempt.result.content[0].text.includes("https://pacta-x402.pacta.workers.dev"));
+  assert.ok(paidAttempt.result.content[0].text.includes("https://api.pacta.wtf"));
 });
 
 test("setting PACTA_X402_URL enables all free + paid x402 tools (lookup + 4 local + 5 gateway) and live discovery", async () => {
@@ -145,8 +146,8 @@ test("free index fallback URL and anchoring metadata", async () => {
   assert.equal(anc.eas_schema_uid, DEFAULT_ANCHORING.eas_schema_uid);
   assert.equal(anc.x402_gateway.enabled, false);
   assert.equal(anc.x402_gateway.x402_url, null, "PACTA_X402_URL unset stays opt-in: no configured gateway");
-  assert.equal(anc.x402_gateway_url, "https://pacta-x402.pacta.workers.dev");
-  assert.equal(DEFAULT_ANCHORING.x402_gateway_url, "https://pacta-x402.pacta.workers.dev");
+  assert.equal(anc.x402_gateway_url, "https://api.pacta.wtf");
+  assert.equal(DEFAULT_ANCHORING.x402_gateway_url, "https://api.pacta.wtf");
 });
 
 test("402 challenge builds PaymentRequirements + EIP-712 typedData when x402Url is set", async () => {

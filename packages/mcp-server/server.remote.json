@@ -1,14 +1,14 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
   "name": "io.github.Fractal-Neurons/pacta",
-  "title": "Pacta",
-  "description": "Free pre-execution contract checks for AI agents: preflight, control-plane scans, EAS anchors.",
+  "title": "Pacta, by Fractal Neurons",
+  "description": "Fractal Neurons: contract checks for 316 DeFi protocols on Ethereum & Base (189 Base-EAS attested)",
   "repository": {
     "url": "https://github.com/Fractal-Neurons/pacta",
     "source": "github",
     "subfolder": "packages/mcp-server"
   },
-  "version": "0.1.5",
+  "version": "0.1.6",
   "websiteUrl": "https://pacta.wtf/",
   "icons": [
     {
@@ -25,7 +25,7 @@
   "remotes": [
     {
       "type": "streamable-http",
-      "url": "https://pacta-x402.pacta.workers.dev/mcp"
+      "url": "https://api.pacta.wtf/mcp"
     }
   ]
 }

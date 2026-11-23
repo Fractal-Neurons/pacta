@@ -33,7 +33,7 @@ export const SNIPPET_LENGTH = 300;
 
 // Canonical live Pacta x402 edge Worker (Cloudflare). Published for discovery only: paid tools stay opt-in and are
 // enabled solely by setting PACTA_X402_URL (defaultBaseUrl stays null, so nothing is ever paid without that choice).
-export const X402_GATEWAY_URL = "https://pacta-x402.pacta.workers.dev";
+export const X402_GATEWAY_URL = "https://api.pacta.wtf";
 /** CAIP-2 network id used by x402 v2 for Base mainnet (v1 uses the legacy name "base"). */
 export const BASE_NETWORK_V2 = "eip155:8453";
 

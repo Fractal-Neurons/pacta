@@ -151,7 +151,7 @@ test("stdio stream wrapper: initialize + tools/list + structured paid error", as
   input.write("not json\n");
   const lines = await out.waitFor(4);
   h.close();
-  assert.equal(lines[0].result.serverInfo.name, "@pacta/mcp-server");
+  assert.equal(lines[0].result.serverInfo.name, "io.github.Fractal-Neurons/pacta");
   assert.equal(lines[1].result.tools.length, 12);
   const err = JSON.parse(lines[2].result.content[0].text);
   assert.equal(lines[2].result.isError, true);

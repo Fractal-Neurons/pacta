@@ -959,13 +959,35 @@ def ready_fixture_brief(idx):
 # MCP package version: 0.1.5 on Commit 1 (published), 0.1.6 on Commit 2 (the registry bump). The package's own files must agree with
 # packages/mcp-server/package.json; site documents may still name the published 0.1.5 until Commit 2 ships.
 MCP_VERSIONS_OK = {"0.1.5", "0.1.6"}
+# packages/mcp-server/SKILL.md vs docs/SKILL.md (tools/build_site.package_skill writes the package copy on every build). From package
+# 0.1.6: an undated bounties pointer, and the MCP status line names only io.github.Fractal-Neurons/pacta, the remote endpoint and the
+# clone command (MCP_STATUS_LINE), whatever the site copy still says. Below 0.1.6 (the frozen 0.1.5 package files): once the site copy
+# carries MCP_STATUS_LINE, the package copy keeps its old status line.
+PKG_SKILL_BOUNTIES = '- Bounties: active verification waves, open slots, and current submission rules are published at https://pacta.wtf/bounties/'
+MCP_STATUS_LINE = 'registry_remote: io.github.Fractal-Neurons/pacta is published in the official MCP Registry as a remote Streamable HTTP server (no install): https://api.pacta.wtf/mcp. Local stdio server: git clone https://github.com/Fractal-Neurons/pacta.git, then node packages/mcp-server/bin/pacta-mcp.mjs.'
+PKG_SKILL_STATUS_015 = 'publication_pending: @pacta/mcp-server is not yet published to npm or the MCP registry. Use the remote MCP server now (no install): https://api.pacta.wtf/mcp. The stdio server runs from a clone of the repository: node packages/mcp-server/bin/pacta-mcp.mjs.'
 
 
 def skill_copy_ok(site_skill, pkg_skill, pkg_json):
-    """docs/SKILL.md and packages/mcp-server/SKILL.md are identical except the frontmatter version line, which in the package copy
-    is the package's own version (package.json)."""
-    norm = lambda t: re.sub(r'^version: "[^"]*"$', 'version: ""', t, count=1, flags=re.M)
-    return norm(site_skill) == norm(pkg_skill) and f'version: "{json.loads(pkg_json)["version"]}"' in pkg_skill
+    """docs/SKILL.md and packages/mcp-server/SKILL.md are identical line for line except the frontmatter version line (the package's
+    own version, package.json) and the package-only lines above. Any other difference fails."""
+    ver = json.loads(pkg_json)["version"]
+    if f'version: "{ver}"' not in pkg_skill:
+        return False
+    v016 = tuple(int(x) for x in re.findall(r"\d+", ver)[:3]) >= (0, 1, 6)
+    a, b = site_skill.split("\n"), pkg_skill.split("\n")
+    if len(a) != len(b):
+        return False
+    vline = next((i for i, s in enumerate(a) if re.fullmatch(r'version: "[^"]*"', s)), None)
+    for i, (s, p) in enumerate(zip(a, b)):
+        if s == p or (i == vline and p == f'version: "{ver}"'):
+            continue
+        if v016 and ((s.startswith("- Bounties") and p == PKG_SKILL_BOUNTIES) or (s.startswith("publication_pending: ") and p == MCP_STATUS_LINE)):
+            continue
+        if not v016 and s == MCP_STATUS_LINE and p == PKG_SKILL_STATUS_015:
+            continue
+        return False
+    return not (v016 and re.search(r"^- Bounties Wave|^publication_pending:|" + re.escape("@pacta/") + "mcp-server", pkg_skill, re.M))
 
 
 def main(argv=None):
@@ -1951,9 +1973,10 @@ def main(argv=None):
                                                  for f in ("docs/SKILL.md", "docs/llms.txt", "docs/llms-full.txt"))
             and card_["endpoints"].get("lookup") in (API_ + "/v1/protocols/lookup", WORKERS_API_ + "/v1/protocols/lookup") and man_.get("lookup", {}).get("tool") == "pacta_lookup_protocol"
             and "pacta_lookup_protocol" in read("docs/llms/index.html") and f"{BS.BASE_URL}/api/v1/lookup.json" in read("docs/sitemap.xml"),
-        "@pacta/mcp-server 0.1.5 everywhere": {json.loads(read("packages/mcp-server/package.json"))["version"], json.loads(read("packages/mcp-server/server.json"))["version"],
-                                               json.loads(read("packages/mcp-server/server.json"))["packages"][0]["version"], json.loads(read("packages/mcp-server/server.remote.json"))["version"],
-                                               man_.get("packageVersion")} <= MCP_VERSIONS_OK
+        "MCP server 0.1.5 / 0.1.6 everywhere (an npm entry or packageVersion only while still present)": {
+            json.loads(read("packages/mcp-server/package.json"))["version"], json.loads(read("packages/mcp-server/server.json"))["version"],
+            *[p_["version"] for p_ in json.loads(read("packages/mcp-server/server.json")).get("packages", [])],
+            json.loads(read("packages/mcp-server/server.remote.json"))["version"], *([man_["packageVersion"]] if "packageVersion" in man_ else [])} <= MCP_VERSIONS_OK
             and json.loads(read("packages/mcp-server/package.json"))["version"] == json.loads(read("packages/mcp-server/server.json"))["version"]
             and any(f'version: "{v_}"' in read("docs/SKILL.md") for v_ in MCP_VERSIONS_OK)
             and f'version: "{json.loads(read("packages/mcp-server/package.json"))["version"]}"' in read("packages/mcp-server/src/server.mjs"),
@@ -3629,7 +3652,7 @@ def main(argv=None):
             and re.search(r'\[!\[Bounties & Leaderboard\]\(https://img\.shields\.io/badge/Bounties_%26_Leaderboard-%24\d+_USDC_Settled-10b981\?style=for-the-badge&labelColor=000000\)\]\(https://pacta\.wtf/leaderboard/\)', read("README.md")) is not None
             and "**Wave 4 OPEN**" in read("README.md") and all(f"https://github.com/Fractal-Neurons/pacta/issues/{n_}" in read("README.md") for n_ in (158, 159, 161))
             and "Wave 3 OPEN" not in read("README.md")
-            and any(f"`@pacta/mcp-server` {v_}" in read("README.md") for v_ in MCP_VERSIONS_OK) and "0.1.4" not in read("README.md")
+            and any(f"`io.github.Fractal-Neurons/pacta` {v_}" in read("README.md") for v_ in MCP_VERSIONS_OK) and "@pacta/" + "mcp-server" not in read("README.md") and "0.1.4" not in read("README.md")
             and json.loads(read("packages/mcp-server/package.json"))["version"] in MCP_VERSIONS_OK
             and "Master Issue #41" not in read("README.md").replace("Master Issue #41 (retired)", "")
             and f"**{BS.coverage_line(idx_)}**" in read("README.md")
