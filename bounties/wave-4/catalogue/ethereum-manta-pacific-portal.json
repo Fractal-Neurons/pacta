@@ -1,0 +1,21 @@
+{
+  "slot_id": "ethereum-manta-pacific-portal",
+  "chain": "ethereum",
+  "protocol_name": "Manta Pacific Canonical Bridge (OptimismPortalProxy)",
+  "contract_address": "0x9168765EE952de7C6f8fC6FaD5Ec209B960b7622",
+  "official_source_url": "https://raw.githubusercontent.com/Manta-Network/docs/main/docs/manta-pacific/Build%20on%20Manta/Contracts.md",
+  "pinned_block_number": 26480819,
+  "pinned_block_hash": "0xe2aa4df418b39f9523be60c2d4c90e7c29d0aca78b19e78f146c5168011f9325",
+  "observed_control_plane": {
+    "is_proxy": true,
+    "implementation_address": "0x4fEee20712abF5724C2BC0476BD87CBf1F1eE388",
+    "controller_kind": "safe",
+    "controller_address": "0x3c46C05c2eba8eDd0B0f0C8B1D2fBf9fc53ea01E",
+    "safe_threshold": 5,
+    "safe_owners_count": 7,
+    "timelock_min_delay_seconds": null
+  },
+  "payment_tx_hash": "0x5a0da490b52befdcdfc2674df229c65e49676b307acb6c807c5edd4f4ae6d81d",
+  "contributor_github": "zColdWater",
+  "base_payout_address": "0x4Ac77B91D00E4E7707868FfAbeF8a544637FE6b0"
+}
