@@ -4295,7 +4295,9 @@ def main(argv=None):
           and 'id="wave-4-161-issue"' not in bnt_w4 and re.search(r"\$10(?![0-9,M])", iss_all_w4["161"]["body"])
           and all(note_w4(k_) in sec_w4 for k_ in ("158", "159"))
           and "the title line says “15 Total Awards · 5 Open Now on Base”" in sec_w4
-          and "a later sentence says 18 settled, 6 open" in sec_w4
+          and re.findall(r"a later sentence says (\d+) settled, (\d+) open", sec_w4) == [     # each such sentence that disagrees with the status line
+              m_.groups()[1:] for m_ in re.finditer(r"\*\*(\d+) total Catalogue slots published; (\d+) settled, (\d+) open\*\*",
+                                                  iss_all_w4["158"]["body"]) if (int(m_.group(2)), int(m_.group(3))) != (sts_w4["158"][3], sts_w4["158"][0])]
           and all(f"the heading “Batch {b_} Closed Target List (12 Open Slots — Ethereum &amp; Base)”;" in sec_w4 for b_ in (1, 2))
           and all(BS_w4.wave4_issue_md_html(iss_all_w4[k_]["body"]) in sec_w4 for k_ in ("158", "159"))
           and sec_w4.count('<p class="w4-quote-title" data-wave4-issue-title><b>') == 2

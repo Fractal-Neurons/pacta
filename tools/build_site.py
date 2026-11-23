@@ -4570,12 +4570,12 @@ WAVE4_WON_PR = {"base-morpho-blue-singleton": 160, "base-uniswap-v2-factory": 16
                 "base-spark-psm3": 181, "base-fluid-liquidity": 185, "base-chainlink-ccip-router": 187, "ethereum-linea-rollup": 189,
                 "ethereum-fx-protocol-treasury": 190, "ethereum-unichain-optimism-portal": 194, "ethereum-scroll-l1-messenger": 197,
                 "base-euler-v2-evault-factory": 199, "ethereum-uniswap-v2-factory": 201, "ethereum-sushiswap-v2-factory": 202,
-                "ethereum-zksync-era-bridgehub": 209}
+                "ethereum-zksync-era-bridgehub": 209, "ethereum-near-erc20-locker": 210, "ethereum-origin-oeth-vault": 211}
 # Merge time (GitHub pulls API merged_at) of each catalogue pull request merged after #158's last update, i.e. a won slot that the
 # issue's status line still counts as open. While this is non-empty, #158's heading and summary follow the merged entries, with the
 # newest of these merges as the snapshot time, and the verbatim label says the status line has not caught up. Empty it once a refreshed
 # issue counts them (the build asserts both ways).
-WAVE4_MERGED_AFTER_ISSUE = {209: "2026-11-23T16:47:39Z"}
+WAVE4_MERGED_AFTER_ISSUE = {}
 
 
 def wave4_merged():
