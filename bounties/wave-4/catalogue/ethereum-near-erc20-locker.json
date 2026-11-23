@@ -1,0 +1,21 @@
+{
+  "slot_id": "ethereum-near-erc20-locker",
+  "chain": "ethereum",
+  "protocol_name": "NEAR Rainbow Bridge (ERC20Locker)",
+  "contract_address": "0x23Ddd3e3692d1861Ed57EDE224608875809e127f",
+  "official_source_url": "https://raw.githubusercontent.com/aurora-is-near/rainbow-bridge-client/main/packages/client/README.md",
+  "pinned_block_number": 26479282,
+  "pinned_block_hash": "0x25156944d0a29dbab8e6d926d4b1b21f7b9d10563d3e47c694ab2bbc3100f678",
+  "observed_control_plane": {
+    "is_proxy": false,
+    "implementation_address": null,
+    "controller_kind": "safe",
+    "controller_address": "0x2468603819Bf09Ed3Fb6f3EFeff24B1955f3CDE1",
+    "safe_threshold": 3,
+    "safe_owners_count": 5,
+    "timelock_min_delay_seconds": null
+  },
+  "payment_tx_hash": "0x1a75ea261676e312ba1fff855bb2b956238ac5a81b51023c1cea328c01999194",
+  "contributor_github": "shandrila2-pixel",
+  "base_payout_address": "0x95b4338a3FcE74C1B8CCbc9e17a6c323F7795059"
+}
