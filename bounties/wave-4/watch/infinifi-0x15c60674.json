@@ -1,0 +1,15 @@
+{
+  "protocol_slug": "infinifi",
+  "chain": "ethereum",
+  "watched_address": "0x3D18480CC32B6AB3B833dCabD80E76CfD41c48a9",
+  "prior_pinned_block": 26449594,
+  "event_block_number": 26477183,
+  "event_block_hash": "0xbf90b1d0a72570e59d616d3e77d75bb530fa6bd30992b1c12a926532e5d8cfd4",
+  "event_tx_hash": "0x15c60674e55cda4eeb3f8bb63fb953079b636250912f12b622ffd22fa8ef0afc",
+  "change_kind": "timelock_delay_or_queued_op",
+  "before_state": "getTimestamp(0x3ecd554f437399b5960bd0ef77e9b6a174f8f7c267d3d89c9c5ca9e00402ec39) = 0",
+  "after_state": "getTimestamp(0x3ecd554f437399b5960bd0ef77e9b6a174f8f7c267d3d89c9c5ca9e00402ec39) = 1796033855",
+  "payment_tx_hash": "0xc5233734ba64f15486e0a5650e2e9a7453f2a1ae0c43c7d4cfac9ec47be4db0a",
+  "contributor_github": "dankezo",
+  "base_payout_address": "0xa28AEDccDF8e1Eb2D234E52df200A29Fb84091b7"
+}
