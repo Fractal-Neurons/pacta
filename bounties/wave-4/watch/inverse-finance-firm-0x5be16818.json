@@ -1,0 +1,15 @@
+{
+  "protocol_slug": "inverse-finance-firm",
+  "chain": "ethereum",
+  "watched_address": "0x926dF14a23BE491164dCF93f4c468A50ef659D5B",
+  "prior_pinned_block": 26449594,
+  "event_block_number": 26468320,
+  "event_block_hash": "0x3c44ef3a571dd518df017d43183a06f42cf1b1a54bb8101ea624ae115737d842",
+  "event_tx_hash": "0x5be168184a65ef021019234a211b883c4b2f3ed80e47d2d5e609387a70966f0d",
+  "change_kind": "timelock_delay_or_queued_op",
+  "before_state": "Timelock delay = 172800 seconds on 0x926dF14a23BE491164dCF93f4c468A50ef659D5B; txHash 0xa37f636c2a48eff7269829cfc69bc2411978fec441bb1d7deab3274f5f04640c was not yet queued.",
+  "after_state": "QueueTransaction on 0x926dF14a23BE491164dCF93f4c468A50ef659D5B with txHash 0xa37f636c2a48eff7269829cfc69bc2411978fec441bb1d7deab3274f5f04640c, target 0x2b34548b865ad66a2b046cb82e59ee43f75b90fd, eta = 1795495187, and delay = 172800 seconds.",
+  "payment_tx_hash": "0xd44a544ef2c8830eac7fe8f15bb5000d972e7e00d5a321b4593b6208ef4dbbf8",
+  "contributor_github": "G317394754",
+  "base_payout_address": "0x8114ecB579270283CE21683E0Bb7F94C9c9492b1"
+}
