@@ -381,13 +381,15 @@ class V6(unittest.TestCase):
         self.assertIn("58,315,414", sc)
         self.assertIn("58,885,628", sc)
         self.assertIn("3-of-6 dev multisig", sc)
+        # Scorecard-87 R1: the quorum is now derived from the dev-multisig record (no factor override)
         self.assertEqual(next(f for f in CARDS["beefy-finance-base"]["factors"] if f["key"] == "quorum")["value"],
-                         "3-of-6 dev multisig (TimelockController proposer)")
+                         "Known controlling quorum: 3-of-6 dev multisig")
 
     def test_a5_fx_both_safes(self):
         q = next(f for f in CARDS["f-x-protocol-v2"]["factors"] if f["key"] == "quorum")["value"]
-        self.assertIn("ProtocolTreasury EmergencySafe: 3-of-4", q)
-        self.assertIn("V2 Router operational Safe: 6-of-9", q)
+        # Scorecard-87 R3 (SC87R2-02): both Safes, each with its own pinned block
+        self.assertIn("3-of-4 ProtocolTreasury EmergencySafe (block #26,400,152)", q)
+        self.assertIn("6-of-9 V2 Router / ProtocolTreasury OpsSafe (block #26,448,221)", q)
         sc = CARDS["f-x-protocol-v2"]["scopeNote"]
         self.assertIn("6-of-9", sc)
         self.assertIn("3-of-4 EmergencySafe", sc)
@@ -396,8 +398,8 @@ class V6(unittest.TestCase):
         st = lambda s, k: next(f for f in CARDS[s]["factors"] if f["key"] == k)
         e = st("treehouse-tree-teth", "emergency")
         self.assertEqual(e["state"], "a")
-        self.assertEqual(e["value"], "Immediate · TREE transfer blacklister() is a 5-of-7 Safe with 0s enforced delay (five-day timelock retained on "
-                                     "TREE and tETH owner paths)")
+        self.assertEqual(e["value"], "Immediate · TREE transfer blacklister() is a 5-of-7 Safe with 0s enforced delay (5d TimelockController retained on "
+                                     "TREE and tETH owner paths)")   # Scorecard-87 R3 (SC87R2-02)
         # the breached dimension of each weaker-protection Delta (where it is a rosette factor) is never Strong
         breached = {"treehouse-tree-teth": "emergency", "usual-money-usd0-usd0": "timelock", "inverse-finance-firm": "quorum",
                     "zircuit-staking": "quorum", "benddao-ape-staking": "timelock", "pickle": "timelock", "cian-yield-layer": "timelock",
@@ -420,7 +422,8 @@ class V6(unittest.TestCase):
         self.assertEqual((c["grade"], c["gradeLabel"]), ("docs_updated", "DOCS UPDATED"))
         self.assertEqual(c["finding"], f'{w["headline"]} (#26,451,608)')
         t = page("tori-finance")
-        self.assertIn(w["evidenceCaption"], t)
+        import html as H_   # SC87-01: the caption's cited record is a link, so compare the visible text
+        self.assertIn(w["evidenceCaption"], H_.unescape(re.sub(r"<[^>]+>", "", t)))
         self.assertIn("Docs updated", t)
         self.assertNotIn("Resolved by a documentation change", t)
         for f in glob.glob(os.path.join(ROOT, "docs", "protocols", "*", "index.html")):
@@ -652,7 +655,11 @@ class V8(unittest.TestCase):
             if e["state"] != "g":
                 continue
             ev = e["evidence"].split(": ", 1)[1]
-            self.assertTrue(SC._EMERGENCY.search(ev) and (SC._nofs(ev) or "-of-N Safe" in e["value"]), s)
+            # a camelCase pause setter (setChainIdDepositsPaused()) names the pause power too (Scorecard-87, hop-protocol)
+            pause_ = SC._EMERGENCY.search(ev) or re.search(r"\b[a-z]\w*Pause[ds]?\w*\(\)", ev)
+            # a joined row (Scorecard-87 additionalEvidenceRecordIds) may read its quorum from the explicitly cited sibling record
+            sib_ = " ".join(r_["onchain_observed"] for r_ in j("api", "v1", "index.json")["entries"] if r_["id"] in (e.get("additionalEvidenceRecordIds") or []))
+            self.assertTrue(pause_ and (SC._nofs(ev) or SC._nofs(sib_) or "-of-N Safe" in e["value"]), s)
 
 class V9(unittest.TestCase):
     INDEX = None
@@ -709,7 +716,7 @@ class V9(unittest.TestCase):
         addr = re.compile(r"0x[0-9a-fA-F]{40}")
         strong = [(s, x) for s, c in CARDS.items() for x in c["factors"] if x["key"] == "emergency" and x["state"] == "g"]
         self.assertEqual(len(CARDS), 316)
-        self.assertEqual(len(strong), 14)
+        self.assertEqual(len(strong), 13)   # Scorecard-87: hop-protocol emergency is reviewed down (M-group), 14 -> 13
         for s, x in strong:
             t = self._rec(x["evidenceRecordId"])["onchain_observed"]
             for sent in re.split(r";|(?<=[a-z0-9)])\.\s+(?=[A-Z])", t):
@@ -839,6 +846,203 @@ class ObolNeutralGovernance(unittest.TestCase):
             self.assertNotIn(f"- {r} [aligned_baseline] ", full)
         ix = json.load(open(os.path.join(ROOT, "docs", "api", "v1", "index.json"), encoding="utf-8"))
         self.assertEqual({e["classification"] for e in ix["entries"] if e["id"] in rows}, {"aligned_baseline"})   # attested data untouched
+
+
+class Scorecard87(unittest.TestCase):
+    """Business receipt 7462: one round, exactly 130 factor slices on 87 pages (87 rule-derived + 43 reviewed); everything else
+    byte-identical to BASE (main 7cdc9a96; the scorecard commit b80f21eb was cut on f7ea61a7)."""
+    BASE = "7cdc9a96bd59a2c0b77fb8a46dacc93c12cac814"
+    CUT = ("f7ea61a757dc00749dee639105bda3e83b907408", "b80f21ebd9e478d68dd0f60cac9cd7e414b6cdcb")
+    EXP = {e["slice_id"]: e for e in _load(os.path.join(HERE, "scorecard87_expected_136.json"), encoding="utf-8")["entries"]}
+    FORBIDDEN = re.compile(r"\b(?:immutable|renounced|EOA)\b", re.I)
+
+    @classmethod
+    def _git(cls, path, binary=False):
+        r = subprocess.run(["git", "-c", "safe.directory=*", "-C", ROOT, "show", f"{cls.BASE}:{path}"], capture_output=True)
+        if r.returncode:
+            raise unittest.SkipTest(f"base commit {cls.BASE[:8]} not available")
+        return r.stdout if binary else r.stdout.decode("utf-8")
+
+    @classmethod
+    def setUpClass(cls):
+        base = json.loads(cls._git("docs/api/v1/scorecards.json"))["protocols"]
+        cls.B = {(p["slug"], f["key"]): f for p in base for f in p["factors"]}
+        cls.N = {(s, f["key"]): f for s, c in CARDS.items() for f in c["factors"]}
+        cls.changed = {f"{s}:{k}" for (s, k) in cls.N if cls.N[(s, k)] != cls.B[(s, k)]}
+        cls.pages = {e["slug"] for e in cls.EXP.values()}
+
+    def test_exactly_the_130_slices_change(self):
+        self.assertEqual(len(self.N), 1580)
+        self.assertEqual(set(self.B), set(self.N))
+        self.assertEqual(self.changed, set(self.EXP))
+        self.assertEqual((len(self.EXP), len(self.pages), len(self.N) - len(self.changed)), (136, 87, 1444))
+        self.assertEqual(sum(e["bucket"] == "B1_RULE" for e in self.EXP.values()), 87)
+
+    def test_every_changed_slice_matches_the_reference(self):
+        for sid, e in self.EXP.items():
+            s, k = sid.rsplit(":", 1)
+            f, a = self.N[(s, k)], e["after"]
+            self.assertEqual((f["state"], f["value"], f["evidenceRecordId"], f["evidenceCaption"]),
+                             (a["state"], a["value"], a["evidenceRecordId"], a["evidenceCaption"]), sid)
+            self.assertEqual(f.get("additionalEvidenceRecordIds", []), a["additionalEvidenceRecordIds"], sid)
+            self.assertEqual(f["evidence"].split(": ", 1)[0], a["evidenceRecordId"], sid)
+            self.assertNotRegex(f["value"] + " " + f["evidenceCaption"], self.FORBIDDEN, sid)
+
+    def test_rules_derive_state_and_evidence_before_any_override(self):
+        # R1-R5 run on exactly the 87 rule slices; with every labelOverride for those slices removed, the raw factors already carry the
+        # reference state and cited record and no forbidden word. Their overrides may only carry value / caption / additional ids.
+        import copy
+        import scorecard as SC
+        b1 = {sid for sid, e in self.EXP.items() if e["bucket"] == "B1_RULE"}
+        self.assertEqual({f"{s}:{k}" for s, k in SC.RULE_SLICES_87}, b1)
+        data = CORR.data()
+        lfo = data["labelOverrides"]["factorOverrides"]
+        for sid in b1:
+            s, k = sid.rsplit(":", 1)
+            o = (lfo.get(s) or {}).get(k)
+            if o is not None:
+                self.assertTrue(set(o) <= {"value", "evidenceCaption", "additionalEvidenceRecordIds"}, (sid, set(o)))
+            self.assertNotIn(k, ((data["protocols"].get(s) or {}).get("factorOverrides") or {}), sid)
+        stripped = copy.deepcopy(data)
+        for sid in b1:
+            s, k = sid.rsplit(":", 1)
+            stripped["labelOverrides"]["factorOverrides"].get(s, {}).pop(k, None)
+        saved = CORR._DATA
+        try:
+            CORR._DATA = stripped
+            raw = {(c["slug"], f["key"]): f for c in BS.scorecards(j("api", "v1", "index.json")) for f in c["factors"]}
+        finally:
+            CORR._DATA = saved
+        for sid in sorted(b1):
+            s, k = sid.rsplit(":", 1)
+            a, f = self.EXP[sid]["after"], raw[(s, k)]
+            self.assertEqual((f["state"], f["evidenceRecordId"]), (a["state"], a["evidenceRecordId"]), sid)
+            self.assertNotRegex(f["value"], self.FORBIDDEN, sid)
+        # and outside the gate the rules never run: every other slice of the stripped build equals f7ea61a7
+        for key, f in raw.items():
+            if f"{key[0]}:{key[1]}" not in self.EXP:
+                self.assertEqual(f, self.B[key], key)
+
+    def test_clean_pages_cards_and_feed_items_byte_identical(self):
+        clean = sorted(set(CARDS) - self.pages)
+        self.assertEqual(len(clean), 229)
+        for s in clean:
+            p = os.path.join("docs", "protocols", s, "index.html")
+            self.assertEqual(_read(os.path.join(ROOT, p), "rb"), self._git(p, binary=True), s)
+            c = os.path.join("docs", "cards", f"{s}.png")
+            if os.path.exists(os.path.join(ROOT, c)):
+                self.assertEqual(_read(os.path.join(ROOT, c), "rb"), self._git(c, binary=True), s)
+        base_feed = {i["feedId"]: i for i in json.loads(self._git("docs/api/v1/x-feed.json"))["items"]}
+        feed = {i["feedId"]: i for i in j("api", "v1", "x-feed.json")["items"]}
+        self.assertEqual(set(base_feed), set(feed))
+        for fid, it in feed.items():
+            if it["slug"] not in self.pages:
+                self.assertEqual(it, base_feed[fid], fid)
+            else:
+                # R2: all five rosette entries of a changed protocol follow its scorecard (parity included)
+                cue = {"g": "S", "b": "M", "a": "W", "n": "—", "u": "—"}
+                for r in it["rosette"]:
+                    f = self.N[(it["slug"], r["key"])]
+                    self.assertEqual((r["state"], r["cue"], r["value"]), (f["state"], cue[f["state"]], f["value"]), fid)
+                if it["slug"] in ("layerzero-v2", "m0-protocol-m", "flokifi-locker"):
+                    prose = " ".join(str(it.get(k, "")) for k in ("summaryShort", "docsSay", "chainSays", "mainPostText"))
+                    self.assertNotRegex(prose, self.FORBIDDEN, fid)
+
+    def test_cards_rerendered_only_where_a_state_changed(self):
+        import struct
+        moved = {s for s in self.pages if any(self.N[(s, k)]["state"] != self.B[(s, k)]["state"] for k in ("upgrade", "timelock", "quorum", "emergency", "parity"))}
+        out = subprocess.run(["git", "-c", "safe.directory=*", "-C", ROOT, "diff", "--name-only", self.BASE, "--", "docs/cards/"], capture_output=True, text=True)
+        diff = {os.path.basename(p)[:-4] for p in out.stdout.split()}
+        # R2: plus the changed protocols whose card text (docsSay / chainSays) changed in x-feed.json (m0-protocol-m)
+        base_feed = {i["feedId"]: i for i in json.loads(self._git("docs/api/v1/x-feed.json"))["items"]}
+        texted = {i["slug"] for i in j("api", "v1", "x-feed.json")["items"]
+                  if any(i.get(k) != base_feed[i["feedId"]].get(k) for k in ("docsSay", "chainSays"))}
+        self.assertTrue(texted <= self.pages, sorted(texted - self.pages))
+        self.assertEqual(diff, moved | texted, sorted(diff ^ (moved | texted)))
+        for s in diff:
+            b = _read(os.path.join(ROOT, "docs", "cards", f"{s}.png"), "rb")
+            self.assertEqual(b[:8], b"\x89PNG\r\n\x1a\n", s)
+            self.assertEqual(struct.unpack(">II", b[16:24]), (1200, 675), s)
+
+    def test_attested_rows_js_css_and_mcp_untouched(self):
+        paths = ["docs/api/v1/index.json", "docs/api/v1/rpc-pinned.json", "docs/api/v1/onboarding.json", "docs/api/v1/radar.json", "audits/",
+                 "docs/styles.css", "docs/app.js", "tools/app.src.js", "tools/pacta_x402_call.py", ".github/workflows/"]
+        # packages/mcp-server/ equals BASE while the package is still 0.1.5; the 0.1.6 package is its own later push
+        if _load(os.path.join(ROOT, "packages", "mcp-server", "package.json"), encoding="utf-8")["version"] == "0.1.5":
+            paths.append("packages/mcp-server/")
+        out = subprocess.run(["git", "-c", "safe.directory=*", "-C", ROOT, "diff", self.BASE, "--", *paths], capture_output=True)
+        self.assertEqual(out.returncode, 0)
+        self.assertEqual(out.stdout, b"")
+        # the scorecard commit itself never touches packages/mcp-server/ (checked whenever f7ea61a7..b80f21eb is in the history)
+        if all(subprocess.run(["git", "-c", "safe.directory=*", "-C", ROOT, "merge-base", "--is-ancestor", c, "HEAD"], capture_output=True).returncode == 0
+               for c in self.CUT):
+            out = subprocess.run(["git", "-c", "safe.directory=*", "-C", ROOT, "diff", f"{self.CUT[0]}..{self.CUT[1]}", "--", "packages/mcp-server/"],
+                                 capture_output=True)
+            self.assertEqual((out.returncode, out.stdout), (0, b""))
+
+    def test_joined_rows_cite_their_siblings_on_one_evidence_tag(self):
+        joined = {sid: e["after"]["additionalEvidenceRecordIds"] for sid, e in self.EXP.items() if e["after"]["additionalEvidenceRecordIds"]}
+        self.assertEqual(len(joined), 19)
+        for sid, ids in joined.items():
+            s, k = sid.rsplit(":", 1)
+            html = _read(os.path.join(ROOT, "docs", "protocols", s, "index.html"), encoding="utf-8")
+            row = re.search(r'<div[^>]*data-factor="%s"[^>]*>.*?</div>' % k, html, re.S).group(0)
+            ev = re.findall(r'<small class="ev"[^>]*>', row)
+            self.assertEqual(len(ev), 1, sid)
+            self.assertIn(f'data-record-id="{self.EXP[sid]["after"]["evidenceRecordId"]}"', ev[0], sid)
+            self.assertIn(f'data-additional-record-ids="{",".join(ids)}"', ev[0], sid)
+        others = sum(_read(os.path.join(ROOT, "docs", "protocols", s, "index.html"), encoding="utf-8").count("data-additional-record-ids")
+                     for s in CARDS)
+        self.assertEqual(others, len(joined))
+
+
+    def test_sc87_01_citation_links_on_changed_cards_only(self):
+        # every cited record of a changed card is a link to its row (#<record id>): one per segment of the caption head, the visible text
+        # unchanged; one evidence tag (data-record-id only on it); the 229 clean pages carry no citation link at all
+        import html as H
+        for s in sorted(self.pages):
+            page = _read(os.path.join(ROOT, "docs", "protocols", s, "index.html"), encoding="utf-8")
+            for k in ("upgrade", "timelock", "quorum", "emergency", "parity"):
+                f = self.N[(s, k)]
+                if not f.get("evidenceRecordId"):
+                    continue
+                row = re.search(r'<div data-factor="%s"[^>]*>.*?</div>' % k, page, re.S).group(0)
+                tag = re.search(r'<small class="ev"[^>]*>(.*?)</small>', row, re.S)
+                ids = [f["evidenceRecordId"]] + list(f.get("additionalEvidenceRecordIds") or [])
+                hrefs = re.findall(r'<a href="([^"]+)"', tag.group(1))
+                self.assertEqual(hrefs, [f"/protocols/{s}/#{i}" for i in ids], (s, k))
+                self.assertEqual(row.count("data-record-id="), 1, (s, k))
+                for i in ids:
+                    self.assertRegex(page, r'<article\b[^>]*\bid="%s"' % re.escape(i), (s, k, i))
+                self.assertEqual(H.unescape(re.sub(r"<[^>]+>", "", tag.group(1))), "Evidence: " + f["evidenceCaption"], (s, k))
+                self.assertIn("min-height:24px", tag.group(1))
+        for s in sorted(set(CARDS) - self.pages):
+            page = _read(os.path.join(ROOT, "docs", "protocols", s, "index.html"), encoding="utf-8")
+            self.assertNotRegex(page, r'<small class="ev"[^>]*>Evidence: <a ', s)
+
+
+    def test_cards_draw_reviewed_chainsays_without_truncation(self):
+        # SC87R4-01: an aligned_baseline card draws its reviewed chainSays (never "Matches the docs" over it), and no drawn line ends in "…"
+        import render_x_cards_raster as RX
+        feed = [i for i in j("api", "v1", "x-feed.json")["items"] if i["slug"] in self.pages]
+        custom = 0
+        for it in feed:
+            cs = (it.get("chainSays") or "").strip()
+            if it["kind"] == "aligned_baseline" and cs.lower() not in ("", "the same, so docs and chain match"):
+                custom += 1
+                self.assertEqual(RX.card_rows(it)[1][1], RX.cap(cs), it["feedId"])
+        self.assertEqual(custom, 22)
+        by = {i["slug"]: i for i in feed}
+        self.assertIn("Aragon identity not resolved in this read", RX.card_rows(by["steakhouse-prime-usdc-base"])[1][1])
+        self.assertIn("direct pause not verified", RX.card_rows(by["railgun"])[1][1])
+        fonts = os.environ.get("PACTA_CARD_FONT_DIR", "/home/pacta-gemini/workspace/shared-specs/ibm-plex-ttf")
+        if not os.path.exists(os.path.join(fonts, "IBMPlexSans-Regular.ttf")):
+            self.skipTest("IBM Plex fonts not available for the drawn-line check")
+        F = RX.Fonts(fonts)
+        drawn = {it["slug"]: RX.drawn_lines(it, F) for it in feed}
+        self.assertEqual([(s, lab) for s, rows in drawn.items() for lab, ls in rows if ls and ls[-1].endswith("…")], [])
+        self.assertIn("direct pause not verified", " ".join(drawn["railgun"][1][1]))
+        self.assertIn("Aragon identity not resolved in this read", " ".join(drawn["steakhouse-prime-usdc-base"][1][1]))
 
 
 if __name__ == "__main__":

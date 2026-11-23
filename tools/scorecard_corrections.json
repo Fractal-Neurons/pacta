@@ -84,10 +84,6 @@
    "headline": "TREE transfer blacklisting: no enforced delay; TREE and tETH owner paths retain five-day timelocks",
    "explanatorySentence": "Treehouse's Timelock documentation states that all Treehouse contracts are secured by a 5-day timelock so no critical action executes immediately, while Pacta recorded at Ethereum block 26,440,048 that a 5-of-7 Safe holds blacklister() on the TREE token with no enforced delay; TREE upgrade ownership (#26,406,106) and tETH ownership (#26,407,707) retain 5-day TimelockControllers.",
    "summaryShort": "TREE blacklisting has no delay; TREE and tETH owner paths keep 5-day timelocks",
-   "factorOverrides": {
-    "timelock": "0s on TREE token blacklisting (5-of-7 Safe); TREE and tETH owner/upgrade paths enforce a 5d timelock",
-    "emergency": "Immediate · TREE transfer blacklister() is a 5-of-7 Safe with 0s enforced delay (five-day timelock retained on TREE and tETH owner paths)"
-   },
    "leadRecord": "treehouse-tree-teth-tree-blacklister-safe-s27"
   },
   "beefy-finance-base": {
@@ -97,10 +93,7 @@
    "headline": "Base vault-owner timelock: zero delay; strategy-owner changes retain six hours",
    "explanatorySentence": "At Base block 58,315,414, Beefy's vault-owner TimelockController enforced zero delay against the six-hour governance docs while the strategy-owner TimelockController retained six hours (both proposed by the 3-of-6 dev multisig); the separate Base block 58,885,628 record covers aligned CLM strategy execution.",
    "summaryShort": "Base vault-owner timelock has zero delay; strategy-owner changes keep 6 hours",
-   "leadRecord": "beefy-finance-base-vault-owner-timelock-zero-delay-s22",
-   "factorOverrides": {
-    "quorum": "3-of-6 dev multisig (TimelockController proposer)"
-   }
+   "leadRecord": "beefy-finance-base-vault-owner-timelock-zero-delay-s22"
   },
   "f-x-protocol-v2": {
    "status": "delta",
@@ -110,9 +103,6 @@
    "explanatorySentence": "At Ethereum block 26,448,221 the V2 Router (Diamond) owner() was the 6-of-9 operational Safe directly, with no enforced delay, while the separate Timelock retained three days; at Ethereum block 26,400,152 DEFAULT_ADMIN_ROLE on the four v2 ProtocolTreasury proxies was held by that 6-of-9 Safe and the 3-of-4 EmergencySafe, not by the three-day Timelock. f(x) Protocol documents a 3-day public timelock for queued transactions (with an oracle-update exception) and names LongPoolManager and ShortPoolManager for emergency pause.",
    "summaryShort": "V2 Router owner is the 6-of-9 operational Safe; separate timelock keeps 3 days",
    "leadRecord": "f-x-protocol-v2-router-owner-safe-s29",
-   "factorOverrides": {
-    "quorum": "ProtocolTreasury EmergencySafe: 3-of-4 (Ethereum block 26,400,152); V2 Router operational Safe: 6-of-9 (Ethereum block 26,448,221)."
-   },
    "recordOverrides": {
     "f-x-protocol-v2-router-owner-safe-s29": {
      "surface": "V2 Router (Diamond) owner: docs put queued transactions behind a 3-day timelock (oracle updates excepted); owner() is the 6-of-9 Safe"
@@ -667,7 +657,7 @@
   }
  },
  "labelOverrides": {
-  "description": "Wording-35 r4 label corrections for protocols that carry no correction status: a record's published surface (applied to index.json by apply_scorecard_corrections.py like recordOverrides) and a scorecard factor's label (applied by build_site.py like factorOverrides). Never a grade or status change. controllerText: the Controller line of an RPC-pinned record with no controller address (the gates its verified source names), replacing the generic 'no single-key owner' sentence. factorOverrides also carry Part 6D's two signer-quorum readings (Wormhole 13-of-19 guardians, Centrifuge's known 4-of-9 via the ProtocolGuardian ward; other ward holders not enumerable).",
+  "description": "Wording-35 r4 label corrections for protocols that carry no correction status: a record's published surface (applied to index.json by apply_scorecard_corrections.py like recordOverrides) and a scorecard factor's label (applied by build_site.py like factorOverrides). Never a grade or status change. controllerText: the Controller line of an RPC-pinned record with no controller address (the gates its verified source names), replacing the generic 'no single-key owner' sentence. factorOverrides also carry Part 6D's two signer-quorum readings (Wormhole 13-of-19 guardians, Centrifuge's known 4-of-9 via the ProtocolGuardian ward; other ward holders not enumerable). Scorecard-87 (Business receipt 7462): 43 reviewed factor corrections (state, value, evidence) and, for 9 rule-derived factors, only a reviewed evidence caption and/or additionalEvidenceRecordIds (same-page sibling records the factor joins); the rule-derived state, value and evidence come from tools/scorecard.py.",
   "recordOverrides": {
    "wormhole-core-ntt-eth-upgrade-governance-s25": {
     "surface": "Upgrades: guardian-signed governance messages only, EIP-1967 admin slot = 0x0 (upgrades governed by 13-of-19 Guardian VAA via submitContractUpgrade)"
@@ -684,6 +674,15 @@
      "value": "Known controlling quorum: 4-of-9 via ProtocolGuardian; other ward holders are not enumerable",
      "evidence": "centrifuge-liquidity-pools-base-protocol-guardian-s24: Root 0x7Ed48C31f2fdC40d37407cBaBf0870B2b688368f (Base, block #58534152): wards(ProtocolGuardian 0xCEb7eD5d5B3bAD3088f6A1697738B60d829635c6) = 1; ProtocolGuardian (Sourcify match) root() = Root, safe() = Safe 0x9711730060C73Ee7Fcfe1890e8A0993858a7D225 (4-of-9, v1.4.1); the Safes are not direct wards.",
      "evidenceCaption": "ProtocolGuardian: a ward of Root, controlled by the Protocol Safe — Base block #58,534,152"
+    },
+    "emergency": {
+     "state": "n",
+     "value": "ProtocolGuardian ward is controlled by the 4-of-9 Protocol Safe (OpsGuardian is not a ward); other Root ward holders are not enumerable",
+     "evidence": "centrifuge-liquidity-pools-base-protocol-guardian-s24: Root 0x7Ed48C31f2fdC40d37407cBaBf0870B2b688368f (Base, block #58534152): wards(ProtocolGuardian 0xCEb7eD5d5B3bAD3088f6A1697738B60d829635c6) = 1 …",
+     "evidenceCaption": "ProtocolGuardian: a ward of Root, controlled by the Protocol Safe + OpsGuardian: not a ward of Root (no pause authority) — Base block #58,534,152",
+     "additionalEvidenceRecordIds": [
+      "centrifuge-liquidity-pools-base-ops-guardian-s24"
+     ]
     }
    },
    "wormhole-core-ntt": {
@@ -692,8 +691,676 @@
      "value": "Lowest controlling quorum: 13-of-19",
      "evidence": "wormhole-core-ntt-eth-guardian-quorum-s25: Wormhole core 0x98f3c9e6E3fAce36bAAd05FE09d375Ef1464288B: getCurrentGuardianSetIndex() = 7; getGuardianSet(7) = 19 keys, expirationTime 0; quorum(19) = 13.",
      "evidenceCaption": "Messages need 13 of the 19 guardians (guardian set 7) — Ethereum block #26,434,786"
+    },
+    "emergency": {
+     "value": "Guardian set (13-of-19) governs VAA message and upgrade verification; no pause / freeze authority is established in the published records"
     }
-   }
+   },
+   "bitfi-basis": {
+    "quorum": {
+     "state": "a",
+     "value": "Lowest controlling quorum: a single key (owner() account with no contract code; multisig() manager is 2-of-3)",
+     "evidence": "bitfi-bfbtc-multisig-manager-is-a-safe-s37: bfBTC 0xCdFb58c8C859Cb3F62ebe9Cf2767F9e036C7fb15 (Ethereum; the deployed-contracts page lists it): ERC-1967 proxy, implementation slot = …"
+    },
+    "emergency": {
+     "state": "a",
+     "value": "Pause / freeze authority (setPause, setBlacklisted) held by a single key (owner() account with no contract code, 0s delay)",
+     "evidence": "bitfi-bfbtc-multisig-manager-is-a-safe-s37: bfBTC 0xCdFb58c8C859Cb3F62ebe9Cf2767F9e036C7fb15 (Ethereum; the deployed-contracts page lists it): ERC-1967 proxy, implementation slot = …"
+    }
+   },
+   "nexus-mutual": {
+    "quorum": {
+     "state": "b",
+     "value": "Lowest controlling quorum: 2-of-6 emergency pause admins (Governor / legacy Advisory Board multisig is 3-of-5)",
+     "evidence": "nexus-mutual-governor-24h-timelock-s18: Governor (0xcafea6063d4Ec6b045d9676e58897C1f0882Ca32, EIP-1967 proxy; implementation Governor 0xcafea466bF6dEFe480cdd54056C020c63b7DA830, Sourcify exact_match) …"
+    },
+    "emergency": {
+     "state": "g",
+     "value": "Pause / freeze authority scoped behind 2-of-6 emergency pause admins (one proposes, another confirms)",
+     "evidence": "nexus-mutual-governor-24h-timelock-s18: Governor (0xcafea6063d4Ec6b045d9676e58897C1f0882Ca32, EIP-1967 proxy; implementation Governor 0xcafea466bF6dEFe480cdd54056C020c63b7DA830, Sourcify exact_match) …"
+    },
+    "upgrade": {
+     "state": "b",
+     "value": "Upgradeable behind a 1h–47h delay (1d Governor timelock on Registry and 10 module proxies; legacy NXMaster owner context is untimed)",
+     "evidence": "nexus-mutual-governor-24h-timelock-s18: Governor (0xcafea6063d4Ec6b045d9676e58897C1f0882Ca32, EIP-1967 proxy; implementation Governor 0xcafea466bF6dEFe480cdd54056C020c63b7DA830, Sourcify exact_match) …"
+    }
+   },
+   "mev-capital-weth-metamorpho": {
+    "timelock": {
+     "state": "b",
+     "value": "1d minimum enforced delay on sampled timelocked surfaces (sibling vault MC.eUSDC timelock() = 1d; MCwETH and USUALUSDC+ = 3d)",
+     "evidence": "mev-capital-weth-metamorpho-timelock-within-bounds-s37: MCwETH 0x9a8bC3B04b7f3D87cfC09ba407dCED575f2d61D8 (Ethereum): a MetaMorpho vault (isMetaMorpho = true on the MetaMorpho factory …"
+    },
+    "emergency": {
+     "value": "MetaMorpho guardian() revokes pending timelocked actions; no pause / freeze authority is established in the published records"
+    }
+   },
+   "superform-v2-base": {
+    "timelock": {
+     "state": "g",
+     "value": "3d minimum enforced delay on sampled admin timelocked surfaces (3d min-update-interval; 7d primary-manager and fee changes)",
+     "evidence": "superform-base-manager-change-timelock-7d-s32: Superform SuperVaultAggregator 0x10AC0b33e1C4501CF3ec1cB1AE51ebfdbd2d4698 (Base, not a proxy; Sourcify-verified, runtime match): the primary-manager change …"
+    },
+    "upgrade": {
+     "value": "Sampled SuperVaultAggregator is not a proxy (non-proxy bytecode; other Superform contracts not assessed)"
+    }
+   },
+   "dydx-v3": {
+    "timelock": {
+     "state": "g",
+     "value": "2d minimum enforced delay on sampled timelocked surfaces (Short Timelock Executor getDelay() = 172,800 s; MINIMUM_DELAY() floor is 1d)",
+     "evidence": "dydx-ethdydx-owner-short-timelock-2d-s32: ethDYDX 0x92D6C1e31e14520e676a687F0a93788B716BEff5 (Ethereum) owner() = 0x64c7d40c07EFAbec2AafdC243bF59eaF2195c6dc, an Executor (verified source): getDelay() = …"
+    }
+   },
+   "treehouse-tree-teth": {
+    "quorum": {
+     "state": "g",
+     "value": "Known controlling quorum: 5-of-7 (executed TREE blacklister Safe)",
+     "evidence": "treehouse-tree-teth-tree-blacklister-safe-s27: TREE 0x77146784315Ba81904d654466968e3a7c196d1f3 (Ethereum): EIP-1967 proxy, implementation 0x0fedcbfEBc293Ad8048726B0F887e6C1126EffA6 since the timelock …"
+    },
+    "upgrade": {
+     "state": "g",
+     "value": "Upgradeable behind a ≥48h delay (5d TimelockController owner on TREE EIP-1967 proxy)",
+     "evidence": "treehouse-tree-teth-tree-blacklister-safe-s27: TREE 0x77146784315Ba81904d654466968e3a7c196d1f3 (Ethereum): EIP-1967 proxy, implementation 0x0fedcbfEBc293Ad8048726B0F887e6C1126EffA6 since the timelock …",
+     "evidenceCaption": "TREE token: EIP-1967 proxy and 5-day timelock owner (#26,440,048) + TREE owner = 5d TimelockController (upgrade op, #26,406,106) — Ethereum blocks #26,406,106 & #26,440,048",
+     "additionalEvidenceRecordIds": [
+      "treehouse-tree-timelock-op-0x2f11"
+     ]
+    },
+    "timelock": {
+     "state": "a",
+     "value": "0s on TREE token blacklisting (5-of-7 Safe); TREE upgrade/owner path and tETH owner path enforce a 5d TimelockController",
+     "evidence": "treehouse-tree-teth-tree-blacklister-safe-s27: TREE 0x77146784315Ba81904d654466968e3a7c196d1f3 (Ethereum): EIP-1967 proxy, implementation 0x0fedcbfEBc293Ad8048726B0F887e6C1126EffA6 since the timelock …",
+     "evidenceCaption": "TREE token: 5-of-7 Safe blacklister with no delay (#26,440,048) + TREE owner = 5d TimelockController (upgrade op, #26,406,106) + tETH owner() = 5d TimelockController (#26,407,707) — Ethereum blocks #26,406,106, #26,407,707 & #26,440,048",
+     "additionalEvidenceRecordIds": [
+      "treehouse-tree-timelock-op-0x2f11",
+      "treehouse-teth-owner-5d-timelock-s16"
+     ]
+    },
+    "emergency": {
+     "state": "a",
+     "value": "Immediate · TREE transfer blacklister() is a 5-of-7 Safe with 0s enforced delay (5d TimelockController retained on TREE and tETH owner paths)",
+     "evidence": "treehouse-tree-teth-tree-blacklister-safe-s27: TREE 0x77146784315Ba81904d654466968e3a7c196d1f3 (Ethereum): EIP-1967 proxy, implementation 0x0fedcbfEBc293Ad8048726B0F887e6C1126EffA6 since the timelock …",
+     "evidenceCaption": "TREE token: 5-of-7 Safe blacklister with no delay (#26,440,048) + tETH owner() = 5d TimelockController (#26,407,707) — Ethereum blocks #26,407,707 & #26,440,048",
+     "additionalEvidenceRecordIds": [
+      "treehouse-teth-owner-5d-timelock-s16"
+     ]
+    }
+   },
+   "arrakis-modular": {
+    "upgrade": {
+     "state": "g",
+     "value": "Upgradeable behind a ≥48h delay (2d TimelockController on manager proxy and 5 module beacons)",
+     "evidence": "arrakis-modular-upgrade-timelock-48h-s30: ArrakisMetaVaultFactory 0x820FB8127a689327C863de8433278d6181123982 (Ethereum): manager() = 0x2e6E879648293e939aA68bA4c6c129A1Be733bDA, whose EIP-1967 admin slot …"
+    }
+   },
+   "aura": {
+    "quorum": {
+     "state": "g",
+     "value": "Known controlling quorum: 4-of-7 on non-delegated Protocol Multisig authority (2 keeper modules execute scoped gauge and stash actions without owner signatures)",
+     "evidence": "aura-protocol-multisig-4-of-7-s36: AuraLocker 0x3Fa73f1E5d8A792C80F426fc8F84FBF7Ce9bBCAC (Ethereum, not a proxy; the multisig-rights page links it as a contract the Protocol Multisig …"
+    },
+    "upgrade": {
+     "value": "Sampled AuraLocker is not a proxy (non-proxy bytecode; owner() is a 4-of-7 Safe; other protocol contracts not assessed)"
+    }
+   },
+   "axelar-network": {
+    "upgrade": {
+     "state": "a",
+     "value": "Upgradeable with no enforced delay on operator-approved path: AxelarServiceGovernance has a 3d minimum timelock plus an operator fast path (0s) for governance-approved proposals",
+     "evidence": "axelar-network-governance-timelock-s25: AxelarServiceGovernance 0x7Acbae6CBa67d78AAf69e47000884aE00F9B2525: minimumTimeLockDelay() = 259200s (3 days); operator() = …",
+     "evidenceCaption": "Governance timelock: 3 days, plus a documented operator fast path + Gateway implementation and auth module + Gateway governed by Axelar governance — Ethereum block #26,434,786",
+     "additionalEvidenceRecordIds": [
+      "axelar-network-gateway-auth-module-s25",
+      "axelar-network-gateway-governance-s25"
+     ]
+    },
+    "quorum": {
+     "evidenceCaption": "Mint limits set by a 3-of-6 multisig, as configured + Gateway governed by Axelar governance (AxelarServiceGovernance) — Ethereum block #26,434,786",
+     "additionalEvidenceRecordIds": [
+      "axelar-network-gateway-governance-s25"
+     ],
+     "value": "Known controlling quorum: 3-of-6 on AxelarGateway mintLimiter multisig (AxelarServiceGovernance cross-chain quorum not on EVM)"
+    }
+   },
+   "balancer-v2-vault-timelock": {
+    "emergency": {
+     "evidenceCaption": "Vault: not a proxy; pause window ended — Ethereum block #26,427,612",
+     "value": "Vault pause window and buffer period ended before the pinned block (getPausedState() = false)"
+    }
+   },
+   "cap": {
+    "upgrade": {
+     "state": "b",
+     "value": "Upgradeable behind a 1h–47h delay (1d TimelockController is sole holder of the bytes4(0) upgrade role)",
+     "evidence": "cap-cusd-upgrade-role-timelock-only-s20: getRoleMemberCount(bytes4(0) | cUSD 0xcCcc62962d17b8914c62D74FfB843d73B2a3cccC) = 1, member 0 = the Timelock 0xD8236031d8279d82E615aF2BFab5FC0127A329ab; the …",
+     "evidenceCaption": "cUSD upgrade role (bytes4(0)) holder: the Timelock only + TimelockController minimum delay: 1 day — Ethereum block #26,425,374",
+     "additionalEvidenceRecordIds": [
+      "cap-1d-timelock-min-delay-s20"
+     ]
+    }
+   },
+   "cbridge": {
+    "quorum": {
+     "evidenceCaption": "Pool Bridge signers: owner can resetSigners after 7-day notice; owner = 3-of-5 SimpleGovernance — Ethereum block #26,452,373",
+     "value": "Known controlling quorum: 3-of-5 full-power SimpleGovernance voters on Bridge owner() (pool relay signer set separate)"
+    },
+    "upgrade": {
+     "evidenceCaption": "Pool Bridge signers: owner can resetSigners after 7-day notice; owner = 3-of-5 SimpleGovernance — Ethereum block #26,452,373",
+     "value": "Sampled cBridge liquidity Bridge is not a proxy (non-proxy bytecode; owner() is SimpleGovernance; other protocol contracts not assessed)"
+    }
+   },
+   "chainlink-ccip": {
+    "quorum": {
+     "state": "g",
+     "value": "Known controlling quorum: 6-of-12 on one RBACTimelock proposer Safe (ManyChainMultiSig proposer and bypasser thresholds not in records)",
+     "evidence": "chainlink-ccip-timelock-proposers-s24: RBACTimelock 0x44835bBBA9D40DEDa9b64858095EcFB2693c9449: getRoleMemberCount(PROPOSER_ROLE) = 3: ManyChainMultiSig 0xE53289F32c8E690b7173aA33affE9B6B0CB0012F …"
+    },
+    "upgrade": {
+     "state": "a",
+     "value": "Upgradeable with no enforced delay: RMN proxy owner RBACTimelock has a 3h scheduled delay and a ManyChainMultiSig bypasser role (0s via bypasserExecuteBatch)",
+     "evidence": "chainlink-ccip-config-owner-rbac-timelock-s24: Router 0x80226fc0Ee2b096224EeAc085Bb9a8cba1146f7D (Router 1.2.0, Sourcify match): owner() = RBACTimelock 0x44835bBBA9D40DEDa9b64858095EcFB2693c9449 …"
+    }
+   },
+   "coinbase-wrapped-staked-eth": {
+    "upgrade": {
+     "state": "a",
+     "value": "Upgradeable with no enforced delay: cbETH FiatTokenProxy admin slot held by an account with no contract code",
+     "evidence": "coinbase-wrapped-staked-eth-proxy-admin-separate-owner-s21: cbETH FiatTokenProxy 0xBe9895146f7AF43049ca1c1AE358B0541Ea49704: admin slot = 0xEeE4Ac8A22a6b310c53d59a7d59b3E0336C19577 (externally owned); owner() = …"
+    }
+   },
+   "debridge": {
+    "upgrade": {
+     "state": "n",
+     "value": "Upgradeable (SignatureVerifier EIP-1967 proxy); the proxy upgrade admin and delay are not in the published records",
+     "evidence": "debridge-signature-verifier-min-8-of-12-s33: deBridge SignatureVerifier 0x949b3B3c098348b879C9e4F15cecc8046d9C8A8c (Ethereum; EIP-1967 proxy, implementation 0xfE7De3c1e1BD252C67667B56347cABFC6df08dF4 …"
+    },
+    "quorum": {
+     "value": "Known controlling quorum: 8-of-12 oracle signatures on SignatureVerifier (proxy upgrade admin not in records)"
+    }
+   },
+   "eclipse-bridge": {
+    "upgrade": {
+     "state": "a",
+     "value": "Upgradeable with no enforced delay: ERC1967Proxy controlled by a 3-of-5 Safe",
+     "evidence": "eclipse-bridge-safe-threshold-s27: Eclipse Bridge Safe 0x7B2c1CbB33c53c3C6a695e36096AD2cfCE1c0efC (Ethereum): getThreshold() = 3 of getOwners() = 5 owners (Safe v1.3.0); it controls ERC1967Proxy …"
+    }
+   },
+   "euler-v2-evk": {
+    "upgrade": {
+     "state": "g",
+     "value": "Upgradeable behind a ≥48h delay (4d TimelockController on GenericFactory FactoryGovernor; EVC has no EIP-1967 proxy slots)",
+     "evidence": "euler-v2-evk-factorygovernor-4d-timelock-s18: GenericFactory (0x29a56a1b8214D9Cf7c5561811750D5cBDb45CC8e).upgradeAdmin() = FactoryGovernor 0x2F13256E04022d6356d8CE8C53C7364e13DC1f3d; its only …"
+    },
+    "quorum": {
+     "state": "b",
+     "value": "Known role-scoped quorums: 4-of-8 Timelock proposer Safe, 2-of-3 Timelock canceller Safe, and 2-of-6 pause/unpause Safe (2 additional PAUSE_GUARDIAN_ROLE members not resolved)",
+     "evidence": "euler-v2-evk-factorygovernor-4d-timelock-s18: GenericFactory (0x29a56a1b8214D9Cf7c5561811750D5cBDb45CC8e).upgradeAdmin() = FactoryGovernor 0x2F13256E04022d6356d8CE8C53C7364e13DC1f3d; its only …"
+    }
+   },
+   "f-x-protocol-v2": {
+    "upgrade": {
+     "state": "a",
+     "value": "Upgradeable with no enforced delay: V2 Router EIP-2535 Diamond (diamondCut) owned directly by a 6-of-9 Safe",
+     "evidence": "f-x-protocol-v2-router-owner-safe-s29: f(x) V2 Router 0x33636D49FbefBE798e15e7F356E8DBef543CC708 (Ethereum, an EIP-2535 Diamond): owner() = Safe 0x26B2ec4E02ebe2F54583af25b647b1D619e67BbF with …"
+    },
+    "quorum": {
+     "state": "g",
+     "value": "Known controlling quorums: 3-of-4 ProtocolTreasury EmergencySafe (block #26,400,152) and 6-of-9 V2 Router / ProtocolTreasury OpsSafe (block #26,448,221)",
+     "evidence": "fx-protocol-v2-treasury-admin: DEFAULT_ADMIN_ROLE (0x00) on all 4 v2 ProtocolTreasury proxies (0x32356FE312Eba9B7D6A157ad28D1ca91b571CdA6, 0xb178197E88D58Da21bE22A408E850d1e6Dc09A38 …",
+     "evidenceCaption": "ProtocolTreasury DEFAULT_ADMIN_ROLE Holders (#26,400,152) + V2 Router (Diamond) owner: 6-of-9 Safe (#26,448,221) — Ethereum blocks #26,400,152 & #26,448,221",
+     "additionalEvidenceRecordIds": [
+      "f-x-protocol-v2-router-owner-safe-s29"
+     ]
+    }
+   },
+   "hashport": {
+    "upgrade": {
+     "state": "a",
+     "value": "Upgradeable with no enforced delay: EIP-2535 Diamond (diamondCut) owned by a 5-of-9 Safe",
+     "evidence": "hashport-diamond-cut-owner-safe-s32: Hashport Router diamond 0x367e59b559283C8506207d75B0c5D8C66c4Cd4B7 (Ethereum, EIP-2535): facetAddress(diamondCut 0x1f931c1c) = …"
+    }
+   },
+   "hop-protocol": {
+    "emergency": {
+     "state": "g",
+     "value": "Pause / freeze authority (setChainIdDepositsPaused) gated by a 2-of-3 Safe behind a 24h Timelock",
+     "evidence": "hop-l1-eth-bridge-governance-2-of-3-safe-s34: the SDK's Ethereum ETH l1Bridge): addBonder(), removeBonder(), setGovernance(), setChallengePeriod(), setChainIdDepositsPaused() and rescueTransferRoot() are onlyGovernance, and governance() = 0x22e3F828b3f47dAcFACd875D20bd5cc0879C96e7, a Compound-style Timelock (verified) with delay() = 86,400 s, pendingAdmin() empty and admin() = Safe 0x1ec078551A5ac8F0f51fAc57Ffc48Ea7d9A86E9d: getThreshold() = 2 of getOwners() = 3;"
+    },
+    "upgrade": {
+     "value": "Sampled L1_ETH_Bridge is not a proxy (non-proxy bytecode; governance() is a 24h Timelock; other bridge contracts not assessed)"
+    }
+   },
+   "idle": {
+    "quorum": {
+     "state": "n",
+     "value": "Timelock admin() is 0xFb3b…3814 (not Governor Bravo); its signer quorum is not in the published records",
+     "evidence": "idle-governance-timelock-2d-s31: Idle governance Timelock 0xD6dABBc2b275114a2366555d6C481EF08FDC2556 (Ethereum): delay() = 172,800 s; Governor Bravo 0x3D5Fc645320be0A085A32885F078F7121e5E5375 …"
+    }
+   },
+   "infinifi": {
+    "emergency": {
+     "state": "n",
+     "value": "PAUSE and UNPAUSE role admin is MINOR_ROLES_MANAGER, held by the 4-of-7 Team Multisig and the Long Timelock; direct PAUSE / UNPAUSE holders are not identified in the published records",
+     "evidence": "infinifi-pause-role-admin-minor-roles-s20: InfiniFiCore 0xF6d48735EcCf12bDC1DF2674b1ce3fcb3bD25490: getRoleAdmin(UNPAUSE) = getRoleAdmin(PAUSE) = keccak256(\"MINOR_ROLES_MANAGER\") (0x9849206c..6512) …",
+     "evidenceCaption": "PAUSE / UNPAUSE role admin: MINOR_ROLES_MANAGER, not GOVERNOR + Team Multisig threshold: 4-of-7 — Ethereum block #26,425,374",
+     "additionalEvidenceRecordIds": [
+      "infinifi-team-multisig-4of7-s20"
+     ]
+    }
+   },
+   "layerzero-v2": {
+    "upgrade": {
+     "evidenceCaption": "EndpointV2: not a proxy (EIP-1967 implementation slot = 0x0) + Endpoint owner: a 5-of-9 LayerZero multisig that sets default libraries — Ethereum block #26,434,786",
+     "additionalEvidenceRecordIds": [
+      "layerzero-v2-endpoint-owner-onesig-s25"
+     ],
+     "value": "Sampled EndpointV2 has empty EIP-1967 implementation slot (not a proxy; owner OneSig registers message libraries without a timelock)"
+    },
+    "quorum": {
+     "evidenceCaption": "Endpoint owner: a 5-of-9 LayerZero multisig that sets default libraries + Ethereum to Base default pathway: 4 DVNs — Ethereum block #26,434,786",
+     "additionalEvidenceRecordIds": [
+      "layerzero-v2-eth-base-pathway-dvns-s25"
+     ],
+     "value": "Known controlling quorum: 5-of-9 OneSig owner on EndpointV2 (default ETH-Base pathway requires 4 DVNs)"
+    },
+    "timelock": {
+     "value": "No enforced delay on at least one sampled control surface (0s: EndpointV2 OneSig owner sets default libraries without a timelock)"
+    }
+   },
+   "lista-lending": {
+    "upgrade": {
+     "state": "b",
+     "value": "Upgradeable behind a 1h–47h delay (1d Admin TimeLock TimelockController is sole DEFAULT_ADMIN_ROLE for _authorizeUpgrade on Moolah EIP-1967 proxy)",
+     "evidence": "lista-moolah-upgrade-admin-timelock-s32: Lista Moolah 0xf820fB4680712CD7263a0D3D024D5b5aEA82Fd70 (Ethereum): EIP-1967 proxy, implementation 0xD7C983093065E0169e955c44ab8370110231D3cf; in its verified …"
+    }
+   },
+   "mantle-liquid-staking-meth-cmeth": {
+    "upgrade": {
+     "state": "g",
+     "value": "Upgradeable behind a ≥48h delay (3d UpgradeTimelock in mETH and Staking EIP-1967 admin slots)",
+     "evidence": "mantle-lsp-meth-upgrade-timelock: mETH (0xd5F7838F5C461fefF7FE49ea5ebaF7728bB0ADfa) & Staking (0xe3cBd06D7dadB3F4e6557bAb7EdD924CD1489E8f) EIP-1967 admin slots point to UpgradeTimelock …"
+    }
+   },
+   "maple-finance-v2-syrup": {
+    "upgrade": {
+     "state": "a",
+     "value": "Upgradeable with no enforced delay: sampled EIP-1967 admin slot held directly by a 4-of-7 Safe",
+     "evidence": "maple-v2-syrup-ppm-admin: EIP-1967 admin slot holds 4-of-7 Maple DAO Safe (0xd6d4Bcde6c816F17889f1Dd3000aF0261B03a196); Globals.governor() (0x804a6F5F667170F545Bf14e5DDB48C70B788390C) …"
+    },
+    "timelock": {
+     "value": "No enforced delay on at least one sampled control surface (0s: EIP-1967 proxy admin is a 4-of-7 Safe; GovernorTimelock default is 3d)"
+    }
+   },
+   "morpheusai": {
+    "upgrade": {
+     "state": "n",
+     "value": "Upgradeable (DepositPool EIP-1967 proxy, owner() = 5-of-9 Safe); the proxy upgrade gate and delay are not in the published records",
+     "evidence": "morpheus-ethereum-safe-5of9-s32: Morpheus Ethereum Safe 0x1FE04BC15Cf2c5A2d41a0b3a96725596676eBa1E (Ethereum): getThreshold() = 5 of 9 owners. DepositPool …"
+    }
+   },
+   "nuva": {
+    "upgrade": {
+     "state": "g",
+     "value": "Upgradeable behind a ≥48h delay (2d TimelockController owner authorizes upgrades on DedicatedVaultRouter EIP-1967 proxy)",
+     "evidence": "nuva-router-timelock-48h-s30: NUVA DedicatedVaultRouter 0x50AE1e4A612A4623b747aEeFb30aFBA82804e12c (Ethereum) is an EIP-1967 proxy (implementation 0x027207E16E2BB920dc89AA9FeF7826e23091588a …"
+    }
+   },
+   "odyssey-finance": {
+    "emergency": {
+     "state": "a",
+     "value": "Immediate: emergency restriction (updateIsActive) held by a 2-of-4 Safe with no enforced delay",
+     "evidence": "odyssey-finance-governor-safe-2-of-4-vs-3-of-5-s37: PositionRegistry 0xeE156D8ea7b96a5524CcC3CF9283ab85E80E9534 (Ethereum; the contracts page lists it as PositionRegistry_Proxy for Mainnet and Base) …"
+    },
+    "upgrade": {
+     "value": "Upgradeable with no enforced delay: ProxyAdmins owned by a 2-of-4 Safe"
+    }
+   },
+   "origin-superoeth-base": {
+    "upgrade": {
+     "state": "g",
+     "value": "Upgradeable behind a ≥48h delay (2d TimelockController admin on SuperOETHb VaultProxy)",
+     "evidence": "origin-superoeth-base-admin-safe-5of8-s31: Origin Base Admin Safe 0x92A19381444A001d62cE67BaFF066fA1111d7202 (Base): getThreshold() = 5 of 8 owners. SuperOETHb VaultProxy …"
+    },
+    "quorum": {
+     "value": "Known controlling quorum: 5-of-8 Base Admin Safe proposer on VaultProxy TimelockController (other proposers not enumerated)"
+    }
+   },
+   "polygon-bridge": {
+    "upgrade": {
+     "state": "a",
+     "value": "Upgradeable with no enforced delay: RootChainManager and predicate proxies use a 0s TimelockController (5-of-9 Safe)",
+     "evidence": "polygon-bridge-rootchainmanager-zero-delay-upgrade-s30: Polygon RootChainManagerProxy 0xA0c68C638235ee32657e8f720a23ceC1bFc77C77, ERC20PredicateProxy 0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf and EtherPredicateProxy …"
+    },
+    "timelock": {
+     "value": "No enforced delay on at least one sampled control surface (0s: bridge proxyOwner TimelockController getMinDelay() = 0)"
+    }
+   },
+   "railgun": {
+    "emergency": {
+     "state": "n",
+     "value": "Record heading attributes pauses with upgrades to the Delegator / Voting governance path; direct pause function and separate emergency holder are not verified in the observation",
+     "evidence": "railgun-upgrade-admin-s25: RailgunSmartWallet 0xFA7093CDD9EE6932B4eb2c9e1cde7CE00B1FA4b9: EIP-1967 admin = ProxyAdmin 0x4F8E20f55f879beE7Bc010Bd6bD2138B34aC65c8, owner() = Delegator …"
+    },
+    "timelock": {
+     "evidenceCaption": "Protocol requests: Voting EXECUTION_START_OFFSET = 7d + Upgrades and pauses (ProxyAdmin owned by Delegator and Voting) — Ethereum block #26,434,786",
+     "additionalEvidenceRecordIds": [
+      "railgun-upgrade-admin-s25"
+     ],
+     "value": "7d minimum enforced delay on sampled timelocked surfaces (Voting EXECUTION_START_OFFSET = 604,800 s)"
+    },
+    "upgrade": {
+     "evidenceCaption": "Upgrades and pauses: ProxyAdmin owned by Delegator and Voting + Protocol requests (7d EXECUTION_START_OFFSET) — Ethereum block #26,434,786",
+     "additionalEvidenceRecordIds": [
+      "railgun-sponsor-window-s25"
+     ],
+     "value": "Upgradeable behind a ≥48h delay (7d Voting execution offset)"
+    }
+   },
+   "re": {
+    "upgrade": {
+     "state": "g",
+     "value": "Upgradeable behind a ≥48h delay (2d TimelockController holds UPGRADER_ROLE on reUSD and reUSDe)",
+     "evidence": "re-48h-timelock-token-admin-s21: reUSD 0x5086bf358635B81D8C47C66d1C8b9E567Db70c72 and reUSDe 0xdDC0f880ff6e4e22E4B74632fBb43Ce4DF6cCC5a: DEFAULT_ADMIN_ROLE and UPGRADER_ROLE held by …"
+    }
+   },
+   "renzo-protocol-ezeth": {
+    "upgrade": {
+     "state": "n",
+     "value": "Upgradeable (DepositQueue EIP-1967 proxy); the proxy upgrade admin and delay are not in the published records",
+     "evidence": "renzo-ezeth-deposit-queue-fee-s29: Renzo DepositQueue 0xf2F305D14DCD8aaef887E0428B3c9534795D0d60 (Ethereum): feeBasisPoints() = 10,000 (100% in basis points) at this pin; 1,500 at Pacta's …"
+    }
+   },
+   "reserve-protocol-rtoken": {
+    "emergency": {
+     "state": "n",
+     "value": "Pause and freeze functions recorded on eUSD Main (shortFreeze 3d, longFreeze 1w, tradingPaused and issuancePaused = false); role holders are not in the published records",
+     "evidence": "reserve-eusd-short-freeze-3-days-s23: eUSD Main 0x7697aE4dEf3C3Cd52493Ba3a6F57fc6d8c59108a (eUSD 0xA0d69E286B938e21CBf7E51D71F6A4c8918f482F.main()): shortFreeze() = 259200s (3 days); tradingPaused() …",
+     "evidenceCaption": "Short freeze: 3 days, the documented default + Long freeze: 1 week, the documented default — Ethereum block #26,431,152",
+     "additionalEvidenceRecordIds": [
+      "reserve-eusd-long-freeze-1-week-s23"
+     ]
+    }
+   },
+   "resupply": {
+    "emergency": {
+     "evidenceCaption": "Emergency guardian role: the main multisig + Main multisig: 3-of-5 signers — Ethereum block #26,429,396",
+     "additionalEvidenceRecordIds": [
+      "resupply-main-multisig-3of5-s22"
+     ],
+     "value": "Pause / freeze authority scoped behind a multi-signer controller (3-of-5 Main Multisig)"
+    }
+   },
+   "sonic-gateway": {
+    "timelock": {
+     "evidenceCaption": "Fail-safe recovery: Sonic Gateway TokenDeposit UUPS owner Safe (3-of-4) — Ethereum block #26,450,616"
+    },
+    "upgrade": {
+     "evidenceCaption": "Fail-safe recovery: Sonic Gateway TokenDeposit UUPS owner Safe (3-of-4) — Ethereum block #26,450,616",
+     "value": "Upgradeable with no enforced delay: UUPS _authorizeUpgrade held by a 3-of-4 owner Safe"
+    }
+   },
+   "stake-dao": {
+    "quorum": {
+     "state": "b",
+     "value": "Known controlling quorum: 3-of-5 on Governance Safe (documented 4-of-7; 3 Safe modules enabled and role holders not enumerable)",
+     "evidence": "stake-dao-timelock-executor-permissioned-s22: ProtocolTimelock 0xb27afc7844988948FBd6210AeF4E1362bC2d8E6a: hasRole(EXECUTOR_ROLE, address(0)) = false, so execution is permissioned, not permissionless; the …",
+     "evidenceCaption": "Executing queued changes: permissioned (3-of-5 governance multisig) + Treasury wallet and documented 4-of-7 multisig policy — Ethereum block #26,429,396",
+     "additionalEvidenceRecordIds": [
+      "stake-dao-treasury-safe-3of5-s22"
+     ]
+    },
+    "upgrade": {
+     "value": "Sampled ProtocolController is not a proxy (non-proxy bytecode; owner() is ProtocolTimelock; other protocol contracts not assessed)"
+    }
+   },
+   "synthetix-v3-core": {
+    "upgrade": {
+     "state": "a",
+     "value": "Upgradeable with no enforced delay: CoreProxy owned directly by the 4-of-7 pDAO Safe",
+     "evidence": "synthetix-v3-core-owner-s24: CoreProxy 0xffffffaEff0B96Ea8e4f94b2253f31abdD875847 (Sourcify exact match): owner() = Safe 0xEb3107117FEAd7de89Cd14D463D340A2E6917769 (4-of-7, v1.3.0; pDAO) …"
+    }
+   },
+   "taiko-bridge": {
+    "upgrade": {
+     "state": "n",
+     "value": "Upgradeable (governance plugin EIP-1967 proxies); the proxy upgrade gate is not characterized in the published records",
+     "evidence": "taiko-dao-emergency-multisig-4-of-5-s34: Taiko DAO 0x9CDf589C941ee81D75F34d3755671d614f7cf261 (owner of controller.taiko.eth in the taiko-mono deployment log): hasPermission() grants EXECUTE_PERMISSION …"
+    },
+    "quorum": {
+     "value": "Known controlling quorum: 4-of-5 on EmergencyMultisig for immediate DAO execution (3-of-5 moves standard proposals to 7d veto stage)"
+    },
+    "timelock": {
+     "value": "No enforced delay on at least one sampled control surface (0s: 4-of-5 EmergencyMultisig executes DAO proposals with duration 0)"
+    }
+   },
+   "tori-finance": {
+    "upgrade": {
+     "state": "n",
+     "value": "Upgradeable (trUSD EIP-1967 proxy; TIMELOCK_ADMIN_ROLE held by 1d ToriTimelock, while the proxy upgrade gate is not specified in this record)",
+     "evidence": "tori-trusd-timelock-admin-undocumented-timelock-s32: Tori trUSD 0xd0580192E98eA6CEB9c7b6191Ed2E27560911697 (Ethereum, EIP-1967 proxy, implementation 0xb1d133fE29255EB4Ac9B05d647d49cd7F05ff631) …",
+     "evidenceCaption": "trUSD TIMELOCK_ADMIN_ROLE: current documentation names the same 24-hour controller (0xcd3c…667b) as the retained observation — Ethereum block #26,451,608"
+    }
+   },
+   "xdai-stake-bridge": {
+    "upgrade": {
+     "state": "a",
+     "value": "Upgradeable with no enforced delay: EternalStorageProxy upgradeabilityOwner() is the 8-of-15 Bridge Governor Safe",
+     "evidence": "gnosis-bridge-governor-safe-8-of-15-s34: Bridge Governor Multisig 0x42F38ec5A75acCEc50054671233dfAC9C0E7A3F6 (Ethereum Safe, the address the page gives): getThreshold() = 8 of getOwners() = 15; guard …"
+    }
+   },
+   "across-protocol-hubpool": {
+    "upgrade": {
+     "value": "Sampled HubPool is not a proxy (non-proxy bytecode; owner() is a 3-of-5 Safe; other protocol contracts not assessed)"
+    }
+   },
+   "angstrom": {
+    "upgrade": {
+     "value": "Sampled Angstrom Hook is not a proxy (non-proxy bytecode; _controller slot points to ControllerV1 owned by 5d Timelock; other contracts not assessed)"
+    }
+   },
+   "avalon-superearn": {
+    "upgrade": {
+     "value": "Upgradeable with no enforced delay: ProxyAdmin controlled by a 4-of-5 Safe"
+    }
+   },
+   "bedrock-unibtc": {
+    "upgrade": {
+     "value": "Upgradeable with no enforced delay: shared ProxyAdmin owned by a 3-of-5 Safe"
+    }
+   },
+   "bedrock-unieth": {
+    "upgrade": {
+     "value": "Upgradeable with no enforced delay: ProxyAdmin owned by a 3-of-5 Safe"
+    }
+   },
+   "beefy-finance-base": {
+    "quorum": {
+     "value": "Known controlling quorum: 3-of-6 dev multisig"
+    }
+   },
+   "bmx-freestyle": {
+    "upgrade": {
+     "value": "Upgradeable with no enforced delay: ProxyAdmin controlled by a 3-of-7 Safe"
+    }
+   },
+   "chamber-vaults": {
+    "upgrade": {
+     "value": "Upgradeable with no enforced delay: EIP-1967 admin slot held by a 3-of-5 Safe"
+    }
+   },
+   "cian-yield-layer": {
+    "upgrade": {
+     "value": "Upgradeable with no enforced delay: ProxyAdmin owned by a 3-of-4 Safe (listed TimeLock not in path)"
+    }
+   },
+   "convergence-fi": {
+    "upgrade": {
+     "value": "Upgradeable with no enforced delay: ProxyAdmin controlled by a 3-of-6 Safe"
+    }
+   },
+   "decentralized-euro": {
+    "upgrade": {
+     "value": "Sampled dEURO Savings V3 is not a proxy (non-proxy bytecode; other protocol contracts not assessed)"
+    }
+   },
+   "eigenpie": {
+    "upgrade": {
+     "value": "Upgradeable with no enforced delay: ProxyAdmin controlled by a 3-of-7 Safe"
+    }
+   },
+   "falcon-finance-usdf-susdf": {
+    "upgrade": {
+     "state": "a",
+     "value": "Upgradeable with no enforced delay: USDf and sUSDf EIP-1967 proxy admin contracts are both owned by a 4-of-6 Safe",
+     "evidence": "falcon-susdf-zero-cooldown-instant-unstake-s17: USDf and sUSDf are EIP-1967 proxies whose admins (0x3Ef1127Fdf81B553066daE0FaEA58785A2AA6E14, 0x16a2605C026BFe4f4B7f4471933714D9b2149AcE) both return owner() = 4-of-6 Safe 0x1E482B60bf19Cb1cc859389e0eA3DED153f16Bd7"
+    },
+    "timelock": {
+     "value": "No enforced delay on at least one sampled control surface (0s: USDf and sUSDf proxy admins owned by a 4-of-6 Safe)"
+    }
+   },
+   "flokifi-locker": {
+    "quorum": {
+     "value": "No active signer quorum in the published records (FLOKI owner() is burn address 0x0000…dEaD)"
+    }
+   },
+   "inverse-finance-firm": {
+    "emergency": {
+     "evidenceCaption": "Policy Committee Safe Quorum & GovernorMills Timelock (#26,399,876) + Policy Committee Safe: 3-of-6 (#26,449,594) — Ethereum blocks #26,399,876 & #26,449,594",
+     "additionalEvidenceRecordIds": [
+      "inverse-firm-policy-safe-3of6-s30"
+     ],
+     "value": "GovernorMills guardian() wrapper is recorded for the Policy Committee Safe (3-of-6 at the later published pins; 4-of-7 at block #26,399,876); pause / freeze capability is not established in the published records"
+    }
+   },
+   "lendflare": {
+    "upgrade": {
+     "value": "Upgradeable with no enforced delay: EIP-1967 admin slot held by an account with no contract code"
+    }
+   },
+   "liquity-v2-bold": {
+    "upgrade": {
+     "value": "Sampled CollateralRegistry EIP-1967 implementation slot is 0x0 and BOLD / Governance owner() = 0x0; non-EIP-1967 upgrade mechanisms not assessed"
+    }
+   },
+   "m0-protocol-m": {
+    "upgrade": {
+     "evidenceCaption": "TTG Registrar governors (empty EIP-1967 implementation slot) + MToken: empty EIP-1967 proxy and admin slots — Ethereum block #26,418,060",
+     "additionalEvidenceRecordIds": [
+      "m0-mtoken-no-eip1967-proxy-immutable-s17"
+     ],
+     "value": "Sampled TTG Registrar has an empty EIP-1967 implementation slot; sampled MToken has empty implementation and admin slots. Non-EIP-1967 upgrade paths and remaining protocol contracts are not assessed"
+    }
+   },
+   "mcdex": {
+    "upgrade": {
+     "value": "Upgradeable with no enforced delay: AdminUpgradeabilityProxy controlled by a 4-of-8 Safe"
+    }
+   },
+   "meta-pool-eth": {
+    "upgrade": {
+     "value": "Upgradeable with no enforced delay: ProxyAdmin owned by a 3-of-6 Safe"
+    }
+   },
+   "metric-v1": {
+    "quorum": {
+     "state": "g",
+     "value": "Known controlling quorum: 3-of-5 owner() Safe (alternate Auth.isAuthorized authority callers are not resolved in the published records)",
+     "evidence": "metric-factory-protocol-fee-no-timelock-s32: MetricOmmPoolFactory 0x2a53833cc95548cf52c7b159110e22D3a9018f32 (Ethereum, not a proxy; verified source): setPoolProtocolFee and setPoolProtocolFeeBatch are …"
+    },
+    "upgrade": {
+     "value": "Sampled MetricOmmPoolFactory is not a proxy (non-proxy bytecode; owner() is a 3-of-5 Safe; other contracts not assessed)"
+    }
+   },
+   "morph-bridge": {
+    "upgrade": {
+     "value": "Upgradeable with no enforced delay: ProxyAdmin controlled by a 0s timelock"
+    }
+   },
+   "pickle": {
+    "upgrade": {
+     "value": "Sampled MasterChef is not a proxy (non-proxy bytecode; owner() is a 2-of-6 Safe; other protocol contracts not assessed)"
+    }
+   },
+   "safe-singleton-core": {
+    "upgrade": {
+     "value": "Sampled Safe v1.4.1 singleton has empty EIP-1967 slots (not a proxy); individual Safe proxy upgrade authorization paths are not characterized in these records"
+    }
+   },
+   "stargate-v2": {
+    "timelock": {
+     "value": "No enforced delay on at least one sampled control surface (0s: 5-of-7 OneSig owner executes with no delay)"
+    }
+   },
+   "steakhouse-financial-ethereum": {
+    "emergency": {
+     "value": "MetaMorpho Aragon guardian() vetoes pending timelocked curator actions; no pause / freeze authority is established in the published records"
+    }
+   },
+   "steakhouse-prime-usdc-base": {
+    "emergency": {
+     "value": "MetaMorpho guardian() vetoes pending timelocked curator actions; no pause / freeze authority is established in the published records"
+    }
+   },
+   "steakhouse-usdc-metamorpho-base": {
+    "emergency": {
+     "value": "MetaMorpho guardian() vetoes pending timelocked curator actions; no pause / freeze authority is established in the published records"
+    }
+   },
+   "steer-protocol": {
+    "upgrade": {
+     "value": "Upgradeable with no enforced delay: ProxyAdmin controlled by a 2-of-5 Safe"
+    }
+   },
+   "sushiswap-v3": {
+    "timelock": {
+     "value": "No enforced delay on at least one sampled control surface (0s: V3Manager onlyOwner functions held by 3-of-5 Operations Multisig)"
+    },
+    "upgrade": {
+     "value": "Sampled SushiSwap V3 factory is not a proxy (non-proxy bytecode; owner() is V3Manager; other contracts not assessed)"
+    }
+   },
+   "team-finance": {
+    "upgrade": {
+     "value": "Upgradeable with no enforced delay: EIP-1967 admin slot held by a 2-of-4 Safe"
+    }
+   },
+   "tether-usdt": {
+    "timelock": {
+     "value": "No enforced delay on at least one sampled control surface (0s: 3-of-6 owner MultiSigWallet acts with no timelock)"
+    }
+   },
+   "unitus": {
+    "upgrade": {
+     "value": "Upgradeable with no enforced delay: ProxyAdmin2Step controlled by a 3-of-5 Safe"
+    }
+   },
+   "usdt0": {
+    "upgrade": {
+     "value": "Upgradeable with no enforced delay: ProxyAdmin controlled by a 3-of-5 Safe"
+    }
+   },
+   "world-chain-bridge": {
+    "upgrade": {
+     "value": "Upgradeable with no enforced delay: ProxyAdmin controlled by a 3-of-6 Safe"
+    }
+   },
+   "anvil": {},
+   "inceptionlrt-isolated-restaking": {},
+   "kine-finance": {},
+   "makina": {},
+   "saturn": {},
+   "threshold-network-tbtc": {
+    "upgrade": {
+     "evidenceCaption": "tBTC TimelockController 1d delay (WalletRegistry upgradeAndCall schedule, #26,407,707) + Timelock operation executed (#26,449,594) — Ethereum blocks #26,407,707 & #26,449,594",
+     "additionalEvidenceRecordIds": [
+      "threshold-tbtc-walletregistry-op-0xb667-executed-s30"
+     ],
+     "value": "Published WalletRegistry upgradeAndCall executed through the tBTC TimelockController (1d); other upgrade paths are not assessed"
+    }
+   },
+   "yieldfi": {},
+   "yuzu-money": {}
   },
   "controllerText": {
    "adi-bridge-control-plane": "Upgradeable EIP-1967 proxy (implementation = 0x9cb8142aEBBcdc60AF7c97Af897A67A8f3CA71C2), EIP-1967 admin slot = 0x0; verified implementation source gates grantRole/rescueERC20Token/rescueNativeToken/revokeRole/initialize via OpenZeppelin AccessControl (hasRole/onlyRole); role holders not enumerable read-only; owner()/admin() absent",

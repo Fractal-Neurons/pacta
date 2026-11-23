@@ -42,9 +42,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "g",
-     "cue": "S",
-     "value": "Immutable or ownership renounced"
+     "state": "n",
+     "cue": "—",
+     "value": "Sampled L1_ETH_Bridge is not a proxy (non-proxy bytecode; governance() is a 24h Timelock; other bridge contracts not assessed)"
     },
     {
      "key": "timelock",
@@ -63,9 +63,9 @@
     {
      "key": "emergency",
      "label": "Emergency / freeze scope",
-     "state": "n",
-     "cue": "—",
-     "value": "No pause / freeze authority in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Pause / freeze authority (setChainIdDepositsPaused) gated by a 2-of-3 Safe behind a 24h Timelock"
     },
     {
      "key": "parity",
@@ -102,9 +102,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "g",
-     "cue": "S",
-     "value": "Immutable or ownership renounced"
+     "state": "n",
+     "cue": "—",
+     "value": "Sampled cBridge liquidity Bridge is not a proxy (non-proxy bytecode; owner() is SimpleGovernance; other protocol contracts not assessed)"
     },
     {
      "key": "timelock",
@@ -116,9 +116,9 @@
     {
      "key": "quorum",
      "label": "Signer quorum",
-     "state": "n",
-     "cue": "—",
-     "value": "No signer quorum in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Known controlling quorum: 3-of-5 full-power SimpleGovernance voters on Bridge owner() (pool relay signer set separate)"
     },
     {
      "key": "emergency",
@@ -222,9 +222,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
+     "state": "b",
+     "cue": "M",
+     "value": "Upgradeable behind a 1h–47h delay (1d TimelockController is sole holder of the bytes4(0) upgrade role)"
     },
     {
      "key": "timelock",
@@ -342,9 +342,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "Upgradeable with no enforced delay: RMN proxy owner RBACTimelock has a 3h scheduled delay and a ManyChainMultiSig bypasser role (0s via bypasserExecuteBatch)"
     },
     {
      "key": "timelock",
@@ -358,7 +358,7 @@
      "label": "Signer quorum",
      "state": "g",
      "cue": "S",
-     "value": "Lowest controlling quorum: 6-of-12"
+     "value": "Known controlling quorum: 6-of-12 on one RBACTimelock proposer Safe (ManyChainMultiSig proposer and bypasser thresholds not in records)"
     },
     {
      "key": "emergency",
@@ -462,9 +462,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Upgradeable behind a ≥48h delay (2d TimelockController holds UPGRADER_ROLE on reUSD and reUSDe)"
     },
     {
      "key": "timelock",
@@ -522,9 +522,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "g",
-     "cue": "S",
-     "value": "Immutable or ownership renounced"
+     "state": "n",
+     "cue": "—",
+     "value": "Sampled MasterChef is not a proxy (non-proxy bytecode; owner() is a 2-of-6 Safe; other protocol contracts not assessed)"
     },
     {
      "key": "timelock",
@@ -582,9 +582,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "Upgradeable with no enforced delay: ProxyAdmin owned by a 3-of-4 Safe (listed TimeLock not in path)"
     },
     {
      "key": "timelock",
@@ -642,16 +642,16 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "Upgradeable with no enforced delay: UUPS _authorizeUpgrade held by a 3-of-4 owner Safe"
     },
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -822,16 +822,16 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "Upgradeable with no enforced delay: shared ProxyAdmin owned by a 3-of-5 Safe"
     },
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -1023,9 +1023,9 @@
     {
      "key": "emergency",
      "label": "Emergency / freeze scope",
-     "state": "g",
-     "cue": "S",
-     "value": "Pause / freeze authority scoped behind a multi-signer controller (3-of-N Safe)"
+     "state": "n",
+     "cue": "—",
+     "value": "GovernorMills guardian() wrapper is recorded for the Policy Committee Safe (3-of-6 at the later published pins; 4-of-7 at block #26,399,876); pause / freeze capability is not established in the published records"
     },
     {
      "key": "parity",
@@ -1062,16 +1062,16 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "Upgradeable with no enforced delay: RootChainManager and predicate proxies use a 0s TimelockController (5-of-9 Safe)"
     },
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "No enforced delay on at least one sampled control surface (0s: bridge proxyOwner TimelockController getMinDelay() = 0)"
     },
     {
      "key": "quorum",
@@ -1242,9 +1242,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "Upgradeable with no enforced delay: V2 Router EIP-2535 Diamond (diamondCut) owned directly by a 6-of-9 Safe"
     },
     {
      "key": "timelock",
@@ -1258,7 +1258,7 @@
      "label": "Signer quorum",
      "state": "g",
      "cue": "S",
-     "value": "ProtocolTreasury EmergencySafe: 3-of-4 (Ethereum block 26,400,152); V2 Router operational Safe: 6-of-9 (Ethereum block 26,448,221)."
+     "value": "Known controlling quorums: 3-of-4 ProtocolTreasury EmergencySafe (block #26,400,152) and 6-of-9 V2 Router / ProtocolTreasury OpsSafe (block #26,448,221)"
     },
     {
      "key": "emergency",
@@ -1662,9 +1662,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Upgradeable behind a ≥48h delay (3d UpgradeTimelock in mETH and Staking EIP-1967 admin slots)"
     },
     {
      "key": "timelock",
@@ -1722,30 +1722,30 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Upgradeable behind a ≥48h delay (5d TimelockController owner on TREE EIP-1967 proxy)"
     },
     {
      "key": "timelock",
      "label": "Timelock floor",
      "state": "a",
      "cue": "W",
-     "value": "0s on TREE token blacklisting (5-of-7 Safe); TREE and tETH owner/upgrade paths enforce a 5d timelock"
+     "value": "0s on TREE token blacklisting (5-of-7 Safe); TREE upgrade/owner path and tETH owner path enforce a 5d TimelockController"
     },
     {
      "key": "quorum",
      "label": "Signer quorum",
      "state": "g",
      "cue": "S",
-     "value": "Lowest controlling quorum: 5-of-7"
+     "value": "Known controlling quorum: 5-of-7 (executed TREE blacklister Safe)"
     },
     {
      "key": "emergency",
      "label": "Emergency / freeze scope",
      "state": "a",
      "cue": "W",
-     "value": "Immediate · TREE transfer blacklister() is a 5-of-7 Safe with 0s enforced delay (five-day timelock retained on TREE and tETH owner paths)"
+     "value": "Immediate · TREE transfer blacklister() is a 5-of-7 Safe with 0s enforced delay (5d TimelockController retained on TREE and tETH owner paths)"
     },
     {
      "key": "parity",
@@ -1798,7 +1798,7 @@
      "label": "Signer quorum",
      "state": "g",
      "cue": "S",
-     "value": "3-of-6 dev multisig (TimelockController proposer)"
+     "value": "Known controlling quorum: 3-of-6 dev multisig"
     },
     {
      "key": "emergency",
@@ -1902,9 +1902,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "Upgradeable with no enforced delay on operator-approved path: AxelarServiceGovernance has a 3d minimum timelock plus an operator fast path (0s) for governance-approved proposals"
     },
     {
      "key": "timelock",
@@ -1916,9 +1916,9 @@
     {
      "key": "quorum",
      "label": "Signer quorum",
-     "state": "n",
-     "cue": "—",
-     "value": "No signer quorum in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Known controlling quorum: 3-of-6 on AxelarGateway mintLimiter multisig (AxelarServiceGovernance cross-chain quorum not on EVM)"
     },
     {
      "key": "emergency",
@@ -1964,7 +1964,7 @@
      "label": "Upgradeability",
      "state": "a",
      "cue": "W",
-     "value": "Upgradeable with no enforced delay: the ProxyAdmin's owner delay (1 other upgrade path not determined)"
+     "value": "Upgradeable with no enforced delay: ProxyAdmin owned by a 3-of-5 Safe"
     },
     {
      "key": "timelock",
@@ -2142,9 +2142,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "g",
-     "cue": "S",
-     "value": "Immutable or ownership renounced"
+     "state": "n",
+     "cue": "—",
+     "value": "Sampled ProtocolController is not a proxy (non-proxy bytecode; owner() is ProtocolTimelock; other protocol contracts not assessed)"
     },
     {
      "key": "timelock",
@@ -2158,7 +2158,7 @@
      "label": "Signer quorum",
      "state": "b",
      "cue": "M",
-     "value": "Lowest controlling quorum: 3-of-5 (documented 4-of-7)"
+     "value": "Known controlling quorum: 3-of-5 on Governance Safe (documented 4-of-7; 3 Safe modules enabled and role holders not enumerable)"
     },
     {
      "key": "emergency",
@@ -2225,7 +2225,7 @@
      "label": "Emergency / freeze scope",
      "state": "g",
      "cue": "S",
-     "value": "Pause / freeze authority scoped behind a multi-signer controller (3-of-N Safe)"
+     "value": "Pause / freeze authority scoped behind a multi-signer controller (3-of-5 Main Multisig)"
     },
     {
      "key": "parity",
@@ -2862,16 +2862,16 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "Upgradeable with no enforced delay: sampled EIP-1967 admin slot held directly by a 4-of-7 Safe"
     },
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "No enforced delay on at least one sampled control surface (0s: EIP-1967 proxy admin is a 4-of-7 Safe; GovernorTimelock default is 3d)"
     },
     {
      "key": "quorum",
@@ -3104,7 +3104,7 @@
      "label": "Upgradeability",
      "state": "n",
      "cue": "—",
-     "value": "Upgrade path not in the published records"
+     "value": "Upgradeable (trUSD EIP-1967 proxy; TIMELOCK_ADMIN_ROLE held by 1d ToriTimelock, while the proxy upgrade gate is not specified in this record)"
     },
     {
      "key": "timelock",
@@ -3162,16 +3162,16 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "Upgradeable with no enforced delay: ProxyAdmins owned by a 2-of-4 Safe"
     },
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -3183,9 +3183,9 @@
     {
      "key": "emergency",
      "label": "Emergency / freeze scope",
-     "state": "n",
-     "cue": "—",
-     "value": "No pause / freeze authority in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "Immediate: emergency restriction (updateIsActive) held by a 2-of-4 Safe with no enforced delay"
     },
     {
      "key": "parity",
@@ -3344,21 +3344,21 @@
      "label": "Upgradeability",
      "state": "n",
      "cue": "—",
-     "value": "Upgrade path not in the published records"
+     "value": "Upgradeable (governance plugin EIP-1967 proxies); the proxy upgrade gate is not characterized in the published records"
     },
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "No enforced delay on at least one sampled control surface (0s: 4-of-5 EmergencyMultisig executes DAO proposals with duration 0)"
     },
     {
      "key": "quorum",
      "label": "Signer quorum",
-     "state": "n",
-     "cue": "—",
-     "value": "No signer quorum in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Known controlling quorum: 4-of-5 on EmergencyMultisig for immediate DAO execution (3-of-5 moves standard proposals to 7d veto stage)"
     },
     {
      "key": "emergency",
@@ -3423,9 +3423,9 @@
     {
      "key": "emergency",
      "label": "Emergency / freeze scope",
-     "state": "g",
-     "cue": "S",
-     "value": "Pause / freeze authority scoped behind a multi-signer controller (4-of-N Safe)"
+     "state": "n",
+     "cue": "—",
+     "value": "PAUSE and UNPAUSE role admin is MINOR_ROLES_MANAGER, held by the 4-of-7 Team Multisig and the Long Timelock; direct PAUSE / UNPAUSE holders are not identified in the published records"
     },
     {
      "key": "parity",
@@ -3524,7 +3524,7 @@
      "label": "Upgradeability",
      "state": "n",
      "cue": "—",
-     "value": "Upgrade path not in the published records"
+     "value": "Upgradeable (DepositQueue EIP-1967 proxy); the proxy upgrade admin and delay are not in the published records"
     },
     {
      "key": "timelock",
@@ -4017,9 +4017,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Upgradeable behind a ≥48h delay (7d)"
     },
     {
      "key": "timelock",
@@ -4072,7 +4072,7 @@
    "easUid": "0xa20a0fa97ac80abb3d3f9d4de615018ff3a07f42eb4f124375dc26a216f896a5",
    "sprint": 37,
    "recordId": "bitfi-bfbtc-multisig-manager-is-a-safe-s37",
-   "summaryShort": "bfBTC withdrawals are approved by a multisig manager (2-of-3 Safe), as documented",
+   "summaryShort": "bfBTC withdrawals use an authorized multisig manager (2-of-3 Safe on-chain; owner() is a single key)",
    "rosette": [
     {
      "key": "upgrade",
@@ -4091,16 +4091,16 @@
     {
      "key": "quorum",
      "label": "Signer quorum",
-     "state": "b",
-     "cue": "M",
-     "value": "Lowest controlling quorum: 2-of-3"
+     "state": "a",
+     "cue": "W",
+     "value": "Lowest controlling quorum: a single key (owner() account with no contract code; multisig() manager is 2-of-3)"
     },
     {
      "key": "emergency",
      "label": "Emergency / freeze scope",
-     "state": "n",
-     "cue": "—",
-     "value": "No pause / freeze authority in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "Pause / freeze authority (setPause, setBlacklisted) held by a single key (owner() account with no contract code, 0s delay)"
     },
     {
      "key": "parity",
@@ -4110,9 +4110,9 @@
      "value": "Chain matches or is stronger than the documentation"
     }
    ],
-   "docsSay": "bfBTC withdrawals are approved by a multisig manager (2-of-3 Safe)",
-   "chainSays": "the same, so docs and chain match",
-   "mainPostText": "BitFi Basis @Bitfi_Org: docs and chain match. BfBTC withdrawals are approved by a multisig manager (2-of-3 Safe). Checked on-chain at Ethereum block #26,458,556, attested on Base. Receipt below.",
+   "docsSay": "bfBTC withdrawals are approved by an authorized multisig manager",
+   "chainSays": "multisig() = a 2-of-3 Safe (matches the docs; owner() is a separate single key)",
+   "mainPostText": "BitFi Basis @Bitfi_Org: docs state bfBTC withdrawals require an authorized multisig manager; on-chain multisig() is a 2-of-3 Safe (owner() is a separate single key). Checked at Ethereum block #26,458,556, attested on Base. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/bitfi-basis/ · Base attestation: https://base.easscan.org/attestation/view/0xa20a0fa97ac80abb3d3f9d4de615018ff3a07f42eb4f124375dc26a216f896a5",
    "cardFilename": "bitfi-basis.png",
    "receiptUrl": "https://pacta.wtf/protocols/bitfi-basis/",
@@ -4192,7 +4192,7 @@
    "easUid": "0xa20a0fa97ac80abb3d3f9d4de615018ff3a07f42eb4f124375dc26a216f896a5",
    "sprint": 37,
    "recordId": "mev-capital-weth-metamorpho-timelock-within-bounds-s37",
-   "summaryShort": "MEV Capital's wETH vault timelock is 3 days, within Morpho's documented bounds",
+   "summaryShort": "MEV Capital's wETH vault timelock is 3 days on-chain, within Morpho's documented 1d–2w bounds",
    "rosette": [
     {
      "key": "upgrade",
@@ -4204,9 +4204,9 @@
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "g",
-     "cue": "S",
-     "value": "3d minimum enforced delay on sampled timelocked surfaces"
+     "state": "b",
+     "cue": "M",
+     "value": "1d minimum enforced delay on sampled timelocked surfaces (sibling vault MC.eUSDC timelock() = 1d; MCwETH and USUALUSDC+ = 3d)"
     },
     {
      "key": "quorum",
@@ -4218,9 +4218,9 @@
     {
      "key": "emergency",
      "label": "Emergency / freeze scope",
-     "state": "g",
-     "cue": "S",
-     "value": "Pause / freeze authority scoped behind a multi-signer controller (2-of-5)"
+     "state": "n",
+     "cue": "—",
+     "value": "MetaMorpho guardian() revokes pending timelocked actions; no pause / freeze authority is established in the published records"
     },
     {
      "key": "parity",
@@ -4230,9 +4230,9 @@
      "value": "Chain matches or is stronger than the documentation"
     }
    ],
-   "docsSay": "MEV Capital's wETH vault timelock is 3 days, within Morpho's documented bounds",
-   "chainSays": "the same, so docs and chain match",
-   "mainPostText": "MEV Capital wETH (MetaMorpho): docs and chain match. MEV Capital's wETH vault timelock is 3 days, within Morpho's documented bounds. Checked on-chain at Ethereum block #26,458,556, attested on Base. Receipt below.",
+   "docsSay": "Morpho vault timelock duration must sit between 1 day and 2 weeks",
+   "chainSays": "MCwETH timelock() = 3 days (within the documented 1d–2w bounds; sibling MC.eUSDC = 1 day)",
+   "mainPostText": "MEV Capital wETH (MetaMorpho): docs set 1-day to 2-week timelock bounds; on-chain MCwETH timelock() is 3 days (sibling MC.eUSDC is 1 day). Checked at Ethereum block #26,458,556, attested on Base. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/mev-capital-weth-metamorpho/ · Base attestation: https://base.easscan.org/attestation/view/0xa20a0fa97ac80abb3d3f9d4de615018ff3a07f42eb4f124375dc26a216f896a5",
    "cardFilename": "mev-capital-weth-metamorpho.png",
    "receiptUrl": "https://pacta.wtf/protocols/mev-capital-weth-metamorpho/",
@@ -4257,9 +4257,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "g",
-     "cue": "S",
-     "value": "Immutable or ownership renounced"
+     "state": "n",
+     "cue": "—",
+     "value": "Sampled AuraLocker is not a proxy (non-proxy bytecode; owner() is a 4-of-7 Safe; other protocol contracts not assessed)"
     },
     {
      "key": "timelock",
@@ -4273,7 +4273,7 @@
      "label": "Signer quorum",
      "state": "g",
      "cue": "S",
-     "value": "Lowest controlling quorum: 4-of-7"
+     "value": "Known controlling quorum: 4-of-7 on non-delegated Protocol Multisig authority (2 keeper modules execute scoped gauge and stash actions without owner signatures)"
     },
     {
      "key": "emergency",
@@ -4437,16 +4437,16 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "g",
-     "cue": "S",
-     "value": "Immutable or ownership renounced"
+     "state": "n",
+     "cue": "—",
+     "value": "Sampled SushiSwap V3 factory is not a proxy (non-proxy bytecode; owner() is V3Manager; other contracts not assessed)"
     },
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "No enforced delay on at least one sampled control surface (0s: V3Manager onlyOwner functions held by 3-of-5 Operations Multisig)"
     },
     {
      "key": "quorum",
@@ -4557,9 +4557,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "g",
-     "cue": "S",
-     "value": "Immutable or ownership renounced"
+     "state": "n",
+     "cue": "—",
+     "value": "Sampled Angstrom Hook is not a proxy (non-proxy bytecode; _controller slot points to ControllerV1 owned by 5d Timelock; other contracts not assessed)"
     },
     {
      "key": "timelock",
@@ -4977,9 +4977,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "Upgradeable with no enforced delay: EternalStorageProxy upgradeabilityOwner() is the 8-of-15 Bridge Governor Safe"
     },
     {
      "key": "timelock",
@@ -5092,14 +5092,14 @@
    "easUid": "0x897aa17688d627e9d4fdd7a49c8f4c3a9d4b1943e24e03d7c744563895d9d03c",
    "sprint": 33,
    "recordId": "debridge-signature-verifier-min-8-of-12-s33",
-   "summaryShort": "deBridge requires at least 8 of 12 validator signatures (2/3), as documented",
+   "summaryShort": "deBridge SignatureVerifier requires 8 of 12 oracle signatures on-chain, matching the ≥2/3 docs rule",
    "rosette": [
     {
      "key": "upgrade",
      "label": "Upgradeability",
      "state": "n",
      "cue": "—",
-     "value": "Upgrade path not in the published records"
+     "value": "Upgradeable (SignatureVerifier EIP-1967 proxy); the proxy upgrade admin and delay are not in the published records"
     },
     {
      "key": "timelock",
@@ -5111,9 +5111,9 @@
     {
      "key": "quorum",
      "label": "Signer quorum",
-     "state": "n",
-     "cue": "—",
-     "value": "No signer quorum in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Known controlling quorum: 8-of-12 oracle signatures on SignatureVerifier (proxy upgrade admin not in records)"
     },
     {
      "key": "emergency",
@@ -5130,9 +5130,9 @@
      "value": "Chain matches or is stronger than the documentation"
     }
    ],
-   "docsSay": "deBridge requires at least 8 of 12 validator signatures (2/3)",
-   "chainSays": "the same, so docs and chain match",
-   "mainPostText": "deBridge @deBridge: docs and chain match. DeBridge requires at least 8 of 12 validator signatures (2/3). Checked on-chain at Ethereum block #26,452,373, attested on Base. Receipt below.",
+   "docsSay": "SignatureVerifier validates at least 2/3 validator signatures before execution",
+   "chainSays": "minConfirmations() = 8 of 12 oracle addresses (matches ≥ 2/3)",
+   "mainPostText": "deBridge: docs require at least 2/3 validator signatures; on-chain SignatureVerifier minConfirmations() is 8 of 12. Checked at Ethereum block #26,452,373, attested on Base. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/debridge/ · Base attestation: https://base.easscan.org/attestation/view/0x897aa17688d627e9d4fdd7a49c8f4c3a9d4b1943e24e03d7c744563895d9d03c",
    "cardFilename": "debridge.png",
    "receiptUrl": "https://pacta.wtf/protocols/debridge/",
@@ -5764,9 +5764,9 @@
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "b",
-     "cue": "M",
-     "value": "1d minimum enforced delay on sampled timelocked surfaces"
+     "state": "g",
+     "cue": "S",
+     "value": "2d minimum enforced delay on sampled timelocked surfaces (Short Timelock Executor getDelay() = 172,800 s; MINIMUM_DELAY() floor is 1d)"
     },
     {
      "key": "quorum",
@@ -5872,14 +5872,14 @@
    "easUid": "0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
    "sprint": 32,
    "recordId": "hashport-diamond-cut-owner-safe-s32",
-   "summaryShort": "Hashport's router is an upgradeable diamond whose owner is a 5-of-9 Safe, as documented",
+   "summaryShort": "Hashport's router is an EIP-2535 Diamond at the listed address; on-chain owner is a 5-of-9 Safe",
    "rosette": [
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "Upgradeable with no enforced delay: EIP-2535 Diamond (diamondCut) owned by a 5-of-9 Safe"
     },
     {
      "key": "timelock",
@@ -5910,9 +5910,9 @@
      "value": "Chain matches or is stronger than the documentation"
     }
    ],
-   "docsSay": "Hashport's router is an upgradeable diamond whose owner is a 5-of-9 Safe",
-   "chainSays": "the same, so docs and chain match",
-   "mainPostText": "Hashport: docs and chain match. Hashport's router is an upgradeable diamond whose owner is a 5-of-9 Safe. Checked on-chain at Ethereum block #26,451,608, attested on Base. Receipt below.",
+   "docsSay": "Hashport's router uses the EIP-2535 Diamond standard at the listed address",
+   "chainSays": "EIP-2535 Diamond at the listed address; owner() is a 5-of-9 Safe",
+   "mainPostText": "Hashport: docs and chain match on the EIP-2535 Diamond router address; on-chain owner() is a 5-of-9 Safe. Checked at Ethereum block #26,451,608, attested on Base. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/hashport/ · Base attestation: https://base.easscan.org/attestation/view/0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
    "cardFilename": "hashport.png",
    "receiptUrl": "https://pacta.wtf/protocols/hashport/",
@@ -5932,14 +5932,14 @@
    "easUid": "0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
    "sprint": 32,
    "recordId": "inception-vault-upgrades-timelock-3d-s32",
-   "summaryShort": "Inception vault upgrades go through its TimelockController (3-day delay), as documented",
+   "summaryShort": "Inception vaults upgrade through the documented TimeLockController (3-day delay on-chain)",
    "rosette": [
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Upgradeable behind a ≥48h delay (3d)"
     },
     {
      "key": "timelock",
@@ -5970,9 +5970,9 @@
      "value": "Chain matches or is stronger than the documentation"
     }
    ],
-   "docsSay": "Inception vault upgrades go through its TimelockController (3-day delay)",
-   "chainSays": "the same, so docs and chain match",
-   "mainPostText": "InceptionLRT (Isolated Restaking): docs and chain match. Inception vault upgrades go through its TimelockController (3-day delay). Checked on-chain at Ethereum block #26,451,608, attested on Base. Receipt below.",
+   "docsSay": "Inception vault contracts are upgradeable and guarded by a TimeLockController",
+   "chainSays": "Vault upgrades go through the TimeLockController (getMinDelay() = 3 days)",
+   "mainPostText": "InceptionLRT (Isolated Restaking): docs and chain match. Vault contracts are guarded by a TimeLockController (getMinDelay() = 3 days on-chain). Checked at Ethereum block #26,451,608, attested on Base. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/inceptionlrt-isolated-restaking/ · Base attestation: https://base.easscan.org/attestation/view/0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
    "cardFilename": "inceptionlrt-isolated-restaking.png",
    "receiptUrl": "https://pacta.wtf/protocols/inceptionlrt-isolated-restaking/",
@@ -6052,14 +6052,14 @@
    "easUid": "0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
    "sprint": 32,
    "recordId": "lista-moolah-upgrade-admin-timelock-s32",
-   "summaryShort": "Lista's Moolah upgrades sit behind its Admin TimeLock (24 h), as documented",
+   "summaryShort": "Lista's Moolah upgrades sit behind an OpenZeppelin TimelockController (24-hour delay on-chain)",
    "rosette": [
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
+     "state": "b",
+     "cue": "M",
+     "value": "Upgradeable behind a 1h–47h delay (1d Admin TimeLock TimelockController is sole DEFAULT_ADMIN_ROLE for _authorizeUpgrade on Moolah EIP-1967 proxy)"
     },
     {
      "key": "timelock",
@@ -6090,9 +6090,9 @@
      "value": "Chain matches or is stronger than the documentation"
     }
    ],
-   "docsSay": "Lista's Moolah upgrades sit behind its Admin TimeLock (24 h)",
-   "chainSays": "the same, so docs and chain match",
-   "mainPostText": "Lista Lending: docs and chain match. Lista's Moolah upgrades sit behind its Admin TimeLock (24 h). Checked on-chain at Ethereum block #26,451,608, attested on Base. Receipt below.",
+   "docsSay": "Moolah upgrade authority sits behind an OpenZeppelin TimelockController",
+   "chainSays": "Sole DEFAULT_ADMIN_ROLE for _authorizeUpgrade is the Admin TimeLock (24-hour delay)",
+   "mainPostText": "Lista Lending: docs and chain match. Moolah upgrade authority sits behind an OpenZeppelin TimelockController (24-hour delay on-chain). Checked at Ethereum block #26,451,608, attested on Base. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/lista-lending/ · Base attestation: https://base.easscan.org/attestation/view/0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
    "cardFilename": "lista-lending.png",
    "receiptUrl": "https://pacta.wtf/protocols/lista-lending/",
@@ -6112,14 +6112,14 @@
    "easUid": "0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
    "sprint": 32,
    "recordId": "metric-factory-protocol-fee-no-timelock-s32",
-   "summaryShort": "Metric's protocol fee share changes from a 3-of-5 Safe with no timelock, as documented",
+   "summaryShort": "Metric's protocol fee share has no timelock (documented and on-chain via a 3-of-5 Safe owner)",
    "rosette": [
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "g",
-     "cue": "S",
-     "value": "Immutable or ownership renounced"
+     "state": "n",
+     "cue": "—",
+     "value": "Sampled MetricOmmPoolFactory is not a proxy (non-proxy bytecode; owner() is a 3-of-5 Safe; other contracts not assessed)"
     },
     {
      "key": "timelock",
@@ -6133,7 +6133,7 @@
      "label": "Signer quorum",
      "state": "g",
      "cue": "S",
-     "value": "Lowest controlling quorum: 3-of-5"
+     "value": "Known controlling quorum: 3-of-5 owner() Safe (alternate Auth.isAuthorized authority callers are not resolved in the published records)"
     },
     {
      "key": "emergency",
@@ -6150,9 +6150,9 @@
      "value": "Chain matches or is stronger than the documentation"
     }
    ],
-   "docsSay": "Metric's protocol fee share changes from a 3-of-5 Safe with no timelock",
-   "chainSays": "the same, so docs and chain match",
-   "mainPostText": "Metric V1 @metricxyz: docs and chain match. Metric's protocol fee share changes from a 3-of-5 Safe with no timelock. Checked on-chain at Ethereum block #26,451,608, attested on Base. Receipt below.",
+   "docsSay": "Metric can change its protocol fee share at any time with no timelock",
+   "chainSays": "Factory owner() is a 3-of-5 Safe and sets protocol fee share with no timelock",
+   "mainPostText": "Metric V1: docs state Metric can change its protocol fee share with no timelock; on-chain Factory owner() is a 3-of-5 Safe with no timelock. Checked at Ethereum block #26,451,608, attested on Base. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/metric-v1/ · Base attestation: https://base.easscan.org/attestation/view/0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
    "cardFilename": "metric-v1.png",
    "receiptUrl": "https://pacta.wtf/protocols/metric-v1/",
@@ -6172,14 +6172,14 @@
    "easUid": "0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
    "sprint": 32,
    "recordId": "morpheus-ethereum-safe-5of9-s32",
-   "summaryShort": "Morpheus's Ethereum multisig is 5-of-9 and owns the DepositPool, as documented",
+   "summaryShort": "Morpheus's Ethereum multisig requires 5 of 9 signers, as documented, and owns the DepositPool",
    "rosette": [
     {
      "key": "upgrade",
      "label": "Upgradeability",
      "state": "n",
      "cue": "—",
-     "value": "Upgrade path not in the published records"
+     "value": "Upgradeable (DepositPool EIP-1967 proxy, owner() = 5-of-9 Safe); the proxy upgrade gate and delay are not in the published records"
     },
     {
      "key": "timelock",
@@ -6210,9 +6210,9 @@
      "value": "Chain matches or is stronger than the documentation"
     }
    ],
-   "docsSay": "Morpheus's Ethereum multisig is 5-of-9 and owns the DepositPool",
-   "chainSays": "the same, so docs and chain match",
-   "mainPostText": "MorpheusAI: docs and chain match. Morpheus's Ethereum multisig is 5-of-9 and owns the DepositPool. Checked on-chain at Ethereum block #26,451,608, attested on Base. Receipt below.",
+   "docsSay": "Morpheus's Ethereum multisig setup requires 5 out of 9 key holders to sign transactions",
+   "chainSays": "Ethereum Safe getThreshold() = 5 of 9 owners and is owner() of the DepositPool proxy",
+   "mainPostText": "MorpheusAI: docs state 5 out of 9 key holders sign transactions; on-chain Ethereum Safe is 5-of-9 and owns the DepositPool proxy. Checked at Ethereum block #26,451,608, attested on Base. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/morpheusai/ · Base attestation: https://base.easscan.org/attestation/view/0x0968566bba6498e9ef4ced90a4d787a44198eb5fde427b39b794d1959064bddc",
    "cardFilename": "morpheusai.png",
    "receiptUrl": "https://pacta.wtf/protocols/morpheusai/",
@@ -6237,16 +6237,16 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "g",
-     "cue": "S",
-     "value": "Immutable or ownership renounced"
+     "state": "n",
+     "cue": "—",
+     "value": "Sampled SuperVaultAggregator is not a proxy (non-proxy bytecode; other Superform contracts not assessed)"
     },
     {
      "key": "timelock",
      "label": "Timelock floor",
      "state": "g",
      "cue": "S",
-     "value": "7d minimum enforced delay on sampled timelocked surfaces"
+     "value": "3d minimum enforced delay on sampled admin timelocked surfaces (3d min-update-interval; 7d primary-manager and fee changes)"
     },
     {
      "key": "quorum",
@@ -6417,9 +6417,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "g",
-     "cue": "S",
-     "value": "Immutable or ownership renounced"
+     "state": "n",
+     "cue": "—",
+     "value": "Sampled dEURO Savings V3 is not a proxy (non-proxy bytecode; other protocol contracts not assessed)"
     },
     {
      "key": "timelock",
@@ -6551,9 +6551,9 @@
     {
      "key": "quorum",
      "label": "Signer quorum",
-     "state": "g",
-     "cue": "S",
-     "value": "DAO Governor (token vote)"
+     "state": "n",
+     "cue": "—",
+     "value": "Timelock admin() is 0xFb3b…3814 (not Governor Bravo); its signer quorum is not in the published records"
     },
     {
      "key": "emergency",
@@ -6652,14 +6652,14 @@
    "easUid": "0x63d29eafa88f7e52cc6a596668ae3f03c8132704108794092dc25710fa8bde77",
    "sprint": 31,
    "recordId": "origin-superoeth-base-admin-safe-5of8-s31",
-   "summaryShort": "Origin's Base Admin Safe is 5-of-8 and proposes on the vault timelock",
+   "summaryShort": "Origin's Base Admin Safe is 5-of-8, as documented, and holds PROPOSER_ROLE on the 2d vault timelock",
    "rosette": [
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Upgradeable behind a ≥48h delay (2d TimelockController admin on SuperOETHb VaultProxy)"
     },
     {
      "key": "timelock",
@@ -6671,9 +6671,9 @@
     {
      "key": "quorum",
      "label": "Signer quorum",
-     "state": "n",
-     "cue": "—",
-     "value": "No signer quorum in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Known controlling quorum: 5-of-8 Base Admin Safe proposer on VaultProxy TimelockController (other proposers not enumerated)"
     },
     {
      "key": "emergency",
@@ -6690,9 +6690,9 @@
      "value": "Chain matches or is stronger than the documentation"
     }
    ],
-   "docsSay": "Origin's Base Admin Safe is 5-of-8 and proposes on the vault timelock",
-   "chainSays": "the same, so docs and chain match",
-   "mainPostText": "Origin Protocol (SuperOETHb Base) @OriginProtocol: docs and chain match. Origin's Base Admin Safe is 5-of-8 and proposes on the vault timelock. Checked on-chain at Base block #59,594,105, attested on Base. Receipt below.",
+   "docsSay": "Origin's Base Admin address is a 5-of-8 Safe",
+   "chainSays": "5-of-8 Base Admin Safe confirmed and holds PROPOSER_ROLE on the 2-day VaultProxy TimelockController",
+   "mainPostText": "Origin Protocol (SuperOETHb Base): docs list the Base Admin as a 5-of-8 Safe; on-chain it is 5-of-8 and proposes on the 2-day VaultProxy TimelockController. Checked at Base block #59,594,105, attested on Base. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/origin-superoeth-base/ · Base attestation: https://base.easscan.org/attestation/view/0x63d29eafa88f7e52cc6a596668ae3f03c8132704108794092dc25710fa8bde77",
    "cardFilename": "origin-superoeth-base.png",
    "receiptUrl": "https://pacta.wtf/protocols/origin-superoeth-base/",
@@ -6772,14 +6772,14 @@
    "easUid": "0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
    "sprint": 30,
    "recordId": "arrakis-modular-upgrade-timelock-48h-s30",
-   "summaryShort": "Arrakis's manager proxy and 5 module beacons upgrade through a 48-hour timelock",
+   "summaryShort": "Arrakis implements a 48-hour upgrade timelock; manager proxy and 5 module beacons use it on-chain",
    "rosette": [
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Upgradeable behind a ≥48h delay (2d TimelockController on manager proxy and 5 module beacons)"
     },
     {
      "key": "timelock",
@@ -6810,9 +6810,9 @@
      "value": "Chain matches or is stronger than the documentation"
     }
    ],
-   "docsSay": "Arrakis's manager proxy and 5 module beacons upgrade through a 48-hour timelock",
-   "chainSays": "the same, so docs and chain match",
-   "mainPostText": "Arrakis Modular @arrakisfinance: docs and chain match. Arrakis's manager proxy and 5 module beacons upgrade through a 48-hour timelock. Checked on-chain at Ethereum block #26,449,594, attested on Base. Receipt below.",
+   "docsSay": "Arrakis implements a 48-hour timelock on upgrades",
+   "chainSays": "Manager proxy and all 5 module beacons upgrade through a 48-hour TimelockController",
+   "mainPostText": "Arrakis Modular: docs state a 48-hour timelock on upgrades; on-chain the manager proxy and 5 module beacons use a 48-hour TimelockController. Checked at Ethereum block #26,449,594, attested on Base. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/arrakis-modular/ · Base attestation: https://base.easscan.org/attestation/view/0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
    "cardFilename": "arrakis-modular.png",
    "receiptUrl": "https://pacta.wtf/protocols/arrakis-modular/",
@@ -7132,14 +7132,14 @@
    "easUid": "0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
    "sprint": 30,
    "recordId": "makina-upgrade-role-dao-delay-2d-s30",
-   "summaryShort": "Makina's DAO multisig must wait 48 hours to use the upgrade role, as documented",
+   "summaryShort": "Makina's INFRA_UPGRADE_ROLE has a 2-day execution delay, held on-chain by the DAO Safe",
    "rosette": [
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Upgradeable behind a ≥48h delay (2d)"
     },
     {
      "key": "timelock",
@@ -7170,9 +7170,9 @@
      "value": "Chain matches or is stronger than the documentation"
     }
    ],
-   "docsSay": "Makina's DAO multisig must wait 48 hours to use the upgrade role",
-   "chainSays": "the same, so docs and chain match",
-   "mainPostText": "Makina @makinafi: docs and chain match. Makina's DAO multisig must wait 48 hours to use the upgrade role. Checked on-chain at Ethereum block #26,449,594, attested on Base. Receipt below.",
+   "docsSay": "INFRA_UPGRADE_ROLE is held by the DAO with a 2-day execution delay",
+   "chainSays": "DAO Safe holds INFRA_UPGRADE_ROLE with a 48-hour (2-day) execution delay",
+   "mainPostText": "Makina: docs state INFRA_UPGRADE_ROLE has a 2-day execution delay; on-chain the DAO Safe holds it with a 48-hour delay. Checked at Ethereum block #26,449,594, attested on Base. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/makina/ · Base attestation: https://base.easscan.org/attestation/view/0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
    "cardFilename": "makina.png",
    "receiptUrl": "https://pacta.wtf/protocols/makina/",
@@ -7192,21 +7192,21 @@
    "easUid": "0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
    "sprint": 30,
    "recordId": "meta-pool-eth-proxy-admin-dao-safe-s30",
-   "summaryShort": "spETH upgrades through the documented ProxyAdmin, owned by the 3-of-6 DAO Admin Safe",
+   "summaryShort": "spETH uses the documented ProxyAdmin address, owned on-chain by a 3-of-6 Safe",
    "rosette": [
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "Upgradeable with no enforced delay: ProxyAdmin owned by a 3-of-6 Safe"
     },
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -7230,9 +7230,9 @@
      "value": "Chain matches or is stronger than the documentation"
     }
    ],
-   "docsSay": "spETH upgrades through the documented ProxyAdmin, owned by the 3-of-6 DAO Admin Safe",
-   "chainSays": "the same, so docs and chain match",
-   "mainPostText": "Meta Pool ETH @meta_pool: docs and chain match. SpETH upgrades through the documented ProxyAdmin, owned by the 3-of-6 DAO Admin Safe. Checked on-chain at Ethereum block #26,449,594, attested on Base. Receipt below.",
+   "docsSay": "spETH ProxyAdmin is deployed at the documented address",
+   "chainSays": "spETH upgrades through the documented ProxyAdmin, owned by a 3-of-6 Safe",
+   "mainPostText": "Meta Pool ETH: docs list the spETH ProxyAdmin address; on-chain spETH upgrades through that ProxyAdmin, owned by a 3-of-6 Safe. Checked at Ethereum block #26,449,594, attested on Base. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/meta-pool-eth/ · Base attestation: https://base.easscan.org/attestation/view/0x06edec4488a7b0389c63bd8551cb47e18600bb67d14decd9b1a56e69198cca1c",
    "cardFilename": "meta-pool-eth.png",
    "receiptUrl": "https://pacta.wtf/protocols/meta-pool-eth/",
@@ -7257,9 +7257,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Upgradeable behind a ≥48h delay (2d TimelockController owner authorizes upgrades on DedicatedVaultRouter EIP-1967 proxy)"
     },
     {
      "key": "timelock",
@@ -7552,14 +7552,14 @@
    "easUid": "0x967a4935786194575835d5a46e3e39b1d553225deb6a96c7ff4acf52a34dff22",
    "sprint": 15,
    "recordId": "threshold-tbtc-timelock-1d-walletregistry-op-0xb667",
-   "summaryShort": "tBTC timelock is 1 day; the WalletRegistry upgrade schedule is public",
+   "summaryShort": "Listed tBTC TimelockController enforces a 1-day minimum delay (pending WalletRegistry op at #26,407,707 observed executed by #26,449,594)",
    "rosette": [
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "b",
+     "cue": "M",
+     "value": "Published WalletRegistry upgradeAndCall executed through the tBTC TimelockController (1d); other upgrade paths are not assessed"
     },
     {
      "key": "timelock",
@@ -7590,14 +7590,17 @@
      "value": "Chain matches or is stronger than the documentation"
     }
    ],
-   "docsSay": "tBTC timelock is 1 day; the WalletRegistry upgrade schedule is public",
-   "chainSays": "the same, so docs and chain match",
-   "mainPostText": "Threshold Network (tBTC): docs and chain match. TBTC timelock is 1 day; the WalletRegistry upgrade schedule is public. Checked on-chain at Ethereum block #26,407,707, attested on Base. Receipt below.",
+   "docsSay": "tBTC contract table lists the Timelock Controller address (no delay stated in that table)",
+   "chainSays": "Listed TimelockController getMinDelay() = 1 day (#26,407,707 pending op observed executed by #26,449,594)",
+   "mainPostText": "Threshold Network (tBTC): contract table lists the tBTC Timelock Controller address (no delay stated there); on-chain getMinDelay() is 1 day (WalletRegistry op pending at Ethereum block #26,407,707 and observed executed by #26,449,594, attested on Base). Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/threshold-network-tbtc/ · Base attestation: https://base.easscan.org/attestation/view/0x967a4935786194575835d5a46e3e39b1d553225deb6a96c7ff4acf52a34dff22",
    "cardFilename": "threshold-network-tbtc.png",
    "receiptUrl": "https://pacta.wtf/protocols/threshold-network-tbtc/",
    "attestationUrl": "https://base.easscan.org/attestation/view/0x967a4935786194575835d5a46e3e39b1d553225deb6a96c7ff4acf52a34dff22",
-   "priority": 126
+   "priority": 126,
+   "additionalRecordIds": [
+    "threshold-tbtc-walletregistry-op-0xb667-executed-s30"
+   ]
   },
   {
    "feedId": "finding:vetro:S30:aligned_baseline",
@@ -8037,16 +8040,16 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "Upgradeable with no enforced delay: AdminUpgradeabilityProxy controlled by a 4-of-8 Safe"
     },
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -8092,7 +8095,7 @@
    "easUid": "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
    "sprint": 28,
    "recordId": "steakhouse-prime-usdc-base-guardian-s28",
-   "summaryShort": "Steakhouse Prime USDC (Base) changes wait a 7-day timelock, as documented",
+   "summaryShort": "Steakhouse Prime USDC (Base) enforces a 7-day vault timelock and configures a guardian() contract",
    "rosette": [
     {
      "key": "upgrade",
@@ -8120,7 +8123,7 @@
      "label": "Emergency / freeze scope",
      "state": "n",
      "cue": "—",
-     "value": "Pause / freeze authority present; its holder is not determined"
+     "value": "MetaMorpho guardian() vetoes pending timelocked curator actions; no pause / freeze authority is established in the published records"
     },
     {
      "key": "parity",
@@ -8130,9 +8133,9 @@
      "value": "Chain matches or is stronger than the documentation"
     }
    ],
-   "docsSay": "Steakhouse Prime USDC (Base) changes wait a 7-day timelock",
-   "chainSays": "the same, so docs and chain match",
-   "mainPostText": "Steakhouse Prime USDC (Base) @SteakhouseFi: docs and chain match. Steakhouse Prime USDC (Base) changes wait a 7-day timelock. Checked on-chain at Base block #59,025,642, attested on Base. Receipt below.",
+   "docsSay": "Steakhouse vaults use a 7-day timelock and an Aragon DAO guardian to veto critical curator actions",
+   "chainSays": "Vault timelock() = 7 days; guardian() = 0x894d…6D33 (a contract; Aragon identity not resolved in this read)",
+   "mainPostText": "Steakhouse Prime USDC (Base): docs describe a 7-day timelock and Aragon DAO guardian veto; on-chain vault timelock() is 7 days and guardian() is contract 0x894d…6D33 (Aragon identity not resolved in this read). Checked at Base block #59,025,642, attested on Base. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/steakhouse-prime-usdc-base/ · Base attestation: https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
    "cardFilename": "steakhouse-prime-usdc-base.png",
    "receiptUrl": "https://pacta.wtf/protocols/steakhouse-prime-usdc-base/",
@@ -8277,9 +8280,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "Upgradeable with no enforced delay: ERC1967Proxy controlled by a 3-of-5 Safe"
     },
     {
      "key": "timelock",
@@ -8992,28 +8995,28 @@
    "easUid": "0x1c379ef9f845a2affa9c42715ba2b1b4b2f750b71b4edf9c50d0e1ae739e11ff",
    "sprint": 25,
    "recordId": "layerzero-v2-endpoint-immutable-s25",
-   "summaryShort": "Endpoint is immutable; a 5-of-9 multisig sets the message defaults, as documented",
+   "summaryShort": "EndpointV2 has an empty EIP-1967 proxy slot; a 5-of-9 OneSig sets default message libraries",
    "rosette": [
     {
      "key": "upgrade",
      "label": "Upgradeability",
      "state": "n",
      "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "value": "Sampled EndpointV2 has empty EIP-1967 implementation slot (not a proxy; owner OneSig registers message libraries without a timelock)"
     },
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "No enforced delay on at least one sampled control surface (0s: EndpointV2 OneSig owner sets default libraries without a timelock)"
     },
     {
      "key": "quorum",
      "label": "Signer quorum",
-     "state": "n",
-     "cue": "—",
-     "value": "No signer quorum in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Known controlling quorum: 5-of-9 OneSig owner on EndpointV2 (default ETH-Base pathway requires 4 DVNs)"
     },
     {
      "key": "emergency",
@@ -9030,9 +9033,9 @@
      "value": "Chain matches or is stronger than the documentation"
     }
    ],
-   "docsSay": "Endpoint is immutable; a 5-of-9 multisig sets the message defaults",
-   "chainSays": "the same, so docs and chain match",
-   "mainPostText": "LayerZero V2 @layerzero_core: docs and chain match. Endpoint is immutable; a 5-of-9 multisig sets the message defaults. Checked on-chain at Ethereum block #26,434,786, attested on Base. Receipt below.",
+   "docsSay": "EndpointV2 is documented as a non-upgradeable entrypoint with configurable default message libraries",
+   "chainSays": "EndpointV2 has an empty EIP-1967 proxy slot (not a proxy); a 5-of-9 OneSig sets default libraries",
+   "mainPostText": "LayerZero V2 @layerzero_core: docs and chain match. EndpointV2 has an empty EIP-1967 proxy slot (not a proxy); a 5-of-9 OneSig sets default message libraries. Checked at Ethereum block #26,434,786, attested on Base. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/layerzero-v2/ · Base attestation: https://base.easscan.org/attestation/view/0x1c379ef9f845a2affa9c42715ba2b1b4b2f750b71b4edf9c50d0e1ae739e11ff",
    "cardFilename": "layerzero-v2.png",
    "receiptUrl": "https://pacta.wtf/protocols/layerzero-v2/",
@@ -9052,21 +9055,21 @@
    "easUid": "0x1c379ef9f845a2affa9c42715ba2b1b4b2f750b71b4edf9c50d0e1ae739e11ff",
    "sprint": 25,
    "recordId": "railgun-fees-shield-unshield-s25",
-   "summaryShort": "0.25% shield fees; upgrades and pauses only via the on-chain protocol vote, as documented",
+   "summaryShort": "0.25% shield/unshield fees and governance-vote upgrades match the docs; Voting enforces an observed 7-day execution offset",
    "rosette": [
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Upgradeable behind a ≥48h delay (7d Voting execution offset)"
     },
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "7d minimum enforced delay on sampled timelocked surfaces (Voting EXECUTION_START_OFFSET = 604,800 s)"
     },
     {
      "key": "quorum",
@@ -9080,7 +9083,7 @@
      "label": "Emergency / freeze scope",
      "state": "n",
      "cue": "—",
-     "value": "No pause / freeze authority in the published records"
+     "value": "Record heading attributes pauses with upgrades to the Delegator / Voting governance path; direct pause function and separate emergency holder are not verified in the observation"
     },
     {
      "key": "parity",
@@ -9090,9 +9093,9 @@
      "value": "Chain matches or is stronger than the documentation"
     }
    ],
-   "docsSay": "0.25% shield fees; upgrades and pauses only via the on-chain protocol vote",
-   "chainSays": "the same, so docs and chain match",
-   "mainPostText": "RAILGUN: docs and chain match. 0.25% shield fees; upgrades and pauses only via the on-chain protocol vote. Checked on-chain at Ethereum block #26,434,786, attested on Base. Receipt below.",
+   "docsSay": "0.25% shield and unshield fees; protocol upgrades require the on-chain governance vote (30-day sponsorship window)",
+   "chainSays": "0.25% shield/unshield fees, 30-day sponsorship window; ProxyAdmin behind Voting's 7-day execution offset (direct pause not verified)",
+   "mainPostText": "RAILGUN: docs and chain match on 0.25% shield/unshield fees, 30-day sponsorship window, and governance-vote upgrades; on-chain Voting also enforces a 7-day execution start offset (direct pause function not verified). Checked at Ethereum block #26,434,786, attested on Base. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/railgun/ · Base attestation: https://base.easscan.org/attestation/view/0x1c379ef9f845a2affa9c42715ba2b1b4b2f750b71b4edf9c50d0e1ae739e11ff",
    "cardFilename": "railgun.png",
    "receiptUrl": "https://pacta.wtf/protocols/railgun/",
@@ -9112,14 +9115,14 @@
    "easUid": "0x1c379ef9f845a2affa9c42715ba2b1b4b2f750b71b4edf9c50d0e1ae739e11ff",
    "sprint": 25,
    "recordId": "safe-singleton-core-proxy-factory-bytecode-s25",
-   "summaryShort": "v1.4.1 singleton and factory code match Safe's registry; singletons cannot be initialized",
+   "summaryShort": "Safe v1.4.1 singleton and factory match the official registry; singleton threshold slot is locked",
    "rosette": [
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "g",
-     "cue": "S",
-     "value": "Immutable or ownership renounced"
+     "state": "n",
+     "cue": "—",
+     "value": "Sampled Safe v1.4.1 singleton has empty EIP-1967 slots (not a proxy); individual Safe proxy upgrade authorization paths are not characterized in these records"
     },
     {
      "key": "timelock",
@@ -9150,9 +9153,9 @@
      "value": "Chain matches or is stronger than the documentation"
     }
    ],
-   "docsSay": "v1.4.1 singleton and factory code match Safe's registry; singletons cannot be initialized",
-   "chainSays": "the same, so docs and chain match",
-   "mainPostText": "Safe Smart Account (v1.4.1 Singleton) @SafeLabs_: docs and chain match. V1.4.1 singleton and factory code match Safe's registry; singletons cannot be initialized. Checked on-chain at Ethereum block #26,434,786. Receipt below.",
+   "docsSay": "Safe v1.4.1 singleton and proxy factory addresses match the official safe-deployments registry",
+   "chainSays": "Deployed bytecode matches the registry hashes; singleton threshold slot is locked and EIP-1967 slots are empty",
+   "mainPostText": "Safe Smart Account (v1.4.1 Singleton): docs list canonical registry deployments; on-chain bytecode matches and singleton threshold slot is locked. Checked at Ethereum block #26,434,786, attested on Base. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/safe-singleton-core/ · Base attestation: https://base.easscan.org/attestation/view/0x1c379ef9f845a2affa9c42715ba2b1b4b2f750b71b4edf9c50d0e1ae739e11ff",
    "cardFilename": "safe-singleton-core.png",
    "receiptUrl": "https://pacta.wtf/protocols/safe-singleton-core/",
@@ -9200,7 +9203,7 @@
      "label": "Emergency / freeze scope",
      "state": "n",
      "cue": "—",
-     "value": "Pause / freeze authority present; its holder is not determined"
+     "value": "Guardian set (13-of-19) governs VAA message and upgrade verification; no pause / freeze authority is established in the published records"
     },
     {
      "key": "parity",
@@ -9260,7 +9263,7 @@
      "label": "Emergency / freeze scope",
      "state": "n",
      "cue": "—",
-     "value": "Pause / freeze authority present; its holder is not determined"
+     "value": "ProtocolGuardian ward is controlled by the 4-of-9 Protocol Safe (OpsGuardian is not a ward); other Root ward holders are not enumerable"
     },
     {
      "key": "parity",
@@ -9320,7 +9323,7 @@
      "label": "Emergency / freeze scope",
      "state": "n",
      "cue": "—",
-     "value": "Pause / freeze authority present; its holder is not determined"
+     "value": "MetaMorpho Aragon guardian() vetoes pending timelocked curator actions; no pause / freeze authority is established in the published records"
     },
     {
      "key": "parity",
@@ -9352,14 +9355,14 @@
    "easUid": "0x61c2970c176b85ab604e6b565c5f050a7176b62e725d449e8d27d700365283d6",
    "sprint": 24,
    "recordId": "synthetix-v3-core-account-owner-s24",
-   "summaryShort": "Account NFT is owned by the CoreProxy, not a key or Safe, as documented",
+   "summaryShort": "Synthetix V3 AccountProxy matches the deployment table and is owned on-chain by CoreProxy",
    "rosette": [
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "Upgradeable with no enforced delay: CoreProxy owned directly by the 4-of-7 pDAO Safe"
     },
     {
      "key": "timelock",
@@ -9390,9 +9393,9 @@
      "value": "Chain matches or is stronger than the documentation"
     }
    ],
-   "docsSay": "Account NFT is owned by the CoreProxy, not a key or Safe",
-   "chainSays": "the same, so docs and chain match",
-   "mainPostText": "Synthetix V3 Core @synthetix: docs and chain match. Account NFT is owned by the CoreProxy, not a key or Safe. Checked on-chain at Ethereum block #26,433,001, attested on Base. Receipt below.",
+   "docsSay": "Synthetix V3 deployment table lists the AccountProxy and CoreProxy addresses",
+   "chainSays": "Account NFT owner() is the CoreProxy (not an external key or standalone Safe)",
+   "mainPostText": "Synthetix V3 Core: deployment table lists AccountProxy and CoreProxy; on-chain Account NFT owner() is CoreProxy. Checked at Ethereum block #26,433,001, attested on Base. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/synthetix-v3-core/ · Base attestation: https://base.easscan.org/attestation/view/0x61c2970c176b85ab604e6b565c5f050a7176b62e725d449e8d27d700365283d6",
    "cardFilename": "synthetix-v3-core.png",
    "receiptUrl": "https://pacta.wtf/protocols/synthetix-v3-core/",
@@ -9532,7 +9535,7 @@
    "easUid": "0x435a5212e2490cd6024859f474dbbd897752b24985480413301d7573cb195801",
    "sprint": 23,
    "recordId": "tether-usdt-owner-multisig-3of6-s23",
-   "summaryShort": "Owner is a 3-of-6 MultiSigWallet, as documented",
+   "summaryShort": "Tether uses a multi-signature authorization model; on-chain USDT owner() is a 3-of-6 MultiSigWallet",
    "rosette": [
     {
      "key": "upgrade",
@@ -9544,9 +9547,9 @@
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "No enforced delay on at least one sampled control surface (0s: 3-of-6 owner MultiSigWallet acts with no timelock)"
     },
     {
      "key": "quorum",
@@ -9570,9 +9573,9 @@
      "value": "Chain matches or is stronger than the documentation"
     }
    ],
-   "docsSay": "Owner is a 3-of-6 MultiSigWallet",
-   "chainSays": "the same, so docs and chain match",
-   "mainPostText": "Tether USDT: docs and chain match. Owner is a 3-of-6 MultiSigWallet. Checked on-chain at Ethereum block #26,431,152, attested on Base. Receipt below.",
+   "docsSay": "Tether token issuance and control use a multi-signature authorization model",
+   "chainSays": "USDT owner() is a 3-of-6 MultiSigWallet",
+   "mainPostText": "Tether USDT: docs describe multi-signature authorization; on-chain USDT owner() is a 3-of-6 MultiSigWallet. Checked at Ethereum block #26,431,152, attested on Base. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/tether-usdt/ · Base attestation: https://base.easscan.org/attestation/view/0x435a5212e2490cd6024859f474dbbd897752b24985480413301d7573cb195801",
    "cardFilename": "tether-usdt.png",
    "receiptUrl": "https://pacta.wtf/protocols/tether-usdt/",
@@ -9740,7 +9743,7 @@
      "label": "Emergency / freeze scope",
      "state": "n",
      "cue": "—",
-     "value": "No pause / freeze authority in the published records"
+     "value": "Pause and freeze functions recorded on eUSD Main (shortFreeze 3d, longFreeze 1w, tradingPaused and issuancePaused = false); role holders are not in the published records"
     },
     {
      "key": "parity",
@@ -9777,9 +9780,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "g",
-     "cue": "S",
-     "value": "Immutable or ownership renounced"
+     "state": "n",
+     "cue": "—",
+     "value": "Sampled HubPool is not a proxy (non-proxy bytecode; owner() is a 3-of-5 Safe; other protocol contracts not assessed)"
     },
     {
      "key": "timelock",
@@ -9920,7 +9923,7 @@
      "label": "Emergency / freeze scope",
      "state": "n",
      "cue": "—",
-     "value": "Pause / freeze authority present; its holder is not determined"
+     "value": "Vault pause window and buffer period ended before the pinned block (getPausedState() = false)"
     },
     {
      "key": "parity",
@@ -9957,16 +9960,16 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "Upgradeable with no enforced delay: cbETH FiatTokenProxy admin slot held by an account with no contract code"
     },
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -10557,9 +10560,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Upgradeable behind a ≥48h delay (4d TimelockController on GenericFactory FactoryGovernor; EVC has no EIP-1967 proxy slots)"
     },
     {
      "key": "timelock",
@@ -10573,7 +10576,7 @@
      "label": "Signer quorum",
      "state": "b",
      "cue": "M",
-     "value": "Lowest controlling quorum: 2-of-3"
+     "value": "Known role-scoped quorums: 4-of-8 Timelock proposer Safe, 2-of-3 Timelock canceller Safe, and 2-of-6 pause/unpause Safe (2 additional PAUSE_GUARDIAN_ROLE members not resolved)"
     },
     {
      "key": "emergency",
@@ -10617,9 +10620,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
+     "state": "b",
+     "cue": "M",
+     "value": "Upgradeable behind a 1h–47h delay (1d Governor timelock on Registry and 10 module proxies; legacy NXMaster owner context is untimed)"
     },
     {
      "key": "timelock",
@@ -10631,16 +10634,16 @@
     {
      "key": "quorum",
      "label": "Signer quorum",
-     "state": "g",
-     "cue": "S",
-     "value": "Lowest controlling quorum: 3-of-5"
+     "state": "b",
+     "cue": "M",
+     "value": "Lowest controlling quorum: 2-of-6 emergency pause admins (Governor / legacy Advisory Board multisig is 3-of-5)"
     },
     {
      "key": "emergency",
      "label": "Emergency / freeze scope",
-     "state": "n",
-     "cue": "—",
-     "value": "Pause / freeze authority present; its holder is not determined"
+     "state": "g",
+     "cue": "S",
+     "value": "Pause / freeze authority scoped behind 2-of-6 emergency pause admins (one proposes, another confirms)"
     },
     {
      "key": "parity",
@@ -10672,7 +10675,7 @@
    "easUid": "0x105ea2849a5cd9ef601ae565e6b0adf288884771c8ac82c1c3d0a87aa789eb4f",
    "sprint": 18,
    "recordId": "stargate-v2-onesig-5of7-owner-planner-fees-s18",
-   "summaryShort": "Pools and treasurer are owned by a 5-of-7 multisig, as documented",
+   "summaryShort": "Stargate governance uses a multisig as documented; on-chain Pools and Treasurer owner is 5-of-7 OneSig",
    "rosette": [
     {
      "key": "upgrade",
@@ -10684,9 +10687,9 @@
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "No enforced delay on at least one sampled control surface (0s: 5-of-7 OneSig owner executes with no delay)"
     },
     {
      "key": "quorum",
@@ -10710,9 +10713,9 @@
      "value": "Chain matches or is stronger than the documentation"
     }
    ],
-   "docsSay": "Pools and treasurer are owned by a 5-of-7 multisig",
-   "chainSays": "the same, so docs and chain match",
-   "mainPostText": "Stargate V2 @StargateFinance: docs and chain match. Pools and treasurer are owned by a 5-of-7 multisig. Checked on-chain at Ethereum block #26,421,541, attested on Base. Receipt below.",
+   "docsSay": "Protocol and treasury changes require action via Stargate's governance multisig",
+   "chainSays": "Pools and Treasurer owner() is a 5-of-7 OneSig multisig",
+   "mainPostText": "Stargate V2: docs describe governance multisig execution; on-chain Pools and Treasurer owner() is a 5-of-7 OneSig multisig. Checked at Ethereum block #26,421,541, attested on Base. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/stargate-v2/ · Base attestation: https://base.easscan.org/attestation/view/0x105ea2849a5cd9ef601ae565e6b0adf288884771c8ac82c1c3d0a87aa789eb4f",
    "cardFilename": "stargate-v2.png",
    "receiptUrl": "https://pacta.wtf/protocols/stargate-v2/",
@@ -10737,16 +10740,16 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgrade path not in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "Upgradeable with no enforced delay: USDf and sUSDf EIP-1967 proxy admin contracts are both owned by a 4-of-6 Safe"
     },
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "No enforced delay on at least one sampled control surface (0s: USDf and sUSDf proxy admins owned by a 4-of-6 Safe)"
     },
     {
      "key": "quorum",
@@ -10792,14 +10795,14 @@
    "easUid": "0xbeb412dfc350f879f816a5cb001b53257a3ee03c12cf1d8e2c15a070141ed8c7",
    "sprint": 17,
    "recordId": "m0-mtoken-no-eip1967-proxy-immutable-s17",
-   "summaryShort": "MToken has no proxy slots: immutable core logic, as documented",
+   "summaryShort": "MToken and TTG Registrar have empty EIP-1967 proxy slots; Registrar governors match the docs",
    "rosette": [
     {
      "key": "upgrade",
      "label": "Upgradeability",
      "state": "n",
      "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "value": "Sampled TTG Registrar has an empty EIP-1967 implementation slot; sampled MToken has empty implementation and admin slots. Non-EIP-1967 upgrade paths and remaining protocol contracts are not assessed"
     },
     {
      "key": "timelock",
@@ -10830,9 +10833,9 @@
      "value": "Chain matches or is stronger than the documentation"
     }
    ],
-   "docsSay": "MToken has no proxy slots: immutable core logic",
-   "chainSays": "the same, so docs and chain match",
-   "mainPostText": "M0 Protocol ($M): docs and chain match. MToken has no proxy slots: immutable core logic. Checked on-chain at Ethereum block #26,418,060, attested on Base. Receipt below.",
+   "docsSay": "MToken core logic is documented as non-upgradeable and TTG Registrar lists the three governors",
+   "chainSays": "MToken and TTG Registrar have empty EIP-1967 proxy slots; Registrar governors match the docs",
+   "mainPostText": "M0 Protocol ($M): docs and chain match. MToken and TTG Registrar have empty EIP-1967 proxy slots and Registrar governors match the docs. Checked at Ethereum block #26,418,060, attested on Base. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/m0-protocol-m/ · Base attestation: https://base.easscan.org/attestation/view/0xbeb412dfc350f879f816a5cb001b53257a3ee03c12cf1d8e2c15a070141ed8c7",
    "cardFilename": "m0-protocol-m.png",
    "receiptUrl": "https://pacta.wtf/protocols/m0-protocol-m/",
@@ -10878,9 +10881,9 @@
     {
      "key": "emergency",
      "label": "Emergency / freeze scope",
-     "state": "a",
-     "cue": "W",
-     "value": "Pause / freeze authority held by a single key"
+     "state": "n",
+     "cue": "—",
+     "value": "MetaMorpho guardian() vetoes pending timelocked curator actions; no pause / freeze authority is established in the published records"
     },
     {
      "key": "parity",
@@ -11332,14 +11335,14 @@
    "easUid": "0x749d96e1a3d214a4ab66c528ca12c84dce085fa138dc370dd0eb817d890f09fa",
    "sprint": 6,
    "recordId": "liquity-v2-bold-immutability",
-   "summaryShort": "Sampled owner and proxy slots match the docs",
+   "summaryShort": "Liquity V2 core contracts are documented as non-upgradeable; sampled EIP-1967 and owner slots read 0x0",
    "rosette": [
     {
      "key": "upgrade",
      "label": "Upgradeability",
      "state": "n",
      "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "value": "Sampled CollateralRegistry EIP-1967 implementation slot is 0x0 and BOLD / Governance owner() = 0x0; non-EIP-1967 upgrade mechanisms not assessed"
     },
     {
      "key": "timelock",
@@ -11370,9 +11373,9 @@
      "value": "Chain matches or is stronger than the documentation"
     }
    ],
-   "docsSay": "Sampled owner and proxy slots match the docs",
-   "chainSays": "the same, so docs and chain match",
-   "mainPostText": "Liquity V2 (BOLD) @LiquityProtocol: docs and chain match. Sampled owner and proxy slots match the docs. Checked on-chain at Ethereum block #26,401,540, attested on Base. Receipt below.",
+   "docsSay": "Liquity V2 core contracts are documented as non-upgradeable",
+   "chainSays": "Sampled CollateralRegistry EIP-1967 slot and BOLD / Governance owner() read 0x0",
+   "mainPostText": "Liquity V2 (BOLD): docs describe non-upgradeable core contracts; on-chain sampled CollateralRegistry EIP-1967 slot and BOLD / Governance owner() read 0x0. Checked at Ethereum block #26,401,540, attested on Base. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/liquity-v2-bold/ · Base attestation: https://base.easscan.org/attestation/view/0x749d96e1a3d214a4ab66c528ca12c84dce085fa138dc370dd0eb817d890f09fa",
    "cardFilename": "liquity-v2-bold.png",
    "receiptUrl": "https://pacta.wtf/protocols/liquity-v2-bold/",
@@ -12297,16 +12300,16 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "Upgradeable with no enforced delay: ProxyAdmin controlled by a 4-of-5 Safe"
     },
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -12327,7 +12330,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -12657,16 +12660,16 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "Upgradeable with no enforced delay: ProxyAdmin controlled by a 3-of-7 Safe"
     },
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -12687,7 +12690,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -12777,16 +12780,16 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "Upgradeable with no enforced delay: EIP-1967 admin slot held by a 3-of-5 Safe"
     },
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -12807,7 +12810,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -12957,16 +12960,16 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "Upgradeable with no enforced delay: ProxyAdmin controlled by a 3-of-6 Safe"
     },
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -12987,7 +12990,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -13797,16 +13800,16 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "Upgradeable with no enforced delay: ProxyAdmin controlled by a 3-of-7 Safe"
     },
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -13827,7 +13830,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -14152,7 +14155,7 @@
    "easUid": null,
    "sprint": null,
    "recordId": "flokifi-locker-control-plane",
-   "summaryShort": "Non-proxy contract controlled by a single key (EOA); docs not assessed",
+   "summaryShort": "Sampled FLOKI token is not a proxy and owner() is burn address 0x0000…dEaD; docs not assessed",
    "rosette": [
     {
      "key": "upgrade",
@@ -14171,9 +14174,9 @@
     {
      "key": "quorum",
      "label": "Signer quorum",
-     "state": "a",
-     "cue": "W",
-     "value": "Lowest controlling quorum: a single key"
+     "state": "n",
+     "cue": "—",
+     "value": "No active signer quorum in the published records (FLOKI owner() is burn address 0x0000…dEaD)"
     },
     {
      "key": "emergency",
@@ -14187,12 +14190,12 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
-   "chainSays": "Non-proxy contract controlled by a single key (EOA)",
-   "mainPostText": "FlokiFi Locker @flokifi. On-chain at Ethereum block #26,458,556: Non-proxy contract controlled by a single key (EOA). Not yet compared with the docs. Receipt below.",
+   "chainSays": "Sampled FLOKI token is not a proxy and owner() is burn address 0x0000…dEaD",
+   "mainPostText": "FlokiFi Locker @flokifi. On-chain at Ethereum block #26,458,556: Sampled FLOKI token is not a proxy and owner() is burn address 0x0000…dEaD. Not yet compared with the docs. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/flokifi-locker/ · Pinned RPC observation (not attested on Base yet)",
    "cardFilename": "flokifi-locker.png",
    "receiptUrl": "https://pacta.wtf/protocols/flokifi-locker/",
@@ -15184,9 +15187,9 @@
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "2d minimum enforced delay on sampled timelocked surfaces"
     },
     {
      "key": "quorum",
@@ -15207,7 +15210,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -15537,16 +15540,16 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "Upgradeable with no enforced delay: EIP-1967 admin slot held by an account with no contract code"
     },
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -15567,7 +15570,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -15837,9 +15840,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "Upgradeable with no enforced delay: ProxyAdmin controlled by a 0s timelock"
     },
     {
      "key": "timelock",
@@ -15867,7 +15870,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -17277,9 +17280,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Upgradeable behind a ≥48h delay (5d)"
     },
     {
      "key": "timelock",
@@ -17307,7 +17310,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -17697,16 +17700,16 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "Upgradeable with no enforced delay: ProxyAdmin controlled by a 2-of-5 Safe"
     },
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -17727,7 +17730,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -17997,16 +18000,16 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "Upgradeable with no enforced delay: EIP-1967 admin slot held by a 2-of-4 Safe"
     },
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -18027,7 +18030,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -18357,16 +18360,16 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "Upgradeable with no enforced delay: ProxyAdmin2Step controlled by a 3-of-5 Safe"
     },
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -18387,7 +18390,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -18477,16 +18480,16 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "Upgradeable with no enforced delay: ProxyAdmin controlled by a 3-of-5 Safe"
     },
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -18507,7 +18510,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -18777,16 +18780,16 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "Upgradeable with no enforced delay: ProxyAdmin controlled by a 3-of-6 Safe"
     },
     {
      "key": "timelock",
      "label": "Timelock floor",
-     "state": "n",
-     "cue": "—",
-     "value": "No enforced admin delay in the published records"
+     "state": "a",
+     "cue": "W",
+     "value": "No enforced delay on at least one sampled control surface (0s)"
     },
     {
      "key": "quorum",
@@ -18807,7 +18810,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -18897,9 +18900,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "b",
+     "cue": "M",
+     "value": "Upgradeable behind a 1h–47h delay (1d)"
     },
     {
      "key": "timelock",
@@ -18927,7 +18930,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
@@ -18957,9 +18960,9 @@
     {
      "key": "upgrade",
      "label": "Upgradeability",
-     "state": "n",
-     "cue": "—",
-     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+     "state": "g",
+     "cue": "S",
+     "value": "Upgradeable behind a ≥48h delay (2d)"
     },
     {
      "key": "timelock",
@@ -18987,7 +18990,7 @@
      "label": "Docs-vs-chain parity",
      "state": "u",
      "cue": "—",
-     "value": "Uncompared: documentation not assessed (RPC-observed)"
+     "value": "Uncompared: documentation not assessed (Observed)"
     }
    ],
    "docsSay": "not compared yet",
