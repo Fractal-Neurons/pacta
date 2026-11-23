@@ -1,0 +1,15 @@
+{
+  "protocol_slug": "beefy-finance-base",
+  "chain": "base",
+  "watched_address": "0x3B60F7f25b09E71356cdFFC6475c222A466a2AC9",
+  "prior_pinned_block": 58315414,
+  "event_block_number": 61217995,
+  "event_block_hash": "0xd4c03be4f8966a31fca1ee3e5f348b5e2478d8ee42d39a2fb043e71fb26091a3",
+  "event_tx_hash": "0x8bc66b7e03165af6c24cb885c5d895f23637cda01a8464e8a750e3d912690919",
+  "change_kind": "timelock_delay_or_queued_op",
+  "before_state": "getTimestamp(0xc604cfaf6972836d880adba9e058cd3536b0c34140ca49a1e2887a77a5d5b31a) = 0",
+  "after_state": "getTimestamp(0xc604cfaf6972836d880adba9e058cd3536b0c34140ca49a1e2887a77a5d5b31a) = 1795455574",
+  "contributor_github": "oppo2357",
+  "base_payout_address": "0x979811E3745fF46cbB57066251F1Aee0c1b24055",
+  "payment_tx_hash": "0xb97ca121f21c68c849996ef18aecf6a7f33978e83fa9b05a18aa905c551baadb"
+}
