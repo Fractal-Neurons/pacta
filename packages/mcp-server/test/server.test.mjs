@@ -22,6 +22,7 @@ import "./proposals.test.mjs";
 import "./registry-skill.test.mjs";
 import "./x402-v2.test.mjs";
 import "./submit.test.mjs";
+import "./lookup.test.mjs";
 
 // Tests must not depend on the caller's environment.
 for (const k of ["PACTA_X402_URL", "PACTA_X402_MAX_ATOMIC", "PACTA_X402_TIMEOUT_MS", "PACTA_INDEX_PATH", "PACTA_PROPOSALS_PATH", "PACTA_SPEC_PATH"]) {
