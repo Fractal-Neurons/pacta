@@ -1,0 +1,21 @@
+{
+  "slot_id": "ethereum-uniswap-v2-factory",
+  "chain": "ethereum",
+  "protocol_name": "Uniswap V2 on Ethereum (UniswapV2Factory)",
+  "contract_address": "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
+  "official_source_url": "https://docs.uniswap.org/contracts/v2/reference/smart-contracts/v2-deployments",
+  "pinned_block_number": 26475542,
+  "pinned_block_hash": "0x6765efd70d1c7d108f83ae114d9806708baa45f4e149d794dd90ffc286e27fe6",
+  "observed_control_plane": {
+    "is_proxy": false,
+    "implementation_address": null,
+    "controller_address": "0x1a9C8182C09F50C8318d769245beA52c32BE35BC",
+    "controller_kind": "timelock",
+    "timelock_min_delay_seconds": 172800,
+    "safe_threshold": null,
+    "safe_owners_count": null
+  },
+  "payment_tx_hash": "0xb8d2ebd259be637d08b664c05342b48f98b5651c113445afa08a633504d8b860",
+  "contributor_github": "jeffrey-graham",
+  "base_payout_address": "0x3FFf807B33695a45707F381cdd60bF1D8Deb8353"
+}
