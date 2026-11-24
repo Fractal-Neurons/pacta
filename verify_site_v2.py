@@ -2246,10 +2246,10 @@ def main(argv=None):
           and r'^\/((?:website-test|public\/web\/option-b-v2)\/)?(scorecards|curators|request|scan|seal|webhook|watch|miniapp|radar|bounties|leaderboard|methodology|protocols(?:\/[a-z0-9-]+)?)\/((?:utm_[a-z]+|tier|ref)=.+)$' in rescue_
           and "L.replace(" in rescue_ and "w.pactaRescued=1" in rescue_ and "&&!w.pactaRescued" in bjs and all(res.get(k_) is True for k_ in r_keys),
           f"csp {csp_at} rescue {r_at} b.js {b_at}; failed {[k_ for k_ in r_keys if res.get(k_) is not True]}")
-    b5_keys = ["b_v5_routes", "b_v5_campaign_fields", "b_v5_host"]
-    check("b.js v5.1: all live site routes (/curators/ /pricing/ /about/ /for-protocols/ /integrations/ /mcp/ /demos/ /privacy/ /terms/ + core v5 set); production-host-only gate "
+    b5_keys = ["b_v5_routes", "b_v5_campaign_fields", "b_v5_host", "b_watch_route"]
+    check("b.js v5.1: all live site routes (/curators/ /pricing/ /about/ /for-protocols/ /integrations/ /mcp/ /demos/ /privacy/ /terms/ /watch/ + core v5 set); production-host-only gate "
           "(pacta.wtf | pacta.fractalneurons.com | pacta-fractalneurons.pages.dev; staging sends 0 beacons); allowlisted m, c, and h (harness)",
-          r"/^\/(protocols|scorecards|radar|curators|bounties|leaderboard|methodology|request|scan|seal|webhook|miniapp|briefs|llms|pricing|about|for-protocols|integrations(\/vault-factories)?|mcp|demos(\/swapio-x402)?|privacy|terms)$/" in bjs
+          r"/^\/(protocols|scorecards|radar|curators|bounties|leaderboard|methodology|request|scan|seal|webhook|watch|miniapp|briefs|llms|pricing|about|for-protocols|integrations(\/vault-factories)?|mcp|demos(\/swapio-x402)?|privacy|terms)$/" in bjs
           and r"/^(pacta\.wtf|pacta\.fractalneurons\.com|pacta-fractalneurons\.pages\.dev)$/.test(L.hostname)" in bjs
           and r'/^(paid|paid_search|cpc|organic|sponsor)$/.test(u=G("medium"))&&(b.m=u)' in bjs
           and r'(f||/^live/.test(e))&&/^[a-z\d_-]{1,32}$/.test(u=G("campaign"))&&(/^wk_20\d{6}$/.test(u)||!D.test(u)&&!/[\da-f]{12}/.test(u))&&(b.c=u)' in bjs

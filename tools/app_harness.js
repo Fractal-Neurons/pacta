@@ -610,6 +610,16 @@ async function beaconScenario() {
     && run(input.index, null, { path: "/", hostname: "localhost", beacon: B }).beacons.length === 0
     && run(input.index, null, { path: "/", hostname: "127.0.0.1", beacon: B }).beacons.length === 0;
   res.b_v5_rescued_sends_nothing = run(input.index, null, { path: "/", beacon: B, win: { pactaRescued: 1 } }).beacons.length === 0;
+  // /watch/ is a first-class route (page_load p=/watch/ on both production hosts, i: 1 on ?internal=1, nothing under DNT); deeper paths stay /other
+  if (input.watch) {
+    const wEv = (o) => run(input.watch, null, Object.assign({ path: "/watch/", beacon: B }, o)).events();
+    res.b_watch_route = same(wEv({}), [{ v: 1, e: "page_load", p: "/watch/", h: "wtf" }])
+      && same(wEv({ hostname: "pacta.fractalneurons.com" }), [{ v: 1, e: "page_load", p: "/watch/", h: "com" }])
+      && wEv({ path: "/watch/index.html" })[0].p === "/watch/" && wEv({ path: "/watch" })[0].p === "/watch/"
+      && same(wEv({ search: "?internal=1" }), [{ v: 1, e: "page_load", p: "/watch/", i: 1, h: "wtf" }])
+      && wEv({ nav: { doNotTrack: "1" } }).length === 0
+      && wEv({ path: "/watch/x" })[0].p === "/other" && wEv({ path: "/watchlist/" })[0].p === "/other";
+  } else res.b_watch_route = false;
 }
 // (o) 404.html stripped-"?" rescue (docs/404-rescue.js): a known route + a stripped query goes back to /<route>/?<query>; nothing else moves
 function rescueScenario() {
