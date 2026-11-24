@@ -2199,7 +2199,8 @@ def main(argv=None):
     w_keys = ["watch_combobox_keyboard_chips", "watch_free_posts_exact_body", "watch_targets_1_to_10", "watch_free_address_subject",
               "watch_nonce_per_submission", "watch_error_no_receipt", "watch_pledge_exact_body", "watch_pledge_never_watchlist", "watch_copy_honest",
               "webhook_redirects_to_watch", "scan_inline_watch_wallet", "scan_inline_watch_contract", "scan_inline_watch_live_wallet",
-              "watch_submit_timeout_unlocks", "scan_combo_tab_focusout_closes"]
+              "watch_submit_timeout_unlocks", "scan_combo_tab_focusout_closes",
+              "watch_not_stored_keeps_entries", "scan_inline_not_stored_keeps_entries", "req_not_stored_keeps_form"]   # P3-CONTACT-03
     w_failed = [k_ for k_ in w_keys if res.get(k_) is not True]
     w_txt = html.unescape(re.sub(r"<[^>]+>", " ", watch_))
     w_src = read("tools/app.src.js")

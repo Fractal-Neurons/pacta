@@ -1276,6 +1276,42 @@ async function liveCardScenario() {
 
 // v4.4 (F6): the scope brief does not repeat the address (it is in the card header); the Gmail body starts at the track; "Copy brief
 // and address" prefixes the address; the secondary actions are all outline buttons
+// P3-CONTACT-03 on /request/: with contact_handle, "Request received" only when the answer says it was stored; a 200 without the
+// flags (live 069b6222 with a failed private store), a "NOT stored" note or a 503 keeps the form, the entries and the plain line.
+// Without a contact (an anonymous vote) a 200 still shows the receipt, as before, even when the Worker has no store (persisted:false).
+async function requestNotStoredScenario() {
+  const NOT_SAVED = "We could not confirm whether your submission was saved. Your entries are still here \u2014 please try again, or write to pacta@dri.network.";   // NOT_SAVED_TXT: "could not confirm", never "not saved"
+  const R = { schema: "pacta.demand_receipt.v1", request_id: "REQ-2026-0a1b2c3d", status: "queued", demand_votes: 1, fast_track_url: "https://pacta.wtf/request/?tier=clearance" };
+  const NS = "The contact handle was NOT stored (no private store available); nothing was published.";
+  const cases = [
+    ["contact:persisted_false", "risk.desk@fund-ops.co", 200, { ...R, has_contact_opt_in: false, persisted: false, note: NS }, false],
+    ["contact:opt_in_false", "risk.desk@fund-ops.co", 200, { ...R, has_contact_opt_in: false, persisted: true }, false],
+    ["contact:note_not_stored", "@pacta_ops", 200, { ...R, status: "upvoted_existing", has_contact_opt_in: true, persisted: true, note: NS }, false],
+    ["contact:503", "octocat", 503, { error: "contact_storage_unavailable", detail: "We could not confirm whether your submission was saved. Please try again, or write to pacta@dri.network" }, false],
+    ["contact:stored", "risk.desk@fund-ops.co", 200, { ...R, has_contact_opt_in: true, persisted: true, note: "The contact handle was stored privately (never published) for follow-up." }, true],
+    ["anonymous:no_store", "", 200, { ...R, has_contact_opt_in: false, persisted: false, note: "Queued in Pacta's public demand queue." }, true],
+  ];
+  const out = {};
+  for (const [name, contact, st0, body0, ok] of cases) {
+    const calls = [];
+    const p = run(input.request, input.app, { path: "/request/", fetch: (url, o) => { calls.push([String(url), o]); return Promise.resolve({ status: st0, ok: st0 >= 200 && st0 < 300, json: () => Promise.resolve(body0) }); } });
+    for (let i = 0; i < 3; i++) await flush();
+    const d = p.document, form = d.getElementById("req-form"), done = d.getElementById("req-done"), st = d.getElementById("req-status"), send = d.getElementById("req-send");
+    setField(d, "req-org", "Harness Risk Desk"); setField(d, "req-contact", contact);
+    const before = ["req-org", "req-contact"].map((id) => d.getElementById(id).value).join("|");
+    const ev = new Event_("submit"); ev.target = form; form.dispatchEvent(ev);
+    for (let i = 0; i < 6; i++) await flush();
+    const sent = calls.length === 1 ? JSON.parse(calls[0][1].body) : {};
+    const bodyOk = calls.length === 1 && calls[0][0] === "https://api.pacta.wtf/v1/requests" && (contact ? sent.contact_handle === contact : !("contact_handle" in sent));
+    out[name] = ok
+      ? bodyOk && form.hidden === true && done.hidden === false && d.querySelector("[data-req-done-title]").textContent === "Request received"
+      : bodyOk && form.hidden !== true && done.hidden === true && st.textContent === NOT_SAVED && send.disabled === false
+        && ["req-org", "req-contact"].map((id) => d.getElementById(id).value).join("|") === before;
+  }
+  res.req_not_stored_results = out;
+  res.req_not_stored_keeps_form = Object.keys(out).length === 6 && Object.values(out).every(Boolean);
+}
+
 async function requestBriefScenario() {
   const p = run(input.request, input.app, { path: "/request/" });
   for (let i = 0; i < 3; i++) await flush();
@@ -1970,11 +2006,14 @@ async function walletExposureScenario() {
   };
 
   let rpcCalls = [], pfCalls = [], weCalls = [], reqCalls = [];
+  let reqReply = null;   // P3-CONTACT-03: [status, body] for the next inline watch POSTs; null = a stored 200
   const mockFetch = (url, opts) => {
     const u = String(url);
     if (/\/v1\/requests$/.test(u)) {   // the inline watch card (a local mock; nothing leaves the harness)
       reqCalls.push([u, opts]);
-      return Promise.resolve({ status: 200, ok: true, json: () => Promise.resolve({ ok: true, request_id: "REQ-2026-00c0ffee", fast_track_url: "https://pacta.wtf/request/?tier=community&protocol=harness-fast-track" }) });
+      if (reqReply) return Promise.resolve({ status: reqReply[0], ok: reqReply[0] >= 200 && reqReply[0] < 300, json: () => Promise.resolve(reqReply[1]) });
+      return Promise.resolve({ status: 200, ok: true, json: () => Promise.resolve({ ok: true, request_id: "REQ-2026-00c0ffee", has_contact_opt_in: true, persisted: true,
+        fast_track_url: "https://pacta.wtf/request/?tier=community&protocol=harness-fast-track" }) });
     }
     if (/api\/v1\/wallet-tokens\.json$/.test(u)) return Promise.resolve({ status: 200, ok: true, json: () => Promise.resolve(wt) });
     if (/api\/v1\/lookup\.json$/.test(u)) return Promise.resolve({ status: 200, ok: true, json: () => Promise.resolve(input.lookupJson) });
@@ -2088,6 +2127,22 @@ async function walletExposureScenario() {
     && !!cW.querySelector('input[type="email"]') && cW.querySelector("[data-w-submit]").textContent === "Watch by email" && !!cW.querySelector("form")
     && cW.textContent.includes("When one changes, a person at Pacta emails you, normally within 24 hours.") && !BANNED_W.test(cW.textContent)
     && cW.querySelectorAll("a").some((a) => /^\.\.\/watch\/\?(?:chain=(?:ethereum|base)&address=0xa35b1b31ce002fbf2058d22f30f95d405200a15b|protocol=stader-labs-ethx)$/.test(a.getAttribute("href") || ""));
+  // P3-CONTACT-03 on the inline card: each not-stored answer keeps the form, the email and no receipt, with the one plain line
+  const NOT_SAVED = "We could not confirm whether your submission was saved. Your entries are still here \u2014 please try again, or write to pacta@dri.network.";   // NOT_SAVED_TXT: "could not confirm", never "not saved"
+  const cwRes = [];
+  if (cW && cW.querySelector("form")) {
+    const cf = cW.querySelector("form"), ce = cW.querySelector('input[type="email"]'), cst = cW.querySelector("[data-w-status]"), cd = cW.querySelector("[data-w-done]");
+    for (const rr of [[200, { schema: "pacta.demand_receipt.v1", request_id: "REQ-2026-00c0ffee", status: "queued", demand_votes: 1, has_contact_opt_in: false, persisted: false,
+                             note: "Queued in Pacta's public demand queue. The contact handle was NOT stored (no private store available); nothing was published." }],
+                      [503, { error: "contact_storage_unavailable", detail: "We could not confirm whether your submission was saved. Please try again, or write to pacta@dri.network" }]]) {
+      reqReply = rr; const n0 = reqCalls.length;
+      ce.value = "treasury@dao-ops.org"; cf.dispatchEvent(new Event_("submit")); for (let i = 0; i < 4; i++) await flush();
+      cwRes.push(reqCalls.length === n0 + 1 && cf.hidden !== true && (!cd || cd.hidden === true) && ce.value === "treasury@dao-ops.org"
+        && !!cst && cst.hidden === false && cst.textContent === NOT_SAVED && cW.querySelector("[data-w-submit]").disabled === false && !/Sign-up received/.test(cW.textContent));
+    }
+    reqReply = null;
+  }
+  res.scan_inline_not_stored_keeps_entries = cwRes.length === 2 && cwRes.every(Boolean);
 
   // 3. Dispatch Rule 3: unknown wallet/Safe 0x -> /v1/check/wallet-exposure (404) -> browser-direct Multicall3.aggregate3 fallback
   click(d.querySelector("[data-focus-wallet-scan]"));
@@ -2110,7 +2165,7 @@ async function walletExposureScenario() {
 async function watchScenario() {
   if (!input.watch || !input.webhook || !input.lookupJson) { res.watch_error = "no /watch/ input"; return; }
   const API = "https://api.pacta.wtf/v1/requests";
-  const REPLY = { schema: "pacta.demand_receipt.v1", ok: true, request_id: "REQ-2026-0a1b2c3d", status: "queued", demand_votes: 1,
+  const REPLY = { schema: "pacta.demand_receipt.v1", ok: true, request_id: "REQ-2026-0a1b2c3d", status: "queued", demand_votes: 1, has_contact_opt_in: true, persisted: true,
                   fast_track_url: "https://pacta.wtf/request/?tier=community&protocol=harness-fast-track", note: "urgent review" };
   let calls = [];
   const mock = (status, body) => (url, opts) => { calls.push([String(url), opts]); return Promise.resolve({ status, ok: status >= 200 && status < 300, json: () => Promise.resolve(body) }); };
@@ -2330,6 +2385,45 @@ async function watchScenario() {
   }
   res.watch_submit_timeout_unlocks = toRes.length === 2 && toRes.every(Boolean);
 
+  // 8b. P3-CONTACT-03: "Received" only when the answer says the email was stored. Live 069b6222 with a failed private store answers 200
+  //     persisted:false / has_contact_opt_in:false (or, on an upvote, a "NOT stored" note); the updated Worker answers 503. Each keeps the
+  //     form visible with every chip and entry, shows no receipt, re-enables the button and shows the one plain line (published address only).
+  const NOT_SAVED = "We could not confirm whether your submission was saved. Your entries are still here \u2014 please try again, or write to pacta@dri.network.";   // NOT_SAVED_TXT: "could not confirm", never "not saved"
+  const STORED_NOTE = "Queued in Pacta's public demand queue. The contact handle was stored privately (never published) for follow-up. No GitHub issue is opened and nothing is charged; fast_track_url is optional.";
+  const NOT_STORED_NOTE = "Queued in Pacta's public demand queue. The contact handle was NOT stored (no private store available); nothing was published. No GitHub issue is opened and nothing is charged; fast_track_url is optional.";
+  const R = { schema: "pacta.demand_receipt.v1", request_id: "REQ-2026-0a1b2c3d", status: "queued", demand_votes: 1 };
+  const SHAPES = {
+    persisted_false: [200, { ...R, has_contact_opt_in: false, persisted: false, note: NOT_STORED_NOTE }],
+    opt_in_false: [200, { ...R, has_contact_opt_in: false, persisted: true, note: STORED_NOTE }],
+    note_not_stored: [200, { ...R, status: "upvoted_existing", demand_votes: 3, has_contact_opt_in: true, persisted: true, note: NOT_STORED_NOTE }],
+    flags_missing: [200, { ...R, ok: true }],
+    http_503: [503, { error: "contact_storage_unavailable", detail: "We could not confirm whether your submission was saved. Please try again, or write to pacta@dri.network" }],
+  };
+  const nsRes = {};
+  for (const which of ["watch", "pledge"]) {
+    for (const [name, [st0, body0]] of Object.entries({ ...SHAPES, stored: [200, { ...R, has_contact_opt_in: true, persisted: true, note: STORED_NOTE }] })) {
+      calls = [];
+      p = watchPage(which === "watch" ? "?protocol=ethena-usde-susde,lido-steth-dual-governance" : "", st0, body0); d = p.document;
+      const f = d.getElementById(which + "-form"), btn = f.querySelector("[data-w-submit]"), st = f.querySelector("[data-w-status]"), done = d.querySelector("[data-" + which + "-done]");
+      if (which === "watch") { d.getElementById("watch-chain").value = "base"; typ(d.getElementById("watch-q"), "0x" + "ab".repeat(20)); d.getElementById("watch-email").value = "risk.desk@fund-ops.co"; }
+      else { d.getElementById("pledge-target").value = "Aave V3 / GHO"; d.getElementById("pledge-amount").value = "120"; d.getElementById("pledge-email").value = "fund@desk.co"; }
+      const vals = () => f.querySelectorAll("input").map((x) => x.value).join("|"), chips = () => d.querySelectorAll("#watch-chips .chip-x").map((c) => c.textContent).join("|");
+      const before = vals(), chipsBefore = chips();
+      submit(f); for (let i = 0; i < 6; i++) await flush();
+      if (name === "stored") {
+        nsRes[which + ":" + name] = calls.length === 1 && f.hidden === true && done.hidden === false && (!st || st.hidden === true || st.textContent === "")
+          && !d.body.textContent.includes(NOT_SAVED);
+      } else {
+        nsRes[which + ":" + name] = calls.length === 1 && f.hidden !== true && done.hidden === true && btn.disabled === false && !btn.hasAttribute("aria-busy")
+          && st.hidden === false && st.textContent === NOT_SAVED && vals() === before && chips() === chipsBefore
+          && (which !== "watch" || chipsBefore.split("|").length === 3)
+          && !/Sign-up received|Pledge received/.test(d.querySelector("#" + which + "-form").textContent + (st.textContent || ""));
+      }
+    }
+  }
+  res.watch_not_stored_results = nsRes;
+  res.watch_not_stored_keeps_entries = Object.keys(nsRes).length === 12 && Object.values(nsRes).every(Boolean);
+
   // 9. WATCH-FOCUS-01: the /scan/ address list closes on Tab and when focus leaves the combobox (to the next button, or to nowhere)
   const sp = run(input.scan, input.app, { path: "/scan/", fetch: (url) => /api\/v1\/lookup\.json$/.test(String(url))
     ? Promise.resolve({ status: 200, json: () => Promise.resolve(input.lookupJson) }) : Promise.reject(new Error("blocked")),
@@ -2351,6 +2445,7 @@ async function watchScenario() {
   try { await internalQaScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
   try { await walletExposureScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
   try { await requestBriefScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
+  try { await requestNotStoredScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
   try { await liveCardScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
   try { await tryExampleScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
   try { await radarHeaderScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }

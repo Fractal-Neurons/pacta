@@ -1436,8 +1436,10 @@
         .then(function (x) {
           busy(false);
           var j = x.j || {};
-          if (x.status === 200 && /^REQ-\d{4}-[A-Za-z0-9]+$/.test(String(j.request_id || ""))) { showDone(j); return; }
-          if (x.status === 429) status("Too many requests from this network (HTTP 429). Wait a few minutes, or open a GitHub issue.", true);
+          var stored = !body.contact_handle || contactSaved(j);
+          if (x.status === 200 && /^REQ-\d{4}-[A-Za-z0-9]+$/.test(String(j.request_id || "")) && stored) { showDone(j); return; }
+          if (x.status === 503 || (x.status === 200 && !stored)) status(NOT_SAVED_TXT, true);   // P3-CONTACT-03: not confirmed saved
+          else if (x.status === 429) status("Too many requests from this network (HTTP 429). Wait a few minutes, or open a GitHub issue.", true);
           else status("The API answered HTTP " + x.status + (j.detail ? ": " + String(j.detail) : j.error ? ": " + String(j.error) : "") + ". Fix the form, or open a GitHub issue.", true);
         }, function () { busy(false); status("Could not reach the API. Open a GitHub issue or copy the brief instead.", true); });
     });
@@ -3837,6 +3839,15 @@
   var EMAIL_RE = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/, TG_RE = /^@[A-Za-z0-9_]{3,32}$/, GH_RE = /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$/;
   var PII_RE = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}|(^|[\s(])@[A-Za-z0-9_]{2,}|\b\d{1,3}(?:\.\d{1,3}){3}\b|<[^>]*>/;
   var JUNK_CONTACT = /^(none|n\/?a|na|-+|null|user@example\.com|test@test\.com|email@example\.com)$/i;
+  // P3-CONTACT-03: a submission that carries a contact (email / handle) is "received" only when the answer says that contact was
+  // stored: a request_id, has_contact_opt_in === true, persisted === true and no "NOT stored" note. Otherwise (a 2xx without those
+  // flags, as a Worker whose private store failed answers, or a 503 contact_storage_unavailable) the form keeps every entry and shows
+  // no receipt. The line says the save could not be confirmed, not that nothing was saved: a Worker whose store write timed out
+  // cannot know, and that write may still land (CONTACT-TIMEOUT-01). The published contact address only; no new promise.
+  var NOT_SAVED_TXT = "We could not confirm whether your submission was saved. Your entries are still here \u2014 please try again, or write to pacta@dri.network.";
+  function contactSaved(j) {
+    return !!j && typeof j.request_id === "string" && j.has_contact_opt_in === true && j.persisted === true && !/NOT stored/i.test(String(j.note || ""));
+  }
 
   function cleanSubject(v) { return String(v || "").replace(/[:@<>]/g, " ").replace(BAD_CHARS, "").replace(/\s+/g, " ").trim(); }
 
@@ -3958,6 +3969,7 @@
   var WATCH_TXT = {
     emailErr: "Enter a valid email address. Watch alerts are sent by email only.",
     timeout: "We could not confirm delivery in time. Your entries are still here: try again, or email pacta@dri.network directly.",
+    notStored: NOT_SAVED_TXT,
     pledgeEmailErr: "Enter a valid email address. We reply about pledges by email only.",
     watchDone: "Sign-up received — nothing charged. A person at Pacta will confirm your watch list by email within 24 hours.",
     pledgeDone: "Pledge received — nothing charged. We will reply by email to agree the scope before sending any Safe deposit address.",
@@ -4016,7 +4028,9 @@
     var req = fetch(api, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body), signal: ctl ? ctl.signal : undefined }).then(function (r) {
       return r.json().catch(function () { return {}; }).then(function (j) {
         j = j || {};
-        return { ok: r.status >= 200 && r.status < 300 && (j.ok === true || typeof j.request_id === "string"), status: r.status };
+        var two = r.status >= 200 && r.status < 300;
+        if (two && contactSaved(j)) return { ok: true, status: r.status };
+        return two || r.status === 503 ? { ok: false, status: r.status, notStored: true } : { ok: false, status: r.status };   // P3-CONTACT-03
       });
     });
     var deadline = new Promise(function (resolve) {
@@ -4045,6 +4059,7 @@
       fail: function (r) {
         ui.busy(false);
         ui.status(r && r.timeout ? WATCH_TXT.timeout
+          : r && (r.notStored || r.status === 503) ? WATCH_TXT.notStored     // the form, its chips and entries stay; no receipt
           : r && r.status === 429 ? "Too many requests. Wait a few minutes, then try again."
           : r && r.status ? "Could not send (HTTP " + r.status + "). Try again, or email pacta@dri.network."
           : "Network error. Try again, or email pacta@dri.network.");
