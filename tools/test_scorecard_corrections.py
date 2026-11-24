@@ -1,5 +1,6 @@
 """Offline checks of the declarative scorecard corrections (tools/scorecard_corrections.json) against the built site (0 network
 calls). Run after tools/build_site.py:  python3 tools/test_scorecard_corrections.py"""
+import html
 import json
 import os
 import re
@@ -883,6 +884,28 @@ class Scorecard87(unittest.TestCase):
             (_BKSP + "});\n", _BKSP + _TAB + "\n});\n"),
             (_CLICK, _CLICK + "".join(_LEAVE))),
     }
+    # /watch/ (one page for a free email sign-up or a pooled check; the commit after WATCH_BASE): every page's top bar and Sheet link
+    # "Scan" + "Watch" (was "Instant Scan"), the footer "Scan" + "Watch" (was "Instant scan" + "Timelock watchlist" on /webhook/) and a
+    # protocol page's watch card opens /watch/?protocol=<slug> by email (WATCH_PAGE_MOVES, each exactly as often as listed; {name} is the
+    # escaped scorecard name). Its site JS (the two asks, the inline /scan/ card, the /webhook/ redirect) is pinned by the app harness in
+    # verify_site_v2.py, so app.src.js / app.js are held to BASE + the moves above at WATCH_BASE; docs/styles.css keeps BASE + FOCUS_MOVE
+    # as an untouched prefix and only gains rules at its end for the /watch/ classes (WATCH_CSS_TAIL).
+    WATCH_BASE = "55fbbe5b6dfb157786c015b8692c8f117d401419"
+    WATCH_PAGE_MOVES = (
+        ('<a href="../../scan/">Instant Scan</a><a href="../../#pricing">',
+         '<a href="../../scan/">Scan</a><a href="../../watch/">Watch</a><a href="../../#pricing">', 2),
+        ('<span class="step-k mono">FREE · NO PAYMENT</span><h3>Timelock &amp; Signer Watchlist ($0)</h3><p class="s">Subscribe to the live '
+         'timelock RSS / Atom feed, or leave a protocol, timelock or Safe on the watchlist page to join the free pilot. Automated paid webhook '
+         'polling is not active.</p><p><a href="../../webhook/" data-cta="watchlist_link">Open the free watchlist',
+         '<span class="step-k mono">FREE · BY EMAIL</span><h3>Get an email when {name} changes</h3><p class="s">We read the timelocks and '
+         'admin roles of the protocols you pick. When one changes, a person at Pacta emails you, normally within 24 hours. We confirm your '
+         'sign-up by email within 24 hours.</p><p><a href="../../watch/?protocol={slug}" data-cta="watchlist_link">Watch by email', 1),
+        ('<li><a href="../../scan/">Instant scan</a></li><li><a href="../../webhook/">Timelock watchlist</a></li>',
+         '<li><a href="../../scan/">Scan</a></li><li><a href="../../watch/">Watch</a></li>', 1))
+    # (+ the round-2 24 px hit boxes on the /scan/ result links: WATCH-TARGET-02)
+    WATCH_CSS_TAIL = re.compile(r'\.watch-|\.combo-count\b|\.pf-watch-inline\b|\.pfw-|\.scan-watch-doors\b|^input\[type="number"\]'
+                                r'|^\.topbar \.search-btn kbd$|^\.wl-pos-name$|^\.wl-gap-links > a$|^\.wl-inline-b2b > a$'
+                                r'|^\.pf-assess > a$|^\.pf-match-foot > a$')
     EXP = {e["slice_id"]: e for e in _load(os.path.join(HERE, "scorecard87_expected_136.json"), encoding="utf-8")["entries"]}
     FORBIDDEN = re.compile(r"\b(?:immutable|renounced|EOA)\b", re.I)
 
@@ -891,11 +914,20 @@ class Scorecard87(unittest.TestCase):
         return re.sub(rb"((?:app\.js|styles\.css)\?v=)[0-9a-f]{8}\b", rb"\1", b)
 
     @classmethod
-    def _git(cls, path, binary=False):
-        r = subprocess.run(["git", "-c", "safe.directory=*", "-C", ROOT, "show", f"{cls.BASE}:{path}"], capture_output=True)
+    def _git(cls, path, binary=False, rev=None):
+        rev = rev or cls.BASE
+        r = subprocess.run(["git", "-c", "safe.directory=*", "-C", ROOT, "show", f"{rev}:{path}"], capture_output=True)
         if r.returncode:
-            raise unittest.SkipTest(f"base commit {cls.BASE[:8]} not available")
+            raise unittest.SkipTest(f"base commit {rev[:8]} not available")
         return r.stdout if binary else r.stdout.decode("utf-8")
+
+    def _watch_page(self, b, slug):
+        """a BASE protocol page (bytes) with the /watch/ commit's WATCH_PAGE_MOVES applied"""
+        t = b.decode("utf-8")
+        for a, c, n in self.WATCH_PAGE_MOVES:
+            self.assertEqual(t.count(a), n, (slug, a[:60]))
+            t = t.replace(a, c.format(name=html.escape(CARDS[slug]["name"]), slug=slug))
+        return t.encode("utf-8")
 
     @classmethod
     def setUpClass(cls):
@@ -969,7 +1001,7 @@ class Scorecard87(unittest.TestCase):
         self.assertEqual(len(clean), 229)
         for s in clean:
             p = os.path.join("docs", "protocols", s, "index.html")
-            self.assertEqual(self._unstamp(_read(os.path.join(ROOT, p), "rb")), self._unstamp(self._git(p, binary=True)), s)
+            self.assertEqual(self._unstamp(_read(os.path.join(ROOT, p), "rb")), self._unstamp(self._watch_page(self._git(p, binary=True), s)), s)
             c = os.path.join("docs", "cards", f"{s}.png")
             if os.path.exists(os.path.join(ROOT, c)):
                 (self.assertNotEqual if s in self.REDRAWN else self.assertEqual)(_read(os.path.join(ROOT, c), "rb"), self._git(c, binary=True), s)
@@ -1078,8 +1110,8 @@ class Scorecard87(unittest.TestCase):
         out = subprocess.run(["git", "-c", "safe.directory=*", "-C", ROOT, "diff", self.BASE, "--", *paths], capture_output=True)
         self.assertEqual(out.returncode, 0)
         self.assertEqual(out.stdout, b"")
-        # app.src.js / app.js: BASE with the request form's issuer track renamed (URGENCY_MOVE) and the protocol combobox's Tab /
-        # focus-leave dismissal (COMBO_MOVES), byte for byte otherwise
+        # app.src.js / app.js at WATCH_BASE: BASE with the request form's issuer track renamed (URGENCY_MOVE) and the protocol
+        # combobox's Tab / focus-leave dismissal (COMBO_MOVES), byte for byte otherwise (the /watch/ commit's JS: the app harness)
         for p in ("tools/app.src.js", "docs/app.js"):
             base = self._git(p)
             self.assertEqual(base.count(self.URGENCY_MOVE[0]), 1, p)
@@ -1087,11 +1119,16 @@ class Scorecard87(unittest.TestCase):
             for a, b in self.COMBO_MOVES[p]:
                 self.assertEqual(want.count(a), 1, (p, a))
                 want = want.replace(a, b)
-            self.assertEqual(_read(os.path.join(ROOT, p), encoding="utf-8"), want, p)
-        # styles.css: BASE plus the one focus rule after the button variants (FOCUS_MOVE), byte for byte otherwise
+            self.assertEqual(self._git(p, rev=self.WATCH_BASE), want, p)
+        # styles.css: BASE plus the one focus rule after the button variants (FOCUS_MOVE), byte for byte, then only the /watch/ rules
         base = self._git("docs/styles.css")
         self.assertEqual(base.count(self.FOCUS_MOVE[0]), 1)
-        self.assertEqual(_read(os.path.join(ROOT, "docs", "styles.css"), encoding="utf-8"), base.replace(*self.FOCUS_MOVE))
+        css, want = _read(os.path.join(ROOT, "docs", "styles.css"), encoding="utf-8"), base.replace(*self.FOCUS_MOVE)
+        self.assertEqual(css[:len(want)], want)
+        tail = re.sub(r"/\*.*?\*/", "", css[len(want):], flags=re.S)
+        sels = [x.strip() for pre in re.findall(r"([^{}]+)\{", tail) if not pre.strip().startswith("@media") for x in pre.split(",")]
+        self.assertTrue(sels)
+        self.assertEqual([x for x in sels if not self.WATCH_CSS_TAIL.search(x)], [])
         # the scorecard commit itself never touches packages/mcp-server/ (checked whenever f7ea61a7..b80f21eb is in the history)
         if all(subprocess.run(["git", "-c", "safe.directory=*", "-C", ROOT, "merge-base", "--is-ancestor", c, "HEAD"], capture_output=True).returncode == 0
                for c in self.CUT):

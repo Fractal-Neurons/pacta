@@ -1922,3 +1922,48 @@ p.s > a:only-child, .cur-row-name, .cur-proto-a { min-width: 24px; }
   .memo-meta { grid-template-columns: minmax(9.5rem, max-content) minmax(0, 1fr); column-gap: 16px; }
   .memo-meta dt { max-width: 17rem; overflow-wrap: break-word; }
 }
+
+/* ---- /watch/: one page, two asks (#watch-signup free sign-up by email, #fund-check pool pledge) + the inline /scan/ watch card ---- */
+.watch-asks { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: 24px; align-items: start; margin-top: 24px; }
+.watch-ask { padding: 24px; border: 1px solid var(--border); border-radius: calc(var(--radius) + 4px); background: var(--card); box-shadow: var(--shadow-xs); display: grid; gap: 14px; min-width: 0; scroll-margin-top: 80px; }
+.watch-ask h2 { margin: 0; font-size: 1.375rem; line-height: 1.25; letter-spacing: -0.015em; }
+.watch-ask .step-k { justify-self: start; }
+.watch-promise { margin: 0; font-size: 0.9375rem; line-height: 1.55; color: var(--foreground); }
+.watch-form { display: grid; gap: 4px; min-width: 0; }
+.watch-form .try { margin-bottom: 12px; }
+.combo-count { margin: 0 0 8px; font-size: 0.8125rem; color: var(--muted-foreground); font-variant-numeric: tabular-nums; }
+.watch-q-row { display: grid; grid-template-columns: minmax(0, 1fr) 8.5rem; gap: 8px; align-items: start; }
+.watch-q-row .field { margin: 0; }
+.watch-q-row .search { flex: none; }
+.watch-custody, .watch-firewall { margin: 0 0 8px; font-size: 0.875rem; line-height: 1.5; color: var(--muted-foreground); }
+.watch-firewall { padding-left: 12px; border-left: 3px solid var(--ring); color: var(--foreground); }
+.watch-quiet { margin: 0; font-size: 0.8125rem; color: var(--muted-foreground); }
+.watch-ask .wp-done, .pf-watch-inline .wp-done { min-width: 0; }
+.watch-ask .wp-done p, .pf-watch-inline .wp-done p { flex: 1 1 16rem; min-width: 0; overflow-wrap: anywhere; }
+input[type="number"] { display: block; width: 100%; height: 36px; padding: 0 12px; border: 1px solid var(--input-border); border-radius: var(--radius); background: var(--card); color: var(--foreground); box-shadow: var(--shadow-xs); font-size: 0.875rem; line-height: 1.5; transition: border-color .15s, box-shadow .15s; }
+/* the pledge amount keeps the shared input focus ring (this rule comes after input:focus-visible, so it restates it) */
+input[type="number"]:focus-visible { outline: none; border-color: var(--ring); box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 35%, transparent); }
+.pf-watch-inline { margin-top: 16px; padding: 16px 18px; border: 1px solid color-mix(in srgb, var(--ring) 45%, var(--border)); border-radius: calc(var(--radius) + 2px); background: color-mix(in srgb, var(--accent) 40%, var(--card)); display: grid; gap: 8px; min-width: 0; }
+.pfw-h { margin: 0; font-size: 1rem; line-height: 1.35; letter-spacing: -0.01em; }
+.pfw-what { margin: 0; font-size: 0.875rem; font-weight: 500; overflow-wrap: anywhere; }
+.pfw-promise, .pfw-privacy { margin: 0; font-size: 0.8125rem; line-height: 1.45; color: var(--muted-foreground); }
+.pfw-form { display: grid; gap: 6px; min-width: 0; }
+.pfw-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: center; }
+.pfw-row [data-slot="button"] { min-height: 36px; white-space: nowrap; }
+.pfw-more { margin: 0; font-size: 0.875rem; }
+.scan-watch-doors { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 12px 0 0; font-size: 0.875rem; }
+@media (max-width: 899px) { .watch-asks { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 639px) {
+  .watch-ask { padding: 16px; }
+  .watch-q-row, .pfw-row { grid-template-columns: minmax(0, 1fr); }
+  .pfw-row [data-slot="button"], .watch-form .co-cta [data-slot="button"] { width: 100%; }
+}
+/* /watch/ nav check (768 / 1024 / 1200 / 1440): eight links, search, the labelled Theme button, GitHub, X and (from 1280 px) the CTA sit
+   in one row with room to spare; the topbar search drops its Ctrl K hint on desktop (the shortcut still works, aria-keyshortcuts names it) */
+@media (min-width: 1024px) { .topbar .search-btn kbd { display: none; } }
+/* WATCH-TARGET-02: a 24 px+ hit box on the /scan/ links (the two watch doors at the 32 px control scale; the wallet result's position
+   names, gap-header links and follow-up links at 24 px), each a padded inline-flex box so focus rings follow it; the rows keep wrapping */
+.scan-watch-doors > a { display: inline-flex; align-items: center; min-height: 32px; }
+.wl-pos-name, .wl-gap-links > a, .wl-inline-b2b > a { display: inline-flex; align-items: center; min-height: 24px; }
+/* the same 24 px floor on the result cards' standalone follow-up links (inline watch card, score note, indexed-record footer) */
+.pfw-more > a, .pf-assess > a, .pf-match-foot > a { display: inline-flex; align-items: center; min-height: 24px; }

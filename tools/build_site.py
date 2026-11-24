@@ -118,8 +118,9 @@ BRIEFS = {
     "lista-lending-op-0x21df": "Pre-execution brief: one 16-call Lista timelock batch upgrades four liquidators to add an emergency pause and grants "
                                "PAUSER to a 1-of-15 Safe and the EmergencySwitchHub (1-day delay; ETA 2026-11-20 07:20 UTC).",
 }
-NAV = [("scorecards/", "Scorecards"), ("radar/", "Radar"), ("curators/", "Curators"), ("scan/", "Instant Scan"), ("#pricing", "Pricing"), ("bounties/", "Bounties"),
-       ("mcp/", "MCP")]   # v2: the self-serve scan, curators matrix and #pricing in the bar; Protocols and For protocols stay in the footer
+NAV = [("scorecards/", "Scorecards"), ("radar/", "Radar"), ("curators/", "Curators"), ("scan/", "Scan"), ("watch/", "Watch"), ("#pricing", "Pricing"),
+       ("bounties/", "Bounties"), ("mcp/", "MCP")]   # v2: the self-serve scan, curators matrix and #pricing in the bar; Protocols and For protocols stay in the footer
+# /watch/: Watch in the bar; the scan link reads "Scan" (the words instant / real-time / automatic never appear on /watch/)
 # Brand / RAG disambiguation (receipt/1817): the exact line in llms.txt, llms-full.txt, /llms/ and the Organization JSON-LD.
 DISAMBIGUATION = B2A.DISAMBIGUATION
 BRAND = B2A.BRAND
@@ -138,8 +139,6 @@ ORG_LD = {"@context": "https://schema.org", "@type": "Organization", "name": "Pa
 # exactly (prefill is by value).
 CLEARANCE_PRICE, MONITORING_PRICE = "by arrangement", "by arrangement"
 SPONSOR_POOL_ADDRESS = ""   # empty until dedicated 2-of-N Sponsor Pool Gnosis Safe is activated (never use 0x4348…Ed14 or 0xcA4E…da09)
-PILOT_WATCH_API = f"{API}/v1/pilot/watch"
-SPONSOR_POOL_API = f"{API}/v1/pilot/sponsor-pool"
 # One tier family, shown identically on / (#pricing) and /request/ (M4): key -> (title, price, unit, summary, GitHub dropdown option).
 # The keys are the closed tier= enum /request/?tier=… prefills; the option strings match .github/ISSUE_TEMPLATE/request-scan.yml.
 TRACKS = {
@@ -287,7 +286,6 @@ def receipt_inner_html(slug, label, chain, st_text, st_tone, prefix=""):
             f'<span class="rc-name">{E(label)}</span>{sym_html}'
             f'<span class="rc-sep" aria-hidden="true">·</span><span class="rc-chain">{ch_lbl}</span>'
             f'<span class="rc-st" data-tone="{st_tone}">{E(st_text)}</span>')
-WEBHOOK_PICKS = [("Ethena", "ethena-usde-susde"), ("Morpho", "morpho-blue-core"), ("Aave v3", "aave-v3-gho"), ("Treehouse", "treehouse-tree-teth")]
 ALERT_EXAMPLE = "lombard-op-0xd07f"     # the alert preview is built from this decoded radar brief
 SOCIAL_SIZE = (1200, 628)   # X Website cards (1.91:1): og-preview.png and docs/cards/x-card-*-1200x628.png
 VULN_ROUTE = ("Exploit-sensitive vulnerabilities are never published here. They go through the protocol’s Immunefi or "
@@ -338,7 +336,7 @@ CSP = ("default-src 'self';script-src 'self' https://static.ads-twitter.com;styl
 # U2: Light / Dark / System on a .dark class; System (the default) follows prefers-color-scheme. Legacy values map: slate -> dark, paper -> light.
 # X Ads strips the "?" from a Website-card URL (/scorecards/utm_source=x... then lands on 404.html): 404.html loads this first
 # (render-blocking, same origin) and sends a stripped query on a known route back to /<route>/?<query> with location.replace.
-RESCUE_JS = ('(function(w,L){var m=/^\\/((?:website-test|public\\/web\\/option-b-v2)\\/)?(scorecards|curators|request|scan|seal|webhook|miniapp|radar|bounties|leaderboard|methodology|'
+RESCUE_JS = ('(function(w,L){var m=/^\\/((?:website-test|public\\/web\\/option-b-v2)\\/)?(scorecards|curators|request|scan|seal|webhook|watch|miniapp|radar|bounties|leaderboard|methodology|'
              'protocols(?:\\/[a-z0-9-]+)?)\\/((?:utm_[a-z]+|tier|ref)=.+)$/.exec(L.pathname);'
              'if(m){w.pactaRescued=1;L.replace("/"+(m[1]||"")+m[2]+"/?"+m[3]+(L.search?"&"+L.search.slice(1):"")+L.hash)}})(window,location);\n')
 THEME_JS = ('(function(){var d=document.documentElement,t="system",m=false;d.classList.add("js");'
@@ -567,7 +565,7 @@ def footer(count_line, reg, home=""):
                       for l, h, ext in links)
         return f'<div><h2>{title}</h2><ul>{lis}</ul></div>'
     product = [("Scorecards", f"{home}scorecards/", 0), ("Curator matrix", f"{home}curators/", 0), ("Protocols", f"{home}protocols/", 0), ("Timelock radar", f"{home}radar/", 0),
-               ("Pricing", nav_href(home, "#pricing"), 0), ("Instant scan", f"{home}scan/", 0), ("Timelock watchlist", f"{home}webhook/", 0),
+               ("Pricing", nav_href(home, "#pricing"), 0), ("Scan", f"{home}scan/", 0), ("Watch", f"{home}watch/", 0),
                ("Re-verification", f"{home}seal/", 0), ("Base Mini-App", f"{home}miniapp/", 0), ("For protocols", f"{home}for-protocols/", 0),
                ("Bounties", f"{home}bounties/", 0), ("Leaderboard", f"{home}leaderboard/", 0)]
     agents = [("MCP server", f"{home}mcp/", 0), ("llms.txt", f"{home}llms.txt", 0), ("llms.txt (HTML)", f"{home}llms/", 0),
@@ -1544,21 +1542,21 @@ def request_builder(idx, home=""):
 
 
 def watch_pilot_box(prefix="", default_target="", heading=None, sub=None, id_attr="watch-pilot", compact=False, cta="watchlist_link"):
-    """The free timelock & signer watchlist, linked from scan, protocol, radar and curator pages: the live RSS / Atom feed and a free pilot
-    sign-up on /webhook/. It promises no alerts (automated paid webhook polling is not active), matching the live watchlist page."""
+    """The free watch sign-up, linked from scan, protocol, radar and curator pages: a card that opens /watch/ (with ?protocol=<slug>
+    when the page is about one protocol). The copy is the /watch/ promise: a person at Pacta emails, normally within 24 hours."""
+    href = f"{prefix}watch/" + (f"?protocol={default_target}" if default_target else "")
     return (f'<div class="watch-pilot-box wp-link{" wp-compact" if compact else ""}" id="{id_attr}" data-watch-link>'
-            f'<span class="step-k mono">FREE · NO PAYMENT</span><h3>Timelock &amp; Signer Watchlist ($0)</h3>'
-            f'<p class="s">Subscribe to the live timelock RSS / Atom feed, or leave a protocol, timelock or Safe on the watchlist page to join the free pilot. '
-            f'Automated paid webhook polling is not active.</p>'
-            f'<p><a href="{prefix}webhook/" data-cta="{cta}">Open the free watchlist{ARR}</a></p></div>')
+            f'<span class="step-k mono">FREE · BY EMAIL</span><h3>{E(heading or "Get an email when a protocol changes")}</h3>'
+            f'<p class="s">{E(WATCH_PROMISE)}</p>'
+            f'<p><a href="{href}" data-cta="{cta}">Watch by email{ARR}</a></p></div>')
 
 
 def launcher_links(home):
     """/request/: the three self-serve doors above the dossier builder (?tier=wallet-9 | webhook-49 | seal-99 forwards there; webhook-49
-    now lands on the free watchlist, since automated paid webhook delivery is not active; re-verification is by arrangement, so its door
-    carries data-sku="clearance", never a retired SKU id)."""
+    and wallet-guard-49 land on /watch/ (the free sign-up by email); re-verification is by arrangement, so its door carries
+    data-sku="clearance", never a retired SKU id)."""
     doors = (("wallet-report-9", "scan", "Instant scan", "$9", "multi-position"),
-             ("radar-watch-free", "webhook", "Pilot watchlist", "$0", "RSS + free sign-up"),
+             ("radar-watch-free", "watch", "Watch by email", "$0", "free sign-up"),
              ("clearance", "seal", "Re-Verification", "By arrangement", "scope by email"))
     return "".join(f'<a class="launch" href="{home + "request/?tier=clearance" if k == "clearance" else f"{home}{route}/"}" data-sku="{k}" data-cta="launch_{route}"><span class="l-n">{name}{ARR}</span>'
                    f'<span class="l-p"><b>{price}</b><small>{sub}</small></span></a>' for k, route, name, price, sub in doors)
@@ -1898,7 +1896,8 @@ def seal_preview(idx, lk):
 
 
 def scan_page(idx):
-    """/scan/: 100% free full Wallet, Safe & Protocol scanner (who can change the contracts behind your positions) + inline free 30-day watch pilot."""
+    """/scan/: 100% free full Wallet, Safe & Protocol scanner (who can change the contracts behind your positions) + the free watch sign-up
+    (a link card to /watch/ below the checker; app.js adds the inline email prompt to every result) and the pool pledge door."""
     lk = lookup_items()
     count_line = coverage_line(idx)
     n_proto = len(site_protocols(idx))
@@ -1924,13 +1923,13 @@ def scan_page(idx):
     )
     next_doors = (
         f'<section class="scan-next-doors" id="scan-next-doors" data-scan-next-doors>'
-        f'{watch_pilot_box("../", heading="Watch This Safe or Protocol Free (30-Day Pilot)", id_attr="watch-pilot")}'
+        f'{watch_pilot_box("../", heading="Get an email when this Safe or protocol changes", id_attr="watch-pilot")}'
         f'<div class="scan-door-pair">'
         f'<article class="wl-tier" data-wl-tier="sponsor-pool">'
         f'<div class="wl-tier-top"><span class="wl-tier-k mono">COMMUNITY &amp; CURATORS</span><b class="wl-tier-p">Verification Pools</b></div>'
         f'<h3>Hold an unassessed or Observed vault?</h3>'
-        f'<p>Sponsor an independent protocol Verification Pool on Base or commission a multi-protocol curator sweep under Pacta&#x27;s editorial firewall.</p>'
-        + U.button("Fund a Pool", href="../bounties/#sponsor-pool", variant="outline", size="default", attrs='data-cta="scan_sponsor_pool"')
+        f'<p>Pledge from 25 USDC toward an independent check of the protocol. We agree the scope by email first; nothing is paid on the page.</p>'
+        + U.button("Fund a check", href="../watch/#fund-check", variant="outline", size="default", attrs='data-cta="scan_sponsor_pool"')
         + '</article>'
         f'<article class="wl-tier wl-tier-agent" data-wl-tier="agent-mcp">'
         f'<div class="wl-tier-top"><span class="wl-tier-k mono">AI AGENTS &amp; BUILDERS</span><b class="wl-tier-p">Remote MCP &amp; API</b></div>'
@@ -2085,7 +2084,7 @@ def product_page(idx, sku):
             f'<section class="scan-upgrade" id="scan-upgrade" data-scan-upgrade hidden>'
             f'<div class="scan-up-head"><span class="step-k mono">PROGRESSIVE PORTFOLIO &amp; AGENT UNLOCK</span>'
             f'<h2>Unlock multi-position contagion, exit-window checks &amp; SHA-256 report digest</h2>'
-            f'<p class="pd-lede">Every individual protocol scorecard stays 100% free. Upgrade only when you want full cross-position signer overlap, Safe signing latency vs. timelock exit math, an SHA-256 digest of the report, or join the free pilot watchlist.</p></div>'
+            f'<p class="pd-lede">Every individual protocol scorecard stays 100% free. Upgrade only when you want full cross-position signer overlap, Safe signing latency vs. timelock exit math, an SHA-256 digest of the report, or get an email when a protocol you hold changes.</p></div>'
             f'<div class="wl-ladder" data-wallet-ladder>'
             f'<article class="wl-tier wl-tier-primary" data-wl-tier="wallet-9">'
             f'<div class="wl-tier-top"><span class="wl-tier-k mono">ONE-TIME · BASE USDC</span><b class="wl-tier-p">$9 USDC</b></div>'
@@ -2095,10 +2094,10 @@ def product_page(idx, sku):
                        attrs='id="scan-open-co" data-open-co-card aria-expanded="false"')
             + '</article>'
             f'<article class="wl-tier" data-wl-tier="watch-free">'
-            f'<div class="wl-tier-top"><span class="wl-tier-k mono">PILOT WATCHLIST · NO PAYMENT</span><b class="wl-tier-p">$0</b></div>'
-            f'<h3>Timelock &amp; Signer Watchlist</h3>'
-            f'<p>Subscribe to the free timelock RSS / Atom feed or leave a work email, @telegram, or GitHub handle for pilot watchlist updates on held protocols.</p>'
-            + U.button(f"Join Free Watchlist{ARR}", href="../webhook/", variant="outline", size="lg",
+            f'<div class="wl-tier-top"><span class="wl-tier-k mono">WATCH BY EMAIL · NO PAYMENT</span><b class="wl-tier-p">$0</b></div>'
+            f'<h3>Timelock &amp; Signer Watch</h3>'
+            f'<p>Pick the protocols you hold (up to 10). When a timelock or admin role changes, a person at Pacta emails you, normally within 24 hours.</p>'
+            + U.button(f"Watch by email{ARR}", href="../watch/", variant="outline", size="lg",
                        attrs='id="scan-to-guard" data-scan-to-guard data-cta="scan_watch_free"')
             + '</article>'
             f'<article class="wl-tier wl-tier-agent" data-wl-tier="agent-x402">'
@@ -2129,6 +2128,8 @@ def product_page(idx, sku):
             f'<div class="pd-funnel">{hero_scan}'
             f'<div class="pd-free-box" id="free-check" data-free-check>'
             f'<div class="pd-step-head"><span class="step-k mono">PASTE ANY WALLET, SAFE (0x…) OR SEARCH {site_numbers(idx)["protocols"]} PROTOCOLS &amp; TICKERS</span></div>{pre}</div>'
+            f'<p class="scan-watch-doors" data-scan-watch-doors><a href="../watch/" data-cta="scan_watch_door">Get an email when a protocol you hold changes{ARR}</a>'
+            f'<a href="../watch/#fund-check" data-cta="scan_fund_check">Fund a check of an unverified protocol{ARR}</a></p>'
             f'{upgrade_scan}{trust_scan}{scan_explainer_section()}</div></div></section>{foot_note}'
         )
     elif sku == "reverify-seal-99":
@@ -2187,100 +2188,130 @@ def product_page(idx, sku):
                 image_size=SOCIAL_SIZE, extra=extra_meta) + "\n" + body
 
 
-WATCH_FREE_LEDE = ("Automated paid webhook polling is not active yet. Subscribe free to the live timelock RSS / Atom feed today, or leave a "
-                   "protocol, timelock, or Safe below to join the free pilot watchlist ($0 — no payment collected).")
-WATCH_FREE_CAPABILITY = "Pilot timelock and signer watchlist request"
+WATCH_MAX = 10
+WATCH_PICKS = [("Ethena", "ethena-usde-susde"), ("Morpho", "morpho-blue-core"), ("Aave v3", "aave-v3-gho"), ("Treehouse", "treehouse-tree-teth"),
+               ("Pendle", "pendle-finance-v2"), ("Lido", "lido-steth-dual-governance")]
+# /watch/ copy: what is true today. A person at Pacta reads the picked protocols and emails; nothing is charged; no Safe address on the page.
+WATCH_PROMISE = ("We read the timelocks and admin roles of the protocols you pick. When one changes, a person at Pacta emails you, "
+                 "normally within 24 hours. We confirm your sign-up by email within 24 hours.")
+WATCH_PRIVACY = "Your email is used only for these alerts, never shared, and removed on request."
+WATCH_EMAIL_ERR = "Enter a valid email address. Watch alerts are sent by email only."
+WATCH_RECEIPT = "Sign-up received — nothing charged. A person at Pacta will confirm your watch list by email within 24 hours."
+RECEIPT_BADGE = "Received · Nothing charged"
+PLEDGE_CUSTODY = ("When a check is agreed, the money goes into a two-signature Safe on Base (the founder's wallet plus an independent verifier's "
+                  "key; neither can move funds alone), with a limit of 500 USDC in total. Nothing is paid on this page; the Safe address is sent "
+                  "directly by email once the scope is agreed.")
+PLEDGE_FIREWALL = "Contributions fund verification work only and never change a finding."
+PLEDGE_PRIVACY = "Your email is used only for this check, never shared, and removed on request."
+PLEDGE_RECEIPT = "Pledge received — nothing charged. We will reply by email to agree the scope before sending any Safe deposit address."
+WATCH_BANNED_RE = re.compile(r"\binstant(?:ly)?\b|real[- ]?time|\bautomatic(?:ally)?\b", re.I)   # never on /watch/ or in the /scan/ prompt
+
+
+def watch_targets():
+    """The /watch/ catalog: every protocol in the published lookup.json, by name; data-q holds its known contract addresses (lowercase)."""
+    out = []
+    for v in sorted((v for v in lookup_items().values() if v.get("kind") == "protocol"), key=lambda v: (v["name"].lower(), v["slug"])):
+        addrs = sorted({str(a).lower() for a in ((v.get("preflightArgs") or {}).get("address"), v.get("primaryContract"), v.get("controllerAddress"))
+                        if isinstance(a, str) and HEX40.fullmatch(a)})
+        out.append((v["slug"], v["name"], v["chain"], addrs))
+    return out
 
 
 def watch_page(idx):
-    """/webhook/: the free timelock & signer watchlist: the existing 30-day pilot form and the RSS / Atom feed. No price, no checkout."""
+    """/watch/: one page, two asks, both filed as one POST /v1/requests by app.js (submitWatchOrPledge; nothing is paid on the page).
+    Ask 1 (#watch-signup): pick 1..10 protocols (combobox over lookup.json, quick picks, ?protocol= / ?address=&chain= prefill, a pasted
+    0x address) and an email; a person at Pacta emails when a timelock or admin role changes. Ask 2 (#fund-check): a pool pledge from
+    25 USDC toward an independent check (target, amount, email); the Safe address is sent by email once the scope is agreed."""
     count_line = coverage_line(idx)
     reg = idx["onchain_anchoring"]["commitment_registry"]
+    tg = watch_targets()
+    by_slug = {t[0]: t for t in tg}
+    assert all(sl in by_slug for _, sl in WATCH_PICKS), [sl for _, sl in WATCH_PICKS if sl not in by_slug]
     crumbs = ('<nav class="crumbs breadcrumb" aria-label="Breadcrumb"><a href="../">Pacta</a><span aria-hidden="true">/</span>'
-              '<a href="../#pricing">Pricing</a><span aria-hidden="true">/</span><span>Timelock &amp; Signer Watchlist</span></nav>')
-    head_ = ('<div class="pd-head"><span data-slot="badge" data-variant="info">Free 30-day pilot · RSS / Atom feed</span>'
-             '<h1 id="co-title">Timelock &amp; Signer Watchlist</h1>'
-             f'<p class="pd-lede">{E(WATCH_PAGE_LEDE)}</p>'
-             f'<p class="hero-routes"><span><a href="../feed.xml" data-cta="watch_feed">Subscribe via RSS / Atom (feed.xml){ARR}</a></span>'
-             f'<span><a href="../radar/">Open the timelock radar{ARR}</a></span></p></div>')
-    pilot = watch_pilot_box("../", heading="Start a free 30-day alert pilot (no wallet required)", id_attr="watch-pilot", compact=True)
-    body = f"""<body>
-{topbar("../", "webhook/")}
-<main id="main">
-<section class="sec pd-sec" id="watch"><div class="wrap">{crumbs}{head_}{pilot}</div></section>
-<section class="sec pd-how" id="how"><div class="wrap"><p class="note">{E(EDITORIAL_FIREWALL)} {E(EDITORIAL_SHORT)} Need a custom control-plane dossier (by arrangement)? <a href="../request/?tier=clearance">Enterprise &amp; allocator dossiers{ARR}</a></p></div></section>
-</main>
-{footer(count_line, reg, "../")}
-</body></html>
-"""
-    return head("Timelock & signer watchlist (free 30-day pilot) · Pacta",
-                "A free 30-day alert pilot and the live timelock RSS / Atom feed for queued timelock operations and Safe signer changes on "
-                "Ethereum and Base. No payment collected.", f"{BASE_URL}/webhook/", prefix="../", og_title="Timelock & signer watchlist (free)",
-                image=f"{BASE_URL}/og-preview.png", image_size=SOCIAL_SIZE) + "\n" + body
-
-
-WATCH_FREE_LEDE = ("Automated paid webhook polling is not active yet. Subscribe free to the live timelock RSS / Atom feed today, or leave a "
-                   "protocol, timelock, or Safe below to join the free pilot watchlist ($0 — no payment collected).")
-WATCH_FREE_CAPABILITY = "Pilot timelock and signer watchlist request"
-
-
-def watchlist_page(idx):
-    """/webhook/: the free timelock & signer watchlist. Automated paid webhook delivery is not active, so nothing is sold here: the
-    live RSS / Atom feed, plus a pilot watchlist sign-up that files a free request (POST /v1/requests; no payment, never published)."""
-    lk = lookup_items()
-    count_line = coverage_line(idx)
-    reg = idx["onchain_anchoring"]["commitment_registry"]
-    crumbs = ('<nav class="crumbs breadcrumb" aria-label="Breadcrumb"><a href="../">Pacta</a><span aria-hidden="true">/</span>'
-              '<a href="../#pricing">Pricing</a><span aria-hidden="true">/</span><span>Timelock &amp; Signer Watchlist</span></nav>')
+              '<span>Watch</span></nav>')
+    head_ = ('<div class="pd-head"><h1 id="watch-title">Pacta Watch</h1>'
+             '<p class="pd-lede">Two ways to keep an eye on the contracts behind your positions: get an email when a protocol you pick changes, '
+             'or fund an independent check of one.</p></div>')
     picks = "".join(U.button(E(label), variant="outline", size="sm", cls="pick",
-                             attrs=f'data-wf-pick data-slug="{s}" data-chain="{lk[s]["chain"]}" aria-pressed="false"')
-                    for label, s in WEBHOOK_PICKS)
-    head_ = ('<div class="pd-head"><span data-slot="badge" data-variant="info">Free RSS / Atom feed · Pilot watchlist ($0)</span>'
-             '<h1 id="co-title">Timelock &amp; Signer Watchlist</h1>'
-             f'<p class="pd-lede">{E(WATCH_FREE_LEDE)}</p></div>')
-    form = (f'<form class="co" id="watch-free-form" data-watch-api="{E(REQUEST_API)}" novalidate autocomplete="off">'
-            f'<div class="try"><div class="try-row" role="group" aria-label="Quick picks"><span class="try-l">Watch:</span>{picks}</div></div>'
-            '<div class="co-row"><div class="field co-chain-f"><label for="wf-chain">Chain</label><select id="wf-chain" name="chain">'
-            '<option value="ethereum" selected>Ethereum</option><option value="base">Base</option></select></div>'
-            '<div class="field"><label for="wf-target">Timelock, Safe or protocol</label>'
-            '<input id="wf-target" name="target" type="text" maxlength="80" spellcheck="false" autocapitalize="off" '
-            'placeholder="0x… address or protocol" aria-describedby="wf-target-err">'
-            '<p class="form-message" id="wf-target-err" data-slot="form-message" hidden></p></div></div>'
-            '<div class="field"><label for="wf-contact">Contact for pilot alerts</label>'
-            '<input id="wf-contact" name="contact" type="text" maxlength="120" spellcheck="false" autocapitalize="off" '
-            'placeholder="you@org.com, @telegram, or github-handle" aria-describedby="wf-contact-hint wf-contact-err">'
-            '<p class="hint" id="wf-contact-hint">Stored privately in Pacta&#x27;s lead queue, never published.</p>'
-            '<p class="form-message" id="wf-contact-err" data-slot="form-message" hidden></p></div>'
-            '<div class="co-cta">'
-            + U.button('<span class="spinner" aria-hidden="true" hidden></span><span data-wf-lbl>Join Free Watchlist ($0)</span>',
-                       variant="default", size="lg", type_="submit", attrs="data-wf-submit")
-            + f'<a class="wf-feed" href="../feed.xml" data-cta="watch_feed">Subscribe via RSS / Atom (feed.xml){ARR}</a></div>'
-            '<p class="req-status" role="status" aria-live="polite" data-wf-status hidden></p>'
-            '<p class="co-assure">No payment is collected. The request joins Pacta&#x27;s free queue; nothing you enter is published.</p>'
-            f'<noscript><p class="note">The sign-up needs JavaScript. Without it, subscribe to the <a href="../feed.xml">RSS / Atom feed</a> '
-            f'or write to {CONTACT}.</p></noscript></form>'
-            '<div class="wp-done" data-wf-done hidden tabindex="-1"><span data-slot="badge" data-variant="success">On the pilot watchlist</span>'
-            '<p data-wf-done-msg>Request recorded.</p></div>')
-    aside = ('<div class="pv-card" data-slot="card" data-preview="watch"><div class="pv-head"><span class="pv-k">What you can watch today</span>'
-             '<span class="pv-t">Free, live, no account</span></div><ol class="pv-rows">'
-             f'<li><b>Timelock radar</b><span>Queued operations on Ethereum and Base, re-checked live in your browser. <a href="../radar/">Open the radar{ARR}</a></span></li>'
-             f'<li><b>RSS / Atom feed</b><span>Every new decoded timelock brief, in any feed reader. <a href="../feed.xml">feed.xml{ARR}</a></span></li>'
-             '<li><b>Pilot watchlist</b><span>Leave a protocol, timelock or Safe and a contact; we reply as the pilot opens. No payment.</span></li></ol></div>')
+                             attrs=f'data-watch-pick data-slug="{sl}" aria-pressed="false"') for label, sl in WATCH_PICKS)
+    opts = "".join(f'<li data-slot="command-item" role="option" id="wopt-{sl}" aria-selected="false" data-name="{E(nm)}" data-slug="{sl}" '
+                   f'data-chain="{ch}"{f" data-q={chr(34)}{chr(32).join(ad)}{chr(34)}" if ad else ""}>{U.icon("check", "ck")}<span>{E(nm)}</span></li>'
+                   for sl, nm, ch, ad in tg)
+    spin = '<span class="spinner" aria-hidden="true" hidden></span>'
+    ask1 = (f'<article class="watch-ask" data-slot="card" id="watch-signup" aria-labelledby="watch-signup-h">'
+            f'<span class="step-k mono">1 · FREE</span><h2 id="watch-signup-h">Get an email when a protocol you hold changes</h2>'
+            f'<p class="watch-promise" data-watch-promise>{E(WATCH_PROMISE)}</p>'
+            f'<form class="watch-form" id="watch-form" data-api="{E(REQUEST_API)}" novalidate autocomplete="off">'
+            f'<div class="try"><div class="try-row" role="group" aria-label="Quick picks"><span class="try-l">Popular:</span><div class="try-chips">{picks}</div></div></div>'
+            f'<div class="field combo" data-combo><label for="watch-q" id="watch-q-l">Protocols to watch <span class="legend-note">· up to {WATCH_MAX} of '
+            f'{len(tg)} indexed, or paste a 0x address</span></label><div class="combo-chips" id="watch-chips" data-combo-chips></div>'
+            f'<p class="combo-count" id="watch-count" data-watch-count aria-live="polite">Selected: 0 / {WATCH_MAX}</p>'
+            f'<div class="watch-q-row"><div class="search">{U.icon("search")}<input id="watch-q" type="text" role="combobox" aria-autocomplete="list" '
+            f'aria-expanded="false" aria-controls="watch-list" aria-describedby="watch-count watch-proto-err" placeholder="Search protocols or paste 0x…" '
+            f'autocomplete="off" spellcheck="false" autocapitalize="off"></div>'
+            f'<div class="field watch-chain-f"><label class="sr-only" for="watch-chain">Chain for a pasted 0x address</label>'
+            f'<select id="watch-chain" name="chain" title="Chain for a pasted 0x address"><option value="ethereum" selected>Ethereum</option>'
+            f'<option value="base">Base</option></select></div></div>'
+            f'<ul data-slot="command-list" id="watch-list" role="listbox" aria-labelledby="watch-q-l" aria-multiselectable="true" hidden>{opts}'
+            f'<li data-slot="command-empty" role="presentation" hidden>No indexed protocol found. Paste its 0x contract address instead.</li></ul>'
+            f'<p class="form-message" id="watch-proto-err" data-slot="form-message" hidden></p></div>'
+            f'<div class="field"><label for="watch-email">Email</label>'
+            f'<input id="watch-email" name="email" type="email" maxlength="120" placeholder="you@company.org" autocomplete="email" '
+            f'aria-describedby="watch-email-hint watch-email-err">'
+            f'<p class="hint" id="watch-email-hint">{E(WATCH_PRIVACY)}</p>'
+            f'<p class="form-message" id="watch-email-err" data-slot="form-message" hidden></p></div>'
+            f'<div class="co-cta">'
+            + U.button(f'{spin}<span data-w-lbl>Watch by email</span>', variant="default", size="lg", type_="submit", attrs="data-w-submit")
+            + '</div><p class="req-status" role="status" aria-live="polite" data-w-status hidden></p>'
+            f'<noscript><p class="note">The sign-up needs JavaScript. Without it, email {CONTACT} with the protocols to watch.</p></noscript></form>'
+            f'<div class="wp-done" id="watch-done" data-watch-done hidden tabindex="-1"><span data-slot="badge" data-variant="success">{E(RECEIPT_BADGE)}</span>'
+            f'<p data-watch-done-msg>{E(WATCH_RECEIPT)}</p></div>'
+            f'<p class="watch-quiet">Prefer a feed reader? <a href="../feed.xml" data-cta="watch_feed">RSS / Atom feed</a> · '
+            f'<a href="../radar/">Timelock radar</a></p></article>')
+    names = "".join(f'<option value="{E(nm)}"></option>' for _, nm, _, _ in tg)
+    ask2 = (f'<article class="watch-ask" data-slot="card" id="fund-check" aria-labelledby="fund-check-h">'
+            f'<span class="step-k mono">2 · FROM 25 USDC</span><h2 id="fund-check-h">Fund a check</h2>'
+            f'<p class="watch-promise">Hold a protocol nobody has checked independently yet? Pledge from 25 USDC toward a check of its timelocks and '
+            f'admin roles. Pledges for the same protocol are pooled, and we agree the scope with you by email first.</p>'
+            f'<form class="watch-form" id="pledge-form" data-api="{E(REQUEST_API)}" novalidate autocomplete="off">'
+            f'<div class="field"><label for="pledge-target">Protocol or contract</label>'
+            f'<input id="pledge-target" name="target" type="text" minlength="2" maxlength="100" list="pledge-names" placeholder="Protocol name or 0x… address" '
+            f'spellcheck="false" autocapitalize="off" aria-describedby="pledge-target-err"><datalist id="pledge-names">{names}</datalist>'
+            f'<p class="form-message" id="pledge-target-err" data-slot="form-message" hidden></p></div>'
+            f'<div class="field"><label for="pledge-amount">Pledge in USDC (25 to 500)</label>'
+            f'<input id="pledge-amount" name="amount" type="number" min="25" max="500" step="1" placeholder="25" inputmode="numeric" aria-describedby="pledge-amount-err">'
+            f'<p class="form-message" id="pledge-amount-err" data-slot="form-message" hidden></p></div>'
+            f'<div class="field"><label for="pledge-email">Email</label>'
+            f'<input id="pledge-email" name="email" type="email" maxlength="120" placeholder="you@company.org" autocomplete="email" '
+            f'aria-describedby="pledge-email-hint pledge-email-err">'
+            f'<p class="hint" id="pledge-email-hint">{E(PLEDGE_PRIVACY)}</p>'
+            f'<p class="form-message" id="pledge-email-err" data-slot="form-message" hidden></p></div>'
+            f'<p class="watch-custody" data-pledge-custody>{E(PLEDGE_CUSTODY)}</p>'
+            f'<p class="watch-firewall" data-pledge-firewall>{E(PLEDGE_FIREWALL)}</p>'
+            f'<div class="co-cta">'
+            + U.button(f'{spin}<span data-w-lbl>Send pledge</span>', variant="outline", size="lg", type_="submit", attrs="data-w-submit")
+            + '</div><p class="req-status" role="status" aria-live="polite" data-w-status hidden></p>'
+            f'<noscript><p class="note">The pledge form needs JavaScript. Without it, email {CONTACT} with the protocol and amount.</p></noscript></form>'
+            f'<div class="wp-done" id="pledge-done" data-pledge-done hidden tabindex="-1"><span data-slot="badge" data-variant="success">{E(RECEIPT_BADGE)}</span>'
+            f'<p data-pledge-done-msg>{E(PLEDGE_RECEIPT)}</p></div></article>')
     body = f"""<body>
-{topbar("../", "webhook/")}
+{topbar("../", "watch/")}
 <main id="main">
-<section class="sec pd-sec" id="watch"><div class="wrap">{crumbs}
-<div class="pd"><div class="pd-main">{head_}{form}</div><aside class="pd-preview" aria-label="What you can watch today">{aside}</aside></div>
+<section class="sec pd-sec" id="watch"><div class="wrap">{crumbs}{head_}
+<div class="watch-asks">{ask1}{ask2}</div>
 </div></section>
-<section class="sec pd-how" id="how"><div class="wrap"><p class="note">{E(EDITORIAL_FIREWALL)} {E(EDITORIAL_SHORT)} Automated webhook and email alert delivery is not available yet; custom control-plane dossiers — <a href="../request/?tier=clearance" data-cta="webhook_dossier_arrangement">by arrangement</a>.</p></div></section>
+<section class="sec pd-how" id="how"><div class="wrap"><p class="note">{E(EDITORIAL_FIREWALL)} {E(EDITORIAL_SHORT)} Need a custom control-plane dossier? <a href="../request/?tier=clearance">Dossiers by arrangement{ARR}</a></p></div></section>
 </main>
 {footer(count_line, reg, "../")}
 </body></html>
 """
-    return head("Timelock & signer watchlist (free) · Pacta",
-                "Free live timelock RSS / Atom feed and a $0 pilot watchlist for queued timelock operations and Safe signer changes on "
-                "Ethereum and Base. No payment collected.", f"{BASE_URL}/webhook/", prefix="../", og_title="Timelock & signer watchlist (free)",
-                image=f"{BASE_URL}/og-preview.png", image_size=SOCIAL_SIZE) + "\n" + body
+    page = head("Pacta Watch: an email when a protocol changes, or fund a check · Pacta",
+                "Pick the protocols you hold (up to 10). When a timelock or admin role changes, a person at Pacta emails you, normally within 24 hours. "
+                "Or pledge from 25 USDC toward an independent check. Nothing is paid on the page.", f"{BASE_URL}/watch/", prefix="../",
+                og_title="Pacta Watch", image=f"{BASE_URL}/og-preview.png", image_size=SOCIAL_SIZE) + "\n" + body
+    bad = WATCH_BANNED_RE.findall(re.sub(r"<[^>]+>", " ", page))
+    assert not bad, f"/watch/ must not say {sorted(set(bad))}"
+    return page
 
 
 MINIAPP_PRESETS = [
@@ -3066,7 +3097,7 @@ def protocol_page(name, entries, idx, radar, digest=None, slug=None):
 <p class="lede">{lede}</p></header>
 {what_differs_html(entries, seal_cta=not is_aligned_page(entries))}{scorecard_section(card_for(idx, slug))}<section class="memo-sec" id="live-check"><h2>Check it live (free)</h2><p>The pre-flight API re-reads the controller, proxy and capabilities of one contract at the latest block. No key, no wallet. The score rates that single contract, not the whole protocol.</p>
 {live}</section>
-{watch_pilot_box("../../", default_target=slug, heading=f"Watch {name} free (30-day alert pilot)", id_attr="watch-pilot", compact=True)}
+{watch_pilot_box("../../", default_target=slug, heading=f"Get an email when {name} changes", id_attr="watch-pilot", compact=True)}
 {provenance}{governance_section(name, digest)}{records}{ops}{editorial_box()}{badge_html}{callout}</article>
 <div class="memo-foot"><span>Read-only onchain analysis. Not investment advice. Exploit-sensitive vulnerabilities are never published here; they go through Immunefi or Cantina bounty programmes.</span>{foot}</div>
 </main>
@@ -3876,7 +3907,7 @@ def sponsor_pool_section_html():
         f'not an automatic on-chain guarantee.</li>'
         f'</ol></div>'
         f'<div class="sp-firewall" role="status" data-sponsor-safe-status>{status}</div>'
-        f'<form class="sp-form" id="sponsor-pool-form" data-sponsor-pool-form data-api="{E(SPONSOR_POOL_API)}" data-fallback-api="{E(REQUEST_API)}" novalidate autocomplete="off">'
+        f'<form class="sp-form" id="sponsor-pool-form" data-sponsor-pool-form data-api="{E(REQUEST_API)}" data-fallback-api="{E(REQUEST_API)}" novalidate autocomplete="off">'
         f'<div class="sp-form-grid">'
         f'<div class="field"><label for="sp-target">Target protocol or contract</label>'
         f'<input id="sp-target" name="target" type="text" maxlength="160" spellcheck="false" placeholder="Protocol or address" data-sp-target></div>'
@@ -5255,7 +5286,7 @@ def llms(idx, radar):
         f"- Free doc-update queue: free, unscheduled (typically 6–8 weeks) ({BASE_URL}/request/?tier=community).",
         f"- Custom Control-Plane Dossier: by arrangement. Archive-RPC control-plane verification, upstream GitBook / docs reconciliation PR and Curator Diligence Dossier (PDF + JSON) for Morpho, Euler, Aave and Sky forum proposals. Request: {BASE_URL}/request/?tier=clearance",
         f"- Full Wallet & Safe Exposure Report: $9 USDC, one-time, on Base ({BASE_URL}/scan/#checkout), delivered with a SHA-256 digest of the report.",
-        f"- Free timelock watchlist ($0): the live RSS / Atom feed ({BASE_URL}/feed.xml), the radar ({BASE_URL}/radar/) and an opt-in pilot watchlist at {BASE_URL}/webhook/ (POST {REQUEST_API}); we reply as the pilot opens. Automated paid webhook polling is not active.",
+        f"- Pacta Watch ($0): pick the protocols to watch (up to 10) at {BASE_URL}/watch/ (POST {REQUEST_API}); when a timelock or admin role changes, a person at Pacta emails you, normally within 24 hours. The same page takes pool pledges from 25 USDC toward an independent check (nothing is paid online; scope agreed by email). The RSS / Atom feed ({BASE_URL}/feed.xml) and the radar ({BASE_URL}/radar/) stay free.",
         f"- Re-Verification: by arrangement ({BASE_URL}/request/?tier=clearance). Automated alert delivery is not available yet. The result can still be Delta.",
         f"- High-throughput API (> 60 requests / minute or a dedicated SLA): x402 metered endpoints, or an Enterprise API key priced on scope: {BASE_URL}/request/?tier=api_sla",
         f"- Settlement, Option A (recommended for protocol treasuries): a formal commercial invoice (PDF) with verified counterparty payment instructions, issued on scope confirmation; no upfront transfer is needed to open intake.",
@@ -5572,7 +5603,7 @@ def hero_section(idx, cards, radar):
 <div class="home-doors" aria-label="Three ways to use Pacta">
 <a class="home-door" data-slot="card" href="scan/"><span class="hd-k">1 · Free Instant Scan</span><b>Scan any wallet or Safe</b><span class="hd-d">Check held DeFi positions, Deltas &amp; signer overlap in 3 seconds.</span><span class="hd-cta">Scan free{ARR}</span></a>
 <a class="home-door" data-slot="card" href="request/?tier=clearance"><span class="hd-k">2 · For protocol teams</span><b>Re-verification &amp; dossiers</b><span class="hd-d">Re-verification and custom dossiers, by arrangement.</span><span class="hd-cta">Ask by request{ARR}</span></a>
-<a class="home-door" data-slot="card" href="webhook/"><span class="hd-k">3 · Free timelock watchlist</span><b>Watch queued timelocks</b><span class="hd-d">RSS / Atom feed and a free pilot sign-up; no payment.</span><span class="hd-cta">Join free watchlist{ARR}</span></a>
+<a class="home-door" data-slot="card" href="watch/"><span class="hd-k">3 · Watch &amp; pool</span><b>Watch timelocks or fund a check</b><span class="hd-d">A person at Pacta emails you when a protocol you pick changes; or pledge toward a check.</span><span class="hd-cta">Open Pacta Watch{ARR}</span></a>
 </div>
 {stats_cards(idx, cards)}
 <div class="hero-meta">{fresh_pill(idx)}{radar_strip(radar)}</div>
@@ -5679,10 +5710,10 @@ SELF_SERVE_PLANS = [   # key, title, price, note, bullets, (cta, href, kind), ba
         "Read-only Multicall3 scan across Ethereum & Base holdings",
         "Cross-position signer overlap, Safe exit-window check & all held gaps",
         "SHA-256 digest of the report + printable report"], ("Start a scan", "scan/#checkout", "pricing_scan_9"), "Most popular"),
-    ("radar-watch-free", "Timelock & Signer Watchlist", "$0", "RSS / Atom + pilot sign-up", [
-        "Queued timelock RSS / Atom feed (feed.xml), free",
-        "Live browser re-check via /v1/briefs/live-timelocks",
-        "Leave an email or @telegram to join the pilot watchlist"], ("Join free watchlist", "webhook/", "pricing_watch_free"), None),
+    ("radar-watch-free", "Timelock & Signer Watchlist", "$0", "sign-up by email", [
+        "Pick the protocols to watch (up to 10)",
+        "A person at Pacta emails you when a timelock or admin role changes, normally within 24 hours",
+        "Queued timelock RSS / Atom feed (feed.xml), free"], ("Watch by email", "watch/", "pricing_watch_free"), None),
     ("reverify", "Re-Verification", "By arrangement", "scope & quote by email", [
         "Independent re-check of a merged fix",
         "Safe Transaction Builder JSON and an upstream docs PR",
@@ -5982,10 +6013,11 @@ def privacy_page(idx):
         ("checks", "Live checks", f'<p>When you press Check, the address and chain you entered are sent to Pacta\'s API at <code>{E(API)}</code>. '
          f'"Verify live on RPC" sends read-only JSON-RPC calls from your browser directly to public RPC providers (publicnode.com, drpc.org, '
          f'base.org), which see your IP address under their own policies.</p>'),
-        ("watch-pilot", "Free pilot watchlist",
-         '<p>When you join the free pilot watchlist on <code>/webhook/</code> (<code>POST /v1/requests</code>), the protocol, timelock or Safe and the '
-         'contact you leave (work email, <code>@telegram</code> or GitHub handle) are sent to Pacta\'s API so we can reply as the pilot opens, from '
-         'Pacta (<code>pacta@dri.network</code>). They are never exposed on public endpoints, sold, or used for cold marketing.</p>'),
+        ("watch-pilot", "Watch sign-ups and pledges",
+         '<p>When you sign up on <code>/watch/</code> (or in a <code>/scan/</code> result) or send a pledge there (<code>POST /v1/requests</code>), '
+         'the protocols or contract you pick, the pledge amount and your email are sent to Pacta\'s API so a person at Pacta can reply from '
+         '<code>pacta@dri.network</code>. Your email is used only for those alerts or that check, never shared, and removed on request; it is never '
+         'exposed on public endpoints, sold, or used for marketing.</p>'),
         ("requests", "Requests you send", '<p>The request form sends the track, protocols, scope text and, only if you enter one, a contact '
          'handle to Pacta\'s API so the team can answer. Do not include personal or sensitive information beyond a contact handle. GitHub issues '
          'and emails you choose to send are handled by those services.</p>'),
@@ -6056,8 +6088,27 @@ def radar_page(idx, radar):
 
 
 def webhook_banner(home):
-    return (f'<div class="radar-cta" data-webhook-cta>{U.icon("info")}<span>Track queued timelock operations free via the RSS / Atom feed '
-            f'or join the pilot watchlist ($0). <a href="{home}webhook/" data-cta="radar_watch_free">Join free watchlist{ARR}</a></span></div>')
+    return (f'<div class="radar-cta" data-webhook-cta>{U.icon("info")}<span>Pick the protocols you hold (up to 10) and a person at Pacta emails '
+            f'you when a timelock or admin role changes, free; or follow the RSS / Atom feed. <a href="{home}watch/" data-cta="radar_watch_free">Watch by email{ARR}</a></span></div>')
+
+
+def webhook_redirect_page():
+    """/webhook/ folded into /watch/: noindex, canonical /watch/, a static meta refresh, and app.js ([data-redirect-watch]) forwarding
+    with location.replace so old links such as /webhook/?address=0x…&chain=base keep their query and hash. No inline script (CSP)."""
+    t, d, img = "Pacta Watch · Pacta", "Pacta Watch: an email when a protocol you pick changes, or fund an independent check.", f"{BASE_URL}/og-preview.png"
+    return ('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
+            f'<title>{E(t)}</title><meta name="description" content="{E(d)}">'
+            f'<meta property="og:type" content="website"><meta property="og:site_name" content="Pacta by Fractal Neurons">'
+            f'<meta property="og:title" content="{E(t)}"><meta property="og:description" content="{E(d)}"><meta property="og:url" content="{BASE_URL}/watch/">'
+            f'<meta property="og:image" content="{img}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">'
+            f'<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{E(t)}"><meta name="twitter:description" content="{E(d)}">'
+            f'<meta name="twitter:image" content="{img}"><meta name="twitter:site" content="{X_HANDLE}"><meta name="robots" content="noindex, follow">'
+            f'<link rel="canonical" href="{BASE_URL}/watch/"><meta http-equiv="refresh" content="0; url=../watch/">'
+            '<meta name="referrer" content="strict-origin-when-cross-origin">'
+            f'<meta http-equiv="Content-Security-Policy" content="{CSP}">'
+            f'<link rel="stylesheet" href="../styles.css?v={asset_v("styles.css")}">'
+            f'<script src="../app.js?v={asset_v("app.js")}" defer></script><script src="../b.js" defer></script></head>'
+            f'<body data-redirect-watch="../watch/"><p><a href="../watch/">Continue to Pacta Watch{ARR}</a></p></body></html>\n')
 
 
 def pricing_redirect_page():
@@ -6367,7 +6418,7 @@ def curators_page(idx):
         f'</div></section>'
     )
 
-    watch_sec = f'<section class="sec" style="padding-top:0"><div class="wrap">{watch_pilot_box("../", heading="Watch Curated Vaults & Underlying Collateral Free (30-Day Pilot)", id_attr="watch-pilot")}</div></section>'
+    watch_sec = f'<section class="sec" style="padding-top:0"><div class="wrap">{watch_pilot_box("../", heading="Get an email when a curated vault or its collateral changes", id_attr="watch-pilot")}</div></section>'
 
     seal_banner = (
         f'<section class="sec" id="curator-seal"><div class="wrap">'
@@ -6433,7 +6484,8 @@ def build_all():
         if CHECKOUT[sku_].get("live", True):
             w(f"{CHECKOUT[sku_]['route']}/index.html", product_page(idx, sku_))
     w("seal/index.html", seal_page(idx))
-    w("webhook/index.html", watchlist_page(idx))   # the free timelock & signer watchlist ($0); no paid webhook is sold
+    w("watch/index.html", watch_page(idx))   # one page, two asks: the free watch sign-up and the pool pledge (nothing paid online)
+    w("webhook/index.html", webhook_redirect_page())   # /webhook/ folded into /watch/ (query and hash kept)
     w("miniapp/index.html", miniapp_page(idx))
     w(".well-known/farcaster.json", farcaster_manifest_json())
     ads_src = os.path.join(ROOT, "tools", "ads")
@@ -6496,7 +6548,7 @@ def build_all():
         w(root_name, open(os.path.join(DOCS, src_rel), encoding="utf-8").read())
     w("feed.xml", atom_feed(idx, radar))
     w("api/v1/feed.json", json_feed(idx, radar))
-    urls = ["/", "/request/", "/scan/", "/webhook/", "/seal/", "/miniapp/", "/curators/", "/.well-known/farcaster.json", "/llms.txt", "/api/v1/index.json", "/api/v1/radar.json"] + [f"/briefs/{k}/" for k in BRIEFS] + \
+    urls = ["/", "/request/", "/scan/", "/watch/", "/seal/", "/miniapp/", "/curators/", "/.well-known/farcaster.json", "/llms.txt", "/api/v1/index.json", "/api/v1/radar.json"] + [f"/briefs/{k}/" for k in BRIEFS] + \
         [f"/briefs/{b['slug']}/" for b in load_onboarding()["briefs"]] + (["/api/v1/onboarding.json"] if load_onboarding()["briefs"] else []) + \
         ["/api/v1/proposals.json", "/api/v1/rpc-pinned.json", "/api/v1/lookup.json", "/api/v1/protocols.json", "/api/v1/graph-manifest.json", "/api/v1/wallet-tokens.json", "/api/v1/curator-exposure-matrix.json", "/integrations/vault-factories/", "/for-protocols/", "/llms/", "/llms-full.txt", "/SKILL.md", "/.well-known/agent.json", "/.well-known/mcp.json",
          "/demos/swapio-x402/", "/bounties/", "/leaderboard/", "/mcp/", "/protocols/", "/feed.xml", "/api/v1/feed.json",

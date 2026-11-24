@@ -1481,7 +1481,7 @@
   var CO_SKU = {
     "wallet-report-9": { atomic: 9000000, amount: "9.00", route: "scan", label: "Full Wallet & Safe Exposure Report", needTarget: true, needContact: false }
   };   // mirrors the Worker's ORDER_SKUS: wallet-report-9 is the one product sold (the retired SKUs are refused there)
-  // legacy ?tier= links: webhook-49 / wallet-guard-49 forward to the free watchlist door (no paid webhook is sold), instant-19 to the
+  // legacy ?tier= links: webhook-49 / wallet-guard-49 forward to /watch/ (the free sign-up by email; no paid webhook is sold), instant-19 to the
   // $9 report on /scan/, seal-99 to the by-arrangement re-verification page (nothing else is sold)
   var CO_TIER = { "wallet-9": "wallet-report-9", "wallet-guard-49": "radar-watch-free", "instant-19": "wallet-report-9", "webhook-49": "radar-watch-free", "seal-99": "seal" };
   // the Worker's order codes (POST /v1/orders/verify, OpenAPI): CO_RETRY are polled with the same frozen order; the rest are final
@@ -1771,79 +1771,6 @@
     if (pr) pr.addEventListener("click", function () {
       var h = document.documentElement; h.classList.add("co-print");
       try { window.print(); } finally { h.classList.remove("co-print"); }
-    });
-  }
-  // /webhook/: the free timelock & signer watchlist ($0). One request to POST /v1/requests: a protocol slug or <chain>:0x<40 hex>, a fixed
-  // capability, the free queue and a private contact (email, @telegram or GitHub handle; never an https:// webhook URL). No payment.
-  function initWatchFree() {
-    var form = $("#watch-free-form"); if (!form) return;
-    var api = form.getAttribute("data-watch-api") || "";
-    if (!REQ_API_RE.test(api)) return;
-    var tIn = $("#wf-target", form), cIn = $("#wf-contact", form), chSel = $("#wf-chain", form), btn = $("[data-wf-submit]", form);
-    var spin = btn ? $(".spinner", btn) : null, lbl = $("[data-wf-lbl]", form), st = $("[data-wf-status]", form);
-    var tErr = $("#wf-target-err", form), cErr = $("#wf-contact-err", form), doneEl = $("[data-wf-done]"), doneMsg = $("[data-wf-done-msg]");
-    try {                                            // handoff from a /scan/ wallet result: keep the selected address (and chain)
-      var wq = new URLSearchParams(window.location.search || ""), qa = String(wq.get("address") || ""), qc = String(wq.get("chain") || "");
-      if (tIn && ADDR_RE.test(qa) && !tIn.value) { tIn.value = qa; tIn.setAttribute("value", qa); }
-      if (chSel && (qc === "ethereum" || qc === "base")) chSel.value = qc;
-    } catch (e) { /* no prefill */ }
-    function err(inp, m, text) {
-      if (m) { m.textContent = text || ""; m.hidden = !text; }
-      if (inp) { if (text) inp.setAttribute("aria-invalid", "true"); else inp.removeAttribute("aria-invalid"); }
-    }
-    function busy(on) {
-      if (btn) { btn.disabled = on; if (on) btn.setAttribute("aria-busy", "true"); else btn.removeAttribute("aria-busy"); }
-      if (spin) spin.hidden = !on;
-      if (lbl) lbl.textContent = on ? "Joining\u2026" : "Join Free Watchlist ($0)";
-    }
-    function subject() {   // an indexed protocol slug, or <chain>:0x<40 lowercase hex>
-      var raw = String(tIn ? tIn.value : "").trim(), ch = chSel && chSel.value === "base" ? "base" : "ethereum";
-      if (CO_ADDR.test(raw)) return ch + ":" + raw.toLowerCase();
-      return raw.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 80);
-    }
-    $$("[data-wf-pick]", form).forEach(function (b) {
-      b.addEventListener("click", function () {
-        if (tIn) tIn.value = b.getAttribute("data-slug") || "";
-        if (chSel) chSel.value = b.getAttribute("data-chain") === "base" ? "base" : "ethereum";
-        $$("[data-wf-pick]", form).forEach(function (o) { o.setAttribute("aria-pressed", String(o === b)); });
-        err(tIn, tErr, "");
-      });
-    });
-    form.addEventListener("submit", function (ev) {
-      ev.preventDefault();
-      if (st) { st.textContent = ""; st.hidden = true; }
-      var raw = String(tIn ? tIn.value : "").trim(), subj = subject(), c = String(cIn ? cIn.value : "").trim(), cBare = c.replace(/^github:/i, "");
-      var tBad = !raw ? "Pick a protocol above, or enter a timelock, Safe or protocol."
-        : (/^0x/i.test(raw) && !CO_ADDR.test(raw)) ? "Enter a 0x address: 0x followed by 40 hexadecimal characters."
-        : (subj.length < 2 || PII_RE.test(raw)) ? "Enter a protocol name or a 0x address (keep contact details in the contact field)." : "";
-      var cBad = !c ? "Enter a work email, @telegram handle or GitHub handle for pilot updates."
-        : (/^https?:/i.test(c) || JUNK_CONTACT.test(c) || !(EMAIL_RE.test(cBare) || TG_RE.test(cBare) || GH_RE.test(cBare)))
-          ? "Use a work email, a @telegram handle or a GitHub handle (not a webhook URL)." : "";
-      err(tIn, tErr, tBad); err(cIn, cErr, cBad);
-      if (tBad || cBad) { var f = tBad ? tIn : cIn; if (f && f.focus) f.focus(); return; }
-      var body = { request_type: "mcp_or_api_feature", target_subject: subj, requested_capability: "Pilot timelock and signer watchlist request",
-                   urgency_track: "community_queue_free", contact_handle: c.slice(0, 120) };
-      busy(true);
-      fetch(api, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }).then(function (res) {
-        return res.json().catch(function () { return {}; }).then(function (j) { return { status: res.status, j: j || {} }; });
-      }).then(function (r) {
-        busy(false);
-        var rid = r.j && typeof r.j.request_id === "string" ? r.j.request_id.slice(0, 80) : "";
-        if (r.status >= 200 && r.status < 300 && rid) {
-          if (doneMsg) doneMsg.textContent = "You are on the free pilot watchlist for " + subj + " (request " + rid + "). No payment was collected; replies come from pacta@dri.network.";
-          form.hidden = true;
-          if (doneEl) { doneEl.hidden = false; if (doneEl.focus) { try { doneEl.focus(); } catch (e) { /* ignore */ } } }
-          return;
-        }
-        if (st) {
-          st.hidden = false;
-          st.textContent = r.status === 429 ? "Too many requests. Wait a few minutes, then try again."
-            : "Could not join the watchlist (HTTP " + r.status + (r.j && typeof r.j.detail === "string" ? ": " + r.j.detail.slice(0, 160) : "") + ").";
-        }
-      }).catch(function () {
-        busy(false);
-        if (st) { st.hidden = false; st.textContent = "Network error. Try again, or subscribe to the RSS / Atom feed meanwhile."; }
-      });
     });
   }
   // /request/: ?tier=instant-19 | webhook-49 | seal-99 forwards to the product page (keeping a valid protocol=)
@@ -2234,6 +2161,7 @@
     pfAssess(card, b);
     card.appendChild(el("p", { text: String(b.summary || "") }));
     pfMatch(card, b.catalogMatch);
+    scanWatchContract(out, card, b.chain || (b.catalogMatch && b.catalogMatch.chain), b.address, b.catalogMatch);
     appendWalletDepositPrompt(card);
     out.appendChild(card);
     notifyScanCheckComplete(b.chain || (b.catalogMatch && b.catalogMatch.chain), b.address);
@@ -2324,6 +2252,7 @@
         }, fail("Live block read"));
         return Promise.all([pinned, live]).then(function (x) { return [].concat(x[0], x[1]); });
       }));
+    scanWatchContract(out, card, r.chain, r.address, r.catalogMatch);
     appendWalletDepositPrompt(card);
     out.appendChild(card);
     notifyScanCheckComplete(r.chain, r.address);
@@ -2805,7 +2734,7 @@
     }
 
 
-    card.appendChild(buildInlineWatchWidget(r.wallet));
+    scanWatchWallet(out, card, r, pos, (cust.chains && cust.chains.indexOf("base") >= 0) ? "base" : (pos[0] && pos[0].chain === "base" ? "base" : "ethereum"));
 
     if (Number(sum.adverseGapCount || 0) > 0 || Number(sum.observedCount || 0) > 0) {
       var b2b = el("div", { "class": "wl-inline-b2b", "data-wallet-b2b": "" }, [
@@ -3205,6 +3134,7 @@
     });
     addr.addEventListener("keydown", function (ev) {
       if (!listbox) return;
+      if (ev.key === "Tab") { closeCombo(); return; }   // WATCH-FOCUS-01: no preventDefault; the list is hidden before focus moves on
       if (ev.key === "ArrowDown") {
         ev.preventDefault();
         if (listbox.hidden) { openCombo(pfSelectedMeta ? "" : val()); return; }
@@ -3226,6 +3156,15 @@
     if (btn) btn.addEventListener("mousedown", function (ev) { ev.preventDefault(); });
     document.addEventListener("mousedown", function (ev) {
       if (listbox && !listbox.hidden && combo && !combo.contains(ev.target) && !(btn && btn.contains(ev.target))) closeCombo();
+    });
+    // WATCH-FOCUS-01: focus leaving the scanner combobox (Tab past its buttons, Shift+Tab, a click elsewhere) closes the list, so it never
+    // covers the next focused control. A press inside the list keeps focus in the field (rows already do), so a pick still lands.
+    if (listbox) listbox.addEventListener("mousedown", function (ev) { ev.preventDefault(); });
+    if (combo) combo.addEventListener("focusout", function (ev) {
+      var to = ev.relatedTarget;
+      if (to && combo.contains(to)) return;
+      if (to) { closeCombo(); return; }
+      setTimeout(function () { if (!combo.contains(document.activeElement)) closeCombo(); }, 0);
     });
 
     addr.addEventListener("input", function () {
@@ -3895,7 +3834,6 @@
   };
   var URGENCY = { community: "community_queue_free", clearance: "issuer_urgent_review", api_sla: "api_high_volume_sla" };
   var REQ_API_RE = /^https:\/\/(?:api\.pacta\.wtf|pacta\.fractalneurons\.com|pacta-x402\.pacta\.workers\.dev)\/v1\/requests$/;
-  var PILOT_API_RE = /^https:\/\/(?:api\.pacta\.wtf|pacta\.fractalneurons\.com|pacta-x402\.pacta\.workers\.dev)\/v1\/(?:pilot\/watch|requests)$/;
   var EMAIL_RE = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/, TG_RE = /^@[A-Za-z0-9_]{3,32}$/, GH_RE = /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$/;
   var PII_RE = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}|(^|[\s(])@[A-Za-z0-9_]{2,}|\b\d{1,3}(?:\.\d{1,3}){3}\b|<[^>]*>/;
   var JUNK_CONTACT = /^(none|n\/?a|na|-+|null|user@example\.com|test@test\.com|email@example\.com)$/i;
@@ -3909,11 +3847,14 @@
     return (i > 20 ? c.slice(0, i) : c).replace(/[\s,;:.(-]+$/, "") + "…";
   }
 
-  // Command + Popover combobox (multi-select) for the protocols in scope: type to filter, arrows / Enter to toggle, chips to remove
-  function initCombo(form, onChange) {
+  // Command + Popover combobox (multi-select) for the protocols in scope: type to filter, arrows / Enter to toggle, chips to remove.
+  // opts (the /watch/ picker): q / list ids, max (a pick past it calls onLimit and adds nothing), raw(text) (a pasted or entered
+  // 0x address; true when it was taken). add(name, value) adds a chip that is not in the list (a <chain>:0x<40 hex> target).
+  function initCombo(form, onChange, opts) {
+    opts = opts || {};
     var root = $("[data-combo]", form), none = { values: function () { return []; }, select: function () { return false; }, input: null };
     if (!root) return none;
-    var input = $("#req-proto-q", root), list = $("#req-proto-list", root), chips = $("[data-combo-chips]", root);
+    var input = $(opts.q || "#req-proto-q", root), list = $(opts.list || "#req-proto-list", root), chips = $("[data-combo-chips]", root);
     if (!input || !list || !chips) return none;
     var emptyLi = $('[data-slot="command-empty"]', list), items = $$('[role="option"]', list), active = -1, selected = [];
     function visible() { return $$('[role="option"]', list).filter(function (i) { return !i.hidden; }); }   // in ranked (DOM) order
@@ -3935,7 +3876,15 @@
       items.forEach(function (it) { it.setAttribute("aria-selected", String(selected.indexOf(it) >= 0)); });
       onChange();
     }
-    function toggle(it) { var i = selected.indexOf(it); if (i >= 0) selected.splice(i, 1); else selected.push(it); render(); }
+    function toggle(it) {
+      var i = selected.indexOf(it);
+      if (i >= 0) selected.splice(i, 1);
+      else if (opts.max && selected.length >= opts.max) { if (opts.onLimit) opts.onLimit(); return false; }
+      else selected.push(it);
+      render();
+      return true;
+    }
+    function raw() { return !!(opts.raw && opts.raw(String(input.value || "").trim())); }
     function open() { list.hidden = false; input.setAttribute("aria-expanded", "true"); }
     function close() { list.hidden = true; input.setAttribute("aria-expanded", "false"); setActive(-1); }
     // v4.5 G-P2-3: rank 0 = name or slug starts with the query, 1 = a word of the name does, 2 = substring, 3 = a contract address
@@ -3959,12 +3908,12 @@
       setActive(n ? 0 : -1);
     }
     input.addEventListener("focus", function () { filter(); open(); });
-    input.addEventListener("input", function () { filter(); open(); });
+    input.addEventListener("input", function () { if (raw()) { input.value = ""; filter(); close(); return; } filter(); open(); });
     input.addEventListener("keydown", function (ev) {
       var v = visible();
       if (ev.key === "ArrowDown") { ev.preventDefault(); open(); setActive(Math.min(v.length - 1, active + 1)); }
       else if (ev.key === "ArrowUp") { ev.preventDefault(); setActive(Math.max(0, active - 1)); }
-      else if (ev.key === "Enter") { ev.preventDefault(); if (!list.hidden && v[active]) toggle(v[active]); }
+      else if (ev.key === "Enter") { ev.preventDefault(); if (raw()) { input.value = ""; filter(); close(); } else if (!list.hidden && v[active]) toggle(v[active]); }
       else if (ev.key === "Escape") { if (!list.hidden) { ev.preventDefault(); close(); } }
       else if (ev.key === "Backspace" && !input.value && selected.length) toggle(selected[selected.length - 1]);
       else if (ev.key === "Tab") { close(); }   // SC-FOCUS-02: no preventDefault; the list is hidden before Tab / Shift+Tab moves focus on
@@ -3986,120 +3935,281 @@
       select: function (v) {
         var low = String(v).toLowerCase();
         var it = items.filter(function (x) { return x.getAttribute("data-slug") === v || String(x.getAttribute("data-name") || "").toLowerCase() === low; })[0];
-        if (it && selected.indexOf(it) < 0) { selected.push(it); render(); }
+        if (it && selected.indexOf(it) < 0) return toggle(it);
         return !!it;
-      }
+      },
+      toggleSlug: function (v) {
+        var it = items.filter(function (x) { return x.getAttribute("data-slug") === v; })[0];
+        return it ? toggle(it) : false;
+      },
+      add: function (name, value) {   // a target that is not in the list; the same value twice is one chip
+        if (selected.some(function (x) { return x.getAttribute("data-slug") === value; })) return true;
+        return toggle(el("li", { "data-name": name, "data-slug": value, title: value }));
+      },
+      items: items
     };
   }
 
-  function postPilotEndpoint(url, payload) {
-    if (!PILOT_API_RE.test(url) || typeof fetch !== "function") return Promise.reject(new Error("unavailable"));
-    var init = { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(payload) };
-    try { if (typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function") init.signal = AbortSignal.timeout(15000); } catch (e) { /* none */ }
-    return fetch(url, init).then(function (r) {
-      return r.json().then(function (j) { return { status: r.status, j: j }; }, function () { return { status: r.status, j: {} }; });
-    });
+  // ---- /watch/ (Ask 1 #watch-signup, Ask 2 #fund-check) and the inline /scan/ watch card --------------------------------------
+  // All three file ONE POST /v1/requests through submitWatchOrPledge: the Worker's closed enums, a lowercase colon-free subject with a
+  // fresh 6-hex nonce (every submission is its own request), the email as the only contact. Nothing is paid; the receipt says only that.
+  var WATCH_MAX = 10;
+  var WATCH_EMAIL_RE = /^[A-Za-z0-9._%+-]{1,64}@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,24}$/;   // worker.mjs CONTACT_RES[0]
+  var WATCH_TXT = {
+    emailErr: "Enter a valid email address. Watch alerts are sent by email only.",
+    timeout: "We could not confirm delivery in time. Your entries are still here: try again, or email pacta@dri.network directly.",
+    pledgeEmailErr: "Enter a valid email address. We reply about pledges by email only.",
+    watchDone: "Sign-up received — nothing charged. A person at Pacta will confirm your watch list by email within 24 hours.",
+    pledgeDone: "Pledge received — nothing charged. We will reply by email to agree the scope before sending any Safe deposit address.",
+    badge: "Received · Nothing charged",
+    heading: "Get notified when this contract's implementation, Safe signers or timelock queue changes",
+    promise: "When one changes, a person at Pacta emails you, normally within 24 hours. We confirm your sign-up by email within 24 hours.",
+    privacy: "Your email is used only for these alerts, never shared, and removed on request."
+  };
+  // public text a pledge target may not carry (the Worker refuses personal data, links with logins, markup and 64-hex secrets)
+  var PLEDGE_BAD_RE = /@|<|>|[0-9a-fA-F]{64}|::|(?:^|[^0-9.])\d{1,3}(?:\.\d{1,3}){3}(?:$|[^0-9.])|[A-Za-z0-9-]\.[A-Za-z]{2,24}:\d{1,5}|javascript\s*:|[\u0000-\u001f\u007f]/i;
+  function watchEmail(v) {   // the trimmed email, or "" (placeholder domains, @handles, GitHub handles and URLs never pass)
+    var e = String(v || "").trim(), lc = e.toLowerCase();
+    if (!e || e.length > 120 || !WATCH_EMAIL_RE.test(e) || JUNK_CONTACT.test(e)) return "";
+    if (/(?:^|[@.])example\.(?:com|org|net)$/.test(lc) || /@(?:test|localhost)(?:\.|$)/.test(lc)) return "";
+    return e;
   }
-
-  function validWatchDestination(raw) {
-    var d = String(raw || "").trim();
-    if (!d || d.length > 240 || JUNK_CONTACT.test(d) || /^@handle$|^@telegram$/i.test(d)) return "";
-    if (/^https?:\/\//i.test(d)) {
-      try {
-        var u = new URL(d);
-        if (u.protocol !== "https:" || u.username || u.password || !u.hostname || /^(?:localhost|127\.|10\.|192\.168\.)/i.test(u.hostname)) return "";
-        return "webhook";
-      } catch (e) { return ""; }
-    }
-    if (d.charAt(0) === "@" || /^https?:\/\/t\.me\//i.test(d)) {
-      var tg = d.replace(/^https?:\/\/t\.me\//i, "@");
-      if (tg.charAt(0) !== "@") tg = "@" + tg;
-      return TG_RE.test(tg) ? "telegram" : "";
-    }
-    if (EMAIL_RE.test(d) && !/@(?:example\.com|test\.com)$/i.test(d)) return "email";
-    return "";
+  function watchNonce() {   // 6 lowercase hex: crypto.getRandomValues, else Math.random
+    var h = "", c = typeof crypto !== "undefined" && crypto && typeof crypto.getRandomValues === "function" ? crypto : null;
+    try { if (c) { var b = c.getRandomValues(new Uint8Array(3)); for (var i = 0; i < b.length; i++) h += (b[i] < 16 ? "0" : "") + b[i].toString(16); } } catch (e) { h = ""; }
+    while (h.length < 6) h += Math.floor(Math.random() * 16).toString(16);
+    return h.slice(0, 6);
   }
-
-  function bindWatchPilotRoot(root) {
-    if (!root || root.getAttribute("data-wp-bound") === "1") return;
-    root.setAttribute("data-wp-bound", "1");
-    var form = $("[data-watch-pilot-form]", root), tIn = $("[data-wp-target]", root), dIn = $("[data-wp-dest]", root);
-    var btn = $("[data-wp-submit]", root), spin = btn ? $(".spinner", btn) : null, lbl = btn ? $("[data-wp-btn-lbl]", btn) : null;
-    var errEl = $("[data-wp-err]", root), stEl = $("[data-wp-status]", root), doneEl = $("[data-wp-done]", root), doneMsg = $("[data-wp-done-msg]", root);
-    var api = root.getAttribute("data-api") || "https://api.pacta.wtf/v1/pilot/watch";
-    var fbApi = root.getAttribute("data-fallback-api") || "https://api.pacta.wtf/v1/requests";
-    if (!form || !tIn || !dIn) return;
-    function setErr(inp, msg) {
-      if (errEl) { errEl.textContent = msg || ""; errEl.hidden = !msg; }
-      [tIn, dIn].forEach(function (x) { x.removeAttribute("aria-invalid"); });
-      if (inp && msg) { inp.setAttribute("aria-invalid", "true"); if (inp.focus) inp.focus(); }
+  function watchStub(v) {   // [a-z0-9-] only (the Worker allows ":" solely in a bare <chain>:0x<40 hex>); an address keeps 0x + 8 hex
+    var t = String(v || "").toLowerCase(), m = /^(ethereum|base):(0x[0-9a-f]{40})$/.exec(t);
+    if (m) t = m[1] + "-" + m[2].slice(0, 10);
+    else if (/^0x[0-9a-f]{40}$/.test(t)) t = t.slice(0, 10);
+    t = t.replace(/[^a-z0-9]+/g, "-").replace(/^-+/, "").slice(0, 100).replace(/-+$/, "");
+    return t.length >= 2 ? t : "target";
+  }
+  function watchCapability(targets) {   // "WATCH watchlist - a, b, c" within 280 characters (the rest as "+N more")
+    var head = "WATCH watchlist - ", parts = [];
+    for (var i = 0; i < targets.length; i++) {
+      var more = targets.length - i - 1;
+      if ((head + parts.concat([targets[i]]).join(", ") + (more ? " +" + more + " more" : "")).length > 280) break;
+      parts.push(targets[i]);
     }
-    function setBusy(on) {
-      if (btn) { btn.disabled = on; btn.setAttribute("aria-busy", String(on)); }
-      if (spin) spin.hidden = !on;
-      if (lbl) lbl.textContent = on ? "Enabling\u2026" : "Enable free alerts";
-    }
-    form.addEventListener("submit", function (ev) {
-      ev.preventDefault();
-      if (stEl) { stEl.textContent = ""; stEl.hidden = true; }
-      var tVal = cleanText(tIn.value, 120), dVal = String(dIn.value || "").trim();
-      var validTarget = ADDR_RE.test(tVal) || /^(?:ethereum|base):0x[0-9a-fA-F]{40}$/.test(tVal)
-        || (tVal.length >= 2 && /^[A-Za-z0-9][A-Za-z0-9._()/ -]{1,119}$/.test(tVal) && !PII_RE.test(tVal));
-      if (!validTarget) { setErr(tIn, "Enter a valid 0x Safe/wallet address or protocol name/slug."); return; }
-      var ch = validWatchDestination(dVal);
-      if (!ch) { setErr(dIn, "Enter a real email address, @Telegram handle, or https:// webhook URL."); return; }
-      setErr(null, "");
-      xTrackLead();
-      setBusy(true);
-      var payload = { target: tVal, channel: ch, destination: dVal };
-      if (isInternalQa()) payload.internal = true;
-      postPilotEndpoint(api, payload).then(function (res) {
-        if (res.status === 404 && fbApi && ch !== "webhook") {
-          return postPilotEndpoint(fbApi, {
-            caller_agent: isInternalQa() ? "pacta-founder-qa" : "pacta-web",
-            requester_role: "risk_curator_analyst",
-            caller_purpose: "governance_monitoring",
-            request_type: "mcp_or_api_feature",
-            target_subject: cleanSubject(tVal).slice(0, 120) || "wallet-watch",
-            requested_capability: "30-day free control-plane drift alert pilot (" + ch + ")",
-            urgency_track: "active_due_diligence",
-            contact_handle: dVal.slice(0, 120)
-          });
-        }
-        return res;
-      }).then(function (res) {
-        setBusy(false);
-        var j = res.j || {};
-        if (res.status === 200 && (j.ok || j.request_id)) {
-          var wid = j.watch_id || j.request_id || "WCH-2026";
-          if (doneMsg) doneMsg.textContent = "30-day free alert pilot active (" + wid + ") for " + tVal + " via " + ch + ". Watch setup replies come from pacta@dri.network.";
-          form.hidden = true;
-          if (doneEl) { doneEl.hidden = false; if (doneEl.focus) { try { doneEl.focus(); } catch (e) { /* ignore */ } } }
-          return;
-        }
-        if (stEl) {
-          stEl.hidden = false;
-          stEl.textContent = res.status === 429 ? "Rate limit reached — please wait a few minutes." : ("Could not enable alerts (HTTP " + res.status + (j.detail ? ": " + j.detail : "") + ").");
-        }
-      }).catch(function () {
-        setBusy(false);
-        if (stEl) { stEl.hidden = false; stEl.textContent = "Network error reaching Pacta API — please retry or write to pacta@dri.network."; }
+    var left = targets.length - parts.length;
+    return head + parts.join(", ") + (left ? " +" + left + " more" : "");
+  }
+  var WATCH_POST_TIMEOUT_MS = 30000;
+  function submitWatchOrPledge(kind, api, o) {
+    if (!REQ_API_RE.test(String(api || "")) || typeof fetch !== "function") return Promise.reject(new Error("unavailable"));
+    var body = kind === "pledge" ? {
+      caller_agent: "pacta-web", requester_role: "institutional_allocator", caller_purpose: "collateral_due_diligence",
+      request_type: "missing_check_surface", target_subject: "pledge-" + watchStub(o.target) + "-" + watchNonce(),
+      requested_capability: ("PLEDGE pool check " + o.amount + " USDC - " + String(o.target).replace(/watch\s*list/gi, "watch list")).slice(0, 280),
+      urgency_track: "active_due_diligence", contact_handle: o.email
+    } : {
+      caller_agent: "pacta-web", requester_role: "risk_curator_analyst", caller_purpose: "governance_monitoring",
+      request_type: "mcp_or_api_feature", target_subject: "watch-" + watchStub(o.targets[0]) + "-" + watchNonce(),
+      requested_capability: watchCapability(o.targets), urgency_track: "community_queue_free", contact_handle: o.email
+    };
+    // WATCH-TIMEOUT-03: a bounded request. Past WATCH_POST_TIMEOUT_MS the request is aborted and the caller gets {timeout: true}: the
+    // form unlocks with its entries kept and says delivery could not be confirmed. Nothing is resent automatically (it may have landed).
+    var ctl = typeof AbortController === "function" ? new AbortController() : null, tmr = null, late = false;
+    var req = fetch(api, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body), signal: ctl ? ctl.signal : undefined }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (j) {
+        j = j || {};
+        return { ok: r.status >= 200 && r.status < 300 && (j.ok === true || typeof j.request_id === "string"), status: r.status };
       });
     });
+    var deadline = new Promise(function (resolve) {
+      tmr = setTimeout(function () {
+        late = true;
+        if (ctl) { try { ctl.abort(); } catch (e) { /* ignore */ } }
+        resolve({ ok: false, status: 0, timeout: true });
+      }, WATCH_POST_TIMEOUT_MS);
+    });
+    return Promise.race([req, deadline]).then(function (r) { clearTimeout(tmr); return r; }, function (e) {
+      clearTimeout(tmr);
+      if (late) return { ok: false, status: 0, timeout: true };
+      throw e;
+    });
   }
-
-  function buildInlineWatchWidget(targetAddr) {
-    // the free watchlist, honestly: a feed and a pilot sign-up on /webhook/; no alert delivery is promised here
-    return el("div", { "class": "watch-pilot-box wp-inline wp-link", "data-wallet-watch-inline": "" }, [
-      el("span", { "class": "step-k mono", text: "FREE \u00b7 NO PAYMENT" }),
-      el("p", { "class": "s", text: "Watch queued timelocks for these protocols: subscribe to the live RSS / Atom feed, or join the free pilot watchlist. "
-        + "Automated paid webhook polling is not active. Questions: pacta@dri.network." }),
-      arrowLink({ href: siteUrl("https://pacta.wtf/webhook/" + (ADDR_RE.test(String(targetAddr || "")) ? "?address=" + targetAddr : "")) }, "Open the free watchlist")
+  // busy / status / receipt for one watch or pledge form ([data-w-submit] [data-w-lbl] [data-w-status])
+  function watchFormUi(form, idle) {
+    var btn = $("[data-w-submit]", form), lbl = $("[data-w-lbl]", form), spin = btn ? $(".spinner", btn) : null, st = $("[data-w-status]", form);
+    var ui = {
+      busy: function (on) {
+        if (btn) { btn.disabled = on; if (on) btn.setAttribute("aria-busy", "true"); else btn.removeAttribute("aria-busy"); }
+        if (spin) spin.hidden = !on;
+        if (lbl) lbl.textContent = on ? "Sending…" : idle;
+      },
+      status: function (t) { if (st) { st.textContent = t || ""; st.hidden = !t; if (t) st.setAttribute("data-bad", ""); else st.removeAttribute("data-bad"); } },
+      fail: function (r) {
+        ui.busy(false);
+        ui.status(r && r.timeout ? WATCH_TXT.timeout
+          : r && r.status === 429 ? "Too many requests. Wait a few minutes, then try again."
+          : r && r.status ? "Could not send (HTTP " + r.status + "). Try again, or email pacta@dri.network."
+          : "Network error. Try again, or email pacta@dri.network.");
+      },
+      done: function (doneEl, msgEl, text) {
+        ui.busy(false);
+        if (msgEl) msgEl.textContent = text;
+        form.hidden = true;
+        if (doneEl) { doneEl.hidden = false; if (doneEl.focus) { try { doneEl.focus(); } catch (e) { /* ignore */ } } }
+      }
+    };
+    return ui;
+  }
+  function fieldErr(inp, m, text) {
+    if (m) { m.textContent = text || ""; m.hidden = !text; }
+    if (inp) { if (text) inp.setAttribute("aria-invalid", "true"); else inp.removeAttribute("aria-invalid"); }
+  }
+  // /watch/ Ask 1: 1..10 targets (catalog protocols, quick picks, ?protocol= / ?address=&chain=, a pasted 0x address) + an email
+  function initWatch() {
+    var form = $("#watch-form"); if (!form) return;
+    var api = form.getAttribute("data-api") || "", ui = watchFormUi(form, "Watch by email");
+    var chainSel = $("#watch-chain", form), emailIn = $("#watch-email", form), countEl = $("[data-watch-count]", form);
+    var pErr = $("#watch-proto-err", form), eErr = $("#watch-email-err", form);
+    var combo = initCombo(form, sync, {
+      q: "#watch-q", list: "#watch-list", max: WATCH_MAX,
+      onLimit: function () { fieldErr(combo.input, pErr, "You can watch up to 10 protocols. Remove one to add another."); },
+      raw: function (t) { return CO_ADDR.test(t) ? addAddress(t, chainSel && chainSel.value === "base" ? "base" : "ethereum", false) || true : false; }
+    });
+    if (!combo.input) return;
+    function addAddress(a, ch, anyChain) {   // an indexed contract selects its protocol; any other address is a <chain>:0x<40 hex> chip
+      var low = a.toLowerCase();
+      var hit = combo.items.filter(function (o) {
+        return (" " + (o.getAttribute("data-q") || "") + " ").indexOf(" " + low + " ") >= 0 && (anyChain || o.getAttribute("data-chain") === ch);
+      })[0];
+      if (hit) return combo.select(hit.getAttribute("data-slug"));
+      return combo.add(ch + ":" + short(low, 6, 4), ch + ":" + low);
+    }
+    function sync() {
+      var vals = combo.values();
+      if (countEl) countEl.textContent = "Selected: " + vals.length + " / " + WATCH_MAX;
+      $$("[data-watch-pick]", form).forEach(function (b) {
+        b.setAttribute("aria-pressed", String(vals.some(function (v) { return v.slug === b.getAttribute("data-slug"); })));
+      });
+      fieldErr(combo.input, pErr, "");
+    }
+    $$("[data-watch-pick]", form).forEach(function (b) {
+      b.addEventListener("click", function () { combo.toggleSlug(b.getAttribute("data-slug")); });
+    });
+    try {   // ?protocol=a,b (up to 10 catalog slugs) and ?address=0x…&chain=ethereum|base (from /scan/, old /webhook/ links)
+      var q = new URLSearchParams(window.location.search || ""), qc = String(q.get("chain") || "").toLowerCase(), qa = String(q.get("address") || "").trim();
+      String(q.get("protocol") || "").split(",").slice(0, WATCH_MAX).forEach(function (sl) {
+        sl = sl.trim().toLowerCase();
+        if (/^[a-z0-9-]{2,80}$/.test(sl)) combo.toggleSlug(sl);
+      });
+      var known = qc === "base" || qc === "ethereum";
+      if (known && chainSel) chainSel.value = qc;
+      if (CO_ADDR.test(qa)) addAddress(qa, qc === "base" ? "base" : "ethereum", !known);
+    } catch (e) { /* no prefill */ }
+    sync();
+    form.addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      ui.status("");
+      var vals = combo.values(), email = watchEmail(emailIn && emailIn.value);
+      var pBad = !vals.length ? "Pick at least one protocol to watch (up to 10)." : vals.length > WATCH_MAX ? "You can watch up to 10 protocols. Remove one to add another." : "";
+      var eBad = email ? "" : WATCH_TXT.emailErr;
+      fieldErr(combo.input, pErr, pBad); fieldErr(emailIn, eErr, eBad);
+      if (pBad || eBad) { var f = eBad && !pBad ? emailIn : combo.input; if (f && f.focus) f.focus(); return; }
+      ui.busy(true);
+      submitWatchOrPledge("watch", api, { targets: vals.map(function (v) { return v.slug; }), email: email }).then(function (r) {
+        if (r.ok) ui.done($("[data-watch-done]"), $("[data-watch-done-msg]"), WATCH_TXT.watchDone); else ui.fail(r);
+      }, function () { ui.fail(null); });
+    });
+  }
+  // /watch/ Ask 2: a pool pledge (protocol or contract, 25..500 USDC, an email); nothing is paid on the page
+  function initPledge() {
+    var form = $("#pledge-form"); if (!form) return;
+    var api = form.getAttribute("data-api") || "", ui = watchFormUi(form, "Send pledge");
+    var tIn = $("#pledge-target", form), aIn = $("#pledge-amount", form), eIn = $("#pledge-email", form);
+    var tErr = $("#pledge-target-err", form), aErr = $("#pledge-amount-err", form), eErr = $("#pledge-email-err", form);
+    form.addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      ui.status("");
+      var t = String(tIn ? tIn.value : "").replace(/\s+/g, " ").trim(), aRaw = String(aIn ? aIn.value : "").trim(), amt = Number(aRaw);
+      var email = watchEmail(eIn && eIn.value);
+      var tBad = t.length < 2 || t.length > 100 ? "Enter a protocol name or a 0x contract address (2 to 100 characters)."
+        : PLEDGE_BAD_RE.test(t) || (/^0x[0-9a-f]*$/i.test(t) && !CO_ADDR.test(t))
+          ? "Enter a protocol name or a full 0x contract address only (no email, @handle, login link or key)." : "";
+      var aBad = !/^\d{1,3}$/.test(aRaw) ? "Enter a whole amount from 25 to 500 USDC."
+        : amt < 25 ? "The smallest pledge is 25 USDC." : amt > 500 ? "The largest pledge is 500 USDC (the pool limit)." : "";
+      var eBad = email ? "" : WATCH_TXT.pledgeEmailErr;
+      fieldErr(tIn, tErr, tBad); fieldErr(aIn, aErr, aBad); fieldErr(eIn, eErr, eBad);
+      if (tBad || aBad || eBad) { var f = tBad ? tIn : aBad ? aIn : eIn; if (f && f.focus) f.focus(); return; }
+      ui.busy(true);
+      submitWatchOrPledge("pledge", api, { target: t, amount: String(amt), email: email }).then(function (r) {
+        if (r.ok) ui.done($("[data-pledge-done]"), $("[data-pledge-done-msg]"), WATCH_TXT.pledgeDone); else ui.fail(r);
+      }, function () { ui.fail(null); });
+    });
+  }
+  // /webhook/ (folded into /watch/): forward with the query and hash kept (a closed target, never page data)
+  function initRedirectWatch() {
+    var t = document.body && document.body.getAttribute("data-redirect-watch");
+    if (t !== "../watch/") return;
+    try { location.replace(t + (location.search || "") + (location.hash || "")); } catch (e) { /* the meta refresh and the link stay */ }
+  }
+  // /scan/: every result in #pf-out (a contract check, the pinned-record fallback, a wallet / Safe scan) ends with the same email prompt.
+  // targets: up to 10 catalog slugs, or one <chain>:0x<40 hex>; names: what is watched, in words.
+  var scanWatchSeq = 0;
+  function scanWatchCard(targets, names) {
+    var box = $(".pf"), api = ((box && box.getAttribute("data-api")) || "https://api.pacta.wtf").replace(/\/+$/, "") + "/v1/requests";
+    var id = "pfw-" + (++scanWatchSeq), isAddr = targets.length === 1 && /^(?:ethereum|base):0x[0-9a-f]{40}$/.test(targets[0]);
+    var more = isAddr ? "?chain=" + targets[0].split(":")[0] + "&address=" + targets[0].split(":")[1] : "?protocol=" + targets.join(",");
+    var emailIn = el("input", { id: id + "-email", name: "email", type: "email", maxlength: "120", placeholder: "you@company.org", autocomplete: "email",
+      "aria-label": "Email for watch alerts", "aria-describedby": id + "-privacy " + id + "-err" });
+    var errEl = el("p", { "class": "form-message", id: id + "-err", "data-slot": "form-message", hidden: "" });
+    var btn = el("button", { type: "submit", "data-slot": "button", "data-variant": "default", "data-size": "default", "data-w-submit": "" },
+      [el("span", { "class": "spinner", "aria-hidden": "true", hidden: "" }), el("span", { "data-w-lbl": "", text: "Watch by email" })]);
+    var form = el("form", { "class": "pfw-form", novalidate: "", autocomplete: "off" }, [
+      el("div", { "class": "pfw-row" }, [emailIn, btn]), errEl,
+      el("p", { "class": "pfw-privacy", id: id + "-privacy", text: WATCH_TXT.privacy }),
+      el("p", { "class": "req-status", role: "status", "aria-live": "polite", "data-w-status": "", hidden: "" })]);
+    var doneMsg = el("p", { "data-w-done-msg": "" });
+    var done = el("div", { "class": "wp-done", "data-w-done": "", hidden: "", tabindex: "-1" },
+      [el("span", { "data-slot": "badge", "data-variant": "success", text: WATCH_TXT.badge }), doneMsg]);
+    var ui = watchFormUi(form, "Watch by email");
+    form.addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      ui.status("");
+      var email = watchEmail(emailIn.value);
+      fieldErr(emailIn, errEl, email ? "" : WATCH_TXT.emailErr);
+      if (!email) { if (emailIn.focus) emailIn.focus(); return; }
+      ui.busy(true);
+      submitWatchOrPledge("watch", api, { targets: targets, email: email }).then(function (r) {
+        if (r.ok) ui.done(done, doneMsg, WATCH_TXT.watchDone); else ui.fail(r);
+      }, function () { ui.fail(null); });
+    });
+    var what = names.length > 3 ? names.slice(0, 3).join(", ") + " and " + (names.length - 3) + " more" : names.join(", ");
+    return el("div", { "class": "pf-watch-inline", "data-slot": "card", "data-scan-inline-watch": "", "data-watch-targets": targets.join(",") }, [
+      el("h3", { "class": "pfw-h", text: WATCH_TXT.heading }),
+      el("p", { "class": "pfw-what", "data-scan-watch-what": "", text: "We will watch: " + what + "." }),
+      el("p", { "class": "pfw-promise", text: WATCH_TXT.promise }),
+      form, done,
+      el("p", { "class": "pfw-more" }, [arrowLink({ href: "../watch/" + more, "data-cta": "scan_watch_more" }, "Pick up to 10 protocols or fund a check on /watch/")])
     ]);
   }
-
-  function initWatchPilot() {
-    $$("[data-watch-pilot]").forEach(function (r) { bindWatchPilotRoot(r); });
+  function scanWatchFor(out) { return !!(out && out.id === "pf-out" && $(".pf[data-wallet-scanner]")); }
+  function scanWatchContract(out, card, chain, address, m) {   // the indexed protocol when the catalog matched it, else <chain>:0x<40 hex>
+    if (!scanWatchFor(out)) return;
+    var slug = m && typeof m === "object" ? String(m.slug || (/\/protocols\/([a-z0-9-]+)\/$/.exec(String(m.url || "")) || [])[1] || "") : "";
+    if (/^[a-z0-9-]{2,80}$/.test(slug)) { card.appendChild(scanWatchCard([slug], [String(m.name || slug)])); return; }
+    var a = String(address || "");
+    if (ADDR_RE.test(a)) {
+      var ch = chain === "base" ? "base" : "ethereum";
+      card.appendChild(scanWatchCard([ch + ":" + a.toLowerCase()], [(ch === "base" ? "Base" : "Ethereum") + " contract " + short(a, 6, 4)]));
+    }
+  }
+  function scanWatchWallet(out, card, r, pos, chain) {   // up to 10 held indexed protocols, else the wallet / Safe itself
+    if (!scanWatchFor(out)) return;
+    var seen = {}, slugs = [], names = [];
+    (pos || []).forEach(function (p) {
+      var sl = String(p && p.slug || "");
+      if (slugs.length < WATCH_MAX && /^[a-z0-9-]{2,80}$/.test(sl) && !seen[sl]) { seen[sl] = 1; slugs.push(sl); names.push(String(p.protocolName || sl)); }
+    });
+    if (slugs.length) { card.appendChild(scanWatchCard(slugs, names)); return; }
+    var w = String(r && r.wallet || "");
+    if (ADDR_RE.test(w)) card.appendChild(scanWatchCard([chain + ":" + w.toLowerCase()], [(chain === "base" ? "Base" : "Ethereum") + " address " + short(w, 6, 4)]));
   }
 
   function syncScanUpgradeTarget(chOverride, addrOverride) {
@@ -4118,7 +4228,7 @@
       sealLink.setAttribute("href", ADDR_RE.test(a) ? "../request/?tier=clearance&chain=" + ch + "&address=" + a : "../request/?tier=clearance");
     }
     if (guardLink) {
-      guardLink.setAttribute("href", ADDR_RE.test(a) ? "../webhook/?chain=" + ch + "&address=" + a : "../webhook/");
+      guardLink.setAttribute("href", ADDR_RE.test(a) ? "../watch/?chain=" + ch + "&address=" + a : "../watch/");
     }
     if (x402Cmd) {
       var box = $(".pf"), apiBase = (box && box.getAttribute("data-api")) || "https://api.pacta.wtf";
@@ -4228,7 +4338,7 @@
   document.addEventListener("DOMContentLoaded", function () {
     // v4.3: every feature starts on its own, so one that throws can never leave a later one (the "Try:" examples, the
     // checker, the radar) unbound; the error is re-thrown asynchronously, so it still reaches the console
-    [initTheme, initInternalQaBadge, initXPixel, initSheet, initTabs, initTabLinks, initDetailsHash, initCmdk, initTooltips, initCopy, initBeaconHooks, tick, initIndex, initRequest, initLauncher, initWatchFree, initCheckout, initScanFunnel, initSealCombo, initMiniApp, initInspector, initPreflight,
+    [initRedirectWatch, initTheme, initInternalQaBadge, initXPixel, initSheet, initTabs, initTabLinks, initDetailsHash, initCmdk, initTooltips, initCopy, initBeaconHooks, tick, initIndex, initRequest, initLauncher, initWatch, initPledge, initCheckout, initScanFunnel, initSealCombo, initMiniApp, initInspector, initPreflight,
      initLiveTimelocks, initProtocolFilter, initAges, initRefresh, initHeroCheck, initBadgeWidget, initScorecards, initReceipts].forEach(function (f) {
       try { f(); } catch (e) { setTimeout(function () { throw e; }, 0); }
     });

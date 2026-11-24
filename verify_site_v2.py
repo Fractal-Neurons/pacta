@@ -86,7 +86,17 @@ X = EXPECT
 GRAPH_MANIFEST_SHA256 = "98763a1c308125730e6d544022692eb3ab79a190b446460f9807093ade77d3e5"   # re-pinned (Part 6B): Obol's two Observed / Uncompared surfaces
 R4_REREAD_HEADS = {"ethereum": (26466974, "0x9265e0f25e8ff2d7358bb5edd03a563a6fa469772bad21dafbadec78d4bc4bdd"),   # wording-35 r4 re-read pins
                    "base": (60576992, "0x7780084ed01a331b77f78611578e99cb273c3a3dbad940d8205563f5068cfc30")}
-NON_PROTOCOL_PAGES = 41                                                  # docs/**/*.html pages that are not /protocols/<slug>/ (40: + /curators/ /scan/ /webhook/ /seal/ /miniapp/, + the Cap, Compound V3 and Lista Lending briefs)
+# /watch/ (receipt 8741 #1): the one approved 24-hour sentence family (a person at Pacta emailing about a watched protocol, or confirming
+# the sign-up). The older bans on a "within 24 hours" clearance promise read every page with exactly these sentences removed.
+WATCH_24H_RE = re.compile(r"[Aa] person at Pacta (?:emails you[^.<]{0,80}?, normally|will confirm your watch list by email) within 24 hours"
+                          r"|We confirm your sign-up by email within 24 hours")
+
+
+def no_watch_24h(t):
+    return WATCH_24H_RE.sub("", t)
+
+
+NON_PROTOCOL_PAGES = 42                                                  # docs/**/*.html pages that are not /protocols/<slug>/ (40: + /curators/ /scan/ /webhook/ /seal/ /miniapp/, + the Cap, Compound V3 and Lista Lending briefs)
 
 
 def check(name, ok, detail=""):
@@ -1037,7 +1047,7 @@ def main(argv=None):
     bad_s = sorted({f"{f}: {m.group(0)}" for f in copy_files for m in subs.finditer(read(f))})
     check("no curator / SaaS subscription tracks (one paid offer only)", not bad_s, str(bad_s[:4]))
     # M4 / M5 (v4): one tier family, byte-identical pricing cards on / and /request/ (only the relative link prefix differs)
-    offer = ("Free scorecards, API &amp; MCP", "$0", "Full Wallet &amp; Safe Exposure Report", "$9", "Timelock &amp; Signer Watchlist", "RSS / Atom + pilot sign-up",
+    offer = ("Free scorecards, API &amp; MCP", "$0", "Full Wallet &amp; Safe Exposure Report", "$9", "Timelock &amp; Signer Watchlist", "sign-up by email",
              "Re-Verification", "By arrangement", "Custom Control-Plane Dossier",
              "Free doc-update queue (typically 6–8 weeks)", "API SLA", "data-enterprise-strip")
     def plans_of(t):
@@ -1408,8 +1418,9 @@ def main(argv=None):
                                "bounties": dom_tree(pages[os.path.join("bounties", "index.html")]) if os.path.join("bounties", "index.html") in pages else None,
                                **{v_["route"]: dom_tree(pages[os.path.join(v_["route"], "index.html")]) for v_ in BS.CHECKOUT.values()
                                   if os.path.join(v_["route"], "index.html") in pages},
-                               # /webhook/ is no longer a checkout route (the free watchlist), but the harness still exercises it
+                               # /webhook/ is the redirect to /watch/ (one page, two asks); the harness exercises both
                                "webhook": dom_tree(pages[os.path.join("webhook", "index.html")]) if os.path.join("webhook", "index.html") in pages else None,
+                               "watch": dom_tree(pages[os.path.join("watch", "index.html")]) if os.path.join("watch", "index.html") in pages else None,
                                "checkout": {"api": BS.ORDERS_VERIFY_API, "treasury": BS.CHECKOUT_TREASURY, "usdc": BS.USDC["Base"],
                                             "skus": {k_: v_["atomic"] for k_, v_ in BS.CHECKOUT.items()},
                                             "amounts": {k_: v_["amount"] for k_, v_ in BS.CHECKOUT.items()}}})
@@ -1640,7 +1651,7 @@ def main(argv=None):
                     and f'<a data-slot="button" data-variant="{dossier}" href="../../request/?{q}" data-cta="clearance">{_html.escape(BS.DOSSIER_CTA)}</a>' in pg
                     and f'<a href="../../request/?{q}&amp;settlement=invoice" data-cta="clearance_invoice">Request a commercial invoice (PDF)</a>' in pg
                     and _html.escape(BS.CLEARANCE_SELF_CORRECTION, quote=False) in pg
-                    and "within 24 hours" not in pg and "Clear findings" not in pg and "Request 24h Clearance" not in pg and MNT_H not in pg)
+                    and "within 24 hours" not in no_watch_24h(pg) and "Clear findings" not in pg and "Request 24h Clearance" not in pg and MNT_H not in pg)
         return (f"<h2>Operating {_html.escape(name)}? {MNT_H}</h2>" in pg and "issuer-clearance" not in pg and CLR_H not in pg
                 and "Request 24h Clearance" not in pg and "Clear findings" not in pg
                 and f'<a data-slot="button" data-variant="outline" href="../../request/?{q}" data-cta="dossier_request">{_html.escape(BS.DOSSIER_CTA)}</a>' in pg and "$1,500" not in pg and "Continuous Control-Plane Monitoring" not in pg
@@ -1874,8 +1885,9 @@ def main(argv=None):
     meta_ok_ = f'<meta name="robots" content="{BS.ROBOTS_META}">'
     gen_pages = sorted(r for r in pages if not r.startswith("demos" + os.sep))
     meta_bad = [r for r in gen_pages if len(re.findall(r'<meta name="robots"', pages[r])) != 1
-                or (f'<meta name="robots" content="{BS.ROBOTS_META_404}">' if r in ("404.html", os.path.join("pricing", "index.html")) else meta_ok_)
-                not in pages[r][:pages[r].index("</head>")]]   # /pricing/ is a noindex redirect stub to /#pricing (T5)
+                or (f'<meta name="robots" content="{BS.ROBOTS_META_404}">' if r in ("404.html", os.path.join("pricing", "index.html"))
+                    else '<meta name="robots" content="noindex, follow">' if r == os.path.join("webhook", "index.html") else meta_ok_)
+                not in pages[r][:pages[r].index("</head>")]]   # /pricing/ is a noindex redirect stub to /#pricing (T5); /webhook/ to /watch/
     llms_t = read("docs/llms.txt")
     lm = pages.get(os.path.join("llms", "index.html"), "")
     llms_ok = {
@@ -2067,6 +2079,7 @@ def main(argv=None):
     want_chips = {lbl: BS.LIVE_CHECK_TARGET.get(sl, (lk_v2[sl]["preflightArgs"]["chain"], lk_v2[sl]["preflightArgs"]["address"]))[1] for lbl, sl in BS.SCAN_CHIPS}
     st_r = next(x_ for x_ in BS.receipt_data(idx, BS.PREVIEW_RECEIPTS) if x_["slug"] == "stader-labs-ethx")
     web_ = pages.get(os.path.join("webhook", "index.html"), "")
+    watch_ = pages.get(os.path.join("watch", "index.html"), "")
     alert_ = BS.DECODED[BS.ALERT_EXAMPLE]["operations"][0]
     seal_ = pages.get(os.path.join("seal", "index.html"), "")
     previews_ok = {
@@ -2078,10 +2091,15 @@ def main(argv=None):
             and all(f'<code class="sel-chip">{html.escape(c_)}</code>' in scan_ and c_ in pages.get(os.path.join("protocols", "stader-labs-ethx", "index.html"), "")
                     for c_ in BS.SCAN_SAMPLE_CHIPS)
             and 'id="pf-submit"' in scan_ and re.search(r'data-variant="default" data-size="lg" type="submit" id="pf-submit"', scan_) is not None,
-        "webhook: the free watchlist ($0) with quick picks, the RSS / Atom feed and a sign-up to POST /v1/requests; nothing for sale":
-            web_.count("data-wf-pick") == len(BS.WEBHOOK_PICKS) and f'<form class="co" id="watch-free-form" data-watch-api="{BS.REQUEST_API}"' in web_
-            and 'href="../feed.xml"' in web_ and "Join Free Watchlist ($0)" in web_ and 'id="co-form"' not in web_ and "data-co-pay" not in web_
-            and "orders/verify" not in web_,
+        "watch: one page, two asks (#watch-signup with quick picks + a 316-protocol combobox, #fund-check with 3 fields), both POST /v1/requests; nothing for sale":
+            watch_.count("data-watch-pick") == len(BS.WATCH_PICKS) and f'<form class="watch-form" id="watch-form" data-api="{BS.REQUEST_API}"' in watch_
+            and f'<form class="watch-form" id="pledge-form" data-api="{BS.REQUEST_API}"' in watch_
+            and 'href="../feed.xml"' in watch_ and 'id="co-form"' not in watch_ and "data-co-pay" not in watch_ and "orders/verify" not in watch_,
+        "webhook: a noindex redirect to /watch/ (canonical, meta refresh, app.js forwarding the query, no inline script)":
+            '<meta name="robots" content="noindex, follow">' in web_ and f'<link rel="canonical" href="{BS.BASE_URL}/watch/">' in web_
+            and '<meta http-equiv="refresh" content="0; url=../watch/">' in web_ and '<body data-redirect-watch="../watch/">' in web_
+            and re.search(r'<script src="\.\./app\.js\?v=[0-9a-f]{8}" defer></script>', web_) is not None
+            and not re.search(r"<script(?![^>]*\bsrc=)[^>]*>", web_) and '<p><a href="../watch/">Continue to Pacta Watch' in web_,
         "seal: three deliverables (EAS seal with rosette + badge, Safe Transaction Builder JSON, docs PR diff) and the editorial guarantee":
             seal_.count('class="pv-d"') == 3 and "<svg" in seal_.split('data-preview="seal"')[-1] and f'src="../badges/{BS.BADGE_DEMO}.svg"' in seal_
             and html.escape(BS.SEAL_GUARANTEE, quote=False) in seal_
@@ -2108,7 +2126,7 @@ def main(argv=None):
           and res.get("wl_demo_and_multicall_fallback") is True and cur_ok,
           f"funnel={res.get('co_progressive_scan_funnel')}; wl={res.get('wl_demo_and_multicall_fallback')}; cur_ok={cur_ok}; cold_prices={[p_ for p_ in ('$9','$19','$49','$99','$0.05') if p_ in scan_cold_part]}")
     nav_bad = [r_ for r_, t_ in pages.items() if 'class="topbar"' in t_ and not all(x_ in (re.search(r'<nav data-slot="navigation-menu" class="nav" aria-label="Primary">.*?</nav>', t_, re.S) or re.search("$^", "")).group(0).replace(' aria-current="page"', "")
-                                                                                 for x_ in ('curators/">Curators</a>', 'scan/">Instant Scan</a>', '#pricing">Pricing</a>', 'bounties/">Bounties</a>',
+                                                                                 for x_ in ('curators/">Curators</a>', 'scan/">Scan</a>', 'watch/">Watch</a>', '#pricing">Pricing</a>', 'bounties/">Bounties</a>',
                                                                                             'radar/">Radar</a>', 'scorecards/">Scorecards</a>', 'mcp/">MCP</a>'))]
     radar_v2 = pages.get(os.path.join("radar", "index.html"), "")
     seal_cta_bad = []
@@ -2160,7 +2178,7 @@ def main(argv=None):
                and (wd_ is None or (('href="#seal-cta" data-cta="seal_wd"' in wd_.group(0)) == (wd_.group(1) is None))))
         if not ok_:
             maint_bad.append(v["slug"])
-    ftr_v2 = [r_ for r_, t_ in pages.items() if 'class="ftr"' in t_ and not all(f'{x_}</a></li>' in t_ for x_ in ('scan/">Instant scan', 'webhook/">Timelock watchlist', 'seal/">Re-verification'))]
+    ftr_v2 = [r_ for r_, t_ in pages.items() if 'class="ftr"' in t_ and not all(f'{x_}</a></li>' in t_ for x_ in ('scan/">Scan', 'watch/">Watch', 'seal/">Re-verification'))]
     # no page offers the retired $49 / month webhook (automated paid delivery is not active)
     no49 = [r_ for r_, t_ in pages.items() if re.search(r"\$49|49 USDC|49 / mo|every 30 minutes", t_)]
     web_one = not no49 and 'id="co-watch"' not in web_
@@ -2173,10 +2191,50 @@ def main(argv=None):
           f"0x4348…Ed14 pill, no raw 42-char hex or EOA copy, exact EIP-681 + amount, real-data previews, 1200x628 cards); nav, /radar/, every flagged protocol "
           f"page and the /request/ launcher link them; app.js payee / token / chain / amounts = the build's, transfer only, frozen order, single flight; "
           f"behaviour {len(co_keys) - len(co_failed)}/{len(co_keys)} (harness)",
-          not pd_bad and all(previews_ok.values()) and not nav_bad and 'href="../webhook/" data-cta="radar_watch_free"' in radar_v2 and not seal_cta_bad
+          not pd_bad and all(previews_ok.values()) and not nav_bad and 'href="../watch/" data-cta="radar_watch_free"' in radar_v2 and not seal_cta_bad
           and launch_ok and co_js_ok and css_ok and not co_failed and not maint_bad and not ftr_v2 and web_one,
           f"pages {pd_bad}; previews {[k_[:30] for k_, v_ in previews_ok.items() if not v_]}; nav {nav_bad[:3]}; seal cta {seal_cta_bad[:3]}; launcher {launch_ok}; "
           f"js {co_js_ok}; css {css_ok}; failed {co_failed[:4]}; maintainer card {maint_bad[:3]}; footer {ftr_v2[:3]}; webhook one field {web_one}")
+    # /watch/ (one page, two asks) + the inline /scan/ watch prompt + /webhook/ folded in. Harness: every POST is a local fetch mock.
+    w_keys = ["watch_combobox_keyboard_chips", "watch_free_posts_exact_body", "watch_targets_1_to_10", "watch_free_address_subject",
+              "watch_nonce_per_submission", "watch_error_no_receipt", "watch_pledge_exact_body", "watch_pledge_never_watchlist", "watch_copy_honest",
+              "webhook_redirects_to_watch", "scan_inline_watch_wallet", "scan_inline_watch_contract", "scan_inline_watch_live_wallet",
+              "watch_submit_timeout_unlocks", "scan_combo_tab_focusout_closes"]
+    w_failed = [k_ for k_ in w_keys if res.get(k_) is not True]
+    w_txt = html.unescape(re.sub(r"<[^>]+>", " ", watch_))
+    w_src = read("tools/app.src.js")
+    w_js_txt = w_src[w_src.find("  var WATCH_TXT = {"):w_src.find("  // public text a pledge target may not carry")]
+    w_lk = json.loads(read("docs/api/v1/lookup.json"))
+    w_pilot = [os.path.relpath(os.path.join(dp_, f_), ROOT) for top_ in ("docs", "tools") for dp_, _, fs_ in os.walk(os.path.join(ROOT, top_)) for f_ in fs_
+               if f_.endswith((".html", ".js", ".py", ".txt", ".json", ".xml", ".md")) and "pilot/watch" in open(os.path.join(dp_, f_), encoding="utf-8", errors="replace").read()]
+    w_static = {
+        "copy": all(t_ in w_txt for t_ in (BS.WATCH_PROMISE, BS.WATCH_PRIVACY, BS.PLEDGE_PRIVACY, BS.PLEDGE_CUSTODY, BS.PLEDGE_FIREWALL, BS.RECEIPT_BADGE,
+                                           BS.WATCH_RECEIPT, BS.PLEDGE_RECEIPT)),
+        "js copy": all(t_ in w_js_txt or t_.replace("—", "\\u2014").replace("·", "\\u00b7") in w_js_txt
+                       for t_ in (BS.WATCH_RECEIPT, BS.PLEDGE_RECEIPT, BS.RECEIPT_BADGE, BS.WATCH_PRIVACY, BS.WATCH_EMAIL_ERR))
+                   and "When one changes, a person at Pacta emails you, normally within 24 hours. We confirm your sign-up by email within 24 hours." in w_js_txt,
+        "banned words": not BS.WATCH_BANNED_RE.search(w_txt) and not BS.WATCH_BANNED_RE.search(w_js_txt) and "pilot" not in w_txt.lower(),
+        "no price / Safe address / custody now": not re.search(r"\$\d|/ ?mo\b|0x[0-9a-fA-F]{40}|are held", w_txt)
+            and not re.search(r"eth_sendTransaction|data-co-pay|ethereum:0x|" + BS.CHECKOUT_TREASURY[2:10], watch_, re.I),
+        "fields": all(x_ in watch_ for x_ in ('<input id="watch-email" name="email" type="email" maxlength="120" placeholder="you@company.org" autocomplete="email"',
+                                              '<input id="pledge-amount" name="amount" type="number" min="25" max="500" step="1" placeholder="25"',
+                                              '<input id="pledge-email" name="email" type="email" maxlength="120" placeholder="you@company.org"',
+                                              'role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="watch-list"'))
+                  and watch_.count('role="option"') == sum(1 for x_ in w_lk["items"] if x_["kind"] == "protocol") and watch_.count("<form ") == 2,
+        "anchors": 'id="watch-signup"' in watch_ and 'id="fund-check"' in watch_ and watch_.count('data-staging-banner') == 0,
+        "links": '<a href="../watch/#fund-check" data-cta="scan_fund_check">' in scan_ and '<a href="../watch/" data-cta="scan_watch_door">' in scan_
+                 and re.search(r'href="\.\./watch/"[^>]*id="scan-to-guard"', scan_) is not None
+                 and 'href="../../watch/?protocol=ethena-usde-susde"' in pages.get(os.path.join("protocols", "ethena-usde-susde", "index.html"), "")
+                 and 'class="home-door" data-slot="card" href="watch/"' in page and 'href="watch/" data-cta="pricing_watch_free"' in page
+                 and f"{BS.BASE_URL}/watch/" in read("docs/llms.txt") and not any(re.search(r'href="[^"]*webhook/', t_) for t_ in pages.values()),
+        "sitemap": f"<loc>{BS.BASE_URL}/watch/</loc>" in sm_v2 and f"<loc>{BS.BASE_URL}/webhook/</loc>" not in sm_v2,
+        "0 pilot/watch in docs/ tools/": not w_pilot,
+    }
+    check(f"/watch/ one page, two asks + inline /scan/ prompt + /webhook/ redirect: exact copy (no instant / real-time / automatic, no price, no Safe address), "
+          f"email only, 1..10 targets, intercepted POST /v1/requests bodies (watch-/pledge-<stub>-<nonce6>, WATCH watchlist / PLEDGE), neutral receipts; "
+          f"behaviour {len(w_keys) - len(w_failed)}/{len(w_keys)} (harness)",
+          not w_failed and all(w_static.values()),
+          f"failed {w_failed[:4]}; static {[k_ for k_, v_ in w_static.items() if not v_]}; pilot/watch {w_pilot[:3]}")
     rescue_ = read("docs/404-rescue.js") if os.path.exists(os.path.join(DOCS, "404-rescue.js")) else ""
     nf_ = pages.get("404.html", "")
     csp_at = nf_.find(f'<meta http-equiv="Content-Security-Policy" content="{BS.CSP}">')
@@ -2185,7 +2243,7 @@ def main(argv=None):
     check("404.html stripped-? rescue: docs/404-rescue.js (same origin, right after the CSP meta, before b.js) sends /<route>/<utm_*|tier|ref>=... on the "
           "known routes to /<route>/?... with location.replace (also under /website-test/), leaves every other path alone; the beacon stays silent (harness)",
           rescue_ == BS.RESCUE_JS and 0 <= csp_at < r_at < b_at and sum(t_.count("404-rescue.js") for t_ in pages.values()) == 1
-          and r'^\/((?:website-test|public\/web\/option-b-v2)\/)?(scorecards|curators|request|scan|seal|webhook|miniapp|radar|bounties|leaderboard|methodology|protocols(?:\/[a-z0-9-]+)?)\/((?:utm_[a-z]+|tier|ref)=.+)$' in rescue_
+          and r'^\/((?:website-test|public\/web\/option-b-v2)\/)?(scorecards|curators|request|scan|seal|webhook|watch|miniapp|radar|bounties|leaderboard|methodology|protocols(?:\/[a-z0-9-]+)?)\/((?:utm_[a-z]+|tier|ref)=.+)$' in rescue_
           and "L.replace(" in rescue_ and "w.pactaRescued=1" in rescue_ and "&&!w.pactaRescued" in bjs and all(res.get(k_) is True for k_ in r_keys),
           f"csp {csp_at} rescue {r_at} b.js {b_at}; failed {[k_ for k_ in r_keys if res.get(k_) is not True]}")
     b5_keys = ["b_v5_routes", "b_v5_campaign_fields", "b_v5_host"]
@@ -2235,11 +2293,12 @@ def main(argv=None):
     data_api = set(re.findall(r'data-api="([^"]+)"', "".join(pages.values())))
     app_fetch = len(re.findall(r"\bfetch\(", appjs))
     # 14 = live 658f1364's 13 (incl. the free watchlist POST on /webhook/) + the dormant opt-in pilot helper postPilotEndpoint (0 pages render its forms);
-    # 13 since Part 5: the mini app's order POST (fetch(verifyApi, ...)) is gone with its $19 checkout
+    # 13 since Part 5: the mini app's order POST (fetch(verifyApi, ...)) is gone with its $19 checkout;
+    # 12 since /watch/: the /webhook/ form POST and the dormant pilot helper are gone; one shared submitWatchOrPledge POST serves /watch/ and /scan/
     check("page script boundaries: b.js/theme.js touch zero cookies/storage/third-party scripts; app.js uses localStorage only for pacta-theme + pacta-x-purchased dedup + opt-in pacta_internal QA tag, injects only host-gated uwt.js, and fetch() calls only this site's JSON, data-api, data-live-timelocks, and the four allow-listed public RPCs",
           not js_bad and script_el_ok and ls_vars == {"THEME_KEY", "X_PURCHASE_KEY", "INTERNAL_QA_KEY"} and ls_keys == {"pacta-theme", "pacta-x-purchased", "pacta_internal"} and appjs.count("localStorage") == 8 and data_api <= {API_, API_ + "/v1/requests", API_ + "/v1/orders/verify"}
-          and app_fetch == 13 and appjs[appjs.find("function initWatchFree()"):appjs.find("function initLauncher")].count("fetch(api, {") == 1
-          and appjs[appjs.find("function initCheckout()"):appjs.find("function initWatchFree")].count("fetch(api, opts)") == 1 and "fetch(pfUrl," in appjs[appjs.find("function initMiniApp()"):] and "fetch(verifyApi," not in appjs and "startMaUpgrade" not in appjs and 'j(root + "api/v1/lookup.json")' in appjs and 'j(root + "api/v1/scorecards.json")' in appjs and 'fetch(api, init)' in appjs[appjs.find("function initRequest()"):] and "REQ_API_RE.test(api)" in appjs and 'fetch(document.documentElement.getAttribute("data-api") || "api/v1/index.json")' in appjs
+          and app_fetch == 12 and appjs[appjs.find("function submitWatchOrPledge("):appjs.find("function watchFormUi(")].count("fetch(api, {") == 1
+          and appjs[appjs.find("function initCheckout()"):appjs.find("function initLauncher")].count("fetch(api, opts)") == 1 and "fetch(pfUrl," in appjs[appjs.find("function initMiniApp()"):] and "fetch(verifyApi," not in appjs and "startMaUpgrade" not in appjs and 'j(root + "api/v1/lookup.json")' in appjs and 'j(root + "api/v1/scorecards.json")' in appjs and 'fetch(api, init)' in appjs[appjs.find("function initRequest()"):] and "REQ_API_RE.test(api)" in appjs and 'fetch(document.documentElement.getAttribute("data-api") || "api/v1/index.json")' in appjs
           and 'fetch(body.getAttribute("data-src") || "api/v1/scorecards.json")' in appjs
           # the user-initiated "Verify live on RPC" + Multicall3 wallet-exposure fallback, POSTing JSON-RPC only to the four allow-listed public RPCs
           and "      return fetch(url, opts).then(function (res) { return res.json(); })" in appjs
@@ -2348,7 +2407,7 @@ def main(argv=None):
             and all(BS.SKIP_LINK + "\n" + banner_st in t for t in html_st.values() if BS.SKIP_LINK in t)
             and not any("data-staging-banner" in t for t in canon_html)
             and all(re.findall(r'<meta name="robots" content="([^"]*)">', pages[r_])[0].startswith(
-                        "noindex" if r_ in ("404.html", os.path.join("pricing", "index.html")) else "index, follow")
+                        "noindex" if r_ in ("404.html", os.path.join("pricing", "index.html"), os.path.join("webhook", "index.html")) else "index, follow")
                     for r_ in pages if r_.endswith(".html") and '<meta name="robots"' in pages[r_]))
         st_detail = f"{len(html_st)} staged pages; root-relative {rootrel[:3]}; build rc {rc_st.returncode} {rc_st.stderr[-160:]}"
     finally:
@@ -3079,7 +3138,8 @@ def main(argv=None):
             or any(o["done"] for it in rad["items"] for o in it["operations"]),
         "live hydrate harness": all(res.get(k) is True for k in live_keys),
         # the only meta refresh is the one-shot /pricing/ -> /#pricing redirect stub (T5); no page reloads or polls live data
-        "no reload / refresh": "location.reload" not in appjs and not any('http-equiv="refresh"' in t for r, t in pages.items() if r != os.path.join("pricing", "index.html")),
+        "no reload / refresh": "location.reload" not in appjs and not any('http-equiv="refresh"' in t for r, t in pages.items()
+                                                                          if r not in (os.path.join("pricing", "index.html"), os.path.join("webhook", "index.html"))),
         # T1 (v4): one cleared fallback timer reveals the pinned state if the re-check never settles; never a polling loop
         "live block writes text only": (lambda b: bool(b) and not re.search(r"innerHTML|outerHTML|insertAdjacentHTML|document\.write|setInterval", b)
                                         and b.count("setTimeout(") == 1 and "clearTimeout(guard)" in b and "}, 18000)" in b and "9000)" not in b
@@ -3725,7 +3785,7 @@ def main(argv=None):
     app_p = read("tools/app.src.js")
     all_pages = {r: t for r, t in pages.items() if not r.startswith("demos" + os.sep)}
     pp["V06: no 'within 24 hours' / 'Clear findings' / 'Request 24h Clearance' / Aligned-attestation-for-payment copy on any page; every delta / RPC-observed protocol page offers the free notification next to the Verification & Reconciliation Dossier"] = (
-        not [r for r, t in all_pages.items() if re.search(r"within 24 hours|Clear findings|Request 24h Clearance|Aligned Attestation \+ Curator", t)]
+        not [r for r, t in all_pages.items() if re.search(r"within 24 hours|Clear findings|Request 24h Clearance|Aligned Attestation \+ Curator", no_watch_24h(t))]
         and all('data-cta="free_notify"' in t and html.escape(BS.DOSSIER_CTA, quote=False) in t
                 for r, t in all_pages.items() if r.startswith("protocols" + os.sep) and 'id="issuer-clearance"' in t))
     rad_p = json.loads(read("docs/api/v1/radar.json"))

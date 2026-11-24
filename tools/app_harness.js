@@ -1346,7 +1346,7 @@ async function v45Scenario() {
 //     transfer, or the manual drawer without a wallet), the order frozen at Pay, every control locked in flight, the API's order codes
 async function checkoutScenario() {
   const C = input.checkout;
-  if (!C || !input.scan || !input.webhook || !input.seal) { res.co_error = "no checkout input"; return; }
+  if (!C || !input.scan || !input.watch || !input.seal) { res.co_error = "no checkout input"; return; }
   const eip = (a) => "ethereum:" + C.usdc + "@8453/transfer?address=" + C.treasury + "&uint256=" + a;
   const pad = (h) => h.padStart(64, "0");
   const ADDR = "0x" + "12".repeat(20), TXH = "0x" + "cd".repeat(32);
@@ -1366,10 +1366,10 @@ async function checkoutScenario() {
       && d.querySelector("[data-co-eip681]").getAttribute("href") === eip(C.skus[sku])
       && d.getElementById("co-wallet").hidden === false && !m.hasAttribute("open") && d.getElementById("co-result").hidden === true;
   };
-  const webDoc = page(input.webhook, "/webhook/").document;   // /webhook/ sells nothing: no checkout form, no pay button
+  const webDoc = page(input.watch, "/watch/").document;   // /watch/ sells nothing: no checkout form, no pay button, no wallet
   res.co_single_sku_pages = shape(page(input.scan, "/scan/").document, "wallet-report-9")
     && !page(input.seal, "/seal/").document.getElementById("co-form") && page(input.seal, "/seal/").document.querySelectorAll("a").some((a_) => (a_.getAttribute("href") || "").includes("request/?tier=clearance"))
-    && !webDoc.getElementById("co-form") && !webDoc.querySelector("[data-co-pay]") && !!webDoc.getElementById("watch-free-form");
+    && !webDoc.getElementById("co-form") && !webDoc.querySelector("[data-co-pay]") && !!webDoc.getElementById("watch-form") && !!webDoc.getElementById("pledge-form");
   // no browser wallet: the primary action checks the order first, then opens the manual transfer drawer (never a dead button)
   calls = [];
   let p = page(input.scan, "/scan/", { fetch: okFetch(200, {}) }), d = p.document;
@@ -1477,32 +1477,6 @@ async function checkoutScenario() {
     && ids3.every((id) => d.getElementById(id).disabled === false) && d.getElementById("co-result").hidden === false;
   res.co_snapshot_and_inputs_locked = locked3 && posts3.length === 1
     && same(b3, { sku: "wallet-report-9", tx_hash: TXH, chain: "base", target_chain: "ethereum", target_address: ADDR, protocol_or_docs: "https://docs.example.invalid/a", webhook_or_contact: "@harness" });
-  // /webhook/: the free watchlist ($0). A pick fills the slug and chain; a webhook URL is refused as a contact (the API keeps email,
-  // @telegram or GitHub handles); the one request is exactly the free-queue body; an address becomes <chain>:0x<lowercase hex>
-  const wfSubmit = (d) => { const ev = new Event_("submit"); d.getElementById("watch-free-form").dispatchEvent(ev); return ev; };
-  calls = [];
-  p = page(input.webhook, "/webhook/", { fetch: okFetch(200, { ok: true, request_id: "req_watch1" }) }); d = p.document;
-  const wfApi = d.getElementById("watch-free-form").getAttribute("data-watch-api");
-  const wfEth = d.querySelectorAll("[data-wf-pick]").find((b) => b.textContent === "Ethena");
-  click(wfEth);
-  const wfPick = d.getElementById("wf-target").value === wfEth.getAttribute("data-slug") && wfEth.getAttribute("aria-pressed") === "true";
-  setv(d, "wf-contact", "https://hooks.example.invalid/x"); wfSubmit(d); await flush();
-  const wfHookRefused = calls.length === 0 && d.getElementById("wf-contact-err").hidden === false;
-  setv(d, "wf-contact", ""); wfSubmit(d); await flush();
-  const wfContactNeeded = calls.length === 0 && d.getElementById("wf-contact-err").hidden === false;
-  setv(d, "wf-contact", "@pactaqa"); wfSubmit(d); await flush(); await flush();
-  res.watch_free_posts_exact_body = wfPick && wfHookRefused && wfContactNeeded && calls.length === 1 && calls[0][0] === wfApi
-    && /^https:\/\/api\.pacta\.wtf\/v1\/requests$/.test(wfApi) && calls[0][1].method === "POST"
-    && same(JSON.parse(calls[0][1].body), { request_type: "mcp_or_api_feature", target_subject: wfEth.getAttribute("data-slug"),
-                                            requested_capability: "Pilot timelock and signer watchlist request", urgency_track: "community_queue_free",
-                                            contact_handle: "@pactaqa" })
-    && d.querySelector("[data-wf-done]").hidden === false && /req_watch1/.test(d.querySelector("[data-wf-done-msg]").textContent);
-  calls = [];
-  p = page(input.webhook, "/webhook/", { fetch: okFetch(200, { ok: true, request_id: "req_watch2" }) }); d = p.document;
-  setv(d, "wf-chain", "base"); setv(d, "wf-target", "0x12"); setv(d, "wf-contact", "ops@example.invalid"); wfSubmit(d); await flush();
-  const wfBadAddr = calls.length === 0 && d.getElementById("wf-target-err").hidden === false;
-  setv(d, "wf-target", ADDR); wfSubmit(d); await flush(); await flush();
-  res.watch_free_address_subject = wfBadAddr && calls.length === 1 && JSON.parse(calls[0][1].body).target_subject === "base:" + ADDR.toLowerCase();
   // /seal/?protocol=<slug> (the protocol pages' seal link): the indexed contract and name come from the public catalog
   const lkFetch = (url) => {
     const u = String(url);
@@ -1985,9 +1959,13 @@ async function walletExposureScenario() {
     return "0x" + (32).toString(16).padStart(64, "0") + s.length.toString(16).padStart(64, "0") + hex.padEnd(64, "0");
   };
 
-  let rpcCalls = [], pfCalls = [], weCalls = [];
+  let rpcCalls = [], pfCalls = [], weCalls = [], reqCalls = [];
   const mockFetch = (url, opts) => {
     const u = String(url);
+    if (/\/v1\/requests$/.test(u)) {   // the inline watch card (a local mock; nothing leaves the harness)
+      reqCalls.push([u, opts]);
+      return Promise.resolve({ status: 200, ok: true, json: () => Promise.resolve({ ok: true, request_id: "REQ-2026-00c0ffee", fast_track_url: "https://pacta.wtf/request/?tier=community&protocol=harness-fast-track" }) });
+    }
     if (/api\/v1\/wallet-tokens\.json$/.test(u)) return Promise.resolve({ status: 200, ok: true, json: () => Promise.resolve(wt) });
     if (/api\/v1\/lookup\.json$/.test(u)) return Promise.resolve({ status: 200, ok: true, json: () => Promise.resolve(input.lookupJson) });
     if (/api\/v1\/scorecards\.json$/.test(u)) return Promise.resolve({ status: 200, ok: true, json: () => Promise.resolve(input.scorecardsJson) });
@@ -2044,16 +2022,47 @@ async function walletExposureScenario() {
   const topGap = d.querySelector("[data-wallet-top-gap]");
   const gapItems = d.querySelectorAll("[data-wallet-gap-item]").map((x) => x.getAttribute("data-wallet-gap-item"));
   const contagion = d.querySelector("[data-wallet-contagion]");
-  const inlineWatch = d.querySelector("[data-wallet-watch-inline]");
+  const inlineWatch = d.querySelector("[data-wallet-result] [data-scan-inline-watch]");
   const b2bBar = d.querySelector("[data-wallet-b2b]");
   const demoOk = coldOk && !!hl && hl.textContent.includes("Found 4 active DeFi positions") && hl.textContent.includes("2 ALIGNED, 2 FLAGGED")
     && !!safeBadge && safeBadge.textContent.includes("Gnosis Safe 3-of-5")
     && !!topGap && topGap.getAttribute("data-wallet-top-gap") === "stader-labs-ethx"
-    && !contagion && !!inlineWatch && inlineWatch.textContent.includes("pacta@dri.network") && !inlineWatch.querySelector("form")
+    && !contagion && !!inlineWatch && !!inlineWatch.querySelector("form")
     && !!d.querySelector("[data-wallet-locked]") && !!d.querySelector("[data-wl-unlock-jump]") && !!b2bBar && !b2bBar.textContent.includes("Pool")
     && d.getElementById("scan-upgrade").hidden === false
-    && d.getElementById("scan-to-guard").getAttribute("href").includes("../webhook/?")
+    && d.getElementById("scan-to-guard").getAttribute("href").includes("../watch/?")
     && d.getElementById("scan-x402-cmd").textContent.includes(demoSafeBtn.getAttribute("data-demo-addr"));
+
+  // the inline watch prompt in the wallet result: the held indexed protocols (up to 10), the promise, email only, the same POST + receipt
+  const W = inlineWatch || { querySelector: () => null, querySelectorAll: () => [], textContent: "", getAttribute: () => "", classList: { contains: () => false } };
+  const heldSlugs = [...new Set(d.querySelectorAll("[data-wallet-result] [data-pos-slug]").map((x) => x.getAttribute("data-pos-slug")))].slice(0, 10);
+  const wTargets = String(W.getAttribute("data-watch-targets") || "").split(",");
+  const wEmail = W.querySelector('input[type="email"]'), wBtn = W.querySelector("[data-w-submit]"), wForm = W.querySelector("form");
+  const BANNED_W = /\binstant(?:ly)?\b|real[- ]?time|\bautomatic(?:ally)?\b/i;
+  const wCopyOk = !!inlineWatch && W.getAttribute("data-slot") === "card" && W.classList.contains("pf-watch-inline")
+    && W.querySelector("h3").textContent === "Get notified when this contract's implementation, Safe signers or timelock queue changes"
+    && heldSlugs.length >= 1 && wTargets.slice().sort().join() === heldSlugs.slice().sort().join()
+    && W.textContent.includes("When one changes, a person at Pacta emails you, normally within 24 hours. We confirm your sign-up by email within 24 hours.")
+    && W.textContent.includes("Your email is used only for these alerts, never shared, and removed on request.") && !BANNED_W.test(W.textContent)
+    && !!wEmail && wEmail.getAttribute("maxlength") === "120" && wEmail.getAttribute("placeholder") === "you@company.org"
+    && !!wBtn && wBtn.textContent === "Watch by email"
+    && W.querySelectorAll("a").some((a) => a.getAttribute("href") === "../watch/?protocol=" + wTargets.join(",") && a.textContent === "Pick up to 10 protocols or fund a check on /watch/");
+  let wRefused = false, wb = {};
+  if (wEmail && wForm) {
+    wEmail.value = "user@example.com"; wForm.dispatchEvent(new Event_("submit")); await flush();
+    wRefused = reqCalls.length === 0 && /Enter a valid email address/.test(W.querySelector('[data-slot="form-message"]').textContent);
+    wEmail.value = "treasury@dao-ops.org"; wForm.dispatchEvent(new Event_("submit")); for (let i = 0; i < 4; i++) await flush();
+    wb = reqCalls.length === 1 ? JSON.parse(reqCalls[0][1].body) : {};
+  }
+  const wDone = W.querySelector("[data-w-done]");
+  res.scan_inline_watch_wallet = wCopyOk && wRefused && reqCalls.length === 1 && reqCalls[0][0] === "https://api.pacta.wtf/v1/requests"
+    && wb.caller_agent === "pacta-web" && wb.request_type === "mcp_or_api_feature" && wb.urgency_track === "community_queue_free"
+    && wb.requester_role === "risk_curator_analyst" && wb.caller_purpose === "governance_monitoring" && wb.contact_handle === "treasury@dao-ops.org"
+    && wb.requested_capability === "WATCH watchlist - " + wTargets.join(", ") && /^watch-[a-z0-9-]+-[0-9a-f]{6}$/.test(wb.target_subject || "")
+    && wForm.hidden === true && !!wDone && wDone.hidden === false
+    && wDone.textContent.includes("Sign-up received \u2014 nothing charged. A person at Pacta will confirm your watch list by email within 24 hours.")
+    && !/harness-fast-track/.test(d.body.textContent);
+  res.scan_inline_watch_bodies = reqCalls.map((c) => JSON.parse(c[1].body));
 
   // 2. Dispatch Rule 2: known protocol 0x contract -> single-protocol preflight + 1-click wallet deposit prompt
   const staderAddr = "0xA35b1B31Ce002FBF2058D22F30f95D405200A15b";
@@ -2062,6 +2071,13 @@ async function walletExposureScenario() {
   for (let i = 0; i < 6; i++) await flush();
   const protoDispatchOk = pfCalls.length === 1 && pfCalls[0].includes(staderAddr)
     && !!d.querySelector("[data-wallet-proto-prompt]");
+  // the same inline watch prompt in a contract (preflight) result: the indexed protocol, else <chain>:0x<40 hex>
+  const cW = d.querySelector("[data-pf-result] [data-scan-inline-watch]");
+  res.scan_inline_watch_contract = !!cW && /^(?:(?:ethereum|base):0xa35b1b31ce002fbf2058d22f30f95d405200a15b|stader-labs-ethx)$/.test(cW.getAttribute("data-watch-targets") || "")
+    && cW.querySelector("h3").textContent === "Get notified when this contract's implementation, Safe signers or timelock queue changes"
+    && !!cW.querySelector('input[type="email"]') && cW.querySelector("[data-w-submit]").textContent === "Watch by email" && !!cW.querySelector("form")
+    && cW.textContent.includes("When one changes, a person at Pacta emails you, normally within 24 hours.") && !BANNED_W.test(cW.textContent)
+    && cW.querySelectorAll("a").some((a) => /^\.\.\/watch\/\?(?:chain=(?:ethereum|base)&address=0xa35b1b31ce002fbf2058d22f30f95d405200a15b|protocol=stader-labs-ethx)$/.test(a.getAttribute("href") || ""));
 
   // 3. Dispatch Rule 3: unknown wallet/Safe 0x -> /v1/check/wallet-exposure (404) -> browser-direct Multicall3.aggregate3 fallback
   click(d.querySelector("[data-focus-wallet-scan]"));
@@ -2073,8 +2089,251 @@ async function walletExposureScenario() {
   const hlLive = d.querySelector("[data-wallet-headline]");
   const fallbackOk = weCalls.length === 1 && weCalls[0].includes(userWallet)
     && mcCalls.length >= 2 && !!hlLive && hlLive.textContent.includes("active DeFi position");
+  res.scan_inline_watch_live_wallet = !!d.querySelector("[data-wallet-result] [data-scan-inline-watch] form") && d.querySelectorAll("[data-scan-inline-watch]").length === 1;
 
   res.wl_demo_and_multicall_fallback = demoOk && protoDispatchOk && fallbackOk;
+}
+// (w) /watch/ (one page, two asks) + /webhook/ redirect: the combobox (ARIA, ArrowDown / ArrowUp / Enter / Escape / Tab / focusout),
+//     quick picks, removable chips, the live "Selected: N / 10" count, 1..10 enforced, ?protocol= / ?address=&chain= prefill, a pasted
+//     0x address, email-only contact, the exact intercepted POST /v1/requests bodies (colon-free subject + 6-hex nonce), the neutral
+//     receipts (never fast_track_url), and /webhook/?q#h -> location.replace("../watch/?q#h"). Every fetch here is a local mock.
+async function watchScenario() {
+  if (!input.watch || !input.webhook || !input.lookupJson) { res.watch_error = "no /watch/ input"; return; }
+  const API = "https://api.pacta.wtf/v1/requests";
+  const REPLY = { schema: "pacta.demand_receipt.v1", ok: true, request_id: "REQ-2026-0a1b2c3d", status: "queued", demand_votes: 1,
+                  fast_track_url: "https://pacta.wtf/request/?tier=community&protocol=harness-fast-track", note: "urgent review" };
+  let calls = [];
+  const mock = (status, body) => (url, opts) => { calls.push([String(url), opts]); return Promise.resolve({ status, ok: status >= 200 && status < 300, json: () => Promise.resolve(body) }); };
+  const kd = (elm, k) => { const ev = new Event_("keydown"); ev.key = k; ev.target = elm; elm.dispatchEvent(ev); return ev; };
+  const typ = (elm, v) => { elm.value = v; const ev = new Event_("input"); ev.target = elm; elm.dispatchEvent(ev); };
+  const fire = (elm, t, extra) => { const ev = Object.assign(new Event_(t), extra || {}); ev.target = elm; elm.dispatchEvent(ev); return ev; };
+  const submit = (f) => { const ev = new Event_("submit"); ev.target = f; f.dispatchEvent(ev); return ev; };
+  const watchPage = (search, status, body) => run(input.watch, input.app, { path: "/watch/", search: search || "", fetch: mock(status || 200, body || REPLY) });
+  const protos = input.lookupJson.items.filter((x) => x.kind === "protocol");
+  const KEYS = ["caller_agent", "requester_role", "caller_purpose", "request_type", "target_subject", "requested_capability", "urgency_track", "contact_handle"];
+  const bodyOf = (i) => JSON.parse(calls[i][1].body);
+  const keysOk = (b) => JSON.stringify(Object.keys(b).sort()) === JSON.stringify(KEYS.slice().sort());
+  const subjOk = (s, pre) => typeof s === "string" && s.length >= 2 && s.length <= 120 && !s.includes(":") && new RegExp("^" + pre + "-[0-9a-f]{6}$").test(s);
+  const BANNED = /\binstant(?:ly)?\b|real[- ]?time|\bautomatic(?:ally)?\b/i;
+  const bodies = [];
+
+  // 1. cold page + keyboard combobox + quick picks + chips + count
+  calls = [];
+  let p = watchPage(), d = p.document;
+  const q = d.getElementById("watch-q"), list = d.getElementById("watch-list"), form = d.getElementById("watch-form");
+  const count = () => d.querySelector("[data-watch-count]").textContent;
+  const chipNames = () => d.querySelectorAll("#watch-chips .chip-x").map((c) => c.textContent);
+  const pickBtn = (label) => d.querySelectorAll("[data-watch-pick]").find((b) => b.textContent === label);
+  const opts = list.querySelectorAll('[role="option"]');
+  const coldOk = calls.length === 0 && q.getAttribute("role") === "combobox" && q.getAttribute("aria-controls") === "watch-list"
+    && q.getAttribute("aria-expanded") === "false" && list.hidden === true && list.getAttribute("aria-multiselectable") === "true"
+    && opts.length === protos.length && opts.every((o) => protos.some((x) => x.slug === o.getAttribute("data-slug")))
+    && d.querySelectorAll("[data-watch-pick]").map((b) => b.textContent).join("|") === "Ethena|Morpho|Aave v3|Treehouse|Pendle|Lido"
+    && count() === "Selected: 0 / 10" && d.getElementById("watch-email").getAttribute("type") === "email"
+    && d.getElementById("watch-email").getAttribute("maxlength") === "120" && d.getElementById("watch-email").getAttribute("placeholder") === "you@company.org"
+    && d.getElementById("watch-email").getAttribute("autocomplete") === "email" && !d.getElementById("co-form") && !d.querySelector("[data-co-pay]");
+  fire(q, "focus");
+  const opened = list.hidden === false && q.getAttribute("aria-expanded") === "true";
+  typ(q, "ethena"); kd(q, "Enter");
+  const enterOk = chipNames().length === 1 && /Ethena/.test(chipNames()[0]) && count() === "Selected: 1 / 10" && pickBtn("Ethena").getAttribute("aria-pressed") === "true";
+  kd(q, "Escape");
+  const escOk = list.hidden === true && q.getAttribute("aria-expanded") === "false";
+  typ(q, "morpho"); kd(q, "ArrowDown"); kd(q, "ArrowUp");
+  const activeOk = !!q.getAttribute("aria-activedescendant");
+  kd(q, "Enter");
+  kd(q, "Tab");
+  const tabOk = list.hidden === true && q.getAttribute("aria-expanded") === "false" && count() === "Selected: 2 / 10";
+  fire(q, "focus"); fire(d.querySelector("[data-combo]"), "focusout", { relatedTarget: d.getElementById("watch-email") });
+  const focusoutOk = list.hidden === true && q.getAttribute("aria-expanded") === "false";
+  const morphoBtn = d.querySelectorAll("#watch-chips .chip-x button").find((b) => /^Remove Morpho/.test(b.getAttribute("aria-label") || ""));
+  click(morphoBtn);
+  click(pickBtn("Lido"));
+  const chipsOk = !!morphoBtn && chipNames().length === 2 && pickBtn("Lido").getAttribute("aria-pressed") === "true"
+    && pickBtn("Morpho").getAttribute("aria-pressed") === "false" && count() === "Selected: 2 / 10"
+    && d.querySelectorAll("#watch-chips .chip-x button").every((b) => /^Remove .+/.test(b.getAttribute("aria-label") || "") && b.getAttribute("type") === "button");
+  res.watch_combobox_keyboard_chips = coldOk && opened && enterOk && escOk && activeOk && tabOk && focusoutOk && chipsOk;
+
+  // 2. email only: placeholders, handles, URLs are refused with the exact message and nothing is sent; then the exact Ask 1 body + receipt
+  const emailIn = d.getElementById("watch-email"), eErr = d.getElementById("watch-email-err");
+  const refused = ["user@example.com", "ops@example.org", "ops@example.net", "a@test.com", "@telegram_handle", "github-handle",
+                   "https://hooks.example.invalid/x", "risk@sub.example.com", ""].every((v) => {
+    emailIn.value = v; submit(form);
+    return calls.length === 0 && eErr.hidden === false && eErr.textContent === "Enter a valid email address. Watch alerts are sent by email only."
+      && emailIn.getAttribute("aria-invalid") === "true";
+  });
+  emailIn.value = "  risk.desk@fund-ops.co  "; submit(form); await flush(); await flush(); await flush();
+  const b1 = calls.length === 1 ? bodyOf(0) : {};
+  if (calls.length) bodies.push(b1);
+  const doneEl = d.querySelector("[data-watch-done]"), doneMsg = d.querySelector("[data-watch-done-msg]");
+  res.watch_free_posts_exact_body = refused && calls.length === 1 && calls[0][0] === API && calls[0][1].method === "POST"
+    && form.getAttribute("data-api") === API && keysOk(b1)
+    && b1.caller_agent === "pacta-web" && b1.requester_role === "risk_curator_analyst" && b1.caller_purpose === "governance_monitoring"
+    && b1.request_type === "mcp_or_api_feature" && b1.urgency_track === "community_queue_free" && b1.contact_handle === "risk.desk@fund-ops.co"
+    && subjOk(b1.target_subject, "watch-ethena-usde-susde")
+    && b1.requested_capability === "WATCH watchlist - ethena-usde-susde, lido-steth-dual-governance"
+    && form.hidden === true && doneEl.hidden === false && doneMsg.textContent === "Sign-up received — nothing charged. A person at Pacta will confirm your watch list by email within 24 hours."
+    && d.querySelector("[data-watch-done] [data-slot=\"badge\"]").textContent === "Received · Nothing charged"
+    && !/harness-fast-track|urgent review|REQ-2026/i.test(d.body.textContent);
+
+  // 3. 0 targets refused; >10 refused (a ?protocol= list keeps the first 10, an 11th pick is refused with a message)
+  calls = [];
+  p = watchPage(); d = p.document;
+  d.getElementById("watch-email").value = "risk.desk@fund-ops.co"; submit(d.getElementById("watch-form")); await flush();
+  const zeroOk = calls.length === 0 && d.getElementById("watch-proto-err").hidden === false && /at least one/.test(d.getElementById("watch-proto-err").textContent);
+  const twelve = protos.filter((x) => !["lido-steth-dual-governance"].includes(x.slug)).slice(0, 12).map((x) => x.slug);
+  calls = [];
+  p = watchPage("?protocol=" + twelve.join(",")); d = p.document;
+  const tenOk = d.querySelectorAll("#watch-chips .chip-x").length === 10 && d.querySelector("[data-watch-count]").textContent === "Selected: 10 / 10";
+  click(d.querySelectorAll("[data-watch-pick]").find((b) => b.textContent === "Lido"));
+  const limitOk = d.querySelectorAll("#watch-chips .chip-x").length === 10 && d.getElementById("watch-proto-err").hidden === false
+    && /up to 10/.test(d.getElementById("watch-proto-err").textContent);
+  d.getElementById("watch-email").value = "risk.desk@fund-ops.co"; submit(d.getElementById("watch-form")); await flush(); await flush(); await flush();
+  const b10 = calls.length === 1 ? bodyOf(0) : {};
+  if (calls.length) bodies.push(b10);
+  res.watch_targets_1_to_10 = zeroOk && tenOk && limitOk && calls.length === 1 && b10.requested_capability.length <= 280
+    && b10.requested_capability.indexOf("WATCH watchlist - " + twelve[0]) === 0 && subjOk(b10.target_subject, "watch-" + twelve[0]);
+
+  // 4. prefill: ?address= of an indexed protocol selects it; any other address (and a pasted one) is a <chain>:0x<40 hex> chip
+  const eth = input.lookupJson.items.find((x) => x.slug === "ethena-usde-susde").preflightArgs;
+  p = watchPage("?address=" + eth.address + "&chain=" + eth.chain); d = p.document;
+  const addrIndexed = d.querySelectorAll("#watch-chips .chip-x").length === 1 && /Ethena/.test(d.querySelector("#watch-chips .chip-x").textContent)
+    && d.querySelectorAll("[data-watch-pick]").find((b) => b.textContent === "Ethena").getAttribute("aria-pressed") === "true";
+  const RAW = "0x" + "12".repeat(20);
+  calls = [];
+  p = watchPage("?address=" + RAW + "&chain=base"); d = p.document;
+  const rawChip = d.querySelectorAll("#watch-chips .chip-x").length === 1 && d.getElementById("watch-chain").value === "base"
+    && /^base:0x1212/.test(d.querySelector("#watch-chips .chip-x").textContent);
+  const q2 = d.getElementById("watch-q");
+  d.getElementById("watch-chain").value = "ethereum"; typ(q2, "0x" + "ab".repeat(20));
+  const pasted = d.querySelectorAll("#watch-chips .chip-x").length === 2 && q2.value === "" && d.getElementById("watch-list").hidden === true;
+  d.getElementById("watch-email").value = "risk.desk@fund-ops.co"; submit(d.getElementById("watch-form")); await flush(); await flush(); await flush();
+  const bA = calls.length === 1 ? bodyOf(0) : {};
+  if (calls.length) bodies.push(bA);
+  res.watch_free_address_subject = addrIndexed && rawChip && pasted && calls.length === 1 && subjOk(bA.target_subject, "watch-base-0x12121212")
+    && bA.requested_capability === "WATCH watchlist - base:" + RAW + ", ethereum:0x" + "ab".repeat(20);
+  calls = [];
+  p = watchPage("?protocol=ethena-usde-susde"); d = p.document;
+  d.getElementById("watch-email").value = "risk.desk@fund-ops.co"; submit(d.getElementById("watch-form")); await flush(); await flush(); await flush();
+  const bN = calls.length === 1 ? bodyOf(0) : {};
+  res.watch_nonce_per_submission = !!bN.target_subject && !!b1.target_subject && bN.target_subject !== b1.target_subject
+    && bN.target_subject.slice(0, -7) === b1.target_subject.slice(0, -7);
+  // a refused or failed request never shows the receipt
+  calls = [];
+  p = watchPage("?protocol=ethena-usde-susde", 429, { error: "rate_limited" }); d = p.document;
+  d.getElementById("watch-email").value = "risk.desk@fund-ops.co"; submit(d.getElementById("watch-form")); await flush(); await flush(); await flush();
+  res.watch_error_no_receipt = calls.length === 1 && d.querySelector("[data-watch-done]").hidden === true && d.getElementById("watch-form").hidden !== true
+    && /Too many requests/.test(d.querySelector("#watch-form [data-w-status]").textContent);
+
+  // 5. Ask 2 pledge: 3 fields, 25..500 whole USDC, email only, target without personal data; the exact body; no watchlist word
+  calls = [];
+  p = watchPage(); d = p.document;
+  const pf = d.getElementById("pledge-form"), pt = d.getElementById("pledge-target"), pa = d.getElementById("pledge-amount"), pe = d.getElementById("pledge-email");
+  const shapeOk = pf.querySelectorAll("input").length === 3 && pa.getAttribute("type") === "number" && pa.getAttribute("min") === "25"
+    && pa.getAttribute("max") === "500" && pa.getAttribute("step") === "1" && pa.getAttribute("placeholder") === "25"
+    && pe.getAttribute("type") === "email" && pe.getAttribute("maxlength") === "120" && pe.getAttribute("placeholder") === "you@company.org"
+    && pf.getAttribute("data-api") === API;
+  const tryP = (t, a, e) => { pt.value = t; pa.value = a; pe.value = e; submit(pf); return calls.length === 0; };
+  const pledgeRefused = tryP("", "25", "fund@desk.co") && !d.getElementById("pledge-target-err").hidden
+    && tryP("Aave", "24", "fund@desk.co") && !d.getElementById("pledge-amount-err").hidden
+    && tryP("Aave", "501", "fund@desk.co") && tryP("Aave", "25.5", "fund@desk.co") && tryP("Aave", "", "fund@desk.co")
+    && tryP("me@vault.org", "25", "fund@desk.co") && tryP("@vaultdesk", "25", "fund@desk.co") && tryP("ab".repeat(32), "25", "fund@desk.co")
+    && tryP("https://user:pw@host.example.invalid/x", "25", "fund@desk.co") && tryP("0x1234", "25", "fund@desk.co")
+    && tryP("Aave", "25", "@telegram") && !d.getElementById("pledge-email-err").hidden && tryP("Aave", "25", "user@example.com");
+  pt.value = "  Aave V3 / GHO  "; pa.value = "25"; pe.value = "fund@desk.co"; submit(pf); await flush(); await flush(); await flush();
+  const bP = calls.length === 1 ? bodyOf(0) : {};
+  if (calls.length) bodies.push(bP);
+  res.watch_pledge_exact_body = shapeOk && pledgeRefused && calls.length === 1 && calls[0][0] === API && keysOk(bP)
+    && bP.caller_agent === "pacta-web" && bP.requester_role === "institutional_allocator" && bP.caller_purpose === "collateral_due_diligence"
+    && bP.request_type === "missing_check_surface" && bP.urgency_track === "active_due_diligence" && bP.contact_handle === "fund@desk.co"
+    && subjOk(bP.target_subject, "pledge-aave-v3-gho") && bP.requested_capability === "PLEDGE pool check 25 USDC - Aave V3 / GHO"
+    && pf.hidden === true && d.querySelector("[data-pledge-done]").hidden === false
+    && d.querySelector("[data-pledge-done-msg]").textContent === "Pledge received — nothing charged. We will reply by email to agree the scope before sending any Safe deposit address."
+    && !/harness-fast-track|urgent review|issuer_urgent_review/i.test(d.body.textContent);
+  calls = [];
+  p = watchPage(); d = p.document;
+  d.getElementById("pledge-target").value = "My Watchlist vault"; d.getElementById("pledge-amount").value = "500"; d.getElementById("pledge-email").value = "fund@desk.co";
+  submit(d.getElementById("pledge-form")); await flush(); await flush(); await flush();
+  const bW = calls.length === 1 ? bodyOf(0) : {};
+  if (calls.length) bodies.push(bW);
+  calls = [];
+  p = watchPage(); d = p.document;
+  d.getElementById("pledge-target").value = "0x" + "Cd".repeat(20); d.getElementById("pledge-amount").value = "120"; d.getElementById("pledge-email").value = "fund@desk.co";
+  submit(d.getElementById("pledge-form")); await flush(); await flush(); await flush();
+  const bX = calls.length === 1 ? bodyOf(0) : {};
+  if (calls.length) bodies.push(bX);
+  res.watch_pledge_never_watchlist = !!bW.requested_capability && !/watchlist/i.test(bW.requested_capability) && bW.requested_capability.indexOf("PLEDGE pool check 500 USDC - ") === 0
+    && subjOk(bX.target_subject, "pledge-0xcdcdcdcd") && bX.requested_capability === "PLEDGE pool check 120 USDC - 0x" + "Cd".repeat(20);
+
+  // 6. copy: the promise, both privacy lines, custody (future tense) and firewall; no banned words, no price, no Safe address
+  const txt = d.body.textContent;
+  res.watch_copy_honest = txt.includes("We read the timelocks and admin roles of the protocols you pick. When one changes, a person at Pacta emails you, normally within 24 hours. We confirm your sign-up by email within 24 hours.")
+    && txt.includes("Your email is used only for these alerts, never shared, and removed on request.")
+    && txt.includes("Your email is used only for this check, never shared, and removed on request.")
+    && txt.includes("When a check is agreed, the money goes into a two-signature Safe on Base (the founder's wallet plus an independent verifier's key; neither can move funds alone), with a limit of 500 USDC in total. Nothing is paid on this page; the Safe address is sent directly by email once the scope is agreed.")
+    && txt.includes("Contributions fund verification work only and never change a finding.")
+    && !BANNED.test(txt) && !/are held|\$\d|\/ ?mo\b|0x[0-9a-fA-F]{40}|eth_sendTransaction/.test(txt)
+    && d.querySelectorAll("a").some((a) => a.getAttribute("href") === "../feed.xml") && d.querySelectorAll("a").some((a) => a.getAttribute("href") === "../radar/");
+
+  // 7. /webhook/ -> /watch/ with the query and hash kept
+  const rp = run(input.webhook, input.app, { path: "/webhook/", search: "?address=" + RAW + "&chain=base", hash: "#fund-check" });
+  const rp0 = run(input.webhook, input.app, { path: "/webhook/" });
+  res.webhook_redirects_to_watch = rp.location.replaced === "../watch/?address=" + RAW + "&chain=base#fund-check" && rp0.location.replaced === "../watch/"
+    && rp.document.body.getAttribute("data-redirect-watch") === "../watch/";
+  res.watch_bodies = bodies;
+
+  // 8. WATCH-TIMEOUT-03: a POST that never answers is cut at the 30 s deadline (the request is aborted); the form unlocks with its entries
+  //    kept and says delivery could not be confirmed; 0 automatic resend; the deadline timer is cleared; a later manual submit goes through
+  const TIMEOUT_TXT = "We could not confirm delivery in time. Your entries are still here: try again, or email pacta@dri.network directly.";
+  const toRes = [];
+  for (const which of ["watch", "pledge"]) {
+    const timers = []; let hang = true, aborted = 0;
+    calls = [];
+    const fetchT = (url, o) => {
+      calls.push([String(url), o]);
+      if (!hang) return Promise.resolve({ status: 200, ok: true, json: () => Promise.resolve(REPLY) });
+      return new Promise((_, rej) => { if (o && o.signal) o.signal.addEventListener("abort", () => { aborted++; rej(new Error("AbortError")); }); });
+    };
+    p = run(input.watch, input.app, { path: "/watch/", search: which === "watch" ? "?protocol=ethena-usde-susde" : "", fetch: fetchT,
+      setTimeout: (fn, ms) => { timers.push({ fn, ms: ms || 0, live: true }); return timers.length; },
+      clearTimeout: (id) => { if (timers[id - 1]) timers[id - 1].live = false; } });
+    d = p.document;
+    const f = d.getElementById(which + "-form"), btn = f.querySelector("[data-w-submit]"), st = f.querySelector("[data-w-status]");
+    const vals = () => f.querySelectorAll("input").map((x) => x.value).join("|");
+    if (which === "watch") d.getElementById("watch-email").value = "risk.desk@fund-ops.co";
+    else { d.getElementById("pledge-target").value = "Aave V3 / GHO"; d.getElementById("pledge-amount").value = "25"; d.getElementById("pledge-email").value = "fund@desk.co"; }
+    const before = vals(), chipsBefore = d.querySelectorAll("#watch-chips .chip-x").length;
+    submit(f); for (let i = 0; i < 4; i++) await flush();
+    const busyOk = btn.disabled === true && btn.getAttribute("aria-busy") === "true" && calls.length === 1;
+    const dl = timers.filter((t) => t.live && t.ms === 30000);
+    dl.forEach((t) => { t.live = false; t.fn(); });
+    for (let i = 0; i < 6; i++) await flush();
+    const unlockOk = dl.length === 1 && aborted === 1 && btn.disabled === false && !btn.hasAttribute("aria-busy") && st.hidden === false
+      && st.textContent === TIMEOUT_TXT && f.hidden !== true && d.querySelector("[data-" + which + "-done]").hidden === true
+      && vals() === before && d.querySelectorAll("#watch-chips .chip-x").length === chipsBefore && calls.length === 1;
+    for (let i = 0; i < 6; i++) await flush();
+    const noRetry = calls.length === 1 && timers.filter((t) => t.live && t.ms >= 1000).length === 0;
+    hang = false; submit(f); for (let i = 0; i < 6; i++) await flush();
+    const manualOk = calls.length === 2 && f.hidden === true && d.querySelector("[data-" + which + "-done]").hidden === false
+      && timers.filter((t) => t.live && t.ms === 30000).length === 0 && calls[1][1].body !== calls[0][1].body
+      && !!calls[0][1].signal && JSON.parse(calls[1][1].body).contact_handle === JSON.parse(calls[0][1].body).contact_handle;
+    toRes.push(busyOk && unlockOk && noRetry && manualOk);
+  }
+  res.watch_submit_timeout_unlocks = toRes.length === 2 && toRes.every(Boolean);
+
+  // 9. WATCH-FOCUS-01: the /scan/ address list closes on Tab and when focus leaves the combobox (to the next button, or to nowhere)
+  const sp = run(input.scan, input.app, { path: "/scan/", fetch: (url) => /api\/v1\/lookup\.json$/.test(String(url))
+    ? Promise.resolve({ status: 200, json: () => Promise.resolve(input.lookupJson) }) : Promise.reject(new Error("blocked")),
+    setTimeout: (fn, ms) => { if (!ms) Promise.resolve().then(() => { try { fn(); } catch (e) { /* init re-throw: ignored */ } }); return 0; } });
+  const sd = sp.document, sInp = sd.getElementById("pf-address"), sLb = sd.getElementById("pf-listbox"), sCombo = sd.querySelector("[data-pf-combo]");
+  const sOpen = async () => { fire(sInp, "focus"); for (let i = 0; i < 5; i++) await flush(); return sLb.hidden === false && sInp.getAttribute("aria-expanded") === "true"; };
+  const sClosed = () => sLb.hidden === true && sInp.getAttribute("aria-expanded") === "false";
+  const o1 = await sOpen(); const tabEv = kd(sInp, "Tab"); const c1 = sClosed() && !tabEv.defaultPrevented;
+  const nextBtn = sd.querySelector("[data-pf-try], [data-wallet-demo], #pf-submit");
+  const o2 = await sOpen(); fire(sCombo, "focusout", { relatedTarget: nextBtn }); const c2 = sClosed();
+  const o3 = await sOpen(); fire(sCombo, "focusout", { relatedTarget: sd.getElementById("pf-combo-clear") }); const kept = sLb.hidden === false;
+  fire(sCombo, "focusout", { relatedTarget: null }); for (let i = 0; i < 3; i++) await flush(); const c3 = sClosed();
+  const o4 = await sOpen(); kd(sInp, "ArrowDown"); const act = !!sInp.getAttribute("aria-activedescendant"); kd(sInp, "Escape"); const c4 = sClosed();
+  res.scan_combo_tab_focusout_closes = o1 && c1 && !!nextBtn && o2 && c2 && o3 && kept && c3 && o4 && act && c4;
 }
 (async () => {
   try { await v45Scenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
@@ -2093,6 +2352,7 @@ async function walletExposureScenario() {
   try { await beaconScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
   try { rescueScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
   try { await checkoutScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
+  try { await watchScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
   try { await xPixelScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
   try { await miniAppScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
   try { await miniAppResetScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
