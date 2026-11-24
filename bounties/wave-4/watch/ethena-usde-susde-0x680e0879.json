@@ -1,0 +1,15 @@
+{
+  "protocol_slug": "ethena-usde-susde",
+  "chain": "ethereum",
+  "watched_address": "0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94",
+  "prior_pinned_block": 26406106,
+  "event_block_number": 26479323,
+  "event_block_hash": "0x6f5bccf37c621a3c4105423d20b3d5979980d19545ed82e9870e372f030a0b6d",
+  "event_tx_hash": "0x680e0879008d8243f7e09e713a733987767c746173b27fe3ec19068614d8ccd3",
+  "change_kind": "timelock_delay_or_queued_op",
+  "before_state": "getTimestamp(0x42693e5ce41b710f8ab22e71d3ecee50a35c7ec44a80a60a13fdc201f8c9bb31) = 0",
+  "after_state": "getTimestamp(0x42693e5ce41b710f8ab22e71d3ecee50a35c7ec44a80a60a13fdc201f8c9bb31) = 1795541255",
+  "contributor_github": "theyounganimation-rgb",
+  "base_payout_address": "0x0f40FeF975123a67d22FaF0f526175c92Ff17e00",
+  "payment_tx_hash": "0x8736be20a4c52df067f9ce672bc7eb3640b55ab6f5bb6f055435abb573e66be2"
+}
