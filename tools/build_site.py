@@ -3947,6 +3947,7 @@ def bounties_page(idx, radar, bounties=None, claims=None, lb=None, claims3=None)
     claude = f"claude mcp add --transport http pacta {MCP_URL}"
     w4 = wave4()
     w4_open = len(w4["rows"]) - len(wave4_won())
+    w4_pill, w4_lede = wave4_pill_lede(w4, w4_open)
     slot_rows = "".join(f'<tr data-bounty-slot="{n}"><td class="num">#{n}</td><td class="num">$25 USDC</td><td>{E(BOUNTY_SLOTS[n])}</td>'
                         f'<td><a href="{E(BOUNTY_ISSUE_URLS[n])}" target="_blank" rel="noopener">Issue #{E(BOUNTY_ISSUE_URLS[n].rsplit("/", 1)[1])}{EXT}</a></td></tr>'
                         for n in (1, 2, 3, 4))
@@ -3967,10 +3968,10 @@ def bounties_page(idx, radar, bounties=None, claims=None, lb=None, claims3=None)
 <main id="main" class="memo-wrap">
 <nav class="crumbs breadcrumb" aria-label="Breadcrumb"><a href="../">Pacta</a><span aria-hidden="true">/</span><span>Bounties</span></nav>
 <article class="memo">
-<header><span class="tier" data-bounty-pill>Wave 4 open · 3 tracks · Observed Catalogue, Control-Plane Watch, Documents Changed</span> <span class="tier" data-bounty-pill-w3>Wave 3 closed · ${E(W3_TOTAL_USDC)} USDC paid on Base</span>
+<header><span class="tier" data-bounty-pill>{w4_pill}</span> <span class="tier" data-bounty-pill-w3>Wave 3 closed · ${E(W3_TOTAL_USDC)} USDC paid on Base</span>
 <p class="s" data-bounty-context>Wave 4 closes {E(w4["close"])} or when its open slots fill · Wave 3 closed on {E(W3_CLOSE["closedOn"])} and is settled · Wave 2 ($1.00 micro-bounties) retired · Wave 1 Genesis (4/4 = $100 USDC) 100% settled on Base</p>
 <h1>Pacta bounties</h1>
-<p class="lede" data-bounty-lede>Wave 4 is open in three tracks, each from its live GitHub issue: the Observed Catalogue ({len(w4["rows"])} slots in Batch 1 and Batch 2, ${E(w4["award"])} USDC each; {w4_open} open on {E(w4["as_of"])}), the Control-Plane Watch (<a href="#wave-4-159">#159</a>) and Documents Changed (<a href="#wave-4-161">#161</a>) (<a href="#wave-4">rules and targets</a>). {E(W3_CLOSE_SUMMARY)} Each Wave 3 payment links its public Base transaction below.</p></header>
+<p class="lede" data-bounty-lede>{w4_lede} {E(W3_CLOSE_SUMMARY)} Each Wave 3 payment links its public Base transaction below.</p></header>
 {wave4_section_html()}{wave3_section_html(claims3, n_protocols, lb, n_rpc_observed)}<section class="memo-sec" id="quickstart"><h2>1-line Remote MCP quickstart (free)</h2>
 <div class="qs-snip"><span class="qs-l">Claude Code</span><code class="mono">{E(claude)}</code>{copy_btn(claude)}</div>
 <p>Query <code>pacta_lookup_protocol</code>, <code>pacta_check_preflight</code> and <code>pacta_scan_control_plane</code> to check any protocol or contract, free up to 50 calls/day (no key, no wallet; pre-flight checks are $0.01 USDC via x402 after). Indexed protocols: <a href="../api/v1/protocols.json">protocol data</a>.</p></section>
@@ -4376,10 +4377,22 @@ def wave4_status(body, n_pool):
     return st
 
 
-def wave4_heading(title, st, at, scope=""):
-    """Visible heading: the issue title's words without its own count, then total, open at the snapshot and the snapshot time."""
+def wave4_closed(it, st):
+    """The issue's GitHub state (state and closed_at, word for word from the Issues API): None while open, else its close time
+    (24 Nov 2026, 01:08 UTC). A closed issue must have every award settled (its status line says 0 open), or the build stops."""
+    assert it["state"] in ("open", "closed") and (it["state"] == "closed") == (it["closed_at"] is not None), ("wave 4 issue state", it["number"])
+    if it["state"] == "open":
+        return None
+    assert st["open"] == 0 and st["settled"] == st["total"], ("wave 4 issue closed with awards open", it["number"], st)
+    return wave4_snapshot_at(it["closed_at"])
+
+
+def wave4_heading(title, st, at, scope="", closed=None):
+    """Visible heading: the issue title's words without its own count, then total, open at the snapshot and the snapshot time
+    (a closed issue: full and closed, won / open as of the snapshot)."""
     base = re.sub(r"\s*\([^()]*\)$", "", title)
-    h = f"{base} ({scope}{st['total']} {st['unit'].title()} · {st['open']} Open as of {at})"
+    h = (f"{base} ({scope}{st['total']} {st['unit'].title()} · Full and closed: {st['settled']} won, {st['open']} open as of {at})" if closed
+         else f"{base} ({scope}{st['total']} {st['unit'].title()} · {st['open']} Open as of {at})")
     assert not re.search(WAVE4_LAG_RX, h), h
     return h
 
@@ -4398,23 +4411,24 @@ def wave4_lag(title, body, st):
     return out
 
 
-def wave4_verbatim_head(n, url, at, st, lag, cat=None):
+def wave4_verbatim_head(n, url, at, st, lag, cat=None, closed=None):
     """Summary and lead note of one verbatim issue snapshot: what it is, when it was taken, which line the curated heading follows
     (#158: the merged catalogue entries on main while its status line has not caught up with them)."""
     lagged = ("older lines inside the quoted text lag behind it: " + "; ".join(lag)) if lag else \
         "older lines inside the quoted text can lag behind it"
+    shut = f" GitHub closed the issue at {E(closed)}, with all {st['total']} {st['unit']} settled." if closed else ""
     if cat:
         prs = ", ".join(f"#{p}" for p in cat["prs"])
         return (f'<summary><span>Verbatim snapshot: GitHub issue #{n} as of {E(at)}</span></summary>'
                 f'<p class="s w4-verbatim-note" data-wave4-verbatim-note="{n}">The issue text word for word, as it stood at the issue&#x27;s last update '
                 f'({E(at)}). The heading and summary above follow the merged catalogue entries on main ({cat["won"]} won, {cat["open"]} open as of '
                 f'{E(cat["at"])}, after pull request{"s" if len(cat["prs"]) > 1 else ""} {prs} merged); its own status line ({st["open"]} of '
-                f'{st["total"]} {st["unit"]} open, {st["settled"]} settled) has not caught up with that yet; {E(lagged)}. Live status: '
+                f'{st["total"]} {st["unit"]} open, {st["settled"]} settled) has not caught up with that yet; {E(lagged)}.{shut} Live status: '
                 f'<a href="{E(url)}" target="_blank" rel="noopener">GitHub issue #{n}{EXT}</a>.</p>')
     return (f'<summary><span>Verbatim snapshot: GitHub issue #{n} as of {E(at)}</span></summary>'
             f'<p class="s w4-verbatim-note" data-wave4-verbatim-note="{n}">The issue text word for word, as it stood at the issue&#x27;s last update '
             f'({E(at)}). The heading and summary above follow its own status line ({st["open"]} of {st["total"]} {st["unit"]} open, '
-            f'{st["settled"]} settled); {E(lagged)}. Live status: <a href="{E(url)}" target="_blank" rel="noopener">GitHub issue #{n}{EXT}</a>.</p>')
+            f'{st["settled"]} settled); {E(lagged)}.{shut} Live status: <a href="{E(url)}" target="_blank" rel="noopener">GitHub issue #{n}{EXT}</a>.</p>')
 
 
 def wave4_tvl(usd):
@@ -4427,7 +4441,7 @@ def wave4():
     if _W4:
         return _W4
     allw = json.load(open(WAVE4_ISSUE_SRC, encoding="utf-8"))
-    iss = dict(allw["158"], state="open")
+    iss = allw["158"]
     body = iss["body"]
 
     def one(rx, text=None):
@@ -4501,6 +4515,7 @@ def wave4():
     assert {WAVE4_WON_PR.get(s_) for s_ in ahead} == set(WAVE4_MERGED_AFTER_ISSUE) \
         and all(t_ > iss["updated_at"] for t_ in WAVE4_MERGED_AFTER_ISSUE.values()), ("wave 4 merges after the issue's last update", ahead)
     cat = dict(st, open=int(n_total) - len(merged), settled=len(merged))
+    closed = wave4_closed(iss, st)
     cat_ts = max(WAVE4_MERGED_AFTER_ISSUE.values()) if ahead else iss["updated_at"]
     cat_at = wave4_snapshot_at(cat_ts)
     up = dt.date.fromisoformat(cat_ts[:10])
@@ -4509,7 +4524,7 @@ def wave4():
                rows=[r_ for b_ in batches for r_ in b_["rows"]], issue_open=open_slots, issue_settled=int(n_settled), issue_notes=notes,
                as_of=f"{up.day} {up:%B %Y}", at=at, status=st, lag=wave4_lag(h1, body, st) + lag,
                catalogue={"won": len(merged), "open": cat["open"], "at": cat_at, "prs": sorted(WAVE4_MERGED_AFTER_ISSUE)} if ahead else None,
-               heading=wave4_heading(h1, cat, cat_at, scope="Batch 1 + Batch 2 · "))
+               closed=closed, heading=wave4_heading(h1, cat, cat_at, scope="Batch 1 + Batch 2 · ", closed=closed))
     others = []
     for k in WAVE4_TRACKS[1:]:
         it = allw[k]
@@ -4523,11 +4538,52 @@ def wave4():
         assert m3 and m4, ("wave 4 issue text changed", k)
         st_k = wave4_status(bd, m3.group(1).split()[0])
         at_k = wave4_snapshot_at(it["updated_at"])
-        others.append({"number": it["number"], "html_url": it["html_url"], "title": m1.group(1), "heading": wave4_heading(m1.group(1), st_k, at_k),
+        cl_k = wave4_closed(it, st_k)
+        others.append({"number": it["number"], "html_url": it["html_url"], "title": m1.group(1), "closed": cl_k,
+                       "heading": wave4_heading(m1.group(1), st_k, at_k, closed=cl_k),
                        "pool_md": m2.group(0), "body": bd, "updated_at": it.get("updated_at"), "awards": m3.group(1) + " on Base",
                        "closes": m4.group(1), "status": st_k, "at": at_k, "lag": wave4_lag(m1.group(1), bd, st_k)})
     _W4["others"] = others
     return _W4
+
+
+def wave4_pill_lede(w4, w4_open):
+    """The /bounties/ pill and lede: while every Wave 4 issue is open, the three tracks; once one is closed (all its awards settled),
+    which tracks are still open, which are full and closed, and the totals across the three tracks (settled / open awards and USDC,
+    from #158's merged catalogue entries and the #159 / #161 status lines, as of each issue's last update)."""
+    cat = f'{len(w4["rows"])} slots in Batch 1 and Batch 2, ${E(w4["award"])} USDC each; {w4_open} open on {E(w4["as_of"])}'
+    o159, o161 = w4["others"]
+    assert (o159["number"], o161["number"]) == (159, 161)
+    if not (w4["closed"] or o159["closed"] or o161["closed"]):
+        return ("Wave 4 open · 3 tracks · Observed Catalogue, Control-Plane Watch, Documents Changed",
+                f'Wave 4 is open in three tracks, each from its live GitHub issue: the Observed Catalogue ({cat}), the Control-Plane Watch '
+                f'(<a href="#wave-4-159">#159</a>) and Documents Changed (<a href="#wave-4-161">#161</a>) (<a href="#wave-4">rules and targets</a>).')
+    tracks = [("Observed Catalogue", w4["closed"], f"the Observed Catalogue ({cat})")]
+    for nm, o in (("Control-Plane Watch", o159), ("Documents Changed", o161)):
+        s_ = o["status"]
+        tracks.append((nm, o["closed"], f'{"the " if nm.startswith("Control") else ""}{nm} (<a href="#wave-4-{o["number"]}">#{o["number"]}</a>, '
+                                        + (f'{s_["settled"]} of {s_["total"]} awards won)' if o["closed"] else f'{s_["open"]} of {s_["total"]} awards open)')))
+    op = [t_ for t_ in tracks if not t_[1]]
+    cl = [t_ for t_ in tracks if t_[1]]
+    assert op, "every Wave 4 track is closed: the pill and lede need new wording"
+    cents = lambda usd: int(round(float(usd) * 100))
+    usd = lambda c: f"${c // 100}.{c % 100:02d}"
+    won158 = len(w4["rows"]) - w4_open
+    rows = [(won158, w4_open, cents(w4["award"]))]
+    for o in (o159, o161):
+        m = re.fullmatch(r"(\d+) awards of \$(\d+\.\d\d) USDC on Base", o["awards"])
+        assert m and int(m.group(1)) == o["status"]["total"], o["awards"]
+        rows.append((o["status"]["settled"], o["status"]["open"], cents(m.group(2))))
+    n_won, n_open = sum(r_[0] for r_ in rows), sum(r_[1] for r_ in rows)
+    c_won, c_open = sum(r_[0] * r_[2] for r_ in rows), sum(r_[1] * r_[2] for r_ in rows)
+    newest = wave4_snapshot_at(max([w4["issue"]["updated_at"]] + [o["updated_at"] for o in (o159, o161)]))
+    ones = {1: "one", 2: "two"}
+    pill = f'Wave 4 open · {", ".join(E(t_[0]) for t_ in op)} · {" &amp; ".join(E(t_[0]) for t_ in cl)} full and closed'
+    lede = (f'Wave 4 is open in {ones[len(op)]} of its three tracks, each from its live GitHub issue. Open: {"; ".join(t_[2] for t_ in op)}. '
+            f'Full and closed: {" and ".join(t_[2] for t_ in cl)}. Across the three tracks, {n_won} of {n_won + n_open} awards are settled '
+            f'({usd(c_won)} of {usd(c_won + c_open)} USDC) and {n_open} {"is" if n_open == 1 else "are"} open ({usd(c_open)} USDC), as of each '
+            f'issue&#x27;s last update (newest {E(newest)}). <a href="#wave-4">Rules and targets</a> below.')
+    return pill, lede
 
 
 def wave4_issue_md_html(body):
@@ -4570,7 +4626,8 @@ WAVE4_WON_PR = {"base-morpho-blue-singleton": 160, "base-uniswap-v2-factory": 16
                 "base-spark-psm3": 181, "base-fluid-liquidity": 185, "base-chainlink-ccip-router": 187, "ethereum-linea-rollup": 189,
                 "ethereum-fx-protocol-treasury": 190, "ethereum-unichain-optimism-portal": 194, "ethereum-scroll-l1-messenger": 197,
                 "base-euler-v2-evault-factory": 199, "ethereum-uniswap-v2-factory": 201, "ethereum-sushiswap-v2-factory": 202,
-                "ethereum-zksync-era-bridgehub": 209, "ethereum-near-erc20-locker": 210, "ethereum-origin-oeth-vault": 211}
+                "ethereum-zksync-era-bridgehub": 209, "ethereum-near-erc20-locker": 210, "ethereum-origin-oeth-vault": 211,
+                "ethereum-manta-pacific-portal": 216, "ethereum-fraxlend-pair-deployer": 217}
 # Merge time (GitHub pulls API merged_at) of each catalogue pull request merged after #158's last update, i.e. a won slot that the
 # issue's status line still counts as open. While this is non-empty, #158's heading and summary follow the merged entries, with the
 # newest of these merges as the snapshot time, and the verbatim label says the status line has not caught up. Empty it once a refreshed
@@ -4647,14 +4704,14 @@ def wave4_section_html():
 <ul class="check-list w4-facts" data-wave4-facts>
 <li><span>Pool</span><b>{w["n_awards"]} awards of ${E(w["award"])} USDC on Base (${E(w["pool_usdc"])} USDC held in the bounty wallet <code class="mono">{E(w["wallet"])}</code>)</b></li>
 <li><span>Slots</span><b>{n_slots} in two batches. {E(per_batch)}. Both closed target lists are below</b></li>
-<li><span>Status</span><b data-wave4-status-count>{len(won)} won, {n_open} open on {E(w["as_of"])}; live status is in Issue #{iss["number"]} and its pull requests</b></li>
-<li><span>Entry call</span><b>One ${E(w["fee"])} USDC x402 call to <code class="mono">POST {E(w["endpoint"])}</code>, paid from your <code>base_payout_address</code>; the ${E(w["fee"])} is never refunded</b></li>
-<li><span>Closes</span><b>{E(w["close"])}, or when all open slots are filled, whichever comes first</b></li>
+<li><span>Status</span><b data-wave4-status-count>{"Full and closed: " if w["closed"] else ""}{len(won)} won, {n_open} open on {E(w["as_of"])}; {f"Issue #{iss['number']} closed on GitHub at {E(w['closed'])}" if w["closed"] else f"live status is in Issue #{iss['number']} and its pull requests"}</b></li>
+<li><span>Entry call</span><b>{"Do not pay: the track is closed. " if w["closed"] else ""}One ${E(w["fee"])} USDC x402 call to <code class="mono">POST {E(w["endpoint"])}</code>, paid from your <code>base_payout_address</code>{", was the entry" if w["closed"] else ""}; the ${E(w["fee"])} is never refunded</b></li>
+<li><span>Closes</span><b>{f"Closed at {E(w['closed'])}, all {n_slots} slots filled (set to close {E(w['close'])}, or when all open slots are filled, whichever came first)" if w["closed"] else f"{E(w['close'])}, or when all open slots are filled, whichever comes first"}</b></li>
 <li><span>Payout</span><b>${E(w["award"])} USDC on Base within {w["payout_h"]} hours after the check passes and the pull request merges</b></li>
 </ul>
-<p class="s" data-wave4-snapshot><b>{len(won)} of {n_slots} slots won, {n_open} open on {E(w["as_of"])}</b> ({" · ".join(f"Batch {b_['n']}: {wave4_batch_counts(b_, won)[0]} of {b_['size']} won" for b_ in w["batches"])}). A slot can be taken at any time, so check Issue #{iss["number"]} and the open pull requests before paying.</p>
+<p class="s" data-wave4-snapshot><b>{len(won)} of {n_slots} slots won, {n_open} open on {E(w["as_of"])}</b> ({" · ".join(f"Batch {b_['n']}: {wave4_batch_counts(b_, won)[0]} of {b_['size']} won" for b_ in w["batches"])}). {"The track is full and closed: no slot is open, so do not pay for an entry call." if w["closed"] else f"A slot can be taken at any time, so check Issue #{iss['number']} and the open pull requests before paying."}</p>
 {"".join(wave4_batch_html(b_, won) for b_ in w["batches"])}<p class="s">{md_inline(w["tvl_note"])} Pull request title: <code>Wave 4 catalogue: &lt;slot_id&gt;</code>. Read the fair-play rules and the paid-call steps in the issue text before paying.</p>
-<details class="archive-details" id="wave-4-issue" data-wave4-issue-text>{wave4_verbatim_head(iss["number"], url, w["at"], w["status"], w["lag"], w["catalogue"])}
+<details class="archive-details" id="wave-4-issue" data-wave4-issue-text>{wave4_verbatim_head(iss["number"], url, w["at"], w["status"], w["lag"], w["catalogue"], w["closed"])}
 <div class="md">{wave4_issue_md_html(iss["body"])}</div>
 </details>
 {"".join(wave4_track_html(o) for o in w["others"])}</section>
@@ -4667,10 +4724,12 @@ def wave4_track_html(o):
     return (f'<div class="w4-track" id="wave-4-{n}" data-wave4-track="{n}"><h3>{E(o["heading"])}</h3>'
             f'<p class="s" data-wave4-status="{n}">Source: <a href="{E(o["html_url"])}" target="_blank" rel="noopener">GitHub issue #{n}{EXT}</a>, '
             f'rendered from that issue. Its status line at {E(o["at"])}: <b>{o["status"]["open"]} of {o["status"]["total"]} awards open, '
-            f'{o["status"]["settled"]} settled</b>. An award can be won at any time, so check the live issue before paying.</p>'
+            f'{o["status"]["settled"]} settled</b>. '
+            + (f'Full and closed: GitHub closed the issue at {E(o["closed"])}, so do not pay for an entry call.</p>' if o["closed"] else
+               'An award can be won at any time, so check the live issue before paying.</p>')
             + (f'<p data-wave4-pool="{n}">{md_inline(o["pool_md"])}</p>'
                f'<details class="archive-details" id="wave-4-{n}-issue" data-wave4-issue-text="{n}">'
-               f'{wave4_verbatim_head(n, o["html_url"], o["at"], o["status"], o["lag"])}'
+               f'{wave4_verbatim_head(n, o["html_url"], o["at"], o["status"], o["lag"], closed=o["closed"])}'
                f'<div class="md">{wave4_issue_md_html(o["body"])}</div></details></div>'
                if not re.search(r"\$10(?![0-9,M])", o["body"]) else
                f'<p data-wave4-pool="{n}"><b>{E(o["awards"])}</b>. {E(o["closes"])}</p>'

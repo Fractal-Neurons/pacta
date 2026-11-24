@@ -3801,11 +3801,19 @@ def main(argv=None):
         and res.get("pp2_verdict_plain") is True
         and all(res.get(k) is True for k in ("pp3_inspector_live_rpc", "pp3_preflight_live_rpc_proxy", "pp3_immutable_headline", "ncf_verdict_checks_run",
                                              "pp3_preflight_live_rpc_owner", "pp3_live_rpc_failure")))
+    def w4_pill_exp_():
+        # the three Wave 4 tracks while every issue is open; once one closes: the open ones, then the full and closed ones
+        st_ = {k_: v_["state"] for k_, v_ in json.load(open(os.path.join(ROOT, "tools", "bounty_wave4_issues.json"))).items()}
+        nm_ = (("158", "Observed Catalogue"), ("159", "Control-Plane Watch"), ("161", "Documents Changed"))
+        if all(st_[k_] == "open" for k_, _ in nm_):
+            return "Wave 4 open · 3 tracks · Observed Catalogue, Control-Plane Watch, Documents Changed"
+        return (f"Wave 4 open · {', '.join(n_ for k_, n_ in nm_ if st_[k_] == 'open')} · "
+                f"{' &amp; '.join(n_ for k_, n_ in nm_ if st_[k_] == 'closed')} full and closed")
     pp["S02 + V07 (v4.4 wording): 'Runs when you press Check or pick an example below' (nothing runs on page load: harness) + honest telemetry/conversion note; /bounties/ pill leads with funded slots open now"] = (
         "Runs when you press Check or pick an example below." in home_p and res.get("pf_no_fetch_on_load") is True
         and "First-party telemetry stores aggregate counts without raw IPs; X Ads conversion measurement (uwt.js) runs on public pages" in home_p
         and "no cookies" not in home_p
-        and 'data-bounty-pill>Wave 4 open · 3 tracks · Observed Catalogue, Control-Plane Watch, Documents Changed</span>' in read("docs/bounties/index.html")
+        and f'data-bounty-pill>{w4_pill_exp_()}</span>' in read("docs/bounties/index.html")
         and f'data-bounty-pill-w3>Wave 3 closed · ${BS.W3_TOTAL_USDC} USDC paid on Base</span>' in read("docs/bounties/index.html")
         and "Wave 1 Genesis (4/4 = $100 USDC) 100% settled on Base" in read("docs/bounties/index.html"))
     def lum_(h):
@@ -4258,13 +4266,17 @@ def main(argv=None):
         t_ = dt.datetime.strptime(iss_all_w4[k_]["updated_at"], "%Y-%m-%dT%H:%M:%SZ")
         ats_w4[k_] = f"{t_.day} {t_:%b %Y}, {t_:%H:%M} UTC"
     ok_st_w4 = all(v_ is not None and v_[0] + v_[3] == v_[1] == int(pools_w4[k_].group(1).split()[0]) for k_, v_ in sts_w4.items())
-    exp_h_w4 = {k_: f"Wave 4 — $2.00 USDC {nm_} Bounty ({sts_w4[k_][1]} Awards · {sts_w4[k_][0]} Open as of {ats_w4[k_]})" if ok_st_w4 else None
-                for k_, nm_ in (("159", "Control-Plane Watch"), ("161", "Documents Changed"))}
+    cl_w4 = {k_: iss_all_w4[k_]["state"] == "closed" for k_ in ("158", "159", "161")}
+    exp_h_w4 = {k_: (f"Wave 4 — $2.00 USDC {nm_} Bounty ({sts_w4[k_][1]} Awards · Full and closed: {sts_w4[k_][3]} won, 0 open as of {ats_w4[k_]})"
+                     if cl_w4[k_] else f"Wave 4 — $2.00 USDC {nm_} Bounty ({sts_w4[k_][1]} Awards · {sts_w4[k_][0]} Open as of {ats_w4[k_]})")
+                if ok_st_w4 else None for k_, nm_ in (("159", "Control-Plane Watch"), ("161", "Documents Changed"))}
     prs_ahead_w4 = sorted(BS_w4.WAVE4_MERGED_AFTER_ISSUE)
     t_ = dt.datetime.strptime(max(BS_w4.WAVE4_MERGED_AFTER_ISSUE.values()) if ahead_w4 else iss_w4["updated_at"], "%Y-%m-%dT%H:%M:%SZ")
     cat_at_w4 = f"{t_.day} {t_:%b %Y}, {t_:%H:%M} UTC"
-    exp_h_w4["158"] = (f"Wave 4 — $1.00 USDC Observed Catalogue Bounty (Batch 1 + Batch 2 · {sts_w4['158'][1]} Slots · {n_open_w4} "
-                       f"Open as of {cat_at_w4})") if ok_st_w4 else None
+    exp_h_w4["158"] = ((f"Wave 4 — $1.00 USDC Observed Catalogue Bounty (Batch 1 + Batch 2 · {sts_w4['158'][1]} Slots · Full and closed: "
+                        f"{len(merged_w4)} won, {n_open_w4} open as of {cat_at_w4})") if cl_w4["158"] else
+                       (f"Wave 4 — $1.00 USDC Observed Catalogue Bounty (Batch 1 + Batch 2 · {sts_w4['158'][1]} Slots · {n_open_w4} "
+                        f"Open as of {cat_at_w4})")) if ok_st_w4 else None
     out_w4 = re.sub(r"(?s)<details.*?</details>", "", sec_w4)      # the curated part of #wave-4 (outside the verbatim snapshots)
     heads_w4 = re.findall(r"<(h[23])>(.*?)</h[23]>", out_w4)
     h3_w4 = {n_: re.findall(rf'<div class="w4-track" id="wave-4-{n_}" data-wave4-track="{n_}"><h3>(.*?)</h3>', sec_w4) for n_ in ("159", "161")}
@@ -4315,6 +4327,50 @@ def main(argv=None):
           and BS_w4.WAVE4_QUOTE_CSS == f"<style>{css_w4[0]}</style>" and "<style>" not in read("docs/styles.css")
           and all("issue #159 Control-Plane Watch, 15 awards of $2.00 USDC;" in t_ and "npm publication pending" not in t_ for t_ in llms_w4),
           f"h2 {heads_w4[:1]}; h3 {h3_w4}; details {dets_w4}; css selectors {len(sel_w4)}")
+
+    # 24 Nov 2026 refresh: #158 and #159 closed on GitHub with every award settled. The snapshot keeps each issue's state and closed_at
+    # word for word (closed <=> closed_at set; a closed issue has 0 open); a closed track says "Full and closed" in its heading, its
+    # facts / status line and its verbatim label, tells hunters not to pay for an entry call, and no longer says an award "can be won
+    # at any time"; the lede names the open and the closed tracks and the totals across the three (awards and USDC)
+    cla_w4 = {}
+    for k_ in ("158", "159", "161"):
+        v_ = iss_all_w4[k_]
+        cla_w4[k_] = None
+        if v_["state"] == "closed" and v_["closed_at"]:
+            t_ = dt.datetime.strptime(v_["closed_at"], "%Y-%m-%dT%H:%M:%SZ")
+            cla_w4[k_] = f"{t_.day} {t_:%b %Y}, {t_:%H:%M} UTC"
+    tot_w4 = [(len(merged_w4), n_open_w4, 100)] + [(sts_w4[k_][3], sts_w4[k_][0], int(round(float(
+        re.search(r"awards of \$(\d+\.\d\d) USDC", pools_w4[k_].group(1)).group(1)) * 100))) for k_ in ("159", "161")]
+    nw_, no_ = sum(a_ for a_, _, _ in tot_w4), sum(b_ for _, b_, _ in tot_w4)
+    cw_, co_ = sum(a_ * c_ for a_, _, c_ in tot_w4), sum(b_ * c_ for _, b_, c_ in tot_w4)
+    u_ = lambda c_: f"${c_ // 100}.{c_ % 100:02d}"
+    t_ = dt.datetime.strptime(max(v_["updated_at"] for v_ in iss_all_w4.values()), "%Y-%m-%dT%H:%M:%SZ")
+    newest_w4 = f"{t_.day} {t_:%b %Y}, {t_:%H:%M} UTC"
+    f158_w4 = re.search(r"<li><span>Entry call</span><b>(.*?)</b></li>", sec_w4)
+    check("Wave 4 closed tracks (24 Nov refresh): each issue's snapshot state / closed_at = GitHub (closed <=> closed_at, a closed issue has "
+          "0 open); #158 and #159 full and closed in heading, facts / status line and verbatim label, 'do not pay' for their entry call; "
+          "#161 still open; the lede names the open and the closed tracks with the Wave 4 totals (awards, USDC, newest snapshot)",
+          all(list(v_) == ["number", "title", "html_url", "state", "updated_at", "closed_at", "body"] for v_ in iss_all_w4.values())
+          and all((v_["state"] == "closed") == (v_["closed_at"] is not None) and v_["state"] in ("open", "closed") for v_ in iss_all_w4.values())
+          and all(sts_w4[k_][0] == 0 and sts_w4[k_][3] == sts_w4[k_][1] for k_ in cl_w4 if cl_w4[k_])
+          and (not cl_w4["158"] or (n_open_w4 == 0 and not page_open_w4
+               and f"<b data-wave4-status-count>Full and closed: {len(merged_w4)} won, 0 open on {w4_['as_of']}; Issue #158 closed on GitHub at {cla_w4['158']}</b>" in sec_w4
+               and f158_w4 is not None and f158_w4.group(1).startswith("Do not pay: the track is closed. One $0.02 USDC x402 call")
+               and f"<li><span>Closes</span><b>Closed at {cla_w4['158']}, all 24 slots filled (set to close " in sec_w4
+               and "The track is full and closed: no slot is open, so do not pay for an entry call.</p>" in sec_w4
+               and "A slot can be taken at any time" not in sec_w4
+               and f"GitHub closed the issue at {cla_w4['158']}, with all 24 slots settled. Live status:" in sec_w4))
+          and all(not cl_w4[k_] or (f"settled</b>. Full and closed: GitHub closed the issue at {cla_w4[k_]}, so do not pay for an entry call.</p>" in
+                                    sec_w4.split(f'data-wave4-status="{k_}">', 1)[1].split("</p>", 1)[0] + "</p>"
+                                    and f"GitHub closed the issue at {cla_w4[k_]}, with all {sts_w4[k_][1]} awards settled. Live status:" in sec_w4)
+                  for k_ in ("159", "161"))
+          and sec_w4.count("An award can be won at any time, so check the live issue before paying.") == sum(not cl_w4[k_] for k_ in ("159", "161"))
+          and (all(not v_ for v_ in cl_w4.values()) or (
+              f"Across the three tracks, {nw_} of {nw_ + no_} awards are settled ({u_(cw_)} of {u_(cw_ + co_)} USDC) and {no_} "
+              f"{'is' if no_ == 1 else 'are'} open ({u_(co_)} USDC), as of each issue&#x27;s last update (newest {newest_w4})." in lede_w4
+              and all((f'#{k_}</a>, {sts_w4[k_][3]} of {sts_w4[k_][1]} awards won)' if cl_w4[k_] else
+                       f'#{k_}</a>, {sts_w4[k_][0]} of {sts_w4[k_][1]} awards open)') in lede_w4 for k_ in ("159", "161")))),
+          f"closed {cla_w4}; totals {nw_} won / {no_} open, {u_(cw_)} / {u_(co_)} USDC; newest {newest_w4}")
 
     graph_manifest_checks(cli)
 
