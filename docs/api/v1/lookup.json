@@ -114,6 +114,7 @@
     "0xb43b30c405c61BC330227968635d130994450735",
     "0xfF16fd3D147220E6CC002a8e4a1f942ac41DBD23"
    ],
+   "scorecardStatus": "unresolved",
    "slug": "40-acres-base",
    "sprints": [
     28
@@ -124,7 +125,7 @@
      "chain": "base",
      "classification": "parameter_delta",
      "id": "40-acres-base-upgradeability-s28",
-     "surface": "AERO USDC Loan contract (UUPS proxy): docs call the contracts immutable, but it is an upgradeable proxy",
+     "surface": "AERO USDC Loan contract (UUPS proxy): 2-of-3 Safe upgrade owner; prior upgradeability line removed by 25 Nov 2026",
      "targetContract": "0x87f18b377e625b62c708D5f6EA96EC193558EFD0",
      "targetLabel": "40 Acres AERO USDC Loan proxy (UUPS)"
     }
@@ -138,9 +139,9 @@
     "changed": [
      {
       "classification": "parameter_delta",
-      "documented": "'40 Acres has completed four independent audits with Sherlock. Smart contracts are immutable and non-upgradeable post-deployment.' (docs.40acres.finance)",
+      "documented": "Prior snapshot (last seen 24 November 2026, 10:40 UTC): '40 Acres has completed four independent audits with Sherlock. Smart contracts are immutable and non-upgradeable post-deployment.' (docs.40acres.finance/index.md).",
       "observed": "40 Acres AERO USDC Loan proxy 0x87f18b377e625b62c708D5f6EA96EC193558EFD0 (Base): EIP-1967 implementation slot = 0xb43b30c405c61BC330227968635d130994450735;",
-      "parameter": "AERO USDC Loan contract (UUPS proxy): docs call the contracts immutable, but it is an upgradeable proxy",
+      "parameter": "AERO USDC Loan contract (UUPS proxy): 2-of-3 Safe upgrade owner; prior upgradeability line removed by 25 Nov 2026",
       "recordId": "40-acres-base-upgradeability-s28"
      }
     ],

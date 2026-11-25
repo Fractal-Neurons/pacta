@@ -14,10 +14,10 @@
   "radarBlockBase": 59999187
  },
  "counts": {
-  "adverse_delta": 43,
+  "adverse_delta": 42,
   "recent_change": 1,
   "docs_updated": 1,
-  "unresolved_scope": 11,
+  "unresolved_scope": 12,
   "protective_delta": 7,
   "radar_timelock": 3,
   "aligned_baseline": 126,
@@ -1285,19 +1285,19 @@
    "priority": 21
   },
   {
-   "feedId": "finding:40-acres-base:S28:adverse_delta",
+   "feedId": "finding:40-acres-base:S28:unresolved_scope",
    "slug": "40-acres-base",
    "protocolName": "40 Acres (Base)",
    "xHandle": null,
    "xUrl": null,
-   "kind": "adverse_delta",
+   "kind": "unresolved_scope",
    "chain": "base",
    "pinnedBlock": 59025642,
    "blockHash": "0x8fc618f8e02aa1fd1c3bcf1300fd25e40291a0fcde351bd39ad8cb61781d5e12",
    "easUid": "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
    "sprint": 28,
    "recordId": "40-acres-base-upgradeability-s28",
-   "summaryShort": "Base AERO USDC Loan contract is upgradeable (2-of-3 Safe); intro says immutable",
+   "summaryShort": "Base AERO USDC Loan UUPS proxy (2-of-3 Safe); prior upgradeability line removed by 25 Nov",
    "rosette": [
     {
      "key": "upgrade",
@@ -1330,14 +1330,14 @@
     {
      "key": "parity",
      "label": "Docs-vs-chain parity",
-     "state": "a",
-     "cue": "W",
-     "value": "Documentation differs from the chain (parameter delta)"
+     "state": "n",
+     "cue": "—",
+     "value": "Observed onchain state pinned; a breach of a documented commitment is not established"
     }
    ],
-   "docsSay": "immutable, non-upgradeable contracts",
-   "chainSays": "the AERO USDC Loan contract is an upgradeable UUPS proxy under a 2-of-3 Safe",
-   "mainPostText": "40 Acres (Base). Docs say: Immutable, non-upgradeable contracts. On-chain at Base block #59,025,642: The AERO USDC Loan contract is an upgradeable UUPS proxy under a 2-of-3 Safe. Docs and chain differ. Receipt below.",
+   "docsSay": "no statement on upgradeability or delays; a prior sentence was removed by 25 Nov 2026",
+   "chainSays": "the AERO USDC Loan contract is a UUPS proxy under a 2-of-3 Safe",
+   "mainPostText": "40 Acres (Base): current docs make no statement on upgradeability or delays. At Base block #59,025,642 and again at #62,011,451 (25 Nov 2026), the AERO USDC Loan contract is a UUPS proxy under a 2-of-3 Safe. A documented breach is not established. Receipt below.",
    "replyPostText": "Receipt: https://pacta.wtf/protocols/40-acres-base/ · Base attestation: https://base.easscan.org/attestation/view/0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768",
    "cardFilename": "40-acres-base.png",
    "receiptUrl": "https://pacta.wtf/protocols/40-acres-base/",

@@ -51,7 +51,7 @@ RESULTS = []
 EXPECT = {
     "sprints": 37, "records": 309, "eas_attestations": 37,              # index.json sprints_completed / records_indexed; Base EAS sprint UIDs
     "protocols": 316, "eas_protocols": 189, "rpc_protocols": 127,          # /protocols/ pages = EAS-attested + RPC-pinned; badges = protocols
-    "briefs": 18, "badge_tiers": {"aligned": 126, "parameter_delta": 50, "rpc_observed": 127, "unresolved": 11, "docs_updated": 1, "recent_change": 1},
+    "briefs": 18, "badge_tiers": {"aligned": 126, "parameter_delta": 49, "rpc_observed": 127, "unresolved": 12, "docs_updated": 1, "recent_change": 1},
     "base_records": 38,                                                  # index.json records with chain "base"
     "rpc_by_chain": {"ethereum": 117, "base": 10},                         # rpc-pinned.json records per chain (sum = rpc_protocols)
     "multi_attest_txs": ["1–12", "13–16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37"],                              # attestation_coverage.eas_multi_attest_txs keys
@@ -83,7 +83,7 @@ EXPECT = {
 X = EXPECT
 # sha256 of docs/api/v1/graph-manifest.json: changes only through a deliberate re-pin (a Sprint stage / stamp rewrites it after the
 # rebuild); a merged Wave 2 claim or any site-only change must leave it as is
-GRAPH_MANIFEST_SHA256 = "98763a1c308125730e6d544022692eb3ab79a190b446460f9807093ade77d3e5"   # re-pinned (Part 6B): Obol's two Observed / Uncompared surfaces
+GRAPH_MANIFEST_SHA256 = "04cfe880e8c2e3f1fd24b4f1bfa775f5cde42a94980b37081c8673de7ec9c60d"   # re-pinned (25 Nov 2026): 40 Acres Unresolved (corrected surface, badge tier, gap node text)
 R4_REREAD_HEADS = {"ethereum": (26466974, "0x9265e0f25e8ff2d7358bb5edd03a563a6fa469772bad21dafbadec78d4bc4bdd"),   # wording-35 r4 re-read pins
                    "base": (60576992, "0x7780084ed01a331b77f78611578e99cb273c3a3dbad940d8205563f5068cfc30")}
 # /watch/ (receipt 8741 #1): the one approved 24-hour sentence family (a person at Pacta emailing about a watched protocol, or confirming
@@ -2666,9 +2666,9 @@ def main(argv=None):
             and all(f'fill="{al_col}"' in t for t in aligned451) and cr45("#ffffff", al_col) >= 7.5 and max(rgb451) - min(rgb451) <= 40,
         "R3-02: the demo receipt link is >= 24 px tall (inline-flex, min-height 24px; script unchanged)":
             ".live-receipt a { display:inline-flex; align-items:center; min-height:24px;" in demo_css,
-        "v6 C13: the rulings sentence 'Of 56 reviewed findings, 43 are Deltas (16 weaker protections, 16 other differences and 11 "
-        "bookkeeping changes), 1 is Changed recently, 1 is Docs updated and 11 are Unresolved; …' (asserted equal to the computed counts) under "
-        "the homepage tiles, on /scorecards/ and on /radar/; the Deltas tile reads 43 with its three subcounts; no 'adverse' tile":
+        "v6 C13: the rulings sentence 'Of 56 reviewed findings, 42 are Deltas (15 weaker protections, 16 other differences and 11 "
+        "bookkeeping changes), 1 is Changed recently, 1 is Docs updated and 12 are Unresolved; …' (asserted equal to the computed counts) under "
+        "the homepage tiles, on /scorecards/ and on /radar/; the Deltas tile reads 42 with its three subcounts; no 'adverse' tile":
             line451 in home43 and line451 in pages[os.path.join("scorecards", "index.html")]
             and html.escape(C451.breakdown_text(), quote=False) in pages[os.path.join("radar", "index.html")]
             and home43.find('data-proof>') < home43.find(line451)

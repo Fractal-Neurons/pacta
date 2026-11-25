@@ -45,16 +45,17 @@ class Registry(unittest.TestCase):
         r = subprocess.run([sys.executable, "-B", os.path.join(HERE, "apply_scorecard_corrections.py"), "--check"], capture_output=True, text=True)
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
 
-    def test_the_eleven_unresolved_protocols(self):
-        self.assertEqual(UNRES, ["concrete", "hakka-finance", "infinifi", "lagoon", "metamorpho-re7-weth-vs-re7-usdt", "odyssey-finance",
-                                 "renzo-protocol-ezeth", "seamless-protocol-base", "taiko-bridge", "whales-market", "yo-protocol"])
+    def test_the_twelve_unresolved_protocols(self):
+        # 25 Nov 2026: 40-acres-base joins (its prior documentation sentence is no longer published; current docs make no upgradeability claim)
+        self.assertEqual(UNRES, ["40-acres-base", "concrete", "hakka-finance", "infinifi", "lagoon", "metamorpho-re7-weth-vs-re7-usdt",
+                                 "odyssey-finance", "renzo-protocol-ezeth", "seamless-protocol-base", "taiko-bridge", "whales-market", "yo-protocol"])
 
 
 class Grades(unittest.TestCase):
     def test_totals(self):
         from collections import Counter
         self.assertEqual(Counter(c["grade"] for c in CARDS.values()),
-                         Counter({"aligned": 126, "protective": 7, "delta": 43, "recent_change": 1, "docs_updated": 1, "unresolved": 11, "observed": 127}))
+                         Counter({"aligned": 126, "protective": 7, "delta": 42, "recent_change": 1, "docs_updated": 1, "unresolved": 12, "observed": 127}))
 
     def test_unresolved_is_neither_delta_nor_aligned(self):
         for s in UNRES:
@@ -98,11 +99,11 @@ class Grades(unittest.TestCase):
 
 class Breakdown(unittest.TestCase):
     def test_the_four_way_breakdown_of_the_56_flagged_comparisons(self):
-        self.assertEqual(CORR.breakdown(), {"reviewed": 56, "delta": 43, "clearWeaker": 16, "realDifference": 16, "bookkeeping": 11,
-                                            "recentChange": 1, "docsUpdated": 1, "unresolved": 11})
+        self.assertEqual(CORR.breakdown(), {"reviewed": 56, "delta": 42, "clearWeaker": 15, "realDifference": 16, "bookkeeping": 11,
+                                            "recentChange": 1, "docsUpdated": 1, "unresolved": 12})
         self.assertEqual(j("api", "v1", "scorecards.json")["findingBreakdown"], CORR.breakdown())
         deltas = sorted(s for s, c in CARDS.items() if c.get("deltaSubcategory"))
-        self.assertEqual(len(deltas), 43)
+        self.assertEqual(len(deltas), 42)
         self.assertTrue(all(CARDS[s]["grade"] == "delta" for s in deltas))
 
     def test_no_adverse_claim_on_home_radar_scorecards_scan_curators(self):
@@ -318,7 +319,7 @@ class V6(unittest.TestCase):
 
     def test_c13_tabs_equal_row_counts(self):
         import re
-        want = {"delta": 43, "recent_change": 1, "docs_updated": 1, "unresolved": 11, "protective": 7, "aligned": 126, "observed": 127}
+        want = {"delta": 42, "recent_change": 1, "docs_updated": 1, "unresolved": 12, "protective": 7, "aligned": 126, "observed": 127}
         hub = _read(os.path.join(ROOT, "docs", "protocols", "index.html"), encoding="utf-8")
         rows = Counter_(re.findall(r'<tr data-ptier="([a-z_]+)"', hub))
         tabs = {k: int(n) for k, n in re.findall(r'data-pfilter-status="([a-z_]+)"[^>]*>[^<]+ <span class="num">\((\d+)\)', hub) if k != "all"}
@@ -328,7 +329,7 @@ class V6(unittest.TestCase):
             t = _read(os.path.join(ROOT, "docs", *page_), encoding="utf-8")
             got = {k: int(n) for k, n in re.findall(r'data-sc-f="([a-z_]+)"[^>]*>[^<]+ <span class="num">\((\d+)\)', t) if k != "all"}
             self.assertEqual(got, want, page_)
-        for label in ("Deltas (43)", "Changed recently (1)", "Docs updated (1)", "Unresolved (11)"):
+        for label in ("Deltas (42)", "Changed recently (1)", "Docs updated (1)", "Unresolved (12)"):
             self.assertIn(label, visible(hub).replace("  ", " "))
 
     def test_c13_neutral_pages_carry_no_delta_or_seal(self):
@@ -404,7 +405,7 @@ class V6(unittest.TestCase):
         # the breached dimension of each weaker-protection Delta (where it is a rosette factor) is never Strong
         breached = {"treehouse-tree-teth": "emergency", "usual-money-usd0-usd0": "timelock", "inverse-finance-firm": "quorum",
                     "zircuit-staking": "quorum", "benddao-ape-staking": "timelock", "pickle": "timelock", "cian-yield-layer": "timelock",
-                    "40-acres-base": "upgrade", "circle-gateway": "upgrade", "maple-finance-v2-syrup": "upgrade"}
+                    "circle-gateway": "upgrade", "maple-finance-v2-syrup": "upgrade"}   # 40-acres-base: Unresolved since 25 Nov 2026
         for s, k in breached.items():
             self.assertIn(s, RULINGS["deltaGroups"]["clear_weaker"])
             self.assertNotEqual(st(s, k)["state"], "g", (s, k))
@@ -575,7 +576,7 @@ class V7(unittest.TestCase):
         rows = m["all_55_verified_adverse_gaps"]
         self.assertEqual(len(rows), 56)
         self.assertEqual(sorted(r["slug"] for r in rows), sorted(RULINGS["partition"]))
-        self.assertEqual(Counter(r["grade"] for r in rows), Counter({"DELTA": 43, "UNRESOLVED": 11, "CHANGED RECENTLY": 1, "DOCS UPDATED": 1}))
+        self.assertEqual(Counter(r["grade"] for r in rows), Counter({"DELTA": 42, "UNRESOLVED": 12, "CHANGED RECENTLY": 1, "DOCS UPDATED": 1}))
         self.assertEqual(m["all_56_reviewed_comparisons"], rows)
         raw = json.dumps(m, ensure_ascii=False)
         cur = _read(os.path.join(ROOT, "docs", "curators", "index.html"), encoding="utf-8")
@@ -852,8 +853,8 @@ class ObolNeutralGovernance(unittest.TestCase):
 class Scorecard87(unittest.TestCase):
     """Business receipt 7462: one round, exactly 130 factor slices on 87 pages (87 rule-derived + 43 reviewed); everything else
     byte-identical to BASE (main 7cdc9a96; the scorecard commit b80f21eb was cut on f7ea61a7), apart from the x-feed rosette repair
-    (REPAIRED / REDRAWN below), the request form's issuer track (URGENCY_MOVE), the button focus outline (FOCUS_MOVE) and the
-    protocol combobox's Tab / focus-leave dismissal (COMBO_MOVES)."""
+    (REPAIRED / REDRAWN below), the request form's issuer track (URGENCY_MOVE), the button focus outline (FOCUS_MOVE), the
+    protocol combobox's Tab / focus-leave dismissal (COMBO_MOVES) and 40-acres-base's 25 Nov 2026 move to Unresolved (A40)."""
     BASE = "7cdc9a96bd59a2c0b77fb8a46dacc93c12cac814"
     CUT = ("f7ea61a757dc00749dee639105bda3e83b907408", "b80f21ebd9e478d68dd0f60cac9cd7e414b6cdcb")
     # service cleanup: the request form posts the Worker's renamed issuer track, the one moved line of tools/app.src.js and
@@ -908,6 +909,18 @@ class Scorecard87(unittest.TestCase):
                                 r'|^\.pf-assess > a$|^\.pf-match-foot > a$')
     EXP = {e["slice_id"]: e for e in _load(os.path.join(HERE, "scorecard87_expected_136.json"), encoding="utf-8")["entries"]}
     FORBIDDEN = re.compile(r"\b(?:immutable|renounced|EOA)\b", re.I)
+    # 25 Nov 2026 (40 Acres): the documentation sentence 40-acres-base's Delta compared against (last seen 24 November 2026) is no longer
+    # published, and current documentation makes no statement on upgradeability or delays, so tools/scorecard_corrections.json moves it
+    # from Delta to Unresolved. Against BASE that adds exactly: 3 factor slices (A40_SLICES: its parity "a" -> "n", state and value; the
+    # upgrade and quorum evidence captions, which quote the record's corrected surface), its page and card, its feed item (adverse_delta
+    # -> unresolved_scope under a new feedId; A40_FEED_FIELDS) and the corrected wording of its one record in index.json
+    # (A40_RECORD_FIELDS plus its neutral-status and wording overrides). Nothing else of the comparison moves.
+    A40 = "40-acres-base"
+    A40_SLICES = {"40-acres-base:parity": {"state", "value"}, "40-acres-base:upgrade": {"evidenceCaption"},
+                  "40-acres-base:quorum": {"evidenceCaption"}}
+    A40_FEED = ("finding:40-acres-base:S28:adverse_delta", "finding:40-acres-base:S28:unresolved_scope")
+    A40_FEED_FIELDS = {"feedId", "kind", "summaryShort", "rosette", "docsSay", "chainSays", "mainPostText"}
+    A40_RECORD, A40_RECORD_FIELDS = "40-acres-base-upgradeability-s28", {"surface", "documented_reference", "summary_short"}
 
     @staticmethod
     def _unstamp(b):
@@ -940,8 +953,20 @@ class Scorecard87(unittest.TestCase):
     def test_exactly_the_130_slices_change(self):
         self.assertEqual(len(self.N), 1580)
         self.assertEqual(set(self.B), set(self.N))
-        self.assertEqual(self.changed, set(self.EXP))
-        self.assertEqual((len(self.EXP), len(self.pages), len(self.N) - len(self.changed)), (136, 87, 1444))
+        self.assertEqual(self.changed, set(self.EXP) | set(self.A40_SLICES))
+        self.assertEqual((len(self.EXP), len(self.pages), len(self.N) - len(self.changed)), (136, 87, 1441))
+        # A40: the parity moves to the standard Unresolved parity; the two captions quote the record's corrected surface
+        import scorecard as SC
+        surface = CORR.get(self.A40)["recordOverrides"][self.A40_RECORD]["surface"]
+        for sid, moved in self.A40_SLICES.items():
+            s, k = sid.rsplit(":", 1)
+            f, b = self.N[(s, k)], self.B[(s, k)]
+            self.assertEqual({x for x in set(f) | set(b) if f.get(x) != b.get(x)}, moved, sid)
+            if k == "parity":
+                self.assertEqual((b["state"], f["state"], f["value"]), ("a", "n", SC.UNRESOLVED_PARITY), sid)
+            else:
+                self.assertEqual(f["evidenceCaption"], f"{surface} — Base block #59,025,642", sid)
+                self.assertNotRegex(f["evidenceCaption"], self.FORBIDDEN, sid)
         self.assertEqual(sum(e["bucket"] == "B1_RULE" for e in self.EXP.values()), 87)
 
     def test_every_changed_slice_matches_the_reference(self):
@@ -986,7 +1011,9 @@ class Scorecard87(unittest.TestCase):
             self.assertNotRegex(f["value"], self.FORBIDDEN, sid)
         # and outside the gate the rules never run: every other slice of the stripped build equals f7ea61a7
         for key, f in raw.items():
-            if f"{key[0]}:{key[1]}" not in self.EXP:
+            if f"{key[0]}:{key[1]}" in self.A40_SLICES:
+                self.assertEqual(f, self.N[key], key)          # A40: the Unresolved parity follows from the registry status alone
+            elif f"{key[0]}:{key[1]}" not in self.EXP:
                 self.assertEqual(f, self.B[key], key)
 
     # x-feed repair on 5392279b: the feed rosettes of the 229 clean protocols had stayed at BASE while their scorecards moved on, 117
@@ -997,8 +1024,10 @@ class Scorecard87(unittest.TestCase):
     REDRAWN = {"aave-v3-gho"}
 
     def test_clean_pages_and_cards_byte_identical_and_every_feed_rosette_follows_its_scorecard(self):
-        clean = sorted(set(CARDS) - self.pages)
-        self.assertEqual(len(clean), 229)
+        clean = sorted(set(CARDS) - self.pages - {self.A40})
+        self.assertEqual(len(clean), 228)
+        for p in (os.path.join("docs", "protocols", self.A40, "index.html"), os.path.join("docs", "cards", f"{self.A40}.png")):
+            self.assertNotEqual(_read(os.path.join(ROOT, p), "rb"), self._git(p, binary=True), p)     # A40: redrawn
         for s in clean:
             p = os.path.join("docs", "protocols", s, "index.html")
             self.assertEqual(self._unstamp(_read(os.path.join(ROOT, p), "rb")), self._unstamp(self._watch_page(self._git(p, binary=True), s)), s)
@@ -1007,7 +1036,9 @@ class Scorecard87(unittest.TestCase):
                 (self.assertNotEqual if s in self.REDRAWN else self.assertEqual)(_read(os.path.join(ROOT, c), "rb"), self._git(c, binary=True), s)
         base_feed = {i["feedId"]: i for i in json.loads(self._git("docs/api/v1/x-feed.json"))["items"]}
         feed = {i["feedId"]: i for i in j("api", "v1", "x-feed.json")["items"]}
-        self.assertEqual(set(base_feed), set(feed))
+        self.assertIn(self.A40_FEED[0], base_feed)
+        self.assertNotIn(self.A40_FEED[0], feed)
+        self.assertEqual(set(base_feed) - {self.A40_FEED[0]}, set(feed) - {self.A40_FEED[1]})
         cue = {"g": "S", "b": "M", "a": "W", "n": "—", "u": "—"}
         repaired, items = Counter_(), set()
         for fid, it in feed.items():
@@ -1015,7 +1046,15 @@ class Scorecard87(unittest.TestCase):
             s = it.get("protocolSlug") or it["slug"]
             self.assertEqual([(r["key"], r["label"], r["state"], r["cue"], r["value"]) for r in it["rosette"]],
                              [(f["key"], f["label"], f["state"], cue[f["state"]], f["value"]) for f in CARDS[s]["factors"]], fid)
-            if it["slug"] not in self.pages:
+            if fid == self.A40_FEED[1]:
+                # A40: the unresolved_scope item keeps every field of its BASE adverse_delta item but A40_FEED_FIELDS
+                b = base_feed[self.A40_FEED[0]]
+                self.assertEqual({k for k in set(it) | set(b) if it.get(k) != b.get(k)}, self.A40_FEED_FIELDS, fid)
+                self.assertEqual((it["kind"], it["summaryShort"]), ("unresolved_scope", CORR.get(self.A40)["summaryShort"]), fid)
+                for k in ("docsSay", "chainSays", "mainPostText"):
+                    self.assertNotRegex(it[k], self.FORBIDDEN, fid)
+                self.assertLessEqual(len(it["mainPostText"]), 270, fid)
+            elif it["slug"] not in self.pages:
                 # a clean item keeps every other field of BASE
                 b = base_feed[fid]
                 self.assertEqual({k: v for k, v in it.items() if k != "rosette"}, {k: v for k, v in b.items() if k != "rosette"}, fid)
@@ -1039,13 +1078,14 @@ class Scorecard87(unittest.TestCase):
         # R2: plus the changed protocols whose card text (docsSay / chainSays) changed in x-feed.json (m0-protocol-m)
         base_feed = {i["feedId"]: i for i in json.loads(self._git("docs/api/v1/x-feed.json"))["items"]}
         feed = j("api", "v1", "x-feed.json")["items"]
-        texted = {i["slug"] for i in feed if any(i.get(k) != base_feed[i["feedId"]].get(k) for k in ("docsSay", "chainSays"))}
+        texted = {i["slug"] for i in feed if i["feedId"] != self.A40_FEED[1]
+                  and any(i.get(k) != base_feed[i["feedId"]].get(k) for k in ("docsSay", "chainSays"))}
         self.assertTrue(texted <= self.pages, sorted(texted - self.pages))
         # x-feed repair: a clean protocol's card is redrawn only where a drawn rosette field (cue / state word) moved: aave-v3-gho alone
-        redrawn = {i["slug"] for i in feed if i["slug"] not in self.pages
+        redrawn = {i["slug"] for i in feed if i["slug"] not in self.pages and i["slug"] != self.A40
                    and any((r["state"], r["cue"]) != (rb["state"], rb["cue"]) for r, rb in zip(i["rosette"], base_feed[i["feedId"]]["rosette"]))}
         self.assertEqual(redrawn, self.REDRAWN)
-        self.assertEqual(diff, moved | texted | redrawn, sorted(diff ^ (moved | texted | redrawn)))
+        self.assertEqual(diff, moved | texted | redrawn | {self.A40}, sorted(diff ^ (moved | texted | redrawn | {self.A40})))   # + A40
         for s in diff:
             b = _read(os.path.join(ROOT, "docs", "cards", f"{s}.png"), "rb")
             self.assertEqual(b[:8], b"\x89PNG\r\n\x1a\n", s)
@@ -1102,8 +1142,21 @@ class Scorecard87(unittest.TestCase):
         self.assertTrue(292 <= min(xs) and max(xs) < 498 and 489 <= ys[0] and ys[-1] < 545, (min(xs), ys[0], max(xs), ys[-1]))
 
     def test_attested_rows_js_css_and_mcp_untouched(self):
-        paths = ["docs/api/v1/index.json", "docs/api/v1/rpc-pinned.json", "docs/api/v1/onboarding.json", "docs/api/v1/radar.json", "audits/",
+        paths = ["docs/api/v1/rpc-pinned.json", "docs/api/v1/onboarding.json", "docs/api/v1/radar.json", "audits/",
                  "tools/pacta_x402_call.py", ".github/workflows/"]
+        # index.json: BASE apart from A40 (its record's corrected wording fields, its neutral status and its wording override); every
+        # attested field of the record (block, hash, classification, summary document and SHA-256, Base EAS UID) stays BASE
+        base_ix, ix, rid = json.loads(self._git("docs/api/v1/index.json")), j("api", "v1", "index.json"), self.A40_RECORD
+        b_e, n_e = (next(e for e in d["entries"] if e["id"] == rid) for d in (base_ix, ix))
+        self.assertEqual({k for k in set(b_e) | set(n_e) if b_e.get(k) != n_e.get(k)}, self.A40_RECORD_FIELDS)
+        self.assertNotIn(rid, base_ix["scorecard_status_overrides"])
+        self.assertEqual(ix["scorecard_status_overrides"].pop(rid), {"status": "unresolved", "label": "Unresolved"})
+        self.assertEqual((base_ix["scorecard_wording_overrides"][rid]["unresolved"], ix["scorecard_wording_overrides"][rid]["unresolved"]),
+                         (False, True))
+        for d in (base_ix, ix):
+            d["entries"] = [e for e in d["entries"] if e["id"] != rid]
+            del d["scorecard_wording_overrides"][rid]
+        self.assertEqual(ix, base_ix)
         # packages/mcp-server/ equals BASE while the package is still 0.1.5; the 0.1.6 package is its own later push
         if _load(os.path.join(ROOT, "packages", "mcp-server", "package.json"), encoding="utf-8")["version"] == "0.1.5":
             paths.append("packages/mcp-server/")

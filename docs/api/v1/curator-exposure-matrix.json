@@ -8,10 +8,10 @@
     "base_eas_attested_protocols": 189,
     "grades_breakdown": {
       "ALIGNED": 126,
-      "DELTA_adverse_gaps": 43,
+      "DELTA_adverse_gaps": 42,
       "CHANGED_RECENTLY": 1,
       "DOCS_UPDATED": 1,
-      "UNRESOLVED": 11,
+      "UNRESOLVED": 12,
       "PROTECTIVE": 7,
       "OBSERVED_rpc_pinned": 127
     },
@@ -21,13 +21,13 @@
     "flagged_comparisons_breakdown": {
       "historically_flagged": 56,
       "reviewed": 56,
-      "delta": 43,
-      "clearWeaker": 16,
+      "delta": 42,
+      "clearWeaker": 15,
       "realDifference": 16,
       "bookkeeping": 11,
       "recentChange": 1,
       "docsUpdated": 1,
-      "unresolved": 11
+      "unresolved": 12
     }
   },
   "curators_and_institutional_allocators": [
@@ -4964,10 +4964,10 @@
       "rank": 15,
       "slug": "40-acres-base",
       "tvl_impact_tier": "Tier 3 · Base Aerodrome veNFT-Backed Lending Vault (UUPS) (Base)",
-      "ecosystem_impact_rationale": "Base ecosystem veAERO lending vault claiming post-deployment immutability while running an active OpenZeppelin v5 UUPS upgradeable proxy owned by a 2-of-3 Safe with 0s timelock.",
-      "clinical_brief_hook": "At Base block #59,025,642, 40 Acres AERO USDC Loan contract 0x87f1…EFD0 resolves EIP-1967 implementation 0xb43b…0735 (UUPS v5.0.0) with owner() = 2-of-3 Safe 0xfF16…BD23, whereas docs.40acres.finance states contracts are immutable; adding a timelock or publishing UUPS proxy & Safe disclosures unlocks a 24h Base-EAS re-verification seal.",
+      "ecosystem_impact_rationale": "Base ecosystem veAERO-backed lending venue whose AERO USDC Loan contract is an OpenZeppelin v5 UUPS proxy owned by a 2-of-3 Safe, with no enforced admin delay in the published records; current documentation makes no statement on upgradeability or delays.",
+      "clinical_brief_hook": "At Base block #59,025,642 (re-read at #62,011,451 on 25 Nov 2026), 40 Acres AERO USDC Loan contract 0x87f1…EFD0 resolves EIP-1967 implementation 0xb43b…0735 (UUPS v5.0.0) with owner() = 2-of-3 Safe 0xfF16…BD23; current docs.40acres.finance pages make no statement on upgradeability or delays.",
       "name": "40 Acres (Base)",
-      "grade": "DELTA",
+      "grade": "UNRESOLVED",
       "easAttested": true,
       "chains": [
         "base"
@@ -4981,10 +4981,10 @@
       "baseEasUids": [
         "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768"
       ],
-      "summary_short": "Base AERO USDC Loan contract is upgradeable (2-of-3 Safe); intro says immutable",
+      "summary_short": "Base AERO USDC Loan UUPS proxy (2-of-3 Safe); prior upgradeability line removed by 25 Nov",
       "url": "https://pacta.wtf/protocols/40-acres-base/",
-      "surface": "AERO USDC Loan contract (UUPS proxy): docs call the contracts immutable, but it is an upgradeable proxy",
-      "documented_excerpt": "'40 Acres has completed four independent audits with Sherlock. Smart contracts are immutable and non-upgradeable post-deployment.' (docs.40acres.finance)",
+      "surface": "AERO USDC Loan contract (UUPS proxy): 2-of-3 Safe upgrade owner; prior upgradeability line removed by 25 Nov 2026",
+      "documented_excerpt": "Prior snapshot (last seen 24 November 2026, 10:40 UTC): '40 Acres has completed four independent audits with Sherlock. Smart contracts are immutable and non-upgradeable post-deployment.' (docs.40acres.finance/index.md). Retrieved 25 November 2026 (07:35–07:42 UTC across index.md, security.md and all 21 pages in llms.txt): the second sentence is absent, and current documentation states only Sherlock audit completion and deployed contract addresses, with no statement on upgradeability or delays. Dual-RPC chain re-read at Base block 62,011,451 (25 November 2026, 07:44 UTC) confirms 0x87f18b377e625b62c708D5f6EA96EC193558EFD0 remains a UUPS proxy (implementation 0xb43b30c405c61BC330227968635d130994450735) owned by the same 2-of-3 Safe 0xfF16fd3D147220E6CC002a8e4a1f942ac41DBD23.",
       "observed_excerpt": "40 Acres proxy 0x87f18b377e625b62c708D5f6EA96EC193558EFD0 (Base): EIP-1967 implementation slot = 0xb43b30c405c61BC330227968635d130994450735; the implementation's proxiableUUID() = the EIP-1967 slot (UUPS), UPGRADE_INTERFACE_VERSION() = '5.0.0'; owner() = 0xfF16fd3D147220E6CC002a8e4a1f942ac41DBD23, a Safe 2-of-3.",
       "recordId": "40-acres-base-upgradeability-s28"
     }
@@ -5347,7 +5347,7 @@
     {
       "slug": "40-acres-base",
       "name": "40 Acres (Base)",
-      "grade": "DELTA",
+      "grade": "UNRESOLVED",
       "easAttested": true,
       "chains": [
         "base"
@@ -5361,10 +5361,10 @@
       "baseEasUids": [
         "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768"
       ],
-      "summary_short": "Base AERO USDC Loan contract is upgradeable (2-of-3 Safe); intro says immutable",
+      "summary_short": "Base AERO USDC Loan UUPS proxy (2-of-3 Safe); prior upgradeability line removed by 25 Nov",
       "url": "https://pacta.wtf/protocols/40-acres-base/",
       "category": "veNFT-backed lending (AERO USDC Loan UUPS proxy on Base)",
-      "surface": "AERO USDC Loan contract (UUPS proxy): docs call the contracts immutable, but it is an upgradeable proxy",
+      "surface": "AERO USDC Loan contract (UUPS proxy): 2-of-3 Safe upgrade owner; prior upgradeability line removed by 25 Nov 2026",
       "recordId": "40-acres-base-upgradeability-s28"
     },
     {
@@ -6686,7 +6686,7 @@
     {
       "slug": "40-acres-base",
       "name": "40 Acres (Base)",
-      "grade": "DELTA",
+      "grade": "UNRESOLVED",
       "easAttested": true,
       "chains": [
         "base"
@@ -6700,10 +6700,10 @@
       "baseEasUids": [
         "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768"
       ],
-      "summary_short": "Base AERO USDC Loan contract is upgradeable (2-of-3 Safe); intro says immutable",
+      "summary_short": "Base AERO USDC Loan UUPS proxy (2-of-3 Safe); prior upgradeability line removed by 25 Nov",
       "url": "https://pacta.wtf/protocols/40-acres-base/",
       "category": "veNFT-backed lending (AERO USDC Loan UUPS proxy on Base)",
-      "surface": "AERO USDC Loan contract (UUPS proxy): docs call the contracts immutable, but it is an upgradeable proxy",
+      "surface": "AERO USDC Loan contract (UUPS proxy): 2-of-3 Safe upgrade owner; prior upgradeability line removed by 25 Nov 2026",
       "recordId": "40-acres-base-upgradeability-s28"
     },
     {

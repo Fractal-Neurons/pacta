@@ -11555,13 +11555,13 @@
       "symbol_hint": "40AcresVault",
       "slug": "40-acres-base",
       "protocolName": "40 Acres (Base)",
-      "grade": "DELTA",
+      "grade": "UNRESOLVED",
       "easAttested": true,
       "pinnedBlock": 59025642,
       "baseEasUids": [
         "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768"
       ],
-      "summary_short": "Docs call 40 Acres immutable, but an upgradeable proxy sits on chain",
+      "summary_short": "Base AERO USDC Loan UUPS proxy (2-of-3 Safe); prior upgradeability line removed by 25 Nov",
       "url": "https://pacta.wtf/protocols/40-acres-base/",
       "source": "canonical_vault"
     },
@@ -11585,13 +11585,13 @@
       "symbol_hint": "40Acres",
       "slug": "40-acres-base",
       "protocolName": "40 Acres (Base)",
-      "grade": "DELTA",
+      "grade": "UNRESOLVED",
       "easAttested": true,
       "pinnedBlock": 59025642,
       "baseEasUids": [
         "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768"
       ],
-      "summary_short": "Docs call 40 Acres immutable, but an upgradeable proxy sits on chain",
+      "summary_short": "Base AERO USDC Loan UUPS proxy (2-of-3 Safe); prior upgradeability line removed by 25 Nov",
       "url": "https://pacta.wtf/protocols/40-acres-base/",
       "source": "lookup_related"
     },
@@ -11600,13 +11600,13 @@
       "symbol_hint": "40Acres",
       "slug": "40-acres-base",
       "protocolName": "40 Acres (Base)",
-      "grade": "DELTA",
+      "grade": "UNRESOLVED",
       "easAttested": true,
       "pinnedBlock": 59025642,
       "baseEasUids": [
         "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768"
       ],
-      "summary_short": "Docs call 40 Acres immutable, but an upgradeable proxy sits on chain",
+      "summary_short": "Base AERO USDC Loan UUPS proxy (2-of-3 Safe); prior upgradeability line removed by 25 Nov",
       "url": "https://pacta.wtf/protocols/40-acres-base/",
       "source": "lookup_related"
     },

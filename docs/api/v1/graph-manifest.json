@@ -14,8 +14,8 @@
  ],
  "sources": {
   "sha256": {
-   "protocols.json": "0942fd21b9dfe8bffed7d542132f1c595768994e3ad04a8728e7d6960ab90413",
-   "index.json": "321b0452e18218fa3ebdcf471cc52cd8ac806d98d9c84ba64045b755bc482fdb",
+   "protocols.json": "9b428f827f67f9f1a191fd7ebf1636ab91326d2b5b34b7cfa1a5c0beaafa7d12",
+   "index.json": "43c83d3a580d35638113b01e05a1e839032a161b0e0c968b0d45c2bf3a824c17",
    "rpc-pinned.json": "383d09fabf7242d3429b20cccd909bb38a5524913d0d023e8061f73f0310ae59",
    "graph_dependencies.json": "c32f718b692f497f33bd8e50e300b883ae1ce3316215fb5e2d01f2c235bff4fa",
    "graph_controller_facts.json": "8bf0299b9aaf52211fccdc5ced9e9b60603b877b7942b19c9e0afe82d10a9ddf"
@@ -3428,7 +3428,7 @@
   {
    "id": "pacta-gap-40-acres-base-upgradeability-s28",
    "kind": "control_plane_gap",
-   "text": "Control-plane gap 40-acres-base-upgradeability-s28: 40 Acres (Base) — AERO USDC Loan proxy: docs call the contracts immutable, but it is an upgradeable proxy. Observed: 40 Acres AERO USDC Loan proxy 0x87f1..EFD0 (Base): EIP-1967 implementation slot = 0xb43b..0735; the implementation's proxiableUUID() = the EIP-1967 slot (UUPS), UPGRADE_INTERFACE_VERSION() = '5.0.0'; owner() = 0xfF16..BD23, a Safe 2-of-3. Documented: '40 Acres has completed four independent audits with Sherlock. Smart contracts are immutable and non-upgradeable post-deployment.' (docs.40acres.finance) Sprint 28, Base block 59025642."
+   "text": "Control-plane gap 40-acres-base-upgradeability-s28: 40 Acres (Base) — AERO USDC Loan contract (UUPS proxy): 2-of-3 Safe upgrade owner; prior upgradeability line removed by 25 Nov 2026. Observed: 40 Acres AERO USDC Loan proxy 0x87f1..EFD0 (Base): EIP-1967 implementation slot = 0xb43b..0735; the implementation's proxiableUUID() = the EIP-1967 slot (UUPS), UPGRADE_INTERFACE_VERSION() = '5.0.0'; owner() = 0xfF16..BD23, a Safe 2-of-3. Documented: Prior snapshot (last seen 24 November 2026, 10:40 UTC): '40 Acres has completed four independent audits with Sherlock. Smart contracts are immutable and non-upgradeable post-deployment.' (docs.40acres.finance/index.md). Retrieved 25 November 2026 (07:35–07:42 UTC across index.md, security.md and all 21 pages in llms.txt): the second sentence is absent, and current documentation states only Sherlock audit completion and deployed contract addresses, with no statement on upgradeability or delays. Sprint 28, Base block 59025642."
   },
   {
    "id": "pacta-gap-abracadabra-spell-safe-threshold-s30",
@@ -13447,12 +13447,12 @@
     "target_contract_hex": "87f18b377e625b62c708d5f6ea96ec193558efd0",
     "block_number": 59025642,
     "block_hash_hex": "8fc618f8e02aa1fd1c3bcf1300fd25e40291a0fcde351bd39ad8cb61781d5e12",
-    "surface": "AERO USDC Loan contract (UUPS proxy): docs call the contracts immutable, but it is an upgradeable proxy",
+    "surface": "AERO USDC Loan contract (UUPS proxy): 2-of-3 Safe upgrade owner; prior upgradeability line removed by 25 Nov 2026",
     "observed_delay_seconds": null,
     "documented_delay_seconds": null,
     "summary_sha256_hex": "062632d4abf0411664883823e185de5f974c9e989bf8497c0e8863b557b878bd"
    },
-   "content_hash": "276cf69129163542ae408117dba927f75a157b67caf3a6394a9a180dd271544c"
+   "content_hash": "64f7c0805d880981ceddf13dd8c1e6ada683514c3077c7d5519311e5835c41ef"
   },
   {
    "edge_key": "exhibits_control_plane_gap:pacta-proto-abracadabra-spell->pacta-gap-abracadabra-spell-safe-threshold-s30",
@@ -15773,7 +15773,7 @@
     ],
     "controller_kind": null,
     "evidence_basis": "eas_attested",
-    "badge_tier": "parameter_delta",
+    "badge_tier": "unresolved",
     "observed_controller": {
      "facts_block_number": 59025642,
      "code_bytes": 170,
@@ -15781,7 +15781,7 @@
      "owner_hex": "ff16fd3d147220e6cc002a8e4a1f942ac41dbd23"
     }
    },
-   "content_hash": "27d3c1cafc09e5f79abaae33fb51f8f933de510e3d5cb8d1570c275888256281"
+   "content_hash": "8af4b72295f3f20a351cd448981d30f7142f16e08e8ddcfa0c72f0f8b5f42d0b"
   },
   {
    "edge_key": "governed_by_controller:pacta-proto-aave-v3-base->pacta-ctrl-base-2dc219e7",
@@ -41193,5 +41193,5 @@
    "content_hash": "05ef371295b62fdb44d9ca5283d2bb88c8b04b97efbd3cd97341b187a3797141"
   }
  ],
- "manifest_sha256": "ca24978eea293ea542acbd0b2d179502ca9c2d41a0e87ce53feff163bfac40dd"
+ "manifest_sha256": "6426b6bd6d51ca31ecaad7ccb03eb5f97ef91aedc92203de1653b697c372aea6"
 }

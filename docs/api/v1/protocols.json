@@ -102,10 +102,10 @@
   },
   {
    "badge": {
-    "label": "Delta",
+    "label": "Unresolved · Unverified Scope",
     "live": "https://api.pacta.wtf/v1/badges/40-acres-base.svg",
     "svg": "https://pacta.wtf/badges/40-acres-base.svg",
-    "tier": "parameter_delta"
+    "tier": "unresolved"
    },
    "baseEasUids": [
     "0x541dcd6767b83d7e01b7ffe6843d486d6abce09ef00801c39bf287c6d14a5768"
@@ -129,6 +129,7 @@
     "0xb43b30c405c61BC330227968635d130994450735",
     "0xfF16fd3D147220E6CC002a8e4a1f942ac41DBD23"
    ],
+   "scorecardStatus": "unresolved",
    "slug": "40-acres-base",
    "sprints": [
     28
@@ -142,7 +143,7 @@
      "classification": "parameter_delta",
      "id": "40-acres-base-upgradeability-s28",
      "sprint": 28,
-     "surface": "AERO USDC Loan contract (UUPS proxy): docs call the contracts immutable, but it is an upgradeable proxy",
+     "surface": "AERO USDC Loan contract (UUPS proxy): 2-of-3 Safe upgrade owner; prior upgradeability line removed by 25 Nov 2026",
      "targetContract": "0x87f18b377e625b62c708D5f6EA96EC193558EFD0",
      "targetLabel": "40 Acres AERO USDC Loan proxy (UUPS)"
     }
@@ -17785,10 +17786,10 @@
   "badgeTiers": {
    "aligned": 126,
    "docs_updated": 1,
-   "parameter_delta": 50,
+   "parameter_delta": 49,
    "recent_change": 1,
    "rpc_observed": 127,
-   "unresolved": 11
+   "unresolved": 12
   },
   "easAttested": 189,
   "protocols": 316,

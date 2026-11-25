@@ -22,7 +22,7 @@ R4_LONG = frozenset([
 SUMMARY = {
     "3f": "Non-proxy contract no readable owner or admin; docs not assessed",
     "3jane-lending": "3Jane Lending's Upgrades admin acts through a 7-day timelock, as documented",
-    "40-acres-base": "Docs call 40 Acres immutable, but an upgradeable proxy sits on chain",
+    "40-acres-base": "Base AERO USDC Loan UUPS proxy (2-of-3 Safe); prior upgradeability line removed by 25 Nov",
     "aave-v3-base": "Pause and unpause admin is the Aave Guardian 4-of-7 Safe, as documented",
     "aave-v3-gho": "ACL admin role, executor delay and Guardian Safe match the docs",
     "abracadabra-spell": "Docs state a 5-of-10 multisig; the Abracadabra Spell Safe is 5-of-11",

@@ -234,15 +234,16 @@
    "leadRecord": "whales-market-upgradeability-s28"
   },
   "40-acres-base": {
-   "status": "delta",
+   "status": "unresolved",
    "chain": "base",
    "pinnedBlock": 59025642,
-   "headline": "40 Acres Base loan contract is upgradeable under a 2-of-3 Safe; its introduction describes contracts as immutable",
-   "explanatorySentence": "40 Acres' introduction page states that smart contracts are immutable and non-upgradeable post-deployment, while Pacta recorded at Base block 59,025,642 that 0x87f18b377e625b62c708D5f6EA96EC193558EFD0 — listed on 40 Acres' contracts page as the AERO USDC Loan contract (distinct from the 0xB99B…7Cf5 Vault) — is a UUPS proxy owned by a 2-of-3 Safe.",
-   "summaryShort": "Base AERO USDC Loan contract is upgradeable (2-of-3 Safe); intro says immutable",
+   "headline": "Base AERO USDC Loan contract is a UUPS proxy under a 2-of-3 Safe; current docs make no upgradeability claim",
+   "explanatorySentence": "40 Acres' introduction page previously included the sentence 'Smart contracts are immutable and non-upgradeable post-deployment.' (last seen by Pacta on 24 November 2026 at 10:40 UTC); on or before 25 November 2026 that sentence was removed, and current documentation makes no statement on upgradeability or delays. At Base block 59,025,642 (attested) and re-checked on two Base RPCs at block 62,011,451 on 25 November 2026, 0x87f18b377e625b62c708D5f6EA96EC193558EFD0 (AERO USDC Loan) remains a UUPS proxy owned by the 2-of-3 Safe 0xfF16fd3D147220E6CC002a8e4a1f942ac41DBD23.",
+   "summaryShort": "Base AERO USDC Loan UUPS proxy (2-of-3 Safe); prior upgradeability line removed by 25 Nov",
    "recordOverrides": {
     "40-acres-base-upgradeability-s28": {
-     "surface": "AERO USDC Loan contract (UUPS proxy): docs call the contracts immutable, but it is an upgradeable proxy",
+     "surface": "AERO USDC Loan contract (UUPS proxy): 2-of-3 Safe upgrade owner; prior upgradeability line removed by 25 Nov 2026",
+     "documented_reference": "Prior snapshot (last seen 24 November 2026, 10:40 UTC): '40 Acres has completed four independent audits with Sherlock. Smart contracts are immutable and non-upgradeable post-deployment.' (docs.40acres.finance/index.md). Retrieved 25 November 2026 (07:35–07:42 UTC across index.md, security.md and all 21 pages in llms.txt): the second sentence is absent, and current documentation states only Sherlock audit completion and deployed contract addresses, with no statement on upgradeability or delays. Dual-RPC chain re-read at Base block 62,011,451 (25 November 2026, 07:44 UTC) confirms 0x87f18b377e625b62c708D5f6EA96EC193558EFD0 remains a UUPS proxy (implementation 0xb43b30c405c61BC330227968635d130994450735) owned by the same 2-of-3 Safe 0xfF16fd3D147220E6CC002a8e4a1f942ac41DBD23.",
      "target_label": "40 Acres AERO USDC Loan proxy (UUPS)",
      "category": "veNFT-backed lending (AERO USDC Loan UUPS proxy on Base)",
      "replace": [
@@ -251,6 +252,11 @@
        "40 Acres AERO USDC Loan proxy 0x87f18b377e625b62c708D5f6EA96EC193558EFD0"
       ]
      ]
+    }
+   },
+   "recordDisplay": {
+    "40-acres-base-upgradeability-s28": {
+     "documentedLabel": "Documented (prior snapshot through 24 Nov 2026; removed by 25 Nov 2026)."
     }
    },
    "leadRecord": "40-acres-base-upgradeability-s28"
@@ -518,10 +524,10 @@
   "text": "Any finding observed within 48 hours of an on-chain change carries Changed recently (changed on chain recently; documents not yet updated) and is re-checked after 72 hours before it counts as a Delta. When the 72-hour window elapses, the protocol is due for a fresh chain-and-documentation re-read; expiry never reinstates Delta without that re-read."
  },
  "reviewedFindings": {
-  "source": "independent verifier rulings, 21 November 2026 (copied verbatim; sourceSha256 is the rulings file)",
+  "source": "independent verifier rulings, 21 November 2026 (copied verbatim; sourceSha256 is the rulings file); 25 November 2026 update: 40-acres-base moves from Delta (weaker protection) to Unresolved: the documentation sentence it was compared against is no longer published (prior snapshot last seen 24 November 2026)",
   "sourceSha256": "3af3a50247e1030628f70069f4974c1533f7eb1f4819bfdcc9aa62db15e9df25",
   "partition": {
-   "40-acres-base": "delta",
+   "40-acres-base": "unresolved",
    "abracadabra-spell": "delta",
    "aerodrome-finance-base": "delta",
    "axelar-network": "delta",
@@ -580,7 +586,6 @@
   },
   "deltaGroups": {
    "clear_weaker": [
-    "40-acres-base",
     "bedrock-unibtc",
     "benddao-ape-staking",
     "bio-protocol",
@@ -630,26 +635,26 @@
    ]
   },
   "counts": {
-   "delta": 43,
+   "delta": 42,
    "recent_change": 1,
-   "unresolved": 11,
+   "unresolved": 12,
    "docs_updated": 1
   },
   "deltaSubcounts": {
-   "clear_weaker": 16,
+   "clear_weaker": 15,
    "real_difference": 16,
    "bookkeeping": 11
   },
   "fullCatalogueCounts": {
    "aligned": 126,
    "protective": 7,
-   "delta": 43,
+   "delta": 42,
    "recent_change": 1,
    "docs_updated": 1,
-   "unresolved": 11,
+   "unresolved": 12,
    "observed": 127
   },
-  "homeRadarSentence": "Of 56 reviewed findings, 43 are Deltas (16 weaker protections, 16 other differences and 11 bookkeeping changes), 1 is Changed recently, 1 is Docs updated and 11 are Unresolved; these statuses use retained chain observations.",
+  "homeRadarSentence": "Of 56 reviewed findings, 42 are Deltas (15 weaker protections, 16 other differences and 11 bookkeeping changes), 1 is Changed recently, 1 is Docs updated and 12 are Unresolved; these statuses use retained chain observations.",
   "labels": {
    "clear_weaker": "Weaker protection than documented",
    "real_difference": "Other difference needing explanation",
