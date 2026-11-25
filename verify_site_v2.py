@@ -96,7 +96,7 @@ def no_watch_24h(t):
     return WATCH_24H_RE.sub("", t)
 
 
-NON_PROTOCOL_PAGES = 42                                                  # docs/**/*.html pages that are not /protocols/<slug>/ (40: + /curators/ /scan/ /webhook/ /seal/ /miniapp/, + the Cap, Compound V3 and Lista Lending briefs)
+NON_PROTOCOL_PAGES = 43                                                  # docs/**/*.html pages that are not /protocols/<slug>/ (40: + /curators/ /scan/ /webhook/ /seal/ /miniapp/, + the Cap, Compound V3 and Lista Lending briefs; 43: + /sponsor/)
 
 
 def check(name, ok, detail=""):
@@ -2236,6 +2236,83 @@ def main(argv=None):
           f"behaviour {len(w_keys) - len(w_failed)}/{len(w_keys)} (harness)",
           not w_failed and all(w_static.values()),
           f"failed {w_failed[:4]}; static {[k_ for k_, v_ in w_static.items() if not v_]}; pilot/watch {w_pilot[:3]}")
+    # /sponsor/ (Phase B staging rules): the five lead pools in the approved order; every quote is the inner HTML of the same element on the
+    # protocol page's "What differs" block, byte for byte; the status word is the page's own (Delta); value locked only where
+    # data/defillama-protocol-tvls.json has a figure, always with "(DefiLlama, <day> <Mon>)"; curator groups only as a count linking
+    # /curators/ (no curator name); no 40 Acres / Bedrock; no amount, refund / 30-day terms, custody Safe or founder wording; one button,
+    # "Fund a fresh check" -> ../watch/#fund-check (which exists); the /watch/ editorial line word for word.
+    sp_ = pages.get(os.path.join("sponsor", "index.html"), "")
+    sp_main = sp_[sp_.find('<main id="main"'):sp_.find("</main>")] if '<main id="main"' in sp_ and "</main>" in sp_ else ""
+    sp_txt = html.unescape(re.sub(r"<[^>]+>", " ", sp_main))
+    sp_pools = ["treehouse-tree-teth", "maple-finance-v2-syrup", "usual-money-usd0-usd0", "inverse-finance-firm", "ethena-usde-susde"]
+    sp_mat = json.loads(read("data/curator-exposure-matrix.json"))["curators_and_institutional_allocators"]
+    sp_tvl_raw = json.loads(read("data/defillama-protocol-tvls.json"))
+    sp_tvl = {p_["pacta_slug"]: p_["total_tvl_usd"] for p_ in sp_tvl_raw["protocols"]
+              if p_.get("pacta_slug") and isinstance(p_.get("total_tvl_usd"), (int, float)) and p_["total_tvl_usd"] > 0}
+    sp_y, sp_m, sp_d = (int(x_) for x_ in sp_tvl_raw["fetchedAt"][:10].split("-"))
+    sp_src = f"(DefiLlama, {sp_d} {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][sp_m - 1]})"
+    sp_bad = []
+    for sl_ in sp_pools:
+        art_ = re.search(rf'<article class="memo-sec" id="pool-{sl_}" data-sponsor-pool="{sl_}">(.*?)</article>', sp_main, re.S)
+        prot_ = pages.get(os.path.join("protocols", sl_, "index.html"), "")
+        wd_ = re.findall(r'<section class="memo-sec whatdiffers[^"]*" data-what-differs>.*?</section>', prot_, re.S)
+        if not art_ or len(wd_) != 1:
+            sp_bad.append(f"{sl_}: card {bool(art_)} / What differs {len(wd_)}")
+            continue
+        a_, w_ = art_.group(1), wd_[0]
+        q_ = {k_: re.findall(rf'<(p|span)[^>]* data-sponsor-quote-{k_}>(.*?)</\1>', a_, re.S) for k_ in ("head", "body", "obs", "doc")}
+        q_ = {k_: [x_[1] for x_ in v_] for k_, v_ in q_.items() if v_}
+        rows_ = re.findall(r'<li data-wd-changed><b>(.*?)</b>: <span class="obs">(.*?)</span> observed vs <span class="doc">(.*?)</span> documented', w_)
+        leads_ = re.findall(r'<p class="wd-lead" data-wd-headline>(.*?)</p>', w_)
+        scopes_ = re.findall(r'<p class="wd-scope" data-wd-scope>(.*?)</p>', w_)
+        if set(q_) == {"head", "body"}:
+            ok_q = q_["head"] == leads_ and q_["body"] == scopes_ and len(leads_) == 1 and len(scopes_) == 1
+        elif set(q_) == {"head", "obs", "doc"} and all(len(v_) == 1 for v_ in q_.values()):
+            hit_ = [r_ for r_ in rows_ if f"<strong>{r_[0]}</strong>" == q_["head"][0]]
+            ok_q = len(hit_) == 1 and hit_[0][1] == q_["obs"][0] and q_["doc"][0] in [r_[2] for r_ in rows_]
+        else:
+            ok_q = False
+        n_ = sum(1 for c_ in sp_mat if sl_ in (c_.get("underlying_adverse_gap_slugs") or []))
+        tvl_ = sp_tvl.get(sl_)
+        checks_ = {
+            "quotes": ok_q,
+            "status": re.findall(r'<span class="badge ([a-z_]+)">([^<]*)</span>', a_) == [("delta", "Delta")]
+                      and "<h2>Control-plane badge: Delta</h2>" in prot_ and '<span class="badge delta">Delta</span>' in prot_,
+            "curators": re.findall(r'<dd><a href="\.\./curators/">([^<]*)</a></dd>', a_) == [f"{n_} curator group{'s' if n_ != 1 else ''}"] and n_ > 0,
+            "value locked": (re.findall(r'<dd data-sponsor-tvl>([^<]*)</dd>', a_) == [f"{BS.fmt_tvl(round(tvl_))} {sp_src}"]) if tvl_
+                            else "data-sponsor-tvl" not in a_ and "Value locked" not in a_,
+            "links": a_.count(f'<a href="../protocols/{sl_}/">') == 2 and f'<a href="../protocols/{sl_}/">Read full scorecard' in a_,
+        }
+        sp_bad += [f"{sl_}: {k_}" for k_, v_ in checks_.items() if not v_]
+    sp_cur_names = [c_["curator_name"] for c_ in sp_mat] + ["MEV Capital", "Gauntlet", "Steakhouse", "Re7", "Upshift", "Veda", "BoringVault",
+                                                           "Lagoon", "Concrete", "Yearn", "Beefy", "Mellow", "Euler", "Morpho", "K3 Capital"]
+    sp_watch_line = f'{html.escape(BS.EDITORIAL_FIREWALL)} {html.escape(BS.EDITORIAL_SHORT)}'
+    sp_static = {
+        "pools in order": re.findall(r'data-sponsor-pool="([a-z0-9-]+)"', sp_main) == sp_pools,
+        "five Delta badges, no invented severity": sp_main.count('<span class="badge delta">Delta</span>') == 5
+            and not re.search(r"\bserious\b|weaker protection|needs explaining", sp_, re.I),
+        "every $ figure is value locked with its source and date": re.findall(r"\$\S+", sp_txt) == [BS.fmt_tvl(round(sp_tvl[s_])).split()[0] for s_ in sp_pools if s_ in sp_tvl]
+            and len(re.findall(r"\$[\d.,]+[KMB]? TVL " + re.escape(sp_src), sp_txt)) == sum(1 for s_ in sp_pools if s_ in sp_tvl),
+        "no curator name": not [nm_ for nm_ in sp_cur_names if nm_ in sp_txt],
+        "no 40 Acres / Bedrock": not re.search(r"40 ?Acres|40-acres|Bedrock|bedrock-unibtc", sp_, re.I),
+        "no amount / terms / custody / founder": not re.search(r"\bUSDC\b|\brefund|30-day|two-signature Safe|Safe on Base|Safe deposit|\bfounder\b|\bBen\b|/ ?mo\b",
+                                                                 html.unescape(re.sub(r"<[^>]+>", " ", sp_)), re.I)
+            and not BS.WATCH_BANNED_RE.search(sp_txt),
+        "one button: Fund a fresh check -> /watch/#fund-check": sp_main.count('data-slot="button"') == 1
+            and '<a data-slot="button" data-variant="default" data-size="lg" href="../watch/#fund-check" data-cta="sponsor_fund_check">Fund a fresh check</a>' in sp_main
+            and 'id="fund-check"' in watch_,
+        "editorial line = /watch/": f'<p class="note" data-sponsor-editorial>{sp_watch_line}</p>' in sp_main and f"{sp_watch_line} " in watch_,
+        "header": '<h1>Fund a fresh control-plane check</h1>' in sp_main and (f'<p class="lede">{html.escape(BS.SPONSOR_LEDE)}</p>') in sp_main
+            and '<span>Sponsor a check</span></nav>' in sp_main,
+        "head + sitemap": f'<link rel="canonical" href="{BS.BASE_URL}/sponsor/">' in sp_ and f"<loc>{BS.BASE_URL}/sponsor/</loc>" in read("docs/sitemap.xml")
+            and "<title>Fund a fresh control-plane check · Pacta</title>" in sp_ and sp_.count("data-staging-banner") == 0,
+    }
+    check("/sponsor/: five lead pools in order (Treehouse, Maple, Usual, Inverse FiRM, Ethena); every quote = the protocol page's What differs "
+          "element byte for byte; the page's own Delta status; value locked only with (DefiLlama, date); curator groups as a count linking "
+          "/curators/, no curator name; no 40 Acres / Bedrock; no amount, terms, custody Safe or founder wording; one button to "
+          "/watch/#fund-check; the /watch/ editorial line word for word",
+          bool(sp_main) and not sp_bad and all(sp_static.values()),
+          f"cards {sp_bad[:5]}; static {[k_ for k_, v_ in sp_static.items() if not v_]}")
     rescue_ = read("docs/404-rescue.js") if os.path.exists(os.path.join(DOCS, "404-rescue.js")) else ""
     nf_ = pages.get("404.html", "")
     csp_at = nf_.find(f'<meta http-equiv="Content-Security-Policy" content="{BS.CSP}">')
@@ -3839,9 +3916,12 @@ def main(argv=None):
     hidden_ = {int(x) for x in re.findall(r"#proto-table td:nth-child\((\d)\)", m639)}
     cta_words = sorted({re.sub(r"<[^>]+>", "", m.group(1)).strip() for t in all_pages.values()
                         for m in re.finditer(r'<a[^>]*data-slot="button"[^>]*data-cta="[^"]+"[^>]*>(.*?)</a>|<a class="cta"[^>]*>(.*?)</a>', t) if m.group(1)})
-    pp["U7 + R4 layout: every CTA button label is 3 words or fewer; NavigationMenu >= 768 px, hamburger Sheet below (menu button shown, nav hidden); "
+    pp["U7 + R4 layout: every CTA button label is 3 words or fewer (one named exception: the approved /sponsor/ label 'Fund a fresh check', on one page); "
+       "NavigationMenu >= 768 px, hamburger Sheet below (menu button shown, nav hidden); "
        "/protocols/ <= 640 px = Protocol / Chain / Docs vs chain"] = (
-        cta_words and all(len(w.split()) <= 3 for w in cta_words)
+        cta_words and all(len(w.split()) <= 3 for w in cta_words if w != BS.SPONSOR_CTA[0])
+        and sum(t.count(f'data-cta="sponsor_fund_check">{BS.SPONSOR_CTA[0]}</a>') for t in all_pages.values()) <= 1
+        and sum(len(re.findall(r'<a[^>]*data-slot="button"[^>]*data-cta="[^"]+"[^>]*>' + re.escape(BS.SPONSOR_CTA[0]) + '</a>', t)) for t in all_pages.values()) <= 1
         and '[data-slot="navigation-menu"], .tools .gh, .tools .xl { display: none; }' in m767 and ".menu-btn { display: inline-flex; }" in m767
         and top_level(css_p, ".menu-btn { display: none; }")
         and [ths_[i - 1] for i in range(1, len(ths_) + 1) if i not in hidden_] == ["Protocol", "Chain", "Docs vs chain"]

@@ -2314,6 +2314,114 @@ def watch_page(idx):
     return page
 
 
+# /sponsor/ (Phase B): five lead pools and one job, funding a fresh check on /watch/#fund-check. Every quoted line is the published
+# protocol page's own element, byte for byte (read back from docs/protocols/<slug>/index.html, so build_all() writes this page after
+# them); the status word is the page's own; value locked only where data/defillama-protocol-tvls.json has a figure, with its source and
+# date; curator exposure only as a count of curator groups linking to /curators/ (never a curator name). No amount, no custody wording.
+SPONSOR_POOLS = [   # (slug, quote source) in the approved order
+    ("treehouse-tree-teth", "lead"),          # "lead": the declarative headline (with its pinned block) and the scope sentence
+    ("maple-finance-v2-syrup", "lead"),
+    ("usual-money-usd0-usd0", "lead"),
+    # two "What differs" rows of the page: the heading and observed text of the first, the documented text of the second
+    ("inverse-finance-firm", ("Policy Committee Safe: 3-of-6 (docs: 5 of 9); 4-of-7 at #26,399,876",
+                              "Policy Committee Safe Quorum & GovernorMills Timelock")),
+    ("ethena-usde-susde", "lead"),
+]
+SPONSOR_TITLE = "Fund a fresh control-plane check"
+SPONSOR_LEDE = ("Five published Delta findings held across institutional curator portfolios. Pick a protocol below to read its pinned "
+                "scorecard, or fund a fresh dual-RPC and documentation check.")
+SPONSOR_CTA = ("Fund a fresh check", "../watch/#fund-check")
+# never on /sponsor/: an amount or price, refund / 30-day terms, custody Safe wording, a founder mention, 40 Acres or Bedrock, an invented
+# severity word (the page uses the protocol page's own status word)
+SPONSOR_BANNED_RE = re.compile(r"\bUSDC\b|\brefund|30-day|two-signature Safe|Safe on Base|Safe deposit|\bfounder\b|\bBen\b|40 ?Acres|40-acres|"
+                               r"Bedrock|\bserious\b|weaker protection|needs explaining|/ ?mo\b", re.I)
+
+
+def wd_quotes(slug, docs=None):
+    """The "What differs" block of the generated docs/protocols/<slug>/index.html as raw inner HTML: (headlines, scope sentences,
+    [(heading, observed, documented) per changed row]) and the page's own status word (its "Control-plane badge" heading)."""
+    t = open(os.path.join(docs or DOCS, "protocols", slug, "index.html"), encoding="utf-8").read()
+    blk = re.findall(r'<section class="memo-sec whatdiffers[^"]*" data-what-differs>.*?</section>', t, re.S)
+    assert len(blk) == 1, f"{slug}: {len(blk)} What differs blocks"
+    b = blk[0]
+    status = re.findall(r'<h2>Control-plane badge: ([^<]+)</h2>', t)
+    return (re.findall(r'<p class="wd-lead" data-wd-headline>(.*?)</p>', b), re.findall(r'<p class="wd-scope" data-wd-scope>(.*?)</p>', b),
+            re.findall(r'<li data-wd-changed><b>(.*?)</b>: <span class="obs">(.*?)</span> observed vs <span class="doc">(.*?)</span> documented', b),
+            status)
+
+
+def tvl_source_label():
+    """'(DefiLlama, 20 Nov)': the snapshot's source and date (data/defillama-protocol-tvls.json fetchedAt)."""
+    raw = json.load(open(TVL_SRC, encoding="utf-8"))
+    d = dt.datetime.strptime(raw["fetchedAt"][:10], "%Y-%m-%d")
+    return f"(DefiLlama, {d.day} {d.strftime('%b')})"
+
+
+def sponsor_curator_groups(slug, mat=None):
+    """How many curator groups of data/curator-exposure-matrix.json hold the protocol as an underlying flagged comparison."""
+    mat = mat or json.load(open(os.path.join(ROOT, "data", "curator-exposure-matrix.json"), encoding="utf-8"))
+    return sum(1 for c in mat["curators_and_institutional_allocators"] if slug in (c.get("underlying_adverse_gap_slugs") or []))
+
+
+def sponsor_page(idx):
+    count_line = coverage_line(idx)
+    reg = idx["onchain_anchoring"]["commitment_registry"]
+    lk = lookup_items()
+    mat = json.load(open(os.path.join(ROOT, "data", "curator-exposure-matrix.json"), encoding="utf-8"))
+    tvl, tvl_src = load_tvl_map(), tvl_source_label()
+    cards = []
+    for slug, src in SPONSOR_POOLS:
+        name = lk[slug]["name"]
+        leads, scopes, rows, status = wd_quotes(slug)
+        assert status == ["Delta"], f"{slug}: the protocol page's status is {status}, not Delta"
+        if src == "lead":
+            assert len(leads) == 1 and len(scopes) == 1, f"{slug}: {len(leads)} headlines, {len(scopes)} scope sentences"
+            quotes = (f'<p class="wd-lead" data-sponsor-quote-head>{leads[0]}</p>'
+                      f'<p class="wd-scope" data-sponsor-quote-body>{scopes[0]}</p>')
+        else:
+            by = {html.unescape(h): (h, o, d) for h, o, d in rows}
+            assert len(by) == len(rows) and src[0] in by and src[1] in by, f"{slug}: What differs rows {sorted(by)}"
+            head_, obs_, doc_ = by[src[0]][0], by[src[0]][1], by[src[1]][2]
+            quotes = (f'<p class="wd-lead" data-sponsor-quote-head><strong>{head_}</strong></p>'
+                      f'<p class="wd-scope">Observed: <span data-sponsor-quote-obs>{obs_}</span></p>'
+                      f'<p class="wd-scope">Documented: <span data-sponsor-quote-doc>{doc_}</span></p>')
+        n = sponsor_curator_groups(slug, mat)
+        assert n > 0, slug
+        meta = (f'<dt>Status</dt><dd><span class="badge delta">Delta</span></dd>'
+                f'<dt>Curator exposure</dt><dd><a href="../curators/">{n} curator group{"s" if n != 1 else ""}</a></dd>'
+                + (f'<dt>Value locked</dt><dd data-sponsor-tvl>{E(fmt_tvl(tvl[slug]))} {E(tvl_src)}</dd>' if tvl.get(slug) else ""))
+        cards.append(f'<article class="memo-sec" id="pool-{slug}" data-sponsor-pool="{slug}">'
+                     f'<h2><a href="../protocols/{slug}/">{E(name)}</a></h2><dl class="memo-meta">{meta}</dl>{quotes}'
+                     f'<p class="convert-cta"><a href="../protocols/{slug}/">Read full scorecard{ARR}</a></p></article>')
+    crumbs = ('<nav class="crumbs breadcrumb" aria-label="Breadcrumb"><a href="../">Pacta</a><span aria-hidden="true">/</span>'
+              '<span>Sponsor a check</span></nav>')
+    cta = U.button(E(SPONSOR_CTA[0]), href=SPONSOR_CTA[1], variant="default", size="lg", attrs='data-cta="sponsor_fund_check"')
+    main = (f'<main id="main" class="memo-wrap">\n{crumbs}\n<article class="memo">\n'
+            f'<header class="pd-head"><h1>{E(SPONSOR_TITLE)}</h1><p class="lede">{E(SPONSOR_LEDE)}</p><p class="ctas">{cta}</p></header>\n'
+            + "\n".join(cards) + "\n"
+            f'<section class="memo-sec" id="how"><p class="note" data-sponsor-editorial>{E(EDITORIAL_FIREWALL)} {E(EDITORIAL_SHORT)}</p></section>\n'
+            f'</article>\n</main>')
+    body = f"""<body>
+{topbar("../")}
+{main}
+{footer(count_line, reg, "../")}
+</body></html>
+"""
+    page = head(f"{SPONSOR_TITLE} · Pacta",
+                "Five published Delta findings held across institutional curator portfolios, each quoted from its pinned scorecard. "
+                "Fund a fresh dual-RPC and documentation check.", f"{BASE_URL}/sponsor/", prefix="../",
+                og_title=SPONSOR_TITLE, image=f"{BASE_URL}/og-preview.png", image_size=SOCIAL_SIZE) + "\n" + body
+    txt = html.unescape(re.sub(r"<[^>]+>", " ", main))
+    bad = SPONSOR_BANNED_RE.findall(re.sub(r"<[^>]+>", " ", page)) + WATCH_BANNED_RE.findall(txt)
+    assert not bad, f"/sponsor/ must not say {sorted(set(bad))}"
+    money = re.findall(r"\$[\d.,]+[KMB]? TVL \(DefiLlama, \d{1,2} [A-Z][a-z]{2}\)|\$\S*", txt)
+    assert money == [f"{fmt_tvl(tvl[sl])} {tvl_src}" for sl, _ in SPONSOR_POOLS if tvl.get(sl)], f"/sponsor/ figures {money}"
+    names = [c["curator_name"] for c in mat["curators_and_institutional_allocators"]]
+    assert not [nm for nm in names if nm in txt], "/sponsor/ names a curator"
+    assert main.count('data-slot="button"') == 1, "/sponsor/: one button"
+    return page
+
+
 MINIAPP_PRESETS = [
     ("Moonwell (Base)", "base", "0xfBb21d0380beE3312B33c4353c8936a0F13EF26C", "moonwell-lending-base"),
     ("USDC (Base)", "base", "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", "circle-usdc"),
@@ -6585,6 +6693,7 @@ def build_all():
     for name, v in sp.items():
         w(f"protocols/{v['slug']}/index.html", protocol_page(name, v["entries"], idx, radar, digest, v["slug"]))
     w("protocols/index.html", protocols_index_page(idx, sp))
+    w("sponsor/index.html", sponsor_page(idx))   # quotes the protocol pages just written (five lead pools, one CTA to /watch/#fund-check)
     w("integrations/vault-factories/index.html", vault_factories_page(idx, sp))
     claims = load_wave2_claims()
     claims3 = load_wave3_claims()
@@ -6618,7 +6727,7 @@ def build_all():
         w(root_name, open(os.path.join(DOCS, src_rel), encoding="utf-8").read())
     w("feed.xml", atom_feed(idx, radar))
     w("api/v1/feed.json", json_feed(idx, radar))
-    urls = ["/", "/request/", "/scan/", "/watch/", "/seal/", "/miniapp/", "/curators/", "/.well-known/farcaster.json", "/llms.txt", "/api/v1/index.json", "/api/v1/radar.json"] + [f"/briefs/{k}/" for k in BRIEFS] + \
+    urls = ["/", "/request/", "/scan/", "/watch/", "/sponsor/", "/seal/", "/miniapp/", "/curators/", "/.well-known/farcaster.json", "/llms.txt", "/api/v1/index.json", "/api/v1/radar.json"] + [f"/briefs/{k}/" for k in BRIEFS] + \
         [f"/briefs/{b['slug']}/" for b in load_onboarding()["briefs"]] + (["/api/v1/onboarding.json"] if load_onboarding()["briefs"] else []) + \
         ["/api/v1/proposals.json", "/api/v1/rpc-pinned.json", "/api/v1/lookup.json", "/api/v1/protocols.json", "/api/v1/graph-manifest.json", "/api/v1/wallet-tokens.json", "/api/v1/curator-exposure-matrix.json", "/integrations/vault-factories/", "/for-protocols/", "/llms/", "/llms-full.txt", "/SKILL.md", "/.well-known/agent.json", "/.well-known/mcp.json",
          "/demos/swapio-x402/", "/bounties/", "/leaderboard/", "/mcp/", "/protocols/", "/feed.xml", "/api/v1/feed.json",
