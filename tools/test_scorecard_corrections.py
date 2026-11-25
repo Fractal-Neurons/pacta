@@ -31,6 +31,9 @@ def j(*p):
 
 
 CARDS = {c["slug"]: c for c in j("api", "v1", "scorecards.json")["protocols"]}
+# 25 November 2026 quick batch: RPC-pinned Observed protocols published after the Scorecard-87 base commit
+QUICK_BATCH_SLUGS = {"wrapped-ether-weth", "wrapped-ether-weth-base", "unichain-canonical-bridge", "linea-rollup", "sui-canonical-bridge",
+                     "arbitrum-canonical-bridge", "spark-usdc-vault-base", "gauntlet-usdc-prime-base"}
 from collections import Counter as Counter_  # noqa: E402
 # the verifier's rulings wording, as copied verbatim into the registry (headline, pinned block, scope, evidence caption)
 RULINGS_WORDING = {s: {"headline": c["headline"], "pinnedBlock": c["pinnedBlock"], "scope": c.get("explanatorySentence"),
@@ -55,7 +58,7 @@ class Grades(unittest.TestCase):
     def test_totals(self):
         from collections import Counter
         self.assertEqual(Counter(c["grade"] for c in CARDS.values()),
-                         Counter({"aligned": 126, "protective": 7, "delta": 42, "recent_change": 1, "docs_updated": 1, "unresolved": 12, "observed": 127}))
+                         Counter({"aligned": 126, "protective": 7, "delta": 42, "recent_change": 1, "docs_updated": 1, "unresolved": 12, "observed": 135}))
 
     def test_unresolved_is_neither_delta_nor_aligned(self):
         for s in UNRES:
@@ -319,7 +322,7 @@ class V6(unittest.TestCase):
 
     def test_c13_tabs_equal_row_counts(self):
         import re
-        want = {"delta": 42, "recent_change": 1, "docs_updated": 1, "unresolved": 12, "protective": 7, "aligned": 126, "observed": 127}
+        want = {"delta": 42, "recent_change": 1, "docs_updated": 1, "unresolved": 12, "protective": 7, "aligned": 126, "observed": 135}
         hub = _read(os.path.join(ROOT, "docs", "protocols", "index.html"), encoding="utf-8")
         rows = Counter_(re.findall(r'<tr data-ptier="([a-z_]+)"', hub))
         tabs = {k: int(n) for k, n in re.findall(r'data-pfilter-status="([a-z_]+)"[^>]*>[^<]+ <span class="num">\((\d+)\)', hub) if k != "all"}
@@ -717,7 +720,7 @@ class V9(unittest.TestCase):
         bound = re.compile(r"\b([2-9]|1\d)-of-\d{1,2}\b|[Tt]imelock")
         addr = re.compile(r"0x[0-9a-fA-F]{40}")
         strong = [(s, x) for s, c in CARDS.items() for x in c["factors"] if x["key"] == "emergency" and x["state"] == "g"]
-        self.assertEqual(len(CARDS), 316)
+        self.assertEqual(len(CARDS), 324)
         self.assertEqual(len(strong), 13)   # Scorecard-87: hop-protocol emergency is reviewed down (M-group), 14 -> 13
         for s, x in strong:
             t = self._rec(x["evidenceRecordId"])["onchain_observed"]
@@ -941,15 +944,26 @@ class Scorecard87(unittest.TestCase):
         for a, c, n in self.WATCH_PAGE_MOVES:
             self.assertEqual(t.count(a), n, (slug, a[:60]))
             t = t.replace(a, c.format(name=html.escape(CARDS[slug]["name"]), slug=slug))
+        # the quick batch moves the footer's catalogue line (316 -> 324 protocols, 127 -> 135 Observed) on every page
+        self.assertGreaterEqual(t.count(self.QB_COUNT_MOVE[0]), 1, slug)
+        t = t.replace(*self.QB_COUNT_MOVE)
         return t.encode("utf-8")
+
+    QB_COUNT_MOVE = ("316 protocols (189 Base-EAS attested + 127 Observed)", "324 protocols (189 Base-EAS attested + 135 Observed)")
 
     @classmethod
     def setUpClass(cls):
         base = json.loads(cls._git("docs/api/v1/scorecards.json"))["protocols"]
         cls.B = {(p["slug"], f["key"]): f for p in base for f in p["factors"]}
-        cls.N = {(s, f["key"]): f for s, c in CARDS.items() for f in c["factors"]}
+        cls.base_slugs = {p["slug"] for p in base}
+        # protocols published after the base commit (25 November 2026 quick batch: 8 RPC-pinned Observed records) have no base slice
+        cls.N = {(s, f["key"]): f for s, c in CARDS.items() for f in c["factors"] if s in cls.base_slugs}
         cls.changed = {f"{s}:{k}" for (s, k) in cls.N if cls.N[(s, k)] != cls.B[(s, k)]}
         cls.pages = {e["slug"] for e in cls.EXP.values()}
+
+    def test_only_the_quick_batch_protocols_are_new(self):
+        self.assertEqual(set(CARDS) - self.base_slugs, QUICK_BATCH_SLUGS)
+        self.assertTrue(all(CARDS[s]["grade"] == "observed" for s in QUICK_BATCH_SLUGS))
 
     def test_exactly_the_130_slices_change(self):
         self.assertEqual(len(self.N), 1580)
@@ -1012,6 +1026,8 @@ class Scorecard87(unittest.TestCase):
             self.assertNotRegex(f["value"], self.FORBIDDEN, sid)
         # and outside the gate the rules never run: every other slice of the stripped build equals f7ea61a7
         for key, f in raw.items():
+            if key[0] in QUICK_BATCH_SLUGS:
+                continue                                       # published after BASE: no BASE slice (test_only_the_quick_batch_protocols_are_new)
             if f"{key[0]}:{key[1]}" in self.A40_SLICES:
                 self.assertEqual(f, self.N[key], key)          # A40: the Unresolved parity follows from the registry status alone
             elif f"{key[0]}:{key[1]}" not in self.EXP:
@@ -1025,7 +1041,7 @@ class Scorecard87(unittest.TestCase):
     REDRAWN = {"aave-v3-gho"}
 
     def test_clean_pages_and_cards_byte_identical_and_every_feed_rosette_follows_its_scorecard(self):
-        clean = sorted(set(CARDS) - self.pages - {self.A40})
+        clean = sorted(set(CARDS) - self.pages - {self.A40} - QUICK_BATCH_SLUGS)
         self.assertEqual(len(clean), 228)
         for p in (os.path.join("docs", "protocols", self.A40, "index.html"), os.path.join("docs", "cards", f"{self.A40}.png")):
             self.assertNotEqual(_read(os.path.join(ROOT, p), "rb"), self._git(p, binary=True), p)     # A40: redrawn
@@ -1039,7 +1055,11 @@ class Scorecard87(unittest.TestCase):
         feed = {i["feedId"]: i for i in j("api", "v1", "x-feed.json")["items"]}
         self.assertIn(self.A40_FEED[0], base_feed)
         self.assertNotIn(self.A40_FEED[0], feed)
-        self.assertEqual(set(base_feed) - {self.A40_FEED[0]}, set(feed) - {self.A40_FEED[1]})
+        qb = {fid for fid, it in feed.items() if it["slug"] in QUICK_BATCH_SLUGS}
+        self.assertEqual(({feed[f]["slug"] for f in qb}, {feed[f]["kind"] for f in qb}), (QUICK_BATCH_SLUGS, {"rpc_observed"}))
+        # the quick batch's items follow every BASE item (BASE priorities unchanged)
+        self.assertEqual(min(feed[f]["priority"] for f in qb), len(base_feed) + 1)
+        self.assertEqual(set(base_feed) - {self.A40_FEED[0]}, set(feed) - {self.A40_FEED[1]} - qb)
         cue = {"g": "S", "b": "M", "a": "W", "n": "—", "u": "—"}
         repaired, items = Counter_(), set()
         for fid, it in feed.items():
@@ -1055,6 +1075,8 @@ class Scorecard87(unittest.TestCase):
                 for k in ("docsSay", "chainSays", "mainPostText"):
                     self.assertNotRegex(it[k], self.FORBIDDEN, fid)
                 self.assertLessEqual(len(it["mainPostText"]), 270, fid)
+            elif it["slug"] in QUICK_BATCH_SLUGS:
+                continue                                       # new item: its rosette is checked above
             elif it["slug"] not in self.pages:
                 # a clean item keeps every other field of BASE
                 b = base_feed[fid]
@@ -1079,6 +1101,7 @@ class Scorecard87(unittest.TestCase):
         # R2: plus the changed protocols whose card text (docsSay / chainSays) changed in x-feed.json (m0-protocol-m)
         base_feed = {i["feedId"]: i for i in json.loads(self._git("docs/api/v1/x-feed.json"))["items"]}
         feed = j("api", "v1", "x-feed.json")["items"]
+        feed = [i for i in feed if i["slug"] not in QUICK_BATCH_SLUGS]   # new cards: rendered once, checked below with the rest
         texted = {i["slug"] for i in feed if i["feedId"] != self.A40_FEED[1]
                   and any(i.get(k) != base_feed[i["feedId"]].get(k) for k in ("docsSay", "chainSays"))}
         self.assertTrue(texted <= self.pages, sorted(texted - self.pages))
@@ -1086,7 +1109,8 @@ class Scorecard87(unittest.TestCase):
         redrawn = {i["slug"] for i in feed if i["slug"] not in self.pages and i["slug"] != self.A40
                    and any((r["state"], r["cue"]) != (rb["state"], rb["cue"]) for r, rb in zip(i["rosette"], base_feed[i["feedId"]]["rosette"]))}
         self.assertEqual(redrawn, self.REDRAWN)
-        self.assertEqual(diff, moved | texted | redrawn | {self.A40}, sorted(diff ^ (moved | texted | redrawn | {self.A40})))   # + A40
+        want = moved | texted | redrawn | {self.A40} | QUICK_BATCH_SLUGS
+        self.assertEqual(diff, want, sorted(diff ^ want))   # + A40 + the quick batch's 8 new cards
         for s in diff:
             b = _read(os.path.join(ROOT, "docs", "cards", f"{s}.png"), "rb")
             self.assertEqual(b[:8], b"\x89PNG\r\n\x1a\n", s)
@@ -1143,7 +1167,17 @@ class Scorecard87(unittest.TestCase):
         self.assertTrue(292 <= min(xs) and max(xs) < 498 and 489 <= ys[0] and ys[-1] < 545, (min(xs), ys[0], max(xs), ys[-1]))
 
     def test_attested_rows_js_css_and_mcp_untouched(self):
-        paths = ["docs/api/v1/rpc-pinned.json", "docs/api/v1/onboarding.json", "docs/api/v1/radar.json", "audits/",
+        # rpc-pinned.json: BASE plus the quick batch's 8 appended records / protocol rows, its summary counts and one appended
+        # sentence each in description and verification; every BASE record and protocol row byte-equal
+        b_p, n_p = json.loads(self._git("docs/api/v1/rpc-pinned.json")), j("api", "v1", "rpc-pinned.json")
+        self.assertEqual(n_p["entries"][:len(b_p["entries"])], b_p["entries"])
+        self.assertEqual({e["slug"] for e in n_p["entries"][len(b_p["entries"]):]}, QUICK_BATCH_SLUGS)
+        self.assertEqual([x for x in n_p["protocols"] if x["slug"] not in QUICK_BATCH_SLUGS], b_p["protocols"])
+        head = re.compile(r"^Read-only control-plane observations of \d+ protocols \(\d+ Ethereum, \d+ Base\)")
+        self.assertTrue(head.sub("", n_p["description"]).startswith(head.sub("", b_p["description"])))
+        self.assertTrue(n_p["verification"].startswith(b_p["verification"]))
+        self.assertEqual({k for k in set(b_p) | set(n_p) if b_p.get(k) != n_p.get(k)}, {"entries", "protocols", "summary", "description", "verification"})
+        paths = ["docs/api/v1/onboarding.json", "docs/api/v1/radar.json", "audits/",
                  "tools/pacta_x402_call.py", ".github/workflows/"]
         # index.json: BASE apart from A40 (its record's corrected wording fields, its neutral status and its wording override); every
         # attested field of the record (block, hash, classification, summary document and SHA-256, Base EAS UID) stays BASE
@@ -1160,7 +1194,18 @@ class Scorecard87(unittest.TestCase):
         self.assertEqual(ix, base_ix)
         # packages/mcp-server/ equals BASE while the package is still 0.1.5; the 0.1.6 package is its own later push
         if _load(os.path.join(ROOT, "packages", "mcp-server", "package.json"), encoding="utf-8")["version"] == "0.1.5":
-            paths.append("packages/mcp-server/")
+            # the embedded catalogue (src/lookup.mjs, regenerated by build_lookup.py; verify_site_v2 checks it equals lookup.json) and
+            # the README's RPC-observed count move with the quick batch; nothing else of the package
+            paths += ["packages/mcp-server/", ":(exclude)packages/mcp-server/src/lookup.mjs", ":(exclude)packages/mcp-server/README.md",
+                      ":(exclude)packages/mcp-server/test/lookup.test.mjs"]
+            self.assertEqual(_read(os.path.join(ROOT, "packages", "mcp-server", "README.md"), encoding="utf-8"),
+                             self._git("packages/mcp-server/README.md").replace("127 RPC-observed protocols", "135 RPC-observed protocols", 1))
+            # the lookup test's published counts and its list of aliased protocols follow the catalogue; nothing else of the test moved
+            t_now = _read(os.path.join(ROOT, "packages", "mcp-server", "test", "lookup.test.mjs"), encoding="utf-8")
+            t_base = self._git("packages/mcp-server/test/lookup.test.mjs")
+            strip = lambda t: re.sub(r"const PUBLISHED = Object\.freeze\(\{[^\n]*\n", "", re.sub(r"assert\.deepEqual\(aliased\.map\(\(x\) => x\.slug\), \[[^\]]*\]\);", "", t))
+            self.assertEqual(strip(t_now), strip(t_base))
+            self.assertIn("protocols: 324, briefs: 18, easAttestedProtocols: 189, rpcObservedProtocols: 135", t_now)
         out = subprocess.run(["git", "-c", "safe.directory=*", "-C", ROOT, "diff", self.BASE, "--", *paths], capture_output=True)
         self.assertEqual(out.returncode, 0)
         self.assertEqual(out.stdout, b"")

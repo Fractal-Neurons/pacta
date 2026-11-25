@@ -50,10 +50,10 @@ RESULTS = []
 # ---- EXPECT-BEGIN: the published numbers, in one place (tools/apply_sprint37_attestation.py rewrites this block when it stamps a Sprint)
 EXPECT = {
     "sprints": 37, "records": 309, "eas_attestations": 37,              # index.json sprints_completed / records_indexed; Base EAS sprint UIDs
-    "protocols": 316, "eas_protocols": 189, "rpc_protocols": 127,          # /protocols/ pages = EAS-attested + RPC-pinned; badges = protocols
-    "briefs": 18, "badge_tiers": {"aligned": 126, "parameter_delta": 49, "rpc_observed": 127, "unresolved": 12, "docs_updated": 1, "recent_change": 1},
+    "protocols": 324, "eas_protocols": 189, "rpc_protocols": 135,          # /protocols/ pages = EAS-attested + RPC-pinned; badges = protocols
+    "briefs": 18, "badge_tiers": {"aligned": 126, "parameter_delta": 49, "rpc_observed": 135, "unresolved": 12, "docs_updated": 1, "recent_change": 1},
     "base_records": 38,                                                  # index.json records with chain "base"
-    "rpc_by_chain": {"ethereum": 117, "base": 10},                         # rpc-pinned.json records per chain (sum = rpc_protocols)
+    "rpc_by_chain": {"ethereum": 122, "base": 13},                         # rpc-pinned.json records per chain (sum = rpc_protocols)
     "multi_attest_txs": ["1–12", "13–16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37"],                              # attestation_coverage.eas_multi_attest_txs keys
     "summaries": {"15": "61c0cc292cfa1fc3840277cf312383d24a6c81af56afac303afdbd84e7316cf6",
                   "16": "91b8e29301ef0e625c4ddc9eadaf5388115812f5958f90b6e0ed53a4808ba8ae",
@@ -83,7 +83,7 @@ EXPECT = {
 X = EXPECT
 # sha256 of docs/api/v1/graph-manifest.json: changes only through a deliberate re-pin (a Sprint stage / stamp rewrites it after the
 # rebuild); a merged Wave 2 claim or any site-only change must leave it as is
-GRAPH_MANIFEST_SHA256 = "04cfe880e8c2e3f1fd24b4f1bfa775f5cde42a94980b37081c8673de7ec9c60d"   # re-pinned (25 Nov 2026): 40 Acres Unresolved (corrected surface, badge tier, gap node text)
+GRAPH_MANIFEST_SHA256 = "f07e4c751c495e16ea1f1a6b2a40fa48e4b3576cc6ee870dd4b8d00f4bc5681b"   # re-pinned (25 Nov 2026): +8 RPC-pinned protocols (22 minted nodes, 14 edges)
 R4_REREAD_HEADS = {"ethereum": (26466974, "0x9265e0f25e8ff2d7358bb5edd03a563a6fa469772bad21dafbadec78d4bc4bdd"),   # wording-35 r4 re-read pins
                    "base": (60576992, "0x7780084ed01a331b77f78611578e99cb273c3a3dbad940d8205563f5068cfc30")}
 # /watch/ (receipt 8741 #1): the one approved 24-hour sentence family (a person at Pacta emailing about a watched protocol, or confirming
@@ -1997,7 +1997,7 @@ def main(argv=None):
         "search probes": lk.get("probes") == {"ethena": [["ethena-usde-susde", "prefix"], ["ethena-usdtb", "prefix"]],
                                               "usde": [["ethena-usde-susde", "exact"], ["ethena-ops-0x0ca0-0x1fe5", "exact"]],
                                               "aave": [["aave-v3-base", "exact"], ["aave-v3-gho", "exact"]],
-                                              "moonwell": [["moonwell-lending-base", "prefix"]], "kusd": [["kerne-kusd-base", "exact"], ["steakhouse-financial-ethereum", "substring"]],
+                                              "moonwell": [["moonwell-lending-base", "prefix"]], "kusd": [["kerne-kusd-base", "exact"], ["spark-usdc-vault-base", "substring"]],
                                               "uniswap": [["uniswap-governance-timelock", "prefix"], ["uniswap-v4", "prefix"]],
                                               "ether.fi": [["ether-fi-core-eeth-weeth", "prefix"], ["ether-fi-liquid-veda-boringvault", "prefix"]]}
                           and (lk.get("empty") or {}).get("count") == 20 and (lk.get("empty") or {}).get("totalMatches") == X["protocols"] + X["briefs"]
@@ -2960,7 +2960,7 @@ def main(argv=None):
         "V47-02: the command input paints a 2 px inset --ring outline on :focus-visible (both themes)":
             ".cmdk-head input:focus-visible { outline: 2px solid var(--ring); outline-offset: -2px; box-shadow: none; }" in css471
             and ".cmdk-head input:focus, .cmdk-head input:focus-visible { outline: none" not in css471,
-        "V47-03: ?basket= keeps underscores (exact <option> values): stable_rwa 69, eth_lst_lrt 46, lending_vaults 122, base 34; combined with ?grade= and ?q= (harness)":
+        "V47-03: ?basket= keeps underscores (exact <option> values): stable_rwa 70, eth_lst_lrt 46, lending_vaults 124, base 37; combined with ?grade= and ?q= (harness)":
             "replace(/[^a-z0-9-]/g" not in appjs and res.get("v471_basket_urls") is True,
     }
     check("v4.7.1 review fixes (V47-01 stable audience-tab height, V47-02 command-input focus ring, V47-03 basket URLs with underscores)",

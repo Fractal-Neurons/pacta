@@ -652,7 +652,7 @@
    "recent_change": 1,
    "docs_updated": 1,
    "unresolved": 12,
-   "observed": 127
+   "observed": 135
   },
   "homeRadarSentence": "Of 56 reviewed findings, 42 are Deltas (15 weaker protections, 16 other differences and 11 bookkeeping changes), 1 is Changed recently, 1 is Docs updated and 12 are Unresolved; these statuses use retained chain observations.",
   "labels": {

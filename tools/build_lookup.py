@@ -74,7 +74,7 @@ TOKENS = {
     "superstate-ustb-uscc": ["USTB", "USCC"], "swell-sweth-rsweth": ["swETH", "rswETH", "SWELL"], "symbiotic-core": ["Symbiotic"],
     "synthetix-v3-core": ["SNX", "sUSD"], "threshold-network-tbtc": ["tBTC", "T"], "treehouse-tree-teth": ["tETH", "TREE"],
     "uniswap-governance-timelock": ["UNI"],
-    "usual-money-usd0-usd0": ["USD0", "USD0++", "USUAL"], "yearn-v3": ["YFI"],
+    "usual-money-usd0-usd0": ["USD0", "USD0++", "USUAL"], "yearn-v3": ["YFI", "ymvOG-USDC"],
     "falcon-finance-usdf-susdf": ["USDf", "sUSDf"], "m0-protocol-m": ["M", "M0", "MToken"], "solv-protocol-solvbtc": ["SolvBTC", "SOLV"], "steakhouse-usdc-metamorpho-base": ["steakUSDC", "Steakhouse", "MetaMorpho"],
     "nexus-mutual": ["NXM", "wNXM", "Nexus Mutual"], "enzyme-finance": ["MLN", "Enzyme"], "stargate-v2": ["STG", "Stargate"], "aerodrome-slipstream-base": ["AERO", "Slipstream"],
     "aave-v3-base": ["AAVE", "Aave Base"], "compound-v3-base": ["COMP", "cUSDCv3"], "liquid-collective-lseth": ["LsETH", "Liquid Collective"], "ethena-usdtb": ["USDtb", "USDTB"],
@@ -82,7 +82,7 @@ TOKENS = {
     "coinbase-wrapped-staked-eth": ["cbETH"], "ssv-network": ["SSV"], "grove-finance": ["GROVE", "stGROVE"], "re": ["reUSD", "reUSDe", "RE"],
     "stake-dao": ["SDT", "veSDT"], "resupply": ["RSUP", "sreUSD"], "yo-protocol": ["yoETH", "yoUSD", "YO"], "liquity-v1-lusd": ["LUSD", "LQTY"],
     "circle-usdc": ["USDC"], "tether-usdt": ["USDT"], "frax-usd-frxusd": ["frxUSD", "sfrxUSD"], "paypal-usd-pyusd": ["PYUSD"],
-    "steakhouse-financial-ethereum": ["steakUSDT", "steakPYUSD", "steakUSDC", "Steakhouse"], "uniswap-v4": ["UNI", "Uniswap v4", "PoolManager"], "chainlink-ccip": ["CCIP", "LINK", "Chainlink"], "obol-network": ["OBOL", "stOBOL", "Obol"],
+    "steakhouse-financial-ethereum": ["steakUSDT", "steakPYUSD", "steakUSDC", "Steakhouse"], "uniswap-v4": ["UNI", "Uniswap v4", "PoolManager"], "chainlink-ccip": ["CCIP", "LINK", "Chainlink"], "obol-network": ["OBOL", "stOBOL", "Obol", "rstOBOL"],
     "layerzero-v2": ["ZRO", "LayerZero", "EndpointV2"], "wormhole-core-ntt": ["Wormhole", "NTT", "Guardian"], "railgun": ["RAIL", "Railgun"], "axelar-network": ["AXL", "Axelar", "AxelarGateway", "InterchainTokenService"],
     # Sprint 26 promotion (bulk harvester v1.3)
     "3f": ["3F"], "3jane-lending": ["3Jane"], "aegis-yusd": ["YUSD"], "aera-v3": ["Aera"], "alchemix-v3": ["ALCX"],
@@ -91,7 +91,7 @@ TOKENS = {
     "concentrator": ["CTR"], "cooler-loans": ["OHM"], "curve-dex-ethereum": ["Curve"], "derive-v3-options": ["DRV"], "frankencoin": ["FCS"],
     "grvt-bridge": ["GRVT"], "hyperlane": ["Hyperlane"], "idex-v1": ["IDEX"], "ipor-fusion": ["IPOR"], "k3-capital": ["K3"], "kpk": ["KPK"],
     "lighter-bridge": ["LIT"], "makina": ["Makina"], "noon": ["USN"], "origami-finance": ["SKY+"], "pancakeswap-amm-v3": ["PancakeSwap"],
-    "polygon-bridge": ["Polygon"], "rockawayx": ["eY10K"], "saturn": ["USDat"], "shift-defi": ["sdUSDC-vault"],
+    "polygon-bridge": ["Polygon", "polygon zkevm", "PolygonZkEVMBridge"], "rockawayx": ["eY10K"], "saturn": ["USDat"], "shift-defi": ["sdUSDC-vault"],
     "sierra-protocol": ["xSOLY"], "sonic-gateway": ["Sonic"], "starknet-bridge": ["STRK"], "team-finance": ["SWAP"],
     "theo-network-thusd": ["thUSD"], "tori-finance": ["trUSD"], "tornado-cash": ["TORN"], "uncx-network-v2": ["UNCX"], "usdt0": ["USDT0"],
     "veda": ["Veda"], "vesper-v1": ["VSP"], "world-chain-bridge": ["World"], "xdai-stake-bridge": ["STAKE"], "yield-basis": ["YB"],
@@ -106,7 +106,7 @@ TOKENS = {
     "gondi-v3": ["Gondi"], "gravity-by-galxe-bridge": ["Gravity"], "hakka-finance": ["HAKKA"], "harvest-finance": ["FARM"],
     "hop-protocol": ["HOP"], "iaero-protocol": ["LIQ"], "inceptionlrt-isolated-restaking": ["InceptionLRT"], "index-coop": ["INDEX"],
     "injective-bridge": ["INJ"], "juicebox-v1": ["JBX"], "kuma-protocol": ["USK"], "ledgity-yield": ["LDY"], "legion": ["Legion"],
-    "lista-lending": ["Lista"], "meta-pool-eth": ["mpETH"], "metis-bridge": ["Metis"], "metric-v1": ["Metric"], "metronome-synth": ["MET"],
+    "lista-lending": ["Lista"], "meta-pool-eth": ["mpETH"], "metis-bridge": ["Metis"], "metric-v1": ["Metric"], "metronome-synth": ["MET", "gtmsUSDc", "msUSD"],
     "monolith-market": ["Monolith"], "morph-bridge": ["Morph"], "morpheusai": ["MorpheusAI"], "multichain": ["anyMULTI"],
     "native-credit-pool": ["Native"], "nodedao": ["NodeDAO"], "nuva": ["NUVA"], "opengdp-shared-security": ["OpenGDP"],
     "orderly-bridge": ["ORDER"], "paradex-bridge": ["DIME"], "pickle": ["Pickle"], "piku-finance": ["PIKU"], "pirex": ["BTRFLY"],
@@ -151,6 +151,15 @@ TOKENS = {
     "etherfi-liquid-op-0xf0fb": ["liquidUSD", "liquidETH", "liquidBTC"], "lombard-op-0xd07f": ["LBTC", "BTC.b", "AssetRouter"],
     "umia-op-0x3d35": ["Umia", "UmiaHub", "UmiaMarketCore"], "cap-op-0x3397": ["cUSD", "Cap", "EigenServiceManager"], "compound-v3-op-0x86b4": ["cWETHv3", "Comet", "Linea"],
     "lista-lending-op-0x21df": ["Lista", "Moolah", "Liquidator", "EmergencySwitchHub"],
+    # 25 November 2026 quick batch: RPC-pinned records (two providers per chain)
+    "wrapped-ether-weth": ["WETH", "WETH9", "Wrapped Ether"],
+    "wrapped-ether-weth-base": ["WETH", "WETH9", "Wrapped Ether Base"],
+    "unichain-canonical-bridge": ["Unichain", "unichain-bridge", "OptimismPortalProxy"],
+    "linea-rollup": ["Linea", "linea-bridge", "L1MessageService"],
+    "sui-canonical-bridge": ["SUI", "suibridge", "sui-bridge", "SuiBridge"],
+    "arbitrum-canonical-bridge": ["ARB", "arbitrum", "arbitrum-bridge", "DelayedInbox"],
+    "spark-usdc-vault-base": ["sparkUSDC", "Spark USDC Vault"],
+    "gauntlet-usdc-prime-base": ["gtUSDCp", "Gauntlet USDC Prime"],
 }
 
 
@@ -223,6 +232,13 @@ ADDRESS_ALIASES = {
     "ether-fi-core-eeth-weeth": ["0x35fA164735182de50811E8e2E824cFb9B6118ac2", "0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee",
                                  "0xFe0c30065B384F05761f15d0CC899D4F9F9Cc0eB"],                  # eETH, weETH, ETHFI
     "morpho-blue-core": ["0x58D97B57BB95320F9a05dC918Aef65434969c2B2"],                     # MORPHO
+    # 25 November 2026 quick batch (read at Ethereum #26,466,974 on two providers: eth_getCode non-empty and a binding getter)
+    "yearn-v3": ["0xF9bdDd4A9b3A45f980e11fDDE96e16364dDBEc49"],                             # ymvOG-USDC (symbol(); asset() = USDC)
+    "polygon-bridge": ["0x2a3DD3EB832aF982ec71669E178424b10Dca2EDe"],                       # PolygonZkEVMBridge (EIP-1967 proxy)
+    "obol-network": ["0x1932e815254c53B3Ecd81CECf252A5AC7f0e8BeA", "0x0B010000b7624eb9B3DfBC279673C76E9D29D5F7"],  # rstOBOL, OBOL
+    "metronome-synth": ["0x6859B34a9379122d25A9FA46f0882d434fee36c3"],                      # gtmsUSDc (asset() = msUSD)
+    "linea-rollup": ["0xd6B95c960779c72B8C6752119849318E5d550574"],                         # timelock owning the LineaRollup admin
+    "arbitrum-canonical-bridge": ["0x3ffFbAdAF827559da092217e474760E2b2c3CeDd"],            # owner() of the Bridge admin contract
 }
 
 

@@ -14,11 +14,11 @@
  ],
  "sources": {
   "sha256": {
-   "protocols.json": "9b428f827f67f9f1a191fd7ebf1636ab91326d2b5b34b7cfa1a5c0beaafa7d12",
+   "protocols.json": "55152c47bbcc1e25aaa7ed70f4efe59d8dac835f9dfbee91846c6d991dfca917",
    "index.json": "43c83d3a580d35638113b01e05a1e839032a161b0e0c968b0d45c2bf3a824c17",
-   "rpc-pinned.json": "383d09fabf7242d3429b20cccd909bb38a5524913d0d023e8061f73f0310ae59",
+   "rpc-pinned.json": "ae7c74d3783a44a9ec395a8ceee7cb05491a0e84b7351edddd7eba6c32882836",
    "graph_dependencies.json": "c32f718b692f497f33bd8e50e300b883ae1ce3316215fb5e2d01f2c235bff4fa",
-   "graph_controller_facts.json": "8bf0299b9aaf52211fccdc5ced9e9b60603b877b7942b19c9e0afe82d10a9ddf"
+   "graph_controller_facts.json": "2c8f996ca52268e2bb65b65339774b642e5de63153e2f5f90beb69bb0f9b70ff"
   },
   "bounty_submissions": [
    "bounties/submissions/slot-1-stake-dao.json",
@@ -49,6 +49,7 @@
   "ao-bridge",
   "apex-pro",
   "apy-finance",
+  "arbitrum-canonical-bridge",
   "arkis",
   "arrakis-modular",
   "aster-bridge",
@@ -142,6 +143,7 @@
   "frax-usd-frxusd",
   "friend-tech-v1",
   "gamma",
+  "gauntlet-usdc-prime-base",
   "gearbox-v3-v3-1",
   "geth",
   "glif",
@@ -187,6 +189,7 @@
   "lendflare",
   "lido-steth-dual-governance",
   "lighter-bridge",
+  "linea-rollup",
   "liquid-collective-lseth",
   "liquity-v1-lusd",
   "liquity-v2-bold",
@@ -271,6 +274,7 @@
   "sonic-gateway",
   "sosovalue-basis",
   "spark-sky",
+  "spark-usdc-vault-base",
   "spectra-metavaults",
   "sport-fun",
   "ssv-network",
@@ -288,6 +292,7 @@
   "steakhouse-usdc-metamorpho-base",
   "steer-protocol",
   "strata-markets",
+  "sui-canonical-bridge",
   "superform-v2-base",
   "supernova-cl",
   "superstate-ustb-uscc",
@@ -314,6 +319,7 @@
   "ultrayield-vaults",
   "umia",
   "uncx-network-v2",
+  "unichain-canonical-bridge",
   "uniswap-governance-timelock",
   "uniswap-v4",
   "unitus",
@@ -331,6 +337,8 @@
   "woofi-earn",
   "world-chain-bridge",
   "wormhole-core-ntt",
+  "wrapped-ether-weth",
+  "wrapped-ether-weth-base",
   "xdai-stake-bridge",
   "xsy",
   "yearn-v3",
@@ -346,23 +354,23 @@
   "ztln-p"
  ],
  "counts": {
-  "protocols": 316,
-  "nodes": 994,
+  "protocols": 324,
+  "nodes": 1016,
   "nodes_by_kind": {
-   "protocol": 316,
-   "controller": 575,
+   "protocol": 324,
+   "controller": 589,
    "control_plane_gap": 66,
    "eas_attestation": 37
   },
-  "edges": 866,
+  "edges": 880,
   "edges_by_relation": {
-   "governed_by_controller": 580,
+   "governed_by_controller": 594,
    "exhibits_control_plane_gap": 66,
    "attested_by_base_eas": 213,
    "collateral_contagion_upstream": 7
   },
   "max_evidence_bytes": 1502,
-  "protocols_with_controller_edge": 316
+  "protocols_with_controller_edge": 324
  },
  "nodes": [
   {
@@ -471,6 +479,11 @@
    "text": "BeefyStrategyOwnerTimelock_Base 0x3B60..2AC9 [8453, checked] Strategy owner and upgrades: timelock; getMinDelay(); documented in docs.beefy.finance (contracts and timelocks): / Base address book: 'strategyOwner."
   },
   {
+   "id": "pacta-ctrl-base-42000000",
+   "kind": "controller",
+   "text": "WETH9 predeploy (Base) 0x4200..0006 [8453, primary/checked] owner(); documented at docs.base.org/base-chain/network-information/base-contracts."
+  },
+  {
    "id": "pacta-ctrl-base-420dd381",
    "kind": "controller",
    "text": "AerodromePoolFactory 0x420D..40Da [8453, primary/checked of Aerodrome Finance (Base)] documented at aerodrome.finance/security."
@@ -489,6 +502,11 @@
    "id": "pacta-ctrl-base-56c1a4b5",
    "kind": "controller",
    "text": "Aave Protocol Guardian Safe (Base) 0x56C1..2968 [8453, primary/checked] EMERGENCY_ADMIN (pause / unpause) = Aave Protocol Guardian Safe; getThreshold(); documented in aave.com/docs (governance); ACL Manager docs."
+  },
+  {
+   "id": "pacta-ctrl-base-5a4e1984",
+   "kind": "controller",
+   "text": "multisig safe 0x5a4E..d4D0 [8453] controls Gauntlet MetaMorpho vault."
   },
   {
    "id": "pacta-ctrl-base-5a70429e",
@@ -534,6 +552,11 @@
    "id": "pacta-ctrl-base-6ffaca7c",
    "kind": "controller",
    "text": "multisig safe 0x6Ffa..6226 [8453] controls BeefyFeeConfig_Base; governed via vote.beefy.finance."
+  },
+  {
+   "id": "pacta-ctrl-base-7bfa7c4f",
+   "kind": "controller",
+   "text": "Spark MetaMorpho vault 0x7BfA..F34A [8453, primary/checked] owner(); documented at app.morpho.org/base/vault/0x7BfA..F34A."
   },
   {
    "id": "pacta-ctrl-base-7ed48c31",
@@ -661,9 +684,19 @@
    "text": "SuperOETHb_VaultProxy 0xDBFe..60A3 [8453, primary/checked] admin(); documented at docs.originprotocol.com."
   },
   {
+   "id": "pacta-ctrl-base-ee8f4ec5",
+   "kind": "controller",
+   "text": "Gauntlet MetaMorpho vault 0xeE8F..4b61 [8453, primary/checked] owner(); documented at app.morpho.org/base/vault/0xeE8F..4b61."
+  },
+  {
    "id": "pacta-ctrl-base-f817cb30",
    "kind": "controller",
    "text": "timelock 0xf817..464f [8453] controls SuperOETHb_VaultProxy; governed via snapshot.org ousdgov.eth."
+  },
+  {
+   "id": "pacta-ctrl-base-f93b7122",
+   "kind": "controller",
+   "text": "contract controller 0xF93B..F579 [8453] controls Spark MetaMorpho vault."
   },
   {
    "id": "pacta-ctrl-base-fbb21d03",
@@ -834,6 +867,11 @@
    "id": "pacta-ctrl-ethereum-0b8de441",
    "kind": "controller",
    "text": "LongShortPairCreator 0x0b8d..A67b [Ethereum 1, primary/checked of Outcome Finance] owner()."
+  },
+  {
+   "id": "pacta-ctrl-ethereum-0bd48f6b",
+   "kind": "controller",
+   "text": "OptimismPortalProxy (Unichain) 0x0bd4..A7a2 [Ethereum 1, primary/checked] documented at raw.githubusercontent.com/ethereum-optimism/superchain-registry/main/superchain/configs/mainnet/unichain.toml."
   },
   {
    "id": "pacta-ctrl-ethereum-0bfbcf9f",
@@ -1281,6 +1319,11 @@
    "text": "Unitus (UnitusCompOFT) 0x3B65..77ad [Ethereum 1, primary/checked] documented at unitus.finance/docs."
   },
   {
+   "id": "pacta-ctrl-ethereum-3b73fa8d",
+   "kind": "controller",
+   "text": "contract controller 0x3B73..f2A4 [Ethereum 1] controls OptimismPortalProxy (Unichain)."
+  },
+  {
    "id": "pacta-ctrl-ethereum-3c28b7c7",
    "kind": "controller",
    "text": "Puffer Timelock (AccessManager admin role) 0x3C28..26eA [Ethereum 1, checked] delay(); documented in docs.puffer.fi (multisig)."
@@ -1594,6 +1637,11 @@
    "id": "pacta-ctrl-ethereum-54f862fa",
    "kind": "controller",
    "text": "ERC1967Factory 0x54F8..E82E [Ethereum 1, primary/checked of 3F] owner(); documented at docs.3f.xyz."
+  },
+  {
+   "id": "pacta-ctrl-ethereum-55472326",
+   "kind": "controller",
+   "text": "contract controller 0x5547..2dbD [Ethereum 1] controls Bridge (Arbitrum One)."
   },
   {
    "id": "pacta-ctrl-ethereum-55f39512",
@@ -1944,6 +1992,11 @@
    "id": "pacta-ctrl-ethereum-8306300f",
    "kind": "controller",
    "text": "multisig safe 0x8306..A81C [Ethereum 1] controls frxETHMinter; governed via gov.frax.finance."
+  },
+  {
+   "id": "pacta-ctrl-ethereum-8315177a",
+   "kind": "controller",
+   "text": "Bridge (Arbitrum One) 0x8315..ed3a [Ethereum 1, primary/checked] documented at docs.arbitrum.io/build-decentralized-apps/reference/contract-addresses."
   },
   {
    "id": "pacta-ctrl-ethereum-83182266",
@@ -2591,6 +2644,11 @@
    "text": "StargatePoolUSDC 0xc026..89C7 [Ethereum 1, primary/checked of Stargate V2] V2 pool, TokenMessaging & Treasurer owner = OneSig multisig; planner sets fees; owner(); documented in stargateprotocol.gitbook.io governance model; V2 README."
   },
   {
+   "id": "pacta-ctrl-ethereum-c02aaa39",
+   "kind": "controller",
+   "text": "WETH9 0xC02a..6Cc2 [Ethereum 1, primary/checked] owner(); documented at ethereum.org/en/wrapped-eth."
+  },
+  {
    "id": "pacta-ctrl-ethereum-c06fd4f8",
    "kind": "controller",
    "text": "EigenLayerTimelockController 0xC06F..Aa2d [Ethereum 1, controller/primary/checked of EigenLayer Core] Core ProxyAdmin, Dual-Owner Executor Safe & Timelock; getMinDelay(); documented in Layr-Labs/eigenlayer-contracts main README documents Core ProxyAdmin, TimelockController + CommunityMultisig Executor wrapper, and PauserRegistry 0xB876..2806."
@@ -2816,6 +2874,11 @@
    "text": "Treehouse tETH 0xD11c..5ED8 [Ethereum 1, checked] tETH owner() = TimelockController; owner()."
   },
   {
+   "id": "pacta-ctrl-ethereum-d19d4b5d",
+   "kind": "controller",
+   "text": "LineaRollup 0xd19d..876F [Ethereum 1, primary/checked of Linea Rollup] documented at raw.githubusercontent.com/Consensys/doc.linea/main/docs/network/build/contracts.mdx."
+  },
+  {
    "id": "pacta-ctrl-ethereum-d1de3f9c",
    "kind": "controller",
    "text": "multisig safe 0xd1DE..Af33 [Ethereum 1 of Metronome Synth] controls Metronome2."
@@ -2889,6 +2952,11 @@
    "id": "pacta-ctrl-ethereum-da1ab39e",
    "kind": "controller",
    "text": "RocketDAONodeTrustedSettingsMembers 0xdA1A..0D01 [Ethereum 1, primary/checked of Rocket Pool (rETH)] Oracle DAO proposal quorum is a share of members; getQuorum() selector c26c12eb; documented in docs.rocketpool.net (oDAO proposals)."
+  },
+  {
+   "id": "pacta-ctrl-ethereum-da3bd1fe",
+   "kind": "controller",
+   "text": "Bridge proxy 0xda3b..92fD [Ethereum 1, primary/checked] committee() selector d864e740; documented at docs.sui.io/concepts/tokenomics/sui-bridging."
   },
   {
    "id": "pacta-ctrl-ethereum-da67b428",
@@ -3061,6 +3129,11 @@
    "text": "Across Bond Token (ABT) 0xee1D..02ea [Ethereum 1, checked] Root-bundle proposals: only allow-listed ABT proposers; proposers(address) selector 18177497; documented in docs.across.to (security model)."
   },
   {
+   "id": "pacta-ctrl-ethereum-ee2d5247",
+   "kind": "controller",
+   "text": "contract controller 0xee2d..416F [Ethereum 1] controls Bridge proxy."
+  },
+  {
    "id": "pacta-ctrl-ethereum-ee2ebccb",
    "kind": "controller",
    "text": "contract controller 0xee2e..1bfc [Ethereum 1] controls Juicebox (Tickets)."
@@ -3134,6 +3207,11 @@
    "id": "pacta-ctrl-ethereum-f44bc453",
    "kind": "controller",
    "text": "multisig safe 0xf44B..6d4c [Ethereum 1] controls LandX Governance Token (LNDX)."
+  },
+  {
+   "id": "pacta-ctrl-ethereum-f5058616",
+   "kind": "controller",
+   "text": "contract controller 0xF505..66d6 [Ethereum 1 of Linea Rollup] controls LineaRollup."
   },
   {
    "id": "pacta-ctrl-ethereum-f56d6601",
@@ -3861,6 +3939,11 @@
    "text": "Protocol APY Finance: category Robo-advisor running a portfolio of yield farming strategies from one pool; chain Ethereum mainnet; assets APY; 0xe18b..ba5f."
   },
   {
+   "id": "pacta-proto-arbitrum-canonical-bridge",
+   "kind": "protocol",
+   "text": "Protocol Arbitrum Canonical Bridge: category Canonical rollup bridge (delayed inbox Bridge) into Arbitrum One; chain Ethereum mainnet; assets ARB, arbitrum, arbitrum-bridge, DelayedInbox; 0x8315..ed3a."
+  },
+  {
    "id": "pacta-proto-arkis",
    "kind": "protocol",
    "text": "Protocol Arkis: category Prime brokerage credit for institutional asset managers; chain Ethereum mainnet; assets Arkis; 0xEA62..0ba8."
@@ -4326,6 +4409,11 @@
    "text": "Protocol Gamma: category Automated rebalancing of concentrated-liquidity positions and market-making strategies for partners; chain Ethereum mainnet; assets Gamma; 0x6BeA..e197."
   },
   {
+   "id": "pacta-proto-gauntlet-usdc-prime-base",
+   "kind": "protocol",
+   "text": "Protocol Gauntlet USDC Prime (Base): category Risk-curated stablecoin allocator (MetaMorpho) on Morpho Blue; assets gtUSDCp, Gauntlet USDC Prime; 0xeE8F..4b61."
+  },
+  {
    "id": "pacta-proto-gearbox-v3-v3-1",
    "kind": "protocol",
    "text": "Protocol Gearbox V3 / V3.1: category Leveraged Credit & Curated Lending; chain Ethereum mainnet; assets GEAR; 0xa133..f23b."
@@ -4549,6 +4637,11 @@
    "id": "pacta-proto-lighter-bridge",
    "kind": "protocol",
    "text": "Protocol Lighter Bridge: category Perpetuals Exchange Deposit Bridge (zk order book); chain Ethereum mainnet; assets LIT; 0x232C..4Ee2."
+  },
+  {
+   "id": "pacta-proto-linea-rollup",
+   "kind": "protocol",
+   "text": "Protocol Linea Rollup: category Canonical rollup bridge and L1 message service into Linea; chain Ethereum mainnet; assets Linea, linea-bridge, L1MessageService; 0xd19d..876F."
   },
   {
    "id": "pacta-proto-liquid-collective-lseth",
@@ -4971,6 +5064,11 @@
    "text": "Protocol Spark / Sky: category Decentralized Credit & Liquidity; chain Ethereum mainnet; assets USDS, sUSDS, DAI, SKY, MKR, SPK; 0xbE28..38f3."
   },
   {
+   "id": "pacta-proto-spark-usdc-vault-base",
+   "kind": "protocol",
+   "text": "Protocol Spark USDC Vault (Base): category Curated lending allocator (MetaMorpho) on Morpho Blue; assets sparkUSDC, Spark USDC Vault; 0x7BfA..F34A."
+  },
+  {
    "id": "pacta-proto-spectra-metavaults",
    "kind": "protocol",
    "text": "Protocol Spectra MetaVaults: category Curated fixed-rate vaults with automated rollovers; chain Base; assets SPECTRA; 0x64FC..4E51."
@@ -5054,6 +5152,11 @@
    "id": "pacta-proto-strata-markets",
    "kind": "protocol",
    "text": "Protocol Strata Markets: category Risk-tranching protocol splitting yield into senior and junior tranches; chain Ethereum mainnet; assets srUSDe; 0x3d7d..c003."
+  },
+  {
+   "id": "pacta-proto-sui-canonical-bridge",
+   "kind": "protocol",
+   "text": "Protocol Sui Canonical Bridge: category Committee-signed lock-and-mint gateway to a non-EVM layer 1; chain Ethereum mainnet; assets SUI, suibridge, sui-bridge, SuiBridge; 0xda3b..92fD."
   },
   {
    "id": "pacta-proto-superform-v2-base",
@@ -5186,6 +5289,11 @@
    "text": "Protocol UNCX Network V2: category Liquidity and team-token locker with token launch and vesting services; chain Ethereum mainnet; assets UNCX; 0xaDB2..B1D0."
   },
   {
+   "id": "pacta-proto-unichain-canonical-bridge",
+   "kind": "protocol",
+   "text": "Protocol Unichain Canonical Bridge: category Canonical rollup bridge (OptimismPortal) into Unichain; chain Ethereum mainnet; assets Unichain, unichain-bridge, OptimismPortalProxy; 0x0bd4..A7a2."
+  },
+  {
    "id": "pacta-proto-uniswap-governance-timelock",
    "kind": "protocol",
    "text": "Protocol Uniswap V3 & Governance Timelock: category Blue-Chip DEX & Governance; chain Ethereum mainnet; assets UNI; 0x1F98..F984."
@@ -5269,6 +5377,16 @@
    "id": "pacta-proto-wormhole-core-ntt",
    "kind": "protocol",
    "text": "Protocol Wormhole Core (NTT): category Cross-Chain Messaging (Guardian-Attested Core Bridge); chain Ethereum mainnet; assets Wormhole, Guardian; 0x98f3..288B."
+  },
+  {
+   "id": "pacta-proto-wrapped-ether-weth",
+   "kind": "protocol",
+   "text": "Protocol Wrapped Ether (WETH9) [wrapped-ether-weth]: category Canonical ERC-20 wrapper for native ETH; chain Ethereum mainnet; assets WETH, Wrapped Ether; 0xC02a..6Cc2."
+  },
+  {
+   "id": "pacta-proto-wrapped-ether-weth-base",
+   "kind": "protocol",
+   "text": "Protocol Wrapped Ether (Base) [wrapped-ether-weth-base]: category OP Stack L2 genesis predeploy at a fixed system address; assets WETH, WETH9, Wrapped Ether Base; 0x4200..0006."
   },
   {
    "id": "pacta-proto-xdai-stake-bridge",
@@ -17071,6 +17189,86 @@
    "content_hash": "64e2141dd1baca17f4c7b10ce13fae0241ebf41c697205f231a0463356d3d9cb"
   },
   {
+   "edge_key": "governed_by_controller:pacta-proto-arbitrum-canonical-bridge->pacta-ctrl-ethereum-55472326",
+   "relation": "governed_by_controller",
+   "direction": "directed",
+   "participants": [
+    {
+     "id": "pacta-proto-arbitrum-canonical-bridge",
+     "role": "protocol",
+     "side": "source"
+    },
+    {
+     "id": "pacta-ctrl-ethereum-55472326",
+     "role": "controller",
+     "side": "target"
+    }
+   ],
+   "observed_at": 1795204823.0,
+   "evidence": {
+    "edge_id": "governed_by_controller:pacta-proto-arbitrum-canonical-bridge->pacta-ctrl-ethereum-55472326",
+    "protocol_slug": "arbitrum-canonical-bridge",
+    "chain": "ethereum",
+    "chain_id": 1,
+    "contract_hex": "554723262467f125ac9e1cdfa9ce15cc53822dbd",
+    "address_roles": [
+     "controller"
+    ],
+    "surface_ids": [],
+    "target_labels": [],
+    "controller_kind": "contract_controller",
+    "evidence_basis": "rpc_observed",
+    "badge_tier": "rpc_observed",
+    "observed_controller": {
+     "facts_block_number": 26466974,
+     "code_bytes": 1856,
+     "code_keccak_hex": "df42de18ce8ffeb9592b92fceea883f369ee2bdca7087d6a462e6e33b3eaf13c",
+     "owner_hex": "3fffbadaf827559da092217e474760e2b2c3cedd"
+    }
+   },
+   "content_hash": "1a07ea2d4cfd04d823fab3592e512f8a4567f08f4823fff0ff1672bda86cafe0"
+  },
+  {
+   "edge_key": "governed_by_controller:pacta-proto-arbitrum-canonical-bridge->pacta-ctrl-ethereum-8315177a",
+   "relation": "governed_by_controller",
+   "direction": "directed",
+   "participants": [
+    {
+     "id": "pacta-proto-arbitrum-canonical-bridge",
+     "role": "protocol",
+     "side": "source"
+    },
+    {
+     "id": "pacta-ctrl-ethereum-8315177a",
+     "role": "controller",
+     "side": "target"
+    }
+   ],
+   "observed_at": 1795204823.0,
+   "evidence": {
+    "edge_id": "governed_by_controller:pacta-proto-arbitrum-canonical-bridge->pacta-ctrl-ethereum-8315177a",
+    "protocol_slug": "arbitrum-canonical-bridge",
+    "chain": "ethereum",
+    "chain_id": 1,
+    "contract_hex": "8315177ab297ba92a06054ce80a67ed4dbd7ed3a",
+    "address_roles": [
+     "primary_contract",
+     "surface_target"
+    ],
+    "surface_ids": [
+     "arbitrum-canonical-bridge-control-plane"
+    ],
+    "target_labels": [
+     "Bridge (Arbitrum One)"
+    ],
+    "controller_kind": null,
+    "evidence_basis": "rpc_observed",
+    "badge_tier": "rpc_observed",
+    "observed_controller": null
+   },
+   "content_hash": "fb17db43b7f960d09f1674ab700b930672464fc899e0ca3d9a0478e719791298"
+  },
+  {
    "edge_key": "governed_by_controller:pacta-proto-arkis->pacta-ctrl-ethereum-324add18",
    "relation": "governed_by_controller",
    "direction": "directed",
@@ -24750,6 +24948,89 @@
    "content_hash": "b30cc758f479bcd64fb022042485ca50f0c0a423583b8bbcaf3bed822df863e0"
   },
   {
+   "edge_key": "governed_by_controller:pacta-proto-gauntlet-usdc-prime-base->pacta-ctrl-base-5a4e1984",
+   "relation": "governed_by_controller",
+   "direction": "directed",
+   "participants": [
+    {
+     "id": "pacta-proto-gauntlet-usdc-prime-base",
+     "role": "protocol",
+     "side": "source"
+    },
+    {
+     "id": "pacta-ctrl-base-5a4e1984",
+     "role": "controller",
+     "side": "target"
+    }
+   ],
+   "observed_at": 1795204823.0,
+   "evidence": {
+    "edge_id": "governed_by_controller:pacta-proto-gauntlet-usdc-prime-base->pacta-ctrl-base-5a4e1984",
+    "protocol_slug": "gauntlet-usdc-prime-base",
+    "chain": "base",
+    "chain_id": 8453,
+    "contract_hex": "5a4e19842e09000a582c20a4f524c26fb48dd4d0",
+    "address_roles": [
+     "controller"
+    ],
+    "surface_ids": [],
+    "target_labels": [],
+    "controller_kind": "multisig_safe",
+    "evidence_basis": "rpc_observed",
+    "badge_tier": "rpc_observed",
+    "observed_controller": {
+     "facts_block_number": 60576992,
+     "code_bytes": 171,
+     "code_keccak_hex": "b89c1b3bdf2cf8827818646bce9a8f6e372885f8c55e5c07acbd307cb133b000",
+     "safe_threshold": 4,
+     "safe_owners_count": 7,
+     "safe_version": "1.3.0",
+     "safe_owners_digest_hex": "f94e6c29e4a99777ffc03ed22b3ab87ee5ea20d6338a0359b3fd09b344eef2ff"
+    }
+   },
+   "content_hash": "5b8f1d782a345deaaac9ab2321ee66fee607b32644eaa07c7ffee9801e9e4d0e"
+  },
+  {
+   "edge_key": "governed_by_controller:pacta-proto-gauntlet-usdc-prime-base->pacta-ctrl-base-ee8f4ec5",
+   "relation": "governed_by_controller",
+   "direction": "directed",
+   "participants": [
+    {
+     "id": "pacta-proto-gauntlet-usdc-prime-base",
+     "role": "protocol",
+     "side": "source"
+    },
+    {
+     "id": "pacta-ctrl-base-ee8f4ec5",
+     "role": "controller",
+     "side": "target"
+    }
+   ],
+   "observed_at": 1795204823.0,
+   "evidence": {
+    "edge_id": "governed_by_controller:pacta-proto-gauntlet-usdc-prime-base->pacta-ctrl-base-ee8f4ec5",
+    "protocol_slug": "gauntlet-usdc-prime-base",
+    "chain": "base",
+    "chain_id": 8453,
+    "contract_hex": "ee8f4ec5672f09119b96ab6fb59c27e1b7e44b61",
+    "address_roles": [
+     "primary_contract",
+     "surface_target"
+    ],
+    "surface_ids": [
+     "gauntlet-usdc-prime-base-control-plane"
+    ],
+    "target_labels": [
+     "Gauntlet MetaMorpho vault"
+    ],
+    "controller_kind": null,
+    "evidence_basis": "rpc_observed",
+    "badge_tier": "rpc_observed",
+    "observed_controller": null
+   },
+   "content_hash": "589c25e5ad3e329a193337635e344e538775ca68d65e776ee4747c206d55fdeb"
+  },
+  {
    "edge_key": "governed_by_controller:pacta-proto-gearbox-v3-v3-1->pacta-ctrl-ethereum-a133c9a9",
    "relation": "governed_by_controller",
    "direction": "directed",
@@ -28271,6 +28552,86 @@
     }
    },
    "content_hash": "145d0a3aebd496bf391b37a826eb83e8728c3125500a249c805612a1ff32d350"
+  },
+  {
+   "edge_key": "governed_by_controller:pacta-proto-linea-rollup->pacta-ctrl-ethereum-d19d4b5d",
+   "relation": "governed_by_controller",
+   "direction": "directed",
+   "participants": [
+    {
+     "id": "pacta-proto-linea-rollup",
+     "role": "protocol",
+     "side": "source"
+    },
+    {
+     "id": "pacta-ctrl-ethereum-d19d4b5d",
+     "role": "controller",
+     "side": "target"
+    }
+   ],
+   "observed_at": 1795204823.0,
+   "evidence": {
+    "edge_id": "governed_by_controller:pacta-proto-linea-rollup->pacta-ctrl-ethereum-d19d4b5d",
+    "protocol_slug": "linea-rollup",
+    "chain": "ethereum",
+    "chain_id": 1,
+    "contract_hex": "d19d4b5d358258f05d7b411e21a1460d11b0876f",
+    "address_roles": [
+     "primary_contract",
+     "surface_target"
+    ],
+    "surface_ids": [
+     "linea-rollup-control-plane"
+    ],
+    "target_labels": [
+     "LineaRollup"
+    ],
+    "controller_kind": null,
+    "evidence_basis": "rpc_observed",
+    "badge_tier": "rpc_observed",
+    "observed_controller": null
+   },
+   "content_hash": "d6862e3db7907db0b7d69e52c4f693d635bdf6cf2810cab51c9ad0a4842deeb1"
+  },
+  {
+   "edge_key": "governed_by_controller:pacta-proto-linea-rollup->pacta-ctrl-ethereum-f5058616",
+   "relation": "governed_by_controller",
+   "direction": "directed",
+   "participants": [
+    {
+     "id": "pacta-proto-linea-rollup",
+     "role": "protocol",
+     "side": "source"
+    },
+    {
+     "id": "pacta-ctrl-ethereum-f5058616",
+     "role": "controller",
+     "side": "target"
+    }
+   ],
+   "observed_at": 1795204823.0,
+   "evidence": {
+    "edge_id": "governed_by_controller:pacta-proto-linea-rollup->pacta-ctrl-ethereum-f5058616",
+    "protocol_slug": "linea-rollup",
+    "chain": "ethereum",
+    "chain_id": 1,
+    "contract_hex": "f5058616517c068c7b8c7ebc69ff636ade9066d6",
+    "address_roles": [
+     "controller"
+    ],
+    "surface_ids": [],
+    "target_labels": [],
+    "controller_kind": "contract_controller",
+    "evidence_basis": "rpc_observed",
+    "badge_tier": "rpc_observed",
+    "observed_controller": {
+     "facts_block_number": 26466974,
+     "code_bytes": 1690,
+     "code_keccak_hex": "4e8a5693ecb0da4b8382ea10c4a2de307f3aefc5e894324ea538d420ee085cbc",
+     "owner_hex": "d6b95c960779c72b8c6752119849318e5d550574"
+    }
+   },
+   "content_hash": "9c79f3d4c0e8b6449dad1ce6df77fee909076f19cdd05ae2012daa4f82d21d80"
   },
   {
    "edge_key": "governed_by_controller:pacta-proto-liquid-collective-lseth->pacta-ctrl-ethereum-8c1bed5b",
@@ -35050,6 +35411,85 @@
    "content_hash": "657738eb1245d9c54b5069a017dc71aa04c015438cbe1999422bae8a88e2fcba"
   },
   {
+   "edge_key": "governed_by_controller:pacta-proto-spark-usdc-vault-base->pacta-ctrl-base-7bfa7c4f",
+   "relation": "governed_by_controller",
+   "direction": "directed",
+   "participants": [
+    {
+     "id": "pacta-proto-spark-usdc-vault-base",
+     "role": "protocol",
+     "side": "source"
+    },
+    {
+     "id": "pacta-ctrl-base-7bfa7c4f",
+     "role": "controller",
+     "side": "target"
+    }
+   ],
+   "observed_at": 1795204823.0,
+   "evidence": {
+    "edge_id": "governed_by_controller:pacta-proto-spark-usdc-vault-base->pacta-ctrl-base-7bfa7c4f",
+    "protocol_slug": "spark-usdc-vault-base",
+    "chain": "base",
+    "chain_id": 8453,
+    "contract_hex": "7bfa7c4f149e7415b73bdedfe609237e29cbf34a",
+    "address_roles": [
+     "primary_contract",
+     "surface_target"
+    ],
+    "surface_ids": [
+     "spark-usdc-vault-base-control-plane"
+    ],
+    "target_labels": [
+     "Spark MetaMorpho vault"
+    ],
+    "controller_kind": null,
+    "evidence_basis": "rpc_observed",
+    "badge_tier": "rpc_observed",
+    "observed_controller": null
+   },
+   "content_hash": "41710eef494efb212a1edee0f610dceea680a05bcc5deccbc8530a3286ee52d8"
+  },
+  {
+   "edge_key": "governed_by_controller:pacta-proto-spark-usdc-vault-base->pacta-ctrl-base-f93b7122",
+   "relation": "governed_by_controller",
+   "direction": "directed",
+   "participants": [
+    {
+     "id": "pacta-proto-spark-usdc-vault-base",
+     "role": "protocol",
+     "side": "source"
+    },
+    {
+     "id": "pacta-ctrl-base-f93b7122",
+     "role": "controller",
+     "side": "target"
+    }
+   ],
+   "observed_at": 1795204823.0,
+   "evidence": {
+    "edge_id": "governed_by_controller:pacta-proto-spark-usdc-vault-base->pacta-ctrl-base-f93b7122",
+    "protocol_slug": "spark-usdc-vault-base",
+    "chain": "base",
+    "chain_id": 8453,
+    "contract_hex": "f93b7122450a50af3e5a76e1d546e95ac1d0f579",
+    "address_roles": [
+     "controller"
+    ],
+    "surface_ids": [],
+    "target_labels": [],
+    "controller_kind": "contract_controller",
+    "evidence_basis": "rpc_observed",
+    "badge_tier": "rpc_observed",
+    "observed_controller": {
+     "facts_block_number": 60576992,
+     "code_bytes": 8210,
+     "code_keccak_hex": "7a11ff3bd4839046aa5df8a0a5b3dec204af968794acc5078bbf9c3f6b9a8db4"
+    }
+   },
+   "content_hash": "cbfeb24cba4ec3473cf7ce29e1308ab66403da170f595ae9a5f662dcf3a50b16"
+  },
+  {
    "edge_key": "governed_by_controller:pacta-proto-spectra-metavaults->pacta-ctrl-base-64fcc3a0",
    "relation": "governed_by_controller",
    "direction": "directed",
@@ -36436,6 +36876,85 @@
     }
    },
    "content_hash": "46bb8b71107504852b475529872cf35a552714ee28afa1ed90b3dfefe5c17985"
+  },
+  {
+   "edge_key": "governed_by_controller:pacta-proto-sui-canonical-bridge->pacta-ctrl-ethereum-da3bd1fe",
+   "relation": "governed_by_controller",
+   "direction": "directed",
+   "participants": [
+    {
+     "id": "pacta-proto-sui-canonical-bridge",
+     "role": "protocol",
+     "side": "source"
+    },
+    {
+     "id": "pacta-ctrl-ethereum-da3bd1fe",
+     "role": "controller",
+     "side": "target"
+    }
+   ],
+   "observed_at": 1795204823.0,
+   "evidence": {
+    "edge_id": "governed_by_controller:pacta-proto-sui-canonical-bridge->pacta-ctrl-ethereum-da3bd1fe",
+    "protocol_slug": "sui-canonical-bridge",
+    "chain": "ethereum",
+    "chain_id": 1,
+    "contract_hex": "da3bd1fe1973470312db04551b65f401bc8a92fd",
+    "address_roles": [
+     "primary_contract",
+     "surface_target"
+    ],
+    "surface_ids": [
+     "sui-canonical-bridge-control-plane"
+    ],
+    "target_labels": [
+     "Bridge proxy"
+    ],
+    "controller_kind": null,
+    "evidence_basis": "rpc_observed",
+    "badge_tier": "rpc_observed",
+    "observed_controller": null
+   },
+   "content_hash": "0a8dd6e74c1041edbc9b54f84afe3e7e44e1a3e76f9c725568ee7177f37ae889"
+  },
+  {
+   "edge_key": "governed_by_controller:pacta-proto-sui-canonical-bridge->pacta-ctrl-ethereum-ee2d5247",
+   "relation": "governed_by_controller",
+   "direction": "directed",
+   "participants": [
+    {
+     "id": "pacta-proto-sui-canonical-bridge",
+     "role": "protocol",
+     "side": "source"
+    },
+    {
+     "id": "pacta-ctrl-ethereum-ee2d5247",
+     "role": "controller",
+     "side": "target"
+    }
+   ],
+   "observed_at": 1795204823.0,
+   "evidence": {
+    "edge_id": "governed_by_controller:pacta-proto-sui-canonical-bridge->pacta-ctrl-ethereum-ee2d5247",
+    "protocol_slug": "sui-canonical-bridge",
+    "chain": "ethereum",
+    "chain_id": 1,
+    "contract_hex": "ee2d52477a7c1a7be0b0347dbe7e3b15185b416f",
+    "address_roles": [
+     "controller"
+    ],
+    "surface_ids": [],
+    "target_labels": [],
+    "controller_kind": "contract_controller",
+    "evidence_basis": "rpc_observed",
+    "badge_tier": "rpc_observed",
+    "observed_controller": {
+     "facts_block_number": 26466974,
+     "code_bytes": 170,
+     "code_keccak_hex": "fc3c26f696152e6e4e4b7ffc2f483b259be216f7253f4847a4acef3d9b54563f"
+    }
+   },
+   "content_hash": "1e29453b8290d3a82d13e6ff06baad0166a63ada97e621296ec9e23f8368ee83"
   },
   {
    "edge_key": "governed_by_controller:pacta-proto-superform-v2-base->pacta-ctrl-base-10ac0b33",
@@ -38627,6 +39146,86 @@
    "content_hash": "dd74e97f9576a8539d3d0e55c830febf5160f01982b35d9a1e4796f16a6b2afd"
   },
   {
+   "edge_key": "governed_by_controller:pacta-proto-unichain-canonical-bridge->pacta-ctrl-ethereum-0bd48f6b",
+   "relation": "governed_by_controller",
+   "direction": "directed",
+   "participants": [
+    {
+     "id": "pacta-proto-unichain-canonical-bridge",
+     "role": "protocol",
+     "side": "source"
+    },
+    {
+     "id": "pacta-ctrl-ethereum-0bd48f6b",
+     "role": "controller",
+     "side": "target"
+    }
+   ],
+   "observed_at": 1795204823.0,
+   "evidence": {
+    "edge_id": "governed_by_controller:pacta-proto-unichain-canonical-bridge->pacta-ctrl-ethereum-0bd48f6b",
+    "protocol_slug": "unichain-canonical-bridge",
+    "chain": "ethereum",
+    "chain_id": 1,
+    "contract_hex": "0bd48f6b86a26d3a217d0fa6ffe2b491b956a7a2",
+    "address_roles": [
+     "primary_contract",
+     "surface_target"
+    ],
+    "surface_ids": [
+     "unichain-canonical-bridge-control-plane"
+    ],
+    "target_labels": [
+     "OptimismPortalProxy (Unichain)"
+    ],
+    "controller_kind": null,
+    "evidence_basis": "rpc_observed",
+    "badge_tier": "rpc_observed",
+    "observed_controller": null
+   },
+   "content_hash": "6a18a0ee365ca123828a54fa3c20ed2a16fac24f5982ef4df986a52f08065626"
+  },
+  {
+   "edge_key": "governed_by_controller:pacta-proto-unichain-canonical-bridge->pacta-ctrl-ethereum-3b73fa8d",
+   "relation": "governed_by_controller",
+   "direction": "directed",
+   "participants": [
+    {
+     "id": "pacta-proto-unichain-canonical-bridge",
+     "role": "protocol",
+     "side": "source"
+    },
+    {
+     "id": "pacta-ctrl-ethereum-3b73fa8d",
+     "role": "controller",
+     "side": "target"
+    }
+   ],
+   "observed_at": 1795204823.0,
+   "evidence": {
+    "edge_id": "governed_by_controller:pacta-proto-unichain-canonical-bridge->pacta-ctrl-ethereum-3b73fa8d",
+    "protocol_slug": "unichain-canonical-bridge",
+    "chain": "ethereum",
+    "chain_id": 1,
+    "contract_hex": "3b73fa8d82f511a3cae17b5a26e4e1a2d5e2f2a4",
+    "address_roles": [
+     "controller"
+    ],
+    "surface_ids": [],
+    "target_labels": [],
+    "controller_kind": "contract_controller",
+    "evidence_basis": "rpc_observed",
+    "badge_tier": "rpc_observed",
+    "observed_controller": {
+     "facts_block_number": 26466974,
+     "code_bytes": 6524,
+     "code_keccak_hex": "aebd68b2a785d0af4b7e1f3e600efde438efa83b08f2ad8bcd9287322f396e5f",
+     "owner_hex": "5a0aae59d09fccbddb6c6cceb07b7279367c3d2a"
+    }
+   },
+   "content_hash": "d9fd166de0f34419351bca2d8c901afafb86f694ed1c13c5fec9661518fcb26e"
+  },
+  {
    "edge_key": "governed_by_controller:pacta-proto-uniswap-governance-timelock->pacta-ctrl-ethereum-1a9c8182",
    "relation": "governed_by_controller",
    "direction": "directed",
@@ -40035,6 +40634,86 @@
    "content_hash": "6e3886f08f62f92e82e2a78b9be4663078a8d7cc841ad3bc2c5fda866518b10f"
   },
   {
+   "edge_key": "governed_by_controller:pacta-proto-wrapped-ether-weth->pacta-ctrl-ethereum-c02aaa39",
+   "relation": "governed_by_controller",
+   "direction": "directed",
+   "participants": [
+    {
+     "id": "pacta-proto-wrapped-ether-weth",
+     "role": "protocol",
+     "side": "source"
+    },
+    {
+     "id": "pacta-ctrl-ethereum-c02aaa39",
+     "role": "controller",
+     "side": "target"
+    }
+   ],
+   "observed_at": 1795204823.0,
+   "evidence": {
+    "edge_id": "governed_by_controller:pacta-proto-wrapped-ether-weth->pacta-ctrl-ethereum-c02aaa39",
+    "protocol_slug": "wrapped-ether-weth",
+    "chain": "ethereum",
+    "chain_id": 1,
+    "contract_hex": "c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+    "address_roles": [
+     "primary_contract",
+     "surface_target"
+    ],
+    "surface_ids": [
+     "wrapped-ether-weth-control-plane"
+    ],
+    "target_labels": [
+     "WETH9"
+    ],
+    "controller_kind": null,
+    "evidence_basis": "rpc_observed",
+    "badge_tier": "rpc_observed",
+    "observed_controller": null
+   },
+   "content_hash": "bf2a9eb0aaf0ca16938c15a133a117a92ecf15ad44148a7faee180998b1a0316"
+  },
+  {
+   "edge_key": "governed_by_controller:pacta-proto-wrapped-ether-weth-base->pacta-ctrl-base-42000000",
+   "relation": "governed_by_controller",
+   "direction": "directed",
+   "participants": [
+    {
+     "id": "pacta-proto-wrapped-ether-weth-base",
+     "role": "protocol",
+     "side": "source"
+    },
+    {
+     "id": "pacta-ctrl-base-42000000",
+     "role": "controller",
+     "side": "target"
+    }
+   ],
+   "observed_at": 1795204823.0,
+   "evidence": {
+    "edge_id": "governed_by_controller:pacta-proto-wrapped-ether-weth-base->pacta-ctrl-base-42000000",
+    "protocol_slug": "wrapped-ether-weth-base",
+    "chain": "base",
+    "chain_id": 8453,
+    "contract_hex": "4200000000000000000000000000000000000006",
+    "address_roles": [
+     "primary_contract",
+     "surface_target"
+    ],
+    "surface_ids": [
+     "wrapped-ether-weth-base-control-plane"
+    ],
+    "target_labels": [
+     "WETH9 predeploy (Base)"
+    ],
+    "controller_kind": null,
+    "evidence_basis": "rpc_observed",
+    "badge_tier": "rpc_observed",
+    "observed_controller": null
+   },
+   "content_hash": "9604d6e03471e3f0614b8ee2cd59944cb9b8f09ed91f96061e241717e8964b61"
+  },
+  {
    "edge_key": "governed_by_controller:pacta-proto-xdai-stake-bridge->pacta-ctrl-ethereum-0ae05509",
    "relation": "governed_by_controller",
    "direction": "directed",
@@ -41193,5 +41872,5 @@
    "content_hash": "05ef371295b62fdb44d9ca5283d2bb88c8b04b97efbd3cd97341b187a3797141"
   }
  ],
- "manifest_sha256": "6426b6bd6d51ca31ecaad7ccb03eb5f97ef91aedc92203de1653b697c372aea6"
+ "manifest_sha256": "4d467a1e7f4341f29bd7833409b93a55568199665c65cb265568249d43c35f2b"
 }

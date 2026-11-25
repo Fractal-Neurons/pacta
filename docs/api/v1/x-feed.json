@@ -9,7 +9,7 @@
    "radar.json": "16d9637777dc1df9babb767d0ac31c4e1fe8c339332ea815cc32db745d097e1d",
    "protocols.json": "8e72053f4b7c7228c342547b1952e44b6863f9732ec1188560d1e5327e90c1b9"
   },
-  "xHandles": "7cfe44213e579618486dd28fee3bbc8b9205bb82843823ed2dc931314c1598c3",
+  "xHandles": "a95ed6366dff8a060e20f0c7c4ed02cd1ebf5dd97878d0fa12a356eb770bf31e",
   "radarBlock": 26457377,
   "radarBlockBase": 59999187
  },
@@ -21,7 +21,7 @@
   "protective_delta": 7,
   "radar_timelock": 3,
   "aligned_baseline": 126,
-  "rpc_observed": 127
+  "rpc_observed": 135
  },
  "items": [
   {
@@ -19181,6 +19181,486 @@
    "receiptUrl": "https://pacta.wtf/protocols/ztln-p/",
    "attestationUrl": null,
    "priority": 319
+  },
+  {
+   "feedId": "finding:arbitrum-canonical-bridge:rpc-ethereum-26466974:rpc_observed",
+   "slug": "arbitrum-canonical-bridge",
+   "protocolName": "Arbitrum Canonical Bridge",
+   "xHandle": null,
+   "xUrl": null,
+   "kind": "rpc_observed",
+   "chain": "ethereum",
+   "pinnedBlock": 26466974,
+   "blockHash": "0x9265e0f25e8ff2d7358bb5edd03a563a6fa469772bad21dafbadec78d4bc4bdd",
+   "easUid": null,
+   "sprint": null,
+   "recordId": "arbitrum-canonical-bridge-control-plane",
+   "summaryShort": "Upgradeable proxy controlled by a contract; docs not assessed",
+   "rosette": [
+    {
+     "key": "upgrade",
+     "label": "Upgradeability",
+     "state": "n",
+     "cue": "—",
+     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+    },
+    {
+     "key": "timelock",
+     "label": "Timelock floor",
+     "state": "n",
+     "cue": "—",
+     "value": "No enforced admin delay in the published records"
+    },
+    {
+     "key": "quorum",
+     "label": "Signer quorum",
+     "state": "n",
+     "cue": "—",
+     "value": "No signer quorum in the published records"
+    },
+    {
+     "key": "emergency",
+     "label": "Emergency / freeze scope",
+     "state": "n",
+     "cue": "—",
+     "value": "No pause / freeze authority in the published records"
+    },
+    {
+     "key": "parity",
+     "label": "Docs-vs-chain parity",
+     "state": "u",
+     "cue": "—",
+     "value": "Uncompared: documentation not assessed (Observed)"
+    }
+   ],
+   "docsSay": "not compared yet",
+   "chainSays": "Upgradeable proxy controlled by a contract",
+   "mainPostText": "Arbitrum Canonical Bridge. On-chain at Ethereum block #26,466,974: Upgradeable proxy controlled by a contract. Not yet compared with the docs. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/arbitrum-canonical-bridge/ · Pinned RPC observation (not attested on Base yet)",
+   "cardFilename": "arbitrum-canonical-bridge.png",
+   "receiptUrl": "https://pacta.wtf/protocols/arbitrum-canonical-bridge/",
+   "attestationUrl": null,
+   "priority": 320
+  },
+  {
+   "feedId": "finding:gauntlet-usdc-prime-base:rpc-base-60576992:rpc_observed",
+   "slug": "gauntlet-usdc-prime-base",
+   "protocolName": "Gauntlet USDC Prime (Base)",
+   "xHandle": null,
+   "xUrl": null,
+   "kind": "rpc_observed",
+   "chain": "base",
+   "pinnedBlock": 60576992,
+   "blockHash": "0x7780084ed01a331b77f78611578e99cb273c3a3dbad940d8205563f5068cfc30",
+   "easUid": null,
+   "sprint": null,
+   "recordId": "gauntlet-usdc-prime-base-control-plane",
+   "summaryShort": "Non-proxy contract controlled by a 4-of-7 Safe; docs not assessed",
+   "rosette": [
+    {
+     "key": "upgrade",
+     "label": "Upgradeability",
+     "state": "n",
+     "cue": "—",
+     "value": "Upgrade path not in the published records"
+    },
+    {
+     "key": "timelock",
+     "label": "Timelock floor",
+     "state": "n",
+     "cue": "—",
+     "value": "No enforced admin delay in the published records"
+    },
+    {
+     "key": "quorum",
+     "label": "Signer quorum",
+     "state": "g",
+     "cue": "S",
+     "value": "Lowest controlling quorum: 4-of-7"
+    },
+    {
+     "key": "emergency",
+     "label": "Emergency / freeze scope",
+     "state": "n",
+     "cue": "—",
+     "value": "No pause / freeze authority in the published records"
+    },
+    {
+     "key": "parity",
+     "label": "Docs-vs-chain parity",
+     "state": "u",
+     "cue": "—",
+     "value": "Uncompared: documentation not assessed (Observed)"
+    }
+   ],
+   "docsSay": "not compared yet",
+   "chainSays": "Non-proxy contract controlled by a 4-of-7 Safe",
+   "mainPostText": "Gauntlet USDC Prime (Base). On-chain at Base block #60,576,992: Non-proxy contract controlled by a 4-of-7 Safe. Not yet compared with the docs. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/gauntlet-usdc-prime-base/ · Pinned RPC observation (not attested on Base yet)",
+   "cardFilename": "gauntlet-usdc-prime-base.png",
+   "receiptUrl": "https://pacta.wtf/protocols/gauntlet-usdc-prime-base/",
+   "attestationUrl": null,
+   "priority": 321
+  },
+  {
+   "feedId": "finding:linea-rollup:rpc-ethereum-26466974:rpc_observed",
+   "slug": "linea-rollup",
+   "protocolName": "Linea Rollup",
+   "xHandle": null,
+   "xUrl": null,
+   "kind": "rpc_observed",
+   "chain": "ethereum",
+   "pinnedBlock": 26466974,
+   "blockHash": "0x9265e0f25e8ff2d7358bb5edd03a563a6fa469772bad21dafbadec78d4bc4bdd",
+   "easUid": null,
+   "sprint": null,
+   "recordId": "linea-rollup-control-plane",
+   "summaryShort": "Upgradeable proxy controlled by a contract; docs not assessed",
+   "rosette": [
+    {
+     "key": "upgrade",
+     "label": "Upgradeability",
+     "state": "n",
+     "cue": "—",
+     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+    },
+    {
+     "key": "timelock",
+     "label": "Timelock floor",
+     "state": "a",
+     "cue": "W",
+     "value": "No enforced delay on at least one sampled control surface (0s)"
+    },
+    {
+     "key": "quorum",
+     "label": "Signer quorum",
+     "state": "n",
+     "cue": "—",
+     "value": "No signer quorum in the published records"
+    },
+    {
+     "key": "emergency",
+     "label": "Emergency / freeze scope",
+     "state": "n",
+     "cue": "—",
+     "value": "No pause / freeze authority in the published records"
+    },
+    {
+     "key": "parity",
+     "label": "Docs-vs-chain parity",
+     "state": "u",
+     "cue": "—",
+     "value": "Uncompared: documentation not assessed (Observed)"
+    }
+   ],
+   "docsSay": "not compared yet",
+   "chainSays": "Upgradeable proxy controlled by a contract",
+   "mainPostText": "Linea Rollup. On-chain at Ethereum block #26,466,974: Upgradeable proxy controlled by a contract. Not yet compared with the docs. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/linea-rollup/ · Pinned RPC observation (not attested on Base yet)",
+   "cardFilename": "linea-rollup.png",
+   "receiptUrl": "https://pacta.wtf/protocols/linea-rollup/",
+   "attestationUrl": null,
+   "priority": 322
+  },
+  {
+   "feedId": "finding:spark-usdc-vault-base:rpc-base-60576992:rpc_observed",
+   "slug": "spark-usdc-vault-base",
+   "protocolName": "Spark USDC Vault (Base)",
+   "xHandle": null,
+   "xUrl": null,
+   "kind": "rpc_observed",
+   "chain": "base",
+   "pinnedBlock": 60576992,
+   "blockHash": "0x7780084ed01a331b77f78611578e99cb273c3a3dbad940d8205563f5068cfc30",
+   "easUid": null,
+   "sprint": null,
+   "recordId": "spark-usdc-vault-base-control-plane",
+   "summaryShort": "Non-proxy contract controlled by a contract; docs not assessed",
+   "rosette": [
+    {
+     "key": "upgrade",
+     "label": "Upgradeability",
+     "state": "n",
+     "cue": "—",
+     "value": "Upgrade path not in the published records"
+    },
+    {
+     "key": "timelock",
+     "label": "Timelock floor",
+     "state": "n",
+     "cue": "—",
+     "value": "No enforced admin delay in the published records"
+    },
+    {
+     "key": "quorum",
+     "label": "Signer quorum",
+     "state": "n",
+     "cue": "—",
+     "value": "No signer quorum in the published records"
+    },
+    {
+     "key": "emergency",
+     "label": "Emergency / freeze scope",
+     "state": "n",
+     "cue": "—",
+     "value": "No pause / freeze authority in the published records"
+    },
+    {
+     "key": "parity",
+     "label": "Docs-vs-chain parity",
+     "state": "u",
+     "cue": "—",
+     "value": "Uncompared: documentation not assessed (Observed)"
+    }
+   ],
+   "docsSay": "not compared yet",
+   "chainSays": "Non-proxy contract controlled by a contract",
+   "mainPostText": "Spark USDC Vault (Base). On-chain at Base block #60,576,992: Non-proxy contract controlled by a contract. Not yet compared with the docs. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/spark-usdc-vault-base/ · Pinned RPC observation (not attested on Base yet)",
+   "cardFilename": "spark-usdc-vault-base.png",
+   "receiptUrl": "https://pacta.wtf/protocols/spark-usdc-vault-base/",
+   "attestationUrl": null,
+   "priority": 323
+  },
+  {
+   "feedId": "finding:sui-canonical-bridge:rpc-ethereum-26466974:rpc_observed",
+   "slug": "sui-canonical-bridge",
+   "protocolName": "Sui Canonical Bridge",
+   "xHandle": null,
+   "xUrl": null,
+   "kind": "rpc_observed",
+   "chain": "ethereum",
+   "pinnedBlock": 26466974,
+   "blockHash": "0x9265e0f25e8ff2d7358bb5edd03a563a6fa469772bad21dafbadec78d4bc4bdd",
+   "easUid": null,
+   "sprint": null,
+   "recordId": "sui-canonical-bridge-control-plane",
+   "summaryShort": "Upgradeable proxy, committee() is a contract; docs not assessed",
+   "rosette": [
+    {
+     "key": "upgrade",
+     "label": "Upgradeability",
+     "state": "n",
+     "cue": "—",
+     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+    },
+    {
+     "key": "timelock",
+     "label": "Timelock floor",
+     "state": "n",
+     "cue": "—",
+     "value": "No enforced admin delay in the published records"
+    },
+    {
+     "key": "quorum",
+     "label": "Signer quorum",
+     "state": "n",
+     "cue": "—",
+     "value": "No signer quorum in the published records"
+    },
+    {
+     "key": "emergency",
+     "label": "Emergency / freeze scope",
+     "state": "n",
+     "cue": "—",
+     "value": "No pause / freeze authority in the published records"
+    },
+    {
+     "key": "parity",
+     "label": "Docs-vs-chain parity",
+     "state": "u",
+     "cue": "—",
+     "value": "Uncompared: documentation not assessed (Observed)"
+    }
+   ],
+   "docsSay": "not compared yet",
+   "chainSays": "Upgradeable proxy, committee() is a contract",
+   "mainPostText": "Sui Canonical Bridge. On-chain at Ethereum block #26,466,974: Upgradeable proxy, committee() is a contract. Not yet compared with the docs. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/sui-canonical-bridge/ · Pinned RPC observation (not attested on Base yet)",
+   "cardFilename": "sui-canonical-bridge.png",
+   "receiptUrl": "https://pacta.wtf/protocols/sui-canonical-bridge/",
+   "attestationUrl": null,
+   "priority": 324
+  },
+  {
+   "feedId": "finding:unichain-canonical-bridge:rpc-ethereum-26466974:rpc_observed",
+   "slug": "unichain-canonical-bridge",
+   "protocolName": "Unichain Canonical Bridge",
+   "xHandle": null,
+   "xUrl": null,
+   "kind": "rpc_observed",
+   "chain": "ethereum",
+   "pinnedBlock": 26466974,
+   "blockHash": "0x9265e0f25e8ff2d7358bb5edd03a563a6fa469772bad21dafbadec78d4bc4bdd",
+   "easUid": null,
+   "sprint": null,
+   "recordId": "unichain-canonical-bridge-control-plane",
+   "summaryShort": "Upgradeable proxy controlled by a contract; docs not assessed",
+   "rosette": [
+    {
+     "key": "upgrade",
+     "label": "Upgradeability",
+     "state": "n",
+     "cue": "—",
+     "value": "Upgradeable; the delay gating the upgrade path is not in the published records"
+    },
+    {
+     "key": "timelock",
+     "label": "Timelock floor",
+     "state": "n",
+     "cue": "—",
+     "value": "No enforced admin delay in the published records"
+    },
+    {
+     "key": "quorum",
+     "label": "Signer quorum",
+     "state": "b",
+     "cue": "M",
+     "value": "Lowest controlling quorum: 2-of-2"
+    },
+    {
+     "key": "emergency",
+     "label": "Emergency / freeze scope",
+     "state": "n",
+     "cue": "—",
+     "value": "No pause / freeze authority in the published records"
+    },
+    {
+     "key": "parity",
+     "label": "Docs-vs-chain parity",
+     "state": "u",
+     "cue": "—",
+     "value": "Uncompared: documentation not assessed (Observed)"
+    }
+   ],
+   "docsSay": "not compared yet",
+   "chainSays": "Upgradeable proxy controlled by a contract",
+   "mainPostText": "Unichain Canonical Bridge. On-chain at Ethereum block #26,466,974: Upgradeable proxy controlled by a contract. Not yet compared with the docs. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/unichain-canonical-bridge/ · Pinned RPC observation (not attested on Base yet)",
+   "cardFilename": "unichain-canonical-bridge.png",
+   "receiptUrl": "https://pacta.wtf/protocols/unichain-canonical-bridge/",
+   "attestationUrl": null,
+   "priority": 325
+  },
+  {
+   "feedId": "finding:wrapped-ether-weth:rpc-ethereum-26466974:rpc_observed",
+   "slug": "wrapped-ether-weth",
+   "protocolName": "Wrapped Ether (WETH9)",
+   "xHandle": null,
+   "xUrl": null,
+   "kind": "rpc_observed",
+   "chain": "ethereum",
+   "pinnedBlock": 26466974,
+   "blockHash": "0x9265e0f25e8ff2d7358bb5edd03a563a6fa469772bad21dafbadec78d4bc4bdd",
+   "easUid": null,
+   "sprint": null,
+   "recordId": "wrapped-ether-weth-control-plane",
+   "summaryShort": "Non-proxy contract no readable owner or admin; docs not assessed",
+   "rosette": [
+    {
+     "key": "upgrade",
+     "label": "Upgradeability",
+     "state": "n",
+     "cue": "—",
+     "value": "Upgrade path not in the published records"
+    },
+    {
+     "key": "timelock",
+     "label": "Timelock floor",
+     "state": "n",
+     "cue": "—",
+     "value": "No enforced admin delay in the published records"
+    },
+    {
+     "key": "quorum",
+     "label": "Signer quorum",
+     "state": "n",
+     "cue": "—",
+     "value": "No signer quorum in the published records"
+    },
+    {
+     "key": "emergency",
+     "label": "Emergency / freeze scope",
+     "state": "n",
+     "cue": "—",
+     "value": "No pause / freeze authority in the published records"
+    },
+    {
+     "key": "parity",
+     "label": "Docs-vs-chain parity",
+     "state": "u",
+     "cue": "—",
+     "value": "Uncompared: documentation not assessed (Observed)"
+    }
+   ],
+   "docsSay": "not compared yet",
+   "chainSays": "Non-proxy contract no readable owner or admin",
+   "mainPostText": "Wrapped Ether (WETH9). On-chain at Ethereum block #26,466,974: Non-proxy contract no readable owner or admin. Not yet compared with the docs. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/wrapped-ether-weth/ · Pinned RPC observation (not attested on Base yet)",
+   "cardFilename": "wrapped-ether-weth.png",
+   "receiptUrl": "https://pacta.wtf/protocols/wrapped-ether-weth/",
+   "attestationUrl": null,
+   "priority": 326
+  },
+  {
+   "feedId": "finding:wrapped-ether-weth-base:rpc-base-60576992:rpc_observed",
+   "slug": "wrapped-ether-weth-base",
+   "protocolName": "Wrapped Ether (Base)",
+   "xHandle": null,
+   "xUrl": null,
+   "kind": "rpc_observed",
+   "chain": "base",
+   "pinnedBlock": 60576992,
+   "blockHash": "0x7780084ed01a331b77f78611578e99cb273c3a3dbad940d8205563f5068cfc30",
+   "easUid": null,
+   "sprint": null,
+   "recordId": "wrapped-ether-weth-base-control-plane",
+   "summaryShort": "Non-proxy contract no readable owner or admin; docs not assessed",
+   "rosette": [
+    {
+     "key": "upgrade",
+     "label": "Upgradeability",
+     "state": "n",
+     "cue": "—",
+     "value": "Upgrade path not in the published records"
+    },
+    {
+     "key": "timelock",
+     "label": "Timelock floor",
+     "state": "n",
+     "cue": "—",
+     "value": "No enforced admin delay in the published records"
+    },
+    {
+     "key": "quorum",
+     "label": "Signer quorum",
+     "state": "n",
+     "cue": "—",
+     "value": "No signer quorum in the published records"
+    },
+    {
+     "key": "emergency",
+     "label": "Emergency / freeze scope",
+     "state": "n",
+     "cue": "—",
+     "value": "No pause / freeze authority in the published records"
+    },
+    {
+     "key": "parity",
+     "label": "Docs-vs-chain parity",
+     "state": "u",
+     "cue": "—",
+     "value": "Uncompared: documentation not assessed (Observed)"
+    }
+   ],
+   "docsSay": "not compared yet",
+   "chainSays": "Non-proxy contract no readable owner or admin",
+   "mainPostText": "Wrapped Ether (Base). On-chain at Base block #60,576,992: Non-proxy contract no readable owner or admin. Not yet compared with the docs. Receipt below.",
+   "replyPostText": "Receipt: https://pacta.wtf/protocols/wrapped-ether-weth-base/ · Pinned RPC observation (not attested on Base yet)",
+   "cardFilename": "wrapped-ether-weth-base.png",
+   "receiptUrl": "https://pacta.wtf/protocols/wrapped-ether-weth-base/",
+   "attestationUrl": null,
+   "priority": 327
   }
  ]
 }

@@ -4,11 +4,11 @@
 
 **Wave 3 — 3-Year Protocol Trajectory & Integrity Dossier ($20.00 USDC / Protocol on Base).** **Wave 3 offered 2 human-researcher dossier slots (`2 × $20.00 USDC = $40.00 USDC`).** Settled on Base Mainnet from `0xcA4E2ff22B69A7284210c47BdeE21Aac1269da09` (an externally owned account, chainId 8453, USDC `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`): **$70.00 USDC (8 dossiers)**; unencumbered Wave 3 capacity now: **$0.00 USDC (0 slots)** plus `$0.05` operational buffer. Wave 2 (`$1.00` single-gap micro-bounties) and Wave 1 (`4 × $25.00 = $100.00 USDC` Genesis) are permanently completed and retired. Live board: https://pacta.wtf/bounties/#wave-3 · Researcher credentials & leaderboard: https://pacta.wtf/leaderboard/
 
-## Eligible Targets (`>= USD 10M` TVL Across 7 EVM Chains + `127` Unassessed On-Chain Records Unlocked)
+## Eligible Targets (`>= USD 10M` TVL Across 7 EVM Chains + `135` Unassessed On-Chain Records Unlocked)
 
 - **Chains:** `ethereum` (1), `base` (8453), `arbitrum` (42161), `optimism` (10), `polygon` (137), `bnb` (56), `avalanche` (43114)
 - **TVL Floor:** `tvl_usd >= 10,000,000` (USD 10M+ verified on DefiLlama or official analytics)
-- **Unassessed on-chain records unlocked:** All **127 unassessed on-chain records (`rpc_observed`, `easAttested: false`)** in the [protocol data](https://pacta.wtf/api/v1/protocols.json) are eligible alongside unindexed USD 10M+ protocols (only the 189 already Base-EAS attested protocols are excluded as duplicates).
+- **Unassessed on-chain records unlocked:** All **135 unassessed on-chain records (`rpc_observed`, `easAttested: false`)** in the [protocol data](https://pacta.wtf/api/v1/protocols.json) are eligible alongside unindexed USD 10M+ protocols (only the 189 already Base-EAS attested protocols are excluded as duplicates).
 
 ## Mandatory 3-Part Human-Researcher Dossier (`2023–2026`)
 

@@ -14,7 +14,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const DOCS = join(HERE, "..", "..", "..", "docs", "api", "v1");
 const GW = "https://gateway.example.test";
 // PUBLISHED-COUNTS (the one line a Sprint stamp rewrites; equals pacta-github-repo verify_site_v2.EXPECT)
-const PUBLISHED = Object.freeze({ protocols: 316, briefs: 18, easAttestedProtocols: 189, rpcObservedProtocols: 127 });   // + the Umia radar brief
+const PUBLISHED = Object.freeze({ protocols: 324, briefs: 18, easAttestedProtocols: 189, rpcObservedProtocols: 135 });   // + the Umia radar brief; + the 25 Nov 2026 quick batch
 const rec = (reply) => {
   const calls = [];
   const f = async (url) => { calls.push(String(url)); return reply(String(url)); };
@@ -176,8 +176,9 @@ test("address aliases: the Aave V3 Base Pool resolves exactly to aave-v3-base; '
     assert.equal(r.results[0].match, "exact", q);
   }
   const aliased = LOOKUP_CATALOG.filter((x) => (x.aliasAddresses || []).length);
-  assert.deepEqual(aliased.map((x) => x.slug), ["aave-v3-base", "aave-v3-gho", "circle-gateway", "ethena-usde-susde", "ether-fi-core-eeth-weeth",
-                                                "lido-steth-dual-governance", "morpho-blue-core", "pendle-finance-v2", "spark-sky", "stader-labs-ethx"]);
+  assert.deepEqual(aliased.map((x) => x.slug), ["aave-v3-base", "aave-v3-gho", "arbitrum-canonical-bridge", "circle-gateway", "ethena-usde-susde",
+                                                "ether-fi-core-eeth-weeth", "lido-steth-dual-governance", "linea-rollup", "metronome-synth", "morpho-blue-core",
+                                                "obol-network", "pendle-finance-v2", "polygon-bridge", "spark-sky", "stader-labs-ethx", "yearn-v3"]);
   for (const x of aliased) {                                              // every verified alias resolves exactly to its protocol
     for (const a of x.aliasAddresses) {
       assert.ok(lookupProtocols({ query: a, limit: 50 }).results.some((r) => r.slug === x.slug && r.match === "exact"), `${x.slug} ${a}`);

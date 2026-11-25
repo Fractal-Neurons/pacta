@@ -79,6 +79,7 @@
   <url><loc>https://pacta.wtf/protocols/ao-bridge/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/apex-pro/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/apy-finance/</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://pacta.wtf/protocols/arbitrum-canonical-bridge/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/arkis/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/arrakis-modular/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/aster-bridge/</loc><lastmod>2026-11-22</lastmod></url>
@@ -172,6 +173,7 @@
   <url><loc>https://pacta.wtf/protocols/frax-usd-frxusd/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/friend-tech-v1/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/gamma/</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://pacta.wtf/protocols/gauntlet-usdc-prime-base/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/gearbox-v3-v3-1/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/geth/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/glif/</loc><lastmod>2026-11-22</lastmod></url>
@@ -217,6 +219,7 @@
   <url><loc>https://pacta.wtf/protocols/lendflare/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/lido-steth-dual-governance/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/lighter-bridge/</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://pacta.wtf/protocols/linea-rollup/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/liquid-collective-lseth/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/liquity-v1-lusd/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/liquity-v2-bold/</loc><lastmod>2026-11-22</lastmod></url>
@@ -301,6 +304,7 @@
   <url><loc>https://pacta.wtf/protocols/sonic-gateway/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/sosovalue-basis/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/spark-sky/</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://pacta.wtf/protocols/spark-usdc-vault-base/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/spectra-metavaults/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/sport-fun/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/ssv-network/</loc><lastmod>2026-11-22</lastmod></url>
@@ -318,6 +322,7 @@
   <url><loc>https://pacta.wtf/protocols/steakhouse-usdc-metamorpho-base/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/steer-protocol/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/strata-markets/</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://pacta.wtf/protocols/sui-canonical-bridge/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/superform-v2-base/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/supernova-cl/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/superstate-ustb-uscc/</loc><lastmod>2026-11-22</lastmod></url>
@@ -344,6 +349,7 @@
   <url><loc>https://pacta.wtf/protocols/ultrayield-vaults/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/umia/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/uncx-network-v2/</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://pacta.wtf/protocols/unichain-canonical-bridge/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/uniswap-governance-timelock/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/uniswap-v4/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/unitus/</loc><lastmod>2026-11-22</lastmod></url>
@@ -361,6 +367,8 @@
   <url><loc>https://pacta.wtf/protocols/woofi-earn/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/world-chain-bridge/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/wormhole-core-ntt/</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://pacta.wtf/protocols/wrapped-ether-weth-base/</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://pacta.wtf/protocols/wrapped-ether-weth/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/xdai-stake-bridge/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/xsy/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/yearn-v3/</loc><lastmod>2026-11-22</lastmod></url>

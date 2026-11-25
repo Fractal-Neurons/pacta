@@ -1045,6 +1045,16 @@
       }
     },
     {
+      "slug": "arbitrum-canonical-bridge",
+      "protocolName": "Arbitrum Canonical Bridge",
+      "xHandle": null,
+      "xUrl": null,
+      "verificationSource": null,
+      "sources": [],
+      "reason": "no relevant first-party handle",
+      "candidates": {}
+    },
+    {
       "slug": "arkis",
       "protocolName": "Arkis",
       "xHandle": "@ArkisXYZ",
@@ -5431,6 +5441,16 @@
       }
     },
     {
+      "slug": "gauntlet-usdc-prime-base",
+      "protocolName": "Gauntlet USDC Prime (Base)",
+      "xHandle": null,
+      "xUrl": null,
+      "verificationSource": null,
+      "sources": [],
+      "reason": "no relevant first-party handle",
+      "candidates": {}
+    },
+    {
       "slug": "gearbox-v3-v3-1",
       "protocolName": "Gearbox V3 / V3.1",
       "xHandle": null,
@@ -7456,6 +7476,16 @@
           "lighter.xyz"
         ]
       }
+    },
+    {
+      "slug": "linea-rollup",
+      "protocolName": "Linea Rollup",
+      "xHandle": null,
+      "xUrl": null,
+      "verificationSource": null,
+      "sources": [],
+      "reason": "no relevant first-party handle",
+      "candidates": {}
     },
     {
       "slug": "liquid-collective-lseth",
@@ -11424,6 +11454,16 @@
       "reason": "no relevant first-party handle"
     },
     {
+      "slug": "spark-usdc-vault-base",
+      "protocolName": "Spark USDC Vault (Base)",
+      "xHandle": null,
+      "xUrl": null,
+      "verificationSource": null,
+      "sources": [],
+      "reason": "no relevant first-party handle",
+      "candidates": {}
+    },
+    {
       "slug": "spectra-metavaults",
       "protocolName": "Spectra MetaVaults",
       "xHandle": "@Spectra_Finance",
@@ -12556,6 +12596,16 @@
           "strata.markets"
         ]
       }
+    },
+    {
+      "slug": "sui-canonical-bridge",
+      "protocolName": "Sui Canonical Bridge",
+      "xHandle": null,
+      "xUrl": null,
+      "verificationSource": null,
+      "sources": [],
+      "reason": "no relevant first-party handle",
+      "candidates": {}
     },
     {
       "slug": "superform-v2-base",
@@ -13873,6 +13923,16 @@
       "candidates": {}
     },
     {
+      "slug": "unichain-canonical-bridge",
+      "protocolName": "Unichain Canonical Bridge",
+      "xHandle": null,
+      "xUrl": null,
+      "verificationSource": null,
+      "sources": [],
+      "reason": "no relevant first-party handle",
+      "candidates": {}
+    },
+    {
       "slug": "uniswap-governance-timelock",
       "protocolName": "Uniswap V3 & Governance Timelock",
       "xHandle": "@Uniswap",
@@ -14738,6 +14798,26 @@
           "wormhole.com"
         ]
       }
+    },
+    {
+      "slug": "wrapped-ether-weth",
+      "protocolName": "Wrapped Ether (WETH9)",
+      "xHandle": null,
+      "xUrl": null,
+      "verificationSource": null,
+      "sources": [],
+      "reason": "no relevant first-party handle",
+      "candidates": {}
+    },
+    {
+      "slug": "wrapped-ether-weth-base",
+      "protocolName": "Wrapped Ether (Base)",
+      "xHandle": null,
+      "xUrl": null,
+      "verificationSource": null,
+      "sources": [],
+      "reason": "no relevant first-party handle",
+      "candidates": {}
     },
     {
       "slug": "xdai-stake-bridge",
