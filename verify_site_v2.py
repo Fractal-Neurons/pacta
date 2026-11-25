@@ -4248,7 +4248,8 @@ def main(argv=None):
           and all(f'data-wave4-targets="{b_}"' in sec_w4 and f"catalogue-targets-batch{b_}.json" in sec_w4 for b_ in (1, 2))
           and "One $0.02 USDC x402 call to <code class=\"mono\">POST https://api.pacta.wtf/v1/x402/verdict</code>" in sec_w4
           and "never refunded" in sec_w4 and "Sunday 29 November 2026 at 23:59 UTC, or when all open slots are filled" in sec_w4
-          and 'href="https://github.com/Fractal-Neurons/pacta/issues/158"' in sec_w4 and sec_w4.count('class="pid-logo"') == 12
+          and 'href="https://github.com/Fractal-Neurons/pacta/issues/158"' in sec_w4
+          and re.sub(r'(?s)<table class="ix stack" data-wave4-targets="159" data-wave4-winners="159">.*?</table>', "", sec_w4).count('class="pid-logo"') == 12
           and all(s_ in {t_["slot_id"] for t_ in tg_w4} and sl_ in lk_w4 and (tk_ in (lk_w4[sl_].get("tokens") or [])
                                                                               or tk_ in BS_w4.proto_ident(sl_)[1].split(" · "))
                   for s_, (sl_, tk_) in BS_w4.WAVE4_IDENT.items())
@@ -4326,10 +4327,22 @@ def main(argv=None):
         sts_w4[k_] = (int(m_.group(1)), int(m_.group(2)), m_.group(3), int(m_.group(4))) if m_ else None
         t_ = dt.datetime.strptime(iss_all_w4[k_]["updated_at"], "%Y-%m-%dT%H:%M:%SZ")
         ats_w4[k_] = f"{t_.day} {t_:%b %Y}, {t_:%H:%M} UTC"
+    # 25 Nov refresh: checked_at = when the snapshot was re-checked against the live issues (one fetch, UTC); an open issue whose last
+    # update predates it reads "N Open as of <check time>" and its status line names both times; a closed one keeps its close time
+    cks_w4 = {}
+    for k_ in ("158", "159", "161"):
+        c_ = iss_all_w4[k_].get("checked_at") or ""
+        cks_w4[k_] = None
+        if (re.fullmatch(r"\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ", c_) and iss_all_w4[k_]["state"] == "open"
+                and c_ > iss_all_w4[k_]["updated_at"]):
+            t_ = dt.datetime.strptime(c_, "%Y-%m-%dT%H:%M:%SZ")
+            cks_w4[k_] = f"{t_.day} {t_:%b %Y}, {t_:%H:%M} UTC"
+    stl_w4 = {k_: (f"Its status line, re-checked against the live issue at {cks_w4[k_]} (the issue was last updated at {ats_w4[k_]}): "
+                   if cks_w4[k_] else f"Its status line at {ats_w4[k_]}: ") for k_ in ("158", "159", "161")}
     ok_st_w4 = all(v_ is not None and v_[0] + v_[3] == v_[1] == int(pools_w4[k_].group(1).split()[0]) for k_, v_ in sts_w4.items())
     cl_w4 = {k_: iss_all_w4[k_]["state"] == "closed" for k_ in ("158", "159", "161")}
     exp_h_w4 = {k_: (f"Wave 4 — $2.00 USDC {nm_} Bounty ({sts_w4[k_][1]} Awards · Full and closed: {sts_w4[k_][3]} won, 0 open as of {ats_w4[k_]})"
-                     if cl_w4[k_] else f"Wave 4 — $2.00 USDC {nm_} Bounty ({sts_w4[k_][1]} Awards · {sts_w4[k_][0]} Open as of {ats_w4[k_]})")
+                     if cl_w4[k_] else f"Wave 4 — $2.00 USDC {nm_} Bounty ({sts_w4[k_][1]} Awards · {sts_w4[k_][0]} Open as of {cks_w4[k_] or ats_w4[k_]})")
                 if ok_st_w4 else None for k_, nm_ in (("159", "Control-Plane Watch"), ("161", "Documents Changed"))}
     prs_ahead_w4 = sorted(BS_w4.WAVE4_MERGED_AFTER_ISSUE)
     t_ = dt.datetime.strptime(max(BS_w4.WAVE4_MERGED_AFTER_ISSUE.values()) if ahead_w4 else iss_w4["updated_at"], "%Y-%m-%dT%H:%M:%SZ")
@@ -4378,7 +4391,7 @@ def main(argv=None):
           and all(BS_w4.wave4_issue_md_html(iss_all_w4[k_]["body"]) in sec_w4 for k_ in ("158", "159"))
           and sec_w4.count('<p class="w4-quote-title" data-wave4-issue-title><b>') == 2
           and all(f'data-wave4-status="{k_}">Source: <a href="https://github.com/Fractal-Neurons/pacta/issues/{k_}" target="_blank" rel="noopener">'
-                  f"GitHub issue #{k_}" in sec_w4 and f"Its status line at {ats_w4[k_]}: <b>{sts_w4[k_][0]} of {sts_w4[k_][1]} awards open, "
+                  f"GitHub issue #{k_}" in sec_w4 and f"{stl_w4[k_]}<b>{sts_w4[k_][0]} of {sts_w4[k_][1]} awards open, "
                   f"{sts_w4[k_][3]} settled</b>." in sec_w4 for k_ in ("159", "161"))
           and f"(snapshot {ats_w4['158']})" in sec_w4
           and len(css_w4) == 1 and css_w4[0].count("@media (min-width:768px){") == 1 and "overflow-wrap:anywhere" in css_w4[0]
@@ -4407,11 +4420,16 @@ def main(argv=None):
     u_ = lambda c_: f"${c_ // 100}.{c_ % 100:02d}"
     t_ = dt.datetime.strptime(max(v_["updated_at"] for v_ in iss_all_w4.values()), "%Y-%m-%dT%H:%M:%SZ")
     newest_w4 = f"{t_.day} {t_:%b %Y}, {t_:%H:%M} UTC"
+    ck_set_w4 = {v_.get("checked_at") for v_ in iss_all_w4.values()}
+    ck_ok_w4 = (len(ck_set_w4) == 1 and all(re.fullmatch(r"\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ", c_ or "") for c_ in ck_set_w4)
+                and all(v_["checked_at"] >= v_["updated_at"] and v_["checked_at"] >= (v_["closed_at"] or "") for v_ in iss_all_w4.values()))
+    t_ = dt.datetime.strptime(min(ck_set_w4), "%Y-%m-%dT%H:%M:%SZ") if ck_ok_w4 else None
+    ck_all_w4 = f"{t_.day} {t_:%b %Y}, {t_:%H:%M} UTC" if t_ else None
     f158_w4 = re.search(r"<li><span>Entry call</span><b>(.*?)</b></li>", sec_w4)
     check("Wave 4 closed tracks (24 Nov refresh): each issue's snapshot state / closed_at = GitHub (closed <=> closed_at, a closed issue has "
           "0 open); #158 and #159 full and closed in heading, facts / status line and verbatim label, 'do not pay' for their entry call; "
           "#161 still open; the lede names the open and the closed tracks with the Wave 4 totals (awards, USDC, newest snapshot)",
-          all(list(v_) == ["number", "title", "html_url", "state", "updated_at", "closed_at", "body"] for v_ in iss_all_w4.values())
+          all(list(v_) == ["number", "title", "html_url", "state", "updated_at", "closed_at", "body", "checked_at"] for v_ in iss_all_w4.values())
           and all((v_["state"] == "closed") == (v_["closed_at"] is not None) and v_["state"] in ("open", "closed") for v_ in iss_all_w4.values())
           and all(sts_w4[k_][0] == 0 and sts_w4[k_][3] == sts_w4[k_][1] for k_ in cl_w4 if cl_w4[k_])
           and (not cl_w4["158"] or (n_open_w4 == 0 and not page_open_w4
@@ -4426,12 +4444,49 @@ def main(argv=None):
                                     and f"GitHub closed the issue at {cla_w4[k_]}, with all {sts_w4[k_][1]} awards settled. Live status:" in sec_w4)
                   for k_ in ("159", "161"))
           and sec_w4.count("An award can be won at any time, so check the live issue before paying.") == sum(not cl_w4[k_] for k_ in ("159", "161"))
+          and ck_ok_w4 and (not cks_w4["161"] or (
+              f"(5 Awards · {sts_w4['161'][0]} Open as of {cks_w4['161']})</h3>" in sec_w4
+              and f"{stl_w4['161']}<b>{sts_w4['161'][0]} of 5 awards open, {sts_w4['161'][3]} settled</b>. An award can be won at any time" in sec_w4))
           and (all(not v_ for v_ in cl_w4.values()) or (
               f"Across the three tracks, {nw_} of {nw_ + no_} awards are settled ({u_(cw_)} of {u_(cw_ + co_)} USDC) and {no_} "
-              f"{'is' if no_ == 1 else 'are'} open ({u_(co_)} USDC), as of each issue&#x27;s last update (newest {newest_w4})." in lede_w4
+              f"{'is' if no_ == 1 else 'are'} open ({u_(co_)} USDC), as re-checked against the three live GitHub issues at {ck_all_w4} "
+              f"(newest issue update {newest_w4})." in lede_w4
               and all((f'#{k_}</a>, {sts_w4[k_][3]} of {sts_w4[k_][1]} awards won)' if cl_w4[k_] else
                        f'#{k_}</a>, {sts_w4[k_][0]} of {sts_w4[k_][1]} awards open)') in lede_w4 for k_ in ("159", "161")))),
           f"closed {cla_w4}; totals {nw_} won / {no_} open, {u_(cw_)} / {u_(co_)} USDC; newest {newest_w4}")
+
+    # 25 Nov refresh (B55-LINK-01): #wave-4-159 links every winner: one row per merged bounties/wave-4/watch/<entry>.json
+    # (build_site.WAVE4_WATCH_PR: one pull request each, as many as the issue's settled count, in pull request order), each a
+    # "Won · PR #N" badge linking the pull request that merged it, between the pool line and the verbatim snapshot; the
+    # closed-track warnings stay
+    wdir_w4 = os.path.join(ROOT, "bounties", "wave-4", "watch")
+    watch_w4 = sorted(f_[:-5] for f_ in os.listdir(wdir_w4) if f_.endswith(".json")) if os.path.isdir(wdir_w4) else []
+    t159_w4 = sec_w4.split('id="wave-4-159"', 1)[1].split('id="wave-4-161"', 1)[0] if 'id="wave-4-159"' in sec_w4 else ""
+    win_w4 = re.findall(r'<tr data-wave4-winner="([a-z0-9-]+)">(.*?)</tr>', t159_w4)
+    pin_w4 = {"inverse-finance-firm-0x68c69563": 166, "ethena-usde-susde-0xfa19ea2e": 170, "umia-0x6c30153b": 172,
+              "beefy-finance-base-0xf00a23c8": 180, "puffer-finance-pufeth-0x70afbff6": 182, "infinifi-0x54d3d19b": 192,
+              "compound-v3-comet-0xf8bfadae": 193, "inverse-finance-firm-0x5be16818": 196, "lista-lending-0x5f9ad3e6": 198,
+              "compound-v3-comet-0x949a364c": 200, "infinifi-0x15c60674": 204, "beefy-finance-base-0x8bc66b7e": 205,
+              "umia-0xb4662fe2": 208, "inverse-finance-firm-0x04c4571e": 212, "ethena-usde-susde-0x680e0879": 218}
+    exp_win_w4 = sorted(pin_w4.items(), key=lambda x_: x_[1])
+    pr_pg_w4 = [int(x_) for x_ in re.findall(r'data-w4-won="(\d+)"', t159_w4)]
+    pos_w4 = [t159_w4.find(m_) for m_ in ('data-wave4-pool="159"', 'data-wave4-winners="159"', 'id="wave-4-159-issue"')]
+    check("Wave 4 #159 winners (25 Nov refresh, B55-LINK-01): all 15 Control-Plane Watch winners link the pull requests that merged them "
+          "(one row per merged bounties/wave-4/watch/*.json = the issue's settled count, PR order), between the pool line and the "
+          "verbatim snapshot; 'Full and closed' and 'do not pay' kept",
+          len(watch_w4) == 15 == sts_w4["159"][3] and set(watch_w4) == set(pin_w4) and BS_w4.WAVE4_WATCH_PR == pin_w4
+          and len(set(pin_w4.values())) == 15 and [e_ for e_, _ in win_w4] == [e_ for e_, _ in exp_win_w4]
+          and all(f'data-w4-won="{p_}">Won · <a href="https://github.com/Fractal-Neurons/pacta/pull/{p_}" target="_blank" rel="noopener">PR #{p_}</a>'
+                  in c_ and c_.count("/pull/") == 1 and f'<code class="mono">{e_}</code>' in c_ for (e_, c_), (_, p_) in zip(win_w4, exp_win_w4))
+          and all(f'<img class="pid-logo" src="../assets/protocols/{sl_}.webp" alt="" width="22" height="22" loading="lazy" decoding="async">'
+                  f'{html.escape(lk_w4[sl_]["name"])}</span>' in c_
+                  for e_, c_ in win_w4 for sl_ in [json.load(open(os.path.join(wdir_w4, e_ + ".json")))["protocol_slug"]])
+          and t159_w4.count('data-wave4-winner="') == 15 and t159_w4.count("data-w4-won=") == 15
+          and -1 not in pos_w4 and pos_w4 == sorted(pos_w4)
+          and "<b>All 15 awards won</b>, each linked to the pull request that merged it" in t159_w4
+          and "Full and closed: GitHub closed the issue at " in t159_w4 and ", so do not pay for an entry call.</p>" in t159_w4
+          and "(15 Awards · Full and closed: 15 won, 0 open as of " in t159_w4,
+          f"rows {len(win_w4)}; page PRs {pr_pg_w4}")
 
     graph_manifest_checks(cli)
 

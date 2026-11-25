@@ -4418,6 +4418,16 @@ def wave4_closed(it, st):
     return wave4_snapshot_at(it["closed_at"])
 
 
+def wave4_checked(it, closed):
+    """The snapshot's re-check against the live issue (checked_at: the Issues API fetch time, UTC, never before the issue's last
+    update; the three issues are fetched together). An open issue whose last update predates it reads "N Open as of <check time>",
+    since its status line still said that then; None for a closed issue (its close time stays the snapshot time) or no later check."""
+    ck = it["checked_at"]
+    assert re.fullmatch(r"\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ", ck) and ck >= it["updated_at"] and ck >= (it["closed_at"] or ""), \
+        ("wave 4 checked_at", it["number"], ck)
+    return None if closed or ck == it["updated_at"] else wave4_snapshot_at(ck)
+
+
 def wave4_heading(title, st, at, scope="", closed=None):
     """Visible heading: the issue title's words without its own count, then total, open at the snapshot and the snapshot time
     (a closed issue: full and closed, won / open as of the snapshot)."""
@@ -4442,7 +4452,7 @@ def wave4_lag(title, body, st):
     return out
 
 
-def wave4_verbatim_head(n, url, at, st, lag, cat=None, closed=None):
+def wave4_verbatim_head(n, url, at, st, lag, cat=None, closed=None, checked=None):
     """Summary and lead note of one verbatim issue snapshot: what it is, when it was taken, which line the curated heading follows
     (#158: the merged catalogue entries on main while its status line has not caught up with them)."""
     lagged = ("older lines inside the quoted text lag behind it: " + "; ".join(lag)) if lag else \
@@ -4459,7 +4469,9 @@ def wave4_verbatim_head(n, url, at, st, lag, cat=None, closed=None):
     return (f'<summary><span>Verbatim snapshot: GitHub issue #{n} as of {E(at)}</span></summary>'
             f'<p class="s w4-verbatim-note" data-wave4-verbatim-note="{n}">The issue text word for word, as it stood at the issue&#x27;s last update '
             f'({E(at)}). The heading and summary above follow its own status line ({st["open"]} of {st["total"]} {st["unit"]} open, '
-            f'{st["settled"]} settled); {E(lagged)}.{shut} Live status: <a href="{E(url)}" target="_blank" rel="noopener">GitHub issue #{n}{EXT}</a>.</p>')
+            f'{st["settled"]} settled); {E(lagged)}.{shut}'
+            + (f' The issue had not changed when it was re-checked against the live issue at {E(checked)}.' if checked else '')
+            + f' Live status: <a href="{E(url)}" target="_blank" rel="noopener">GitHub issue #{n}{EXT}</a>.</p>')
 
 
 def wave4_tvl(usd):
@@ -4570,9 +4582,11 @@ def wave4():
         st_k = wave4_status(bd, m3.group(1).split()[0])
         at_k = wave4_snapshot_at(it["updated_at"])
         cl_k = wave4_closed(it, st_k)
-        others.append({"number": it["number"], "html_url": it["html_url"], "title": m1.group(1), "closed": cl_k,
-                       "heading": wave4_heading(m1.group(1), st_k, at_k, closed=cl_k),
-                       "pool_md": m2.group(0), "body": bd, "updated_at": it.get("updated_at"), "awards": m3.group(1) + " on Base",
+        ck_k = wave4_checked(it, cl_k)
+        others.append({"number": it["number"], "html_url": it["html_url"], "title": m1.group(1), "closed": cl_k, "checked": ck_k,
+                       "heading": wave4_heading(m1.group(1), st_k, ck_k or at_k, closed=cl_k),
+                       "pool_md": m2.group(0), "body": bd, "updated_at": it.get("updated_at"), "checked_at": it["checked_at"],
+                       "awards": m3.group(1) + " on Base",
                        "closes": m4.group(1), "status": st_k, "at": at_k, "lag": wave4_lag(m1.group(1), bd, st_k)})
     _W4["others"] = others
     return _W4
@@ -4608,12 +4622,16 @@ def wave4_pill_lede(w4, w4_open):
     n_won, n_open = sum(r_[0] for r_ in rows), sum(r_[1] for r_ in rows)
     c_won, c_open = sum(r_[0] * r_[2] for r_ in rows), sum(r_[1] * r_[2] for r_ in rows)
     newest = wave4_snapshot_at(max([w4["issue"]["updated_at"]] + [o["updated_at"] for o in (o159, o161)]))
+    cks = {w4["issue"]["checked_at"], o159["checked_at"], o161["checked_at"]}
+    assert len(cks) == 1, ("wave 4: the three issues are re-checked together", cks)
+    checked = wave4_snapshot_at(cks.pop())
     ones = {1: "one", 2: "two"}
     pill = f'Wave 4 open · {", ".join(E(t_[0]) for t_ in op)} · {" &amp; ".join(E(t_[0]) for t_ in cl)} full and closed'
     lede = (f'Wave 4 is open in {ones[len(op)]} of its three tracks, each from its live GitHub issue. Open: {"; ".join(t_[2] for t_ in op)}. '
             f'Full and closed: {" and ".join(t_[2] for t_ in cl)}. Across the three tracks, {n_won} of {n_won + n_open} awards are settled '
-            f'({usd(c_won)} of {usd(c_won + c_open)} USDC) and {n_open} {"is" if n_open == 1 else "are"} open ({usd(c_open)} USDC), as of each '
-            f'issue&#x27;s last update (newest {E(newest)}). <a href="#wave-4">Rules and targets</a> below.')
+            f'({usd(c_won)} of {usd(c_won + c_open)} USDC) and {n_open} {"is" if n_open == 1 else "are"} open ({usd(c_open)} USDC), as '
+            f're-checked against the three live GitHub issues at {E(checked)} (newest issue update {E(newest)}). '
+            f'<a href="#wave-4">Rules and targets</a> below.')
     return pill, lede
 
 
@@ -4664,6 +4682,56 @@ WAVE4_WON_PR = {"base-morpho-blue-singleton": 160, "base-uniswap-v2-factory": 16
 # newest of these merges as the snapshot time, and the verbatim label says the status line has not caught up. Empty it once a refreshed
 # issue counts them (the build asserts both ways).
 WAVE4_MERGED_AFTER_ISSUE = {}
+
+# Wave 4 Control-Plane Watch (#159): each merged watch entry (bounties/wave-4/watch/<entry>.json, named <protocol_slug>-<event tx hash
+# prefix>) and the pull request that merged it ("Merge pull request #N …: Wave 4 watch: …"). #wave-4-159 lists them all, each linked
+# to its pull request (B55-LINK-01); the build stops unless there is one entry per merged file, as many as the issue's settled count
+WAVE4_WATCH_PR = {"inverse-finance-firm-0x68c69563": 166, "ethena-usde-susde-0xfa19ea2e": 170, "umia-0x6c30153b": 172,
+                  "beefy-finance-base-0xf00a23c8": 180, "puffer-finance-pufeth-0x70afbff6": 182, "infinifi-0x54d3d19b": 192,
+                  "compound-v3-comet-0xf8bfadae": 193, "inverse-finance-firm-0x5be16818": 196, "lista-lending-0x5f9ad3e6": 198,
+                  "compound-v3-comet-0x949a364c": 200, "infinifi-0x15c60674": 204, "beefy-finance-base-0x8bc66b7e": 205,
+                  "umia-0xb4662fe2": 208, "inverse-finance-firm-0x04c4571e": 212, "ethena-usde-susde-0x680e0879": 218}
+WAVE4_WATCH_DIR = os.path.join(ROOT, "bounties", "wave-4", "watch")
+
+
+def wave4_watch_won():
+    """[(entry, its JSON, PR number)] for every merged Control-Plane Watch entry on main, in pull request order."""
+    have = sorted(f[:-5] for f in os.listdir(WAVE4_WATCH_DIR) if f.endswith(".json")) if os.path.isdir(WAVE4_WATCH_DIR) else []
+    assert set(have) == set(WAVE4_WATCH_PR), ("wave 4 watch entries vs WAVE4_WATCH_PR", sorted(set(have) ^ set(WAVE4_WATCH_PR)))
+    out = []
+    for e in have:
+        d = json.load(open(os.path.join(WAVE4_WATCH_DIR, e + ".json"), encoding="utf-8"))
+        assert d["chain"] in CHAINS and e == f'{d["protocol_slug"]}-{d["event_tx_hash"][:10].lower()}', ("wave 4 watch entry", e)
+        out.append((e, d, WAVE4_WATCH_PR[e]))
+    return sorted(out, key=lambda x: x[2])
+
+
+def wave4_winners_html(o):
+    """#159: its winning entries (once the issue counts any as settled), each with the pull request that merged it."""
+    if o["number"] != 159 or not o["status"]["settled"]:
+        return ""
+    won, items, s_ = wave4_watch_won(), lookup_items(), o["status"]
+    assert len(won) == s_["settled"], ("wave 4 #159: settled awards vs merged watch entries", len(won), s_)
+
+    def proto(slug):
+        name = items[slug]["name"]
+        if os.path.exists(os.path.join(DOCS, "assets", "protocols", f"{slug}.webp")):
+            return (f'<span class="pid"><img class="pid-logo" src="../assets/protocols/{E(slug)}.webp" alt="" width="22" height="22" '
+                    f'loading="lazy" decoding="async">{E(name)}</span>')
+        return f'<span class="pid">{pid_mono(name)}{E(name)}</span>'
+    rows = "".join(
+        f'<tr data-wave4-winner="{E(e)}"><td data-label="Watched protocol">{proto(d["protocol_slug"])}<span class="w4-meta">'
+        f'{E(CHAINS[d["chain"]][0])} · <code class="mono">{E(e)}</code></span></td>'
+        f'<td data-label="Change kind"><code class="mono">{E(d["change_kind"])}</code></td>'
+        f'<td class="w4-links" data-label="Award"><span data-slot="badge" data-variant="neutral" data-w4-won="{pr}">Won · '
+        f'<a href="{REPO}/pull/{pr}" target="_blank" rel="noopener">PR #{pr}</a></span></td></tr>'
+        for e, d, pr in won)
+    n_won = f"All {len(won)} awards won" if len(won) == s_["total"] else f"{len(won)} of {s_['total']} awards won"
+    return (f'<p class="s" data-wave4-winners-note="159"><b>{n_won}</b>, each linked to the pull request that merged it (in pull request '
+            f'order). The same entries as files: <a href="{REPO}/tree/main/bounties/wave-4/watch" target="_blank" rel="noopener">'
+            f'<code>bounties/wave-4/watch/</code>{EXT}</a></p>'
+            f'<div class="table-scroll"><table class="ix stack" data-wave4-targets="159" data-wave4-winners="159"><thead><tr>'
+            f'<th>Watched protocol · chain · entry</th><th>Change kind</th><th>Award · pull request</th></tr></thead><tbody>{rows}</tbody></table></div>')
 
 
 def wave4_merged():
@@ -4754,13 +4822,15 @@ def wave4_track_html(o):
     n = o["number"]
     return (f'<div class="w4-track" id="wave-4-{n}" data-wave4-track="{n}"><h3>{E(o["heading"])}</h3>'
             f'<p class="s" data-wave4-status="{n}">Source: <a href="{E(o["html_url"])}" target="_blank" rel="noopener">GitHub issue #{n}{EXT}</a>, '
-            f'rendered from that issue. Its status line at {E(o["at"])}: <b>{o["status"]["open"]} of {o["status"]["total"]} awards open, '
-            f'{o["status"]["settled"]} settled</b>. '
+            f'rendered from that issue. '
+            + (f'Its status line, re-checked against the live issue at {E(o["checked"])} (the issue was last updated at {E(o["at"])}): '
+               if o["checked"] else f'Its status line at {E(o["at"])}: ')
+            + f'<b>{o["status"]["open"]} of {o["status"]["total"]} awards open, {o["status"]["settled"]} settled</b>. '
             + (f'Full and closed: GitHub closed the issue at {E(o["closed"])}, so do not pay for an entry call.</p>' if o["closed"] else
                'An award can be won at any time, so check the live issue before paying.</p>')
-            + (f'<p data-wave4-pool="{n}">{md_inline(o["pool_md"])}</p>'
+            + (f'<p data-wave4-pool="{n}">{md_inline(o["pool_md"])}</p>{wave4_winners_html(o)}'
                f'<details class="archive-details" id="wave-4-{n}-issue" data-wave4-issue-text="{n}">'
-               f'{wave4_verbatim_head(n, o["html_url"], o["at"], o["status"], o["lag"], closed=o["closed"])}'
+               f'{wave4_verbatim_head(n, o["html_url"], o["at"], o["status"], o["lag"], closed=o["closed"], checked=o["checked"])}'
                f'<div class="md">{wave4_issue_md_html(o["body"])}</div></details></div>'
                if not re.search(r"\$10(?![0-9,M])", o["body"]) else
                f'<p data-wave4-pool="{n}"><b>{E(o["awards"])}</b>. {E(o["closes"])}</p>'
