@@ -890,7 +890,7 @@ class Scorecard87(unittest.TestCase):
     # protocol page's watch card opens /watch/?protocol=<slug> by email (WATCH_PAGE_MOVES, each exactly as often as listed; {name} is the
     # escaped scorecard name). Its site JS (the two asks, the inline /scan/ card, the /webhook/ redirect) is pinned by the app harness in
     # verify_site_v2.py, so app.src.js / app.js are held to BASE + the moves above at WATCH_BASE; docs/styles.css keeps BASE + FOCUS_MOVE
-    # as an untouched prefix and only gains rules at its end for the /watch/ classes (WATCH_CSS_TAIL).
+    # as an untouched prefix and only gains rules at its end for the /watch/ and /check/ classes (WATCH_CSS_TAIL).
     WATCH_BASE = "55fbbe5b6dfb157786c015b8692c8f117d401419"
     WATCH_PAGE_MOVES = (
         ('<a href="../../scan/">Instant Scan</a><a href="../../#pricing">',
@@ -906,7 +906,8 @@ class Scorecard87(unittest.TestCase):
     # (+ the round-2 24 px hit boxes on the /scan/ result links: WATCH-TARGET-02)
     WATCH_CSS_TAIL = re.compile(r'\.watch-|\.combo-count\b|\.pf-watch-inline\b|\.pfw-|\.scan-watch-doors\b|^input\[type="number"\]'
                                 r'|^\.topbar \.search-btn kbd$|^\.wl-pos-name$|^\.wl-gap-links > a$|^\.wl-inline-b2b > a$'
-                                r'|^\.pf-assess > a$|^\.pf-match-foot > a$')
+                                r'|^\.pf-assess > a$|^\.pf-match-foot > a$'
+                                r'|^\.ck-')   # + the /check/ ("Who controls this contract?") page rules, all under the .ck- prefix
     EXP = {e["slice_id"]: e for e in _load(os.path.join(HERE, "scorecard87_expected_136.json"), encoding="utf-8")["entries"]}
     FORBIDDEN = re.compile(r"\b(?:immutable|renounced|EOA)\b", re.I)
     # 25 Nov 2026 (40 Acres): the documentation sentence 40-acres-base's Delta compared against (last seen 24 November 2026) is no longer

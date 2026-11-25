@@ -2422,6 +2422,94 @@ def sponsor_page(idx):
     return page
 
 
+
+# /check/: "Who controls this contract?" One static page; app.js (initContractCheck) reads the chain from the visitor's browser
+# through two public RPCs per chain (the same order as CK_RPCS in tools/app.src.js). No per-address pages, no Worker call.
+CHECK_RPCS = {"ethereum": ("ethereum-rpc.publicnode.com", "eth.drpc.org"), "base": ("mainnet.base.org", "base-rpc.publicnode.com")}
+CHECK_EXAMPLES = [   # real addresses, each also in this repo's own records (lookup / index / wallet catalog)
+    ("USDC (Base)", "base", "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"),
+    ("Rocket Pool rETH", "ethereum", "0xae78736Cd615f374D3085123A210448E74Fc6393"),
+    ("Inverse Policy Committee Safe", "ethereum", "0x4b6c63E6a94ef26E2dF60b89372db2d8e211F1B7"),
+    ("Ethena TimelockController", "ethereum", "0xE8Dc0Fab349EA169283C48Ccfd09d797E6DB7c94"),
+]
+# no rating vocabulary on /check/: the lower-case adjective "safe" and these words never appear (the noun "Safe" names the Safe multisig)
+CHECK_BANNED_RE = re.compile(r"\b(?:unsafe|insecure|secure|immutable|risk|risky|rating|score|scores|grade|graded|warning)\b", re.I)
+CHECK_SAFE_ADJ_RE = re.compile(r"\bsafe\b")
+
+
+def check_rpc_note(chain):
+    a, b = CHECK_RPCS[chain]
+    return (f"The address you paste goes directly from your browser to these two public RPC providers ({a} and {b}) "
+            "to read live chain state.")
+
+
+def check_page(idx):
+    """/check/: paste an Ethereum or Base address; app.js reads code, proxy slots, owner / admin / pauser / minter getters, enumerable
+    roles, Safe quorum + guard and timelock delays at one block both RPCs agree on, renders facts only (failed reads: "could not read";
+    disagreeing providers: "providers disagree, could not read") and ends with "Tell me when this changes" (the existing /watch/ form)."""
+    count_line = coverage_line(idx)
+    reg = idx["onchain_anchoring"]["commitment_registry"]
+    crumbs = ('<nav class="crumbs breadcrumb" aria-label="Breadcrumb"><a href="../">Pacta</a><span aria-hidden="true">/</span>'
+              '<span>Who controls this contract?</span></nav>')
+    head_ = ('<div class="pd-head"><h1 id="ck-title">Who controls this contract?</h1>'
+             '<p class="pd-lede">Paste an Ethereum or Base contract or token address. Your browser reads the chain directly and lists who can '
+             'upgrade the contract, who owns it, who can pause it and whether new tokens can be minted, each with the block it was read at.</p></div>')
+    chips = "".join(U.button(E(label), variant="outline", size="sm",
+                             attrs=f'data-ck-example data-chain="{ch}" data-address="{ad}"') for label, ch, ad in CHECK_EXAMPLES)
+    rpcs = "".join(f'<p data-ck-rpcs="{ch}">{E(check_rpc_note(ch))}</p>' for ch in ("ethereum", "base"))
+    spin = '<span class="spinner" aria-hidden="true" hidden></span>'
+    form = (f'<form class="ck-form" id="ck-form" novalidate autocomplete="off">'
+            f'<div class="ck-row"><div class="field ck-addr-f"><label for="ck-address">Contract or token address</label>'
+            f'<input id="ck-address" name="address" type="text" placeholder="0x…" spellcheck="false" autocapitalize="off" autocomplete="off" '
+            f'aria-describedby="ck-address-err ck-rpcs"><p class="form-message" id="ck-address-err" data-slot="form-message" hidden></p></div>'
+            f'<div class="field ck-chain-f"><label for="ck-chain">Chain</label><select id="ck-chain" name="chain">'
+            f'<option value="ethereum" selected>Ethereum</option><option value="base">Base</option></select></div>'
+            f'<div class="ck-go">' + U.button(f'{spin}<span>Check</span>', variant="default", size="lg", type_="submit", attrs="data-ck-submit") + '</div></div>'
+            f'<div class="try"><div class="try-row" role="group" aria-label="Examples"><span class="try-l">Try:</span><div class="try-chips">{chips}</div></div></div>'
+            f'<div class="ck-rpcs" id="ck-rpcs">{rpcs}</div>'
+            f'<p class="req-status" id="ck-status" role="status" aria-live="polite" hidden></p>'
+            f'<noscript><p class="note">The check runs in your browser and needs JavaScript. The commands under How the check reads the chain '
+            f'reproduce it with Foundry cast.</p></noscript></form>')
+    how = ('<section class="sec pd-how ck-how" id="how" aria-labelledby="ck-how-h"><div class="wrap"><h2 id="ck-how-h">How the check reads the chain</h2>'
+           '<ul class="ck-how-l">'
+           '<li>Two public RPC providers answer every read: ethereum-rpc.publicnode.com and eth.drpc.org on Ethereum, mainnet.base.org and '
+           'base-rpc.publicnode.com on Base. The check pins one block, the finalized block, and both providers must return the same block hash '
+           'for it. If a provider does not serve the finalized tag, the latest block is used and the result says so.</li>'
+           '<li>It reads the contract code; the EIP-1967, EIP-1822 and ZeppelinOS proxy slots and the EIP-1967 beacon slot; owner(), admin(), '
+           'pauser(), minter() and similar getters; paused(), totalSupply(), cap() and maxSupply(); enumerable roles; a Safe multisig&#8217;s '
+           'threshold, owners and guard; and timelock delays. Getter calls go through Multicall3 at the pinned block. When the upgrade admin, '
+           'the beacon or a getter points to another contract, that contract is read too.</li>'
+           '<li>A read that times out or errors shows <b>could not read</b> with the reason. A read the two providers answer differently shows '
+           '<b>providers disagree, could not read</b>. A getter the contract does not have, or that reverts, shows <b>not exposed on this '
+           'contract (or reverted)</b>. An answer that is not well formed shows <b>could not read (invalid response)</b>. Role holders that '
+           'can only be listed from event logs show <b>not determined</b>. A selector in the bytecode or an address returned by a getter is '
+           'reported as observed; whether it lets anyone mint or upgrade is <b>not determined</b> without the verified source. Nothing is '
+           'guessed.</li>'
+           '<li>Every result ends with the Foundry cast commands that reproduce it at the same block, and a link to get an email from Pacta '
+           'Watch when this address changes.</li>'
+           '<li>Up to 10 checks a minute, so the public providers stay usable for everyone. This one page serves every address. Results are '
+           'never stored or published, and this page loads no advertising tag.</li></ul></div></section>')
+    body = f"""<body>
+{topbar("../", "check/")}
+<main id="main" data-ck-page>
+<section class="sec pd-sec" id="check"><div class="wrap">{crumbs}{head_}
+{form}
+<div class="ck-out" id="ck-out"></div>
+</div></section>
+{how}
+</main>
+{footer(count_line, reg, "../")}
+</body></html>
+"""
+    page = head("Who controls this contract? Free Ethereum and Base check · Pacta",
+                "Paste a contract or token address to see its upgrade admin, owner, pauser, minters, Safe multisig quorum and timelock delay, "
+                "read in your browser from two public RPCs at one pinned block.", f"{BASE_URL}/check/", prefix="../",
+                og_title="Who controls this contract?", image=f"{BASE_URL}/og-preview.png", image_size=SOCIAL_SIZE) + "\n" + body
+    text = re.sub(r"<[^>]+>", " ", re.sub(r"<script\b.*?</script>", " ", page, flags=re.S))
+    bad = CHECK_BANNED_RE.findall(text) + CHECK_SAFE_ADJ_RE.findall(text)
+    assert not bad, f"/check/ must not say {sorted(set(bad))}"
+    return page
+
 MINIAPP_PRESETS = [
     ("Moonwell (Base)", "base", "0xfBb21d0380beE3312B33c4353c8936a0F13EF26C", "moonwell-lending-base"),
     ("USDC (Base)", "base", "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", "circle-usdc"),
@@ -6663,6 +6751,7 @@ def build_all():
             w(f"{CHECKOUT[sku_]['route']}/index.html", product_page(idx, sku_))
     w("seal/index.html", seal_page(idx))
     w("watch/index.html", watch_page(idx))   # one page, two asks: the free watch sign-up and the pool pledge (nothing paid online)
+    w("check/index.html", check_page(idx))   # "Who controls this contract?": one page, read in the browser from two public RPCs
     w("webhook/index.html", webhook_redirect_page())   # /webhook/ folded into /watch/ (query and hash kept)
     w("miniapp/index.html", miniapp_page(idx))
     w(".well-known/farcaster.json", farcaster_manifest_json())

@@ -707,7 +707,7 @@ s.version = "1.1";
 s.queue = [];
 window.twq = s;
 }
-if ($("[data-nf]") || window.pactaRescued) return;
+if ($("[data-nf]") || window.pactaRescued || $("[data-ck-page]")) return;
 xCallTwq("config", X_PIXEL_ID);
 if (xIsProdHost() && !isInternalQa() && !$('script[src="' + X_UWT_SRC + '"]')) {
 var sc = document.createElement("script");
@@ -4099,9 +4099,676 @@ try { ro = new ResizeObserver(again); ro.observe(document.body); setTimeout(quit
 }
 }
 }
+var CK_RPCS = { ethereum: ["https://ethereum-rpc.publicnode.com", "https://eth.drpc.org"],
+base: ["https://mainnet.base.org", "https://base-rpc.publicnode.com"] };
+var CK_CHAIN = { ethereum: "Ethereum", base: "Base" };
+var CK_DISAGREE = "providers disagree, could not read";
+var CK_ABSENT = "not exposed on this contract (or reverted)";
+var CK_ND = "not determined";
+var CK_NO_ROLES = "uses role-based AccessControl; role holders could not be read without event logs";
+var CK_NO_MINT = "no standard mint getter or selector detected; custom mint logic not ruled out";
+var CK_TIMEOUT_MS = 8000, CK_LIMIT = 10, CK_WINDOW_MS = 60000, CK_INFLIGHT = 4, CK_MAX_CONTROLLERS = 12, CK_MAX_MEMBERS = 5;
+var CK_ADDR_RE = /^0x[0-9a-fA-F]{40}$/;
+var CK_ZERO = "0x0000000000000000000000000000000000000000";
+var CK_SLOTS = [
+["impl1967", "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc", "EIP-1967 implementation slot"],
+["admin1967", "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103", "EIP-1967 admin slot"],
+["beacon1967", "0xa3f0ad74e5423aebfd80d3ef4346578335a9a72aeaee59ff6cb3582b35133d50", "EIP-1967 beacon slot"],
+["proxiable1822", "0xc5f16f0fcc639fa48a6947836d9850f504798523bf8c9a3a87d5876cf622bcf7", "EIP-1822 PROXIABLE slot"],
+["implZos", "0x7050c9e0f4ca769c69bd3a8ef740bc37934f8e2c036e5a723fd8ee048ed3f8c3", "ZeppelinOS implementation slot"],
+["adminZos", "0x10d6a54a4754c8869d6886b5f5d7fbfa5b4522237ea5c60d11bc4e7a1ff9390b", "ZeppelinOS admin slot"]];
+var CK_GUARD_SLOT = "0x4a204f620c8c5ccdca3fd54d003badd85ba500436a431f0cbda4f558c93c34c8";
+var CK_ROLE = { admin: "0x0000000000000000000000000000000000000000000000000000000000000000",
+pauser: "0x65d7a28e3265b37a6474929f336521b332c1681b933f6cb9f3376673440d862a",
+minter: "0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6",
+proposer: "0xb09aa5aeb3702cfd50b6b62bc4532604938f21248a27a1d5ca736082b6819cc1",
+executor: "0xd8aa0f3194971a2a116679f7c2090f6939c8d4e01a2a8d7e41d55e5351469e63" };
+var CK_ROLE_NAME = { admin: "DEFAULT_ADMIN_ROLE", pauser: "PAUSER_ROLE", minter: "MINTER_ROLE", proposer: "PROPOSER_ROLE", executor: "EXECUTOR_ROLE" };
+var CK_GET = [
+["owner", "owner()(address)", "0x8da5cb5b"], ["admin", "admin()(address)", "0xf851a440"], ["authority", "authority()(address)", "0xbf7e214f"],
+["governance", "governance()(address)", "0x5aa6e675"], ["governor", "governor()(address)", "0x0c340a24"], ["timelock", "timelock()(address)", "0xd33219b4"],
+["pendingAdmin", "pendingAdmin()(address)", "0x26782247"], ["comptrollerImplementation", "comptrollerImplementation()(address)", "0xbb82aa5e"],
+["defaultAdmin", "defaultAdmin()(address)", "0x84ef8ffc"], ["defaultAdminDelay", "defaultAdminDelay()(uint48)", "0xcc8463c8"],
+["paused", "paused()(bool)", "0x5c975abb"], ["pauser", "pauser()(address)", "0x9fd0506d"],
+["totalSupply", "totalSupply()(uint256)", "0x18160ddd"], ["decimals", "decimals()(uint8)", "0x313ce567"], ["symbol", "symbol()(string)", "0x95d89b41"],
+["cap", "cap()(uint256)", "0x355274ea"], ["maxSupply", "maxSupply()(uint256)", "0xd5abeb01"],
+["minter", "minter()(address)", "0x07546172"], ["masterMinter", "masterMinter()(address)", "0x35d99f35"]];
+var CK_CTRL = [
+["getThreshold", "getThreshold()(uint256)", "0xe75235b8"], ["getOwners", "getOwners()(address[])", "0xa0e67e2b"],
+["required", "required()(uint256)", "0xdc8452cd"], ["getMinDelay", "getMinDelay()(uint256)", "0xf27a0c92"],
+["isOperation", "isOperation(bytes32)(bool) 0x0000000000000000000000000000000000000000000000000000000000000000",
+"0x31d507500000000000000000000000000000000000000000000000000000000000000000"],
+["delay", "delay()(uint256)", "0x6a42b8f8"], ["owner", "owner()(address)", "0x8da5cb5b"], ["implementation", "implementation()(address)", "0x5c60da1b"]];
+var CK_PUSH4 = [["mint(address,uint256)", "40c10f19", "mint"], ["mint(uint256)", "a0712d68", "mint"], ["issue(uint256)", "cc872b66", "mint"],
+["pause()", "8456cb59", "pause"], ["grantRole(bytes32,address)", "2f2ff15d", "roles"]];
+function ckErr(reason, rpcLevel) { var e = new Error(reason); e.ckReason = reason; e.ckRpc = !!rpcLevel; return e; }
+var CK_INVALID = "invalid response";
+function ckRpcErr(je) {
+var code = je && typeof je.code === "number" && isFinite(je.code) ? je.code : null, msg = je && typeof je.message === "string" ? je.message : "";
+var limited = code === -32005 || /rate.?limit|too many requests|quota|capacity|throttl/i.test(msg);
+var e = ckErr(limited ? "RPC rate limit" : "RPC error" + (code !== null ? " " + code : ""), true);
+e.ckCode = code; e.ckMsg = msg.slice(0, 200);
+return e;
+}
+function ckTagUnsupported(e) {
+if (!e || !e.ckRpc || e.ckCode === null || e.ckCode === undefined) return false;
+if (!(e.ckCode === -32602 || e.ckCode === -32601 || e.ckCode === -32000 || e.ckCode === -32001)) return false;
+var m = String(e.ckMsg || "");
+if (/not found|missing|header|block ?number|unavailable|not available|not ready|pruned|rate.?limit|too many|quota|capacity|internal|timeout|busy/i.test(m)) return false;
+var tagRejected = /\b(?:invalid|unsupported|unknown|unrecogni[sz]ed|not supported|bad)\b[\s\S]{0,24}\bblock ?tag\b|\bblock ?tag\b[\s\S]{0,24}\b(?:invalid|unsupported|unknown|unrecogni[sz]ed|not supported)\b/i.test(m);
+var finalizedRejected = /finali[sz]ed/i.test(m) && /\b(?:invalid argument|invalid params?|invalid|unsupported|unknown|unrecogni[sz]ed|not supported|cannot unmarshal)\b/i.test(m);
+return tagRejected || finalizedRejected;
+}
+function ckWhy(e) { var r = e && e.ckReason ? e.ckReason : "unexpected response"; return r === CK_DISAGREE ? CK_DISAGREE : "could not read (" + r + ")"; }
+var ckQueues = {};
+function ckSlot(url, job) {
+var q = ckQueues[url] || (ckQueues[url] = { n: 0, wait: [] });
+return new Promise(function (resolve, reject) {
+function go() {
+q.n++;
+job().then(function (v) { done(); resolve(v); }, function (e) { done(); reject(e); });
+}
+function done() { q.n--; var nx = q.wait.shift(); if (nx) nx(); }
+if (q.n < CK_INFLIGHT) go(); else q.wait.push(go);
+});
+}
+function ckPost(url, method, params) {
+return ckSlot(url, function () {
+return new Promise(function (resolve, reject) {
+var ctl = typeof AbortController === "function" ? new AbortController() : null, over = false;
+var opts = { method: "POST", headers: { "Content-Type": "application/json" },
+body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: method, params: params }) };
+if (ctl) opts.signal = ctl.signal;
+var timer = setTimeout(function () {
+over = true; if (ctl) { try { ctl.abort(); } catch (e) {  } } reject(ckErr("RPC timeout"));
+}, CK_TIMEOUT_MS);
+var stop = function () { try { clearTimeout(timer); } catch (e) {  } };
+fetch(url, opts).then(function (res) {
+if (!res || (typeof res.status === "number" && res.status !== 200)) throw ckErr(res && res.status === 429 ? "RPC rate limit" : "RPC HTTP " + (res && res.status));
+return res.json();
+}).then(function (j) {
+if (j && typeof j === "object" && j.error) throw ckRpcErr(j.error);
+if (!j || typeof j !== "object" || !Object.prototype.hasOwnProperty.call(j, "result")) throw ckErr(CK_INVALID);
+stop(); if (!over) resolve(j.result);
+}).catch(function (e) {
+stop(); if (!over) reject(e && e.ckReason ? e : ckErr(e && e.name === "AbortError" ? "RPC timeout" : "RPC unreachable"));
+});
+});
+});
+}
+function ckCanon(v) { return typeof v === "string" ? "s:" + v.toLowerCase() : "j:" + String(JSON.stringify(v === undefined ? null : v)); }
+var CK_VALID = {
+eth_getCode: function (r) { return typeof r === "string" && /^0x(?:[0-9a-fA-F]{2})*$/.test(r); },
+eth_getStorageAt: function (r) { return typeof r === "string" && /^0x[0-9a-fA-F]{64}$/.test(r); },
+eth_call: function (r) { return typeof r === "string" && /^0x(?:[0-9a-fA-F]{2})*$/.test(r); }
+};
+function ckDual(chain, method, params) {
+var valid = CK_VALID[method] || function () { return true; };
+return Promise.all(CK_RPCS[chain].map(function (u) {
+return ckPost(u, method, params).then(function (r) { return { ok: true, r: r }; }, function (e) { return { ok: false, e: e }; });
+})).then(function (x) {
+if (!x[0].ok) throw x[0].e;
+if (!x[1].ok) throw x[1].e;
+if (ckCanon(x[0].r) !== ckCanon(x[1].r)) throw ckErr(CK_DISAGREE);
+if (!valid(x[0].r)) throw ckErr(CK_INVALID);
+return x[0].r;
+});
+}
+function ckQty(q) {
+if (typeof q !== "string" || !/^0x(?:0|[1-9a-fA-F][0-9a-fA-F]{0,13})$/.test(q)) return null;
+var n = parseInt(q, 16);
+return n <= 9007199254740991 ? n : null;
+}
+function ckBlockPair(a, b) {
+var va = ckBlockOk(a), vb = ckBlockOk(b);
+if (va && vb) return;
+if (va !== vb || ckCanon(a) !== ckCanon(b)) throw ckErr(CK_DISAGREE);
+throw ckErr(a === null || a === undefined ? "RPC returned no block" : CK_INVALID);
+}
+function ckBlockOk(b) { return !!b && typeof b === "object" && ckQty(b.number) !== null && typeof b.hash === "string" && /^0x[0-9a-fA-F]{64}$/.test(b.hash); }
+function ckPin(chain) {
+var urls = CK_RPCS[chain];
+function tagged(tag) {
+return Promise.all(urls.map(function (u) {
+return ckPost(u, "eth_getBlockByNumber", [tag, false]).then(function (b) { return { ok: true, b: b }; }, function (e) { return { ok: false, e: e }; });
+}));
+}
+return tagged("finalized").then(function (x) {
+var bad = x.filter(function (y) { return !y.ok; });
+var other = bad.filter(function (y) { return !ckTagUnsupported(y.e); });
+if (other.length) throw other[0].e;
+if (bad.length) return tagged("latest").then(function (z) { return { tag: "latest", x: z }; });
+return { tag: "finalized", x: x };
+}).then(function (t) {
+t.x.forEach(function (y) { if (!y.ok) throw y.e; });
+ckBlockPair(t.x[0].b, t.x[1].b);
+var nA = ckQty(t.x[0].b.number), nB = ckQty(t.x[1].b.number), n = Math.min(nA, nB), hex = "0x" + n.toString(16);
+var same = nA === nB ? Promise.resolve(t.x.map(function (y) { return y.b; }))
+: Promise.all(urls.map(function (u) { return ckPost(u, "eth_getBlockByNumber", [hex, false]); }));
+return same.then(function (bs) {
+ckBlockPair(bs[0], bs[1]);
+var b0 = ckQty(bs[0].number), b1 = ckQty(bs[1].number);
+if (b0 !== b1) throw ckErr(CK_DISAGREE);
+if (b0 !== n) throw ckErr("RPC block number mismatch");
+if (bs[0].hash.toLowerCase() !== bs[1].hash.toLowerCase()) throw ckErr(CK_DISAGREE);
+return { n: n, hex: hex, hash: bs[0].hash.toLowerCase(), tag: t.tag };
+});
+});
+}
+function ckSettle(p) { return p.then(function (v) { return { ok: true, v: v }; }, function (e) { return { ok: false, why: ckWhy(e) }; }); }
+function ckWord(h, i) { return h.slice(i * 64, (i + 1) * 64); }
+function ckHex(hex) {
+return typeof hex === "string" && /^0x(?:[0-9a-fA-F]{2})*$/.test(hex) ? hex.slice(2).toLowerCase() : null;
+}
+function ckAddrOf(hex) {
+var h = ckHex(hex);
+if (h === null || h.length < 64) return null;
+var w = ckWord(h, 0);
+return /^0{24}[0-9a-f]{40}$/.test(w) ? "0x" + w.slice(24) : null;
+}
+function ckUint(hex) {
+var h = ckHex(hex);
+if (h === null || h.length < 64) return null;
+return typeof BigInt === "function" ? BigInt("0x" + ckWord(h, 0)) : null;
+}
+function ckBool(hex) {
+var u = ckUint(hex);
+return u === null ? null : (u === BigInt(0) ? false : u === BigInt(1) ? true : null);
+}
+function ckStr(hex) {
+var h = ckHex(hex), b = "";
+if (h === null) return null;
+if (h.length === 64) b = h.replace(/(?:00)+$/, "");
+else if (h.length >= 128) {
+if (ckWord(h, 0) !== "0000000000000000000000000000000000000000000000000000000000000020") return null;
+var l = ckUint("0x" + h.slice(64, 128)), len = l !== null && l <= BigInt(h.length / 2) ? Number(l) * 2 : -1;
+if (len < 0 || len > 128) return null;
+var padded = Math.ceil(len / 64) * 64;
+if (h.length !== 128 + padded || !/^0*$/.test(h.slice(128 + len, 128 + padded))) return null;
+b = h.slice(128, 128 + len);
+} else return null;
+var s = "";
+for (var i = 0; i < b.length; i += 2) { var c = parseInt(b.slice(i, i + 2), 16); if (c < 32 || c > 126) return ""; s += String.fromCharCode(c); }
+return s;
+}
+function ckIdx(h, at) {
+if (at < 0 || at + 64 > h.length) return -1;
+var v = ckUint("0x" + h.slice(at, at + 64));
+return v !== null && v <= BigInt(h.length / 2) ? Number(v) * 2 : -1;
+}
+function ckAgg3(raw, want) {
+var h = ckHex(raw);
+if (h === null || h.length < 128) return null;
+var arr = ckIdx(h, 0);
+if (arr !== 64) return null;
+var cnt = ckUint("0x" + h.slice(arr, arr + 64)), base = arr + 64;
+if (cnt === null || cnt !== BigInt(want) || base + want * 64 > h.length) return null;
+var out = [], next = want * 64;
+for (var i = 0; i < want; i++) {
+var rel = ckIdx(h, base + i * 64), t = base + rel;
+if (rel !== next || t + 192 > h.length) return null;
+var sw = h.slice(t, t + 64);
+if (!/^0{63}[01]$/.test(sw)) return null;
+if (ckIdx(h, t + 64) !== 128) return null;
+var d = t + 128, dl = ckIdx(h, d), padded = Math.ceil(dl / 64) * 64;
+if (dl < 0 || d + 64 + padded > h.length || !/^0*$/.test(h.slice(d + 64 + dl, d + 64 + padded))) return null;
+out.push({ success: sw.slice(-1) === "1", returnData: "0x" + h.slice(d + 64, d + 64 + dl) });
+next = rel + 192 + padded;
+}
+return base + next === h.length ? out : null;
+}
+function ckOwnersOf(raw) {
+var h = ckHex(raw);
+if (h === null || h.length < 128) return null;
+var off = ckIdx(h, 0);
+if (off !== 64 || off + 64 > h.length) return null;
+var n = ckUint("0x" + h.slice(off, off + 64));
+if (n === null || n < BigInt(1) || n > BigInt(100) || off + 64 + Number(n) * 64 !== h.length) return null;
+var owners = [];
+for (var i = 0; i < Number(n); i++) {
+var w = h.slice(off + 64 + i * 64, off + 128 + i * 64);
+if (!/^0{24}[0-9a-f]{40}$/.test(w)) return null;
+owners.push("0x" + w.slice(24));
+}
+return owners;
+}
+function ckMulti(chain, pin, calls) {
+if (!calls.length) return Promise.resolve([]);
+var data = encodeAggregate3(calls.map(function (c) { return { target: c.to, allowFailure: true, callData: c.data }; }));
+return ckSettle(ckDual(chain, "eth_call", [{ to: MULTICALL3_ADDR, data: data }, pin.hex])).then(function (r) {
+if (!r.ok) return calls.map(function () { return { ok: false, why: r.why }; });
+var out = r.v === "0x" ? null : ckAgg3(r.v, calls.length);
+if (!out) return calls.map(function () { return { ok: false, why: "could not read (" + (r.v === "0x" ? "Multicall3 returned no data" : CK_INVALID) + ")" }; });
+return out.map(function (o) { return { ok: true, success: o.success, data: o.returnData }; });
+});
+}
+function ckCode(chain, pin, a) { return ckSettle(ckDual(chain, "eth_getCode", [a, pin.hex])); }
+function ckStorage(chain, pin, a, slot) { return ckSettle(ckDual(chain, "eth_getStorageAt", [a, slot, pin.hex])); }
+function ckPush4(code) {
+var h = String(code || "").replace(/^0x/, "").toLowerCase(), found = {};
+for (var i = 0; i < h.length;) {
+var op = parseInt(h.slice(i, i + 2), 16);
+if (op === 0x63) found[h.slice(i + 2, i + 10)] = true;
+i += 2 + (op >= 0x60 && op <= 0x7f ? (op - 0x5f) * 2 : 0);
+}
+return CK_PUSH4.filter(function (s) { return found[s[1]]; });
+}
+function ckCodeKind(code) {
+var h = String(code).toLowerCase();
+if (h === "0x") return { kind: "none" };
+if (/^0xef0100[0-9a-f]{40}$/.test(h)) return { kind: "7702", to: "0x" + h.slice(8) };
+return { kind: "contract", bytes: (h.length - 2) / 2 };
+}
+function ckProbe(chain, pin, addrs, list) {
+var calls = [];
+addrs.forEach(function (a) { list.forEach(function (g) { calls.push({ a: a, k: g[0], to: a, data: g[2] }); }); });
+return ckMulti(chain, pin, calls).then(function (rs) {
+var out = {};
+calls.forEach(function (c, i) { (out[c.a] = out[c.a] || {})[c.k] = rs[i]; });
+return out;
+});
+}
+function ckVal(r, dec) {
+if (!r) return { ok: false, why: CK_ABSENT, absent: true };
+if (!r.ok) return { ok: false, why: r.why };
+if (!r.success || !r.data || r.data === "0x") return { ok: false, why: CK_ABSENT, absent: true };
+var v = dec(r.data);
+return v === null || v === undefined ? { ok: false, why: "could not read (" + CK_INVALID + ")" } : { ok: true, v: v };
+}
+function ckRun(chain, target) {
+var rep = { chain: chain, address: target.toLowerCase(), cast: [] };
+return ckPin(chain).then(function (pin) {
+rep.pin = pin;
+var a = rep.address;
+var tCalls = CK_GET.map(function (g) { return { k: g[0], to: a, data: g[2] }; })
+.concat(["admin", "pauser", "minter", "proposer", "executor"].map(function (r) { return { k: "roleCount_" + r, to: a, data: "0xca15c873" + CK_ROLE[r].slice(2) }; }))
+.concat(CK_CTRL.filter(function (g) { return g[0] !== "owner"; }).map(function (g) { return { k: g[0], to: a, data: g[2] }; }));
+return Promise.all([ckCode(chain, pin, a), Promise.all(CK_SLOTS.map(function (s) { return ckStorage(chain, pin, a, s[1]); })),
+ckMulti(chain, pin, tCalls), ckStorage(chain, pin, a, CK_GUARD_SLOT)]).then(function (x) {
+rep.code = x[0];
+rep.slots = {}; CK_SLOTS.forEach(function (s, i) { rep.slots[s[0]] = x[1][i]; });
+rep.t = {}; tCalls.forEach(function (c, i) { rep.t[c.k] = x[2][i]; });
+rep.guard = x[3];
+if (!rep.code.ok) return rep;
+rep.kind = ckCodeKind(rep.code.v);
+if (rep.kind.kind !== "contract") return rep;
+return ckSecond(chain, pin, rep);
+});
+});
+}
+function ckSlotAddr(rep, key) { var s = rep.slots[key]; if (!s || !s.ok) return null; var ad = ckAddrOf(s.v); return ad && ad !== CK_ZERO ? ad : null; }
+function ckSecond(chain, pin, rep) {
+var t = rep.t, a = rep.address;
+var impl = ckSlotAddr(rep, "impl1967") || ckSlotAddr(rep, "implZos") || ckSlotAddr(rep, "proxiable1822");
+var cImpl = ckVal(t.comptrollerImplementation, ckAddrOf);
+if (!impl && cImpl.ok && cImpl.v !== CK_ZERO) impl = cImpl.v;
+rep.impl = impl;
+rep.adminAddr = ckSlotAddr(rep, "admin1967") || ckSlotAddr(rep, "adminZos");
+rep.beacon = ckSlotAddr(rep, "beacon1967");
+var members = [];
+["admin", "pauser", "minter", "proposer", "executor"].forEach(function (r) {
+var c = ckVal(t["roleCount_" + r], ckUint);
+if (c.ok) for (var i = 0; i < Math.min(Number(c.v), CK_MAX_MEMBERS); i++) {
+members.push({ r: r, k: "member_" + r + "_" + i, to: a, data: "0x9010d07c" + CK_ROLE[r].slice(2) + u256Word(i) });
+}
+});
+var hops = [], hopAddrs = [rep.adminAddr, rep.beacon].filter(Boolean);
+return Promise.all([impl ? ckCode(chain, pin, impl) : Promise.resolve(null), ckMulti(chain, pin, members),
+ckProbe(chain, pin, hopAddrs, CK_CTRL)]).then(function (x) {
+rep.implCode = x[0];
+rep.members = {}; members.forEach(function (m, i) {
+var ad = ckVal(x[1][i], ckAddrOf); (rep.members[m.r] = rep.members[m.r] || []).push(ad);
+});
+rep.hop = x[2];
+if (rep.beacon) {
+var bi = ckVal((rep.hop[rep.beacon] || {}).implementation, ckAddrOf);
+rep.beaconImpl = bi;
+if (bi.ok && bi.v !== CK_ZERO) hops.push(ckCode(chain, pin, bi.v).then(function (c) { rep.beaconImplCode = c; }));
+}
+return Promise.all(hops);
+}).then(function () { return ckControllers(chain, pin, rep); });
+}
+function ckControllers(chain, pin, rep) {
+var t = rep.t, seen = {}, list = [];
+function add(v) { if (v && v.ok && typeof v.v === "string" && v.v !== CK_ZERO && v.v !== rep.address && !seen[v.v] && list.length < CK_MAX_CONTROLLERS) { seen[v.v] = 1; list.push(v.v); } }
+["owner", "admin", "authority", "governance", "governor", "timelock", "pendingAdmin", "defaultAdmin", "pauser", "minter", "masterMinter"]
+.forEach(function (k) { add(ckVal(t[k], ckAddrOf)); });
+Object.keys(rep.members).forEach(function (r) { rep.members[r].forEach(add); });
+if (rep.adminAddr) { add({ ok: true, v: rep.adminAddr }); add(ckVal((rep.hop[rep.adminAddr] || {}).owner, ckAddrOf)); }
+if (rep.beacon) add(ckVal((rep.hop[rep.beacon] || {}).owner, ckAddrOf));
+rep.ctrlList = list;
+return Promise.all([Promise.all(list.map(function (c) { return ckCode(chain, pin, c); })), ckProbe(chain, pin, list, CK_CTRL),
+Promise.all(list.map(function (c) { return ckStorage(chain, pin, c, CK_GUARD_SLOT); }))]).then(function (x) {
+rep.ctrl = {};
+list.forEach(function (c, i) { rep.ctrl[c] = { code: x[0][i], p: x[1][c] || {}, guard: x[2][i] }; });
+var tl = list.filter(function (c) { return ckVal(rep.ctrl[c].p.getMinDelay, ckUint).ok; });
+var calls = [];
+tl.forEach(function (c) { ["proposer", "executor"].forEach(function (r) { calls.push({ c: c, r: r, to: c, data: "0xca15c873" + CK_ROLE[r].slice(2) }); }); });
+return ckMulti(chain, pin, calls).then(function (rs) {
+calls.forEach(function (cl, i) { rep.ctrl[cl.c]["roleCount_" + cl.r] = rs[i]; });
+return rep;
+});
+});
+}
+function ckNum(v) { return typeof v === "bigint" ? v.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : num(v); }
+function ckDuration(s) {
+var n = Number(s), parts = [];
+[["day", 86400], ["hour", 3600], ["minute", 60], ["second", 1]].forEach(function (u) {
+var q = Math.floor(n / u[1]); if (q > 0 && parts.length < 2) { parts.push(q + " " + u[0] + (q === 1 ? "" : "s")); n -= q * u[1]; }
+});
+var b = BigInt(s);
+return ckNum(b) + (b === BigInt(1) ? " second" : " seconds") + (parts.length && b !== BigInt(1) ? " (" + parts.join(" ") + ")" : "");
+}
+function ckUnits(v, dec) {
+if (dec === null || dec === undefined || dec > 36) return ckNum(v);
+var p = BigInt(10) ** BigInt(dec), w = v / p, f = (v % p).toString();
+f = (new Array(dec + 1).join("0") + f).slice(-dec).replace(/0+$/, "");
+return ckNum(w) + (f ? "." + f : "");
+}
+function ckAddrNode(v) { return el("span", { "class": "ck-a" }, hexref(v, 6, 4)); }
+function ckWhat(rep, a, c, depth) {
+c = c || (rep.ctrl && rep.ctrl[a]);
+depth = depth || 0;
+if (!c) return [ckAddrNode(a)];
+if (!c.code.ok) return [ckAddrNode(a), " · code " + c.code.why];
+var k = ckCodeKind(c.code.v);
+if (k.kind === "none") return [ckAddrNode(a), " · externally owned account (no contract code)"];
+if (k.kind === "7702") return [ckAddrNode(a), " · EIP-7702 delegated account (delegates to ", ckAddrNode(k.to), ")"];
+var typed = [["getThreshold", ckUint], ["getOwners", ckOwnersOf], ["required", ckUint], ["getMinDelay", ckUint], ["isOperation", ckBool],
+["delay", ckUint], ["owner", ckAddrOf], ["implementation", ckAddrOf]];
+var failed = typed.map(function (g) { return [g[0], ckVal(c.p[g[0]], g[1])]; }).filter(function (x) { return !x[1].ok && !x[1].absent; })[0];
+if (failed) return ["contract (", ckAddrNode(a), ") · " + failed[0] + "() " + failed[1].why];
+var th = ckVal(c.p.getThreshold, ckUint), owv = ckVal(c.p.getOwners, ckOwnersOf), ow = owv.ok ? owv.v : null;
+if (th.ok && ow) {
+var g = c.guard && c.guard.ok ? ckAddrOf(c.guard.v) : null;
+var gTxt = !c.guard ? "Safe guard " + CK_ND : !c.guard.ok ? "Safe guard " + c.guard.why
+: g === null ? "Safe guard slot holds a value that is not an address: " + c.guard.v.toLowerCase()
+: g !== CK_ZERO ? el("span", {}, ["Safe guard ", ckAddrNode(g)]) : "no Safe guard";
+return [String(th.v) + "-of-" + ow.length + " Safe multisig (", ckAddrNode(a), ") · " + ow.length + " owners · ", gTxt];
+}
+var md = ckVal(c.p.getMinDelay, ckUint);
+if (md.ok) {
+var rc = function (r) { var x = ckVal(c["roleCount_" + r], ckUint); return x.ok ? String(x.v) : x.absent ? CK_ND : x.why; };
+return ["TimelockController (", ckAddrNode(a), ") · minimum delay " + ckDuration(md.v) + " · proposers: " + rc("proposer") + " · executors: " + rc("executor")];
+}
+if (!md.ok && !md.absent) return ["contract (", ckAddrNode(a), ") · getMinDelay() " + md.why];
+var dl = ckVal(c.p.delay, ckUint);
+if (dl.ok) return ["Timelock (", ckAddrNode(a), ") · delay() " + ckDuration(dl.v)];
+if (!dl.absent) return ["contract (", ckAddrNode(a), ") · delay() " + dl.why];
+var rq = ckVal(c.p.required, ckUint);
+if (rq.ok) return ["Multisig wallet (", ckAddrNode(a), ") · required() = " + String(rq.v) + " confirmations"];
+if (!rq.absent) return ["contract (", ckAddrNode(a), ") · required() " + rq.why];
+var o = ckVal(c.p.owner, ckAddrOf);
+if (!o.ok && !o.absent) return ["contract (", ckAddrNode(a), ") · owner() " + o.why];
+if (o.ok && o.v !== CK_ZERO && o.v !== a && rep.ctrl && rep.ctrl[o.v] && depth < 3) return ["contract (", ckAddrNode(a), ") whose owner() is "].concat(ckWhat(rep, o.v, null, depth + 1));
+if (o.ok) return ["contract (", ckAddrNode(a), ") whose owner() is ", o.v === CK_ZERO ? "the zero address" : ckAddrNode(o.v)];
+return ["contract (", ckAddrNode(a), ") · no Safe, multisig or timelock getter exposed"];
+}
+function ckRowsDl(rows) {
+return el("dl", { "class": "ck-dl" }, rows.map(function (r) {
+return el("div", { "data-ck-row": r[0] }, [el("dt", { text: r[0] }), el("dd", {}, [].concat(r[1]))]);
+}));
+}
+function ckAddrFact(r) {
+if (!r.ok) return r.why;
+return r.v === CK_ZERO ? "0x0000…0000 (the zero address: none set)" : [ckAddrNode(r.v)];
+}
+function ckSection(id, title, pinTxt, rows, extra) {
+return el("section", { "class": "ck-sec", "data-ck-sec": id, "aria-labelledby": "ck-h-" + id }, [
+el("h3", { id: "ck-h-" + id, text: title }), el("p", { "class": "ck-pin muted", text: pinTxt }), ckRowsDl(rows)].concat(extra || []));
+}
+function ckRoleRow(rep, role) {
+var c = ckVal(rep.t["roleCount_" + role], ckUint);
+if (c.ok) {
+var m = (rep.members[role] || []);
+if (!m.length) return "0 holders";
+var kids = [String(c.v) + (c.v === BigInt(1) ? " holder: " : " holders: ")];
+m.forEach(function (x, i) { if (i) kids.push(", "); kids = kids.concat(x.ok ? ckWhat(rep, x.v) : [x.why]); });
+if (Number(c.v) > m.length) kids.push(" (first " + m.length + " shown)");
+return kids;
+}
+if (!c.absent) return c.why;
+return rep.sel.roles ? CK_ND : null;
+}
+function ckPowerRow(rep, role, label, path) {
+var c = ckVal(rep.t["roleCount_" + role], ckUint);
+if (c.ok || !c.absent) return [[CK_ROLE_NAME[role] + " holders", ckRoleRow(rep, role)]];
+if (rep.unread) return [[label, rep.unread]];
+return path ? [[label, CK_ND]] : [];
+}
+function ckRender(out, rep) {
+var ch = CK_CHAIN[rep.chain], pin = rep.pin;
+var pinTxt = ch + " · block #" + num(pin.n) + " (" + pin.hash + ")" + (pin.tag === "finalized" ? " · finalized" : " · latest (a provider did not serve the finalized tag)");
+var host = CK_RPCS[rep.chain].map(function (u) { return u.replace(/^https:\/\//, ""); });
+var cast = [], rpcFlag = " --rpc-url " + CK_RPCS[rep.chain][0];
+cast.push("cast block " + pin.n + " --field hash" + rpcFlag + "\n# expect " + pin.hash);
+var card = el("div", { "class": "ck-result", "data-slot": "card", "data-ck-result": "", "data-ck-chain": rep.chain, "data-ck-address": rep.address });
+card.appendChild(el("h2", { "class": "ck-title", tabindex: "-1" }, ["Who controls ", el("span", { "class": "ck-a" }, hexref(rep.address, 8, 6)), " on " + ch]));
+card.appendChild(el("p", { "class": "ck-pin", "data-ck-pin": "", text: pinTxt }));
+card.appendChild(el("p", { "class": "muted ck-src", text: "Read from " + host[0] + " and " + host[1] + ": both returned this block hash and every value below." }));
+var sections = [];
+if (!rep.code.ok) {
+sections.push(ckSection("code", "Contract code", pinTxt, [["eth_getCode", rep.code.why]]));
+} else if (rep.kind.kind === "none") {
+sections.push(ckSection("code", "Contract code", pinTxt, [["eth_getCode", "No contract code at this address on " + ch + " at block #" + num(pin.n) + " (externally owned account or not deployed)."]]));
+cast.push("cast code " + rep.address + " --block " + pin.n + rpcFlag);
+} else if (rep.kind.kind === "7702") {
+sections.push(ckSection("code", "Contract code", pinTxt, [["eth_getCode", ["EIP-7702 delegated account: an externally owned account whose code delegates to ", ckAddrNode(rep.kind.to), " (23 bytes)."]]]));
+cast.push("cast code " + rep.address + " --block " + pin.n + rpcFlag);
+}
+if (rep.code.ok && rep.kind.kind === "contract") {
+cast.push("cast code " + rep.address + " --block " + pin.n + rpcFlag);
+rep.ctrl = rep.ctrl || {};
+var t = rep.t;
+var selfKids = ckWhat(rep, rep.address, { code: rep.code, p: t, guard: rep.guard, roleCount_proposer: t.roleCount_proposer,
+roleCount_executor: t.roleCount_executor });
+sections.push(ckSection("code", "Contract code", pinTxt, [["eth_getCode", num(rep.kind.bytes) + " bytes of contract code"], ["This address", selfKids]]));
+var codes = [rep.code.v, rep.implCode && rep.implCode.ok ? rep.implCode.v : "", rep.beaconImplCode && rep.beaconImplCode.ok ? rep.beaconImplCode.v : ""];
+var sel = {}; rep.sel = sel;
+codes.forEach(function (c) { ckPush4(c).forEach(function (s) { (sel[s[2]] = sel[s[2]] || []); if (sel[s[2]].indexOf(s[0]) < 0) sel[s[2]].push(s[0]); }); });
+var implUnread = !!(rep.impl && rep.implCode && !rep.implCode.ok);
+var unread = implUnread ? "implementation code " + rep.implCode.why : null;
+if (!unread) CK_SLOTS.forEach(function (s) {
+if (unread || ["impl1967", "implZos", "proxiable1822", "beacon1967"].indexOf(s[0]) < 0) return;
+var r = rep.slots[s[0]];
+if (!r.ok) unread = s[2] + " " + r.why;
+else if (!/^0x0{64}$/i.test(r.v) && !ckAddrOf(r.v)) unread = s[2] + " holds a value that is not an address";
+});
+var cImp0 = ckVal(t.comptrollerImplementation, ckAddrOf);
+if (!unread && !cImp0.ok && !cImp0.absent) unread = "comptrollerImplementation() " + cImp0.why;
+if (!unread && rep.beacon) {
+var bImpl = rep.beaconImpl;
+if (!bImpl || !bImpl.ok) unread = "beacon implementation() " + (bImpl ? bImpl.why : CK_ABSENT);
+else if (bImpl.v === CK_ZERO) unread = "beacon implementation() is the zero address";
+else if (!rep.beaconImplCode || !rep.beaconImplCode.ok) unread = "beacon implementation code " + (rep.beaconImplCode ? rep.beaconImplCode.why : "could not read");
+}
+rep.unread = unread;
+var up = [], slotRead = function (k) { return rep.slots[k]; };
+var slotErr = CK_SLOTS.filter(function (s) { return !rep.slots[s[0]].ok; });
+CK_SLOTS.forEach(function (s) { if (rep.slots[s[0]].ok && ckSlotAddr(rep, s[0])) cast.push("cast storage " + rep.address + " " + s[1] + " --block " + pin.n + rpcFlag); });
+var kinds = CK_SLOTS.filter(function (s) { return ckSlotAddr(rep, s[0]); }).map(function (s) { return s[2]; });
+var cImpl = ckVal(t.comptrollerImplementation, ckAddrOf);
+if (cImpl.ok && cImpl.v !== CK_ZERO) kinds.push("comptrollerImplementation() (Compound Unitroller)");
+var selfImpl = ckVal(t.implementation, ckAddrOf);
+var slotDown = function (k) { return !rep.slots[k].ok; };
+var slotIsOdd = function (k) { return slotOdd.some(function (s) { return s[0] === k; }); };
+if (!selfImpl.ok && !selfImpl.absent) up.push(["implementation()", selfImpl.why]);
+if (!cImpl.ok && !cImpl.absent) up.push(["comptrollerImplementation()", cImpl.why]);
+var slotOdd = CK_SLOTS.filter(function (s) { var r = rep.slots[s[0]]; return r.ok && !/^0x0{64}$/i.test(r.v) && !ckAddrOf(r.v); });
+slotOdd.forEach(function (s) { up.push([s[2], "holds a value that is not an address: " + rep.slots[s[0]].v.toLowerCase()]); });
+if (kinds.length) up.push(["Upgrade proxy", "Yes: " + kinds.join("; ") + " set"]);
+else if (selfImpl.ok && selfImpl.v !== CK_ZERO) {
+up.push(["Upgrade proxy", slotErr.length || slotOdd.length ? "Not every proxy slot could be read (see below); implementation() on this address returned an address"
+: "No proxy slot is set; implementation() on this address returned an address (the shape of an upgrade beacon)"]);
+up.push(["implementation()", [ckAddrNode(selfImpl.v)]]);
+cast.push('cast call ' + rep.address + ' "implementation()(address)" --block ' + pin.n + rpcFlag);
+}
+else if (!slotErr.length && !slotOdd.length) up.push(["Upgrade proxy", "No standard proxy slot is set (EIP-1967, EIP-1822, ZeppelinOS) and no beacon; custom upgrade logic not ruled out"]);
+slotErr.forEach(function (s) { up.push([s[2], rep.slots[s[0]].why]); });
+if (rep.impl) up.push(["Implementation", [ckAddrNode(rep.impl)].concat(implUnread ? [" · code " + rep.implCode.why] : [])]);
+if (rep.beacon) {
+up.push(["Beacon", [ckAddrNode(rep.beacon)]]);
+up.push(["Beacon implementation()", rep.beaconImpl && rep.beaconImpl.ok ? [ckAddrNode(rep.beaconImpl.v)] : (rep.beaconImpl ? rep.beaconImpl.why : CK_ABSENT)]);
+var bo = ckVal((rep.hop[rep.beacon] || {}).owner, ckAddrOf);
+up.push(["Beacon owner()", bo.ok ? (bo.v === CK_ZERO ? ckAddrFact(bo) : ckWhat(rep, bo.v)) : bo.why]);
+if (bo.ok) cast.push('cast call ' + rep.beacon + ' "owner()(address)" --block ' + pin.n + rpcFlag);
+}
+if (rep.adminAddr) {
+up.push(["Upgrade admin", ckWhat(rep, rep.adminAddr)]);
+var ao = ckVal((rep.hop[rep.adminAddr] || {}).owner, ckAddrOf);
+if (ao.ok) cast.push('cast call ' + rep.adminAddr + ' "owner()(address)" --block ' + pin.n + rpcFlag);
+} else if (slotDown("admin1967") || slotDown("adminZos")) {
+up.push(["Upgrade admin", (slotDown("admin1967") ? rep.slots.admin1967 : rep.slots.adminZos).why]);
+} else if (slotIsOdd("admin1967") || slotIsOdd("adminZos")) {
+up.push(["Upgrade admin", CK_ND + ": the admin slot holds a value that is not an address"]);
+} else if (selfImpl.ok && selfImpl.v !== CK_ZERO && !kinds.length) {
+up.push(["Who can upgrade", CK_ND + " from getter reads alone: owner() and implementation() returned addresses, and reads do not show whether owner() can change implementation()"]);
+} else if (rep.impl && !rep.beacon && !slotDown("beacon1967")) {
+up.push(["Upgrade admin", "The admin slots (EIP-1967, ZeppelinOS) are empty. Who can authorize upgrades: " + CK_ND + " from slot and getter reads alone (it may sit in the implementation's own code)"]);
+} else if (rep.beacon) {
+up.push(["Upgrade admin", "This proxy takes its code from the beacon above. Who can change the beacon's implementation(): " + CK_ND + " from getter reads alone (see Beacon owner())"]);
+}
+sections.push(ckSection("upgrades", "Upgrades", pinTxt, up));
+var own = [], also = [];
+[["owner", "owner()"], ["admin", "admin()"]].forEach(function (g) {
+var v = ckVal(t[g[0]], ckAddrOf); own.push([g[1], v.ok && v.v !== CK_ZERO ? ckWhat(rep, v.v) : ckAddrFact(v)]);
+});
+[["authority", "authority()"], ["governance", "governance()"], ["governor", "governor()"], ["timelock", "timelock()"], ["pendingAdmin", "pendingAdmin()"], ["defaultAdmin", "defaultAdmin()"]]
+.forEach(function (g) {
+var v = ckVal(t[g[0]], ckAddrOf);
+if (v.ok) own.push([g[1], v.v !== CK_ZERO ? ckWhat(rep, v.v) : ckAddrFact(v)]);
+else if (!v.absent) own.push([g[1], v.why]); else also.push(g[1]);
+});
+var dad = ckVal(t.defaultAdminDelay, ckUint);
+if (dad.ok) own.push(["defaultAdminDelay()", ckDuration(dad.v)]); else if (!dad.absent) own.push(["defaultAdminDelay()", dad.why]);
+var adminRole = ckRoleRow(rep, "admin");
+if (adminRole !== null) own.push(["DEFAULT_ADMIN_ROLE holders", adminRole]);
+if (rep.sel.roles && !ckVal(t.roleCount_admin, ckUint).ok) own.push(["Roles", CK_NO_ROLES]);
+sections.push(ckSection("owner", "Owner and roles", pinTxt, own,
+also.length ? [el("p", { "class": "muted ck-also", text: "Also checked, not exposed on this contract (or reverted): " + also.join(", ") + "." })] : []));
+var pz = [], pv = ckVal(t.paused, ckBool), pr = ckVal(t.pauser, ckAddrOf);
+pz.push(["paused()", pv.ok ? (pv.v ? "true: the contract is paused" : "false: not paused") : pv.why]);
+pz.push(["pauser()", pr.ok && pr.v !== CK_ZERO ? ckWhat(rep, pr.v) : ckAddrFact(pr)]);
+pz = pz.concat(ckPowerRow(rep, "pauser", "Pause role holders", !!sel.pause || pv.ok || (pr.ok && pr.v !== CK_ZERO)));
+pz.push(["pause() in bytecode", sel.pause ? "selector observed in bytecode: pause()" : unread || "no pause() selector observed"]);
+sections.push(ckSection("pause", "Pausing", pinTxt, pz));
+var sp = [], ts = ckVal(t.totalSupply, ckUint), dc = ckVal(t.decimals, ckUint), sy = ckVal(t.symbol, ckStr);
+var dec = dc.ok && dc.v <= BigInt(36) ? Number(dc.v) : null, sym = sy.ok && sy.v ? " " + sy.v : "";
+var symNote = sy.ok ? (sy.v ? "; symbol() " + sy.v : "") : !sy.absent ? "; symbol() " + sy.why : "";
+var amount = function (v) {
+if (dec !== null) return ckUnits(v, dec) + sym + " (raw " + ckNum(v) + ", " + dec + " decimals" + (sy.ok || sy.absent ? "" : symNote) + ")";
+return "raw " + ckNum(v) + " (decimals() " + (dc.ok ? String(dc.v) + " > 36" : dc.why) + "; token amount " + CK_ND + symNote + ")";
+};
+sp.push(["totalSupply()", ts.ok ? amount(ts.v) : ts.why]);
+[["cap", "cap()"], ["maxSupply", "maxSupply()"]].forEach(function (g) {
+var v = ckVal(t[g[0]], ckUint);
+if (v.ok) sp.push([g[1], amount(v.v)]); else if (g[0] === "cap" || !v.absent) sp.push([g[1], v.why]);
+});
+var mn = ckVal(t.minter, ckAddrOf), mm = ckVal(t.masterMinter, ckAddrOf);
+sp.push(["minter()", mn.ok && mn.v !== CK_ZERO ? ckWhat(rep, mn.v) : ckAddrFact(mn)]);
+if (mm.ok) sp.push(["masterMinter()", mm.v !== CK_ZERO ? ckWhat(rep, mm.v) : ckAddrFact(mm)]); else if (!mm.absent) sp.push(["masterMinter()", mm.why]);
+sp = sp.concat(ckPowerRow(rep, "minter", "Mint role holders", !!sel.mint || ts.ok || (mn.ok && mn.v !== CK_ZERO) || (mm.ok && mm.v !== CK_ZERO)));
+sp.push(["Mint functions in bytecode", sel.mint ? "selector observed in bytecode: " + sel.mint.join(", ") + (unread ? " (" + unread + ")" : "") : unread || "none of mint(address,uint256), mint(uint256), issue(uint256) observed"]);
+var why = [];
+if (sel.mint) why.push("a mint selector was observed in the bytecode");
+if (mn.ok && mn.v !== CK_ZERO) why.push("minter() returned an address");
+if (mm.ok && mm.v !== CK_ZERO) why.push("masterMinter() returned an address");
+var mc = ckVal(t.roleCount_minter, ckUint); if (mc.ok && mc.v > BigInt(0)) why.push("MINTER_ROLE has holders");
+sp.push(["Can supply grow?", unread ? unread + (why.length ? " (observed: " + why.join("; ") + ")" : "")
+: why.length ? CK_ND + " from static bytecode and getter reads alone. Observed: " + why.join("; ") + "."
+: !ts.ok && !ts.absent ? ts.why : CK_NO_MINT]);
+sections.push(ckSection("supply", "Supply", pinTxt, sp));
+CK_GET.forEach(function (g) { if (ckVal(t[g[0]], function (d) { return d; }).ok) cast.push('cast call ' + rep.address + ' "' + g[1] + '" --block ' + pin.n + rpcFlag); });
+(rep.ctrlList || []).forEach(function (c) {
+var p = rep.ctrl[c] && rep.ctrl[c].p || {};
+if (ckVal(p.getThreshold, ckUint).ok) cast.push('cast call ' + c + ' "getThreshold()(uint256)" --block ' + pin.n + rpcFlag);
+if (ckVal(p.getMinDelay, ckUint).ok) cast.push('cast call ' + c + ' "getMinDelay()(uint256)" --block ' + pin.n + rpcFlag);
+});
+["getThreshold", "getMinDelay"].forEach(function (k) {
+if (ckVal(t[k], ckUint).ok) cast.push('cast call ' + rep.address + ' "' + k + '()(uint256)" --block ' + pin.n + rpcFlag);
+});
+}
+sections.forEach(function (s) { card.appendChild(s); });
+card.appendChild(term(cast.join("\n"), "Reproduce with Foundry cast (" + ch + ", block #" + pin.n + ")", "Copy the cast commands"));
+card.appendChild(ckWatchCta(rep.chain, rep.address));
+out.textContent = "";
+out.appendChild(card);
+}
+function ckWatchCta(chain, address) {
+var q = "chain=" + encodeURIComponent(chain) + "&address=" + encodeURIComponent(address);
+return el("div", { "class": "ck-cta", "data-ck-cta": "" }, [
+el("a", { href: "../watch/?" + q, "data-slot": "button", "data-variant": "default", "data-size": "default", "data-ck-watch": "", text: "Tell me when this changes" }),
+el("span", { "class": "muted", text: "Opens the Pacta Watch sign-up with this address filled in." })]);
+}
+function ckFail(out, chain, address, why) {
+var card = el("div", { "class": "ck-result", "data-slot": "card", "data-ck-result": "", "data-ck-chain": chain, "data-ck-address": address.toLowerCase() }, [
+el("h2", { "class": "ck-title", tabindex: "-1" }, ["Who controls ", el("span", { "class": "ck-a" }, hexref(address.toLowerCase(), 8, 6)), " on " + CK_CHAIN[chain]]),
+el("p", { "class": "ck-pin", "data-ck-fail": "", text: "Block: " + why }),
+el("p", { "class": "muted", text: "No fact is shown without a block both providers agree on. Try again in a moment." }),
+ckWatchCta(chain, address.toLowerCase())]);
+out.textContent = ""; out.appendChild(card);
+}
+function initContractCheck() {
+var form = $("#ck-form"); if (!form) return;
+var inp = $("#ck-address", form), chainSel = $("#ck-chain", form), btn = $("[data-ck-submit]", form), spin = btn ? $(".spinner", btn) : null;
+var out = $("#ck-out"), status = $("#ck-status"), err = $("#ck-address-err"), runs = [], busy = false;
+function rpcNote() {
+var ch = chainSel && chainSel.value === "base" ? "base" : "ethereum";
+$$("[data-ck-rpcs]").forEach(function (p) { p.hidden = p.getAttribute("data-ck-rpcs") !== ch; });
+}
+function setErr(t) {
+if (!err) return;
+err.textContent = t; err.hidden = !t;
+if (t) inp.setAttribute("aria-invalid", "true"); else inp.removeAttribute("aria-invalid");
+}
+function check() {
+var a = String(inp.value || "").trim(), ch = chainSel && chainSel.value === "base" ? "base" : "ethereum";
+if (!CK_ADDR_RE.test(a)) { setErr("Enter a contract or token address: 0x followed by 40 hexadecimal characters."); if (inp.focus) inp.focus(); return; }
+setErr("");
+if (busy) return;
+var now = Date.now();
+runs = runs.filter(function (x) { return now - x < CK_WINDOW_MS; });
+if (runs.length >= CK_LIMIT) {
+var wait = Math.max(1, Math.ceil((CK_WINDOW_MS - (now - runs[0])) / 1000));
+status.hidden = false;
+status.textContent = "Up to " + CK_LIMIT + " checks a minute, so the public RPCs stay usable for everyone. Try again in " + wait + " seconds.";
+status.setAttribute("data-ck-throttled", "");
+return;
+}
+runs.push(now); busy = true;
+status.removeAttribute("data-ck-throttled");
+btn.disabled = true; btn.setAttribute("aria-busy", "true"); if (spin) spin.hidden = false;
+status.hidden = false; status.textContent = "Reading " + CK_CHAIN[ch] + " from two public RPCs…";
+var finish = function () { busy = false; btn.disabled = false; btn.removeAttribute("aria-busy"); if (spin) spin.hidden = true; };
+ckRun(ch, a).then(function (rep) {
+if (!rep.pin) throw ckErr("RPC error");
+ckRender(out, rep);
+status.textContent = "Done: " + CK_CHAIN[ch] + " block #" + num(rep.pin.n) + ".";
+finish();
+}).catch(function (e) {
+ckFail(out, ch, a, ckWhy(e));
+status.textContent = ckWhy(e) + ".";
+finish();
+});
+}
+form.addEventListener("submit", function (ev) { ev.preventDefault(); check(); });
+if (chainSel) chainSel.addEventListener("change", rpcNote);
+$$("[data-ck-example]").forEach(function (b) {
+b.addEventListener("click", function () {
+if (chainSel) chainSel.value = b.getAttribute("data-chain") === "base" ? "base" : "ethereum";
+inp.value = b.getAttribute("data-address") || ""; rpcNote(); check();
+});
+});
+rpcNote();
+try {
+var q = new URLSearchParams(window.location.search || ""), qc = String(q.get("chain") || "").toLowerCase(), qa = String(q.get("address") || "").trim();
+if (qc === "base" || qc === "ethereum") { if (chainSel) chainSel.value = qc; rpcNote(); }
+if (qa) { inp.value = qa; check(); }
+} catch (e) {  }
+}
 document.addEventListener("DOMContentLoaded", function () {
 [initRedirectWatch, initTheme, initInternalQaBadge, initXPixel, initSheet, initTabs, initTabLinks, initDetailsHash, initCmdk, initTooltips, initCopy, initBeaconHooks, tick, initIndex, initRequest, initLauncher, initWatch, initPledge, initCheckout, initScanFunnel, initSealCombo, initMiniApp, initInspector, initPreflight,
-initLiveTimelocks, initProtocolFilter, initAges, initRefresh, initHeroCheck, initBadgeWidget, initScorecards, initReceipts].forEach(function (f) {
+initLiveTimelocks, initProtocolFilter, initAges, initRefresh, initHeroCheck, initBadgeWidget, initScorecards, initReceipts, initContractCheck].forEach(function (f) {
 try { f(); } catch (e) { setTimeout(function () { throw e; }, 0); }
 });
 setInterval(tick, 30000);

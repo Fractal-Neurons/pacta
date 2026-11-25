@@ -2439,6 +2439,487 @@ async function watchScenario() {
   const o4 = await sOpen(); kd(sInp, "ArrowDown"); const act = !!sInp.getAttribute("aria-activedescendant"); kd(sInp, "Escape"); const c4 = sClosed();
   res.scan_combo_tab_focusout_closes = o1 && c1 && !!nextBtn && o2 && c2 && o3 && kept && c3 && o4 && act && c4;
 }
+// ---------- /check/ (Who controls this contract?): every RPC answer comes from tools/check_fixtures.json ----------
+// The fixtures are real read-only JSON-RPC results recorded from the four public providers (block objects trimmed to number and
+// hash). Tampered answers (disagreement, errors, timeouts, the latest fallback) are built here from those records, per test.
+async function checkScenario() {
+  if (!input.check || !input.checkFixtures) { res.check_error = "no /check/ input"; return; }
+  const FX = input.checkFixtures;
+  const URLS = { ethereum: ["https://ethereum-rpc.publicnode.com", "https://eth.drpc.org"], base: ["https://mainnet.base.org", "https://base-rpc.publicnode.com"] };
+  const chainOf = (u) => (URLS.ethereum.includes(u) ? "ethereum" : URLS.base.includes(u) ? "base" : null);
+  const recorded = (u, m, p) => (m === "eth_getBlockByNumber" ? FX.byUrl[u + " " + m + " " + JSON.stringify(p)] : FX.byChain[chainOf(u) + " " + m + " " + JSON.stringify(p)]);
+  // the brief's gate: no rating words, and "safe" only as the capitalised name (Gnosis Safe / Safe multisig)
+  const GATE = /\b(unsafe|insecure|risk\s*score|grade)\b/i, SAFE_ADJ = /\bsafe\b/, MORE = /\b(secure|immutable|warning|risk|risky|rating|score|graded)\b/i;
+  const gateOk = (t) => !GATE.test(t) && !SAFE_ADJ.test(t) && !MORE.test(t);
+  const gateSelf = !gateOk("this vault is safe") && !gateOk("Unsafe admin") && !gateOk("risk score 7") && !gateOk("Grade A") && !gateOk("insecure")
+    && !gateOk("immutable") && gateOk("3-of-6 Safe multisig (0x6d46…51af) · 6 owners · no Safe guard") && gateOk("a Gnosis Safe");
+  const gateBad = [];
+
+  function page(opts) {
+    opts = opts || {};
+    const log = [], misses = [], timers = new Map(); let tid = 0;
+    const fetch = (url, init) => {
+      const u = String(url), q = JSON.parse(init.body);
+      log.push({ u, m: q.method, p: q.params });
+      if (!chainOf(u) || init.method !== "POST") return Promise.reject(new Error("blocked host"));
+      let out = { result: recorded(u, q.method, q.params) };
+      if (out.result === undefined) { misses.push(q.method + " " + JSON.stringify(q.params).slice(0, 80)); out = { error: { code: -32000, message: "no fixture" } }; }
+      if (opts.tamper) { const t = opts.tamper(u, q.method, q.params, out.result); if (t) out = t; }
+      if (out.hang) return new Promise(() => {});
+      const status = out.status || 200;
+      const body = out.error ? { jsonrpc: "2.0", id: 1, error: out.error } : { jsonrpc: "2.0", id: 1, result: out.result };
+      return Promise.resolve({ status, ok: status === 200, json: () => Promise.resolve(body) });
+    };
+    const setTimeout_ = (fn, ms) => { const id = ++tid; timers.set(id, { fn, ms: ms || 0 }); return id; };
+    const clearTimeout_ = (id) => { timers.delete(id); };
+    const p = run(input.check, input.app, { path: "/check/", hostname: opts.hostname || "127.0.0.1", search: opts.search || "", fetch,
+      setTimeout: setTimeout_, clearTimeout: clearTimeout_, win: opts.win });
+    const d = p.document;
+    const fire = (pred) => { for (const [id, t] of Array.from(timers)) if (pred(t)) { timers.delete(id); t.fn(); } };
+    const st = () => d.getElementById("ck-status");
+    const settle = async () => {
+      for (let i = 0; i < 400; i++) {
+        await flush(); fire((t) => t.ms === 0);
+        if (!d.querySelector("[data-ck-submit]").disabled) break;
+      }
+    };
+    const submit = async (chain, address) => {
+      d.getElementById("ck-chain").value = chain; d.getElementById("ck-address").value = address;
+      const ev = new Event_("submit"); ev.target = d.getElementById("ck-form"); d.getElementById("ck-form").dispatchEvent(ev);
+      await settle(); return ev;
+    };
+    const out = () => d.getElementById("ck-out");
+    const rows = () => {
+      const o = {};
+      out().querySelectorAll("[data-ck-row]").forEach((r) => {
+        const dd = r.querySelector("dd");
+        o[r.getAttribute("data-ck-row")] = { t: dd ? dd.textContent.replace(/Copy/g, "") : "", a: dd ? dd.querySelectorAll("[data-copy]").map((b) => b.getAttribute("data-copy")) : [] };
+      });
+      return o;
+    };
+    const text = () => out().textContent + " " + st().textContent;
+    const pin = () => (out().querySelector("[data-ck-pin]") || { textContent: "" }).textContent;
+    const cast = () => out().querySelectorAll(".term pre").map((x) => x.textContent).join("\n");
+    const watch = () => { const a = out().querySelector("[data-ck-watch]"); return a ? a.getAttribute("href") : null; };
+    return { p, d, log, misses, timers, fire, st, settle, submit, out, rows, text, pin, cast, watch };
+  }
+  const row = (r, k) => r[k] || { t: "", a: [] };
+  const has = (r, k, s) => row(r, k).t.includes(s);
+  const addr = (r, k, a) => row(r, k).a.map((x) => x.toLowerCase()).includes(a.toLowerCase());
+  const ETH_PIN = "Ethereum · block #26,491,866 (0x77fbf13ed7493d7a6c784fc3d43481763952f365f653cd9c948ab20dfe0f0533) · finalized";
+  const BASE_PIN = "Base · block #62,069,007 (0x182e19d0f5c17a88508f1fb730f73f01db0e20f89e8221574730832f058e3ab0) · finalized";
+  const DIS = "providers disagree, could not read", ABS = "not exposed on this contract (or reverted)";
+  const allSecPins = (pg, want) => pg.out().querySelectorAll("[data-ck-pin]").length >= 1 && pg.out().querySelectorAll(".ck-pin").every((x) => x.textContent === want);
+  const live = async (c, extra) => {
+    const pg = page(extra);
+    await pg.submit(FX.cases[c].chain, FX.cases[c].address);
+    const t = pg.text(); if (!gateOk(t)) gateBad.push(c + ": " + (t.match(GATE) || t.match(SAFE_ADJ) || t.match(MORE))[0]);
+    return pg;
+  };
+  const hostsOk = (pg, chain) => pg.log.length > 0 && pg.log.every((x) => URLS[chain].includes(x.u)) && URLS[chain].every((u) => pg.log.some((x) => x.u === u));
+
+  // 1. Maple PoolPermissionManager: EIP-1967 proxy, admin slot = 4-of-7 Safe
+  const maple = await live("maple_ppm"); const mr = maple.rows();
+  res.check_maple_proxy_admin_safe = maple.misses.length === 0 && maple.pin() === ETH_PIN && allSecPins(maple, ETH_PIN) && hostsOk(maple, "ethereum")
+    && has(mr, "Upgrade proxy", "EIP-1967 implementation slot") && has(mr, "Upgrade proxy", "EIP-1967 admin slot")
+    && has(mr, "Upgrade admin", "4-of-7 Safe multisig") && has(mr, "Upgrade admin", "7 owners") && has(mr, "owner()", ABS)
+    && maple.st().textContent === "Done: Ethereum block #26,491,866.";
+  if (!res.check_maple_proxy_admin_safe) res.check_maple_detail = JSON.stringify({ m: maple.misses, pin: maple.pin(), up: row(mr, "Upgrade admin") }).slice(0, 300);
+
+  // 2. Usual RegistryAccess: proxy + ProxyAdmin -> 8-of-15 Safe; defaultAdmin() / defaultAdminDelay(); non-enumerable AccessControl
+  const usual = await live("usual_registry_access"); const ur = usual.rows();
+  res.check_usual_proxyadmin_safe = usual.misses.length === 0 && usual.pin() === ETH_PIN
+    && has(ur, "Upgrade admin", "contract (") && has(ur, "Upgrade admin", "whose owner() is 8-of-15 Safe multisig") && has(ur, "Upgrade admin", "15 owners")
+    && has(ur, "defaultAdmin()", "8-of-15 Safe multisig") && row(ur, "defaultAdminDelay()").t === "1 second"
+    && row(ur, "DEFAULT_ADMIN_ROLE holders").t === "not determined"
+    && row(ur, "Roles").t === "uses role-based AccessControl; role holders could not be read without event logs"
+    && usual.cast().includes('cast call ') && usual.cast().includes('"owner()(address)" --block 26491866');
+  // the two selectors the brief names are probed by the multicall
+  const usualCalls = usual.log.filter((x) => x.m === "eth_call").map((x) => String(x.p[0].data)).join("");
+  res.check_usual_default_admin_selectors = usualCalls.includes("84ef8ffc") && usualCalls.includes("cc8463c8");
+
+  // 3. Ethena TimelockController: getMinDelay() = 86400
+  const eth = await live("ethena_timelock"); const er = eth.rows();
+  res.check_timelock_min_delay = eth.misses.length === 0 && has(er, "This address", "TimelockController")
+    && has(er, "This address", "minimum delay 86,400 seconds (1 day)") && has(er, "This address", "proposers: not determined")
+    && has(er, "This address", "executors: not determined") && eth.cast().includes('"getMinDelay()(uint256)"');
+
+  // 4. Lagoon beacon: implementation() + owner() = 3-of-6 Safe; 5. the beacon-proxy vault reaches the same Safe through the beacon slot
+  const SAFE6 = "0x6D46e28aB34622d9A39d0F306a37a8dC270951aF";
+  const lb = await live("lagoon_beacon"); const lbr = lb.rows();
+  res.check_beacon_owner_safe = lb.misses.length === 0 && row(lbr, "Upgrade proxy").t === "No proxy slot is set; implementation() on this address returned an address (the shape of an upgrade beacon)"
+    && row(lbr, "implementation()").a.length === 1 && has(lbr, "owner()", "3-of-6 Safe multisig") && addr(lbr, "owner()", SAFE6)
+    && row(lbr, "Who can upgrade").t.indexOf("not determined from getter reads alone") === 0;
+  const lv = await live("lagoon_vault"); const lvr = lv.rows();
+  res.check_beacon_proxy_vault = lv.misses.length === 0 && has(lvr, "Upgrade proxy", "EIP-1967 beacon slot")
+    && addr(lvr, "Beacon", "0x707D622cdA4b5459e7DcEe8Ba8E429F154f96A27") && row(lvr, "Beacon implementation()").a.length === 1
+    && has(lvr, "Beacon owner()", "3-of-6 Safe multisig") && addr(lvr, "Beacon owner()", SAFE6)
+    && has(lvr, "paused()", "false") && row(lvr, "pause() in bytecode").t === "selector observed in bytecode: pause()" && has(lvr, "totalSupply()", "18 decimals")
+    && row(lvr, "Pause role holders").t === "not determined" && row(lvr, "Mint role holders").t === "not determined"
+    && has(lvr, "Upgrade admin", "Who can change the beacon's implementation(): not determined");
+
+  // 6. token: USDC on Base (ZeppelinOS slots, pauser(), masterMinter(), totalSupply(), a mint selector)
+  const usdc = await live("usdc_base"); const usr = usdc.rows();
+  res.check_token_minter_pauser_supply = usdc.misses.length === 0 && usdc.pin() === BASE_PIN && hostsOk(usdc, "base")
+    && has(usr, "Upgrade proxy", "ZeppelinOS implementation slot") && has(usr, "pauser()", "externally owned account")
+    && has(usr, "masterMinter()", "contract (") && has(usr, "totalSupply()", " USDC (raw ") && has(usr, "totalSupply()", "6 decimals")
+    && row(usr, "Mint functions in bytecode").t === "selector observed in bytecode: mint(address,uint256)"
+    && row(usr, "Can supply grow?").t.indexOf("not determined from static bytecode and getter reads alone. Observed: a mint selector was observed in the bytecode; masterMinter() returned an address") === 0
+    && has(usr, "paused()", "false: not paused");
+  // Base's providers were one finalized block apart when recorded: the lower height is pinned and its hash compared on both
+  res.check_pin_lower_height = usdc.log.filter((x) => x.m === "eth_getBlockByNumber" && x.p[0] === "0x3b3190f").length === 2;
+
+  // 7. examples: rETH (no proxy, no standard mint) and the Inverse Policy Committee Safe
+  const reth = await live("reth"); const rr = reth.rows();
+  const inv = await live("inverse_policy_safe"); const ir = inv.rows();
+  res.check_examples_read = reth.misses.length === 0 && inv.misses.length === 0 && has(rr, "Upgrade proxy", "No standard proxy slot is set")
+    && has(rr, "Can supply grow?", "custom mint logic not ruled out") && has(ir, "This address", "3-of-6 Safe multisig") && has(ir, "This address", "no Safe guard");
+
+  // 8. EOA (0x…dEaD): the exact sentence, and nothing past the code read
+  const eoa = await live("eoa_dead"); const eor = eoa.rows();
+  res.check_eoa_message = eoa.misses.length === 0
+    && row(eor, "eth_getCode").t === "No contract code at this address on Ethereum at block #26,491,866 (externally owned account or not deployed)."
+    && Object.keys(eor).length === 1 && !eoa.out().textContent.includes("Upgrade admin");
+  // EIP-7702 delegated EOA: code 0xef0100 || address (built from the EOA record, only the code answer differs)
+  const D7702 = "0xef0100" + "77".repeat(20);   // a synthetic delegate, only to exercise the 0xef0100 prefix
+  const e7702 = await live("eoa_dead", { tamper: (u, m, p) => (m === "eth_getCode" ? { result: D7702 } : null) });
+  res.check_eoa_7702 = /EIP-7702/.test(e7702.out().textContent) && e7702.out().textContent.includes("0x7777");
+
+  // 9. nonsense input: an inline error and zero RPC calls
+  const bad = page();
+  await bad.submit("ethereum", "not an address");
+  await bad.submit("ethereum", "0x12345");
+  await bad.submit("base", "0xZZ10aDcE8B6E3E02Db384E7FaDA5395DD113D8b3");
+  res.check_nonsense_zero_rpc = bad.log.length === 0 && bad.d.getElementById("ck-address-err").hidden === false
+    && bad.d.getElementById("ck-address-err").textContent === "Enter a contract or token address: 0x followed by 40 hexadecimal characters."
+    && bad.d.getElementById("ck-address").getAttribute("aria-invalid") === "true" && bad.out().textContent === "";
+
+  // 10. disagreement: B answers a different block hash -> no fact at all; B answers a different slot / call -> that row only
+  const B = URLS.ethereum[1];
+  const flipHash = (h) => h.slice(0, -1) + (h.slice(-1) === "0" ? "1" : "0");
+  const dPin = await live("maple_ppm", { tamper: (u, m, p, r) => (u === B && m === "eth_getBlockByNumber" && r ? { result: { number: r.number, hash: flipHash(r.hash) } } : null) });
+  res.check_disagree_block_hash = dPin.st().textContent === DIS + "." && (dPin.out().querySelector("[data-ck-fail]") || {}).textContent === "Block: " + DIS
+    && dPin.out().querySelectorAll("[data-ck-row]").length === 0 && !!dPin.watch();
+  const ADMIN_SLOT = "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103";
+  const dSlot = await live("maple_ppm", { tamper: (u, m, p, r) => (u === B && m === "eth_getStorageAt" && p[1] === ADMIN_SLOT ? { result: "0x" + "0".repeat(24) + "1".repeat(40) } : null) });
+  const dsr = dSlot.rows();
+  res.check_disagree_row_only = row(dsr, "EIP-1967 admin slot").t === DIS && row(dsr, "Upgrade admin").t === DIS
+    && has(dsr, "Upgrade proxy", "EIP-1967 implementation slot") && dSlot.pin() === ETH_PIN;
+  const dCall = await live("usual_registry_access", { tamper: (u, m, p, r) => (u === B && m === "eth_call" && typeof r === "string" && r.length > 200 ? { result: r.slice(0, -2) + (r.slice(-2) === "00" ? "01" : "00") } : null) });
+  const dcr = dCall.rows();
+  res.check_disagree_getters = row(dcr, "owner()").t === DIS && row(dcr, "totalSupply()").t === DIS && row(dcr, "eth_getCode").t.includes("bytes of contract code");
+
+  // 11. RPC errors: a JSON-RPC error, HTTP 429 and a timeout each read "could not read (<reason>)"
+  const eCode = await live("reth", { tamper: (u, m) => (u === B && m === "eth_getCode" ? { error: { code: -32603, message: "internal" } } : null) });
+  const e429 = await live("reth", { tamper: (u, m) => (u === B && m === "eth_getBlockByNumber" ? { status: 429 } : null) });
+  const eTo = page({ tamper: (u, m) => (u === B && m === "eth_getStorageAt" ? { hang: true } : null) });
+  eTo.submit("ethereum", FX.cases.reth.address);
+  await eTo.settle();
+  let waitingTimers = 0;
+  for (let i = 0; i < 6; i++) {
+    const n = Array.from(eTo.timers.values()).filter((t) => t.ms === 8000).length; if (!n) break;
+    waitingTimers += n; eTo.fire((t) => t.ms === 8000); await eTo.settle();
+  }
+  const tor = eTo.rows();
+  res.check_rpc_error_could_not_read = row(eCode.rows(), "eth_getCode").t === "could not read (RPC error -32603)" && eCode.pin() === ETH_PIN
+    && eCode.out().querySelectorAll("[data-ck-row]").length === 1 && !!eCode.watch();
+  res.check_rpc_rate_limit = e429.st().textContent === "could not read (RPC rate limit)." && (e429.out().querySelector("[data-ck-fail]") || {}).textContent === "Block: could not read (RPC rate limit)";
+  res.check_rpc_timeout = waitingTimers >= 7 && eTo.st().textContent.indexOf("Done:") === 0 && row(tor, "EIP-1967 admin slot").t === "could not read (RPC timeout)"
+    && row(tor, "Upgrade admin").t === "could not read (RPC timeout)" && !has(tor, "Upgrade proxy", "No standard proxy slot");
+  // finalized unsupported (a JSON-RPC error on both) -> latest, labelled
+  const lat = await live("ethena_timelock", { tamper: (u, m, p) => {
+    if (m !== "eth_getBlockByNumber") return null;
+    if (p[0] === "finalized") return { error: { code: -32602, message: "unsupported block tag" } };
+    if (p[0] === "latest") return { result: FX.byUrl[u + " eth_getBlockByNumber " + JSON.stringify(["finalized", false])] };
+    return null;
+  } });
+  res.check_latest_fallback_labelled = lat.pin() === ETH_PIN.replace(" · finalized", " · latest (a provider did not serve the finalized tag)")
+    && lat.log.some((x) => x.m === "eth_getBlockByNumber" && x.p[0] === "latest");
+
+  // 12. throttle: the 11th check inside a minute makes zero RPC calls
+  const th = page();
+  let thOk = true;
+  for (let i = 0; i < 10; i++) { await th.submit("ethereum", FX.cases.eoa_dead.address); thOk = thOk && th.st().textContent.indexOf("Done:") === 0; }
+  const before = th.log.length;
+  await th.submit("ethereum", FX.cases.eoa_dead.address);
+  res.check_throttle_11th = thOk && th.log.length === before && th.st().hasAttribute("data-ck-throttled")
+    && /^Up to 10 checks a minute, so the public RPCs stay usable for everyone\. Try again in \d+ seconds\.$/.test(th.st().textContent);
+
+  // 13. watch CTA, query-param prefill, example chips, RPC disclosure toggle, cast commands, no X tag
+  const cta = maple.watch();
+  const w = run(input.watch || input.check, input.app, { path: "/watch/", search: cta ? cta.replace(/^\.\.\/watch\//, "") : "" });
+  const wCount = w.document.querySelector("[data-watch-count]");
+  res.check_watch_cta = cta === "../watch/?chain=ethereum&address=0xbe10adce8b6e3e02db384e7fada5395dd113d8b3"
+    && (maple.out().querySelector("[data-ck-watch]") || {}).textContent === "Tell me when this changes" && !!input.watch && !!wCount
+    && wCount.textContent.indexOf("Selected: 1 / ") === 0 && w.document.getElementById("watch-chain").value === "ethereum";
+  const q = page({ search: "?chain=base&address=" + FX.cases.usdc_base.address });
+  await q.settle();
+  const shown = (pg) => pg.d.querySelectorAll("[data-ck-rpcs]").filter((x) => !x.hidden).map((x) => x.getAttribute("data-ck-rpcs"));
+  res.check_query_prefill = q.d.getElementById("ck-chain").value === "base" && q.d.getElementById("ck-address").value === FX.cases.usdc_base.address
+    && q.pin() === BASE_PIN && same(shown(q), ["base"]);
+  const ex = page();
+  const chips = ex.d.querySelectorAll("[data-ck-example]");
+  const s0 = same(shown(ex), ["ethereum"]);
+  const tl = chips.find((b) => b.getAttribute("data-address") === FX.cases.ethena_timelock.address);
+  click(tl); await ex.settle();
+  res.check_examples_chips = chips.length === 4 && s0 && !!tl && has(ex.rows(), "This address", "TimelockController")
+    && same(chips.map((b) => b.getAttribute("data-chain")), ["base", "ethereum", "ethereum", "ethereum"]);
+  const chainSel = ex.d.getElementById("ck-chain"); chainSel.value = "base"; const cev = new Event_("change"); cev.target = chainSel; chainSel.dispatchEvent(cev);
+  res.check_rpc_disclosure_toggle = same(shown(ex), ["base"])
+    && ex.d.querySelector('[data-ck-rpcs="base"]').textContent === "The address you paste goes directly from your browser to these two public RPC providers (mainnet.base.org and base-rpc.publicnode.com) to read live chain state.";
+  const mc = maple.cast();
+  res.check_cast_commands = mc.includes("cast block 26491866 --field hash --rpc-url https://ethereum-rpc.publicnode.com")
+    && mc.includes("# expect 0x77fbf13ed7493d7a6c784fc3d43481763952f365f653cd9c948ab20dfe0f0533")
+    && mc.includes("cast storage 0xbe10adce8b6e3e02db384e7fada5395dd113d8b3 0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103 --block 26491866")
+    && !!maple.out().querySelector("[data-copy-term]");
+  const prod = page({ hostname: "pacta.wtf" });
+  res.check_no_x_tag = prod.d.querySelectorAll('script[src="https://static.ads-twitter.com/uwt.js"]').length === 0 && same(prod.p.window.__pactaTwqEvents || [], []);
+
+
+  // 15. Round-1 verifier counterexamples (CK-01 .. CK-08), each a synthetic answer built from the recorded fixtures, plus edge cases.
+  //     The first part is the verifier's own probe set, kept as written; the assertions below require every defect to be gone.
+  const independent = {};
+  const snapshot = pg => ({status:pg.st().textContent, pin:pg.pin(), rows:pg.rows(), latestRequests:pg.log.filter(x=>x.m==='eth_getBlockByNumber'&&x.p[0]==='latest').length, misses:pg.misses, text:pg.out().textContent});
+  const finalizedRecord = u => FX.byUrl[u + ' eth_getBlockByNumber ' + JSON.stringify(['finalized',false])];
+  independent.internal_error_fallback = snapshot(await live('ethena_timelock',{tamper:(u,m,p)=>m==='eth_getBlockByNumber'?(p[0]==='finalized'?{error:{code:-32603,message:'internal server error'}}:p[0]==='latest'?{result:finalizedRecord(u)}:null):null}));
+  independent.null_code = snapshot(await live('maple_ppm',{tamper:(u,m)=>m==='eth_getCode'?{result:null}:null}));
+  independent.invalid_code = snapshot(await live('maple_ppm',{tamper:(u,m)=>m==='eth_getCode'?{result:'0xzz'}:null}));
+  independent.null_slots = snapshot(await live('maple_ppm',{tamper:(u,m)=>m==='eth_getStorageAt'?{result:null}:null}));
+  independent.null_guard = snapshot(await live('inverse_policy_safe',{tamper:(u,m,p)=>m==='eth_getStorageAt'&&p[1]==='0x4a204f620c8c5ccdca3fd54d003badd85ba500436a431f0cbda4f558c93c34c8'?{result:null}:null}));
+  function firstTarget(data) {let h=data.slice(10), base=Number(BigInt('0x'+h.slice(0,64)))*2+64, rel=Number(BigInt('0x'+h.slice(base,base+64)))*2;return '0x'+h.slice(base+rel+24,base+rel+64);}
+  const mapleTarget=FX.cases.maple_ppm.address.toLowerCase();
+  independent.controller_error = snapshot(await live('maple_ppm',{tamper:(u,m,p)=>m==='eth_call'&&firstTarget(p[0].data)!==mapleTarget?{error:{code:-32603,message:'controller reads failed'}}:null}));
+  independent.controller_disagree = snapshot(await live('maple_ppm',{tamper:(u,m,p,r)=>u===B&&m==='eth_call'&&firstTarget(p[0].data)!==mapleTarget?{result:r.slice(0,-2)+(r.slice(-2)==='00'?'01':'00')}:null}));
+  const vault=FX.cases.lagoon_vault.address.toLowerCase();
+  independent.beacon_impl_error = snapshot(await live('lagoon_vault',{tamper:(u,m,p,r)=>m==='eth_getCode'&&p[0].toLowerCase()!==vault&&r&&r.length>1000?{error:{code:-32603,message:'implementation unavailable'}}:null}));
+  independent.non_enumerable_no_grant_selector = snapshot(await live('reth',{tamper:(u,m,p)=>m==='eth_getCode'&&p[0].toLowerCase()===FX.cases.reth.address.toLowerCase()?{result:'0x6340c10f19638456cb5900'}:null}));
+  independent.wrong_number_equal_hash = snapshot(await live('usdc_base',{tamper:(u,m,p,r)=>m==='eth_getBlockByNumber'&&p[0]!=='finalized'&&r?{result:{number:'0x1',hash:'0x'+'12'.repeat(32)}}:null}));
+  independent.unreachable_mint = snapshot(await live('eoa_dead',{tamper:(u,m)=>m==='eth_getCode'?{result:'0x006340c10f19'}:null}));
+  const word=n=>BigInt(n).toString(16).padStart(64,'0');
+  const changeResult = (raw,index,data) => {
+    const h=raw.slice(2), base=Number(BigInt('0x'+h.slice(0,64)))*2+64;
+    const t=base+Number(BigInt('0x'+h.slice(base+index*64,base+(index+1)*64)))*2;
+    const d=t+Number(BigInt('0x'+h.slice(t+64,t+128)))*2+64;
+    return '0x'+h.slice(0,d)+data+h.slice(d+data.length);
+  };
+  independent.invalid_bool = snapshot(await live('usdc_base',{tamper:(u,m,p,r)=>m==='eth_call'&&firstTarget(p[0].data)===FX.cases.usdc_base.address.toLowerCase()?{result:changeResult(r,10,word(2))}:null}));
+  const ownerConst='11'.repeat(20), implConst='22'.repeat(20);
+  const retAddr=a=>'5b5073'+a+'60005260206000f3';
+  let dispatcher='60003560e01c80638da5cb5b1460XX5780635c60da1b1460YY5700';
+  const first=dispatcher.length/2, second=first+retAddr(ownerConst).length/2;
+  const readonlyRuntime='0x'+dispatcher.replace('XX',first.toString(16).padStart(2,'0')).replace('YY',second.toString(16).padStart(2,'0'))+retAddr(ownerConst)+retAddr(implConst);
+  const aggResults = rs => {let offset=rs.length*32, heads='',tails='';for(const data of rs){heads+=word(offset);const item=word(1)+word(64)+word(data.length/2)+data.padEnd(Math.ceil(data.length/64)*64,'0');tails+=item;offset+=item.length/2;}return '0x'+word(32)+word(rs.length)+heads+tails;};
+  const readonlyTarget=FX.cases.eoa_dead.address.toLowerCase();
+  independent.readonly_owner_implementation = snapshot(await live('eoa_dead',{tamper:(u,m,p)=>{
+    if(m==='eth_getCode') return {result:p[0].toLowerCase()===readonlyTarget?readonlyRuntime:'0x'};
+    if(m==='eth_getStorageAt') return {result:'0x'+word(0)};
+    if(m!=='eth_call')return null;
+    const h=p[0].data.slice(10),base=Number(BigInt('0x'+h.slice(0,64)))*2+64,n=Number(BigInt('0x'+h.slice(base-64,base))),rs=[];
+    for(let i=0;i<n;i++) {const t=base+Number(BigInt('0x'+h.slice(base+i*64,base+(i+1)*64)))*2,target='0x'+h.slice(t+24,t+64),d=t+Number(BigInt('0x'+h.slice(t+128,t+192)))*2+64,sel=h.slice(d,d+8);rs.push(target===readonlyTarget&&sel==='8da5cb5b'?'0'.repeat(24)+ownerConst:target===readonlyTarget&&sel==='5c60da1b'?'0'.repeat(24)+implConst:'');}
+    return {result:aggResults(rs)};
+  }}));
+  const ir_ = (k, key) => ((independent[k].rows[key] || {}).t || "");
+  const INV = "could not read (invalid response)";
+  const okText = (t) => !/A standard mint path is present|can point|authorized by the implementation's own logic/.test(t);
+  const NOGET = "no Safe, multisig or timelock getter exposed";
+
+  // CK-01: only a positively unsupported finalized tag moves the pin to latest
+  const rl = snapshot(await live('ethena_timelock', { tamper: (u, m, p) => (m === 'eth_getBlockByNumber' && p[0] === 'finalized' ? { error: { code: -32005, message: 'rate limit exceeded' } } : null) }));
+  const mixed = snapshot(await live('ethena_timelock', { tamper: (u, m, p) => (m === 'eth_getBlockByNumber' && p[0] === 'finalized'
+    ? (u === B ? { error: { code: -32603, message: 'internal error' } } : { error: { code: -32602, message: 'unsupported block tag: finalized' } }) : null) }));
+  const ie = independent.internal_error_fallback;
+  res.check_ck01_fallback_narrow = ie.latestRequests === 0 && ie.status === "could not read (RPC error -32603)." && ie.pin === ""
+    && rl.latestRequests === 0 && rl.status === "could not read (RPC rate limit)." && mixed.latestRequests === 0 && mixed.status === "could not read (RPC error -32603).";
+
+  // CK-02: malformed answers are "could not read (invalid response)", never empty, zero or absent
+  const short = snapshot(await live('maple_ppm', { tamper: (u, m) => (m === 'eth_getStorageAt' ? { result: '0x1234' } : null) }));
+  const zero0 = snapshot(await live('maple_ppm', { tamper: (u, m) => (m === 'eth_getCode' ? { result: '0x0' } : null) }));
+  const hiPad = snapshot(await live('maple_ppm', { tamper: (u, m, p, r) => (m === 'eth_call' && firstTarget(p[0].data) === mapleTarget
+    ? { result: changeResult(r, 1, 'ff' + changeResultWord(r, 1).slice(2)) } : null) }));
+  function changeResultWord(raw, index) {   // the current 32-byte return word of call `index`
+    const h = raw.slice(2), base = Number(BigInt('0x' + h.slice(0, 64))) * 2 + 64;
+    const t = base + Number(BigInt('0x' + h.slice(base + index * 64, base + (index + 1) * 64))) * 2;
+    const d = t + Number(BigInt('0x' + h.slice(t + 64, t + 128))) * 2 + 64;
+    return h.slice(d, d + 64);
+  }
+  const aggBool = snapshot(await live('usdc_base', { tamper: (u, m, p, r) => (m === 'eth_call' && firstTarget(p[0].data) === FX.cases.usdc_base.address.toLowerCase()
+    ? { result: (() => { const h = r.slice(2), base = Number(BigInt('0x' + h.slice(0, 64))) * 2 + 64, t = base + Number(BigInt('0x' + h.slice(base, base + 64))) * 2;
+        return '0x' + h.slice(0, t) + word(2) + h.slice(t + 64); })() } : null) }));
+  const badBlock = snapshot(await live('ethena_timelock', { tamper: (u, m, p, r) => (m === 'eth_getBlockByNumber' && r ? { result: { number: '0x0' + r.number.slice(2), hash: r.hash } } : null) }));
+  const ns = independent.null_slots;
+  res.check_ck02_malformed_not_empty = ir_('null_code', 'eth_getCode') === INV && ir_('invalid_code', 'eth_getCode') === INV
+    && (zero0.rows.eth_getCode || {}).t === INV
+    && ["EIP-1967 implementation slot", "EIP-1967 admin slot", "EIP-1967 beacon slot", "EIP-1822 PROXIABLE slot", "ZeppelinOS implementation slot", "ZeppelinOS admin slot"]
+      .every((k) => ir_('null_slots', k) === INV && (short.rows[k] || {}).t === INV)
+    && !/No proxy slot|No standard proxy slot/.test(ns.text + short.text) && ir_('null_slots', 'Upgrade admin') === INV
+    && ir_('null_slots', 'Upgrade proxy').indexOf("Not every proxy slot could be read") === 0
+    && ir_('null_guard', 'This address').includes("Safe guard " + INV) && !ir_('null_guard', 'This address').includes("no Safe guard")
+    && ir_('invalid_bool', 'paused()') === INV && (hiPad.rows['admin()'] || {}).t === INV
+    && ["owner()", "paused()", "totalSupply()", "pauser()"].every((k) => (aggBool.rows[k] || {}).t === INV)
+    && badBlock.status === "could not read (invalid response)." && badBlock.pin === "";
+
+  // CK-03: a controller whose probes failed or disagreed shows that, never "no Safe, multisig or timelock getter exposed"
+  const selfDis = snapshot(await live('ethena_timelock', { tamper: (u, m, p, r) => (u === B && m === 'eth_call' ? { result: r.slice(0, -2) + (r.slice(-2) === '00' ? '01' : '00') } : null) }));
+  res.check_ck03_controller_failures_shown = ir_('controller_error', 'Upgrade admin').includes("could not read (RPC error -32603)")
+    && ir_('controller_disagree', 'Upgrade admin').includes(DIS)
+    && ["Upgrade admin", "admin()"].every((k) => !ir_('controller_error', k).includes(NOGET) && !ir_('controller_disagree', k).includes(NOGET))
+    && ir_('controller_disagree', 'admin()').includes(DIS) && (selfDis.rows['This address'] || {}).t === "contract (0xe8dc…7c94) · getThreshold() " + DIS
+    && (selfDis.rows['Can supply grow?'] || {}).t === "comptrollerImplementation() " + DIS;
+
+  // CK-04: an unread beacon implementation (its code, or implementation() itself) blocks every selector conclusion
+  const bimpl = snapshot(await live('lagoon_vault', { tamper: (u, m, p) => (m === 'eth_call' && firstTarget(p[0].data) === '0x707d622cda4b5459e7dcee8ba8e429f154f96a27'
+    ? { error: { code: -32603, message: 'beacon reads failed' } } : null) }));
+  const BIC = "beacon implementation code could not read (RPC error -32603)", BIF = "beacon implementation() could not read (RPC error -32603)";
+  res.check_ck04_beacon_unread = ir_('beacon_impl_error', 'pause() in bytecode') === BIC && ir_('beacon_impl_error', 'Mint functions in bytecode') === BIC
+    && ir_('beacon_impl_error', 'Can supply grow?') === BIC && ir_('beacon_impl_error', 'Pause role holders') === BIC && ir_('beacon_impl_error', 'Mint role holders') === BIC
+    && (bimpl.rows['pause() in bytecode'] || {}).t === BIF && (bimpl.rows['Beacon implementation()'] || {}).t === "could not read (RPC error -32603)"
+    && !/no pause\(\) selector|none of mint|no standard mint getter/.test(independent.beacon_impl_error.text + bimpl.text);
+
+  // CK-05: the pinned hash is bound to the requested height on both providers
+  const numSplit = snapshot(await live('usdc_base', { tamper: (u, m, p, r) => (m === 'eth_getBlockByNumber' && p[0] !== 'finalized' && r && u === URLS.base[1] ? { result: { number: '0x3b31910', hash: r.hash } } : null) }));
+  const wn = independent.wrong_number_equal_hash;
+  res.check_ck05_block_number_bound = wn.status === "could not read (RPC block number mismatch)." && wn.pin === "" && !wn.text.includes("0x1212")
+    && numSplit.status === DIS + "." && numSplit.pin === "";
+
+  // CK-06: pause / mint holders that cannot be listed are "not determined", with or without a grantRole selector
+  const ne = independent.non_enumerable_no_grant_selector;
+  res.check_ck06_roles_not_determined = ir_('non_enumerable_no_grant_selector', 'Pause role holders') === "not determined"
+    && ir_('non_enumerable_no_grant_selector', 'Mint role holders') === "not determined" && ne.misses.length === 0;
+
+  // CK-07: a selector in the bytes is an observation; capability is not determined
+  res.check_ck07_selector_not_capability = ir_('unreachable_mint', 'Mint functions in bytecode') === "selector observed in bytecode: mint(address,uint256)"
+    && ir_('unreachable_mint', 'Can supply grow?') === "not determined from static bytecode and getter reads alone. Observed: a mint selector was observed in the bytecode."
+    && okText(independent.unreachable_mint.text);
+
+  // CK-08: getter answers are addresses, never proof of who can upgrade
+  res.check_ck08_no_upgrade_authority_claims = ir_('readonly_owner_implementation', 'Who can upgrade').indexOf("not determined from getter reads alone") === 0
+    && Object.values(independent).every((x) => okText(x.text)) && [lb, lv, usual, maple, usdc, reth].every((pg) => okText(pg.out().textContent))
+    && has(lv.rows(), "Upgrade admin", "not determined");
+
+  // 15b. round-2 verifier edge cases (CKR2-01..06): adjacent inputs to the round-1 fixes, replayed on recorded answers
+  {
+    const snap = (pg) => ({ status: pg.st().textContent, pin: pg.pin(), rows: pg.rows(), text: pg.out().textContent,
+      latestRequests: pg.log.filter((x) => x.m === 'eth_getBlockByNumber' && x.p[0] === 'latest').length });
+    const row = (x, k) => ((x.rows[k] || {}).t || "");
+    const w = (n) => BigInt(n).toString(16).padStart(64, '0');
+    const decodeRet = (raw) => { const h = raw.slice(2), base = Number(BigInt('0x' + h.slice(0, 64))) * 2 + 64, n = Number(BigInt('0x' + h.slice(base - 64, base))), a = [];
+      for (let i = 0; i < n; i++) { const t = base + Number(BigInt('0x' + h.slice(base + i * 64, base + (i + 1) * 64))) * 2, d = t + Number(BigInt('0x' + h.slice(t + 64, t + 128))) * 2,
+        len = Number(BigInt('0x' + h.slice(d, d + 64))) * 2; a.push({ success: h.slice(t, t + 64) === w(1), data: h.slice(d + 64, d + 64 + len) }); } return a; };
+    const encodeRet = (rs) => { let off = rs.length * 32, heads = '', tails = '';
+      for (const r of rs) { heads += w(off); const t = w(r.success ? 1 : 0) + w(64) + w(r.data.length / 2) + r.data.padEnd(Math.ceil(r.data.length / 64) * 64, '0'); off += t.length / 2; tails += t; }
+      return '0x' + w(32) + w(rs.length) + heads + tails; };
+    const callTargets = (data) => { const h = data.slice(10), base = Number(BigInt('0x' + h.slice(0, 64))) * 2 + 64, n = Number(BigInt('0x' + h.slice(base - 64, base))), a = [];
+      for (let i = 0; i < n; i++) { const t = base + Number(BigInt('0x' + h.slice(base + i * 64, base + (i + 1) * 64))) * 2, d = t + Number(BigInt('0x' + h.slice(t + 128, t + 192))) * 2 + 64;
+        a.push({ target: '0x' + h.slice(t + 24, t + 64), sel: h.slice(d, d + 8), data: h.slice(d, d + Number(BigInt('0x' + h.slice(d - 64, d))) * 2) }); } return a; };
+    const atoms = new Map();
+    for (const [key, raw] of Object.entries(FX.byChain)) { const mt = key.match(/^(\w+) eth_call (.*)$/); if (!mt) continue;
+      const params = JSON.parse(mt[2]), cs = callTargets(params[0].data), rs = decodeRet(raw); cs.forEach((c, i) => atoms.set(mt[1] + ' ' + params[1] + ' ' + c.target + ' ' + c.data, rs[i])); }
+    const recombine = (p) => { const rs = callTargets(p[0].data).map((c) => atoms.get('ethereum ' + p[1] + ' ' + c.target + ' ' + c.data)); if (rs.some((x) => !x)) throw Error('missing atomic fixture'); return encodeRet(rs); };
+    const edit = (p, r, selector, value) => { const cs = callTargets(p[0].data), rs = decodeRet(r); cs.forEach((c, i) => { if (c.sel === selector) rs[i] = value; }); return encodeRet(rs); };
+    const fin = (u) => FX.byUrl[u + ' eth_getBlockByNumber ' + JSON.stringify(['finalized', false])];
+    const tagErr = (code, message, latestToo) => ({ tamper: (u, m, p) => (m === 'eth_getBlockByNumber' ? (p[0] === 'finalized' ? { error: { code, message } } : p[0] === 'latest' ? { result: fin(u) } : null) : null) });
+    const edge = {};
+    // CKR2-01: missing block data never selects "latest"; only an explicit tag / parameter rejection does
+    const NEG = [[-32001, 'finalized block not found'], [-32000, 'unknown block number'], [-32000, 'finalized unavailable'], [-32000, 'header not found'],
+      [-32602, 'missing finalized block'], [-32603, 'internal error'], [-32005, 'rate limit exceeded'], [-32000, 'block number too high']];
+    const POS = [[-32602, 'invalid block tag finalized'], [-32602, 'unsupported block tag: finalized'], [-32000, 'invalid block tag'],
+      [-32602, 'invalid argument 0: hex string without 0x prefix: finalized'], [-32601, 'unknown block tag']];
+    for (const [c, msg] of NEG) edge['neg ' + msg] = snap(await live('ethena_timelock', tagErr(c, msg)));
+    for (const [c, msg] of POS) edge['pos ' + msg] = snap(await live('ethena_timelock', tagErr(c, msg)));
+    const LATEST = ETH_PIN.replace(" · finalized", " · latest (a provider did not serve the finalized tag)");
+    res.check_ckr2_01_tag_fallback_explicit_only = NEG.every(([c, msg]) => edge['neg ' + msg].latestRequests === 0 && edge['neg ' + msg].pin === ""
+        && edge['neg ' + msg].status === "could not read (" + (c === -32005 ? "RPC rate limit" : "RPC error " + c) + ").")
+      && POS.every(([c, msg]) => edge['pos ' + msg].latestRequests === 2 && edge['pos ' + msg].pin === LATEST);
+    // CKR2-02: each controller getter is decoded with its own type before any conclusion; defaultAdminDelay() failures are shown
+    edge.owners_malformed = snap(await live('reth', { tamper: (u, m, p, r) => (m === 'eth_call' ? { result: edit(p, r, 'a0e67e2b', { success: true, data: '01' }) } : null) }));
+    edge.dad_malformed = snap(await live('usual_registry_access', { tamper: (u, m, p, r) => (m === 'eth_call' ? { result: edit(p, r, 'cc8463c8', { success: true, data: '01' }) } : null) }));
+    const typedBad = [['e75235b8', 'getThreshold', '01'], ['dc8452cd', 'required', '01'], ['f27a0c92', 'getMinDelay', '01'], ['31d50750', 'isOperation', w(2)],
+      ['6a42b8f8', 'delay', '01'], ['8da5cb5b', 'owner', '01' + w(1)], ['5c60da1b', 'implementation', w(1).replace(/^00/, 'ff')]];
+    for (const [sel, name, data] of typedBad) edge['typed ' + name] = snap(await live('reth', { tamper: (u, m, p, r) => (m === 'eth_call' ? { result: edit(p, r, sel, { success: true, data }) } : null) }));
+    res.check_ckr2_02_malformed_getters_shown = row(edge.owners_malformed, 'This address') === "contract (0xae78…6393) · getOwners() " + INV
+      && !edge.owners_malformed.text.includes(NOGET) && row(edge.dad_malformed, 'defaultAdminDelay()') === INV
+      && typedBad.every(([, name]) => row(edge['typed ' + name], 'This address') === "contract (0xae78…6393) · " + name + "() " + INV && !edge['typed ' + name].text.includes(NOGET));
+    // CKR2-03: an unreadable / non-address proxy or beacon slot, or a failed comptrollerImplementation(), blocks selector conclusions
+    const slotErr = (c, slot) => live(c, { tamper: (u, m, p) => (m === 'eth_getStorageAt' && p[1] === slot ? { error: { code: -32603, message: 'read failed' } }
+      : c === 'lagoon_vault' && m === 'eth_call' ? { result: recombine(p) } : null) });
+    edge.beacon_slot = snap(await slotErr('lagoon_vault', '0xa3f0ad74e5423aebfd80d3ef4346578335a9a72aeaee59ff6cb3582b35133d50'));
+    edge.zos_slot = snap(await slotErr('usdc_base', '0x7050c9e0f4ca769c69bd3a8ef740bc37934f8e2c036e5a723fd8ee048ed3f8c3'));
+    edge.zos_odd = snap(await live('usdc_base', { tamper: (u, m, p) => (m === 'eth_getStorageAt' && p[1] === '0x7050c9e0f4ca769c69bd3a8ef740bc37934f8e2c036e5a723fd8ee048ed3f8c3' ? { result: '0x' + 'f'.repeat(64) } : null) }));
+    edge.cimpl = snap(await live('maple_ppm', { tamper: (u, m, p, r) => (m === 'eth_call' ? { result: edit(p, r, 'bb82aa5e', { success: true, data: '01' }) } : null) }));
+    const BEA = "EIP-1967 beacon slot could not read (RPC error -32603)", ZOS = "ZeppelinOS implementation slot could not read (RPC error -32603)";
+    const DEP = ['pause() in bytecode', 'Mint functions in bytecode', 'Can supply grow?', 'Pause role holders', 'Mint role holders'];
+    const leads = (x, t) => DEP.every((k) => row(x, k).indexOf(t) === 0 || row(x, k).indexOf("selector observed in bytecode: ") === 0 && row(x, k).endsWith(" (" + t + ")"));
+    res.check_ckr2_03_discovery_failures_unread = leads(edge.beacon_slot, BEA) && row(edge.beacon_slot, 'pause() in bytecode') === BEA && leads(edge.zos_slot, ZOS)
+      && row(edge.zos_slot, 'Can supply grow?') === ZOS + " (observed: masterMinter() returned an address)"
+      && leads(edge.zos_odd, "ZeppelinOS implementation slot holds a value that is not an address")
+      && ['pause() in bytecode', 'Mint functions in bytecode', 'Can supply grow?'].every((k) => row(edge.cimpl, k).indexOf("comptrollerImplementation() " + INV) === 0)
+      && [edge.beacon_slot, edge.zos_slot, edge.zos_odd, edge.cimpl].every((x) => !/no pause\(\) selector observed|none of mint/.test(x.text));
+    // CKR2-04: without a usable decimals(), supply values are raw integer units and never carry the symbol as if scaled
+    edge.dec_malformed = snap(await live('usdc_base', { tamper: (u, m, p, r) => (m === 'eth_call' ? { result: edit(p, r, '313ce567', { success: true, data: '01' }) } : null) }));
+    edge.dec_reverted = snap(await live('usdc_base', { tamper: (u, m, p, r) => (m === 'eth_call' ? { result: edit(p, r, '313ce567', { success: false, data: '' }) } : null) }));
+    edge.dec_huge = snap(await live('usdc_base', { tamper: (u, m, p, r) => (m === 'eth_call' ? { result: edit(p, r, '313ce567', { success: true, data: w(37) }) } : null) }));
+    edge.sym_malformed = snap(await live('usdc_base', { tamper: (u, m, p, r) => (m === 'eth_call' ? { result: edit(p, r, '95d89b41', { success: true, data: '01' }) } : null) }));
+    edge.cap_raw = snap(await live('usdc_base', { tamper: (u, m, p, r) => (m === 'eth_call' ? { result: edit(p, edit(p, r, '313ce567', { success: false, data: '' }), '355274ea', { success: true, data: w(1000) }) } : null) }));
+    const RAW = "raw 4,283,493,874,807,210 (decimals() ";
+    res.check_ckr2_04_raw_units_without_decimals = row(edge.dec_malformed, 'totalSupply()') === RAW + INV + "; token amount not determined; symbol() USDC)"
+      && row(edge.dec_reverted, 'totalSupply()') === RAW + ABS + "; token amount not determined; symbol() USDC)"
+      && row(edge.dec_huge, 'totalSupply()') === RAW + "37 > 36; token amount not determined; symbol() USDC)"
+      && row(edge.sym_malformed, 'totalSupply()') === "4,283,493,874.80721 (raw 4,283,493,874,807,210, 6 decimals; symbol() " + INV + ")"
+      && row(edge.cap_raw, 'cap()') === "raw 1,000 (decimals() " + ABS + "; token amount not determined; symbol() USDC)"
+      && [edge.dec_malformed, edge.dec_reverted, edge.dec_huge, edge.cap_raw].every((x) => !/[0-9] USDC/.test(x.text));
+    // CKR2-05: a single pauser() / masterMinter() getter never hides the role-holder rows
+    edge.single_getter = snap(await live('usdc_base', { tamper: (u, m, p, r) => (m === 'eth_getCode' ? { result: r.replaceAll('632f2ff15d', '6301020304') } : null) }));
+    res.check_ckr2_05_single_getter_not_suppressed = ['Pause role holders', 'Mint role holders'].every((k) => row(edge.single_getter, k) === "not determined")
+      && ['Pause role holders', 'Mint role holders'].every((k) => (usdc.rows()[k] || {}).t === "not determined");
+    // CKR2-06: two different answers disagree before either is judged malformed; the same malformed answer is "invalid response"
+    edge.code_null_b = snap(await live('maple_ppm', { tamper: (u, m) => (u === B && m === 'eth_getCode' ? { result: null } : null) }));
+    edge.code_bad_b = snap(await live('maple_ppm', { tamper: (u, m) => (u === B && m === 'eth_getCode' ? { result: '0xgg' } : null) }));
+    edge.code_null_both = snap(await live('maple_ppm', { tamper: (u, m) => (m === 'eth_getCode' ? { result: null } : null) }));
+    edge.slot_short_b = snap(await live('maple_ppm', { tamper: (u, m) => (u === B && m === 'eth_getStorageAt' ? { result: '0x1234' } : null) }));
+    edge.call_null_b = snap(await live('maple_ppm', { tamper: (u, m) => (u === B && m === 'eth_call' ? { result: null } : null) }));
+    const blk = (fn) => live('ethena_timelock', { tamper: (u, m, p) => (m === 'eth_getBlockByNumber' ? fn(u, p) : null) });
+    edge.blk_null_b = snap(await blk((u, p) => (u === B && p[0] === 'finalized' ? { result: null } : null)));
+    edge.blk_bad_b = snap(await blk((u, p) => (u === B && p[0] === 'finalized' ? { result: { number: '0x00', hash: fin(u).hash } } : null)));
+    edge.blk_null_both = snap(await blk((u, p) => (p[0] === 'finalized' ? { result: null } : null)));
+    edge.blk_bad_both = snap(await blk((u, p) => (p[0] === 'finalized' ? { result: { number: '0x00', hash: fin(u).hash } } : null)));
+    const up1 = (u) => ({ number: '0x' + (BigInt(fin(u).number) + 1n).toString(16), hash: '0x' + 'ab'.repeat(32) });
+    edge.requery_null_b = snap(await blk((u, p) => (p[0] === 'finalized' ? { result: u === B ? up1(u) : fin(u) } : /^0x/.test(p[0]) ? { result: u === B ? null : fin(u) } : null)));
+    edge.requery_null_both = snap(await blk((u, p) => (p[0] === 'finalized' ? { result: u === B ? up1(u) : fin(u) } : /^0x/.test(p[0]) ? { result: null } : null)));
+    res.check_ckr2_06_disagreement_before_shape = row(edge.code_null_b, 'eth_getCode') === DIS && row(edge.code_bad_b, 'eth_getCode') === DIS
+      && row(edge.code_null_both, 'eth_getCode') === INV && row(edge.slot_short_b, 'Upgrade admin') === DIS && row(edge.call_null_b, 'owner()') === DIS
+      && [edge.blk_null_b, edge.blk_bad_b, edge.requery_null_b].every((x) => x.status === DIS + "." && x.pin === "")
+      && edge.blk_null_both.status === "could not read (RPC returned no block)." && edge.blk_bad_both.status === "could not read (invalid response)."
+      && edge.requery_null_both.status === "could not read (RPC returned no block)." && Object.values(edge).every((x) => okText(x.text));
+    // canonical ABI only: aggregate3 tuples whose offsets alias the heads (or each other) are malformed, never decoded
+    edge.aliased = snap(await live('maple_ppm', { tamper: (u, m, p) => { if (m !== 'eth_call') return null; const n = callTargets(p[0].data).length;
+      return { result: '0x' + w(32) + w(n) + Array.from({ length: n }, (_, i) => w(n * 32 + i * 64)).join('') + (w(0) + w(0)).repeat(n) }; } }));
+    edge.trailing = snap(await live('maple_ppm', { tamper: (u, m, p, r) => (m === 'eth_call' ? { result: r + w(0) } : null) }));
+    edge.shared = snap(await live('maple_ppm', { tamper: (u, m, p, r) => { if (m !== 'eth_call') return null;
+      const h = r.slice(2), n = Number(BigInt('0x' + h.slice(64, 128))); if (n < 2) return null;   // tuple 1 re-uses tuple 0's offset
+      return { result: '0x' + h.slice(0, 192) + h.slice(128, 192) + h.slice(256) }; } }));
+    // the top-level array offset must be 0x20 (no zero-word gap), and every bytes / string must be right-padded with zeros only
+    edge.gap40 = snap(await live('maple_ppm', { tamper: (u, m, p, r) => (m === 'eth_call' ? { result: '0x' + w(64) + w(0) + r.slice(66) } : null) }));
+    edge.gap60 = snap(await live('maple_ppm', { tamper: (u, m, p, r) => (m === 'eth_call' ? { result: '0x' + w(96) + w(0) + w(0) + r.slice(66) } : null) }));
+    const USDC_SYM = w(32) + w(4) + '55534443';   // "USDC", 68 bytes before padding
+    edge.pad_ff = snap(await live('usdc_base', { tamper: (u, m, p, r) => { if (m !== 'eth_call') return null;
+      const x = edit(p, r, '95d89b41', { success: true, data: USDC_SYM }), at = x.indexOf(USDC_SYM + '0'.repeat(56));
+      return at < 0 ? null : { result: x.slice(0, at + USDC_SYM.length + 54) + 'ff' + x.slice(at + USDC_SYM.length + 56) }; } }));
+    edge.str_gap = snap(await live('usdc_base', { tamper: (u, m, p, r) => (m === 'eth_call' ? { result: edit(p, r, '95d89b41', { success: true, data: w(64) + w(0) + w(4) + '55534443' + '0'.repeat(56) }) } : null) }));
+    edge.str_off = snap(await live('usdc_base', { tamper: (u, m, p, r) => (m === 'eth_call' ? { result: edit(p, r, '95d89b41', { success: true, data: w(64) + w(4) + '55534443' + '0'.repeat(56) }) } : null) }));
+    edge.str_pad = snap(await live('usdc_base', { tamper: (u, m, p, r) => (m === 'eth_call' ? { result: edit(p, r, '95d89b41', { success: true, data: USDC_SYM + '0'.repeat(54) + 'ff' }) } : null) }));
+    const SYM_BAD = "4,283,493,874.80721 (raw 4,283,493,874,807,210, 6 decimals; symbol() " + INV + ")";
+    res.check_ckr2_aggregate_canonical = [edge.aliased, edge.trailing, edge.shared, edge.gap40, edge.gap60].every((x) => ['owner()', 'admin()', 'paused()', 'totalSupply()'].every((k) => row(x, k) === INV)
+      && row(x, 'This address').endsWith("() " + INV) && !x.text.includes(NOGET))
+      && ['owner()', 'paused()', 'totalSupply()'].every((k) => row(edge.pad_ff, k) === INV)
+      && [edge.str_gap, edge.str_off, edge.str_pad].every((x) => row(x, 'totalSupply()') === SYM_BAD);
+  }
+
+  // 14. the words gate over every rendered result (and a self-test that it bites)
+  res.check_words_gate = gateSelf && gateBad.length === 0;
+  if (gateBad.length) res.check_words_bad = gateBad.slice(0, 4);
+  // only the four public RPCs are ever contacted, by POST, and never the Pacta API or a beacon
+  res.check_only_public_rpcs = [maple, usual, eth, lb, lv, usdc, reth, inv, eoa, q, ex, th].every((pg) => pg.log.every((x) => !!chainOf(x.u)) && pg.p.beacons.length === 0);
+}
 (async () => {
   try { await v45Scenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
   try { await pfComboboxScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
@@ -2466,6 +2947,7 @@ async function watchScenario() {
   try { await basePathScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
   try { await visitorScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
   try { await liveRpcScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
+  try { await checkScenario(); } catch (e) { res.harness_error = (res.harness_error || "") + String(e && e.stack || e); }
   res.v43_no_init_errors = INIT_ERRORS.length === 0;
   if (INIT_ERRORS.length) res.init_errors = INIT_ERRORS.slice(0, 3);
   process.stdout.write(JSON.stringify(res));

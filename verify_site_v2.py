@@ -96,7 +96,7 @@ def no_watch_24h(t):
     return WATCH_24H_RE.sub("", t)
 
 
-NON_PROTOCOL_PAGES = 43                                                  # docs/**/*.html pages that are not /protocols/<slug>/ (40: + /curators/ /scan/ /webhook/ /seal/ /miniapp/, + the Cap, Compound V3 and Lista Lending briefs; 43: + /sponsor/)
+NON_PROTOCOL_PAGES = 44                                                  # docs/**/*.html pages that are not /protocols/<slug>/ (40: + /curators/ /scan/ /webhook/ /seal/ /miniapp/, + the Cap, Compound V3 and Lista Lending briefs; 43: + /sponsor/; 44: + /check/)
 
 
 def check(name, ok, detail=""):
@@ -1421,6 +1421,9 @@ def main(argv=None):
                                # /webhook/ is the redirect to /watch/ (one page, two asks); the harness exercises both
                                "webhook": dom_tree(pages[os.path.join("webhook", "index.html")]) if os.path.join("webhook", "index.html") in pages else None,
                                "watch": dom_tree(pages[os.path.join("watch", "index.html")]) if os.path.join("watch", "index.html") in pages else None,
+                               # /check/: every RPC answer comes from recorded read-only results (tools/check_fixtures.json); no network
+                               "check": dom_tree(pages[os.path.join("check", "index.html")]) if os.path.join("check", "index.html") in pages else None,
+                               "checkFixtures": json.loads(read("tools/check_fixtures.json")) if os.path.exists(os.path.join(ROOT, "tools", "check_fixtures.json")) else None,
                                "checkout": {"api": BS.ORDERS_VERIFY_API, "treasury": BS.CHECKOUT_TREASURY, "usdc": BS.USDC["Base"],
                                             "skus": {k_: v_["atomic"] for k_, v_ in BS.CHECKOUT.items()},
                                             "amounts": {k_: v_["amount"] for k_, v_ in BS.CHECKOUT.items()}}})
@@ -2313,6 +2316,59 @@ def main(argv=None):
           "/watch/#fund-check; the /watch/ editorial line word for word",
           bool(sp_main) and not sp_bad and all(sp_static.values()),
           f"cards {sp_bad[:5]}; static {[k_ for k_, v_ in sp_static.items() if not v_]}")
+    # /check/ "Who controls this contract?": one static page; the visitor's browser reads two public RPCs per chain (harness: recorded
+    # read-only answers, plus tampered copies for disagreement, errors, timeouts and the latest fallback)
+    ck_keys = ["check_maple_proxy_admin_safe", "check_usual_proxyadmin_safe", "check_usual_default_admin_selectors", "check_timelock_min_delay",
+               "check_beacon_owner_safe", "check_beacon_proxy_vault", "check_token_minter_pauser_supply", "check_pin_lower_height", "check_examples_read",
+               "check_eoa_message", "check_eoa_7702", "check_nonsense_zero_rpc", "check_disagree_block_hash", "check_disagree_row_only",
+               "check_disagree_getters", "check_rpc_error_could_not_read", "check_rpc_rate_limit", "check_rpc_timeout", "check_latest_fallback_labelled",
+               "check_throttle_11th", "check_watch_cta", "check_query_prefill", "check_examples_chips", "check_rpc_disclosure_toggle",
+               "check_cast_commands", "check_no_x_tag", "check_words_gate", "check_only_public_rpcs",
+               # round-1 verifier findings: fail closed on malformed / failed reads, and no capability claims from getters or selectors
+               "check_ck01_fallback_narrow", "check_ck02_malformed_not_empty", "check_ck03_controller_failures_shown", "check_ck04_beacon_unread",
+               "check_ck05_block_number_bound", "check_ck06_roles_not_determined", "check_ck07_selector_not_capability", "check_ck08_no_upgrade_authority_claims",
+               "check_ckr2_01_tag_fallback_explicit_only", "check_ckr2_02_malformed_getters_shown", "check_ckr2_03_discovery_failures_unread",
+               "check_ckr2_04_raw_units_without_decimals", "check_ckr2_05_single_getter_not_suppressed", "check_ckr2_06_disagreement_before_shape",
+               "check_ckr2_aggregate_canonical"]
+    ck_failed = [k_ for k_ in ck_keys if res.get(k_) is not True]
+    ck_ = pages.get(os.path.join("check", "index.html"), "")
+    ck_txt = html.unescape(re.sub(r"<[^>]+>", " ", ck_[ck_.find("<body"):] if ck_ else ""))
+    ck_src = read("tools/app.src.js")
+    ck_mod = ck_src[ck_src.find("  // ---- /check/: "):ck_src.find("  document.addEventListener(\"DOMContentLoaded\"")]
+    ck_strs = " ".join(re.findall(r'"((?:[^"\\\n]|\\.)*)"', ck_mod))
+    CK_GATE, CK_SAFE_ADJ = re.compile(r"\b(unsafe|insecure|risk\s*score|grade)\b", re.I), re.compile(r"\bsafe\b")
+    ck_gate = lambda t_: not CK_GATE.search(t_) and not CK_SAFE_ADJ.search(t_) and not BS.CHECK_BANNED_RE.search(t_)
+    ck_files = sorted(os.path.relpath(os.path.join(dp_, f_), DOCS) for dp_, _, fs_ in os.walk(os.path.join(DOCS, "check")) for f_ in fs_)
+    ck_csp = {d_.split(" ")[0]: d_.split(" ")[1:] for d_ in BS.CSP.split(";")}.get("connect-src", [])
+    ck_static = {
+        "one page, no per-address pages": ck_files == [os.path.join("check", "index.html")],
+        "RPC disclosure": all(ck_.count(f'<p data-ck-rpcs="{c_}">{html.escape(BS.check_rpc_note(c_), quote=False)}</p>') == 1 for c_ in ("ethereum", "base"))
+            and BS.check_rpc_note("ethereum") == "The address you paste goes directly from your browser to these two public RPC providers "
+                                                 "(ethereum-rpc.publicnode.com and eth.drpc.org) to read live chain state.",
+        "CSP connect-src has the 4 RPCs": all(u_ in ck_csp for u_ in ("https://ethereum-rpc.publicnode.com", "https://eth.drpc.org",
+                                                                     "https://mainnet.base.org", "https://base-rpc.publicnode.com"))
+            and f'<meta http-equiv="Content-Security-Policy" content="{BS.CSP}">' in ck_,
+        "words gate (page + module strings)": bool(ck_txt.strip()) and ck_gate(ck_txt) and bool(ck_strs) and ck_gate(ck_strs)
+            and not ck_gate("is it safe") and not ck_gate("risk score") and ck_gate("3-of-6 Safe multisig"),
+        "exact read-state copy": all(t_ in ck_mod for t_ in ('"providers disagree, could not read"', '"not exposed on this contract (or reverted)"', '"not determined"',
+                                                            '"uses role-based AccessControl; role holders could not be read without event logs"',
+                                                            '"No contract code at this address on "', '" (externally owned account or not deployed)."',
+                                                            '"Tell me when this changes"', '"invalid response"', '"RPC block number mismatch"',
+                                                            '" from static bytecode and getter reads alone. Observed: "', '" from getter reads alone: owner() and implementation() returned addresses'))
+            and not re.search(r"A standard mint path is present|can point implementation|authorized by the implementation's own logic", ck_mod),
+        "4 example chips": re.findall(r'data-ck-example data-chain="(\w+)" data-address="(0x[0-9a-fA-F]{40})"', ck_) == [(c_, a_) for _, c_, a_ in BS.CHECK_EXAMPLES]
+            and len(BS.CHECK_EXAMPLES) == 4,
+        "form + landmarks": all(x_ in ck_ for x_ in ('<main id="main" data-ck-page>', '<form class="ck-form" id="ck-form" novalidate', '<label for="ck-address">',
+                                                     '<label for="ck-chain">', 'id="ck-status" role="status" aria-live="polite"', '<h1 id="ck-title">Who controls this contract?</h1>',
+                                                     f'<link rel="canonical" href="{BS.BASE_URL}/check/">')),
+        "pinned + throttle constants": all(x_ in ck_mod for x_ in ('"finalized"', '"latest"', "CK_LIMIT = 10", "CK_WINDOW_MS = 60000", "MULTICALL3_ADDR")),
+        "no Worker / beacon call": "api.pacta.wtf" not in ck_mod and "sendBeacon" not in ck_mod and "/v1/" not in ck_mod,
+        "fixtures are recorded results": bool(res.get("check_only_public_rpcs")) and "Recorded read-only JSON-RPC results" in read("tools/check_fixtures.json")[:400],
+    }
+    check(f"/check/ Who controls this contract? (one page): pinned finalized block both RPCs agree on, could not read / providers disagree / not exposed / "
+          f"not determined, EOA + EIP-7702, Watch CTA, 10/min throttle, words gate; behaviour {len(ck_keys) - len(ck_failed)}/{len(ck_keys)} (harness)",
+          not ck_failed and all(ck_static.values()),
+          f"failed {ck_failed[:5]}; static {[k_ for k_, v_ in ck_static.items() if not v_]}; words {res.get('check_words_bad')}; err {res.get('check_error')}")
     rescue_ = read("docs/404-rescue.js") if os.path.exists(os.path.join(DOCS, "404-rescue.js")) else ""
     nf_ = pages.get("404.html", "")
     csp_at = nf_.find(f'<meta http-equiv="Content-Security-Policy" content="{BS.CSP}">')
@@ -2373,9 +2429,10 @@ def main(argv=None):
     # 14 = live 658f1364's 13 (incl. the free watchlist POST on /webhook/) + the dormant opt-in pilot helper postPilotEndpoint (0 pages render its forms);
     # 13 since Part 5: the mini app's order POST (fetch(verifyApi, ...)) is gone with its $19 checkout;
     # 12 since /watch/: the /webhook/ form POST and the dormant pilot helper are gone; one shared submitWatchOrPledge POST serves /watch/ and /scan/
+    # 13 since /check/: ckPost's JSON-RPC POST, only ever to a URL of CK_RPCS (the same four public RPCs)
     check("page script boundaries: b.js/theme.js touch zero cookies/storage/third-party scripts; app.js uses localStorage only for pacta-theme + pacta-x-purchased dedup + opt-in pacta_internal QA tag, injects only host-gated uwt.js, and fetch() calls only this site's JSON, data-api, data-live-timelocks, and the four allow-listed public RPCs",
           not js_bad and script_el_ok and ls_vars == {"THEME_KEY", "X_PURCHASE_KEY", "INTERNAL_QA_KEY"} and ls_keys == {"pacta-theme", "pacta-x-purchased", "pacta_internal"} and appjs.count("localStorage") == 8 and data_api <= {API_, API_ + "/v1/requests", API_ + "/v1/orders/verify"}
-          and app_fetch == 12 and appjs[appjs.find("function submitWatchOrPledge("):appjs.find("function watchFormUi(")].count("fetch(api, {") == 1
+          and app_fetch == 13 and appjs[appjs.find("function submitWatchOrPledge("):appjs.find("function watchFormUi(")].count("fetch(api, {") == 1
           and appjs[appjs.find("function initCheckout()"):appjs.find("function initLauncher")].count("fetch(api, opts)") == 1 and "fetch(pfUrl," in appjs[appjs.find("function initMiniApp()"):] and "fetch(verifyApi," not in appjs and "startMaUpgrade" not in appjs and 'j(root + "api/v1/lookup.json")' in appjs and 'j(root + "api/v1/scorecards.json")' in appjs and 'fetch(api, init)' in appjs[appjs.find("function initRequest()"):] and "REQ_API_RE.test(api)" in appjs and 'fetch(document.documentElement.getAttribute("data-api") || "api/v1/index.json")' in appjs
           and 'fetch(body.getAttribute("data-src") || "api/v1/scorecards.json")' in appjs
           # the user-initiated "Verify live on RPC" + Multicall3 wallet-exposure fallback, POSTing JSON-RPC only to the four allow-listed public RPCs
@@ -2384,6 +2441,8 @@ def main(argv=None):
           and appjs.count("rpcCall(") == 13 and len(re.findall(r'rpcCall\([a-zA-Z.]+, "(\w+)"', appjs)) == 12
           and set(re.findall(r'rpcCall\([a-z.]+, "(\w+)"', appjs)) == {"eth_blockNumber", "eth_call", "eth_getStorageAt", "eth_getBlockByNumber", "eth_getCode"}
           and 'btn.addEventListener("click", function () {' in appjs[appjs.index("function liveVerifyBtn"):appjs.index("function pfRow")]
+          and re.search(r'var CK_RPCS = \{ ethereum: \["https://ethereum-rpc\.publicnode\.com", "https://eth\.drpc\.org"\],\s*base: \["https://mainnet\.base\.org", "https://base-rpc\.publicnode\.com"\] \};', appjs) is not None
+          and appjs.count("ckPost(") == 4 and appjs.count("ckPost(u, ") == 3 and appjs.count("        fetch(url, opts).then(function (res) {") == 1
           and "    fetch(url, init)\n" in appjs and "if (!LIVE_TL_RE.test(url)) { liveSettled(false, null); return; }" in appjs
           and set(re.findall(r'data-live-timelocks="([^"]+)"', "".join(pages.values()))) == {html.escape(BS.LIVE_TIMELOCKS_URL)}
           and BS.LIVE_TIMELOCKS_URL.startswith(API_ + "/v1/briefs/live-timelocks?")
