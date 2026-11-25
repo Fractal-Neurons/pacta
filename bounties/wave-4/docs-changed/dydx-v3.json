@@ -1,0 +1,12 @@
+{
+  "protocol_slug": "dydx-v3",
+  "chain": "ethereum",
+  "surface": "ethDYDX owner: the Short Timelock Executor, getDelay() 172,800 s",
+  "prior_documented_reference": "docs.dydx.community (voting-and-governance): 'Parameter Description Short Timelock Executor Merkle-Pauser Executor Long Timelock Executor Starkware Executor Timelock Delay* After a proposal passes and is queued, delay before the proposal is executed 2 days 0 days 7 days 2-9 days'",
+  "current_official_docs_url": "https://docs.dydx.community/governance-documentation/voting-and-governance",
+  "current_verbatim_quote": "The Priority Timelock contract: The same as the timelock contract, but allows a priority controller to execute transactions within the Priority Period (7 days) before the end of the timelock delay.",
+  "what_changed": "The Timelock Delay table that stated each executor's delay (2 days, 0 days, 7 days, 2-9 days) is no longer rendered: the page now reaches 'The initial timelock parameters are as follows:' with no table under it, and the only delay still stated is the 7-day priority period in prose.",
+  "payment_tx_hash": "0x01abc46a123c0cf95d4dd5f26d2c871dbdfd3c543104bb4efadcded7e0c812a2",
+  "contributor_github": "JOJOBUDDHAMAN313",
+  "base_payout_address": "0xe0A81023fa8aEd5C2ACcAB7Fd260cf73bBF8A006"
+}
