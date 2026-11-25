@@ -24,12 +24,12 @@ const rec = (reply) => {
 const call = (srv, args, id = 1) => srv.handleMessage({ jsonrpc: "2.0", id, method: "tools/call", params: { name: "pacta_lookup_protocol", arguments: args } });
 const body = (r) => JSON.parse(r.result.content[0].text);
 
-test("pacta_lookup_protocol is listed first in both modes, query and caller fields optional; initialize names it", async () => {
+test("pacta_lookup_protocol is listed first in both modes, query optional, 0 caller fields in its inputSchema; initialize names it", async () => {
   assert.equal(TOOL_DEFINITIONS[0], LOOKUP_TOOL);
   assert.deepEqual(LOOKUP_TOOL.inputSchema.required, []);
-  assert.ok(["caller_agent", "requester_role", "caller_purpose"].every((f) => LOOKUP_TOOL.inputSchema.properties[f]), "caller fields stay documented (optional)");
+  assert.deepEqual(Object.keys(LOOKUP_TOOL.inputSchema.properties), ["query", "chain", "kind", "limit"], "clean schema: no caller fields");
   assert.deepEqual(LOOKUP_TOOL.annotations, { title: "Lookup Protocol or Token by Name", readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false });
-  const local = new PactaMcpServer({ fetchImpl: rec(() => { throw new Error("no network"); }) });
+  const local = new PactaMcpServer({ x402Url: "", fetchImpl: rec(() => { throw new Error("no network"); }) });
   const gw = new PactaMcpServer({ x402Url: GW, fetchImpl: rec(() => { throw new Error("no network"); }) });
   for (const srv of [local, gw]) {
     const list = await srv.handleMessage({ jsonrpc: "2.0", id: 1, method: "tools/list" });
@@ -42,7 +42,7 @@ test("pacta_lookup_protocol is listed first in both modes, query and caller fiel
 
 test("pacta_lookup_protocol: omitted or invalid caller fields (JWT, e-mail) never reject with -32602 and are never sent; invalid lookup input is a tool error", async () => {
   const f = rec(() => json(200, { schema: "pacta.protocol_lookup.v1", query: "ethena", count: 0, totalMatches: 0, results: [] }));
-  const local = new PactaMcpServer({ fetchImpl: rec(() => { throw new Error("no network"); }) });
+  const local = new PactaMcpServer({ x402Url: "", fetchImpl: rec(() => { throw new Error("no network"); }) });
   const none = await call(local, { query: "ethena" });
   assert.deepEqual([none.error, none.result.isError], [undefined, false], "no first-call rejection without attribution");
   const srv = new PactaMcpServer({ x402Url: GW, fetchImpl: f });
@@ -63,9 +63,9 @@ test("pacta_lookup_protocol: omitted or invalid caller fields (JWT, e-mail) neve
   assert.equal(fNoNet.calls.length, 0);
 });
 
-test("pacta_lookup_protocol without PACTA_X402_URL: answered from the embedded catalog, no network", async () => {
+test("pacta_lookup_protocol with the gateway off (x402Url \"\"): answered from the embedded catalog, no network", async () => {
   const f = rec(() => { throw new Error("no network"); });
-  const srv = new PactaMcpServer({ fetchImpl: f });
+  const srv = new PactaMcpServer({ x402Url: "", fetchImpl: f });
   const r = body(await call(srv, { ...CALLER, query: "USDe" }));
   assert.deepEqual([r.source, r.schema, r.results[0].slug, r.results[0].match, r.results[0].preflightArgs.chain], ["embedded_catalog", "pacta.protocol_lookup.v1", "ethena-usde-susde", "exact", "ethereum"]);
   assert.equal(r.gatewayFallback, undefined);
@@ -139,7 +139,7 @@ const easFooter = (slug, uid) => `Citation: https://pacta.wtf/protocols/${slug}/
 const rpcFooter = (slug) => `Citation: https://pacta.wtf/protocols/${slug}/ (RPC-observed baseline; Base Mainnet EAS: not_attested)\n${CLEAR}${slug}${TAIL}`;
 
 test("0.1.5 footer: EAS-attested lookups (concrete, ethena) carry the exact 2-line citation in results, the result, content[0] JSON and content[1]", async () => {
-  const srv = new PactaMcpServer({ fetchImpl: rec(() => { throw new Error("no network"); }) });
+  const srv = new PactaMcpServer({ x402Url: "", fetchImpl: rec(() => { throw new Error("no network"); }) });
   for (const [q, slug] of [["concrete", "concrete"], ["ethena", "ethena-usde-susde"]]) {
     const item = LOOKUP_CATALOG.find((x) => x.kind === "protocol" && x.slug === slug);
     assert.ok(item.easAttested === true && item.baseEasUids.length > 0 && /^0x[0-9a-f]{64}$/.test(item.baseEasUids[0]));
@@ -219,7 +219,7 @@ test("0x address lookup: primary / surface contracts resolve exactly, a token or
 });
 
 test("0.1.5 footer: an rpc_observed record says not_attested and never names a UID; briefs carry none; a miss has none (1 content block)", async () => {
-  const srv = new PactaMcpServer({ fetchImpl: rec(() => { throw new Error("no network"); }) });
+  const srv = new PactaMcpServer({ x402Url: "", fetchImpl: rec(() => { throw new Error("no network"); }) });
   const slug = "extra-finance-base";
   const item = LOOKUP_CATALOG.find((x) => x.kind === "protocol" && x.slug === slug);
   assert.equal(item.evidenceBasis, "rpc_observed");

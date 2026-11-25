@@ -93,30 +93,33 @@ Use EIP-1898 `{"blockHash": "<hash>", "requireCanonical": true}` when calling et
 registry_remote: io.github.Fractal-Neurons/pacta is published in the official MCP Registry as a remote Streamable HTTP server (no install): https://api.pacta.wtf/mcp. Local stdio server: git clone https://github.com/Fractal-Neurons/pacta.git, then node packages/mcp-server/bin/pacta-mcp.mjs.
 
 - `pacta_lookup_protocol` (free): Resolve a protocol or token name, symbol, slug or 0x address to its verified record and preflightArgs {chain, address} (query, chain, kind, limit; no RPC)
+- `pacta_who_controls_contract` (free, 100/day): Who controls this contract / token: owner, admin, upgradeable proxy, timelock, multisig, can mint, can pause; block-pinned chain facts confirmed by two independent RPC providers, with cast commands (chain, address; GET /v1/check)
 - `pacta_list_commitments` (free): Filter indexed records (protocol, classification, sprint, limit)
 - `pacta_get_anchoring` (free): Base EAS anchoring: PactaCommitmentRegistry, schema, batch attestation UIDs
 - `pacta_list_proposals` (free): Governance proposals feed (forum, topic_id, chain, limit, include_repro)
-- `pacta_x402_discover` (free): x402 gateway status and discovery manifest (only when PACTA_X402_URL is set)
+- `pacta_x402_discover` (free): x402 gateway status and discovery manifest (the gateway is on by default)
 - `pacta_check_preflight` (x402 $0.01): Pre-execution check of a contract: verdict, 0-100 risk score (null when there is no contract or no controller was found), checks run, proxy / admin / timelock, capabilities (chain, address, block)
-- `pacta_scan_wallet_exposure` (x402 $0.01): Read-only Multicall3 Ethereum + Base wallet or Safe exposure summary across indexed DeFi protocols (address, chain; shares 50/day free quota, zero wallet-address logging)
+- `pacta_scan_wallet_exposure` (x402 $0.01): Read-only Multicall3 Ethereum + Base wallet or Safe exposure summary across indexed DeFi protocols (address, chain; 100/day free quota, zero wallet-address logging)
 - `pacta_scan_control_plane` (free, $0.00): Live control-plane scan of a contract (chain, address)
 - `pacta_scan_timelock_op` (free, $0.00): Live TimelockController operation state (timelock, opId)
 - `pacta_live_timelocks` (free, $0.00): Live state of tracked queued timelock operations
 - `pacta_scan_proposal_diff` (free, $0.00): Re-run a tracked governance proposal's pinned reads live, pinned-vs-live diffs (forum, topicId)
-- `pacta_submit_request` (free): Opt-in (the only tool that writes): queue or upvote a coverage / feature request after a coverage_gap_hint, with the user's consent; forwards to POST /v1/requests (only when PACTA_X402_URL is set)
+- `pacta_verdict` (x402 $0.02): Contract / token control-plane verdict: verdict, riskScore and grade, capability flags, controller, pinned block (slug, or chain + address; 100/day free quota)
+- `pacta_dossier` (x402 $0.05): Protocol control-plane dossier: Safe signers and threshold, cross-protocol signer overlap, Base EAS proof (slug, or chain + address; 100/day free quota)
+- `pacta_submit_request` (free): Opt-in (writes): queue or upvote a coverage / feature request after a coverage_gap_hint, with the user's consent; forwards to POST /v1/requests
 
 Environment (all optional, none secret):
 - `PACTA_INDEX_PATH`: Local snapshot of /api/v1/index.json (offline use)
 - `PACTA_PROPOSALS_PATH`: Local snapshot of /api/v1/proposals.json
 - `PACTA_SPEC_PATH`: Local spec JSON (anchoring overrides, local index fallback)
-- `PACTA_X402_URL`: Enables paid x402 tools against this gateway URL; the live gateway is https://api.pacta.wtf (unset: free tools only)
+- `PACTA_X402_URL`: Gateway base URL for the gateway tools; default (unset) the live gateway https://api.pacta.wtf; an empty value keeps the server local-only (static-feed tools only)
 - `PACTA_X402_MAX_ATOMIC`: Per-call USDC cap in atomic units (default 1000000 = $1.00; hard ceiling 5000000)
 - `PACTA_X402_TIMEOUT_MS`: Timeout per outbound request in ms (default 8000)
 
 ## x402 (Base USDC; the five /v1/x402/* routes and calls over the free daily tier)
 - Live gateway: `https://api.pacta.wtf` (discovery `https://api.pacta.wtf/.well-known/x402`; free `/health`, `/v1/sample/control-plane`, `/v1/sample/preflight`).
 - No API key. Paid today: only the five /v1/x402/* routes ($0.02 to $9.00 USDC on Base, paid to the Pacta Treasury EOA 0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14; x402 v1 X-PAYMENT or v2 PAYMENT-SIGNATURE). /v1/check/preflight and /v1/check/wallet-exposure are free for 50 calls per caller per UTC day, then $0.01 USDC per call via x402 to the same treasury. Every other route (protocol lookup, control-plane, timelock-op and proposal-diff scans, live-timelocks briefs, samples and the remote MCP read tools) is free at $0.00 (60 requests / minute per caller).
-- The local stdio MCP server's scan tools are opt-in: set `PACTA_X402_URL=https://api.pacta.wtf` to enable them.
+- The local stdio MCP server's gateway tools are on by default (`PACTA_X402_URL=https://api.pacta.wtf`); set `PACTA_X402_URL=""` to keep it local-only.
 - Base (8453), scheme `exact`, USDC `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`, payTo `0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14` (the Pacta Treasury EOA), `maxTimeoutSeconds` 60. Never sign for any other `payTo`.
 - Gateway routes (GET query or POST JSON body with the same names; default client cap $1.00):
   - `https://api.pacta.wtf/v1/check/preflight` (50 free calls per caller per UTC day, then $0.01 = `10000` atomic USDC via x402): `?chain=ethereum|base&address=0x…`

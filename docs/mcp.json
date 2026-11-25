@@ -22,7 +22,7 @@
    "secret": false
   },
   {
-   "description": "Enables paid x402 tools against this gateway URL; the live gateway is https://api.pacta.wtf (unset: free tools only)",
+   "description": "Gateway base URL for the gateway tools; default (unset) the live gateway https://api.pacta.wtf; an empty value keeps the server local-only (static-feed tools only)",
    "name": "PACTA_X402_URL",
    "required": false,
    "secret": false
@@ -69,7 +69,7 @@
   "remote": "7 read-only inspection tools + 1 opt-in coverage/feature request tool (pacta_submit_request)",
   "requestTool": "pacta_submit_request",
   "requestsEndpoint": "https://api.pacta.wtf/v1/requests",
-  "stdio": "11 read-only inspection tools + 1 opt-in request tool"
+  "stdio": "14 read-only inspection tools + 1 opt-in request tool"
  },
  "tools": [
   {
@@ -77,6 +77,14 @@
    "description": "Resolve a protocol or token name, symbol, slug or 0x address to its verified record and preflightArgs {chain, address} (query, chain, kind, limit; no RPC)",
    "effectivePriceUsd": "0.00",
    "name": "pacta_lookup_protocol",
+   "price": null,
+   "readOnly": true
+  },
+  {
+   "access": "free",
+   "description": "Who controls this contract / token: owner, admin, upgradeable proxy, timelock, multisig, can mint, can pause; block-pinned chain facts confirmed by two independent RPC providers, with cast commands (chain, address; GET /v1/check)",
+   "effectivePriceUsd": "0.00",
+   "name": "pacta_who_controls_contract",
    "price": null,
    "readOnly": true
   },
@@ -106,7 +114,7 @@
   },
   {
    "access": "free",
-   "description": "x402 gateway status and discovery manifest (only when PACTA_X402_URL is set)",
+   "description": "x402 gateway status and discovery manifest (the gateway is on by default)",
    "effectivePriceUsd": "0.00",
    "name": "pacta_x402_discover",
    "price": null,
@@ -122,7 +130,7 @@
   },
   {
    "access": "metered_50_per_day_then_x402_0.01",
-   "description": "Read-only Multicall3 Ethereum + Base wallet or Safe exposure summary across indexed DeFi protocols (address, chain; shares 50/day free quota, zero wallet-address logging)",
+   "description": "Read-only Multicall3 Ethereum + Base wallet or Safe exposure summary across indexed DeFi protocols (address, chain; 100/day free quota, zero wallet-address logging)",
    "effectivePriceUsd": "0.00",
    "name": "pacta_scan_wallet_exposure",
    "price": "$0.01",
@@ -161,8 +169,24 @@
    "readOnly": true
   },
   {
+   "access": "free_read",
+   "description": "Contract / token control-plane verdict: verdict, riskScore and grade, capability flags, controller, pinned block (slug, or chain + address; 100/day free quota)",
+   "effectivePriceUsd": "0.00",
+   "name": "pacta_verdict",
+   "price": "$0.02",
+   "readOnly": true
+  },
+  {
+   "access": "free_read",
+   "description": "Protocol control-plane dossier: Safe signers and threshold, cross-protocol signer overlap, Base EAS proof (slug, or chain + address; 100/day free quota)",
+   "effectivePriceUsd": "0.00",
+   "name": "pacta_dossier",
+   "price": "$0.05",
+   "readOnly": true
+  },
+  {
    "access": "free",
-   "description": "Opt-in (the only tool that writes): queue or upvote a coverage / feature request after a coverage_gap_hint, with the user's consent; forwards to POST /v1/requests (only when PACTA_X402_URL is set)",
+   "description": "Opt-in (writes): queue or upvote a coverage / feature request after a coverage_gap_hint, with the user's consent; forwards to POST /v1/requests",
    "effectivePriceUsd": "0.00",
    "name": "pacta_submit_request",
    "price": null,

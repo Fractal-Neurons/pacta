@@ -38,11 +38,12 @@ import { lookupProtocols, parseLookupInput, LOOKUP_CATALOG, LOOKUP_TOTALS, LOOKU
 
 export const SERVER_INFO = Object.freeze({ name: "io.github.Fractal-Neurons/pacta", version: "0.1.6" });
 export const MCP_INSTRUCTIONS =
-  "Pacta by Fractal Neurons: 10 read-only, block-pinned inspection tools for EVM contracts (Ethereum, Base) + 1 opt-in request tool. If you only have a protocol or token name " +
-  "(e.g. 'Aave', 'Ethena', 'USDe', 'Moonwell', 'kUSD'), call pacta_lookup_protocol first to resolve its verified record and checksummed 0x " +
-  "contract address, then call pacta_check_preflight. Every value is pinned to a block hash. When a result carries coverage_gap_hint, ask the user " +
-  "before calling pacta_submit_request (the only tool that writes: it queues or upvotes a coverage / feature request; contact_handle only with the " +
-  "user's explicit consent). Not investment advice.";
+  "Pacta by Fractal Neurons: 14 read-only, block-pinned inspection tools for EVM contracts (Ethereum, Base) + 1 opt-in request tool. To see who " +
+  "controls a contract or token (owner, admin, upgradeable proxy, timelock, multisig, can mint, can pause), call pacta_who_controls_contract with " +
+  "chain + address. If you only have a protocol or token name (e.g. 'Aave', 'Ethena', 'USDe', 'Moonwell', 'kUSD'), call pacta_lookup_protocol first " +
+  "to resolve its verified record and checksummed 0x contract address, then call pacta_check_preflight. Every value is pinned to a block hash. When " +
+  "a result carries coverage_gap_hint, ask the user before calling pacta_submit_request (the only tool that writes: it queues or upvotes a " +
+  "coverage / feature request; contact_handle only with the user's explicit consent). Not investment advice.";
 export const SUPPORTED_PROTOCOL_VERSION = "2024-11-05";
 
 const REGISTRY = "0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872";
@@ -146,31 +147,19 @@ const objSchema = (properties = {}, required) => ({
 });
 
 const CHAIN_PROP = { type: "string", enum: ["ethereum", "base"] };
-const PAID_AUTH_PROPS = {
-  xPaymentHeader: { type: "string", description: "Base64 x402 v1 X-PAYMENT header (network base)." },
-  paymentSignatureHeader: {
-    type: "string",
-    description: "Base64 x402 v2 PAYMENT-SIGNATURE header (network eip155:8453). Send this OR xPaymentHeader, not both.",
-  },
-  x402Version: {
-    type: "integer",
-    enum: [1, 2],
-    description: "Preferred x402 version for the 402 challenge (default 1). Both are validated under the same pins.",
-  },
-  payer: { type: "string", description: "0x payer address for 402 EIP-712 typedData." },
-  validBeforeSeconds: {
-    type: "integer",
-    minimum: 30,
-    maximum: MAX_TIMEOUT_SECONDS_CEILING,
-    description: "TTL for the 402 typedData; clamped to the validated challenge's maxTimeoutSeconds.",
-  },
-  nonce: { type: "string", description: "0x-prefixed 32-byte hex nonce." },
-};
+const ADDRESS_PROP = { type: "string", pattern: "^0x[0-9a-fA-F]{40}$" };
+const SLUG_PROP = { type: "string", pattern: "^[a-z0-9]+(?:-[a-z0-9]+)*$", maxLength: 80 };
+/**
+ * Optional x402 payment arguments every gateway tool still accepts in tools/call (backwards compatible), but no tool lists them in
+ * its inputSchema: a free call never needs them, and a 402 result carries the typedData and envelope template to sign. Documented
+ * here (and in README.md) for clients that pay above a free quota.
+ */
+export const PAYMENT_ARGUMENTS = Object.freeze(["xPaymentHeader", "paymentSignatureHeader", "x402Version", "payer", "validBeforeSeconds", "nonce"]);
 
-// ---- Free-tier caller attribution (task-06d4550a8b0f): three NON-PII fields, required on the gateway tools ----
+// ---- Free-tier caller attribution: three optional NON-PII fields, accepted (never listed) by the gateway tools ----
 // Same vocabulary and checks as the hosted worker (x402-edge-worker/worker.mjs). Location is never asked: the hosted
 // worker reads the Cloudflare edge country. Local-only tools (index, proposals, anchoring, discovery) send nothing
-// anywhere, so they do not ask for these fields.
+// anywhere, so they ignore these fields.
 export const REQUESTER_ROLES = Object.freeze(["autonomous_agent", "defi_developer", "risk_curator_analyst", "security_researcher", "protocol_team",
   "institutional_allocator", "individual_user"]);
 export const CALLER_PURPOSES = Object.freeze(["pre_trade_safety", "collateral_due_diligence", "yield_allocation", "security_audit",
@@ -199,21 +188,15 @@ export function callerContext(src) {
   }
   return { fields, problems };
 }
-const CALLER_PROPS = {
-  caller_agent: {
-    type: "string", pattern: CALLER_AGENT_RE.source, maxLength: 48,
-    description: "Optional identifier of the calling AI agent, IDE, or framework (e.g. 'claude-code', 'cursor', 'windsurf', 'coinbase-agentkit', 'elizaos', 'langchain', 'chatgpt', 'gemini', 'openclaw', 'custom-agent'). Omitted or invalid values never block a call. Lowercase slug only; never include personal names, emails, or secrets.",
-  },
-  requester_role: { type: "string", enum: [...REQUESTER_ROLES], description: "Optional: high-level role category of the requester or system running this check (closed enum; no personal data)." },
-  caller_purpose: { type: "string", enum: [...CALLER_PURPOSES], description: "Optional: operational workflow context for this pre-execution check (closed enum)." },
-};
-const gatewaySchema = (properties, required = []) => objSchema({ ...properties, ...CALLER_PROPS }, [...required]);   // caller fields: optional
+/** Clean inputSchema: only the tool's own inputs (0 payment or caller-attribution fields). */
+const gatewaySchema = (properties, required = []) => objSchema(properties, [...required]);
 
 /** MCP tool annotations: every inspection tool is read-only, non-destructive and closed-world. */
 export const readOnlyAnnotations = (title) => Object.freeze({ title, readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false });
 /** tools/list _meta per tool: result type, how long a result stays valid (ms), and whether a client may share a cached result. */
 export const TOOL_META = Object.freeze({
   pacta_lookup_protocol: Object.freeze({ resultType: "protocol_lookup", ttlMs: 300000, cacheScope: "public" }),
+  pacta_who_controls_contract: Object.freeze({ resultType: "who_controls", ttlMs: 300000, cacheScope: "public" }),
   pacta_list_commitments: Object.freeze({ resultType: "commitment_records", ttlMs: 3600000, cacheScope: "public" }),
   pacta_list_proposals: Object.freeze({ resultType: "governance_proposals", ttlMs: 3600000, cacheScope: "public" }),
   pacta_get_anchoring: Object.freeze({ resultType: "anchoring_metadata", ttlMs: 86400000, cacheScope: "public" }),
@@ -224,21 +207,27 @@ export const TOOL_META = Object.freeze({
   pacta_live_timelocks: Object.freeze({ resultType: "live_timelock_operations", ttlMs: 60000, cacheScope: "public" }),
   pacta_scan_timelock_op: Object.freeze({ resultType: "timelock_operation_state", ttlMs: 60000, cacheScope: "public" }),
   pacta_scan_proposal_diff: Object.freeze({ resultType: "proposal_diff", ttlMs: 60000, cacheScope: "public" }),
+  pacta_verdict: Object.freeze({ resultType: "x402_verdict", ttlMs: 300000, cacheScope: "public" }),
+  pacta_dossier: Object.freeze({ resultType: "x402_dossier", ttlMs: 300000, cacheScope: "public" }),
   pacta_submit_request: Object.freeze({ resultType: "demand_receipt", ttlMs: 0, cacheScope: "none" }),
 });
 const TOOL_TITLES = Object.freeze({
+  pacta_who_controls_contract: "Who Controls This Contract or Token",
   pacta_list_commitments: "List Pacta Control-Plane Records", pacta_list_proposals: "List Tracked Governance Proposals",
   pacta_get_anchoring: "Get Base EAS Anchoring Metadata", pacta_x402_discover: "Discover x402 Gateway Configuration",
   pacta_check_preflight: "Pre-execution Safety Check", pacta_scan_wallet_exposure: "Wallet & Safe DeFi Control-Plane Exposure Scan",
   pacta_scan_control_plane: "Control-plane Scan", pacta_live_timelocks: "Live Tracked Timelock Operations",
   pacta_scan_timelock_op: "Timelock Operation State", pacta_scan_proposal_diff: "Governance Proposal Pinned-vs-Live Diff",
+  pacta_verdict: "Contract Control-plane Verdict", pacta_dossier: "Protocol Control-plane Dossier",
 });
 const readOnlyTool = (t) => Object.freeze({ ...t, title: TOOL_TITLES[t.name], annotations: readOnlyAnnotations(TOOL_TITLES[t.name]), _meta: TOOL_META[t.name] });
 
 export const FREE_TOOLS = Object.freeze([
   {
     name: "pacta_list_commitments",
-    description: "Filter Pacta's free static DeFi control-plane records and Base EAS UIDs.",
+    description:
+      "DeFi protocol control-plane records (owner, admin, upgradeable proxy, timelock, multisig) with their Base EAS attestation UIDs: " +
+      "filter Pacta's static index by protocol, classification or batch. Free (static feed, no key, no payment).",
     inputSchema: objSchema({
       protocol: { type: "string" },
       classification: {
@@ -252,7 +241,8 @@ export const FREE_TOOLS = Object.freeze([
   {
     name: "pacta_list_proposals",
     description:
-      "Filter Pacta's free governance-proposal feed (Aave, Euler, Morpho, Sky) with pinned-block control-plane context.",
+      "DeFi governance proposals (Aave, Euler, Morpho, Sky) with pinned-block control-plane context: who controls the contracts a proposal " +
+      "touches, with cast repro commands on request. Free (static feed, no key, no payment).",
     inputSchema: objSchema({
       forum: { type: "string", enum: [...PROPOSAL_FORUMS] },
       topic_id: { type: "integer", minimum: 1 },
@@ -263,34 +253,51 @@ export const FREE_TOOLS = Object.freeze([
   },
   {
     name: "pacta_get_anchoring",
-    description: "Return Base Mainnet PactaCommitmentRegistry, EAS Schema, and pacta.base.eth metadata.",
+    description: "On-chain proof metadata: Base Mainnet PactaCommitmentRegistry, EAS schema and pacta.base.eth addresses. Free (no key, no payment).",
     inputSchema: objSchema(),
   },
   {
     name: "pacta_x402_discover",
     description:
-      "Return x402 configuration status; when PACTA_X402_URL is set, also fetch /.well-known/x402 and /v1/sample/control-plane.",
+      "x402 payment configuration: gateway URL, Base USDC pay-to and per-route price ceilings; with the gateway on (the default), also " +
+      "fetches /.well-known/x402 and /v1/sample/control-plane. Free (no key, no payment).",
     inputSchema: objSchema(),
   },
 ].map(readOnlyTool));
 
 const BLOCK_RE = /^(latest|0x[0-9a-fA-F]{1,14}|0|[1-9][0-9]{0,15})$/;
-// The four scan tools are free ($0.00) today; preflight and wallet exposure carry the free daily quota, then the $0.01 x402 overflow.
+// Pricing text goes LAST in every description. The four scan tools are free ($0.00) today; preflight (50/day), wallet exposure,
+// verdict and dossier (100/day each) carry a free daily quota per caller, then their x402 price; who-controls is free (100/day).
 const FREE_ROUTE_HINT = "Free ($0.00) today: rate-limited, no wallet or payment required.";
-const METERED_HINT = "50 free calls per caller per UTC day, then $0.01 Base USDC per call via x402.";
+const PREFLIGHT_HINT = "Free: 50 calls per caller per UTC day (no key, no payment), then $0.01 Base USDC per call via x402.";
+const WALLET_HINT = "Free: 100 calls per caller per UTC day (no key, no payment), then $0.01 Base USDC per call via x402.";
+const VERDICT_HINT = "Free: 100 calls per caller per UTC day (no key, no payment), then $0.02 Base USDC per call via x402.";
+const DOSSIER_HINT = "Free: 100 calls per caller per UTC day (no key, no payment), then $0.05 Base USDC per call via x402.";
+export const WHO_CONTROLS_DESCRIPTION =
+  "who controls this contract / token: owner, admin, upgradeable proxy, timelock, multisig, can mint, can pause; rug check, token safety. " +
+  "Block-pinned chain facts on Ethereum and Base confirmed by two independent RPC providers, with Foundry cast commands; never guesses or rates. " +
+  "Free: 100 calls per caller per UTC day (no key, no payment).";
+/** Free (never x402) gateway route of pacta_who_controls_contract. */
+export const WHO_CONTROLS_PATH = "/v1/check";
+export const WHO_CONTROLS_SCHEMA = "pacta.who_controls.v1";
+
+export const WHO_CONTROLS_TOOL = readOnlyTool({
+  name: "pacta_who_controls_contract",
+  description: WHO_CONTROLS_DESCRIPTION,
+  inputSchema: objSchema({ chain: CHAIN_PROP, address: ADDRESS_PROP }, ["chain", "address"]),
+});
 
 export const PAID_TOOLS = Object.freeze([
   {
     name: "pacta_check_preflight",
     description:
-      "Gateway tool (requires PACTA_X402_URL). One-call pre-execution safety check of a contract before an agent interacts with it: verdict (NO_CONTROLLER_FOUND / TIMELOCK_PROTECTED / ZERO_DELAY_TIMELOCK_RISK / MULTISIG_NO_TIMELOCK / INSTANT_EOA_ADMIN_RISK / UNCLASSIFIED_CONTRACT_CONTROLLER / UNDEPLOYED_OR_EOA), 0-100 risk score (null when there is no contract or no controller was found), the checks run (checksRun), proxy + implementation, controller kind, zero-delay upgradeability, pause / blacklist / upgrade capabilities, pinned block. " +
-      METERED_HINT,
+      "Smart contract security pre-flight / rug check before an agent interacts with a contract or token: verdict (NO_CONTROLLER_FOUND / TIMELOCK_PROTECTED / ZERO_DELAY_TIMELOCK_RISK / MULTISIG_NO_TIMELOCK / INSTANT_EOA_ADMIN_RISK / UNCLASSIFIED_CONTRACT_CONTROLLER / UNDEPLOYED_OR_EOA), 0-100 risk score (null when there is no contract or no controller was found), the checks run (checksRun), proxy + implementation, controller kind, zero-delay upgradeability, pause / blacklist / upgrade capabilities, pinned block. " +
+      PREFLIGHT_HINT,
     inputSchema: gatewaySchema(
       {
         chain: CHAIN_PROP,
         address: { type: "string" },
         block: { type: "string", description: 'Block to pin: "latest" (default), a decimal block number or 0x-hex.' },
-        ...PAID_AUTH_PROPS,
       },
       ["chain", "address"]
     ),
@@ -298,39 +305,39 @@ export const PAID_TOOLS = Object.freeze([
   {
     name: "pacta_scan_wallet_exposure",
     description:
-      "Gateway tool (requires PACTA_X402_URL). Read-only Multicall3 wallet & Gnosis Safe DeFi control-plane exposure scan across Ethereum and Base: Safe custody detection, ERC-20 / ERC-4626 / MetaMorpho balanceOf + symbol/decimals verification across 313 indexed protocols, 0-100 risk score, shortest exit window, position roster, and #1 adverse gap preview. " +
-      METERED_HINT,
+      "Wallet risk / DeFi exposure of a wallet or Gnosis Safe on Ethereum and Base: read-only Multicall3 Safe custody detection, ERC-20 / ERC-4626 / MetaMorpho balanceOf + symbol/decimals verification across 313 indexed protocols, 0-100 risk score, shortest exit window, position roster, and #1 adverse gap preview. " +
+      WALLET_HINT,
     inputSchema: gatewaySchema(
       {
         address: { type: "string" },
         chain: { type: "string", enum: ["ethereum", "base", "all"] },
-        ...PAID_AUTH_PROPS,
       },
       ["address"]
     ),
   },
   {
     name: "pacta_scan_control_plane",
-    description: "Gateway tool (requires PACTA_X402_URL): pinned-block EVM control-plane scan. " + FREE_ROUTE_HINT,
-    inputSchema: gatewaySchema({ chain: CHAIN_PROP, address: { type: "string" }, ...PAID_AUTH_PROPS }, ["chain", "address"]),
+    description:
+      "Who can upgrade or control this contract: pinned-block EVM control-plane scan (EIP-1967 proxy admin, Ownable owner, Safe multisig, TimelockController). " +
+      FREE_ROUTE_HINT,
+    inputSchema: gatewaySchema({ chain: CHAIN_PROP, address: { type: "string" } }, ["chain", "address"]),
   },
   {
     name: "pacta_live_timelocks",
-    description: "Gateway tool (requires PACTA_X402_URL): live tracked DeFi TimelockController operations. " + FREE_ROUTE_HINT,
-    inputSchema: gatewaySchema({ ...PAID_AUTH_PROPS }),
+    description:
+      "Pending DeFi timelock operations (queued upgrades and parameter changes): live state and ETA countdowns of tracked TimelockController operations. " +
+      FREE_ROUTE_HINT,
+    inputSchema: gatewaySchema({}),
   },
   {
     name: "pacta_scan_timelock_op",
-    description: "Gateway tool (requires PACTA_X402_URL): pinned-block OZ TimelockController operation state. " + FREE_ROUTE_HINT,
-    inputSchema: gatewaySchema(
-      { chain: CHAIN_PROP, timelock: { type: "string" }, opId: { type: "string" }, ...PAID_AUTH_PROPS },
-      ["timelock", "opId"]
-    ),
+    description: "Timelock operation status and delay: pinned-block OpenZeppelin TimelockController operation state (pending, ready, done). " + FREE_ROUTE_HINT,
+    inputSchema: gatewaySchema({ chain: CHAIN_PROP, timelock: { type: "string" }, opId: { type: "string" } }, ["timelock", "opId"]),
   },
   {
     name: "pacta_scan_proposal_diff",
     description:
-      "Gateway tool (requires PACTA_X402_URL): re-run a tracked governance proposal's pinned control-plane reads live and return pinned-vs-live diffs. The proposal must be listed in https://pacta.wtf/api/v1/proposals.json as <forum>-<topicId>. " +
+      "Governance proposal check: re-run a tracked proposal's pinned control-plane reads live and return pinned-vs-live diffs. The proposal must be listed in https://pacta.wtf/api/v1/proposals.json as <forum>-<topicId>. " +
       FREE_ROUTE_HINT,
     inputSchema: gatewaySchema(
       {
@@ -339,30 +346,50 @@ export const PAID_TOOLS = Object.freeze([
           type: ["string", "integer"],
           description: "Forum topic id (positive integer, at most 10 digits), as in pacta_list_proposals topic_id.",
         },
-        ...PAID_AUTH_PROPS,
       },
       ["forum", "topicId"]
     ),
   },
+  {
+    name: "pacta_verdict",
+    description:
+      "Token safety / contract control-plane verdict in one call: verdict, riskScore 0-100 and grade A-F (both null when not determined), a one-line verdict, upgrade / owner / pause / blacklist / mint capability flags, the controller (EOA, Safe threshold, timelock delay), the indexed Pacta record when there is one, and a shareable scan URL; one pinned block on Ethereum or Base. Give slug, or chain + address. " +
+      VERDICT_HINT,
+    inputSchema: gatewaySchema({
+      slug: { ...SLUG_PROP, description: "Published protocol slug (https://pacta.wtf/api/v1/lookup.json); or give chain + address." },
+      chain: CHAIN_PROP,
+      address: ADDRESS_PROP,
+    }),
+  },
+  {
+    name: "pacta_dossier",
+    description:
+      "Protocol control-plane dossier: live EIP-1967 / owner / Safe reads, every controller Safe's signers and threshold, Safe signers shared with other indexed protocols, and the Base EAS attestation proof. Give slug (or chain + address of an indexed contract). " +
+      DOSSIER_HINT,
+    inputSchema: gatewaySchema({
+      slug: { ...SLUG_PROP, description: "Published protocol slug (https://pacta.wtf/api/v1/lookup.json); or give chain + address." },
+      chain: CHAIN_PROP,
+      address: ADDRESS_PROP,
+    }),
+  },
 ].map(readOnlyTool));
 
-// Free discovery: answered from the embedded catalog (src/lookup.mjs, the same block the hosted worker serves); with
-// PACTA_X402_URL set it asks GET /v1/protocols/lookup first and falls back to the embedded catalog on any failure.
+// Free discovery: answered from the embedded catalog (src/lookup.mjs, the same block the hosted worker serves); with the
+// gateway on (the default) it asks GET /v1/protocols/lookup first and falls back to the embedded catalog on any failure.
 export const LOOKUP_TOOL = Object.freeze({
   name: "pacta_lookup_protocol",
   title: "Lookup Protocol or Token by Name",
   description:
-    "Resolve a protocol or token name, symbol, slug or 0x address (e.g. 'Aave', 'Ethena', 'USDe', 'Moonwell', 'kUSD') to Pacta's verified record: " +
+    "Find a DeFi protocol or token by name, symbol, slug or 0x address (e.g. 'Aave', 'Ethena', 'USDe', 'Moonwell', 'kUSD'): Pacta's verified record with " +
     "canonical slug and page URL, checksummed primary contract and controller, classification with its evidence basis (Base-EAS-attested vs " +
     "RPC-observed only), and preflightArgs {chain, address} ready for pacta_check_preflight. " +
-    `${LOOKUP_TOTALS.protocols} protocols + ${LOOKUP_TOTALS.briefs} briefs; free, no RPC. An empty query lists what Pacta tracks.`,
+    `${LOOKUP_TOTALS.protocols} protocols + ${LOOKUP_TOTALS.briefs} briefs, no RPC; an empty query lists what Pacta tracks. Free (no key, no payment).`,
   inputSchema: objSchema(
     {
       query: { type: "string", maxLength: LOOKUP_LIMITS.queryMaxChars, description: "Protocol / token name, symbol, slug or 0x address. Empty or '*' lists the catalog." },
       chain: { type: "string", enum: [...LOOKUP_CHAINS] },
       kind: { type: "string", enum: [...LOOKUP_KINDS], description: "protocol, brief or all (default)." },
       limit: { type: "integer", minimum: 1, maximum: LOOKUP_LIMITS.maxLimit, description: "Default 10 (20 when listing)." },
-      ...CALLER_PROPS,
     },
     []
   ),
@@ -370,26 +397,31 @@ export const LOOKUP_TOOL = Object.freeze({
   _meta: TOOL_META.pacta_lookup_protocol,
 });
 export const SUBMIT_TITLE = "Submit Pacta Coverage or Feature Request";
-// The one opt-in write tool: forwards to POST ${PACTA_X402_URL}/v1/requests (listed only when PACTA_X402_URL is set; nothing
-// leaves the process otherwise). Every string is checked locally first (demandGuard), so a secret never leaves the machine.
+// The one opt-in write tool: forwards to POST <gateway>/v1/requests (listed only with the gateway on; nothing leaves the process otherwise).
+// Every string is checked locally first (demandGuard), so a secret never leaves the machine.
 export const SUBMIT_TOOL = Object.freeze({
   name: "pacta_submit_request",
   title: SUBMIT_TITLE,
   description:
-    "Opt-in: queue a coverage or feature request with Pacta when a target is not indexed, a chain or check is unsupported, or data looks wrong " +
-    "(coverage_gap_hint). Ask the user first. Forwards to POST ${PACTA_X402_URL}/v1/requests; free in every pricing mode, 5 per hour; an identical " +
-    "request_type + target_subject upvotes the existing request (same request_id). Returns request_id, status, demand_votes and an optional " +
-    "fast_track_url. Never opens a GitHub issue. Pass contact_handle ONLY when the user explicitly asks for follow-up or an invoice.",
+    "Request coverage of a protocol, chain or check Pacta does not index yet, or report data that looks wrong (coverage_gap_hint): opt-in, " +
+    "ask the user first. An identical request_type + target_subject upvotes the existing request (same request_id). Returns request_id, status, " +
+    "demand_votes and an optional fast_track_url. Never opens a GitHub issue. Pass contact_handle ONLY when the user explicitly asks for follow-up " +
+    "or an invoice. Forwards to POST /v1/requests on the gateway. Free in every pricing mode: 5 per hour.",
   inputSchema: Object.freeze({ $schema: "https://json-schema.org/draft/2020-12/schema", type: "object", additionalProperties: false,
-    required: [...REQUEST_REQUIRED], properties: { ...CALLER_PROPS, ...REQUEST_SCHEMA_PROPS } }),
+    required: [...REQUEST_REQUIRED], properties: Object.fromEntries(Object.entries(REQUEST_SCHEMA_PROPS).filter(([k]) => !CALLER_FIELDS.includes(k))) }),
   annotations: Object.freeze({ title: SUBMIT_TITLE, readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false }),
   _meta: TOOL_META.pacta_submit_request,
 });
-export const READ_ONLY_TOOLS = Object.freeze([LOOKUP_TOOL, ...FREE_TOOLS, ...PAID_TOOLS]);
-export const TOOL_DEFINITIONS = Object.freeze([...READ_ONLY_TOOLS, SUBMIT_TOOL]);
+/** The 14 read-only inspection tools, then the opt-in request tool (pacta_submit_request). */
+export const READ_ONLY_TOOLS = Object.freeze([LOOKUP_TOOL, WHO_CONTROLS_TOOL, ...FREE_TOOLS, ...PAID_TOOLS]);
+export const REQUEST_TOOLS = Object.freeze([SUBMIT_TOOL]);
+export const TOOL_DEFINITIONS = Object.freeze([...READ_ONLY_TOOLS, ...REQUEST_TOOLS]);
 const LOCAL_TOOLS = Object.freeze([LOOKUP_TOOL, ...FREE_TOOLS]);
-/** Accepted alternative tool names (the hosted remote MCP calls this tool pacta_get_live_timelocks); not listed. */
-export const TOOL_ALIASES = Object.freeze(Object.assign(Object.create(null), { pacta_get_live_timelocks: "pacta_live_timelocks" }));
+/** Accepted alternative tool names (the hosted remote MCP's names / aliases); not listed. */
+export const TOOL_ALIASES = Object.freeze(Object.assign(Object.create(null), {
+  pacta_get_live_timelocks: "pacta_live_timelocks",
+  who_controls: "pacta_who_controls_contract",
+}));
 export const canonicalToolName = (name) =>
   typeof name === "string" && Object.prototype.hasOwnProperty.call(TOOL_ALIASES, name) ? TOOL_ALIASES[name] : name;
 
@@ -406,7 +438,8 @@ export class PactaMcpServer {
     this.proposalsData = options.proposalsData ?? null;
     this.proposalsPath = options.proposalsPath ?? process.env.PACTA_PROPOSALS_PATH ?? null;
     this.proposalsUrls = options.proposalsUrls ?? PROPOSALS_URLS;
-    const rawX402 = options.x402Url ?? options.apiBaseUrl ?? process.env.PACTA_X402_URL ?? "";
+    // Gateway on by default (https://api.pacta.wtf); x402Url: "" or PACTA_X402_URL="" keeps the server local-only (static feeds).
+    const rawX402 = options.x402Url ?? options.apiBaseUrl ?? process.env.PACTA_X402_URL ?? X402_DEFAULTS.defaultBaseUrl ?? "";
     this.x402Url = typeof rawX402 === "string" && rawX402.trim() ? rawX402.trim() : null;
     this.nowSeconds = options.nowSeconds;
     this.timeoutMs = resolveTimeoutMs(options.timeoutMs ?? process.env.PACTA_X402_TIMEOUT_MS);
@@ -528,8 +561,8 @@ export class PactaMcpServer {
     );
   }
 
-  _paid(routeSpec, query, args) {
-    if (this.x402Url) {                                           // nothing leaves the process when unset
+  _paid(routeSpec, query, args, { forwardCaller = true } = {}) {
+    if (this.x402Url && forwardCaller) {                          // nothing leaves the process when the gateway is off
       const paying = Boolean(args.xPaymentHeader || args.paymentSignatureHeader);
       const cc = callerContext(args);
       if (!paying) query = { ...query, ...cc.fields };            // valid values forwarded as optional REST query params; omitted or invalid ones silently dropped
@@ -602,7 +635,7 @@ export class PactaMcpServer {
         ". Never include secrets or personal data outside contact_handle; contact_handle: " + CONTACT_HANDLE_DESCRIPTION), { code: -32602 });
     }
     if (!this.x402Url) {
-      throw new X402Error("gateway_not_configured", `pacta_submit_request forwards to POST <PACTA_X402_URL>/v1/requests: set PACTA_X402_URL=${X402_DEFAULTS.gatewayUrl} (nothing was sent).`);
+      throw new X402Error("gateway_not_configured", `pacta_submit_request forwards to POST <PACTA_X402_URL>/v1/requests, and PACTA_X402_URL is set to an empty value: unset it (default ${X402_DEFAULTS.gatewayUrl}) or set PACTA_X402_URL=${X402_DEFAULTS.gatewayUrl} (nothing was sent).`);
     }
     const cc = callerContext(args);
     const body = { ...cc.fields, ...Object.fromEntries(REQUEST_FIELDS.filter((k) => !CALLER_FIELDS.includes(k) && typeof args[k] === "string" && args[k] !== "").map((k) => [k, args[k]])) };
@@ -619,6 +652,69 @@ export class PactaMcpServer {
     throw new X402Error("upstream_http_error", `POST /v1/requests answered ${detail}`, { status: res.status });
   }
 
+  /** The gateway's JSON error body -> X402Error with the gateway's own snake_case code (else upstream_http_error) and its meter fields. */
+  _gatewayError(what, res, data) {
+    const code = isPlainObject(data) && typeof data.error === "string" && /^[a-z][a-z0-9_]{1,47}$/.test(data.error) ? data.error : "upstream_http_error";
+    const detail = isPlainObject(data) && typeof data.detail === "string" ? data.detail.slice(0, 500) : `HTTP ${res.status}`;
+    const extra = {};
+    if (isPlainObject(data)) {
+      for (const k of ["retryAfterSeconds", "limit", "remaining", "reset"]) if (Number.isSafeInteger(data[k])) extra[k] = data[k];
+      if (isPlainObject(data.meter)) extra.meter = Object.fromEntries(["limit", "remaining", "reset"].filter((k) => Number.isSafeInteger(data.meter[k])).map((k) => [k, data.meter[k]]));
+      if (Array.isArray(data.problems)) extra.problems = data.problems.slice(0, 20);
+    }
+    return new X402Error(code, `${what} answered ${detail}`, { status: res.status, ...extra });
+  }
+
+  /**
+   * pacta_who_controls_contract: GET <gateway>/v1/check?chain=&address= (free, never x402). Only chain + address are sent: caller
+   * attribution fields from an older client are dropped silently (the route refuses unknown query parameters).
+   */
+  async _whoControls(args) {
+    if (!this.x402Url) {
+      throw new X402Error("x402_disabled", `pacta_who_controls_contract calls GET <PACTA_X402_URL>${WHO_CONTROLS_PATH}, and PACTA_X402_URL is set to an empty value: unset it (default ${X402_DEFAULTS.gatewayUrl}) or set PACTA_X402_URL=${X402_DEFAULTS.gatewayUrl} (nothing was sent).`);
+    }
+    const unknown = Object.keys(args).filter((k) => !CALLER_FIELDS.includes(k) && !PAYMENT_ARGUMENTS.includes(k) && k !== "chain" && k !== "address");
+    if (unknown.length) throw new X402Error("invalid_argument", `Unknown argument ${String(unknown[0]).slice(0, 40)}; allowed: chain, address.`);
+    if (args.chain !== "ethereum" && args.chain !== "base") throw new X402Error("invalid_argument", "chain must be ethereum or base.");
+    if (!isValidAddress(args.address)) throw new X402Error("invalid_argument", "Invalid contract address: 0x + 40 hex (EIP-55 checksum enforced when mixed-case).");
+    const url = new URL(`${WHO_CONTROLS_PATH}?${new URLSearchParams({ chain: args.chain, address: args.address }).toString()}`, this.x402Url).toString();
+    const { res, text } = await fetchTextWithTimeout(this.fetchImpl, url, { headers: { Accept: "application/json" }, redirect: "error" }, { timeoutMs: this.timeoutMs });
+    let data = null;
+    try { data = JSON.parse(text); } catch { /* handled below */ }
+    if (res.status === 200) {
+      if (isPlainObject(data) && data.schema === WHO_CONTROLS_SCHEMA) return data;
+      throw new X402Error("malformed_upstream_json", `GET ${WHO_CONTROLS_PATH} answered 200 without a ${WHO_CONTROLS_SCHEMA} JSON object.`, { status: 200, snippet: String(text).slice(0, 300) });
+    }
+    throw this._gatewayError(`GET ${WHO_CONTROLS_PATH}`, res, data);
+  }
+
+  /**
+   * pacta_verdict / pacta_dossier: GET <gateway>/v1/x402/{verdict,dossier}?slug= | ?chain=&address=. Free for 100 calls per caller per
+   * UTC day; above it the route answers its x402 402 (returned as a validated challenge; pay with xPaymentHeader / paymentSignatureHeader).
+   * Caller attribution fields are never forwarded (the route refuses unknown query parameters).
+   */
+  _x402Free(name, routeSpec, args) {
+    const allowed = ["slug", "chain", "address"];
+    const unknown = Object.keys(args).filter((k) => !allowed.includes(k) && !CALLER_FIELDS.includes(k) && !PAYMENT_ARGUMENTS.includes(k));
+    if (unknown.length) throw new X402Error("invalid_argument", `Unknown argument ${String(unknown[0]).slice(0, 40)}; allowed: slug, or chain + address.`);
+    const has = (k) => args[k] !== undefined && args[k] !== null && args[k] !== "";
+    let query;
+    if (has("slug")) {
+      if (has("chain") || has("address")) throw new X402Error("invalid_argument", `${name}: give slug, or chain + address, not both.`);
+      if (typeof args.slug !== "string" || args.slug.length > 80 || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(args.slug)) {
+        throw new X402Error("invalid_argument", "slug must be a published protocol slug (lowercase words joined by '-', at most 80 characters).");
+      }
+      query = { slug: args.slug };
+    } else if (has("chain") || has("address")) {
+      if (args.chain !== "ethereum" && args.chain !== "base") throw new X402Error("invalid_argument", "chain must be ethereum or base.");
+      if (!isValidAddress(args.address)) throw new X402Error("invalid_argument", "Invalid contract address: 0x + 40 hex (EIP-55 checksum enforced when mixed-case).");
+      query = { chain: args.chain, address: args.address };
+    } else {
+      throw new X402Error("invalid_argument", `${name}: give slug (e.g. "aave-v3-gho"), or chain + address.`);
+    }
+    return this._paid(routeSpec, query, args, { forwardCaller: false });
+  }
+
   async callTool(name, args = {}) {
     name = canonicalToolName(name);
     if (!args || typeof args !== "object" || Array.isArray(args)) {
@@ -631,6 +727,17 @@ export class PactaMcpServer {
 
       case "pacta_submit_request":
         return this._submit(args);
+
+      case "pacta_who_controls_contract":
+        return this._whoControls(args);
+
+      case "pacta_verdict":
+        if (!this.x402Url) return this._paid(PAID_ROUTES.verdict, {}, args);
+        return this._x402Free("pacta_verdict", PAID_ROUTES.verdict, args);
+
+      case "pacta_dossier":
+        if (!this.x402Url) return this._paid(PAID_ROUTES.dossier, {}, args);
+        return this._x402Free("pacta_dossier", PAID_ROUTES.dossier, args);
 
       case "pacta_list_commitments": {
         const { source, index } = await this.loadIndex();
@@ -731,7 +838,7 @@ export class PactaMcpServer {
             baseUrlEnvVar: "PACTA_X402_URL",
             x402Url: null,
             x402_gateway_url: X402_DEFAULTS.gatewayUrl,
-            enableHint: `Set PACTA_X402_URL=${X402_DEFAULTS.gatewayUrl} to enable the paid tools (opt-in; nothing is paid while unset).`,
+            enableHint: `PACTA_X402_URL is set to an empty value, so the gateway tools are off: unset it (default ${X402_DEFAULTS.gatewayUrl}) or set PACTA_X402_URL=${X402_DEFAULTS.gatewayUrl} to turn them on (nothing is ever paid without a payment header you sign).`,
             freeIndexUrls: INDEX_URLS,
             x402Defaults: X402_DEFAULTS,
             paidRoutes: PAID_ROUTES,

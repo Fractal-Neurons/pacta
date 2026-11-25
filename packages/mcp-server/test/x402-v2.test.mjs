@@ -78,15 +78,17 @@ const v2Payment = (route, { shape = "accepted", top = {}, accepted = {}, authO =
 };
 const receipt = (o = {}) => b64({ success: true, transaction: TX, network: BASE_NETWORK_V2, payer: FROM, ...o });
 
-test("X402_DEFAULTS and PAID_ROUTES advertise v1 + v2 and all 6 live Worker routes", () => {
+test("X402_DEFAULTS and PAID_ROUTES advertise v1 + v2 and all 8 live Worker routes (6 gateway + verdict $0.02 + dossier $0.05)", () => {
   assert.deepEqual(X402_DEFAULTS.x402Versions, [1, 2]);
   assert.deepEqual(X402_DEFAULTS.networks, ["base", "eip155:8453"]);
   assert.deepEqual(X402_DEFAULTS.paymentHeaders, { 1: "X-PAYMENT", 2: "PAYMENT-SIGNATURE" });
   assert.equal(BASE_NETWORK_V2, "eip155:8453");
   assert.deepEqual(
     Object.values(PAID_ROUTES).map((r) => [r.path, r.maxAmountRequired]).sort(),
-    [["/v1/briefs/live-timelocks", "100000"], ["/v1/check/preflight", "10000"], ["/v1/check/wallet-exposure", "10000"], ["/v1/scan/control-plane", "100000"], ["/v1/scan/proposal-diff", "150000"], ["/v1/scan/timelock-op", "250000"]]
+    [["/v1/briefs/live-timelocks", "100000"], ["/v1/check/preflight", "10000"], ["/v1/check/wallet-exposure", "10000"], ["/v1/scan/control-plane", "100000"], ["/v1/scan/proposal-diff", "150000"], ["/v1/scan/timelock-op", "250000"],
+      ["/v1/x402/dossier", "50000"], ["/v1/x402/verdict", "20000"]]
   );
+  assert.deepEqual([PAID_ROUTES.verdict.priceUsdc, PAID_ROUTES.dossier.priceUsdc], ["0.02", "0.05"]);
 });
 
 test("v2 accepts[] entries: container resource binding + the same pins as v1 (hostile payTo / amount / network / asset / timeout rejected)", () => {
@@ -217,9 +219,8 @@ test("pacta_scan_proposal_diff: listed with the Worker contract, GET /v1/scan/pr
   // free ($0.00) today: the description carries no metered figure; the client still answers a $0.15 challenge if one is ever issued
   assert.ok(tool && /Free \(\$0\.00\) today/.test(tool.description) && !/\$0\.1[05]|\$0\.25|when metered/.test(tool.description));
   assert.deepEqual(tool.inputSchema.required, ["forum", "topicId"]);
-  assert.ok(CALLER_REQ.every((f) => tool.inputSchema.properties[f]), "caller fields documented as optional");
+  assert.deepEqual(Object.keys(tool.inputSchema.properties), ["forum", "topicId"], "clean schema: caller and payment fields accepted, never listed");
   assert.deepEqual(tool.inputSchema.properties.forum.enum, ["aave", "euler", "morpho", "sky"]);
-  assert.ok(tool.inputSchema.properties.paymentSignatureHeader && tool.inputSchema.properties.xPaymentHeader);
   const R = PAID_ROUTES.scanProposalDiff, URL_ = `${BASE_URL}${R.path}`;
   const { body, header } = worker402(R, URL_);
   const f = recordingFetch((url) => (url.includes("/v1/scan/proposal-diff") ? mockRes(402, body, { "PAYMENT-REQUIRED": b64(header) }) : mockRes(404, {})));
@@ -244,10 +245,10 @@ test("pacta_scan_proposal_diff: listed with the Worker contract, GET /v1/scan/pr
 
 test("pacta_check_preflight: Worker contract GET /v1/check/preflight?chain=&address=[&block=], $0.01 challenge when metered, free-launch 200 as unpaid data", async () => {
   const tool = PAID_TOOLS.find((t) => t.name === "pacta_check_preflight");
-  assert.ok(tool && /50 free calls per caller per UTC day, then \$0\.01 Base USDC per call via x402/.test(tool.description) && !/when metered/.test(tool.description));
+  assert.ok(tool && /Free: 50 calls per caller per UTC day \(no key, no payment\), then \$0\.01 Base USDC per call via x402\.$/.test(tool.description) && !/when metered/.test(tool.description));
   assert.equal(PAID_TOOLS[0].name, "pacta_check_preflight");
   assert.deepEqual(tool.inputSchema.required, ["chain", "address"]);
-  assert.ok(CALLER_REQ.every((f) => tool.inputSchema.properties[f]), "caller fields documented as optional");
+  assert.deepEqual(Object.keys(tool.inputSchema.properties), ["chain", "address", "block"], "clean schema: caller and payment fields accepted, never listed");
   assert.deepEqual(tool.inputSchema.properties.chain.enum, ["ethereum", "base"]);
   const R = PAID_ROUTES.checkPreflight, URL_ = `${BASE_URL}${R.path}`;
   assert.deepEqual([R.path, R.priceUsdc, R.maxAmountRequired], ["/v1/check/preflight", "0.01", "10000"]);
@@ -302,10 +303,10 @@ test("tool alias: pacta_get_live_timelocks (the remote MCP name) runs pacta_live
   assert.equal(bad.error.code, -32602);
 });
 
-test("free-tier caller attribution (stdio): gateway tools document caller_agent / requester_role / caller_purpose as OPTIONAL; omitted or invalid values never reject (-32602) and are dropped before forwarding; paid calls and local tools are unaffected", async () => {
-  for (const t of PAID_TOOLS) {
-    assert.ok(["caller_agent", "requester_role", "caller_purpose"].every((f) => !t.inputSchema.required.includes(f) && t.inputSchema.properties[f]), t.name);
-    assert.deepEqual([t.inputSchema.properties.requester_role.enum, t.inputSchema.properties.caller_purpose.enum], [[...REQUESTER_ROLES], [...CALLER_PURPOSES]]);
+test("free-tier caller attribution (stdio): caller_agent / requester_role / caller_purpose are accepted but listed in 0 inputSchemas; omitted or invalid values never reject (-32602) and are dropped before forwarding; paid calls and local tools are unaffected", async () => {
+  assert.deepEqual([REQUESTER_ROLES.length, CALLER_PURPOSES.length], [7, 7]);
+  for (const t of TOOL_DEFINITIONS) {
+    assert.ok(CALLER_REQ.every((f) => !(f in (t.inputSchema.properties || {})) && !(t.inputSchema.required || []).includes(f)), t.name);
     assert.ok(!/\b(?:country|location|city|latitude|longitude|geo)\b/i.test(JSON.stringify(t.inputSchema.properties)), "never asks for location");
   }
   for (const t of FREE_TOOLS) assert.ok(!("caller_agent" in (t.inputSchema.properties || {})), "local-only tools send nothing, so they ask nothing: " + t.name);
@@ -334,8 +335,8 @@ test("free-tier caller attribution (stdio): gateway tools document caller_agent 
   const paid = await call({ xPaymentHeader: "not-base64!" });
   assert.notEqual(paid.error?.code, -32602);
   assert.ok(f.calls.length <= 2 && f.calls.every((c) => !c.url.includes("caller_agent=pacta")), "paid calls are sent without attribution");
-  // gateway unset: nothing leaves the process, so nothing is required
-  const off = new PactaMcpServer({ fetchImpl: recordingFetch(() => mockRes(500, {})), nowSeconds: NOW });
+  // gateway off: nothing leaves the process, so nothing is required
+  const off = new PactaMcpServer({ x402Url: "", fetchImpl: recordingFetch(() => mockRes(500, {})), nowSeconds: NOW });
   const r0 = await off.handleMessage({ jsonrpc: "2.0", id: 9, method: "tools/call", params: { name: "pacta_check_preflight", arguments: { chain: "base", address: FROM } } });
   assert.notEqual(r0.error?.code, -32602);
 });

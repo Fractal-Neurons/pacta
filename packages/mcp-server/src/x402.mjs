@@ -31,8 +31,8 @@ export const MAX_TIMEOUT_MS = 60000;
 export const MAX_RESPONSE_BYTES = 2 * 1024 * 1024;
 export const SNIPPET_LENGTH = 300;
 
-// Canonical live Pacta x402 edge Worker (Cloudflare). Published for discovery only: paid tools stay opt-in and are
-// enabled solely by setting PACTA_X402_URL (defaultBaseUrl stays null, so nothing is ever paid without that choice).
+// Canonical live Pacta x402 edge Worker (Cloudflare). The stdio server uses it by default (defaultBaseUrl) when PACTA_X402_URL is
+// unset; PACTA_X402_URL="" keeps the server local-only. Nothing is ever paid without a payment header the caller signs (no keys here).
 export const X402_GATEWAY_URL = "https://api.pacta.wtf";
 /** CAIP-2 network id used by x402 v2 for Base mainnet (v1 uses the legacy name "base"). */
 export const BASE_NETWORK_V2 = "eip155:8453";
@@ -43,7 +43,7 @@ export const X402_DEFAULTS = Object.freeze({
   baseUrlEnvVar: "PACTA_X402_URL",
   maxAtomicEnvVar: "PACTA_X402_MAX_ATOMIC",
   timeoutEnvVar: "PACTA_X402_TIMEOUT_MS",
-  defaultBaseUrl: null,
+  defaultBaseUrl: X402_GATEWAY_URL,
   x402Version: 1,
   x402Versions: Object.freeze([1, 2]),
   scheme: "exact",
@@ -72,7 +72,8 @@ export const X402_DEFAULTS = Object.freeze({
 
 // Gateway routes. maxAmountRequired is the per-route ceiling this client will ever sign for a 402 challenge on that route (a limit, not a
 // price). Today the four scan routes (control-plane, live-timelocks, timelock-op, proposal-diff) are free ($0.00) and answer without a
-// challenge; /v1/check/preflight and /v1/check/wallet-exposure give 50 free calls per caller per UTC day, then $0.01 Base USDC via x402.
+// challenge; /v1/check/preflight gives 50 and /v1/check/wallet-exposure 100 free calls per caller per UTC day, then $0.01 Base USDC via
+// x402; /v1/x402/verdict ($0.02) and /v1/x402/dossier ($0.05) give 100 free calls per caller per UTC day each, then x402.
 export const PAID_ROUTES = Object.freeze({
   checkPreflight: Object.freeze({
     path: "/v1/check/preflight",
@@ -109,6 +110,18 @@ export const PAID_ROUTES = Object.freeze({
     priceUsdc: "0.15",
     maxAmountRequired: "150000",
     description: "Re-runs a tracked governance proposal's pinned control-plane reads live and returns pinned-vs-live diffs.",
+  }),
+  verdict: Object.freeze({
+    path: "/v1/x402/verdict",
+    priceUsdc: "0.02",
+    maxAmountRequired: "20000",
+    description: "Contract / token control-plane verdict: verdict, riskScore 0-100 and grade A-F, capability flags, controller summary, pinned block.",
+  }),
+  dossier: Object.freeze({
+    path: "/v1/x402/dossier",
+    priceUsdc: "0.05",
+    maxAmountRequired: "50000",
+    description: "Protocol control-plane dossier: live EIP-1967 / owner / Safe reads, Safe signers and threshold, cross-protocol signer overlap, Base EAS proof.",
   }),
 });
 
@@ -994,7 +1007,7 @@ function assertBaseUrl(baseUrl) {
   if (!baseUrl || typeof baseUrl !== "string") {
     fail(
       "x402_disabled",
-      `Paid x402 gateway is disabled by default. Set PACTA_X402_URL=${X402_GATEWAY_URL} to enable paid x402 tools, or use free pacta_list_commitments over https://pacta.wtf/api/v1/index.json.`
+      `The x402 gateway is off (PACTA_X402_URL is set to an empty value). Unset it (default ${X402_GATEWAY_URL}) or set PACTA_X402_URL=${X402_GATEWAY_URL} to enable the gateway tools, or use free pacta_list_commitments over https://pacta.wtf/api/v1/index.json.`
     );
   }
   let u;

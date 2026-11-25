@@ -48,11 +48,12 @@ METERED_TOOLS = ("pacta_check_preflight", "pacta_scan_wallet_exposure")
 PRICING_MODES = {"reads": PRICING_MODE, "/v1/check/preflight": METERED_MODE, "/v1/check/wallet-exposure": METERED_MODE, "/v1/x402/*": PAID_MODE}
 RATE_LIMIT_PER_MIN = 60
 REMOTE_READ_ONLY_TOOLS = ["pacta_lookup_protocol", "pacta_check_preflight", "pacta_scan_wallet_exposure", "pacta_scan_control_plane", "pacta_scan_timelock_op", "pacta_scan_proposal_diff", "pacta_get_live_timelocks"]
-REQUEST_TOOL = "pacta_submit_request"                              # the one opt-in write tool (remote + stdio): queue / upvote a request
+REQUEST_TOOL = "pacta_submit_request"                              # opt-in write tool (remote + stdio): queue / upvote a request
+STDIO_REQUEST_TOOLS = (REQUEST_TOOL,)                              # the stdio tool that writes (readOnly false in mcp.json)
 REMOTE_TOOLS = REMOTE_READ_ONLY_TOOLS + [REQUEST_TOOL]
 REQUESTS_URL = "https://api.pacta.wtf/v1/requests"
 REMOTE_TOOLS_DOC = "7 read-only inspection tools + 1 opt-in coverage/feature request tool (pacta_submit_request)"
-STDIO_TOOLS_DOC = "11 read-only inspection tools + 1 opt-in request tool"
+STDIO_TOOLS_DOC = "14 read-only inspection tools + 1 opt-in request tool"
 BRAND = "Pacta by Fractal Neurons (https://pacta.wtf · pacta.base.eth)"
 # Brand / RAG disambiguation (receipt/1817): never call this project by the two-word name of the dormant escrow project.
 DISAMBIGUATION = ("Disambiguation: Pacta, by Fractal Neurons (https://pacta.wtf, pacta.base.eth, io.github.Fractal-Neurons/pacta) is the EVM DeFi "
@@ -174,7 +175,7 @@ CALLER_FIELDS_DOC = 'Free MCP tier: tools/call takes three OPTIONAL, non-persona
 MCP_ENV = [("PACTA_INDEX_PATH", "Local snapshot of /api/v1/index.json (offline use)"),
            ("PACTA_PROPOSALS_PATH", "Local snapshot of /api/v1/proposals.json"),
            ("PACTA_SPEC_PATH", "Local spec JSON (anchoring overrides, local index fallback)"),
-           ("PACTA_X402_URL", f"Enables paid x402 tools against this gateway URL; the live gateway is {X402_URL} (unset: free tools only)"),
+           ("PACTA_X402_URL", f"Gateway base URL for the gateway tools; default (unset) the live gateway {X402_URL}; an empty value keeps the server local-only (static-feed tools only)"),
            ("PACTA_X402_MAX_ATOMIC", "Per-call USDC cap in atomic units (default 1000000 = $1.00; hard ceiling 5000000)"),
            ("PACTA_X402_TIMEOUT_MS", "Timeout per outbound request in ms (default 8000)")]
 FORUM_HOST = {"aave": "governance.aave.com", "euler": "forum.euler.finance", "morpho": "forum.morpho.org", "sky": "forum.skyeco.com"}
@@ -305,17 +306,20 @@ LOOKUP_DOC = (f"Name lookup first: if you only have a protocol or token name (e.
               f"{CAT['protocols']} protocols + {CAT['briefs']} briefs, answered in memory with no RPC; free in every pricing mode; an empty query lists the catalog. "
               f"Catalog: {BASE}/api/v1/lookup.json.")
 MCP_TOOLS = [("pacta_lookup_protocol", "free", "Resolve a protocol or token name, symbol, slug or 0x address to its verified record and preflightArgs {chain, address} (query, chain, kind, limit; no RPC)"),
+             ("pacta_who_controls_contract", "free, 100/day", "Who controls this contract / token: owner, admin, upgradeable proxy, timelock, multisig, can mint, can pause; block-pinned chain facts confirmed by two independent RPC providers, with cast commands (chain, address; GET /v1/check)"),
              ("pacta_list_commitments", "free", "Filter indexed records (protocol, classification, sprint, limit)"),
              ("pacta_get_anchoring", "free", "Base EAS anchoring: PactaCommitmentRegistry, schema, batch attestation UIDs"),
              ("pacta_list_proposals", "free", "Governance proposals feed (forum, topic_id, chain, limit, include_repro)"),
-             ("pacta_x402_discover", "free", "x402 gateway status and discovery manifest (only when PACTA_X402_URL is set)"),
+             ("pacta_x402_discover", "free", "x402 gateway status and discovery manifest (the gateway is on by default)"),
              ("pacta_check_preflight", "x402 $0.01", "Pre-execution check of a contract: verdict, 0-100 risk score (null when there is no contract or no controller was found), checks run, proxy / admin / timelock, capabilities (chain, address, block)"),
-             ("pacta_scan_wallet_exposure", "x402 $0.01", "Read-only Multicall3 Ethereum + Base wallet or Safe exposure summary across indexed DeFi protocols (address, chain; shares 50/day free quota, zero wallet-address logging)"),
+             ("pacta_scan_wallet_exposure", "x402 $0.01", "Read-only Multicall3 Ethereum + Base wallet or Safe exposure summary across indexed DeFi protocols (address, chain; 100/day free quota, zero wallet-address logging)"),
              ("pacta_scan_control_plane", "free, $0.00", "Live control-plane scan of a contract (chain, address)"),
              ("pacta_scan_timelock_op", "free, $0.00", "Live TimelockController operation state (timelock, opId)"),
              ("pacta_live_timelocks", "free, $0.00", "Live state of tracked queued timelock operations"),
              ("pacta_scan_proposal_diff", "free, $0.00", "Re-run a tracked governance proposal's pinned reads live, pinned-vs-live diffs (forum, topicId)"),
-             ("pacta_submit_request", "free", "Opt-in (the only tool that writes): queue or upvote a coverage / feature request after a coverage_gap_hint, with the user's consent; forwards to POST /v1/requests (only when PACTA_X402_URL is set)")]
+             ("pacta_verdict", "x402 $0.02", "Contract / token control-plane verdict: verdict, riskScore and grade, capability flags, controller, pinned block (slug, or chain + address; 100/day free quota)"),
+             ("pacta_dossier", "x402 $0.05", "Protocol control-plane dossier: Safe signers and threshold, cross-protocol signer overlap, Base EAS proof (slug, or chain + address; 100/day free quota)"),
+             ("pacta_submit_request", "free", "Opt-in (writes): queue or upvote a coverage / feature request after a coverage_gap_hint, with the user's consent; forwards to POST /v1/requests")]
 X402_ROUTES = [("/v1/check/preflight?chain=ethereum|base&address=0x…", "10000", "$0.01"),
                ("/v1/check/wallet-exposure?address=0x…&chain=ethereum|base|all", "10000", "$0.01"),
                ("/v1/scan/control-plane?chain=ethereum|base&address=0x…", "100000", "$0.10"),
@@ -358,7 +362,8 @@ def llms_full(idx, radar, prop, onb, pinned=None):
          "3. Run `cast block N --field hash` and compare with the recorded block hash.", "",
          "## MCP server", f"- Name: {MCP_NAME} · remote Streamable HTTP {MCP_REMOTE_URL} (no install) · local stdio from a clone.", f"- Status: {MCP_STATUS}",
          f"- Remote MCP (primary, zero install, Streamable HTTP): {MCP_REMOTE_URL} · Claude Code: `claude mcp add --transport http pacta {MCP_REMOTE_URL}` · "
-         f"MCP client config: {{\"mcpServers\": {{\"pacta\": {{\"url\": \"{MCP_REMOTE_URL}\"}}}}}} · remote tools ({REMOTE_TOOLS_DOC}): {', '.join(REMOTE_TOOLS)}.",
+         f"MCP client config: {{\"mcpServers\": {{\"pacta\": {{\"url\": \"{MCP_REMOTE_URL}\"}}}}}} · remote tools ({LLMS_REMOTE_TOOLS_DOC}): {', '.join(LLMS_REMOTE_TOOLS)}.",
+         f"- {LLMS_WHO_CONTROLS_DOC}",
          f"- Local stdio server (from a clone of the repository): `{STDIO_FROM_SOURCE}`. OpenAPI 3.1: {OPENAPI_URL}.",
          f"- {CALLER_FIELDS_DOC}",
          f"- One call: `curl -s -A \"my-agent/1.0\" \"{X402_URL}/v1/check/preflight?chain=ethereum&address=0x...\"`. {UA_DOC} Every response carries "
@@ -378,10 +383,12 @@ def llms_full(idx, radar, prop, onb, pinned=None):
          f"- {COMMUNITY_DOC}",
          f"- Vault factories and curators: {BASE}/integrations/vault-factories/ (Control-Plane & Role Map tab from {BASE}/api/v1/protocols.json, status badges {BASE}/badges/<slug>.svg and {X402_URL}/v1/badges/<slug>.svg, and PactaSentinelGuard.sol: refuses cap increases without a healthy Pacta attestation, never blocks a decrease).",
          f"- Stdio tools ({STDIO_TOOLS_DOC}):"] + [f"  - {n} ({p}): {d}" for n, p, d in MCP_TOOLS] + [
-         f"- Paid tools are disabled unless PACTA_X402_URL is set (opt-in: PACTA_X402_URL={X402_URL}); the client refuses any 402 challenge (v1 body or v2 "
+         f"- The stdio server's gateway tools are on by default (PACTA_X402_URL unset = PACTA_X402_URL={X402_URL}; PACTA_X402_URL=\"\" keeps it local-only); the client refuses any 402 challenge (v1 body or v2 "
          "PAYMENT-REQUIRED header) whose payTo, asset or network differ from the values below, or whose amount exceeds $1.00 by default. Pay with "
          "xPaymentHeader (x402 v1) or paymentSignatureHeader (x402 v2).", "",
-         "## x402 micropayments (Base USDC: the five /v1/x402/* routes, and preflight / wallet-exposure calls over the free daily tier)",
+         "## x402 micropayments (Base USDC: the five /v1/x402/* routes, verdict / dossier / wallet-exposure over their free 100/day, and preflight / wallet-exposure checks over the free daily tier)",
+         f"- {FREE_X402_DOC}",
+         f"- {LLMS_FREE_TIER_DOC}",
          f"- Network: Base (chain id 8453) · scheme exact · asset USDC {USDC_BASE} · payTo {PAY_TO} (Pacta treasury).",
          f"- Pacta Treasury: {TREASURY} (an externally owned account; the PactaCommitmentRegistry treasury slot). {TREASURY_USE}",
          f"- Live gateway: {X402_URL} (Cloudflare Worker; x402Versions [1, 2]; PayAI facilitator; maxTimeoutSeconds {X402_MAX_TIMEOUT_S}).",
@@ -393,7 +400,7 @@ def llms_full(idx, radar, prop, onb, pinned=None):
          f"- Settlement: {X402_RECEIPT_NOTE}",
          f"- Gateway settlement guard: {X402_GATEWAY_GUARD_NOTE}",
          "- Gateway GET routes (GET query or POST JSON body with the same names):"] + [
-             (f"  - GET {X402_URL}{r}: {FREE_DAILY_QUOTA} free calls per caller per UTC day, then {usd} ({atomic} atomic USDC) per call via x402"
+             (f"  - GET {X402_URL}{r}: {FREE_X402_DAILY_QUOTA if r.split('?')[0] == '/v1/check/wallet-exposure' else FREE_DAILY_QUOTA} free calls per caller per UTC day, then {usd} ({atomic} atomic USDC) per call via x402"
               if r.split("?")[0] in METERED_PATHS else f"  - GET {X402_URL}{r}: free ($0.00) today, no wallet or payment ({RATE_LIMIT_PER_MIN} requests / minute per caller)")
              for r, atomic, usd in X402_ROUTES] + [
          "- Free: " + ", ".join(f"GET {X402_URL}{p}" for p in X402_FREE) + " (/.well-known/x402 is the Bazaar discovery manifest, discoverable: true).", "",
@@ -522,7 +529,7 @@ def mcp_manifest(idx, onb):
         "lookup": {"tool": "pacta_lookup_protocol", "http": LOOKUP_URL, "catalog": f"{BASE}/api/v1/lookup.json", "free": True, "note": LOOKUP_DOC},
         "environment": [{"name": n, "required": False, "secret": False, "description": d} for n, d in MCP_ENV],
         "tools": [{"name": n, "access": "free" if p.startswith("free") else (METERED_MODE if n in METERED_TOOLS else PRICING_MODE), "price": None if p.startswith("free") else p.split(" ")[1],
-                   "effectivePriceUsd": "0.00", "readOnly": n != REQUEST_TOOL, "description": d} for n, p, d in MCP_TOOLS],
+                   "effectivePriceUsd": "0.00", "readOnly": n not in STDIO_REQUEST_TOOLS, "description": d} for n, p, d in MCP_TOOLS],
         "toolSummary": {"remote": REMOTE_TOOLS_DOC, "stdio": STDIO_TOOLS_DOC, "requestTool": REQUEST_TOOL, "requestsEndpoint": REQUESTS_URL},
         "disambiguation": DISAMBIGUATION,
         "feeds": {p: f"{BASE}{p}" for p, _ in FEEDS},
@@ -549,6 +556,30 @@ FREE_TIER_DOC = (f"Free agent tier: {FREE_DAILY_QUOTA} pre-flight and wallet-exp
                  "(HTTP 402, USDC on Base; never a dead-end 429). Free responses carry an upgrade_x402 object listing the paid routes.")
 X402_DOC = "Pay per call with x402 (USDC on Base, POST JSON, X-PAYMENT v1 or PAYMENT-SIGNATURE v2): " + "; ".join(
     f"{X402_PUBLIC}{p} ${usd} ({what})" for p, usd, what in X402_ENDPOINTS) + "."
+# The free tier of three x402 routes (the Worker's FREE_X402_ROUTES / FREE_X402_DAILY_QUOTA), as stated by llms.txt, /llms/ and llms-full.txt.
+FREE_X402_DAILY_QUOTA = 100
+FREE_X402_MCP_TOOLS = ["pacta_verdict", "pacta_dossier"]
+WHO_CONTROLS_TOOL = "pacta_who_controls_contract"
+WHO_CONTROLS_DAILY_QUOTA = 100
+# The remote MCP's 11 tools (10 read-only + 1 request tool), as the llms texts state them; SKILL.md / .well-known keep the shared REMOTE_TOOLS.
+LLMS_REMOTE_TOOLS = ([REMOTE_READ_ONLY_TOOLS[0], WHO_CONTROLS_TOOL] + REMOTE_READ_ONLY_TOOLS[1:] + FREE_X402_MCP_TOOLS + [REQUEST_TOOL])
+LLMS_REMOTE_TOOLS_DOC = "10 read-only inspection tools + 1 opt-in request tool (pacta_submit_request)"
+LLMS_WHO_CONTROLS_DOC = (f"Who controls this contract (free): GET {X402_URL}/v1/check?chain=ethereum|base&address=0x... and the MCP tool {WHO_CONTROLS_TOOL} "
+                         "(chain, address): owner, admin, upgradeable proxy, timelock, multisig, can mint, can pause, as block-pinned chain facts confirmed by two "
+                         "independent RPC providers, with Foundry cast commands; never guesses or rates. "
+                         f"Free: {WHO_CONTROLS_DAILY_QUOTA} calls per caller per UTC day (no key, no payment).")
+FREE_X402_DOC = (f"Free x402 tier: {X402_PUBLIC}/v1/x402/verdict, /v1/x402/dossier and /v1/x402/wallet-exposure, and the MCP tools pacta_verdict, pacta_dossier "
+                 f"and pacta_scan_wallet_exposure, are free for {FREE_X402_DAILY_QUOTA} calls per caller per UTC day per tool (no key, no payment; REST and MCP share each "
+                 "tool's quota; X-Meter-Limit / X-Meter-Remaining / X-Meter-Reset headers and a meter object; free wallet-exposure calls may also "
+                 "GET ?address=0x...&chain=ethereum|base|all). Above "
+                 f"{FREE_X402_DAILY_QUOTA}/day, x402 payment applies ($0.02 verdict, $0.05 dossier or wallet-exposure, USDC on Base; the route answers HTTP 402 "
+                 "with the requirements). /v1/x402/calldata-sim ($0.25) and /v1/x402/deep-scan ($9.00) stay paid on every call. A request with no input "
+                 "(bare GET, empty or {} POST) is the x402 discovery probe and answers 402.")
+LLMS_FREE_TIER_DOC = (f"Free agent tier: {FREE_DAILY_QUOTA} pre-flight checks (REST /v1/check/preflight and MCP pacta_check_preflight together) and "
+                      f"{FREE_X402_DAILY_QUOTA} wallet-exposure checks (REST /v1/check/wallet-exposure, /v1/x402/wallet-exposure and MCP pacta_scan_wallet_exposure "
+                      "together) per caller per UTC day (X-Meter-Limit / X-Meter-Remaining / X-Meter-Reset headers); over the quota, /v1/check/preflight and "
+                      "/v1/check/wallet-exposure cost $0.01 per call over x402 (HTTP 402, USDC on Base; never a dead-end 429). Free responses carry an "
+                      "upgrade_x402 object listing the paid routes.")
 
 
 def skill_md(prop, idx):
@@ -616,7 +647,7 @@ Environment (all optional, none secret):
 ## x402 (Base USDC; the five /v1/x402/* routes and calls over the free daily tier)
 - Live gateway: `{X402_URL}` (discovery `{X402_URL}/.well-known/x402`; free `/health`, `/v1/sample/control-plane`, `/v1/sample/preflight`).
 - {FREE_LAUNCH_NOTE}
-- The local stdio MCP server's scan tools are opt-in: set `PACTA_X402_URL={X402_URL}` to enable them.
+- The local stdio MCP server's gateway tools are on by default (`PACTA_X402_URL={X402_URL}`); set `PACTA_X402_URL=""` to keep it local-only.
 - Base (8453), scheme `exact`, USDC `{USDC_BASE}`, payTo `{PAY_TO}` (the Pacta Treasury EOA), `maxTimeoutSeconds` {X402_MAX_TIMEOUT_S}. Never sign for any other `payTo`.
 - Gateway routes (GET query or POST JSON body with the same names; default client cap $1.00):
 """ + "\n".join(f"  - `{X402_URL}{r.split('?')[0]}` (" + (f"{FREE_DAILY_QUOTA} free calls per caller per UTC day, then {usd} = `{atomic}` atomic USDC via x402"

@@ -35,6 +35,7 @@ export interface PactaServerOptions {
   proposalsPath?: string;
   /** Proposals feed URLs tried in order. Default PROPOSALS_URLS. */
   proposalsUrls?: readonly string[];
+  /** Gateway base URL. Default PACTA_X402_URL, else https://api.pacta.wtf; "" keeps the server local-only (static-feed tools only). */
   x402Url?: string | null;
   apiBaseUrl?: string | null;
   nowSeconds?: number;
@@ -170,10 +171,16 @@ export declare const DEFAULT_ANCHORING: Readonly<Record<string, unknown>>;
 export declare const FREE_TOOLS: ReadonlyArray<Record<string, unknown>>;
 export declare const PAID_TOOLS: ReadonlyArray<Record<string, unknown>>;
 export declare const TOOL_DEFINITIONS: ReadonlyArray<Record<string, unknown>>;
-/** The 10 read-only inspection tools (annotations readOnlyHint true, destructiveHint false, openWorldHint false). */
+/** The 14 read-only inspection tools (annotations readOnlyHint true, destructiveHint false, openWorldHint false). */
 export declare const READ_ONLY_TOOLS: ReadonlyArray<Record<string, unknown>>;
-/** The one opt-in write tool: pacta_submit_request (forwards to POST <PACTA_X402_URL>/v1/requests). */
+/** pacta_who_controls_contract: GET <PACTA_X402_URL>/v1/check?chain=&address= (free, 100 calls per caller per UTC day). */
+export declare const WHO_CONTROLS_TOOL: Readonly<Record<string, unknown>>;
+/** The opt-in write tool: pacta_submit_request. */
+export declare const REQUEST_TOOLS: ReadonlyArray<Record<string, unknown>>;
+/** Opt-in write tool: pacta_submit_request (forwards to POST <PACTA_X402_URL>/v1/requests). */
 export declare const SUBMIT_TOOL: Readonly<Record<string, unknown>>;
+/** x402 payment arguments every gateway tool accepts in tools/call; no inputSchema lists them. */
+export declare const PAYMENT_ARGUMENTS: ReadonlyArray<string>;
 /** tools/list _meta per tool name: { resultType, ttlMs, cacheScope }. */
 export declare const TOOL_META: Readonly<Record<string, Readonly<{ resultType: string; ttlMs: number; cacheScope: "public" | "none" }>>>;
 /** Exact hint added to lookup misses (and, on the gateway, to unindexed / unclassified pre-flights). */

@@ -1,6 +1,6 @@
-// pacta_submit_request (stdio, 0.1.5): listed only with PACTA_X402_URL, exact annotations / _meta / JSON Schema 2020-12,
+// pacta_submit_request (stdio, 0.1.5): listed only with the gateway on (the default), exact annotations / _meta / JSON Schema 2020-12,
 // local secret / HTML / field checks (nothing is sent on a refusal), and forwarding to POST <PACTA_X402_URL>/v1/requests.
-// Also: annotations + _meta on all 10 read-only tools and coverage_gap_hint on lookup misses.
+// Also: annotations + _meta on all 14 read-only tools and coverage_gap_hint on lookup misses.
 import "./no-network.mjs";
 import test from "node:test";
 import assert from "node:assert/strict";
@@ -19,10 +19,12 @@ const rec = (reply) => {
 const json = (status, obj) => new Response(JSON.stringify(obj), { status, headers: { "Content-Type": "application/json" } });
 const call = (srv, args, name = "pacta_submit_request") => srv.handleMessage({ jsonrpc: "2.0", id: 1, method: "tools/call", params: { name, arguments: args } });
 
-test("0.1.5 tools/list: 11 read-only tools (annotations readOnlyHint/destructiveHint/openWorldHint + _meta) + 1 opt-in pacta_submit_request", async () => {
+test("tools/list: 14 read-only tools (annotations readOnlyHint/destructiveHint/openWorldHint + _meta) + 1 opt-in request tool (pacta_submit_request)", async () => {
   assert.equal(SERVER_INFO.version, "0.1.6");
-  assert.equal(READ_ONLY_TOOLS.length, 11);
+  assert.equal(READ_ONLY_TOOLS.length, 14);
+  assert.equal(TOOL_DEFINITIONS.length, 15);
   assert.deepEqual(TOOL_DEFINITIONS.map((t) => t.name).slice(-1), ["pacta_submit_request"]);
+  assert.deepEqual(TOOL_DEFINITIONS.filter((t) => t.annotations.readOnlyHint !== true).map((t) => t.name), ["pacta_submit_request"]);
   for (const t of READ_ONLY_TOOLS) {
     assert.deepEqual([t.annotations.readOnlyHint, t.annotations.destructiveHint, t.annotations.openWorldHint], [true, false, false], t.name);
     assert.equal(typeof t.title, "string", t.name);
@@ -35,13 +37,15 @@ test("0.1.5 tools/list: 11 read-only tools (annotations readOnlyHint/destructive
   const s = SUBMIT_TOOL.inputSchema;
   assert.equal(s.$schema, "https://json-schema.org/draft/2020-12/schema");
   assert.deepEqual(s.required, ["request_type", "target_subject", "requested_capability", "urgency_track"]);
-  assert.deepEqual(Object.keys(s.properties).sort(), ["caller_agent", "requester_role", "caller_purpose", ...s.required, "forum_proposal_url", "contact_handle"].sort());
+  assert.deepEqual(Object.keys(s.properties).sort(), [...s.required, "forum_proposal_url", "contact_handle"].sort(), "clean schema: 0 caller fields");
   assert.equal(s.properties.contact_handle.description, "Optional work email, Telegram @handle, or GitHub handle ONLY if the human user explicitly asks for follow-up or an invoice. NEVER guess or populate without explicit user consent; never pass keys or secrets.");
-  const local = new PactaMcpServer({ fetchImpl: rec(() => { throw new Error("no network"); }) });
+  const local = new PactaMcpServer({ x402Url: "", fetchImpl: rec(() => { throw new Error("no network"); }) });
   const gw = new PactaMcpServer({ x402Url: GW, fetchImpl: rec(() => { throw new Error("no network"); }) });
+  const dflt = new PactaMcpServer({ fetchImpl: rec(() => { throw new Error("no network"); }) });
   const names = async (srv) => (await srv.handleMessage({ jsonrpc: "2.0", id: 1, method: "tools/list" })).result.tools.map((t) => t.name);
-  assert.equal((await names(gw)).length, 12);
-  assert.ok(!(await names(local)).includes("pacta_submit_request"), "listed only with PACTA_X402_URL (zero network otherwise)");
+  assert.equal((await names(gw)).length, 15);
+  assert.deepEqual(await names(dflt), await names(gw), "the gateway is on by default (https://api.pacta.wtf)");
+  assert.ok(!(await names(local)).includes("pacta_submit_request"), "not listed with the gateway off (zero network)");
 });
 
 test("pacta_submit_request forwards one JSON POST to <PACTA_X402_URL>/v1/requests and returns the receipt", async () => {
@@ -93,13 +97,13 @@ test("pacta_submit_request refuses secrets, HTML, unknown / missing / bad fields
   assert.equal(sentBody.requester_role, undefined);
   assert.equal(sentBody.caller_purpose, undefined);
   assert.equal(demandGuard("tx:0x" + key), null);
-  const off = await call(new PactaMcpServer({ fetchImpl: f }), REQ);
+  const off = await call(new PactaMcpServer({ x402Url: "", fetchImpl: f }), REQ);
   assert.deepEqual([off.result.isError, JSON.parse(off.result.content[0].text).code], [true, "gateway_not_configured"]);
   assert.equal(f.calls.length, 0);
 });
 
 test("pacta_lookup_protocol: a miss carries coverage_gap_hint (embedded catalog and gateway answer); a match does not", async () => {
-  const local = new PactaMcpServer({ fetchImpl: rec(() => { throw new Error("no network"); }) });
+  const local = new PactaMcpServer({ x402Url: "", fetchImpl: rec(() => { throw new Error("no network"); }) });
   const miss = JSON.parse((await call(local, { ...CALLER, query: "zzunknownprotocol" }, "pacta_lookup_protocol")).result.content[0].text);
   assert.deepEqual([miss.totalMatches, miss.coverage_gap_hint], [0, COVERAGE_GAP_HINT]);
   const hit = JSON.parse((await call(local, { ...CALLER, query: "ethena" }, "pacta_lookup_protocol")).result.content[0].text);
