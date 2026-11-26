@@ -1,12 +1,12 @@
-// Gateway on by default + clean tool schemas + buyer-first descriptions, and the 3 gateway tools pacta_who_controls_contract
-// (GET /v1/check) and pacta_verdict / pacta_dossier (GET /v1/x402/{verdict,dossier}, free 100/day then x402). Every fetch is
-// injected (no-network.mjs blocks the global one).
+// Gateway on by default + clean tool schemas + buyer-first descriptions, and the 4 gateway tools pacta_who_controls_contract
+// (GET /v1/check), pacta_verdict / pacta_dossier (GET /v1/x402/{verdict,dossier}, free 100/day then x402) and request_feature
+// (POST /v1/feature-request). Every fetch is injected (no-network.mjs blocks the global one).
 import "./no-network.mjs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
-  PactaMcpServer, TOOL_DEFINITIONS, READ_ONLY_TOOLS, REQUEST_TOOLS, WHO_CONTROLS_TOOL, PAID_TOOLS, TOOL_META, TOOL_ALIASES,
-  PAYMENT_ARGUMENTS, CALLER_FIELDS, MCP_INSTRUCTIONS, X402_DEFAULTS, PAID_ROUTES, ALLOWED_PAY_TO, BASE_USDC, canonicalToolName,
+  PactaMcpServer, TOOL_DEFINITIONS, READ_ONLY_TOOLS, REQUEST_TOOLS, WHO_CONTROLS_TOOL, FEATURE_TOOL, PAID_TOOLS, TOOL_META, TOOL_ALIASES,
+  PAYMENT_ARGUMENTS, CALLER_FIELDS, MCP_INSTRUCTIONS, X402_DEFAULTS, PAID_ROUTES, ALLOWED_PAY_TO, BASE_USDC, hasIpLiteral, canonicalToolName,
 } from "../src/server.mjs";
 import { CALLER } from "./helpers.mjs";
 
@@ -39,12 +39,13 @@ const PRICE_ENDINGS = [
   "Free: 100 calls per caller per UTC day (no key, no payment).",
   "Free (no key, no payment).",
   "Free (static feed, no key, no payment).",
+  "Free: 5 per caller per UTC day.",
   "Free in every pricing mode: 5 per hour.",
 ];
 
-test("H1: 15 tools, 0 of the 9 payment / caller fields in any inputSchema, 0 setup labels, pricing text last, buyer words first", () => {
-  assert.equal(TOOL_DEFINITIONS.length, 15);
-  assert.deepEqual(REQUEST_TOOLS.map((t) => t.name), ["pacta_submit_request"]);
+test("H1: 16 tools, 0 of the 9 payment / caller fields in any inputSchema, 0 setup labels, pricing text last, buyer words first", () => {
+  assert.equal(TOOL_DEFINITIONS.length, 16);
+  assert.deepEqual(REQUEST_TOOLS.map((t) => t.name), ["request_feature", "pacta_submit_request"]);
   assert.deepEqual([...PAYMENT_ARGUMENTS, ...CALLER_FIELDS], NINE);
   for (const t of TOOL_DEFINITIONS) {
     const props = Object.keys(t.inputSchema.properties || {});
@@ -62,10 +63,11 @@ test("H1: 15 tools, 0 of the 9 payment / caller fields in any inputSchema, 0 set
   assert.equal(READ_ONLY_TOOLS.length, 14);
   const buyer = { pacta_who_controls_contract: /^who controls this contract/, pacta_check_preflight: /^Smart contract security pre-flight \/ rug check/,
     pacta_scan_wallet_exposure: /^Wallet risk \/ DeFi exposure/, pacta_verdict: /^Token safety/, pacta_scan_control_plane: /^Who can upgrade or control this contract/,
-    pacta_lookup_protocol: /^Find a DeFi protocol or token/ };
+    pacta_lookup_protocol: /^Find a DeFi protocol or token/, request_feature: /^Request a missing tool/ };
   for (const [n, re] of Object.entries(buyer)) assert.match(TOOL_DEFINITIONS.find((t) => t.name === n).description, re, n);
-  assert.match(MCP_INSTRUCTIONS, /^Pacta by Fractal Neurons: 14 read-only, block-pinned inspection tools for EVM contracts \(Ethereum, Base\) \+ 1 opt-in request tool\. /);
+  assert.match(MCP_INSTRUCTIONS, /^Pacta by Fractal Neurons: 14 read-only, block-pinned inspection tools for EVM contracts \(Ethereum, Base\) \+ 2 opt-in request tools\. /);
   assert.match(MCP_INSTRUCTIONS, /call pacta_who_controls_contract/);
+  assert.match(MCP_INSTRUCTIONS, /call request_feature/);
 });
 
 test("pacta_who_controls_contract: exact description, schema of only chain + address, read-only annotations, alias who_controls", () => {
@@ -78,6 +80,7 @@ test("pacta_who_controls_contract: exact description, schema of only chain + add
   assert.deepEqual(WHO_CONTROLS_TOOL.annotations, { title: WHO_CONTROLS_TOOL.title, readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false });
   assert.equal(TOOL_DEFINITIONS[1], WHO_CONTROLS_TOOL, "listed right after pacta_lookup_protocol");
   assert.equal(canonicalToolName("who_controls"), "pacta_who_controls_contract");
+  assert.equal(canonicalToolName("pacta_request_feature"), "request_feature");
   assert.ok(!TOOL_DEFINITIONS.some((t) => t.name in TOOL_ALIASES), "aliases are never listed");
 });
 
@@ -182,6 +185,65 @@ test("pacta_verdict / pacta_dossier above the free quota: the route's 402 is a v
   // gateway off: x402_disabled, nothing sent
   const off = never();
   await assert.rejects(new PactaMcpServer({ x402Url: "", fetchImpl: off }).callTool("pacta_verdict", { slug: "aave-v3-gho" }), (e) => e.code === "x402_disabled");
+  assert.equal(off.calls.length, 0);
+});
+
+test("request_feature: exact schema + annotations; one POST /v1/feature-request with {text, use_case?} (normalized), receipt returned", async () => {
+  assert.deepEqual(FEATURE_TOOL.inputSchema.required, ["text"]);
+  assert.deepEqual(Object.keys(FEATURE_TOOL.inputSchema.properties), ["text", "use_case"]);
+  assert.deepEqual([FEATURE_TOOL.inputSchema.properties.text.maxLength, FEATURE_TOOL.inputSchema.properties.use_case.maxLength], [1000, 500]);
+  assert.deepEqual(FEATURE_TOOL.annotations, { title: "Request a Pacta Feature or Tool", readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false });
+  assert.deepEqual(FEATURE_TOOL._meta, { resultType: "feature_request_receipt", ttlMs: 0, cacheScope: "none" });
+  assert.match(FEATURE_TOOL.description, /Free: 5 per caller per UTC day\.$/);
+  const receipt = { ok: true, request_id: "FREQ-2026-0123abcd", message: "Thank you", meter: { limit: 5, remaining: 4, reset: NOW } };
+  const f = rec(() => mockRes(200, receipt));
+  const srv = new PactaMcpServer({ x402Url: GW, fetchImpl: f });
+  const r = await rpc(srv, "request_feature", { text: "  Add Arbitrum\n support\tfor who_controls ", use_case: "pre-trade checks" });
+  assert.equal(r.result.isError, false);
+  assert.deepEqual(bodyOf(r), { ...receipt, source: "gateway" });
+  assert.equal(f.calls[0].url, `${GW}/v1/feature-request`);
+  assert.deepEqual([f.calls[0].init.method, f.calls[0].init.headers["Content-Type"], f.calls[0].init.redirect], ["POST", "application/json", "error"]);
+  assert.deepEqual(JSON.parse(f.calls[0].init.body), { text: "Add Arbitrum support for who_controls", use_case: "pre-trade checks" });
+  await rpc(srv, "pacta_request_feature", { text: "Solana support", use_case: "   " });
+  assert.deepEqual(JSON.parse(f.calls[1].init.body), { text: "Solana support" }, "alias; blank use_case omitted");
+});
+
+test("request_feature refuses names / emails / IP literals / secrets / unknown fields LOCALLY (-32602, nothing sent, values never echoed); gateway errors keep their code", async () => {
+  const nf = never();
+  const srv = new PactaMcpServer({ x402Url: GW, fetchImpl: nf });
+  for (const [args, needle] of [
+    [{ text: "mail me at ops" + "@" + "example.org" }, "text (email_address)"],
+    [{ text: "my node 10.0.0.7 is slow" }, "text (ip_address)"],
+    [{ text: "node at [2001:db8::1]" }, "text (ip_address)"],
+    [{ text: "use fe80::1 please" }, "text (ip_address)"],
+    [{ text: "key " + "ab".repeat(32) }, "text (secret_or_key)"],
+    [{ text: "<b>x</b>" }, "text (html)"],
+    [{ text: "x".repeat(1001) }, "text (too_long)"],
+    [{ text: "ok", use_case: "y".repeat(501) }, "use_case (too_long)"],
+    [{ text: "   " }, "text (missing)"],
+    [{}, "text (missing)"],
+    [{ text: 7 }, "text (not_a_string)"],
+    [{ text: "ok", email: "a" }, "email (unknown_field)"],
+    [{ text: "ok", ...CALLER }, "caller_agent (unknown_field)"],
+  ]) {
+    const r = await rpc(srv, "request_feature", args);
+    assert.equal(r.error?.code, -32602, JSON.stringify(args).slice(0, 80));
+    assert.ok(r.error.message.includes(needle), r.error.message);
+    for (const v of Object.values(args)) if (typeof v === "string" && v.length > 8 && v.trim()) assert.ok(!r.error.message.includes(v), "never echoed");
+  }
+  assert.equal(nf.calls.length, 0, "nothing left the process");
+  assert.deepEqual(["0x2::coin::Coin", "std::vector", "at 12:30:45", "ratio 1.5:100"].map(hasIpLiteral), [false, false, false, false]);
+  for (const [status, body, code] of [[429, { error: "rate_limited", detail: "Feature request limit reached (5 per caller per UTC day).", limit: 5, remaining: 0, reset: NOW }, "rate_limited"],
+    [400, { error: "bad_request", detail: "text (email_address)", problems: [{ field: "text", reason: "email_address" }] }, "bad_request"],
+    [503, { error: "storage_unavailable", detail: "We could not confirm that your feature request was saved." }, "storage_unavailable"]]) {
+    const r = await rpc(new PactaMcpServer({ x402Url: GW, fetchImpl: rec(() => mockRes(status, body)) }), "request_feature", { text: "Solana support" });
+    const e = bodyOf(r);
+    assert.deepEqual([r.result.isError, e.code, e.status], [true, code, status]);
+    if (status === 429) assert.deepEqual([e.limit, e.remaining, e.reset], [5, 0, NOW]);
+  }
+  const off = never();
+  const r0 = await rpc(new PactaMcpServer({ x402Url: "", fetchImpl: off }), "request_feature", { text: "Solana support" });
+  assert.deepEqual([r0.result.isError, bodyOf(r0).code], [true, "gateway_not_configured"]);
   assert.equal(off.calls.length, 0);
 });
 

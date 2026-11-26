@@ -38,12 +38,13 @@ import { lookupProtocols, parseLookupInput, LOOKUP_CATALOG, LOOKUP_TOTALS, LOOKU
 
 export const SERVER_INFO = Object.freeze({ name: "io.github.Fractal-Neurons/pacta", version: "0.1.6" });
 export const MCP_INSTRUCTIONS =
-  "Pacta by Fractal Neurons: 14 read-only, block-pinned inspection tools for EVM contracts (Ethereum, Base) + 1 opt-in request tool. To see who " +
+  "Pacta by Fractal Neurons: 14 read-only, block-pinned inspection tools for EVM contracts (Ethereum, Base) + 2 opt-in request tools. To see who " +
   "controls a contract or token (owner, admin, upgradeable proxy, timelock, multisig, can mint, can pause), call pacta_who_controls_contract with " +
   "chain + address. If you only have a protocol or token name (e.g. 'Aave', 'Ethena', 'USDe', 'Moonwell', 'kUSD'), call pacta_lookup_protocol first " +
   "to resolve its verified record and checksummed 0x contract address, then call pacta_check_preflight. Every value is pinned to a block hash. When " +
-  "a result carries coverage_gap_hint, ask the user before calling pacta_submit_request (the only tool that writes: it queues or upvotes a " +
-  "coverage / feature request; contact_handle only with the user's explicit consent). Not investment advice.";
+  "a result carries coverage_gap_hint, ask the user before calling pacta_submit_request (it queues or upvotes a coverage / feature request; " +
+  "contact_handle only with the user's explicit consent). To ask for a missing tool, chain, check or data, call request_feature (text only; never " +
+  "names, emails, IP addresses or secrets). Only these two tools write. Not investment advice.";
 export const SUPPORTED_PROTOCOL_VERSION = "2024-11-05";
 
 const REGISTRY = "0x35D21Bb4Df6586FE7759b5e57263ffeB3e1fd872";
@@ -209,6 +210,7 @@ export const TOOL_META = Object.freeze({
   pacta_scan_proposal_diff: Object.freeze({ resultType: "proposal_diff", ttlMs: 60000, cacheScope: "public" }),
   pacta_verdict: Object.freeze({ resultType: "x402_verdict", ttlMs: 300000, cacheScope: "public" }),
   pacta_dossier: Object.freeze({ resultType: "x402_dossier", ttlMs: 300000, cacheScope: "public" }),
+  request_feature: Object.freeze({ resultType: "feature_request_receipt", ttlMs: 0, cacheScope: "none" }),
   pacta_submit_request: Object.freeze({ resultType: "demand_receipt", ttlMs: 0, cacheScope: "none" }),
 });
 const TOOL_TITLES = Object.freeze({
@@ -280,6 +282,46 @@ export const WHO_CONTROLS_DESCRIPTION =
 /** Free (never x402) gateway route of pacta_who_controls_contract. */
 export const WHO_CONTROLS_PATH = "/v1/check";
 export const WHO_CONTROLS_SCHEMA = "pacta.who_controls.v1";
+/** request_feature: POST /v1/feature-request with {text, use_case?}; free, 5 per caller per UTC day. */
+export const FEATURE_REQUEST_PATH = "/v1/feature-request";
+export const FEATURE_REQUEST_DAILY_LIMIT = 5;
+// The hosted worker's feature-request content rules (no email address, no IP literal), checked locally before anything is sent.
+// FEATURE_EMAIL_RE .. hasIpLiteral below is worker.mjs's block byte for byte (list_feature_requests.py has_ip_literal is the
+// same rule), so the local pre-check and the worker refuse exactly the same texts.
+const FEATURE_EMAIL_RE = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/;
+// The coarse address filter: a refused request costs less than a stored address. The text and its %XX-decoded forms (2 rounds,
+// every %XX byte as its character, so %FF and "100% organic" never throw) are refused when one of them holds 4 dotted numbers
+// (192.168.1.1, ::ffff:192.0.2.1), or "::" anywhere once 0x<hex> tokens (contract addresses, base:0xabc, eip155:8453:0x...) and
+// whole Move / Rust paths (0x2::coin::Coin, std::vector, std::vec::Vec, Vec::new) are masked (every compressed IPv6, also
+// address:::1), or a run of 3+ hex groups joined by ":" once 24h clock times (12:30:45, also after a label with a letter outside
+// a-f: time:12:30:45, ETA:12:30:45) are masked (full IPv6, MAC addresses, fe80:12:30:45). Times like 12:30, ratios like 3:1 and
+// URLs with a port have one ":" and pass. list_feature_requests.py has_ip_literal is the same rule.
+const FEATURE_PCT_RE = /%([0-9A-Fa-f]{2})/g;
+const FEATURE_IPV4_RE = /(?<![0-9])(?:\d{1,3}\.){3}\d{1,3}(?![0-9])/;
+const FEATURE_OX_RE = /(?<!%)0[xX][0-9A-Fa-f]+/g;
+const FEATURE_SAFE_MOVE_RE = /(?<![:\w])_OX_(?:::[A-Za-z_][A-Za-z0-9_]*){2,}(?![:\w])/g;
+// an identifier with a letter outside a-f (or "_") anywhere in it: Vec, read, coin, _OX_; never dead, a, fe80
+const FEATURE_NS_SEG_NONHEX = "(?=[A-Za-z0-9_]*[G-Zg-z_])[A-Za-z_][A-Za-z0-9_]*";
+const FEATURE_SAFE_NS_RE = new RegExp("(?<!::)(?<![A-Za-z0-9_])(?:_OX_|" + FEATURE_NS_SEG_NONHEX + ")(?:::" + FEATURE_NS_SEG_NONHEX + ")+(?![:\\w])", "g");
+const FEATURE_TIME_RE = /(?<![0-9A-Fa-f:])(?:[01]?\d|2[0-3]):[0-5]\d:[0-5]\d(?![0-9A-Fa-f:])/g;
+// such an identifier as a label right before a clock time (time:12:30:45 -> "time 12:30:45"); a hex label (fe80:) never matches
+const FEATURE_TIME_LABEL_RE = new RegExp("(?<![A-Za-z0-9_])(" + FEATURE_NS_SEG_NONHEX + "):(?=(?:[01]?\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?![0-9A-Fa-f:]))", "g");
+const FEATURE_HEX_RUN_RE = /[0-9A-Fa-f]{1,4}(?::[0-9A-Fa-f]{1,4}){2,}/;
+/** true when the text could carry an IP address (the coarse filter above): the whole request is refused. */
+export function hasIpLiteral(raw) {
+  const texts = [raw];
+  for (let i = 0, cur = raw; i < 2; i++) {
+    cur = cur.replace(FEATURE_PCT_RE, (_, h) => String.fromCharCode(parseInt(h, 16)));
+    if (!texts.includes(cur)) texts.push(cur);
+  }
+  for (const t of texts) {
+    if (FEATURE_IPV4_RE.test(t)) return true;
+    const m = t.replace(FEATURE_OX_RE, "_OX_").replace(FEATURE_SAFE_MOVE_RE, "_NS_").replace(FEATURE_SAFE_NS_RE, "_NS_");
+    if (m.includes("::")) return true;
+    if (FEATURE_HEX_RUN_RE.test(m.replace(FEATURE_TIME_LABEL_RE, "$1 ").replace(FEATURE_TIME_RE, "_TIME_"))) return true;
+  }
+  return false;
+}
 
 export const WHO_CONTROLS_TOOL = readOnlyTool({
   name: "pacta_who_controls_contract",
@@ -396,8 +438,25 @@ export const LOOKUP_TOOL = Object.freeze({
   annotations: readOnlyAnnotations("Lookup Protocol or Token by Name"),
   _meta: TOOL_META.pacta_lookup_protocol,
 });
+export const FEATURE_TITLE = "Request a Pacta Feature or Tool";
+// Write tool #1: forwards {text, use_case?} to POST <gateway>/v1/feature-request (listed only with the gateway on; every string is checked
+// locally first, so a secret, email or IP literal never leaves the machine).
+export const FEATURE_TOOL = Object.freeze({
+  name: "request_feature",
+  title: FEATURE_TITLE,
+  description:
+    "Request a missing tool, chain, check or data: tell Pacta what your agent needs (text, optional use_case); we read every request daily. " +
+    "Never include names, emails, IP addresses, secrets or keys. Free: 5 per caller per UTC day.",
+  inputSchema: Object.freeze({ $schema: "https://json-schema.org/draft/2020-12/schema", type: "object", additionalProperties: false, required: ["text"],
+    properties: {
+      text: { type: "string", minLength: 1, maxLength: 1000, description: "What tool, chain, check, or data your agent needs (max 1000 characters)." },
+      use_case: { type: "string", maxLength: 500, description: "Optional: how your agent would use it (max 500 characters)." },
+    } }),
+  annotations: Object.freeze({ title: FEATURE_TITLE, readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false }),
+  _meta: TOOL_META.request_feature,
+});
 export const SUBMIT_TITLE = "Submit Pacta Coverage or Feature Request";
-// The one opt-in write tool: forwards to POST <gateway>/v1/requests (listed only with the gateway on; nothing leaves the process otherwise).
+// Write tool #2: forwards to POST <gateway>/v1/requests (listed only with the gateway on; nothing leaves the process otherwise).
 // Every string is checked locally first (demandGuard), so a secret never leaves the machine.
 export const SUBMIT_TOOL = Object.freeze({
   name: "pacta_submit_request",
@@ -412,15 +471,16 @@ export const SUBMIT_TOOL = Object.freeze({
   annotations: Object.freeze({ title: SUBMIT_TITLE, readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false }),
   _meta: TOOL_META.pacta_submit_request,
 });
-/** The 14 read-only inspection tools, then the opt-in request tool (pacta_submit_request). */
+/** The 14 read-only inspection tools, then the 2 opt-in request tools (request_feature, pacta_submit_request). */
 export const READ_ONLY_TOOLS = Object.freeze([LOOKUP_TOOL, WHO_CONTROLS_TOOL, ...FREE_TOOLS, ...PAID_TOOLS]);
-export const REQUEST_TOOLS = Object.freeze([SUBMIT_TOOL]);
+export const REQUEST_TOOLS = Object.freeze([FEATURE_TOOL, SUBMIT_TOOL]);
 export const TOOL_DEFINITIONS = Object.freeze([...READ_ONLY_TOOLS, ...REQUEST_TOOLS]);
 const LOCAL_TOOLS = Object.freeze([LOOKUP_TOOL, ...FREE_TOOLS]);
 /** Accepted alternative tool names (the hosted remote MCP's names / aliases); not listed. */
 export const TOOL_ALIASES = Object.freeze(Object.assign(Object.create(null), {
   pacta_get_live_timelocks: "pacta_live_timelocks",
   who_controls: "pacta_who_controls_contract",
+  pacta_request_feature: "request_feature",
 }));
 export const canonicalToolName = (name) =>
   typeof name === "string" && Object.prototype.hasOwnProperty.call(TOOL_ALIASES, name) ? TOOL_ALIASES[name] : name;
@@ -715,6 +775,45 @@ export class PactaMcpServer {
     return this._paid(routeSpec, query, args, { forwardCaller: false });
   }
 
+  /** request_feature: local checks ({text, use_case?} only; secrets, HTML, emails and IP literals refused), then POST /v1/feature-request. */
+  async _feature(args) {
+    const problems = [];
+    for (const k of Object.keys(args)) if (k !== "text" && k !== "use_case") problems.push(`${String(k).slice(0, 40)} (unknown_field)`);
+    const norm = (v) => v.replace(/\r\n|\r|\n|\t/g, " ").replace(/\s+/g, " ").trim();
+    const check = (v) => demandGuard(v) || (FEATURE_EMAIL_RE.test(v) ? "email_address" : hasIpLiteral(v) ? "ip_address" : null);
+    let text = null, useCase = null;
+    if (args.text === undefined || args.text === null) problems.push("text (missing)");
+    else if (typeof args.text !== "string") problems.push("text (not_a_string)");
+    else {
+      const v = norm(args.text), p = !v ? "missing" : v.length > 1000 ? "too_long" : check(v);
+      if (p) problems.push(`text (${p})`); else text = v;
+    }
+    if (args.use_case !== undefined && args.use_case !== null) {
+      if (typeof args.use_case !== "string") problems.push("use_case (not_a_string)");
+      else {
+        const v = norm(args.use_case);
+        if (v) { const p = v.length > 500 ? "too_long" : check(v); if (p) problems.push(`use_case (${p})`); else useCase = v; }
+      }
+    }
+    if (problems.length) {
+      throw Object.assign(new Error("request_feature refused locally (nothing was sent): " + problems.join("; ") +
+        (problems.some((p) => p.endsWith("(ip_address)")) ? "; please remove addresses and resend" : "") +
+        ". Send {text, use_case?} only; never include names, emails, IP addresses, secrets or keys."), { code: -32602 });
+    }
+    if (!this.x402Url) {
+      throw new X402Error("gateway_not_configured", `request_feature forwards to POST <PACTA_X402_URL>${FEATURE_REQUEST_PATH}, and PACTA_X402_URL is set to an empty value: unset it (default ${X402_DEFAULTS.gatewayUrl}) or set PACTA_X402_URL=${X402_DEFAULTS.gatewayUrl} (nothing was sent).`);
+    }
+    const body = useCase ? { text, use_case: useCase } : { text };
+    const url = new URL(FEATURE_REQUEST_PATH, this.x402Url).toString();
+    const { res, text: out } = await fetchTextWithTimeout(this.fetchImpl, url,
+      { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(body), redirect: "error" },
+      { timeoutMs: this.timeoutMs });
+    let data = null;
+    try { data = JSON.parse(out); } catch { /* handled below */ }
+    if (res.status === 200 && isPlainObject(data) && data.ok === true && typeof data.request_id === "string") return { ...data, source: "gateway" };
+    throw this._gatewayError(`POST ${FEATURE_REQUEST_PATH}`, res, data);
+  }
+
   async callTool(name, args = {}) {
     name = canonicalToolName(name);
     if (!args || typeof args !== "object" || Array.isArray(args)) {
@@ -727,6 +826,9 @@ export class PactaMcpServer {
 
       case "pacta_submit_request":
         return this._submit(args);
+
+      case "request_feature":
+        return this._feature(args);
 
       case "pacta_who_controls_contract":
         return this._whoControls(args);

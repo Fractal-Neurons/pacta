@@ -5503,6 +5503,7 @@ def llms(idx, radar):
         "## API & MCP for agents (free daily tier + Base USDC x402)",
         f"- Remote MCP (Streamable HTTP, zero install): {MCP_URL} · Claude Code: `claude mcp add --transport http pacta {MCP_URL}` · Cursor: `{{\"mcpServers\": {{\"pacta\": {{\"url\": \"{MCP_URL}\"}}}}}}`. Tools ({B2A.LLMS_REMOTE_TOOLS_DOC}): {', '.join(B2A.LLMS_REMOTE_TOOLS)}. Local stdio server: {STDIO_TOOLS_DOC}.",
         "- " + B2A.LLMS_WHO_CONTROLS_DOC,
+        "- " + B2A.LLMS_FEATURE_DOC,
         "- " + B2A.CALLER_FIELDS_DOC,
         "- " + B2A.LLMS_FREE_TIER_DOC,
         "- " + B2A.FREE_X402_DOC,

@@ -3232,9 +3232,9 @@ def main(argv=None):
             re.search(r'^USER node$\n(?:.*\n)*?^CMD \["node", "/app/bin/pacta-mcp\.mjs"\]$', read(f), re.M) is not None and not re.search(r"^ENTRYPOINT", read(f), re.M)
             for f in ("Dockerfile", "packages/mcp-server/Dockerfile")),
         "glama maintainers": json.loads(read("glama.json"))["maintainers"] == ["pacta-fractal-neurons"],
-        # Pack 2: the stdio server lists 14 read-only + 1 opt-in request tool (adds pacta_who_controls_contract, pacta_verdict, pacta_dossier)
-        "7 + 1 remote / 14 + 1 stdio tools": "7 read-only inspection tools + 1 opt-in coverage/feature request tool (`pacta_submit_request`), led by `pacta_lookup_protocol`" in read("README.md")
-            and "14 read-only inspection tools + 1 opt-in request tool" in read("README.md") and "11 read-only inspection tools" not in read("README.md")
+        # Pack 2: the stdio server lists 14 read-only + 2 opt-in request tools (adds pacta_who_controls_contract, pacta_verdict, pacta_dossier, request_feature)
+        "7 + 1 remote / 14 + 2 stdio tools": "7 read-only inspection tools + 1 opt-in coverage/feature request tool (`pacta_submit_request`), led by `pacta_lookup_protocol`" in read("README.md")
+            and "14 read-only inspection tools + 2 opt-in request tools" in read("README.md") and "11 read-only inspection tools" not in read("README.md")
             and "`pacta_live_timelocks`" in read("README.md") and "7 read-only inspection tools led by pacta_lookup_protocol + 1 opt-in request tool" in read("smithery.yaml")
             and "Remote MCP (7 read-only inspection tools + 1 opt-in coverage/feature request tool (pacta_submit_request))" in home
             and "Remote MCP (7 read-only inspection tools + 1 opt-in coverage/feature request tool (pacta_submit_request))" in req_page,
@@ -3465,24 +3465,24 @@ def main(argv=None):
             and cov in read("README.md") and all(cov in t for r, t in pages.items() if 'class="ftr"' in t) and f"{cov}." in read("docs/llms.txt"),
         "0 stale 'Indexed Records' lines": not [r for r, t in pages.items() if "Indexed Records" in t] and "Indexed Records" not in read("README.md")
             and "Indexed Records" not in read("docs/llms.txt"),
-        # Pack 1a / Pack 2: llms.txt / llms-full.txt list the remote MCP's 11 tools (10 read-only + 1 request tool: pacta_who_controls_contract,
-        # pacta_verdict, pacta_dossier added) and state GET /v1/check; SKILL.md keeps the 7 + 1 wording
+        # Pack 1a / Pack 2: llms.txt / llms-full.txt list the remote MCP's 12 tools (10 read-only + 2 request tools: pacta_who_controls_contract,
+        # pacta_verdict, pacta_dossier, request_feature added) and state GET /v1/check + POST /v1/feature-request; SKILL.md keeps the 7 + 1 wording
         # of the shared B2A constants
         "6 + 1 remote / 10 + 1 stdio wording": all(B2AV.LLMS_REMOTE_TOOLS_DOC in read(f) and ", ".join(B2AV.LLMS_REMOTE_TOOLS) in read(f)
-                                                   and B2AV.LLMS_WHO_CONTROLS_DOC in read(f)
+                                                   and B2AV.LLMS_WHO_CONTROLS_DOC in read(f) and B2AV.LLMS_FEATURE_DOC in read(f)
                                                    for f in ("docs/llms.txt", "docs/llms-full.txt"))
             and B2AV.LLMS_REMOTE_TOOLS == ["pacta_lookup_protocol", "pacta_who_controls_contract", "pacta_check_preflight", "pacta_scan_wallet_exposure",
                                            "pacta_scan_control_plane", "pacta_scan_timelock_op", "pacta_scan_proposal_diff", "pacta_get_live_timelocks",
-                                           "pacta_verdict", "pacta_dossier", "pacta_submit_request"]
-            and B2AV.LLMS_REMOTE_TOOLS_DOC == "10 read-only inspection tools + 1 opt-in request tool (pacta_submit_request)"
+                                           "pacta_verdict", "pacta_dossier", "pacta_submit_request", "request_feature"]
+            and B2AV.LLMS_REMOTE_TOOLS_DOC == "10 read-only inspection tools + 2 opt-in request tools (pacta_submit_request, request_feature)"
             and all(html.escape(x, quote=False) in read("docs/llms/index.html") or x in read("docs/llms/index.html")
-                    for x in (B2AV.LLMS_REMOTE_TOOLS_DOC, B2AV.LLMS_WHO_CONTROLS_DOC))
+                    for x in (B2AV.LLMS_REMOTE_TOOLS_DOC, B2AV.LLMS_WHO_CONTROLS_DOC, B2AV.LLMS_FEATURE_DOC))
             and B2AV.REMOTE_TOOLS_DOC in read("docs/SKILL.md")
             and all(B2AV.STDIO_TOOLS_DOC in read(f) for f in ("docs/llms.txt", "docs/llms-full.txt"))
             and not re.search(r"all read-only|Everything is read-only", read("docs/llms.txt") + read("docs/SKILL.md") + read("docs/llms-full.txt")),
-        # Pack 2: the stdio list (MCP_TOOLS) has 15 tools, exactly 1 of them writes (pacta_submit_request)
+        # Pack 2: the stdio list (MCP_TOOLS) has 16 tools, exactly 2 of them write (request_feature, pacta_submit_request)
         "mcp.json lists 8 remote tools + readOnly flags": man_["transport"]["tools"] == B2AV.REMOTE_TOOLS and len(B2AV.REMOTE_TOOLS) == 8
-            and len(man_["tools"]) == 15 and [t["name"] for t in man_["tools"] if not t["readOnly"]] == ["pacta_submit_request"],
+            and len(man_["tools"]) == 16 and [t["name"] for t in man_["tools"] if not t["readOnly"]] == ["request_feature", "pacta_submit_request"],
         "radar: live note + each timelock on its own chain's explorer (Etherscan / Basescan)": "Block-pinned timelock queue — auto-rechecked via RPC in your browser" in home
             and all(f'{BS.EXPLORERS[BS.radar_chain(it, rad)][1]}/address/{it["timelock"]}' in (home if BS.item_state(it) != "executed" else read("docs/radar/index.html"))
                     for it in rad["items"])

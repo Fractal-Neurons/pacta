@@ -48,7 +48,7 @@ test("in-process tools/list + tools/call: valid 402 challenge, rogue 402 rejecte
     },
   });
   const list = await srv.handleMessage({ jsonrpc: "2.0", id: 1, method: "tools/list" });
-  assert.equal(list.result.tools.length, 15);
+  assert.equal(list.result.tools.length, 16);
   const tl = list.result.tools.find((t) => t.name === "pacta_scan_timelock_op");
   assert.deepEqual(Object.keys(tl.inputSchema.properties), ["chain", "timelock", "opId"], "clean schema: payment arguments are accepted, never listed");
 
@@ -153,7 +153,7 @@ test("stdio stream wrapper: initialize + tools/list + structured paid error", as
   const lines = await out.waitFor(4);
   h.close();
   assert.equal(lines[0].result.serverInfo.name, "io.github.Fractal-Neurons/pacta");
-  assert.equal(lines[1].result.tools.length, 15);
+  assert.equal(lines[1].result.tools.length, 16);
   const err = JSON.parse(lines[2].result.content[0].text);
   assert.equal(lines[2].result.isError, true);
   assert.equal(err.code, "upstream_http_error");
@@ -205,12 +205,12 @@ test("bin/pacta-mcp.mjs over stdio file descriptors (no sockets, no listener): i
     assert.equal(lines[0].id, 1);
     assert.equal(lines[0].result.protocolVersion, "2024-11-05");
     assert.equal(lines[1].id, 2);
-    // PACTA_X402_URL unset: the gateway is on by default (https://api.pacta.wtf), so all 15 tools are listed (tools/list sends nothing)
+    // PACTA_X402_URL unset: the gateway is on by default (https://api.pacta.wtf), so all 16 tools are listed (tools/list sends nothing)
     assert.deepEqual(
       lines[1].result.tools.map((t) => t.name),
       ["pacta_lookup_protocol", "pacta_who_controls_contract", "pacta_list_commitments", "pacta_list_proposals", "pacta_get_anchoring", "pacta_x402_discover",
         "pacta_check_preflight", "pacta_scan_wallet_exposure", "pacta_scan_control_plane", "pacta_live_timelocks", "pacta_scan_timelock_op",
-        "pacta_scan_proposal_diff", "pacta_verdict", "pacta_dossier", "pacta_submit_request"]
+        "pacta_scan_proposal_diff", "pacta_verdict", "pacta_dossier", "request_feature", "pacta_submit_request"]
     );
   } finally {
     scratch.cleanup();

@@ -49,11 +49,12 @@ PRICING_MODES = {"reads": PRICING_MODE, "/v1/check/preflight": METERED_MODE, "/v
 RATE_LIMIT_PER_MIN = 60
 REMOTE_READ_ONLY_TOOLS = ["pacta_lookup_protocol", "pacta_check_preflight", "pacta_scan_wallet_exposure", "pacta_scan_control_plane", "pacta_scan_timelock_op", "pacta_scan_proposal_diff", "pacta_get_live_timelocks"]
 REQUEST_TOOL = "pacta_submit_request"                              # opt-in write tool (remote + stdio): queue / upvote a request
-STDIO_REQUEST_TOOLS = (REQUEST_TOOL,)                              # the stdio tool that writes (readOnly false in mcp.json)
+FEATURE_TOOL = "request_feature"                                   # opt-in write tool (remote + stdio): free-text feature request
+STDIO_REQUEST_TOOLS = (FEATURE_TOOL, REQUEST_TOOL)                 # the 2 stdio tools that write (readOnly false in mcp.json)
 REMOTE_TOOLS = REMOTE_READ_ONLY_TOOLS + [REQUEST_TOOL]
 REQUESTS_URL = "https://api.pacta.wtf/v1/requests"
 REMOTE_TOOLS_DOC = "7 read-only inspection tools + 1 opt-in coverage/feature request tool (pacta_submit_request)"
-STDIO_TOOLS_DOC = "14 read-only inspection tools + 1 opt-in request tool"
+STDIO_TOOLS_DOC = "14 read-only inspection tools + 2 opt-in request tools"
 BRAND = "Pacta by Fractal Neurons (https://pacta.wtf · pacta.base.eth)"
 # Brand / RAG disambiguation (receipt/1817): never call this project by the two-word name of the dormant escrow project.
 DISAMBIGUATION = ("Disambiguation: Pacta, by Fractal Neurons (https://pacta.wtf, pacta.base.eth, io.github.Fractal-Neurons/pacta) is the EVM DeFi "
@@ -319,6 +320,7 @@ MCP_TOOLS = [("pacta_lookup_protocol", "free", "Resolve a protocol or token name
              ("pacta_scan_proposal_diff", "free, $0.00", "Re-run a tracked governance proposal's pinned reads live, pinned-vs-live diffs (forum, topicId)"),
              ("pacta_verdict", "x402 $0.02", "Contract / token control-plane verdict: verdict, riskScore and grade, capability flags, controller, pinned block (slug, or chain + address; 100/day free quota)"),
              ("pacta_dossier", "x402 $0.05", "Protocol control-plane dossier: Safe signers and threshold, cross-protocol signer overlap, Base EAS proof (slug, or chain + address; 100/day free quota)"),
+             ("request_feature", "free, 5/day", "Opt-in (writes): tell Pacta what tool, chain, check or data your agent needs (text, use_case; never names, emails, IPs or secrets); forwards to POST /v1/feature-request"),
              ("pacta_submit_request", "free", "Opt-in (writes): queue or upvote a coverage / feature request after a coverage_gap_hint, with the user's consent; forwards to POST /v1/requests")]
 X402_ROUTES = [("/v1/check/preflight?chain=ethereum|base&address=0x…", "10000", "$0.01"),
                ("/v1/check/wallet-exposure?address=0x…&chain=ethereum|base|all", "10000", "$0.01"),
@@ -364,6 +366,7 @@ def llms_full(idx, radar, prop, onb, pinned=None):
          f"- Remote MCP (primary, zero install, Streamable HTTP): {MCP_REMOTE_URL} · Claude Code: `claude mcp add --transport http pacta {MCP_REMOTE_URL}` · "
          f"MCP client config: {{\"mcpServers\": {{\"pacta\": {{\"url\": \"{MCP_REMOTE_URL}\"}}}}}} · remote tools ({LLMS_REMOTE_TOOLS_DOC}): {', '.join(LLMS_REMOTE_TOOLS)}.",
          f"- {LLMS_WHO_CONTROLS_DOC}",
+         f"- {LLMS_FEATURE_DOC}",
          f"- Local stdio server (from a clone of the repository): `{STDIO_FROM_SOURCE}`. OpenAPI 3.1: {OPENAPI_URL}.",
          f"- {CALLER_FIELDS_DOC}",
          f"- One call: `curl -s -A \"my-agent/1.0\" \"{X402_URL}/v1/check/preflight?chain=ethereum&address=0x...\"`. {UA_DOC} Every response carries "
@@ -561,13 +564,17 @@ FREE_X402_DAILY_QUOTA = 100
 FREE_X402_MCP_TOOLS = ["pacta_verdict", "pacta_dossier"]
 WHO_CONTROLS_TOOL = "pacta_who_controls_contract"
 WHO_CONTROLS_DAILY_QUOTA = 100
-# The remote MCP's 11 tools (10 read-only + 1 request tool), as the llms texts state them; SKILL.md / .well-known keep the shared REMOTE_TOOLS.
-LLMS_REMOTE_TOOLS = ([REMOTE_READ_ONLY_TOOLS[0], WHO_CONTROLS_TOOL] + REMOTE_READ_ONLY_TOOLS[1:] + FREE_X402_MCP_TOOLS + [REQUEST_TOOL])
-LLMS_REMOTE_TOOLS_DOC = "10 read-only inspection tools + 1 opt-in request tool (pacta_submit_request)"
+FEATURE_REQUEST_DAILY_LIMIT = 5
+# The remote MCP's 12 tools (10 read-only + 2 request tools), as the llms texts state them; SKILL.md / .well-known keep the shared REMOTE_TOOLS.
+LLMS_REMOTE_TOOLS = ([REMOTE_READ_ONLY_TOOLS[0], WHO_CONTROLS_TOOL] + REMOTE_READ_ONLY_TOOLS[1:] + FREE_X402_MCP_TOOLS + [REQUEST_TOOL, FEATURE_TOOL])
+LLMS_REMOTE_TOOLS_DOC = "10 read-only inspection tools + 2 opt-in request tools (pacta_submit_request, request_feature)"
 LLMS_WHO_CONTROLS_DOC = (f"Who controls this contract (free): GET {X402_URL}/v1/check?chain=ethereum|base&address=0x... and the MCP tool {WHO_CONTROLS_TOOL} "
                          "(chain, address): owner, admin, upgradeable proxy, timelock, multisig, can mint, can pause, as block-pinned chain facts confirmed by two "
                          "independent RPC providers, with Foundry cast commands; never guesses or rates. "
                          f"Free: {WHO_CONTROLS_DAILY_QUOTA} calls per caller per UTC day (no key, no payment).")
+LLMS_FEATURE_DOC = (f"Feature requests (free): the MCP tool {FEATURE_TOOL} or POST {X402_URL}/v1/feature-request with a JSON body {{text, use_case?}} "
+                    "(text up to 1000 characters, use_case up to 500): tell Pacta what tool, chain, check or data your agent needs; read daily. Never include "
+                    f"names, emails, IP addresses, secrets or keys. Free: {FEATURE_REQUEST_DAILY_LIMIT} per caller per UTC day.")
 FREE_X402_DOC = (f"Free x402 tier: {X402_PUBLIC}/v1/x402/verdict, /v1/x402/dossier and /v1/x402/wallet-exposure, and the MCP tools pacta_verdict, pacta_dossier "
                  f"and pacta_scan_wallet_exposure, are free for {FREE_X402_DAILY_QUOTA} calls per caller per UTC day per tool (no key, no payment; REST and MCP share each "
                  "tool's quota; X-Meter-Limit / X-Meter-Remaining / X-Meter-Reset headers and a meter object; free wallet-exposure calls may also "
@@ -598,8 +605,8 @@ homepage: {BASE}/
 
 Use this skill when a task involves DeFi collateral risk, governance or upgrade authority, timelocks, Safe quorums or roles,
 or a live collateral onboarding proposal. Pacta publishes {m['records_indexed']} attested checks across {m['sprints_completed']} Base EAS batch attestations and
-{len(prop['proposals'])} governance proposals mapped to on-chain state. Every inspection tool is read-only and free; one opt-in tool,
-`pacta_submit_request`, queues a coverage / feature request with the user's consent.
+{len(prop['proposals'])} governance proposals mapped to on-chain state. Every inspection tool is read-only and free; two opt-in tools write:
+`pacta_submit_request` queues a coverage / feature request with the user's consent, and `request_feature` sends a free-text feature request.
 
 ## Pre-execution API (free daily tier, no API key; deep routes paid in Base USDC)
 - Remote MCP, zero install: `{MCP_REMOTE_URL}` (Streamable HTTP). Claude Code: `claude mcp add --transport http pacta {MCP_REMOTE_URL}`.

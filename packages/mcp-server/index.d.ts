@@ -175,12 +175,19 @@ export declare const TOOL_DEFINITIONS: ReadonlyArray<Record<string, unknown>>;
 export declare const READ_ONLY_TOOLS: ReadonlyArray<Record<string, unknown>>;
 /** pacta_who_controls_contract: GET <PACTA_X402_URL>/v1/check?chain=&address= (free, 100 calls per caller per UTC day). */
 export declare const WHO_CONTROLS_TOOL: Readonly<Record<string, unknown>>;
-/** The opt-in write tool: pacta_submit_request. */
+/** The 2 opt-in write tools: request_feature, pacta_submit_request. */
 export declare const REQUEST_TOOLS: ReadonlyArray<Record<string, unknown>>;
+/** Opt-in write tool: request_feature (forwards {text, use_case?} to POST <PACTA_X402_URL>/v1/feature-request; 5 per caller per UTC day). */
+export declare const FEATURE_TOOL: Readonly<Record<string, unknown>>;
 /** Opt-in write tool: pacta_submit_request (forwards to POST <PACTA_X402_URL>/v1/requests). */
 export declare const SUBMIT_TOOL: Readonly<Record<string, unknown>>;
 /** x402 payment arguments every gateway tool accepts in tools/call; no inputSchema lists them. */
 export declare const PAYMENT_ARGUMENTS: ReadonlyArray<string>;
+/** true when a string could hold an address (the hosted worker's coarse filter): the text or its %XX-decoded forms hold 4
+ *  dotted numbers, or "::" once 0x<hex> tokens and Move / Rust paths (0x2::coin::Coin, std::vector, sui::coin) are masked, or
+ *  3 or more 1-4 digit hex groups joined by ":" outside HH:MM:SS clock times. 0x addresses, chain:address (base:0xabc), 12:30,
+ *  12:30:45, 3:1, URLs with a port and @openzeppelin/contracts are not refused. */
+export declare function hasIpLiteral(raw: string): boolean;
 /** tools/list _meta per tool name: { resultType, ttlMs, cacheScope }. */
 export declare const TOOL_META: Readonly<Record<string, Readonly<{ resultType: string; ttlMs: number; cacheScope: "public" | "none" }>>>;
 /** Exact hint added to lookup misses (and, on the gateway, to unindexed / unclassified pre-flights). */

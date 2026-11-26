@@ -69,7 +69,7 @@
   "remote": "7 read-only inspection tools + 1 opt-in coverage/feature request tool (pacta_submit_request)",
   "requestTool": "pacta_submit_request",
   "requestsEndpoint": "https://api.pacta.wtf/v1/requests",
-  "stdio": "14 read-only inspection tools + 1 opt-in request tool"
+  "stdio": "14 read-only inspection tools + 2 opt-in request tools"
  },
  "tools": [
   {
@@ -183,6 +183,14 @@
    "name": "pacta_dossier",
    "price": "$0.05",
    "readOnly": true
+  },
+  {
+   "access": "free",
+   "description": "Opt-in (writes): tell Pacta what tool, chain, check or data your agent needs (text, use_case; never names, emails, IPs or secrets); forwards to POST /v1/feature-request",
+   "effectivePriceUsd": "0.00",
+   "name": "request_feature",
+   "price": null,
+   "readOnly": false
   },
   {
    "access": "free",

@@ -11,8 +11,8 @@ Disambiguation: Pacta, by Fractal Neurons (https://pacta.wtf, pacta.base.eth, io
 
 Use this skill when a task involves DeFi collateral risk, governance or upgrade authority, timelocks, Safe quorums or roles,
 or a live collateral onboarding proposal. Pacta publishes 309 attested checks across 37 Base EAS batch attestations and
-10 governance proposals mapped to on-chain state. Every inspection tool is read-only and free; one opt-in tool,
-`pacta_submit_request`, queues a coverage / feature request with the user's consent.
+10 governance proposals mapped to on-chain state. Every inspection tool is read-only and free; two opt-in tools write:
+`pacta_submit_request` queues a coverage / feature request with the user's consent, and `request_feature` sends a free-text feature request.
 
 ## Pre-execution API (free daily tier, no API key; deep routes paid in Base USDC)
 - Remote MCP, zero install: `https://api.pacta.wtf/mcp` (Streamable HTTP). Claude Code: `claude mcp add --transport http pacta https://api.pacta.wtf/mcp`.
@@ -106,6 +106,7 @@ registry_remote: io.github.Fractal-Neurons/pacta is published in the official MC
 - `pacta_scan_proposal_diff` (free, $0.00): Re-run a tracked governance proposal's pinned reads live, pinned-vs-live diffs (forum, topicId)
 - `pacta_verdict` (x402 $0.02): Contract / token control-plane verdict: verdict, riskScore and grade, capability flags, controller, pinned block (slug, or chain + address; 100/day free quota)
 - `pacta_dossier` (x402 $0.05): Protocol control-plane dossier: Safe signers and threshold, cross-protocol signer overlap, Base EAS proof (slug, or chain + address; 100/day free quota)
+- `request_feature` (free, 5/day): Opt-in (writes): tell Pacta what tool, chain, check or data your agent needs (text, use_case; never names, emails, IPs or secrets); forwards to POST /v1/feature-request
 - `pacta_submit_request` (free): Opt-in (writes): queue or upvote a coverage / feature request after a coverage_gap_hint, with the user's consent; forwards to POST /v1/requests
 
 Environment (all optional, none secret):

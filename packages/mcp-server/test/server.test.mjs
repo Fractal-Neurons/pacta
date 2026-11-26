@@ -71,7 +71,7 @@ const mockJson = (status, body, headers = {}) => {
   };
 };
 
-test("default mode (PACTA_X402_URL unset): the gateway https://api.pacta.wtf is on, all 15 tools listed with clean schemas, tools/list sends nothing", async () => {
+test("default mode (PACTA_X402_URL unset): the gateway https://api.pacta.wtf is on, all 16 tools listed with clean schemas, tools/list sends nothing", async () => {
   assert.equal(X402_DEFAULTS.defaultBaseUrl, "https://api.pacta.wtf");
   assert.equal(X402_DEFAULTS.gatewayUrl, "https://api.pacta.wtf");
   assert.equal(X402_DEFAULTS.deploymentStatus, "live_opt_in");
@@ -80,7 +80,7 @@ test("default mode (PACTA_X402_URL unset): the gateway https://api.pacta.wtf is 
   const srv = new PactaMcpServer({ indexData: FIXTURE, fetchImpl: async (u) => { seen.push(String(u)); throw new Error("no network in this test"); } });
   assert.equal(srv.x402Url, "https://api.pacta.wtf");
   const list = await srv.handleMessage({ jsonrpc: "2.0", id: 1, method: "tools/list" });
-  assert.equal(list.result.tools.length, 15);
+  assert.equal(list.result.tools.length, 16);
   const NINE = ["xPaymentHeader", "paymentSignatureHeader", "x402Version", "payer", "validBeforeSeconds", "nonce", "caller_agent", "requester_role", "caller_purpose"];
   for (const t of list.result.tools) {
     assert.ok(!NINE.some((k) => k in (t.inputSchema.properties || {})), `${t.name}: 0 payment / caller fields in inputSchema`);
@@ -138,7 +138,7 @@ test("gateway off (x402Url \"\" or PACTA_X402_URL=\"\") exposes only the 5 local
   assert.ok(paidAttempt.result.content[0].text.includes("https://api.pacta.wtf"));
 });
 
-test("setting PACTA_X402_URL enables all 15 tools (lookup + who-controls + 4 local + 8 gateway + 1 request tool) and live discovery", async () => {
+test("setting PACTA_X402_URL enables all 16 tools (lookup + who-controls + 4 local + 8 gateway + 2 request tools) and live discovery", async () => {
   const srv = new PactaMcpServer({
     indexData: FIXTURE,
     x402Url: TEST_X402_URL,
@@ -148,7 +148,7 @@ test("setting PACTA_X402_URL enables all 15 tools (lookup + who-controls + 4 loc
         : mockJson(200, { chain: "base" }),
   });
   const list = await srv.handleMessage({ jsonrpc: "2.0", id: 1, method: "tools/list" });
-  assert.equal(list.result.tools.length, 15);
+  assert.equal(list.result.tools.length, 16);
 
   const out = await srv.callTool("pacta_x402_discover");
   assert.equal(out.enabled, true);
