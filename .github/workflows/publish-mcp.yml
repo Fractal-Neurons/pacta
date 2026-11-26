@@ -1,8 +1,10 @@
 # Publishes the remotes-only manifest io.github.Fractal-Neurons/pacta (packages/mcp-server/server.remote.json: the
-# Streamable HTTP endpoint https://pacta-x402.pacta.workers.dev/mcp, no npm package) to registry.modelcontextprotocol.io.
+# Streamable HTTP endpoint https://api.pacta.wtf/mcp, no npm package) to registry.modelcontextprotocol.io.
 # Auth is GitHub OIDC (id-token: write): no secrets, no PATs. mcp-publisher is a pinned release, checked against a pinned
 # SHA-256 and the release's own checksums file before it runs. The registry rejects re-publishing an existing version,
-# so bump "version" in server.remote.json (and server.json) to publish an update.
+# so bump "version" in server.remote.json (and server.json) to publish an update. A re-run (workflow_dispatch) skips the
+# publish only while the registry already lists that exact version as active; then the superseded versions 0.1.1, 0.1.3,
+# 0.1.4, 0.1.5 and 0.1.6 are marked deleted (one already marked deleted is skipped). A failed registry read fails the run.
 name: Publish remote MCP server to the MCP Registry
 
 on:
@@ -54,9 +56,31 @@ jobs:
           mkdir -p "$ws"
           cp packages/mcp-server/server.remote.json "$ws/server.json"
 
-      - name: Log in with GitHub OIDC and publish io.github.Fractal-Neurons/pacta
+      - name: Log in with GitHub OIDC, publish io.github.Fractal-Neurons/pacta and mark the superseded versions deleted
         run: |
           set -euo pipefail
           cd "$RUNNER_TEMP/mcp-registry"
           mcp-publisher login github-oidc
-          mcp-publisher publish
+          versions="https://registry.modelcontextprotocol.io/v0.1/servers/io.github.Fractal-Neurons%2Fpacta/versions"
+          # the registry status of one version (active, deprecated or deleted), or none when the registry has no such version;
+          # any other answer (a network error, HTTP 5xx, a body without a status) fails the step
+          registry_status() {
+            code="$(curl -sS --retry 3 -o "$RUNNER_TEMP/registry-version.json" -w '%{http_code}' "$versions/$1?include_deleted=true")" || true
+            case "$code" in
+              200) jq -er '._meta["io.modelcontextprotocol.registry/official"].status' "$RUNNER_TEMP/registry-version.json" ;;
+              404) echo none ;;
+              *) echo "registry answered HTTP ${code:-none} for version $1" >&2; return 1 ;;
+            esac
+          }
+          version="$(jq -er .version server.json)"
+          state="$(registry_status "$version")"
+          if [ "$state" = "active" ]; then
+            echo "io.github.Fractal-Neurons/pacta $version is already active in the registry: nothing to publish"
+          else
+            mcp-publisher publish
+          fi
+          for ver in 0.1.1 0.1.3 0.1.4 0.1.5 0.1.6; do
+            state="$(registry_status "$ver")"
+            if [ "$state" = "deleted" ]; then echo "io.github.Fractal-Neurons/pacta $ver is already marked deleted"; continue; fi
+            mcp-publisher status --status deleted --message "Superseded by 0.1.7 on https://api.pacta.wtf/mcp" io.github.Fractal-Neurons/pacta "$ver"
+          done

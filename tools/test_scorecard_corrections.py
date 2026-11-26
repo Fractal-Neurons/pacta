@@ -895,6 +895,51 @@ class Scorecard87(unittest.TestCase):
     # verify_site_v2.py, so app.src.js / app.js are held to BASE + the moves above at WATCH_BASE; docs/styles.css keeps BASE + FOCUS_MOVE
     # as an untouched prefix and only gains rules at its end for the /watch/ and /check/ classes (WATCH_CSS_TAIL).
     WATCH_BASE = "55fbbe5b6dfb157786c015b8692c8f117d401419"
+    # MCP 0.1.7: .github/workflows/publish-mcp.yml names the api.pacta.wtf endpoint, documents a re-run, and its last step skips
+    # the publish of a version the registry already lists as active, then marks the superseded registry versions deleted
+    # (PUBLISH_WORKFLOW_MOVES, each old text exactly once in BASE). Nothing else of it, or of any other workflow, moved.
+    PUBLISH_WORKFLOW_MOVES = (
+        (('# Streamable HTTP endpoint https://pacta-x402.pacta.workers.dev/mcp, no npm package) to registry.modelcontextprotocol.io.\n'),
+         ('# Streamable HTTP endpoint https://api.pacta.wtf/mcp, no npm package) to registry.modelcontextprotocol.io.\n')),
+        (('# so bump "version" in server.remote.json (and server.json) to publish an update.\n'),
+         ('# so bump "version" in server.remote.json (and server.json) to publish an update. A re-run (workflow_dispatch) skips the\n'
+         '# publish only while the registry already lists that exact version as active; then the superseded versions 0.1.1, 0.1.3,\n'
+         '# 0.1.4, 0.1.5 and 0.1.6 are marked deleted (one already marked deleted is skipped). A failed registry read fails the run.\n')),
+        (('      - name: Log in with GitHub OIDC and publish io.github.Fractal-Neurons/pacta\n'
+         '        run: |\n'
+         '          set -euo pipefail\n'
+         '          cd "$RUNNER_TEMP/mcp-registry"\n'
+         '          mcp-publisher login github-oidc\n'
+         '          mcp-publisher publish\n'),
+         ('      - name: Log in with GitHub OIDC, publish io.github.Fractal-Neurons/pacta and mark the superseded versions deleted\n'
+         '        run: |\n'
+         '          set -euo pipefail\n'
+         '          cd "$RUNNER_TEMP/mcp-registry"\n'
+         '          mcp-publisher login github-oidc\n'
+         '          versions="https://registry.modelcontextprotocol.io/v0.1/servers/io.github.Fractal-Neurons%2Fpacta/versions"\n'
+         '          # the registry status of one version (active, deprecated or deleted), or none when the registry has no such version;\n'
+         '          # any other answer (a network error, HTTP 5xx, a body without a status) fails the step\n'
+         '          registry_status() {\n'
+         '            code="$(curl -sS --retry 3 -o "$RUNNER_TEMP/registry-version.json" -w \'%{http_code}\' "$versions/$1?include_deleted=true")" || true\n'
+         '            case "$code" in\n'
+         '              200) jq -er \'._meta["io.modelcontextprotocol.registry/official"].status\' "$RUNNER_TEMP/registry-version.json" ;;\n'
+         '              404) echo none ;;\n'
+         '              *) echo "registry answered HTTP ${code:-none} for version $1" >&2; return 1 ;;\n'
+         '            esac\n'
+         '          }\n'
+         '          version="$(jq -er .version server.json)"\n'
+         '          state="$(registry_status "$version")"\n'
+         '          if [ "$state" = "active" ]; then\n'
+         '            echo "io.github.Fractal-Neurons/pacta $version is already active in the registry: nothing to publish"\n'
+         '          else\n'
+         '            mcp-publisher publish\n'
+         '          fi\n'
+         '          for ver in 0.1.1 0.1.3 0.1.4 0.1.5 0.1.6; do\n'
+         '            state="$(registry_status "$ver")"\n'
+         '            if [ "$state" = "deleted" ]; then echo "io.github.Fractal-Neurons/pacta $ver is already marked deleted"; continue; fi\n'
+         '            mcp-publisher status --status deleted --message "Superseded by 0.1.7 on https://api.pacta.wtf/mcp" io.github.Fractal-Neurons/pacta "$ver"\n'
+         '          done\n')),
+    )
     WATCH_PAGE_MOVES = (
         ('<a href="../../scan/">Instant Scan</a><a href="../../#pricing">',
          '<a href="../../scan/">Scan</a><a href="../../watch/">Watch</a><a href="../../#pricing">', 2),
@@ -1178,7 +1223,13 @@ class Scorecard87(unittest.TestCase):
         self.assertTrue(n_p["verification"].startswith(b_p["verification"]))
         self.assertEqual({k for k in set(b_p) | set(n_p) if b_p.get(k) != n_p.get(k)}, {"entries", "protocols", "summary", "description", "verification"})
         paths = ["docs/api/v1/onboarding.json", "docs/api/v1/radar.json", "audits/",
-                 "tools/pacta_x402_call.py", ".github/workflows/"]
+                 "tools/pacta_x402_call.py", ".github/workflows/", ":(exclude).github/workflows/publish-mcp.yml"]
+        # publish-mcp.yml: BASE + PUBLISH_WORKFLOW_MOVES, byte for byte
+        wf = self._git(".github/workflows/publish-mcp.yml")
+        for a, c in self.PUBLISH_WORKFLOW_MOVES:
+            self.assertEqual(wf.count(a), 1, a[:60])
+            wf = wf.replace(a, c)
+        self.assertEqual(_read(os.path.join(ROOT, ".github", "workflows", "publish-mcp.yml"), encoding="utf-8"), wf)
         # index.json: BASE apart from A40 (its record's corrected wording fields, its neutral status and its wording override); every
         # attested field of the record (block, hash, classification, summary document and SHA-256, Base EAS UID) stays BASE
         base_ix, ix, rid = json.loads(self._git("docs/api/v1/index.json")), j("api", "v1", "index.json"), self.A40_RECORD

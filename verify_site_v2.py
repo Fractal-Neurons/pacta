@@ -966,9 +966,10 @@ def ready_fixture_brief(idx):
     return BSR.brief_page(slug, BSR.BRIEFS[slug], idx, rad)
 
 
-# MCP package version: 0.1.5 on Commit 1 (published), 0.1.6 on Commit 2 (the registry bump). The package's own files must agree with
-# packages/mcp-server/package.json; site documents may still name the published 0.1.5 until Commit 2 ships.
-MCP_VERSIONS_OK = {"0.1.5", "0.1.6"}
+# MCP package version: 0.1.5 on Commit 1 (published), 0.1.6 on Commit 2 (the registry bump), 0.1.7 with the control-facts registry
+# description (the publish workflow marks 0.1.1 to 0.1.6 deleted). The package's own files must agree with
+# packages/mcp-server/package.json; site documents may still name an earlier version (docs/SKILL.md: 0.1.5).
+MCP_VERSIONS_OK = {"0.1.5", "0.1.6", "0.1.7"}
 # packages/mcp-server/SKILL.md vs docs/SKILL.md (tools/build_site.package_skill writes the package copy on every build). From package
 # 0.1.6: an undated bounties pointer, and the MCP status line names only io.github.Fractal-Neurons/pacta, the remote endpoint and the
 # clone command (MCP_STATUS_LINE), whatever the site copy still says. Below 0.1.6 (the frozen 0.1.5 package files): once the site copy
@@ -1848,7 +1849,7 @@ def main(argv=None):
         "defined in llms.txt + llms-full.txt": all("rpc_observed (on-chain control plane pinned at an archive block height" in read(f) or
                                                    "Classification rpc_observed: on-chain control plane pinned at an archive block height" in read(f)
                                                    for f in ("docs/llms.txt", "docs/llms-full.txt")),
-        "mcp.json: no npm package / packageVersion keys; package.json 0.1.5 / 0.1.6": not ({"package", "packageVersion"} & set(json.loads(read("docs/.well-known/mcp.json"))))
+        "mcp.json: no npm package / packageVersion keys; package.json 0.1.5 / 0.1.6 / 0.1.7": not ({"package", "packageVersion"} & set(json.loads(read("docs/.well-known/mcp.json"))))
                                          and json.loads(read("packages/mcp-server/package.json"))["version"] in MCP_VERSIONS_OK,
         "llms-full names io.github.Fractal-Neurons/pacta, the remote endpoint and the clone command (no npm package)": (
             "- Name: io.github.Fractal-Neurons/pacta · remote Streamable HTTP https://api.pacta.wtf/mcp (no install) · local stdio from a clone." in read("docs/llms-full.txt")
@@ -2006,7 +2007,7 @@ def main(argv=None):
                                                  for f in ("docs/SKILL.md", "docs/llms.txt", "docs/llms-full.txt"))
             and card_["endpoints"].get("lookup") in (API_ + "/v1/protocols/lookup", WORKERS_API_ + "/v1/protocols/lookup") and man_.get("lookup", {}).get("tool") == "pacta_lookup_protocol"
             and "pacta_lookup_protocol" in read("docs/llms/index.html") and f"{BS.BASE_URL}/api/v1/lookup.json" in read("docs/sitemap.xml"),
-        "MCP server 0.1.5 / 0.1.6 everywhere (an npm entry or packageVersion only while still present)": {
+        "MCP server 0.1.5 / 0.1.6 / 0.1.7 everywhere (an npm entry or packageVersion only while still present)": {
             json.loads(read("packages/mcp-server/package.json"))["version"], json.loads(read("packages/mcp-server/server.json"))["version"],
             *[p_["version"] for p_ in json.loads(read("packages/mcp-server/server.json")).get("packages", [])],
             json.loads(read("packages/mcp-server/server.remote.json"))["version"], *([man_["packageVersion"]] if "packageVersion" in man_ else [])} <= MCP_VERSIONS_OK
@@ -3233,8 +3234,11 @@ def main(argv=None):
             for f in ("Dockerfile", "packages/mcp-server/Dockerfile")),
         "glama maintainers": json.loads(read("glama.json"))["maintainers"] == ["pacta-fractal-neurons"],
         # Pack 2: the stdio server lists 14 read-only + 2 opt-in request tools (adds pacta_who_controls_contract, pacta_verdict, pacta_dossier, request_feature)
-        "7 + 1 remote / 14 + 2 stdio tools": "7 read-only inspection tools + 1 opt-in coverage/feature request tool (`pacta_submit_request`), led by `pacta_lookup_protocol`" in read("README.md")
+        # MCP 0.1.7: README.md names the live remote surface (10 read-only + 2 opt-in request tools); the home page, the request page and
+        # smithery.yaml keep their 7 + 1 wording until the site pages are rebuilt
+        "README 10 + 2 remote / 14 + 2 stdio tools; home, request page and smithery.yaml 7 + 1 remote": "10 read-only inspection tools + 2 opt-in request tools, led by `pacta_lookup_protocol`" in read("README.md")
             and "14 read-only inspection tools + 2 opt-in request tools" in read("README.md") and "11 read-only inspection tools" not in read("README.md")
+            and "7 read-only inspection tools" not in read("README.md") and "1 opt-in coverage/feature request tool" not in read("README.md")
             and "`pacta_live_timelocks`" in read("README.md") and "7 read-only inspection tools led by pacta_lookup_protocol + 1 opt-in request tool" in read("smithery.yaml")
             and "Remote MCP (7 read-only inspection tools + 1 opt-in coverage/feature request tool (pacta_submit_request))" in home
             and "Remote MCP (7 read-only inspection tools + 1 opt-in coverage/feature request tool (pacta_submit_request))" in req_page,

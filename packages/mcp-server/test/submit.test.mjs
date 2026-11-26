@@ -20,7 +20,7 @@ const json = (status, obj) => new Response(JSON.stringify(obj), { status, header
 const call = (srv, args, name = "pacta_submit_request") => srv.handleMessage({ jsonrpc: "2.0", id: 1, method: "tools/call", params: { name, arguments: args } });
 
 test("tools/list: 14 read-only tools (annotations readOnlyHint/destructiveHint/openWorldHint + _meta) + 2 opt-in request tools (request_feature, pacta_submit_request)", async () => {
-  assert.equal(SERVER_INFO.version, "0.1.6");
+  assert.equal(SERVER_INFO.version, "0.1.7");
   assert.equal(READ_ONLY_TOOLS.length, 14);
   assert.equal(TOOL_DEFINITIONS.length, 16);
   assert.deepEqual(TOOL_DEFINITIONS.map((t) => t.name).slice(-2), ["request_feature", "pacta_submit_request"]);

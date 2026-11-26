@@ -36,7 +36,7 @@ import { lookupProtocols, parseLookupInput, LOOKUP_CATALOG, LOOKUP_TOTALS, LOOKU
   REQUEST_SCHEMA_PROPS, REQUEST_REQUIRED, REQUEST_FIELDS, REQUEST_TYPES, URGENCY_TRACKS, COVERAGE_GAP_HINT, CONTACT_HANDLE_DESCRIPTION, demandGuard,
   withCoverageHint, withCitationFooters, protocolCitationFooter, lookupFooterBlock, stripCitationFootersDeep } from "./lookup.mjs";
 
-export const SERVER_INFO = Object.freeze({ name: "io.github.Fractal-Neurons/pacta", version: "0.1.6" });
+export const SERVER_INFO = Object.freeze({ name: "io.github.Fractal-Neurons/pacta", version: "0.1.7" });
 export const MCP_INSTRUCTIONS =
   "Pacta by Fractal Neurons: 14 read-only, block-pinned inspection tools for EVM contracts (Ethereum, Base) + 2 opt-in request tools. To see who " +
   "controls a contract or token (owner, admin, upgradeable proxy, timelock, multisig, can mint, can pause), call pacta_who_controls_contract with " +

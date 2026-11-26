@@ -2,13 +2,13 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
   "name": "io.github.Fractal-Neurons/pacta",
   "title": "Pacta, by Fractal Neurons",
-  "description": "Fractal Neurons: contract checks for 316 DeFi protocols on Ethereum & Base (189 Base-EAS attested)",
+  "description": "Who can upgrade, pause or change a contract. Control facts for agents on Ethereum and Base.",
   "repository": {
     "url": "https://github.com/Fractal-Neurons/pacta",
     "source": "github",
     "subfolder": "packages/mcp-server"
   },
-  "version": "0.1.6",
+  "version": "0.1.7",
   "websiteUrl": "https://pacta.wtf/",
   "icons": [
     {

@@ -1,7 +1,7 @@
 ---
 name: pacta-protocol-commitments
 description: Run Pacta's free pre-execution check on any Ethereum or Base contract before an agent approves, deposits into or calls it (who can upgrade, pause or blacklist it, how fast), query the free block-pinned DeFi control-plane feeds, verify any value on an archive node, and map live Aave / Euler / Morpho / Sky governance proposals to on-chain state.
-version: "0.1.6"
+version: "0.1.7"
 homepage: https://pacta.wtf/
 ---
 
