@@ -6826,6 +6826,8 @@ def build_all():
          "/scorecards/", "/radar/", "/about/", "/methodology/", "/privacy/", "/terms/"] + [f"/protocols/{v['slug']}/" for v in sp.values()]
     w("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
       + "".join(f"  <url><loc>{BASE_URL}{u}</loc><lastmod>{today}</lastmod></url>\n" for u in urls) + "</urlset>\n")
+    w("google9232d852c0706689.html", "google-site-verification: google9232d852c0706689.html")
+    w("BingSiteAuth.xml", '<?xml version="1.0"?>\n<users>\n\t<user>E636BB57E9F39AD391DCAC0C3B6BEAB7</user>\n</users>\n')
     w(".well-known/security.txt", f"Contact: mailto:{CONTACT}\nExpires: 2027-11-13T00:00:00.000Z\nPreferred-Languages: en\n"
       f"Canonical: {BASE_URL}/.well-known/security.txt\nPolicy: {BASE_URL}/for-protocols/#faq\n")
     w(".nojekyll", "")    # GitHub Pages: serve dot-directories such as /.well-known/

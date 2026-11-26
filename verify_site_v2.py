@@ -1332,8 +1332,14 @@ def main(argv=None):
         b.feed(read(f))
         check(f"HTML tag balance: {f}", not b.errors and not [t for t in b.stack if t not in ("html", "body")], "; ".join(b.errors[:3]))
 
-    # v3 design / UX invariants
-    pages = {os.path.relpath(p, DOCS): open(p).read() for p in glob.glob(os.path.join(DOCS, "**", "*.html"), recursive=True)}
+    # v3 design / UX invariants + root search-engine ownership artifacts (exact bytes, excluded from normal HTML page chrome)
+    ROOT_VERIFY_HTML = {"google9232d852c0706689.html": b"google-site-verification: google9232d852c0706689.html"}
+    ROOT_VERIFY_XML = {"BingSiteAuth.xml": b'<?xml version="1.0"?>\n<users>\n\t<user>E636BB57E9F39AD391DCAC0C3B6BEAB7</user>\n</users>\n'}
+    check("root search-engine verification artifacts match exact expected bytes (Google 53 B, Bing 86 B)",
+          all(os.path.isfile(os.path.join(DOCS, fn)) and open(os.path.join(DOCS, fn), "rb").read() == exp
+              for fn, exp in {**ROOT_VERIFY_HTML, **ROOT_VERIFY_XML}.items()))
+    pages = {os.path.relpath(p, DOCS): open(p).read() for p in glob.glob(os.path.join(DOCS, "**", "*.html"), recursive=True)
+             if os.path.relpath(p, DOCS) not in ROOT_VERIFY_HTML}
     # MV10-09: the shared footer's contact line is the one mailto: (pacta@dri.network); every CTA still works in the browser
     FTR_MAIL = '<p class="ftr-contact" data-ftr-contact>Contact: <a class="mono" href="mailto:pacta@dri.network">pacta@dri.network</a></p>'
     mail = sorted(k for k, v in pages.items() if "mailto:" in v.replace(FTR_MAIL, "")) + (["app.js"] if "mailto:" in appjs else [])
@@ -2485,14 +2491,15 @@ def main(argv=None):
         rc_st = subprocess.run([sys.executable, os.path.join(ROOT, "tools", "build_site.py"), "--base-path", "/website-test", "--out-dir", out_st],
                                cwd=ROOT, capture_output=True, text=True, timeout=300)
         st = _tree_digest(out_st) if rc_st.returncode == 0 else {}
-        html_st = {k: open(os.path.join(out_st, k), encoding="utf-8").read() for k in st if k.endswith(".html")}
+        html_st = {k: open(os.path.join(out_st, k), encoding="utf-8").read() for k in st if k.endswith(".html") and k not in ROOT_VERIFY_HTML}
         rootrel = [k for k, t in html_st.items() for u in re.findall(r'(?:href|src|action)="(/[^"]*)"', t) if not u.startswith(("/website-test/", "//"))]
         st_ok = {
             "build ok": rc_st.returncode == 0 and "staged:" in rc_st.stdout,
             "docs/ untouched": _tree_digest(DOCS) == docs_before,
             "same files as docs/ (+ marker)": set(st) - {".pacta-staging"} == set(docs_before),
-            "non-HTML bytes identical (robots.txt disallows)": all(st[k] == docs_before[k] for k in st if not k.endswith(".html") and k not in (".pacta-staging", "robots.txt"))
-                and open(os.path.join(out_st, "robots.txt")).read() == "User-agent: *\nDisallow: /\n",
+            "non-HTML + root-verification bytes identical (robots.txt disallows)": all(
+                st[k] == docs_before[k] for k in st if (not k.endswith(".html") or k in ROOT_VERIFY_HTML) and k not in (".pacta-staging", "robots.txt")
+            ) and open(os.path.join(out_st, "robots.txt")).read() == "User-agent: *\nDisallow: /\n",
             "every page noindex, nofollow": bool(html_st) and all(re.findall(r'<meta name="robots" content="([^"]*)">', t) == ["noindex, nofollow"] for t in html_st.values()),
             "every page records the base path": all('<html lang="en" data-base-path="/website-test">' in t for t in html_st.values()),
             "0 root-relative links outside /website-test/": not rootrel,
@@ -2502,7 +2509,8 @@ def main(argv=None):
             "/pricing/ resolves to /website-test/#pricing": (lambda m: bool(m) and _upst.urljoin("https://pacta.dri.network/website-test/pricing/", m.group(1)) == "https://pacta.dri.network/website-test/#pricing")(
                 re.search(r'<meta http-equiv="refresh" content="0; url=([^"]+)">', html_st.get(os.path.join("pricing", "index.html"), ""))),
             "canonical docs/ stays indexable with no base path": not any("noindex, nofollow" in t or "data-base-path" in t
-                                                                     for t in (open(p_, encoding="utf-8").read() for p_ in glob.glob(os.path.join(DOCS, "**", "*.html"), recursive=True))),
+                                                                     for t in (open(p_, encoding="utf-8").read() for p_ in glob.glob(os.path.join(DOCS, "**", "*.html"), recursive=True)
+                                                                               if os.path.relpath(p_, DOCS) not in ROOT_VERIFY_HTML)),
         }
         guard_dir = os.path.join(tmp_root, "not-staging")
         os.makedirs(guard_dir)
@@ -2536,7 +2544,8 @@ def main(argv=None):
             and not os.path.exists(os.path.join(ROOT, "staging-inside-repo")))
         # v4.3 N2: every staging page (and only staging pages) carries one subtle banner line right after the skip link
         banner_st = BS.staging_banner("/website-test")
-        canon_html = [open(p_, encoding="utf-8").read() for p_ in glob.glob(os.path.join(DOCS, "**", "*.html"), recursive=True)]
+        canon_html = [open(p_, encoding="utf-8").read() for p_ in glob.glob(os.path.join(DOCS, "**", "*.html"), recursive=True)
+                      if os.path.relpath(p_, DOCS) not in ROOT_VERIFY_HTML]
         st_ok["N2: one staging banner per staged page (after the skip link); none on docs/, which ships index, follow"] = (
             banner_st == ('<div class="staging-banner" role="note" data-staging-banner>Staging preview (/website-test/) · robots=noindex on this '
                           'test route; production pacta.wtf ships index, follow.</div>')
