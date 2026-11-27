@@ -1914,13 +1914,23 @@ def main(argv=None):
           not meta_bad and len(gen_pages) >= 66 and all(llms_ok.values()), f"meta bad {meta_bad[:4]}; llms {[k for k, v in llms_ok.items() if not v]}")
 
     # /proof/moonwell-cbeth/: the Moonwell cbETH replay, the approved text word for word (93 lines, sha256-pinned, no draft banner),
-    # ROBOTS_META, and linked from nowhere else on the site
+    # ROBOTS_META, and linked from exactly four places with the approved line word for word and nothing around it
     pm = pages.get(os.path.join("proof", "moonwell-cbeth", "index.html"), "")
     pm_src = read("data/proof/moonwell-cbeth-article.html")
     pm_open = '<main id="main" class="memo-wrap"><article class="memo">\n'
     pm_art = (pm[pm.index(pm_open) + len(pm_open):pm.index("</article></main>")]
               if pm.count(pm_open) == 1 and pm.count("</article></main>") == 1 else None)
-    pm_from = ["index.html", "mcp/index.html", "sitemap.xml", "feed.xml", "llms.txt", "llms-full.txt"] + sorted(
+    pm_line = "Replay with public chain data: on Moonwell a wrong price source sat in the queue for 24.04 hours before it ran. Four commands to check it yourself."
+    pm_md = f"- [{pm_line}]({BS.BASE_URL}/proof/moonwell-cbeth/)"
+    pm_links = {"docs/index.html": f'<p class="s" data-moonwell-proof><a href="proof/moonwell-cbeth/">{html.escape(pm_line)}</a></p>',
+                "docs/mcp/index.html": f'<p data-moonwell-proof><a href="../proof/moonwell-cbeth/">{html.escape(pm_line)}</a></p>',
+                "docs/llms.txt": pm_md, "docs/llms/index.html": html.escape(pm_md), "README.md": pm_md}
+    pm_txt = {f_: read(f_) for f_ in pm_links}
+
+    def pm_in(f_, start, end):   # the link sits once in the file, between the two markers
+        t_ = pm_txt[f_]
+        return start in t_ and t_.index(start) < t_.find(pm_links[f_]) < t_.index(end, t_.index(start))
+    pm_from = ["sitemap.xml", "feed.xml", "llms-full.txt"] + sorted(
         os.path.relpath(f_, DOCS) for f_ in glob.glob(os.path.join(DOCS, "briefs", "**", "*.html"), recursive=True))
     pm_ok = {
         "article is the approved text": pm_art == pm_src
@@ -1931,10 +1941,23 @@ def main(argv=None):
         "both source links": re.findall(r'<a href="([^"]+)">', pm_art or "") == [
             "https://forum.moonwell.fi/t/mip-x43-cbeth-oracle-incident-summary/2068",
             "https://decrypt.co/358374/oracle-error-leaves-defi-lender-moonwell-1-8-million-bad-debt"],
-        "unlisted": len(pm_from) > 6 and not [f_ for f_ in pm_from if "moonwell-cbeth" in read("docs/" + f_)],
+        "the approved line": BS.PROOF_MOONWELL_LINE == pm_line,
+        "linked once from each of the 4 places, the line and the link only": all(
+            t_.count(pm_links[f_]) == 1 and t_.count("moonwell-cbeth") == 1 and t_.count(pm_line) == 1 for f_, t_ in pm_txt.items()),
+        "home: in the AI agents & builders card": pm_in("docs/index.html", 'id="audiences"', 'class="teams-card"')
+            and pm_in("docs/index.html", 'class="agents-card"', 'data-slot="card-footer"')
+            and "AI agents &amp; builders" in pm_txt["docs/index.html"].split('class="agents-card"')[1].split(pm_links["docs/index.html"])[0],
+        "/mcp/: under the tool list, after its Indexed protocols line": pm_in("docs/mcp/index.html", '<section class="memo-sec" id="tools">', "</section>")
+            and [ln_.startswith(s_) for ln_, s_ in zip(pm_txt["docs/mcp/index.html"].split('<section class="memo-sec" id="tools">')[1].split("\n")[:3],
+                                                        ("<h2>Tools (", "<p>Indexed protocols:", pm_links["docs/mcp/index.html"]))] == [True] * 3,
+        "llms.txt + /llms/: in the API & MCP section": pm_in("docs/llms.txt", "\n## API & MCP for agents", "\n## Agent feeds")
+            and pm_in("docs/llms/index.html", "\n## API &amp; MCP for agents", "\n## Agent feeds"),
+        "README: in the API & MCP section": pm_in("README.md", "\n## Pre-execution API, Remote MCP & x402 Endpoints", "\n### MCP recipes"),
+        "not in the briefs, sitemap.xml, feed.xml or llms-full.txt": len(pm_from) > 3 and not [f_ for f_ in pm_from if "moonwell-cbeth" in read("docs/" + f_)],
     }
     check("/proof/moonwell-cbeth/: the approved Moonwell replay text word for word (8,341 characters, no draft banner), its title, ROBOTS_META, "
-          "both source links, and no link from /, /mcp/, the briefs, sitemap.xml, feed.xml, llms.txt or llms-full.txt",
+          "both source links; linked with the approved line word for word and nothing around it from exactly /, /mcp/ (Tools section), "
+          "llms.txt + /llms/ and README.md, and from no brief, sitemap.xml, feed.xml or llms-full.txt",
           all(pm_ok.values()), str([k_ for k_, v_ in pm_ok.items() if not v_]))
 
     glama = json.loads(read("glama.json"))

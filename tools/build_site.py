@@ -5461,6 +5461,7 @@ def mcp_page(idx):
 <p>Optional attribution: <code>caller_agent</code>, <code>requester_role</code> and <code>caller_purpose</code> (non-personal; omitted or invalid values never block a call — invalid values are silently dropped; see <a href="../SKILL.md">SKILL.md</a>).</p></section>
 <section class="memo-sec" id="tools"><h2>Tools ({E(B2A.REMOTE_TOOLS_DOC)})</h2><ul>{tools}</ul>
 <p>Indexed protocols: <a href="../api/v1/protocols.json">protocol data</a> · machine-readable server card: <a href="../.well-known/mcp.json">/.well-known/mcp.json</a> · REST twin and OpenAPI 3.1: <a href="{E(OPENAPI_URL)}" target="_blank" rel="noopener">openapi.json{EXT}</a></p>
+<p data-moonwell-proof><a href="../{PROOF_MOONWELL_SLUG}/">{E(PROOF_MOONWELL_LINE)}</a></p>
 <p class="s">The live check tool <code>pacta_check_preflight</code> rates the single contract address it is given, not the whole protocol (<a href="../methodology/#live-checker">methodology</a>).</p></section>
 <section class="memo-sec" id="x402"><h2>Free tier &amp; pay per call (x402)</h2>
 <p>{E(B2A.FREE_TIER_DOC)}</p>
@@ -5511,6 +5512,7 @@ def llms(idx, radar):
         "- " + B2A.protocols_line(idx, load_pinned()),
         "- " + protocol_status_line(idx),
         f"- One call: `{CURL} \"{API}/v1/check/preflight?chain=ethereum&address=0x...\"` returns a verdict (NO_CONTROLLER_FOUND, TIMELOCK_PROTECTED, ZERO_DELAY_TIMELOCK_RISK, MULTISIG_NO_TIMELOCK, INSTANT_EOA_ADMIN_RISK, UNDEPLOYED_OR_EOA, UNCLASSIFIED_CONTRACT_CONTROLLER), a 0-100 risk score (null when there is no contract or no controller was found), the checks run (checksRun), proxy / admin / timelock breakdown and pause / blacklist / upgrade capabilities, pinned to a block hash. NO_CONTROLLER_FOUND means no controller found by our checks; custom or unprobed control paths may still exist (RPC reads never call a contract immutable).",
+        f"- [{PROOF_MOONWELL_LINE}]({BASE_URL}/{PROOF_MOONWELL_SLUG}/)",
         f"- [{B2A.LOOKUP_URL}?q=ethena]({B2A.LOOKUP_URL}?q=ethena): free protocol / token name lookup (MCP tool pacta_lookup_protocol). {B2A.LOOKUP_DOC}",
         f"- {B2A.REQUEST_DOC}",
         f"- [{BASE_URL}/bounties/]({BASE_URL}/bounties/): {B2A.BOUNTIES_DOC}",
@@ -5945,7 +5947,8 @@ def badge_demo(prefix=""):
 
 def agents_section(prefix=""):
     """M1: curators are the primary reader; agents and protocol teams get one card each and a route to their own page."""
-    qs = (term(REST_PY, "Python (requests)", "Copy the Python requests quickstart")
+    qs = (f'<p class="s" data-moonwell-proof><a href="{prefix}{PROOF_MOONWELL_SLUG}/">{E(PROOF_MOONWELL_LINE)}</a></p>'
+          + term(REST_PY, "Python (requests)", "Copy the Python requests quickstart")
           + term(STATIC_PY, "Python (standard library, static JSON)", "Copy the Python standard-library quickstart")
           + f'<p class="s" style="margin-top:12px"><a href="#hiw-t-agents" data-tab-open="hiw-t-agents">Claude Code, Cursor, curl and cast commands{ARR}</a></p>')
     agents = U.card(U.card_header("AI agents &amp; builders", f"Pre-execution contract checks over MCP or REST: {E(RATE_LIMIT)}, no key, no wallet.")
@@ -6305,9 +6308,10 @@ def privacy_page(idx):
                        "Privacy", "What this site collects, how conversion measurement works, and how to block it.", sections, idx)
 
 
-# /proof/moonwell-cbeth/: a replay proof page, published unlisted (no link, sitemap, feed or llms entry) with ROBOTS_META. Its article body is
-# data/proof/moonwell-cbeth-article.html, word for word (tools/test_moonwell_proof_page.py pins its sha256). Nothing else on
-# the site links to it: no nav, footer, sitemap, feed or llms entry. Its few layout rules ride in the page's own <style>
+# /proof/moonwell-cbeth/: a replay proof page with ROBOTS_META. Its article body is
+# data/proof/moonwell-cbeth-article.html, word for word (tools/test_moonwell_proof_page.py pins its sha256). Four places link to
+# it, each with PROOF_MOONWELL_LINE word for word and nothing around it: the home page's agents card, /mcp/'s Tools section,
+# llms.txt (and its /llms/ mirror) and README.md; no nav, footer, sitemap, feed, brief or llms-full entry. Its few layout rules ride in the page's own <style>
 # (style-src allows inline styles), so styles.css and every other page stay byte-identical. Tables scroll inside their .wrap
 # (they stay tables on phones; the five-column one keeps each row on one line), and headers keep their written case (cbETH, not CBETH).
 # Phones (max-width 767px; wider screens render exactly as before): a box that scrolls sideways shows a shade at each edge
@@ -6318,6 +6322,8 @@ def privacy_page(idx):
 PROOF_MOONWELL_SLUG = "proof/moonwell-cbeth"
 PROOF_MOONWELL_ARTICLE = os.path.join(ROOT, "data", "proof", "moonwell-cbeth-article.html")
 PROOF_MOONWELL_TITLE = "The change that broke a Moonwell market sat in the queue for 24 hours · Pacta"
+PROOF_MOONWELL_LINE = ("Replay with public chain data: on Moonwell a wrong price source sat in the queue for 24.04 hours before it ran. "
+                       "Four commands to check it yourself.")
 PROOF_MOONWELL_CSS = ("<style>"
                       ".memo > h1{margin:0 0 12px;font-size:2.25rem;line-height:1.25;letter-spacing:-0.025em}"
                       ".memo > p.sub{display:block;margin:0 0 8px;font-size:1.125rem;color:var(--muted-foreground)}"
@@ -6873,7 +6879,7 @@ def build_all():
     w("methodology/index.html", methodology_page(idx))
     w("privacy/index.html", privacy_page(idx))
     w("terms/index.html", terms_page(idx))
-    w(PROOF_MOONWELL_SLUG + "/index.html", proof_moonwell_page(idx))   # unlisted: no link, sitemap, feed or llms entry
+    w(PROOF_MOONWELL_SLUG + "/index.html", proof_moonwell_page(idx))   # linked from /, /mcp/, llms.txt and README.md only; no sitemap or feed entry
     w("pricing/index.html", pricing_redirect_page())   # T5: /pricing -> /#pricing
     w("robots.txt", ROBOTS_TXT)
     w("404-rescue.js", RESCUE_JS)                 # 404.html: stripped-"?" rescue (same origin, before b.js)

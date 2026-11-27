@@ -1,5 +1,7 @@
 """/proof/moonwell-cbeth/: the Moonwell cbETH replay proof page. Its article is the approved text word for word (93 lines, pinned
-by sha256 and length, with no draft banner), the page carries ROBOTS_META, and nothing else on the site links to it.
+by sha256 and length, with no draft banner), the page carries ROBOTS_META, and exactly four places link to it: the home page's
+agents card, /mcp/'s Tools section (under the tool list and its Indexed protocols line), llms.txt (and its /llms/ mirror) and README.md, each with the approved line word for word
+and nothing around it. Briefs, sitemap.xml, feed.xml and llms-full.txt do not.
 
     python3 -m unittest tools/test_moonwell_proof_page.py
 """
@@ -21,7 +23,18 @@ TITLE = "The change that broke a Moonwell market sat in the queue for 24 hours Â
 HREFS = ["https://forum.moonwell.fi/t/mip-x43-cbeth-oracle-incident-summary/2068",
          "https://decrypt.co/358374/oracle-error-leaves-defi-lender-moonwell-1-8-million-bad-debt"]
 BANNER = ["DRAFT", "box warn", "not published"]
-UNLISTED_FROM = ["index.html", os.path.join("mcp", "index.html"), "sitemap.xml", "feed.xml", "llms.txt", "llms-full.txt"]
+LINE = ("Replay with public chain data: on Moonwell a wrong price source sat in the queue for 24.04 hours before it ran. "
+        "Four commands to check it yourself.")
+URL = "https://pacta.wtf/proof/moonwell-cbeth/"
+MD = f"- [{LINE}]({URL})"
+LINKED_FROM = {   # file -> the whole block: the approved line as the link text, nothing around it
+    os.path.join("docs", "index.html"): f'<p class="s" data-moonwell-proof><a href="proof/moonwell-cbeth/">{LINE}</a></p>',
+    os.path.join("docs", "mcp", "index.html"): f'<p data-moonwell-proof><a href="../proof/moonwell-cbeth/">{LINE}</a></p>',
+    os.path.join("docs", "llms.txt"): MD,
+    os.path.join("docs", "llms", "index.html"): MD,
+    "README.md": MD,
+}
+UNLISTED_FROM = ["sitemap.xml", "feed.xml", "llms-full.txt"]
 
 
 def read(*p):
@@ -108,6 +121,59 @@ class PageChrome(unittest.TestCase):
         self.assertEqual(read(PAGE), BS.proof_moonwell_page(json.loads(read("docs", "api", "v1", "index.json"))))
 
 
+class Linked(unittest.TestCase):
+    def test_the_approved_line(self):
+        self.assertEqual(BS.PROOF_MOONWELL_LINE, LINE)
+        self.assertEqual(len(LINE), 147)
+        self.assertNotIn("<", LINE)
+        self.assertNotIn("&", LINE)
+
+    def test_each_place_has_the_line_and_the_link_once(self):
+        for f, block in LINKED_FROM.items():
+            t = read(f)
+            self.assertEqual(t.count(block), 1, f)
+            self.assertEqual(t.count(LINE), 1, f)
+            self.assertEqual(t.count("moonwell-cbeth"), 1, f)
+
+    def test_markdown_places_are_a_bare_list_item(self):
+        for f in (os.path.join("docs", "llms.txt"), "README.md"):
+            self.assertEqual([ln for ln in read(f).split("\n") if "moonwell-cbeth" in ln], [MD], f)
+
+    def test_html_places_link_text_is_the_line(self):
+        for f, href in ((os.path.join("docs", "index.html"), "proof/moonwell-cbeth/"), (os.path.join("docs", "mcp", "index.html"), "../proof/moonwell-cbeth/")):
+            self.assertEqual(re.findall(r'<a href="([^"]*moonwell-cbeth[^"]*)">([^<]*)</a>', read(f)), [(href, LINE)], f)
+
+    def between(self, f, start, end):
+        t = read(f)
+        i = t.index(start)
+        self.assertLess(i, t.index(LINKED_FROM[f]), f)
+        self.assertLess(t.index(LINKED_FROM[f]), t.index(end, i), f)
+
+    def test_home_agents_card(self):
+        home = os.path.join("docs", "index.html")
+        self.between(home, '<section class="sec" id="audiences">', 'class="teams-card"')
+        self.between(home, 'class="agents-card"', 'data-slot="card-footer"')
+        t = read(home)
+        card = t.index('class="agents-card"')
+        self.assertIn("AI agents &amp; builders", t[card:t.index(LINKED_FROM[home])])
+        content = t.index('data-slot="card-content">', card) + len('data-slot="card-content">')
+        self.assertEqual(t.index(LINKED_FROM[home]), content)   # the card content opens with it
+
+    def test_mcp_under_the_tool_list(self):
+        """The tool list's own line changes whenever a tool is added, so one unchanged line (Indexed protocols) sits between."""
+        mcp = os.path.join("docs", "mcp", "index.html")
+        self.between(mcp, '<section class="memo-sec" id="tools">', "</section>")
+        tools, ip, proof = read(mcp).split('<section class="memo-sec" id="tools">')[1].split("\n")[:3]
+        self.assertTrue(tools.startswith("<h2>Tools (") and tools.endswith("</li></ul>"), tools[:40])
+        self.assertTrue(ip.startswith("<p>Indexed protocols: "), ip[:40])
+        self.assertEqual(proof, LINKED_FROM[mcp])
+
+    def test_llms_and_readme_api_sections(self):
+        self.between(os.path.join("docs", "llms.txt"), "\n## API & MCP for agents", "\n## Agent feeds")
+        self.between(os.path.join("docs", "llms", "index.html"), "\n## API &amp; MCP for agents", "\n## Agent feeds")
+        self.between("README.md", "\n## Pre-execution API, Remote MCP & x402 Endpoints", "\n### MCP recipes")
+
+
 class Unlisted(unittest.TestCase):
     def test_named_surfaces_do_not_link_it(self):
         names = UNLISTED_FROM + [os.path.join("briefs", d, "index.html") for d in os.listdir(os.path.join(ROOT, "docs", "briefs"))
@@ -127,7 +193,7 @@ class Unlisted(unittest.TestCase):
                 with open(p, encoding="utf-8", errors="replace") as fh:
                     if "proof/moonwell-cbeth" in fh.read():
                         hits.append(os.path.relpath(p, ROOT))
-        self.assertEqual(hits, [PAGE])
+        self.assertEqual(sorted(hits), sorted([PAGE] + [f for f in LINKED_FROM if f.startswith("docs")]))
 
 
 if __name__ == "__main__":
