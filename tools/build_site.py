@@ -6297,6 +6297,66 @@ def privacy_page(idx):
                        "Privacy", "What this site collects, how conversion measurement works, and how to block it.", sections, idx)
 
 
+# /proof/moonwell-cbeth/: a replay proof page, published unlisted (no link, sitemap, feed or llms entry) with ROBOTS_META. Its article body is
+# data/proof/moonwell-cbeth-article.html, word for word (tools/test_moonwell_proof_page.py pins its sha256). Nothing else on
+# the site links to it: no nav, footer, sitemap, feed or llms entry. Its few layout rules ride in the page's own <style>
+# (style-src allows inline styles), so styles.css and every other page stay byte-identical. Tables scroll inside their .wrap
+# (they stay tables on phones; the five-column one keeps each row on one line), and headers keep their written case (cbETH, not CBETH).
+# Phones (max-width 767px; wider screens render exactly as before): a box that scrolls sideways shows a shade at each edge
+# that has more content past it (page-coloured covers ride with the content, the shades stay at the box edges: pure CSS, no
+# script), the five-column table keeps its Market column pinned on the left with an opaque page-coloured background and a
+# divider, and its headers wrap so the last two columns fit beside it at the scroll end. Nothing paints past the pinned
+# column's divider (no pseudo-element, no animation), so a scrolled number is never covered.
+PROOF_MOONWELL_SLUG = "proof/moonwell-cbeth"
+PROOF_MOONWELL_ARTICLE = os.path.join(ROOT, "data", "proof", "moonwell-cbeth-article.html")
+PROOF_MOONWELL_TITLE = "The change that broke a Moonwell market sat in the queue for 24 hours · Pacta"
+PROOF_MOONWELL_CSS = ("<style>"
+                      ".memo > h1{margin:0 0 12px;font-size:2.25rem;line-height:1.25;letter-spacing:-0.025em}"
+                      ".memo > p.sub{display:block;margin:0 0 8px;font-size:1.125rem;color:var(--muted-foreground)}"
+                      ".memo .wrap{max-width:none;margin:12px 0 16px;padding:0;overflow-x:auto}"
+                      ".memo .wrap table{display:table;max-width:none;overflow:visible;margin-top:0}"
+                      ".memo .wrap th{text-transform:none;letter-spacing:0;font-size:0.8125rem}"
+                      ".memo .wrap table:has(th:nth-child(5)) :is(th,td){white-space:nowrap}"
+                      ".memo td.n,.memo th.n{text-align:right;font-variant-numeric:tabular-nums}"
+                      ".memo .addr{word-break:break-all}"
+                      ".memo pre{margin:12px 0 0;padding:12px 14px;overflow-x:auto;white-space:pre;background:var(--muted);"
+                      "border:1px solid var(--border);border-radius:var(--radius);font-size:0.8125rem;line-height:1.6}"
+                      ".memo small{color:var(--muted-foreground);font-size:0.875rem}"
+                      "@media (max-width: 767px){.memo > h1{font-size:1.875rem}"
+                      ".memo .wrap,.memo pre{--mw-bg:var(--background);--mw-shade:color-mix(in srgb,var(--foreground) 34%,transparent);"
+                      "background:linear-gradient(to right,var(--mw-bg) 36px,transparent 64px) left center/64px 100% no-repeat local,"
+                      "linear-gradient(to left,var(--mw-bg) 36px,transparent 64px) right center/64px 100% no-repeat local,"
+                      "linear-gradient(to right,var(--mw-shade),transparent) left center/32px 100% no-repeat scroll,"
+                      "linear-gradient(to left,var(--mw-shade),transparent) right center/32px 100% no-repeat scroll,var(--mw-bg)}"
+                      ".memo pre{--mw-bg:var(--muted)}"
+                      ".memo .wrap table:has(th:nth-child(5)) th{white-space:normal;vertical-align:bottom}"
+                      ".memo .wrap table:has(th:nth-child(5)) :is(th,td):first-child{position:sticky;left:0;z-index:2;padding-right:10px;"
+                      "background:var(--background);box-shadow:inset -1px 0 0 var(--border)}"
+                      ".memo .wrap table:has(th:nth-child(5)) :is(th,td):nth-child(2){padding-left:6px}}"
+                      "</style>")
+
+
+def proof_moonwell_article():
+    with open(PROOF_MOONWELL_ARTICLE, encoding="utf-8") as fh:
+        return fh.read()
+
+
+def proof_moonwell_page(idx):
+    """The article is the approved text as is; the page adds only the site chrome. Its description is the article's own subtitle."""
+    article = proof_moonwell_article()
+    h1 = html.unescape(re.search(r"<h1>([^<]*)</h1>", article).group(1))
+    desc = html.unescape(re.search(r'<p class="sub">([^<]*)</p>', article).group(1))
+    body = f"""<body>
+{topbar("../../", "")}
+<main id="main" class="memo-wrap"><article class="memo">
+{article}</article></main>
+{footer(coverage_line(idx), idx["onchain_anchoring"]["commitment_registry"], "../../")}
+</body></html>
+"""
+    return head(PROOF_MOONWELL_TITLE, desc, f"{BASE_URL}/{PROOF_MOONWELL_SLUG}/", prefix="../../", og_title=h1,
+                extra=PROOF_MOONWELL_CSS) + "\n" + body
+
+
 def terms_page(idx):
     sections = [
         ("use", "Use of the site and data", f'<p>Pacta publishes read-only analysis of public onchain state and public documentation. The '
@@ -6805,6 +6865,7 @@ def build_all():
     w("methodology/index.html", methodology_page(idx))
     w("privacy/index.html", privacy_page(idx))
     w("terms/index.html", terms_page(idx))
+    w(PROOF_MOONWELL_SLUG + "/index.html", proof_moonwell_page(idx))   # unlisted: no link, sitemap, feed or llms entry
     w("pricing/index.html", pricing_redirect_page())   # T5: /pricing -> /#pricing
     w("robots.txt", ROBOTS_TXT)
     w("404-rescue.js", RESCUE_JS)                 # 404.html: stripped-"?" rescue (same origin, before b.js)

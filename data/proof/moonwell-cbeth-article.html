@@ -1,0 +1,93 @@
+<h1>The change that broke a Moonwell market sat in the queue for 24 hours</h1>
+<p class="sub">A replay of public Base chain data. It shows what could be read beforehand. It is not an alert that was sent, and no loss was prevented.</p>
+
+<h2>What happened</h2>
+<p>On 15 Feb 2026 a governance proposal on Moonwell (Base), known as MIP-X43, changed the price source of several markets. For one of them, cbETH, the new source was wrong. Public reports put the bad debt that followed at 1.78 million dollars.</p>
+
+<h2>What the live settings showed</h2>
+<p>One block before the change ran (block 42,194,662), we read these live settings of the cbETH market:</p>
+<ul>
+<li>live price source <code class="addr">0xB0Ba0C5D7DA4ec400C1C3E5ef2485134F89918C5</code> answered <strong>2,206.68</strong> dollars</li>
+<li>the market was listed with a collateral factor of 81%</li>
+<li>the governor's delay was 86,400 seconds (24 hours), owner a 3-of-5 multisig</li>
+</ul>
+<p>None of these live settings showed that the queued price source answered in a different unit. The fault was not in what was live. It was in what was queued.</p>
+
+<h2>What was readable in the queue</h2>
+<div class="wrap">
+<table>
+<tr><th></th><th>Block</th><th>Time (UTC)</th></tr>
+<tr><td>Change queued</td><td>42,151,384</td><td>14 Feb 2026 18:01:55</td></tr>
+<tr><td>Change executed</td><td>42,194,663</td><td>15 Feb 2026 18:04:33</td></tr>
+<tr><td>Readable beforehand</td><td colspan="2"><strong>24.04 hours</strong></td></tr>
+</table>
+</div>
+<p>The queued call named a new price source for cbETH, <code class="addr">0x67996D1ff7a3711a91E2839d1059Fcb950C0495D</code>. Read at the block where it was queued:</p>
+<div class="wrap">
+<table>
+<tr><th>Price source for cbETH</th><th class="n">Answer at block 42,151,384</th><th>Its own description</th></tr>
+<tr><td>Live</td><td class="n">2,334.34</td><td>none returned</td></tr>
+<tr><td>Queued</td><td class="n">1.1226</td><td>"CBETH / ETH"</td></tr>
+<tr><td>Queued divided by live</td><td class="n">0.000481</td><td></td></tr>
+</table>
+</div>
+<p>The queued source priced cbETH in ETH, where the market expected dollars. The gap was a factor of about 2,000. It could be read at the block where the change was queued, 24.04 hours before it ran, and it was still there one block before it ran (queued source 1.1227, live source 2,206.68).</p>
+<p><small>Public reports give 18:01 UTC on 15 Feb for the execution. The block of the execution transaction is stamped 18:04:33 UTC.</small></p>
+
+<h2>The same check on the other 13 changes in that proposal</h2>
+<p>The proposal carried 32 actions; 14 of them changed a price source. We compared the old source with the new one for all 14, at the queue block. USDC and USDbC use the same pair of sources.</p>
+<div class="wrap">
+<table>
+<tr><th>Market</th><th class="n">Old source</th><th class="n">New source</th><th class="n">New divided by old</th><th>New source's own description</th></tr>
+<tr><td>DAI</td><td class="n">0.99988</td><td class="n">0.99988</td><td class="n">1</td><td>"DAI / USD"</td></tr>
+<tr><td>USDC</td><td class="n">1.00000501</td><td class="n">1.00000501</td><td class="n">1</td><td>"USDC / USD"</td></tr>
+<tr><td>USDbC</td><td class="n">1.00000501</td><td class="n">1.00000501</td><td class="n">1</td><td>"USDC / USD"</td></tr>
+<tr><td>AERO</td><td class="n">0.32417615</td><td class="n">0.32417615</td><td class="n">1</td><td>"AERO / USD"</td></tr>
+<tr><td>cbBTC</td><td class="n">69,688.214</td><td class="n">69,688.214</td><td class="n">1</td><td>"BTC / USD"</td></tr>
+<tr><td>EURC</td><td class="n">1.18449879</td><td class="n">1.18449879</td><td class="n">1</td><td>"EURC / USD"</td></tr>
+<tr><td>WELL</td><td class="n">0.00489802</td><td class="n">0.00489802</td><td class="n">1</td><td>"WELL / USD"</td></tr>
+<tr><td>USDS</td><td class="n">0.99999889</td><td class="n">0.99999889</td><td class="n">1</td><td>"USDS / USD"</td></tr>
+<tr><td>tBTC</td><td class="n">69,778.47849904</td><td class="n">69,778.47849904</td><td class="n">1</td><td>"TBTC / USD"</td></tr>
+<tr><td>VIRTUAL</td><td class="n">0.67709462</td><td class="n">0.67709462</td><td class="n">1</td><td>"VIRTUAL / USD"</td></tr>
+<tr><td>MORPHO</td><td class="n">1.35808445</td><td class="n">1.35808445</td><td class="n">1</td><td>"MORPHO / USD"</td></tr>
+<tr><td>cbXRP</td><td class="n">1.47294879</td><td class="n">1.47294879</td><td class="n">1</td><td>"XRP / USD"</td></tr>
+<tr><td>MAMO</td><td class="n">0.01514498</td><td class="n">0.01514498</td><td class="n">1</td><td>"MAMO / USD"</td></tr>
+<tr><td><strong>cbETH</strong></td><td class="n"><strong>2,334.34</strong></td><td class="n"><strong>1.1226</strong></td><td class="n"><strong>0.000481</strong></td><td><strong>"CBETH / ETH"</strong></td></tr>
+</table>
+</div>
+<p>We compared all 14: 13 gave the same price before and after, one did not. Of the 14 new sources, 13 describe themselves as a price in USD. The one for cbETH describes itself as "CBETH / ETH". The check is one sentence: <strong>when a change of price source is queued, read the new source now and compare it with the live one.</strong></p>
+
+<h2>Run it yourself</h2>
+<p>Any Base node that keeps history will do. With Foundry's <code>cast</code>:</p>
+<pre>
+# the queued source, at the block where the change was queued
+cast call 0x67996D1ff7a3711a91E2839d1059Fcb950C0495D \
+  "latestRoundData()(uint80,int256,uint256,uint256,uint80)" \
+  --block 42151384 --rpc-url $BASE_RPC
+# expected answer field: 1122592232679792800   (1.1226 at 18 decimals)
+
+cast call 0x67996D1ff7a3711a91E2839d1059Fcb950C0495D "description()(string)" \
+  --block 42151384 --rpc-url $BASE_RPC
+# expected: "CBETH / ETH"
+
+# the live source, same block
+cast call 0xB0Ba0C5D7DA4ec400C1C3E5ef2485134F89918C5 \
+  "latestRoundData()(uint80,int256,uint256,uint256,uint80)" \
+  --block 42151384 --rpc-url $BASE_RPC
+# expected answer field: 2334339505627558796403   (2,334.34 at 18 decimals)
+
+# the queue entry itself
+cast receipt 0x0469683378ec0748436ee70df7e6977613a1f57190463266d8609144fa4d9976 \
+  --rpc-url $BASE_RPC
+</pre>
+<p><small>Governor: <span class="addr">0x8b621804a7637b781e2BbD58e256a591F2dF7d51</span>. Execution transaction: <span class="addr">0xd26baf29dcba7bf66db4be17b46a49bb4dacca41ace968c98c8a5b09a03ae812</span>.</small></p>
+
+<h2>What this does not show</h2>
+<ul>
+<li><strong>It is a replay.</strong> We looked after the fact, knowing where to look. No agent was warned on 14 Feb and no loss was prevented.</li>
+<li><strong>It is one incident.</strong> We replayed four; the reads found the fault beforehand in three (Kelp, Resolv, Moonwell) and not in the fourth (Stream). Only this one was a queued change. The other three replays are our own and were not run again by the independent reviewer.</li>
+<li><strong>False alarms are counted once, on a small sample.</strong> The 13 sibling changes are a small control. A first wider count of our own exists since 26 Nov (not run again by the independent reviewer): over the 90 days to that date a mechanical version of this check ran on 26 queued changes of a price source on the contracts we read, and flagged none. In all 26 the old and the new source were both read and compared, and each gave the same price before and after. From 26 clean results one can only say the false alarm rate is probably below about 1 in 9. All 26 were Moonwell changes on Base, so this is a result for one protocol, not for price sources in general. The count holds no known bad change, so it says nothing about how many the check would catch.</li>
+<li><strong>Others may watch queues too.</strong> Monitoring firms sell this to their own customers. We have not tested their products.</li>
+</ul>
+
+<p><small>Source: historical replay of 4 incidents, Pacta, 26 Nov 2026. The reads on this page were run again on 27 Nov 2026 by Pacta's independent reviewer on two public Base nodes: 45 of 45 values equal. The same reviewer then read all 14 price-source changes at the queue block on both nodes; the table above is from that read. Loss figure: the <a href="https://forum.moonwell.fi/t/mip-x43-cbeth-oracle-incident-summary/2068">incident summary on Moonwell's governance forum</a> (1,779,044.83 dollars), repeated by <a href="https://decrypt.co/358374/oracle-error-leaves-defi-lender-moonwell-1-8-million-bad-debt">Decrypt</a>. We did not recount the loss.</small></p>

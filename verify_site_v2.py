@@ -96,7 +96,7 @@ def no_watch_24h(t):
     return WATCH_24H_RE.sub("", t)
 
 
-NON_PROTOCOL_PAGES = 44                                                  # docs/**/*.html pages that are not /protocols/<slug>/ (40: + /curators/ /scan/ /webhook/ /seal/ /miniapp/, + the Cap, Compound V3 and Lista Lending briefs; 43: + /sponsor/; 44: + /check/)
+NON_PROTOCOL_PAGES = 45                                                  # docs/**/*.html pages that are not /protocols/<slug>/ (40: + /curators/ /scan/ /webhook/ /seal/ /miniapp/, + the Cap, Compound V3 and Lista Lending briefs; 43: + /sponsor/; 44: + /check/; 45: + /proof/moonwell-cbeth/)
 
 
 def check(name, ok, detail=""):
@@ -1912,6 +1912,30 @@ def main(argv=None):
     }
     check(f"robots meta '{BS.ROBOTS_META}' exactly once in the head of all {len(gen_pages)} generated pages (404.html: noindex variant); /llms/ is an HTML mirror of llms.txt (exact escaped text, canonical, text/plain alternate, in the sitemap, linked from head + footer)",
           not meta_bad and len(gen_pages) >= 66 and all(llms_ok.values()), f"meta bad {meta_bad[:4]}; llms {[k for k, v in llms_ok.items() if not v]}")
+
+    # /proof/moonwell-cbeth/: the Moonwell cbETH replay, the approved text word for word (93 lines, sha256-pinned, no draft banner),
+    # ROBOTS_META, and linked from nowhere else on the site
+    pm = pages.get(os.path.join("proof", "moonwell-cbeth", "index.html"), "")
+    pm_src = read("data/proof/moonwell-cbeth-article.html")
+    pm_open = '<main id="main" class="memo-wrap"><article class="memo">\n'
+    pm_art = (pm[pm.index(pm_open) + len(pm_open):pm.index("</article></main>")]
+              if pm.count(pm_open) == 1 and pm.count("</article></main>") == 1 else None)
+    pm_from = ["index.html", "mcp/index.html", "sitemap.xml", "feed.xml", "llms.txt", "llms-full.txt"] + sorted(
+        os.path.relpath(f_, DOCS) for f_ in glob.glob(os.path.join(DOCS, "briefs", "**", "*.html"), recursive=True))
+    pm_ok = {
+        "article is the approved text": pm_art == pm_src
+            and hashlib.sha256(pm_src[:-1].encode("utf-8")).hexdigest() == "700b2a2d9d7712fdfbeaae7bf090b8cda9fc0639918901c167a35d586eaba414",
+        "title": re.findall(r"<title>([^<]*)</title>", pm) == ["The change that broke a Moonwell market sat in the queue for 24 hours · Pacta"],
+        "robots": re.findall(r'<meta name="robots" content="([^"]*)">', pm) == [BS.ROBOTS_META],
+        "no draft banner": bool(pm) and not any(s_ in pm for s_ in ("DRAFT", "box warn", "not published")),
+        "both source links": re.findall(r'<a href="([^"]+)">', pm_art or "") == [
+            "https://forum.moonwell.fi/t/mip-x43-cbeth-oracle-incident-summary/2068",
+            "https://decrypt.co/358374/oracle-error-leaves-defi-lender-moonwell-1-8-million-bad-debt"],
+        "unlisted": len(pm_from) > 6 and not [f_ for f_ in pm_from if "moonwell-cbeth" in read("docs/" + f_)],
+    }
+    check("/proof/moonwell-cbeth/: the approved Moonwell replay text word for word (8,341 characters, no draft banner), its title, ROBOTS_META, "
+          "both source links, and no link from /, /mcp/, the briefs, sitemap.xml, feed.xml, llms.txt or llms-full.txt",
+          all(pm_ok.values()), str([k_ for k_, v_ in pm_ok.items() if not v_]))
 
     glama = json.loads(read("glama.json"))
     smith = read("smithery.yaml")
