@@ -6285,14 +6285,14 @@ PRIVACY_REPEAT_CALLERS = ("To count repeat API and MCP callers across days witho
                           "you choose to pass with a call, keep these daily counts with no date of removal, and publish them by name in "
                           "our public usage figures. Do not put a personal name there.")
 
-PRIVACY_KEEWANO_TOTALS = ("We send totals of these counts to our analytics provider, Keewano: how many pages were opened and of which kind "
-                          "(for example the home page or a protocol page), how far they were scrolled, how many hit a missing page, how "
-                          "often the live checker, a copy button or a main button was used, and how many API and MCP calls were made and "
-                          "by which kind of caller, by day and hour. We also send from which kind of site visitors arrived, for example a "
-                          "search engine or a directory, and whether a visit came through a paid campaign. We also send the amount, what "
-                          "was paid for and the day of each payment we receive, with the kind of payer and never the payer's address. "
-                          "These totals contain no wallet address, no IP address, no name of a referring site and nothing that identifies "
-                          "a visitor or a caller.")
+PRIVACY_PROVIDER_ANALYTICS = (
+    "For analytics, we send an analytics provider a record of each API and agent call, each payment, and each page visit, "
+    "scroll and button use: what was used (tool or page, chain, listed protocol, kind of request), the outcome and how long "
+    "it took, the kind of client, the kind of site or campaign a visit came from, the amount of a payment, and the time. "
+    "We also send that a wallet used wallet memory for the first time or came back after a day, without its address. "
+    "Calls from one caller or session are grouped for one day only. These analytics records carry no wallet address, no IP "
+    "address and nothing you type or save, and are kept with no date of removal."
+)
 
 
 def privacy_page(idx):
@@ -6313,7 +6313,7 @@ def privacy_page(idx):
          'live checker, a copy button or a main button on a page was used. Each is recorded with the page path and, where they apply, '
          'the same arrival details as a page view. Nothing that was typed or copied is recorded. These counts are kept with no date of removal.</p>'
          f'<p data-privacy-repeat-callers>{E(PRIVACY_REPEAT_CALLERS, quote=False)}</p>'
-         f'<p data-privacy-keewano-totals>{E(PRIVACY_KEEWANO_TOTALS, quote=False)}</p>'),
+         f'<p data-privacy-provider-analytics>{E(PRIVACY_PROVIDER_ANALYTICS, quote=False)}</p>'),
         ("x-pixel", "X (Twitter) Ads conversion measurement",
          '<p>To measure X campaign performance, public pages on <code class="nw">pacta.wtf</code> and <code class="nw">pacta.fractalneurons.com</code> load '
          'X&#x27;s Universal Website Tag (<code>https://static.ads-twitter.com/uwt.js</code>, pixel ID <code class="nw">rjbqn</code>). It records '

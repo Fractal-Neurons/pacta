@@ -100,6 +100,10 @@ class PrivacyParagraphs(unittest.TestCase):
         self.assertEqual(len(html.unescape(m[0][1])), len(WALLET_MEMORY))
         self.assertNotIn('id="call-analytics"', t)
         self.assertNotIn('data-privacy-call-analytics', t)
+        self.assertNotIn('Keewano', t)
+        m_pa = re.findall(r'<p data-privacy-provider-analytics>([^<]*)</p>', t)
+        self.assertEqual(len(m_pa), 1)
+        self.assertEqual(html.unescape(m_pa[0]), BS.PRIVACY_PROVIDER_ANALYTICS)
         # wallet-memory sits after the first-party telemetry and X sections, before checkout; call-analytics stays off while KEEWANO_ENABLED == "0"
         ids = re.findall(r'<section class="memo-sec" id="([^"]+)">', t)
         self.assertEqual(ids, ["summary", "analytics", "x-pixel", "wallet-memory", "checkout", "checks", "watch-pilot", "requests", "contact"])
