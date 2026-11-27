@@ -958,7 +958,8 @@ class Scorecard87(unittest.TestCase):
     WATCH_CSS_TAIL = re.compile(r'\.watch-|\.combo-count\b|\.pf-watch-inline\b|\.pfw-|\.scan-watch-doors\b|^input\[type="number"\]'
                                 r'|^\.topbar \.search-btn kbd$|^\.wl-pos-name$|^\.wl-gap-links > a$|^\.wl-inline-b2b > a$'
                                 r'|^\.pf-assess > a$|^\.pf-match-foot > a$'
-                                r'|^\.ck-')   # + the /check/ ("Who controls this contract?") page rules, all under the .ck- prefix
+                                r'|^\.ck-'   # + the /check/ ("Who controls this contract?") page rules, all under the .ck- prefix
+                                r'|^\.ftr-grid\.ftr-cols5$')   # + the footer's fifth link column (Guides and lists) from 1024 px
     EXP = {e["slice_id"]: e for e in _load(os.path.join(HERE, "scorecard87_expected_136.json"), encoding="utf-8")["entries"]}
     FORBIDDEN = re.compile(r"\b(?:immutable|renounced|EOA)\b", re.I)
     # 25 Nov 2026 (40 Acres): the documentation sentence 40-acres-base's Delta compared against (last seen 24 November 2026) is no longer
@@ -977,6 +978,17 @@ class Scorecard87(unittest.TestCase):
     @staticmethod
     def _unstamp(b):
         return re.sub(rb"((?:app\.js|styles\.css)\?v=)[0-9a-f]{8}\b", rb"\1", b)
+
+    @staticmethod
+    def _unlinked(b):
+        """a record page without what the pages for assistants add to it: the links block under its lede (tools/fact_pages.py
+        record_links) and the footer's Guides and lists column (build_site.footer from fact_pages.GUIDES; its grid class with it),
+        each exactly once"""
+        b, k = re.subn(rb'\n<nav class="fact-links" aria-label="Lists this record is on" data-fact-links>.*?</nav>(?=</header>)', b"", b, count=1)
+        b, n = re.subn(rb'<div class="ftr-grid ftr-cols5">', b'<div class="ftr-grid">', b)
+        b, m = re.subn(rb'<div><h2>Guides and lists</h2><ul>(?:<li><a href="[^"]*">[^<]*</a></li>){9}</ul></div>(?=<div><h2>Company</h2>)', b"", b)
+        assert (k, n, m) == (1, 1, 1), (k, n, m)
+        return b
 
     @classmethod
     def _git(cls, path, binary=False, rev=None):
@@ -1095,7 +1107,7 @@ class Scorecard87(unittest.TestCase):
             self.assertNotEqual(_read(os.path.join(ROOT, p), "rb"), self._git(p, binary=True), p)     # A40: redrawn
         for s in clean:
             p = os.path.join("docs", "protocols", s, "index.html")
-            self.assertEqual(self._unstamp(_read(os.path.join(ROOT, p), "rb")), self._unstamp(self._watch_page(self._git(p, binary=True), s)), s)
+            self.assertEqual(self._unstamp(self._unlinked(_read(os.path.join(ROOT, p), "rb"))), self._unstamp(self._watch_page(self._git(p, binary=True), s)), s)
             c = os.path.join("docs", "cards", f"{s}.png")
             if os.path.exists(os.path.join(ROOT, c)):
                 (self.assertNotEqual if s in self.REDRAWN else self.assertEqual)(_read(os.path.join(ROOT, c), "rb"), self._git(c, binary=True), s)

@@ -42,6 +42,7 @@ import summary_short as SS  # noqa: E402  M7: <= 90-char human "What differs" li
 import scorecard_corrections as CORR  # noqa: E402  declarative wording / scope / status corrections (tools/scorecard_corrections.json)
 import ui as U  # noqa: E402  shadcn/ui component markup (data-slot anatomy)
 import decoded_briefs as DB  # noqa: E402  v4.6: radar briefs rendered from tools/briefs_decoded.json
+import fact_pages as FP  # noqa: E402  pages for assistants: fact lists, chain pages, use pages, /listed/, record-page links
 
 ARR, EXT = U.arrow("right"), U.arrow("up-right")   # v4.4 (R-V4): inline icons, never a raw arrow glyph (U+2192 / U+2197) in HTML
 
@@ -559,7 +560,9 @@ def catalog_stamp(idx=None):
 
 
 def footer(count_line, reg, home=""):
-    """M9: four grouped columns (Product, For agents, Company, Legal); one count line, the same numbers as the hero (M4)."""
+    """M9: grouped columns (Product, For agents, Guides and lists, Company, Legal); one count line, the same numbers as the hero (M4).
+    Guides and lists: the use pages, fact lists, chain pages and /listed/ (tools/fact_pages.py GUIDES); five link columns from 1024 px
+    (.ftr-grid.ftr-cols5), two below as before."""
     def col(title, links):
         lis = "".join(f'<li><a href="{E(h)}"{" target=" + chr(34) + "_blank" + chr(34) + " rel=" + chr(34) + "noopener" + chr(34) if ext else ""}>{E(l)}</a></li>'
                       for l, h, ext in links)
@@ -575,12 +578,13 @@ def footer(count_line, reg, home=""):
                ("Request a dossier", f"{home}request/", 0), ("GitHub", REPO, 1), (f"X ({X_HANDLE})", X_URL, 1), ("Community", COMMUNITY_URL, 1),
                ("Base registry", f"https://basescan.org/address/{reg}", 1)]
     legal = [("Privacy", f"{home}privacy/", 0), ("Terms", f"{home}terms/", 0), ("security.txt", f"{home}.well-known/security.txt", 0)]
-    return (f'<footer class="ftr"><div class="wrap"><div class="ftr-grid">'
+    guides = [(label, f"{home}{rel}", 0) for rel, label, _ in FP.GUIDES]   # the pages for assistants (tools/fact_pages.py GUIDES)
+    return (f'<footer class="ftr"><div class="wrap"><div class="ftr-grid ftr-cols5">'
             f'<div class="ftr-brand"><a class="brand" href="{home or "./"}"><img class="ftr-logo" src="{home}favicon.svg" alt="" width="24" height="24">PACTA</a>'
             f'<p>Independent control-plane scorecards for DeFi. Pacta, by <a href="https://fractalneurons.com">Fractal Neurons</a> · pacta.base.eth</p>'
             f'<p class="ftr-contact" data-ftr-contact>Contact: <a class="mono" href="mailto:pacta@dri.network">pacta@dri.network</a></p>'
             f'<p class="ftr-stamp" data-catalog-stamp>{E(catalog_stamp())}</p></div>'
-            + col("Product", product) + col("For agents", agents) + col("Company", company) + col("Legal", legal)
+            + col("Product", product) + col("For agents", agents) + col("Guides and lists", guides) + col("Company", company) + col("Legal", legal)
             + f'</div><div class="ftr-bottom"><span data-count-line>{E(count_line)}</span><span>Read-only onchain analysis. Not investment advice. First-party telemetry stores counts and the few details named in Privacy (zero raw IPs); X Ads conversion measurement (uwt.js) runs on public pages — see <a href="{home}privacy/">Privacy</a>.</span></div>'
             f'</div></footer>\n<div class="toaster" id="toaster" aria-live="polite" aria-atomic="true"></div>')
 
@@ -967,11 +971,13 @@ def cast_line(e):
     return f'{first}{extra}\ncast block {e["block_number"]} --field hash {rpc}\n# expect {e["block_hash"]}'
 
 
-def term(cmd, title="Reproduce on any archive node", what=None):
-    """Code block with a uniquely named Copy button (A4) and wrapped lines (R5)."""
+def term(cmd, title="Reproduce on any archive node", what=None, marker=None):
+    """Code block with a uniquely named Copy button (A4) and wrapped lines (R5). marker: data-copy-count="<page>:<button>" (which
+    page and which button, never what is copied) for a later copy count; no script reads it."""
     aria = what or f"Copy command: {title}"
+    mk = f' data-copy-count="{E(marker)}"' if marker else ""
     return (f'<div class="term"><div class="term-h"><span>{E(title)}</span>'
-            f'<button class="copy" data-slot="button" data-variant="ghost" data-size="sm" type="button" data-copy-term '
+            f'<button class="copy" data-slot="button" data-variant="ghost" data-size="sm" type="button" data-copy-term{mk} '
             f'aria-label="{E(aria)}">{U.icon("copy")}<span>Copy</span></button></div>'
             f'<pre>{E(cmd)}</pre></div>')
 
@@ -2958,6 +2964,21 @@ def card_for(idx, slug):
     return _CARDS[slug]
 
 
+_WAVE = {}
+
+
+def wave(idx, radar):
+    """The pages for assistants (tools/fact_pages.py: fact lists, chain pages, use pages, /listed/) and every record page's links
+    block, computed once per build from the published records through their scorecard facts; FP.check() fails the build when a
+    count in a page's first lines is not the number of rows under it."""
+    if not _WAVE:
+        sp = site_protocols(idx)
+        card_for(idx, next(iter(sp.values()))["slug"])
+        out, facts, lists, nums = FP.build(sys.modules[__name__], idx, sp, _CARDS, radar)
+        _WAVE.update(out=out, F=facts, L=lists, nums=nums, check=FP.check(out, lists, nums))
+    return _WAVE
+
+
 def grade_pill(card):
     import scorecard as SC
     lbl, v = GRADE_UI[card["grade"]]
@@ -3290,7 +3311,8 @@ def protocol_page(name, entries, idx, radar, digest=None, slug=None):
 <nav class="crumbs breadcrumb" aria-label="Breadcrumb"><a href="../../">Pacta</a><span aria-hidden="true">/</span><a href="../">Protocols</a><span aria-hidden="true">/</span><span>{E(name)}</span></nav>
 <article class="memo">
 <header><span class="tier">{E(cat)}</span><h1>{E(title)}</h1>
-<p class="lede">{lede}</p></header>
+<p class="lede">{lede}</p>
+{FP.record_links(sys.modules[__name__], wave(idx, radar)["F"], slug)}</header>
 {what_differs_html(entries, seal_cta=not is_aligned_page(entries))}{scorecard_section(card_for(idx, slug))}<section class="memo-sec" id="live-check"><h2>Check it live (free)</h2><p>The pre-flight API re-reads the controller, proxy and capabilities of one contract at the latest block. No key, no wallet. The score rates that single contract, not the whole protocol.</p>
 {live}</section>
 {watch_pilot_box("../../", default_target=slug, heading=f"Get an email when {name} changes", id_attr="watch-pilot", compact=True)}
@@ -5460,6 +5482,7 @@ def mcp_page(idx):
 <p class="lede" data-mcp-memory><b>Wallet memory</b> (<code>remember</code>, <code>what_changed_since</code>, <code>forget</code>): {E(B2A.WALLET_MEMORY_PURPOSE)} Free on MCP and <code>POST /v1/memory/*</code> at 20 calls per minute and 100 calls per day per wallet, signed with <code>wallet_auth</code> (an EOA or ERC-1271 signature) or a 1-hour <code>wallet_session_token</code>; up to 200 items per wallet, notes up to 500 characters. The same calls cost $0.001 USDC each on Base via <code>POST /v1/x402/remember</code> and <code>POST /v1/x402/what-changed-since</code> (60 calls per minute, no daily cap); <code>forget</code> is always free. <span data-trust-notice>{E(B2A.WALLET_MEMORY_TRUST_NOTICE)}</span> (<a href="../privacy/">Privacy</a>)</p></header>
 <section class="memo-sec" id="install"><h2>Install</h2>
 {install}
+{FP.mcp_guides(sys.modules[__name__], "../")}
 <p>Optional attribution: <code>caller_agent</code>, <code>requester_role</code> and <code>caller_purpose</code> (non-personal; omitted or invalid values never block a call — invalid values are silently dropped; see <a href="../SKILL.md">SKILL.md</a>).</p></section>
 <section class="memo-sec" id="tools"><h2>Tools ({E(B2A.REMOTE_TOOLS_DOC)})</h2><ul>{tools}</ul>
 <p>Indexed protocols: <a href="../api/v1/protocols.json">protocol data</a> · machine-readable server card: <a href="../.well-known/mcp.json">/.well-known/mcp.json</a> · REST twin and OpenAPI 3.1: <a href="{E(OPENAPI_URL)}" target="_blank" rel="noopener">openapi.json{EXT}</a></p>
@@ -5527,6 +5550,7 @@ def llms(idx, radar):
         f"- [{OPENAPI_URL}]({OPENAPI_URL}): OpenAPI 3.1 for ChatGPT Actions, LangChain and OpenAPI tools; every route takes GET query parameters or a POST JSON body. {RATE_LIMIT}; free daily tier plus the paid /v1/x402/* routes, x402 v1 + v2.",
         f"- [{BASE_URL}/protocols/]({BASE_URL}/protocols/): per-protocol control-plane safety records.",
         f"- [{BASE_URL}/integrations/vault-factories/]({BASE_URL}/integrations/vault-factories/): free building blocks for vault factories and curators (Morpho Vault V2, Euler EVK, Veda BoringVault, Lagoon, Upshift, Mellow): a Control-Plane & Role Map tab from /api/v1/protocols.json, status badges (/badges/<slug>.svg; live {API}/v1/badges/<slug>.svg), and PactaSentinelGuard.sol, a cap-increase tripwire that never blocks a decrease.", "",
+    ] + FP.llms_lines(BASE_URL, md=True) + ["",   # the pages for assistants (tools/fact_pages.py GUIDES)
         "## Agent feeds",
         f"- [{BASE_URL}/llms-full.txt]({BASE_URL}/llms-full.txt): complete single-file reference (feeds, MCP tools, x402, anchoring, every record, proposal and queued operation).",
         f"- [{BASE_URL}/api/v1/proposals.json]({BASE_URL}/api/v1/proposals.json): schema `pacta.governance_proposals_feed.v1`; live Aave / Euler / Morpho / Sky proposals mapped to block-pinned observations.",
@@ -5971,6 +5995,7 @@ def agents_section(prefix=""):
     return f"""<section class="sec" id="audiences"><div class="wrap">
 <div class="sec-head"><h2>Also built for agents and protocol teams</h2><p class="aside">The same data, two more ways in.</p></div>
 <div class="aud">{agents}{teams}</div>
+{FP.home_guides(sys.modules[__name__], prefix)}
 </div></section>"""
 
 
@@ -6951,6 +6976,11 @@ def build_all():
     for name, v in sp.items():
         w(f"protocols/{v['slug']}/index.html", protocol_page(name, v["entries"], idx, radar, digest, v["slug"]))
     w("protocols/index.html", protocols_index_page(idx, sp))
+    wv = wave(idx, radar)                         # pages for assistants: not in sitemap.xml, feed.xml or llms.txt (entries added separately)
+    for rel_, html_ in wv["out"].items():
+        w(rel_ + "index.html", html_)
+    for line_ in wv["check"]:
+        print("first-lines check:", line_)
     w("sponsor/index.html", sponsor_page(idx))   # quotes the protocol pages just written (five lead pools, one CTA to /watch/#fund-check)
     w("integrations/vault-factories/index.html", vault_factories_page(idx, sp))
     claims = load_wave2_claims()

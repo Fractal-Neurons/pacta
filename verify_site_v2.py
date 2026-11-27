@@ -96,7 +96,7 @@ def no_watch_24h(t):
     return WATCH_24H_RE.sub("", t)
 
 
-NON_PROTOCOL_PAGES = 45                                                  # docs/**/*.html pages that are not /protocols/<slug>/ (40: + /curators/ /scan/ /webhook/ /seal/ /miniapp/, + the Cap, Compound V3 and Lista Lending briefs; 43: + /sponsor/; 44: + /check/; 45: + /proof/moonwell-cbeth/)
+NON_PROTOCOL_PAGES = 54                                                  # docs/**/*.html pages that are not /protocols/<slug>/ (40: + /curators/ /scan/ /webhook/ /seal/ /miniapp/, + the Cap, Compound V3 and Lista Lending briefs; 43: + /sponsor/; 44: + /check/; 45: + /proof/moonwell-cbeth/; 54: + the 9 pages for assistants of tools/fact_pages.py)
 
 
 def check(name, ok, detail=""):
@@ -1146,17 +1146,27 @@ def main(argv=None):
                    (r"\b(\d[\d,]*) attested checks?\b(?! · pinned block)", n),
                    (r"\b(\d[\d,]*) (?:indexed |published |DeFi |scored )?protocols\b", X["protocols"])]
 
-    def count_contradictions(text):
+    def count_contradictions(text, own=()):
+        """own: a page for assistants (tools/fact_pages.py) also names its own list counts ("75 DeFi protocols put a delay ..."), the
+        numbers its first lines mark (data-n); every other "N protocols" on it is still the catalog size"""
         text = re.sub(r'<table class="ix" data-bounty-slots>.*?</table>', "", text, flags=re.S)
         text = re.sub(r'<details class="archive-details" id="wave-1-archive".*?</details>\n</article>', "", text, flags=re.S)   # v4.7 W4
-        return [(m.group(0), want) for rx, want in count_rules for m in re.finditer(rx, text) if int(m.group(1).replace(",", "")) != want]
+        return [(m.group(0), want) for rx, want in count_rules for m in re.finditer(rx, text)
+                if int(m.group(1).replace(",", "")) != want and not (want == X["protocols"] and int(m.group(1).replace(",", "")) in own)]
     probes = {"999 RPC-Observed": f"{X['protocols']} protocols · 999 RPC-Observed", "7 RPC-observed": "7 RPC-observed protocols",
               "79 Base-EAS attested": "79 Base-EAS attested", "158 attested checks": "158 attested checks across 24",
               "85 protocols": "Search 85 protocols"}
     probe_ok = all([h[0] for h in count_contradictions(t_)] == [k_] for k_, t_ in probes.items()) and not count_contradictions(
         f"{X['protocols']} protocols ({X['protocols'] - n_rpc_c} Base-EAS attested + {n_rpc_c} RPC-observed) · {n} attested checks · 3 attested checks · pinned block #1")
     cc_files = sorted(glob.glob(os.path.join(DOCS, "**", "*.html"), recursive=True)) + [os.path.join(ROOT, f) for f in ("docs/llms.txt", "docs/llms-full.txt", "docs/SKILL.md", "README.md")]
-    cc_bad = [(os.path.relpath(f, ROOT), h) for f in cc_files for h in count_contradictions(open(f, encoding="utf-8").read())]
+    sys.path.insert(0, os.path.join(ROOT, "tools"))
+    import fact_pages as FP_
+    fp_own = {os.path.join(DOCS, r_, "index.html") for r_ in FP_.PAGES}
+
+    def own_counts(f, t_):
+        return set(FP_.first_lines_counts(t_)[0].values()) if f in fp_own else ()
+    cc_bad = [(os.path.relpath(f, ROOT), h) for f in cc_files for t_ in [open(f, encoding="utf-8").read()]
+              for h in count_contradictions(t_, own_counts(f, t_))]
     check("M4 count-contradiction guard: 0 wrong RPC-observed / Base-EAS attested / attested checks / protocols numbers across every page, llms.txt, "
           "llms-full.txt, SKILL.md and README (self-probe: injected 999 RPC-Observed, 79 Base-EAS, 158 checks, 85 protocols are each caught)",
           probe_ok and not cc_bad, f"probe {probe_ok}; {len(cc_files)} files; contradictions {cc_bad[:4]}")
@@ -1960,6 +1970,120 @@ def main(argv=None):
           "both source links; linked with the approved line word for word and nothing around it from exactly /, /mcp/ (Tools section), "
           "llms.txt + /llms/ and README.md, and from no brief, sitemap.xml, feed.xml or llms-full.txt",
           all(pm_ok.values()), str([k_ for k_, v_ in pm_ok.items() if not v_]))
+
+    # Pages for assistants (tools/fact_pages.py): three lists by one checked fact, two chain pages, three use pages and /listed/,
+    # and the links block on every record page. Rule a is recomputed here from the built HTML: a count in a page's first lines
+    # equals the rows under it, and the parts of each list add up to the protocols checked.
+    sys.path.insert(0, os.path.join(ROOT, "tools"))
+    import fact_pages as FP_
+    fp = {r_: read(f"docs/{r_}index.html") for r_ in FP_.PAGES}
+    fp_art = {r_: t_.split('<article class="memo" data-page=', 1)[-1].split("</article>", 1)[0] for r_, t_ in fp.items()}
+    fp_n = {r_: FP_.first_lines_counts(t_) for r_, t_ in fp.items()}
+    n_all = X["protocols"]
+    tl_n, ms_n, dv_n = fp_n["control/timelock/"][0], fp_n["control/multisig/"][0], fp_n["docs-vs-chain/"][0]
+    learn = [r_ for r_ in FP_.PAGES if r_.startswith("learn/")]
+    markers = [m_ for r_ in learn for m_ in re.findall(r'data-copy-count="([^"]+)"', fp[r_])]
+    copy_btns = sum(fp_art[r_].count('class="copy"') for r_ in learn)
+    rec_pages = sorted(glob.glob(os.path.join(DOCS, "protocols", "*", "index.html")))
+    rec_links = [re.search(r'<nav class="fact-links" aria-label="Lists this record is on" data-fact-links>(.*?)</nav>', open(f_, encoding="utf-8").read())
+                 for f_ in rec_pages]
+    unlisted_in = ["sitemap.xml", "feed.xml", "api/v1/feed.json"]   # sitemap entries and their dates are added separately
+    # W8: the pages are linked from the home page (one block), from every footer (the Guides and lists column, in GUIDES order) and
+    # /mcp/ (the three use pages); W9: llms.txt and llms-full.txt carry one Guides and lists section each, the GUIDES lines in order,
+    # with no figure; nothing links to /learn/ itself (no page of its own)
+    g_rels = [g_[0] for g_ in FP_.GUIDES]
+    hrefs_ = lambda t_: re.findall(r'href="([^"]*)"', t_)
+    pre_ok = lambda h_, rel_: h_.endswith(rel_) and re.fullmatch(r"(?:\.\./)*|/", h_[:-len(rel_)]) is not None
+    ftr_cols = {r_: re.search(r'<div class="ftr-grid ftr-cols5">.*?<div><h2>Guides and lists</h2><ul>(.*?)</ul></div><div><h2>Company</h2>', t_, re.S)
+                for r_, t_ in pages.items() if 'class="ftr"' in t_}
+    ftr_bad = [r_ for r_, m_ in ftr_cols.items() if not m_ or len(hrefs_(m_.group(1))) != len(g_rels)
+               or not all(pre_ok(h_, g_) for h_, g_ in zip(hrefs_(m_.group(1)), g_rels))]
+    home_g = re.search(r'<nav class="home-guides" aria-label="Guides and lists" data-home-guides>(.*?)</nav>', read("docs/index.html"), re.S)
+    mcp_g = re.search(r"<p data-mcp-guides>(.*?)</p>", read("docs/mcp/index.html"), re.S)
+    learn_bare = [r_ for r_, t_ in pages.items() if re.search(r'href="(?:(?:\.\./)*|/|https://pacta\.wtf/)learn/"', t_)]
+    llms_t_, llmsf_t_ = read("docs/llms.txt"), read("docs/llms-full.txt")
+    llms_sec_ok = ("\n".join(FP_.llms_lines(BS.BASE_URL, md=True)) + "\n\n" in llms_t_ and "\n".join(FP_.llms_lines(B2A.BASE, md=False)) + "\n\n" in llmsf_t_
+                   and all(sum(f"{BS.BASE_URL}/{r_}" in l_ for l_ in t_.split("\n")) == 1 for t_ in (llms_t_, llmsf_t_) for r_ in g_rels)
+                   and llms_t_.count("## Guides and lists") == llmsf_t_.count("## Guides and lists") == 1
+                   and not [g_ for g_ in FP_.GUIDES if re.search(r"\d", re.sub(r"\bx402\b|\b1 of 1\b", "", g_[2]))]
+                   and not re.search(r"pacta\.wtf/learn/(?:[)\s:]|$)", llms_t_ + llmsf_t_, re.M))
+    # W10: the count a list or chain page's description leads with is the number of its rows
+    desc_n = {r_: {re.match(r"(\d+) DeFi protocols ", html.unescape(c_)).group(1) if re.match(r"(\d+) DeFi protocols ", html.unescape(c_)) else None
+                   for c_ in re.findall(r'<meta (?:name|property)="(?:description|og:description|twitter:description)" content="([^"]*)"', fp[r_])}
+              for r_ in FP_.LIST_PAGES + tuple(f"chains/{c_}/" for c_ in FP_.CHAIN_PAGES)}
+    import build_b2a_feeds as B2A
+
+    def cells_(t_, attr_):
+        tb_ = re.split(r'<table class="stack(?: w2-table)?" ' + re.escape(attr_) + ">", t_, 1)[1].split("</tbody>", 1)[0].split("<tbody>", 1)[1]
+        return [[html.unescape(re.sub(r"<[^>]+>", "", c_.replace("<br>", " | "))) for c_ in re.findall(r'<td data-label="[^"]+">(.*?)</td>', tr_)]
+                for tr_ in re.findall(r"<tr>(.*?)</tr>", tb_)]
+    tool_rows = [[r_[0], r_[2], r_[3]] for r_ in cells_(fp["learn/connect-mcp-agent/"], "data-tool-table")]
+    price_rows_ = [[r_[0].split(" (", 1)[0], r_[0].split(" (", 1)[1][:-1], r_[1], r_[2]] for r_ in cells_(fp["learn/check-before-deposit/"], "data-price-table")]
+    routes_named = sorted({m_ for r_ in learn for m_ in re.findall(r"/v1/[\w/.-]*[\w-]", re.sub(r"/v1/[\w/-]*/\*", " ", html.unescape(re.sub(r"<[^>]+>", " ", fp_art[r_]))))})
+    listed_rows = [(r_[0], r_[1], r_[2].split(" | ", 1)[0], r_[3]) for r_ in cells_(fp["listed/"], "data-listings")]
+    fp_ok = {
+        "the 9 pages, one h1 each, h1 = title tag": all(re.findall(r"<title>([^<]*)</title>", t_) == [html.escape(FP_.TITLES[r_], quote=True)]
+                                                       and re.findall(r"<h1>([^<]*)</h1>", t_) == [html.escape(FP_.TITLES[r_], quote=True)]
+                                                       for r_, t_ in fp.items()),
+        "robots": all(re.findall(r'<meta name="robots" content="([^"]*)">', t_) == [BS.ROBOTS_META] for t_ in fp.values()),
+        "no list of protocols with no upgrade path": not os.path.exists(os.path.join(DOCS, "control", "immutable")),
+        "rule a: first-line count = rows (3 lists, 2 chain pages)": all(fp_n[r_][0].get("rows") == fp_n[r_][1] and fp_n[r_][1] > 0
+                                                                        for r_ in FP_.LIST_PAGES + tuple(f"chains/{c_}/" for c_ in FP_.CHAIN_PAGES)),
+        "timelock: listed + not determined + no delay = all protocols": tl_n["rows"] + tl_n["nd"] + tl_n["zero"] == tl_n["total"] == n_all,
+        "multisig: listed + not determined + token vote = all protocols": ms_n["rows"] + ms_n["nd"] + ms_n.get("governor", 0) == ms_n["total"] == n_all,
+        "docs-vs-chain: differ + not determined + agree = compared; compared + not compared = all protocols":
+            dv_n["rows"] + dv_n["nd"] + dv_n["agree"] == dv_n["compared"] and dv_n["compared"] + dv_n["uncompared"] == dv_n["total"] == n_all,
+        "chain pages: on one chain + on both + on neither = all protocols; Ethereum + Base rows = one + 2 x both":
+            all(fp_n[f"chains/{c_}/"][0]["both"] == sum(1 for k_ in sc_cards if len(k_["chains"]) == 2)
+                and fp_n[f"chains/{c_}/"][0]["one"] + fp_n[f"chains/{c_}/"][0]["both"] + fp_n[f"chains/{c_}/"][0].get("neither", 0)
+                == fp_n[f"chains/{c_}/"][0]["total"] == n_all for c_ in FP_.CHAIN_PAGES)
+            and fp_n["chains/ethereum/"][1] + fp_n["chains/base/"][1] == fp_n["chains/base/"][0]["one"] + 2 * fp_n["chains/base/"][0]["both"]
+            and fp_n["chains/ethereum/"][0] | {"rows": 0, "timelock": 0, "multisig": 0, "docs": 0}
+            == fp_n["chains/base/"][0] | {"rows": 0, "timelock": 0, "multisig": 0, "docs": 0},
+        "change dates: lists and chain pages the newest block date; use pages and /listed/ the day their text last changed (TEXT_PINS, "
+        "fingerprint = pin) or their newest input, whichever is later; an example's reading date labelled as that":
+            all(len(re.findall(r'<time datetime="\d{4}-\d\d-\d\d" data-change-date>', fp[r_])) == 1 for r_ in FP_.PAGES)
+            and all(FP_.text_fingerprint(fp[r_]) == FP_.TEXT_PINS[r_][1]
+                    and re.findall(r'<time datetime="(\d{4}-\d\d-\d\d)" data-change-date>', fp[r_])[0]
+                    == max([FP_.TEXT_PINS[r_][0]] + re.findall(r'<time datetime="(\d{4}-\d\d-\d\d)" data-reading-date>', fp[r_])
+                           + ([max(d_ for *_, d_ in FP_.LISTINGS)] if r_ == "listed/" else []))
+                    for r_ in learn + ["listed/"])
+            and all("data-reading-date" in fp[r_] for r_ in learn),
+        "docs-vs-chain: every quote shown is closed; a cut ends between whole quotes; a cell with no web address links the record":
+            all(FP_.quotes_closed(html.unescape(re.sub(r"<[^>]+>", "", c_.split("<br>", 1)[0])))
+                for c_ in re.findall(r'<td data-label="The documents say">(.*?)</td>', fp["docs-vs-chain/"])),
+        "no grade or judgement word in the new text": not [h_ for r_ in fp for h_ in FP_.banned(fp_art[r_])]
+            and not [h_ for m_ in rec_links if m_ for h_ in FP_.banned(m_.group(1))],
+        "use pages: 0 brackets left; the tool table is the remote tool list and both tables' limits and prices are the site's price "
+        "list (tools/build_b2a_feeds.py); every route named is a path of openapi.json":
+            not [r_ for r_ in FP_.PAGES if "data-fill" in fp[r_] or re.search(r"\[[a-z][^\]<]{6,}\]", re.sub(r"<pre>.*?</pre>", "", fp_art[r_], flags=re.S))]
+            and tool_rows == [[t_, FP_.prices(BS)[t_][1], FP_.prices(BS)[t_][2]] for t_ in B2A.REMOTE_TOOLS]
+            and price_rows_ == [[t_, FP_.prices(BS)[t_][0], FP_.prices(BS)[t_][1], FP_.prices(BS)[t_][2]]
+                                for t_ in ("who_controls", "trace_dependencies", "pacta_check_preflight", "remember", "what_changed_since", "forget")]
+            and not [r_ for r_ in routes_named if r_ not in json.loads(read("docs/api/v1/openapi.json"))["paths"]],
+        "use pages: each copy button carries its page:button marker, no script reads it": sorted(markers) == sorted(FP_.COPY_MARKERS)
+            and copy_btns == len(markers) and "data-copy-count" not in read("tools/app.src.js") and "data-copy-count" not in read("docs/b.js"),
+        "/listed/: one row per checked listing, newest first, each a https link; the left-out count in one line":
+            len(listed_rows) == len(FP_.LISTINGS) and [d_ for *_, d_ in listed_rows] == sorted((d_ for *_, d_ in listed_rows), reverse=True)
+            and all(u_.startswith("https://") for _, _, u_, _ in listed_rows)
+            and f'<p data-listed-left-out>{len(FP_.LISTINGS_LEFT_OUT)} more ' in fp["listed/"],
+        "every record page: the links block under its lede (chain page, how to check)": len(rec_pages) == n_all and all(
+            m_ and 'href="../../chains/' in m_.group(1) and 'href="../../learn/who-can-upgrade/"' in m_.group(1) for m_ in rec_links),
+        "record links: one per list a record is on": sum(m_.group(1).count('href="../../control/timelock/"') for m_ in rec_links) == tl_n["rows"]
+            and sum(m_.group(1).count('href="../../control/multisig/"') for m_ in rec_links) == ms_n["rows"]
+            and sum(m_.group(1).count('href="../../docs-vs-chain/"') for m_ in rec_links) == dv_n["rows"],
+        "not in sitemap.xml, feed.xml or feed.json": not [f_ for f_ in unlisted_in for r_ in FP_.PAGES if f"{BS.BASE_URL}/{r_}" in read("docs/" + f_)],
+        "W9: one Guides and lists section in llms.txt and llms-full.txt (each page once, in order, no figure)": llms_sec_ok,
+        "W8: linked from the home page block, every footer's Guides and lists column and /mcp/ (the three use pages); 0 links to /learn/":
+            sorted(set(FP_.PAGES)) == sorted(g_rels) and bool(ftr_cols) and not ftr_bad and not learn_bare
+            and bool(home_g) and [h_ for h_ in hrefs_(home_g.group(1))] == g_rels
+            and bool(mcp_g) and hrefs_(mcp_g.group(1)) == ["../" + g_[0] for g_ in FP_.GUIDE_USE],
+        "W10: each list and chain page's description leads with its row count": all(v_ == {str(fp_n[r_][1])} for r_, v_ in desc_n.items()),
+    }
+    check(f"pages for assistants: /control/timelock/ ({tl_n['rows']}), /control/multisig/ ({ms_n['rows']}), /docs-vs-chain/ ({dv_n['rows']}), "
+          "/chains/ethereum/ + /chains/base/, 3 use pages, /listed/; first-line counts = rows (rule a); no grade words; use-page limits, prices, "
+          "routes and tools from the site's own lists, page:button copy markers; the links block on every record page; in no sitemap, feed or llms file",
+          all(fp_ok.values()), str([k_ for k_, v_ in fp_ok.items() if not v_]))
 
     glama = json.loads(read("glama.json"))
     smith = read("smithery.yaml")

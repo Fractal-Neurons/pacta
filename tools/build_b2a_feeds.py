@@ -26,6 +26,7 @@ def _json_file(*a, **k):
 
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import fact_pages as FP  # noqa: E402  the pages for assistants: their "Guides and lists" section (GUIDES)
 import onboarding_render as OR  # noqa: E402
 import scorecard_corrections as CORR  # noqa: E402
 
@@ -369,7 +370,7 @@ def llms_full(idx, radar, prop, onb, pinned=None):
          "## How to verify any value",
          "1. Take the record's target, call signature and arguments, block number and block hash.",
          "2. Run the listed `cast call … --block N` (or eth_call with EIP-1898 {blockHash, requireCanonical: true}) on any archive node.",
-         "3. Run `cast block N --field hash` and compare with the recorded block hash.", "",
+         "3. Run `cast block N --field hash` and compare with the recorded block hash.", ""] + FP.llms_lines(BASE, md=False) + ["",
          "## MCP server", f"- Name: {MCP_NAME} · remote Streamable HTTP {MCP_REMOTE_URL} (no install) · local stdio from a clone.", f"- Status: {MCP_STATUS}",
          f"- Remote MCP (primary, zero install, Streamable HTTP): {MCP_REMOTE_URL} · Claude Code: `claude mcp add --transport http pacta {MCP_REMOTE_URL}` · "
          f"MCP client config: {{\"mcpServers\": {{\"pacta\": {{\"url\": \"{MCP_REMOTE_URL}\"}}}}}} · remote tools ({LLMS_REMOTE_TOOLS_DOC}): {', '.join(LLMS_REMOTE_TOOLS)} ({LLMS_REMOTE_ALIAS_NOTE}).",
@@ -580,6 +581,8 @@ FREE_X402_MCP_TOOLS = ["pacta_verdict", "pacta_dossier"]
 WHO_CONTROLS_TOOL = "who_controls"
 WHO_CONTROLS_ALIAS = "pacta_who_controls_contract"
 WHO_CONTROLS_DAILY_QUOTA = 100
+WALLET_MEMORY_DAILY_QUOTA, WALLET_MEMORY_PER_MIN = 100, 20        # remember / what_changed_since free doors, per wallet (FREE_TIER_DOC)
+X402_MEMORY_PER_MIN = 60                                          # their paid doors /v1/x402/remember and /v1/x402/what-changed-since
 FEATURE_REQUEST_DAILY_LIMIT = 5
 # The llms texts state the same 16 remote tools as SKILL.md, mcp.json, /mcp/ and the home page.
 LLMS_REMOTE_TOOLS = REMOTE_TOOLS

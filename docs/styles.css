@@ -1999,3 +1999,5 @@ input[type="number"]:focus-visible { outline: none; border-color: var(--ring); b
   .ck-result { padding: 16px 14px; }
   .ck-dl > div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
 }
+/* pages for assistants: the footer's "Guides and lists" column makes five link columns from 1024 px (two below, as before) */
+@media (min-width: 1024px) { .ftr-grid.ftr-cols5 { grid-template-columns: minmax(0, 1.4fr) repeat(5, minmax(0, 1fr)); } }
