@@ -593,8 +593,8 @@ LLMS_FEATURE_DOC = (f"Feature requests (free): the MCP tool {FEATURE_TOOL} or PO
                     "(text up to 1000 characters, use_case up to 500): tell Pacta what tool, chain, check or data your agent needs; read daily. Never include "
                     f"names, emails, IP addresses, secrets or keys. Free: {FEATURE_REQUEST_DAILY_LIMIT} per caller per UTC day.")
 WALLET_MEMORY_TRUST_NOTICE = ("Pacta keeps what your wallet saves (contract addresses, block numbers, your notes), with your wallet address and the "
-                              "time. No other wallet can read it. We do not share, sell, score or trade on it. One call erases it; backup copies "
-                              "expire within 30 days.")   # the Worker's WALLET_MEMORY_TRUST_NOTICE, word for word (253 characters)
+                              "time. No other wallet can read it. We do not sell, score or trade on it. One call ends every recall of it. What remains "
+                              "in backups and records, and who processes your notes, is in our privacy notice.")   # the Worker's WALLET_MEMORY_TRUST_NOTICE, word for word (316 characters)
 X402_MEMORY_ENDPOINTS = [("/v1/x402/remember", "0.001", "Wallet memory, paid door of remember: save a position, an entry block or a rule under your "
                           "wallet. The payer must be the wallet in wallet_auth / wallet_session_token; the free doors are POST /v1/memory/remember and MCP"),
                          ("/v1/x402/what-changed-since", "0.001", "Wallet memory, paid door of what_changed_since: every control, minter, price "

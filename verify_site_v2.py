@@ -3181,11 +3181,12 @@ def main(argv=None):
     g2_priv["data-privacy-summary-gate2"] = [html.unescape(x_) for x_ in re.findall(
         r'<section class="memo-sec" id="summary"><h2>Summary</h2><p>Pacta has no user accounts\. First-party telemetry stores counts '
         r'and the few details named below \(zero raw IP addresses\)\. <span data-privacy-summary-gate2>([^<]*)</span> On the public production domains ', priv_html)]
-    check("/privacy/: the wallet-memory summary sentence (150 characters, right after Sentence D) and the wallet-memory (1089 characters) "
-          "paragraph, word for word, once each (call-analytics kept off while KEEWANO_ENABLED == '0')",
+    check("/privacy/: the wallet-memory summary sentence (150 characters, right after Sentence D) and the two-store wallet-memory "
+          "paragraphs (7 paragraphs), word for word, once each (call-analytics kept off)",
           g2_priv["data-privacy-summary-gate2"] == [BS.PRIVACY_SUMMARY_WALLET_ONLY] and len(BS.PRIVACY_SUMMARY_WALLET_ONLY) == 150
           and priv_html.count("data-privacy-summary-gate2") == 1
-          and g2_priv["data-privacy-wallet-memory"] == [BS.PRIVACY_WALLET_MEMORY] and len(BS.PRIVACY_WALLET_MEMORY) == 1089
+          and tuple(g2_priv["data-privacy-wallet-memory"]) == BS.PRIVACY_WALLET_MEMORY_PARAGRAPHS and len(BS.PRIVACY_WALLET_MEMORY_PARAGRAPHS) == 7
+          and "[CHANGE" not in priv_html
           and g2_priv["data-privacy-call-analytics"] == []
           and 'id="wallet-memory"' in priv_html and 'id="call-analytics"' not in priv_html,
           str({k_: [len(x_) for x_ in v_] for k_, v_ in g2_priv.items()}))
@@ -3604,7 +3605,8 @@ def main(argv=None):
                 "trace_dependencies", "remember", "what_changed_since", "forget", "pacta_submit_request", "request_feature"]
     g2_doc = "11 read-only inspection tools + 3 wallet-memory tools + 2 opt-in request tools"
     g2_trust = ("Pacta keeps what your wallet saves (contract addresses, block numbers, your notes), with your wallet address and the time. "
-                "No other wallet can read it. We do not share, sell, score or trade on it. One call erases it; backup copies expire within 30 days.")
+                "No other wallet can read it. We do not sell, score or trade on it. One call ends every recall of it. What remains in backups "
+                "and records, and who processes your notes, is in our privacy notice.")
     g2_list = re.search(r'<section class="memo-sec" id="tools"><h2>Tools \(([^)]*)\)</h2><ul>(.*?)</ul>', g2_mcp)
     g2_table = re.search(r'<section class="memo-sec" id="x402">.*?<tbody>(.*?)</tbody>', g2_mcp, re.S)
     g2_rows = re.findall(r'<tr><td class="nowrap"><code>POST (/v1/x402/[a-z-]+)</code></td><td class="nowrap num">\$([0-9.]+)</td><td>([^<]*)</td></tr>',
@@ -3632,7 +3634,7 @@ def main(argv=None):
     g2 = {
         "shared constants": B2AV.REMOTE_TOOLS == g2_tools and B2AV.LLMS_REMOTE_TOOLS == g2_tools and B2AV.REMOTE_TOOLS_DOC == g2_doc
             and B2AV.LLMS_REMOTE_TOOLS_DOC == g2_doc and B2AV.STDIO_TOOLS_DOC == "14 read-only inspection tools + 2 opt-in request tools"
-            and B2AV.WALLET_MEMORY_TRUST_NOTICE == g2_trust and len(g2_trust) == 253 and (B2AV.WHO_CONTROLS_TOOL, B2AV.WHO_CONTROLS_ALIAS) == ("who_controls", "pacta_who_controls_contract"),
+            and B2AV.WALLET_MEMORY_TRUST_NOTICE == g2_trust and len(g2_trust) == 316 and (B2AV.WHO_CONTROLS_TOOL, B2AV.WHO_CONTROLS_ALIAS) == ("who_controls", "pacta_who_controls_contract"),
         "0 stale discovery strings": not any(g2_stale.values()),
         "/mcp/ badge": g2_mcp.count('data-mcp-tier>16 MCP tools · free read &amp; wallet memory</span>') == 1,
         "/mcp/ lede: free reads + daily tiers": all(x_ in g2_mcp for x_ in (
@@ -3711,7 +3713,7 @@ def main(argv=None):
     }
     check("Discovery copy: /, /mcp/, llms.txt, /llms/, llms-full.txt, smithery.yaml (+ SKILL.md, mcp.json, agent.json, /request/, 404) state 16 remote "
           "tools (11 + 3 + 2, tools/list order), 100/day + 50/day free tiers, wallet memory 20/min + 100/day per wallet, 2 x $0.001 paid memory doors, "
-          "the 253-character trust notice; 0 stale 7 + 1 strings",
+          "the 316-character trust notice; 0 stale 7 + 1 strings",
           all(g2.values()), f"{[k for k, v in g2.items() if not v]} stale {({k: v for k, v in g2_stale.items() if v})}")
 
     bounty = read("docs/bounties/index.html")

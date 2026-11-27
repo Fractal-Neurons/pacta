@@ -21,16 +21,8 @@ SUMMARY_WALLET_ONLY = ("One thing goes further and has its own section below: if
 SUMMARY_QUALIFIER = ("Two things go further and have their own sections below: if your agent uses the wallet memory tools, Pacta stores what it "
                      "saves under its wallet address; and a record of each API and MCP call, without wallet or IP address, goes to our "
                      "analytics provider, Keewano.")
-WALLET_MEMORY = ("If your agent uses the remember tool, Pacta stores what it saves: contract addresses, block numbers and your notes, "
-                 "together with your wallet address, the time of each save and the time of your latest recall. No other wallet can read it. "
-                 "Pacta reads it to answer your own later calls, such as what changed since a block. We do not share it, sell it, score it "
-                 "or trade on it. The forget tool erases one item or everything saved under your wallet at once. Backup copies kept by our "
-                 "storage provider, Cloudflare, expire within 30 days. The data is encrypted at rest, and Cloudflare holds the keys. "
-                 "Payments are separate. If your agent pays for a call, our payment record keeps the paying wallet's address, the "
-                 "transaction, the amount and the time, and the payment itself stays on the public Base chain. The forget tool does not "
-                 "remove a payment. A payment record does not hold what your agent saved. It holds a one-way fingerprint of the paid "
-                 "request, kept so that a retry after a lost reply gets its answer without paying again and so that the payment cannot be "
-                 "used for a different request.")
+WALLET_MEMORY_PARAGRAPHS = BS.PRIVACY_WALLET_MEMORY_PARAGRAPHS
+WALLET_MEMORY = "\n\n".join(WALLET_MEMORY_PARAGRAPHS)
 CALL_ANALYTICS = ("To see how the service is used, we send a record of each call to our analytics provider, Keewano: which tool, which "
                   "chain, which listed protocol the call was about, the kind of client, the outcome and roughly how long it took. For memory "
                   "tools no protocol is sent. The record carries a label that stands for one caller for one day and is replaced at midnight "
@@ -47,7 +39,8 @@ REMOTE_TOOLS_16 = ["pacta_lookup_protocol", "who_controls", "pacta_check_preflig
                    "trace_dependencies", "remember", "what_changed_since", "forget", "pacta_submit_request", "request_feature"]
 REMOTE_DOC = "11 read-only inspection tools + 3 wallet-memory tools + 2 opt-in request tools"
 TRUST_NOTICE = ("Pacta keeps what your wallet saves (contract addresses, block numbers, your notes), with your wallet address and the time. "
-                "No other wallet can read it. We do not share, sell, score or trade on it. One call erases it; backup copies expire within 30 days.")
+                "No other wallet can read it. We do not sell, score or trade on it. One call ends every recall of it. What remains in backups "
+                "and records, and who processes your notes, is in our privacy notice.")
 HOME_AGENTS_TAB = ("Remote MCP over Streamable HTTP and a REST API: 60 requests / minute per caller; reads need no API key and no wallet. "
                    "16 remote tools: 11 read-only inspection tools (among them who_controls, 100 free calls a day, and trace_dependencies, free) "
                    "+ 3 wallet-memory tools (remember, what_changed_since and forget: free at 20 calls / minute and 100 / day per wallet, then "
@@ -74,7 +67,7 @@ class PrivacyParagraphs(unittest.TestCase):
     def test_exact_lengths(self):
         self.assertEqual(len(SUMMARY_WALLET_ONLY), 150)
         self.assertEqual(len(SUMMARY_QUALIFIER), 263)
-        self.assertEqual(len(WALLET_MEMORY), 1089)
+        self.assertEqual(len(WALLET_MEMORY_PARAGRAPHS), 7)
         self.assertEqual(len(CALL_ANALYTICS), 647)
         self.assertEqual(BS.PRIVACY_SUMMARY_WALLET_ONLY, SUMMARY_WALLET_ONLY)
         self.assertEqual(BS.PRIVACY_SUMMARY_QUALIFIER, SUMMARY_QUALIFIER)
@@ -93,11 +86,12 @@ class PrivacyParagraphs(unittest.TestCase):
 
     def test_rendered_once_each_in_its_own_section(self):
         t = read("docs", "privacy", "index.html")
-        m = re.findall(r'<section class="memo-sec" id="wallet-memory"><h2>([^<]*)</h2><p data-privacy-wallet-memory>([^<]*)</p></section>', t)
-        self.assertEqual(len(m), 1, "wallet-memory")
-        self.assertEqual(html.unescape(m[0][0]), "Wallet memory (remember and forget)")
-        self.assertEqual(html.unescape(m[0][1]), WALLET_MEMORY)
-        self.assertEqual(len(html.unescape(m[0][1])), len(WALLET_MEMORY))
+        sec = re.findall(r'<section class="memo-sec" id="wallet-memory"><h2>([^<]*)</h2>(.*?)</section>', t, re.S)
+        self.assertEqual(len(sec), 1, "wallet-memory")
+        self.assertEqual(html.unescape(sec[0][0]), "Wallet memory (remember and forget)")
+        ps = [html.unescape(x) for x in re.findall(r'<p data-privacy-wallet-memory>([^<]*)</p>', sec[0][1])]
+        self.assertEqual(tuple(ps), WALLET_MEMORY_PARAGRAPHS)
+        self.assertNotIn("[CHANGE", t)
         self.assertNotIn('id="call-analytics"', t)
         self.assertNotIn('data-privacy-call-analytics', t)
         self.assertNotIn('Keewano', t)
@@ -158,7 +152,7 @@ class DiscoveryCopy(unittest.TestCase):
         self.assertEqual(B2A.WALLET_MEMORY_TOOLS, ["remember", "what_changed_since", "forget"])
         self.assertEqual((B2A.REMOTE_TOOLS_DOC, B2A.LLMS_REMOTE_TOOLS_DOC, B2A.LLMS_REMOTE_TOOLS), (REMOTE_DOC, REMOTE_DOC, REMOTE_TOOLS_16))
         self.assertEqual(B2A.STDIO_TOOLS_DOC, "14 read-only inspection tools + 2 opt-in request tools")
-        self.assertEqual(len(TRUST_NOTICE), 253)
+        self.assertEqual(len(TRUST_NOTICE), 316)
         self.assertEqual(B2A.WALLET_MEMORY_TRUST_NOTICE, TRUST_NOTICE)
         self.assertEqual([(p, u) for p, u, _ in B2A.X402_MEMORY_ENDPOINTS], [("/v1/x402/remember", "0.001"), ("/v1/x402/what-changed-since", "0.001")])
         self.assertEqual(len(B2A.X402_ENDPOINTS), 5)

@@ -6259,23 +6259,58 @@ PRIVACY_SUMMARY_WALLET_ONLY = ("One thing goes further and has its own section b
 PRIVACY_SUMMARY_QUALIFIER = ("Two things go further and have their own sections below: if your agent uses the wallet memory tools, Pacta stores what it "
                              "saves under its wallet address; and a record of each API and MCP call, without wallet or IP address, goes to our "
                              "analytics provider, Keewano.")
-PRIVACY_WALLET_MEMORY = ("If your agent uses the remember tool, Pacta stores what it saves: contract addresses, block numbers and your notes, "
-                         "together with your wallet address, the time of each save and the time of your latest recall. No other wallet can read it. "
-                         "Pacta reads it to answer your own later calls, such as what changed since a block. We do not share it, sell it, score it "
-                         "or trade on it. The forget tool erases one item or everything saved under your wallet at once. Backup copies kept by our "
-                         "storage provider, Cloudflare, expire within 30 days. The data is encrypted at rest, and Cloudflare holds the keys. "
-                         "Payments are separate. If your agent pays for a call, our payment record keeps the paying wallet's address, the "
-                         "transaction, the amount and the time, and the payment itself stays on the public Base chain. The forget tool does not "
-                         "remove a payment. A payment record does not hold what your agent saved. It holds a one-way fingerprint of the paid "
-                         "request, kept so that a retry after a lost reply gets its answer without paying again and so that the payment cannot be "
-                         "used for a different request.")
+PRIVACY_WALLET_MEMORY_PARAGRAPHS = (
+    ("If your agent uses the remember tool, Pacta stores what it saves: contract addresses, block numbers and your notes, "
+     "together with your wallet address, the time of each save and the time of your latest recall. No other wallet can read it. "
+     "Pacta reads it to answer your own later calls, such as what changed since a block. We do not sell it, score it or trade "
+     "on it. One outside provider processes the text of your notes, as described below."),
+    ("Your saved items are kept in two places. The full item, with your wallet address, is kept with our storage provider, "
+     "Cloudflare; backup copies there expire within 30 days, the data is encrypted at rest and Cloudflare holds the keys. A "
+     "reduced copy (chain, protocol, block number, an item number, the time, and your note, in which addresses of the 0x form "
+     "and long hex strings are replaced by a marker) is kept on a server run by the team that operates Pacta's systems and "
+     "rented from Amazon Web Services in London. An address written another way, such as a name or a shortened address, stays "
+     "as you wrote it. It is stored without your wallet address, under a random label; the link between your wallet and its "
+     "label is kept only with your items at Cloudflare."),
+    ("In that server's files the text of each item is not stored as readable text, but it can be read back with a key. That "
+     "key is a file on the same server; it is not kept in a separate key service. Those who administer that server can read the "
+     "key, and with it your items. So this encryption protects your items if a file is taken without the server; it does not "
+     "protect them from whoever controls the server. The label, the ids of your items, how many there are and when each was "
+     "saved are readable there without any key. A backup copy of that server is made every night and holds what the files held "
+     "when it was made. A copy of that server's whole disk is also made every day; it holds the files, the backup copies and "
+     "the key together. We give no date on which these copies are removed."),
+    ("To make the reduced copy searchable its text, with the rest of your note as you wrote it, is sent to an embedding "
+     "provider, Voyage AI (part of MongoDB), which turns it into a numeric fingerprint. Voyage AI's published terms allow it to "
+     "use this text to train and improve its models, and they name no time after which it is deleted."),
+    ("The forget tool erases one item or everything saved under your wallet, in both places: at Cloudflare at once, and the "
+     "reduced copy right after. If that server cannot be reached, the erase is repeated until it is done. After an erase "
+     "nothing you saved can be recalled through our tools. After an erase, a backup copy on that server made before it still "
+     "holds the erased item. A copy of that server's whole disk, made every day, can hold it too, and holds that server's key "
+     "as well. They stay until those copies are removed, and we give no date for that. A search form of the item (numbers, not "
+     "its words) can stay in an older file there and in later copies until that file is replaced. What stays with no date of "
+     "removal: on that server, a record of each save and erase, and of each check our service makes when a save was slow to "
+     "confirm; in our own records at Cloudflare, a record of an erase of everything. These hold the label and the id of your "
+     "store, the ids of your items, the times and technical figures, not your wallet address and not what you saved. Your "
+     "recalls are answered from our own store and never reach that server. Until you erase everything, our own store keeps that "
+     "label beside your wallet address. When you erase everything, the link between your wallet and its label is erased with "
+     "your items, and your wallet gets a new label the next time you save. When you erase a single item, your wallet keeps its "
+     "label."),
+    ("If you paid for a call, our payment record keeps your wallet and the time, and that server's records keep the label and "
+     "the time; someone who holds both could match them. A note may hold up to 500 characters; a note with an email address, a "
+     "handle, an IP address, a phone number or a secret is refused. Please do not put other personal details into a note."),
+    ("Payments are separate. If your agent pays for a call, our payment record keeps the paying wallet's address, the "
+     "transaction, the amount and the time, and the payment itself stays on the public Base chain. The forget tool does not "
+     "remove a payment. A payment record does not hold what your agent saved. It holds a one-way fingerprint of the paid "
+     "request, kept so that a retry after a lost reply gets its answer without paying again and so that the payment cannot be "
+     "used for a different request."),
+)
+PRIVACY_WALLET_MEMORY = "\n\n".join(PRIVACY_WALLET_MEMORY_PARAGRAPHS)
 PRIVACY_CALL_ANALYTICS = ("To see how the service is used, we send a record of each call to our analytics provider, Keewano: which tool, which "
                           "chain, which listed protocol the call was about, the kind of client, the outcome and roughly how long it took. For memory "
                           "tools no protocol is sent. The record carries a label that stands for one caller for one day and is replaced at midnight "
                           "UTC. Payment requests and payments are recorded apart from that label: a request with the tool and the day, a payment "
                           "with the amount and the day. We do not send wallet addresses, IP addresses or anything a wallet has saved, and we keep no "
                           "key that would link one day's label to the next.")
-assert (len(PRIVACY_SUMMARY_WALLET_ONLY), len(PRIVACY_SUMMARY_QUALIFIER), len(PRIVACY_WALLET_MEMORY), len(PRIVACY_CALL_ANALYTICS)) == (150, 263, 1089, 647)
+assert (len(PRIVACY_SUMMARY_WALLET_ONLY), len(PRIVACY_SUMMARY_QUALIFIER), len(PRIVACY_WALLET_MEMORY_PARAGRAPHS), len(PRIVACY_CALL_ANALYTICS)) == (150, 263, 7, 647)
 
 
 PRIVACY_REPEAT_CALLERS = ("To count repeat API and MCP callers across days without storing raw IP addresses, our edge worker may compute a "
@@ -6331,7 +6366,7 @@ def privacy_page(idx):
          '<code class="nw">static.ads-twitter.com</code>, <code class="nw">analytics.twitter.com</code> and <code class="nw">t.co</code>) and review your X Ads '
          'personalization settings.</p>'),
         ("wallet-memory", "Wallet memory (remember and forget)",
-         f'<p data-privacy-wallet-memory>{E(PRIVACY_WALLET_MEMORY, quote=False)}</p>'),
+         "".join(f"<p data-privacy-wallet-memory>{E(p_, quote=False)}</p>" for p_ in PRIVACY_WALLET_MEMORY_PARAGRAPHS)),
         ("checkout", "Self-serve checkout", '<p>Verify on-chain &amp; unlock sends the product, the Base transaction hash, the target '
          'chain and address, the protocol or docs URL and, only if you enter one, a contact handle or webhook URL to Pacta&#x27;s API. The '
          'contact or webhook is kept privately for delivery and never published. A payment on Base is public on-chain, like any transfer. '
