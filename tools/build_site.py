@@ -6246,6 +6246,12 @@ PRIVACY_REPEAT_CALLERS = ("To count repeat API and MCP callers across days witho
                           "non-reversible keyed hash (HMAC) of a truncated network prefix and client User-Agent family over a rolling "
                           "14-day window, publishing only aggregate multi-day caller totals.")
 
+PRIVACY_KEEWANO_TOTALS = ("We send totals of these counts to our analytics provider, Keewano: how many pages were opened, how far they were scrolled, "
+                          "how many hit a missing page, and how many API and MCP calls were made, by day and hour, and from which kind of site visitors "
+                          "arrived, for example a search engine or a directory. We also send the amount, what was paid for and the day of each payment "
+                          "we receive, with the kind of payer and never the payer's address. What Keewano receives contains no wallet address, no IP "
+                          "address, no name of a referring site and nothing that identifies a visitor or a caller.")
+
 
 def privacy_page(idx):
     sections = [
@@ -6260,7 +6266,8 @@ def privacy_page(idx):
          '<code>b.js</code> when your browser sends Do Not Track (<code>navigator.doNotTrack = &quot;1&quot;</code>). A page view records '
          'only a closed-set page path, the referring site&#x27;s public host name, allowlisted campaign tags '
          '(<code>utm_source</code>, <code>utm_medium</code>, <code>utm_campaign</code>) and which Pacta domain served it.</p>'
-         f'<p data-privacy-repeat-callers>{E(PRIVACY_REPEAT_CALLERS, quote=False)}</p>'),
+         f'<p data-privacy-repeat-callers>{E(PRIVACY_REPEAT_CALLERS, quote=False)}</p>'
+         f'<p data-privacy-keewano-totals>{E(PRIVACY_KEEWANO_TOTALS, quote=False)}</p>'),
         ("x-pixel", "X (Twitter) Ads conversion measurement",
          '<p>To measure X campaign performance, public pages on <code class="nw">pacta.wtf</code> and <code class="nw">pacta.fractalneurons.com</code> load '
          'X&#x27;s Universal Website Tag (<code>https://static.ads-twitter.com/uwt.js</code>, pixel ID <code class="nw">rjbqn</code>). It records '
