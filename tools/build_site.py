@@ -6282,8 +6282,8 @@ PRIVACY_REPEAT_CALLERS = ("To count repeat API and MCP callers across days witho
                           "non-reversible keyed hash (HMAC) of a truncated network prefix and client User-Agent family over a rolling "
                           "14-day window, publishing only aggregate multi-day caller totals. "
                           "We also count, for each day, calls by the client name and version your MCP client sends and by the agent name "
-                          "you choose to pass with a call, keep these daily counts with no date of removal, and publish them by name in "
-                          "our public usage figures. Do not put a personal name there.")
+                          "you choose to pass with a call, and keep these daily counts with no date of removal. We publish them only as "
+                          "counts per kind of client. Do not put a personal name there.")
 
 PRIVACY_PROVIDER_ANALYTICS = (
     "For analytics, we send an analytics provider a record of each API and agent call, each payment, and each page visit, "
