@@ -581,7 +581,7 @@ def footer(count_line, reg, home=""):
             f'<p class="ftr-contact" data-ftr-contact>Contact: <a class="mono" href="mailto:pacta@dri.network">pacta@dri.network</a></p>'
             f'<p class="ftr-stamp" data-catalog-stamp>{E(catalog_stamp())}</p></div>'
             + col("Product", product) + col("For agents", agents) + col("Company", company) + col("Legal", legal)
-            + f'</div><div class="ftr-bottom"><span data-count-line>{E(count_line)}</span><span>Read-only onchain analysis. Not investment advice. First-party telemetry stores aggregate counts without raw IPs; X Ads conversion measurement (uwt.js) runs on public pages — see <a href="{home}privacy/">Privacy</a>.</span></div>'
+            + f'</div><div class="ftr-bottom"><span data-count-line>{E(count_line)}</span><span>Read-only onchain analysis. Not investment advice. First-party telemetry stores counts and the few details named in Privacy (zero raw IPs); X Ads conversion measurement (uwt.js) runs on public pages — see <a href="{home}privacy/">Privacy</a>.</span></div>'
             f'</div></footer>\n<div class="toaster" id="toaster" aria-live="polite" aria-atomic="true"></div>')
 
 
@@ -6247,19 +6247,25 @@ def methodology_page(idx):
 
 PRIVACY_REPEAT_CALLERS = ("To count repeat API and MCP callers across days without storing raw IP addresses, our edge worker may compute a "
                           "non-reversible keyed hash (HMAC) of a truncated network prefix and client User-Agent family over a rolling "
-                          "14-day window, publishing only aggregate multi-day caller totals.")
+                          "14-day window, publishing only aggregate multi-day caller totals. "
+                          "We also count, for each day, calls by the client name and version your MCP client sends and by the agent name "
+                          "you choose to pass with a call, keep these daily counts with no date of removal, and publish them by name in "
+                          "our public usage figures. Do not put a personal name there.")
 
-PRIVACY_KEEWANO_TOTALS = ("We send totals of these counts to our analytics provider, Keewano: how many pages were opened, how far they were scrolled, "
-                          "how many hit a missing page, and how many API and MCP calls were made, by day and hour, and from which kind of site visitors "
-                          "arrived, for example a search engine or a directory. We also send the amount, what was paid for and the day of each payment "
-                          "we receive, with the kind of payer and never the payer's address. These totals contain no wallet address, no IP "
-                          "address, no name of a referring site and nothing that identifies a visitor or a caller.")
+PRIVACY_KEEWANO_TOTALS = ("We send totals of these counts to our analytics provider, Keewano: how many pages were opened and of which kind "
+                          "(for example the home page or a protocol page), how far they were scrolled, how many hit a missing page, how "
+                          "often the live checker, a copy button or a main button was used, and how many API and MCP calls were made and "
+                          "by which kind of caller, by day and hour. We also send from which kind of site visitors arrived, for example a "
+                          "search engine or a directory, and whether a visit came through a paid campaign. We also send the amount, what "
+                          "was paid for and the day of each payment we receive, with the kind of payer and never the payer's address. "
+                          "These totals contain no wallet address, no IP address, no name of a referring site and nothing that identifies "
+                          "a visitor or a caller.")
 
 
 def privacy_page(idx):
     sections = [
         ("summary", "Summary",
-         '<p>Pacta has no user accounts. First-party telemetry stores aggregate counts only (zero raw IP addresses). '
+         '<p>Pacta has no user accounts. First-party telemetry stores counts and the few details named below (zero raw IP addresses). '
          'On the public production domains (<code>pacta.wtf</code> and <code>pacta.fractalneurons.com</code>), Pacta also loads the X '
          '(Twitter) conversion measurement tag (<code>static.ads-twitter.com/uwt.js</code>, pixel <code>rjbqn</code>), which sets '
          'advertising attribution cookies unless blocked by your browser or content blocker.</p>'),
@@ -6268,7 +6274,10 @@ def privacy_page(idx):
          '(<code>b.js</code>): zero cookies, zero identifiers in browser storage, zero raw IP addresses stored, and nothing is sent by '
          '<code>b.js</code> when your browser sends Do Not Track (<code>navigator.doNotTrack = &quot;1&quot;</code>). A page view records '
          'only a closed-set page path, the referring site&#x27;s public host name, allowlisted campaign tags '
-         '(<code>utm_source</code>, <code>utm_medium</code>, <code>utm_campaign</code>) and which Pacta domain served it.</p>'
+         '(<code>utm_source</code>, <code>utm_medium</code>, <code>utm_campaign</code>) and which Pacta domain served it. '
+         'The script also counts how far a page was scrolled, when a missing page was hit, when a protocol page was viewed, and when the '
+         'live checker, a copy button or a main button on a page was used. Each is recorded with the page path and, where they apply, '
+         'the same arrival details as a page view. Nothing that was typed or copied is recorded. These counts are kept with no date of removal.</p>'
          f'<p data-privacy-repeat-callers>{E(PRIVACY_REPEAT_CALLERS, quote=False)}</p>'
          f'<p data-privacy-keewano-totals>{E(PRIVACY_KEEWANO_TOTALS, quote=False)}</p>'),
         ("x-pixel", "X (Twitter) Ads conversion measurement",
@@ -6304,7 +6313,7 @@ def privacy_page(idx):
         ("contact", "Contact", f'<p>{E(CONTACT_NOTE)}</p>'),
     ]
     return simple_page("privacy", "Privacy · Pacta",
-                       "What the Pacta site and API collect: aggregate first-party telemetry without raw IPs, X Ads conversion measurement (uwt.js), and only what you submit.",
+                       "What the Pacta site and API collect: first-party telemetry without raw IPs, X Ads conversion measurement (uwt.js), and only what you submit.",
                        "Privacy", "What this site collects, how conversion measurement works, and how to block it.", sections, idx)
 
 

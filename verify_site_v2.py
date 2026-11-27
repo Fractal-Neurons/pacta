@@ -3164,7 +3164,7 @@ def main(argv=None):
           "Lead tw-rjbqn-rjhie once/page, Purchase tw-rjbqn-rjhif on verified non-canary non-replay orders, accurate footer & /privacy/ copy",
           all(res.get(k_) is True for k_ in xp_keys)
           and bool(ftr_pages)
-          and all("First-party telemetry stores aggregate counts without raw IPs; X Ads conversion measurement (uwt.js) runs on public pages" in t_
+          and all("First-party telemetry stores counts and the few details named in Privacy (zero raw IPs); X Ads conversion measurement (uwt.js) runs on public pages" in t_
                   and "no cookies, no IP stored" not in t_ for t_ in ftr_pages.values())
           and all(tok_ in priv_html for tok_ in ("static.ads-twitter.com/uwt.js", "rjbqn", "tw-rjbqn-rjhie", "tw-rjbqn-rjhif",
                                                  "analytics.twitter.com", "t.co", "pacta-x-purchased"))
@@ -4087,7 +4087,7 @@ def main(argv=None):
                 f"{' &amp; '.join(n_ for k_, n_ in nm_ if st_[k_] == 'closed')} full and closed")
     pp["S02 + V07 (v4.4 wording): 'Runs when you press Check or pick an example below' (nothing runs on page load: harness) + honest telemetry/conversion note; /bounties/ pill leads with funded slots open now"] = (
         "Runs when you press Check or pick an example below." in home_p and res.get("pf_no_fetch_on_load") is True
-        and "First-party telemetry stores aggregate counts without raw IPs; X Ads conversion measurement (uwt.js) runs on public pages" in home_p
+        and "First-party telemetry stores counts and the few details named in Privacy (zero raw IPs); X Ads conversion measurement (uwt.js) runs on public pages" in home_p
         and "no cookies" not in home_p
         and f'data-bounty-pill>{w4_pill_exp_()}</span>' in read("docs/bounties/index.html")
         and f'data-bounty-pill-w3>Wave 3 closed · ${BS.W3_TOTAL_USDC} USDC paid on Base</span>' in read("docs/bounties/index.html")

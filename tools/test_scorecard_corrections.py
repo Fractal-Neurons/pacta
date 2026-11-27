@@ -950,7 +950,9 @@ class Scorecard87(unittest.TestCase):
          'admin roles of the protocols you pick. When one changes, a person at Pacta emails you, normally within 24 hours. We confirm your '
          'sign-up by email within 24 hours.</p><p><a href="../../watch/?protocol={slug}" data-cta="watchlist_link">Watch by email', 1),
         ('<li><a href="../../scan/">Instant scan</a></li><li><a href="../../webhook/">Timelock watchlist</a></li>',
-         '<li><a href="../../scan/">Scan</a></li><li><a href="../../watch/">Watch</a></li>', 1))
+         '<li><a href="../../scan/">Scan</a></li><li><a href="../../watch/">Watch</a></li>', 1),
+        ('First-party telemetry stores aggregate counts without raw IPs;',
+         'First-party telemetry stores counts and the few details named in Privacy (zero raw IPs);', 1))
     # (+ the round-2 24 px hit boxes on the /scan/ result links: WATCH-TARGET-02)
     WATCH_CSS_TAIL = re.compile(r'\.watch-|\.combo-count\b|\.pf-watch-inline\b|\.pfw-|\.scan-watch-doors\b|^input\[type="number"\]'
                                 r'|^\.topbar \.search-btn kbd$|^\.wl-pos-name$|^\.wl-gap-links > a$|^\.wl-inline-b2b > a$'
