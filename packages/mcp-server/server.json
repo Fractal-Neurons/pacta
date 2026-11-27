@@ -2,13 +2,13 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
   "name": "io.github.Fractal-Neurons/pacta",
   "title": "Pacta, by Fractal Neurons",
-  "description": "Who can upgrade, pause or change a contract. Control facts for agents on Ethereum and Base.",
+  "description": "Control, dependency and wallet-memory facts for agents on Ethereum and Base. MCP and x402.",
   "repository": {
     "url": "https://github.com/Fractal-Neurons/pacta",
     "source": "github",
     "subfolder": "packages/mcp-server"
   },
-  "version": "0.1.7",
+  "version": "0.1.8",
   "websiteUrl": "https://pacta.wtf/",
   "icons": [
     {

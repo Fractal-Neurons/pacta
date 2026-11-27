@@ -47,13 +47,18 @@ METERED_PATHS = ("/v1/check/preflight", "/v1/check/wallet-exposure")
 METERED_TOOLS = ("pacta_check_preflight", "pacta_scan_wallet_exposure")
 PRICING_MODES = {"reads": PRICING_MODE, "/v1/check/preflight": METERED_MODE, "/v1/check/wallet-exposure": METERED_MODE, "/v1/x402/*": PAID_MODE}
 RATE_LIMIT_PER_MIN = 60
-REMOTE_READ_ONLY_TOOLS = ["pacta_lookup_protocol", "pacta_check_preflight", "pacta_scan_wallet_exposure", "pacta_scan_control_plane", "pacta_scan_timelock_op", "pacta_scan_proposal_diff", "pacta_get_live_timelocks"]
+# The remote MCP (POST /mcp tools/list on the live Worker, core f6877af3): 16 tools = 11 read-only inspection tools + 3 wallet-memory
+# tools + 2 opt-in request tools, in tools/list order. who_controls also answers as pacta_who_controls_contract.
+REMOTE_READ_ONLY_TOOLS = ["pacta_lookup_protocol", "who_controls", "pacta_check_preflight", "pacta_scan_wallet_exposure", "pacta_scan_control_plane",
+                          "pacta_scan_timelock_op", "pacta_scan_proposal_diff", "pacta_get_live_timelocks", "pacta_verdict", "pacta_dossier",
+                          "trace_dependencies"]
+WALLET_MEMORY_TOOLS = ["remember", "what_changed_since", "forget"]
 REQUEST_TOOL = "pacta_submit_request"                              # opt-in write tool (remote + stdio): queue / upvote a request
 FEATURE_TOOL = "request_feature"                                   # opt-in write tool (remote + stdio): free-text feature request
 STDIO_REQUEST_TOOLS = (FEATURE_TOOL, REQUEST_TOOL)                 # the 2 stdio tools that write (readOnly false in mcp.json)
-REMOTE_TOOLS = REMOTE_READ_ONLY_TOOLS + [REQUEST_TOOL]
+REMOTE_TOOLS = REMOTE_READ_ONLY_TOOLS + WALLET_MEMORY_TOOLS + [REQUEST_TOOL, FEATURE_TOOL]
 REQUESTS_URL = "https://api.pacta.wtf/v1/requests"
-REMOTE_TOOLS_DOC = "7 read-only inspection tools + 1 opt-in coverage/feature request tool (pacta_submit_request)"
+REMOTE_TOOLS_DOC = "11 read-only inspection tools + 3 wallet-memory tools + 2 opt-in request tools"
 STDIO_TOOLS_DOC = "14 read-only inspection tools + 2 opt-in request tools"
 BRAND = "Pacta by Fractal Neurons (https://pacta.wtf · pacta.base.eth)"
 # Brand / RAG disambiguation (receipt/1817): never call this project by the two-word name of the dormant escrow project.
@@ -132,10 +137,13 @@ MCP_RECIPES = [
         "    print(out[\"messages\"][-1].content)"])),
 ]
 STDIO_FROM_SOURCE = "node packages/mcp-server/bin/pacta-mcp.mjs"  # from a clone of the repository
-FREE_LAUNCH_NOTE = (f"No API key. Paid today: only the five /v1/x402/* routes ($0.02 to $9.00 USDC on Base, paid to the Pacta Treasury EOA {PAY_TO}; "
-                    "x402 v1 X-PAYMENT or v2 PAYMENT-SIGNATURE). /v1/check/preflight and /v1/check/wallet-exposure are free for 50 calls per caller "
-                    "per UTC day, then $0.01 USDC per call via x402 to the same treasury. Every other route (protocol lookup, control-plane, timelock-op "
-                    f"and proposal-diff scans, live-timelocks briefs, samples and the remote MCP read tools) is free at $0.00 ({RATE_LIMIT_PER_MIN} requests / minute per caller).")
+FREE_LAUNCH_NOTE = (f"No API key. Paid today: the five /v1/x402/* routes ($0.02 to $9.00 USDC on Base, paid to the Pacta Treasury EOA {PAY_TO}; "
+                    "x402 v1 X-PAYMENT or v2 PAYMENT-SIGNATURE), the two wallet-memory doors /v1/x402/remember and /v1/x402/what-changed-since "
+                    "($0.001 USDC per call) and calls over the free daily tiers. /v1/check/preflight is free for 50 calls per caller per UTC day and "
+                    "/v1/check/wallet-exposure for 100, then $0.01 USDC per call via x402 to the same treasury; who_controls (GET /v1/check) is free "
+                    "for 100 calls a day. Every other route (protocol lookup, control-plane, timelock-op and proposal-diff scans, live-timelocks "
+                    f"briefs, dependency trace, samples and the other remote MCP read tools) is free at $0.00 ({RATE_LIMIT_PER_MIN} requests / minute "
+                    "per caller); wallet memory is free at 20 calls / minute and 100 calls / day per wallet, and forget is always free.")
 X402_NETWORK_V2 = "eip155:8453"                                  # CAIP-2 Base mainnet (x402 v2); v1 uses "base"
 X402_MAX_TIMEOUT_S = 60                                          # live Worker MAX_TIMEOUT_S (v1 and v2 requirements)
 JSON_SCHEMA_2020_12 = "https://json-schema.org/draft/2020-12/schema"
@@ -364,8 +372,10 @@ def llms_full(idx, radar, prop, onb, pinned=None):
          "3. Run `cast block N --field hash` and compare with the recorded block hash.", "",
          "## MCP server", f"- Name: {MCP_NAME} · remote Streamable HTTP {MCP_REMOTE_URL} (no install) · local stdio from a clone.", f"- Status: {MCP_STATUS}",
          f"- Remote MCP (primary, zero install, Streamable HTTP): {MCP_REMOTE_URL} · Claude Code: `claude mcp add --transport http pacta {MCP_REMOTE_URL}` · "
-         f"MCP client config: {{\"mcpServers\": {{\"pacta\": {{\"url\": \"{MCP_REMOTE_URL}\"}}}}}} · remote tools ({LLMS_REMOTE_TOOLS_DOC}): {', '.join(LLMS_REMOTE_TOOLS)}.",
+         f"MCP client config: {{\"mcpServers\": {{\"pacta\": {{\"url\": \"{MCP_REMOTE_URL}\"}}}}}} · remote tools ({LLMS_REMOTE_TOOLS_DOC}): {', '.join(LLMS_REMOTE_TOOLS)} ({LLMS_REMOTE_ALIAS_NOTE}).",
          f"- {LLMS_WHO_CONTROLS_DOC}",
+         f"- {LLMS_TRACE_DEPENDENCIES_DOC}",
+         f"- {LLMS_WALLET_MEMORY_DOC}",
          f"- {LLMS_FEATURE_DOC}",
          f"- Local stdio server (from a clone of the repository): `{STDIO_FROM_SOURCE}`. OpenAPI 3.1: {OPENAPI_URL}.",
          f"- {CALLER_FIELDS_DOC}",
@@ -389,9 +399,10 @@ def llms_full(idx, radar, prop, onb, pinned=None):
          f"- The stdio server's gateway tools are on by default (PACTA_X402_URL unset = PACTA_X402_URL={X402_URL}; PACTA_X402_URL=\"\" keeps it local-only); the client refuses any 402 challenge (v1 body or v2 "
          "PAYMENT-REQUIRED header) whose payTo, asset or network differ from the values below, or whose amount exceeds $1.00 by default. Pay with "
          "xPaymentHeader (x402 v1) or paymentSignatureHeader (x402 v2).", "",
-         "## x402 micropayments (Base USDC: the five /v1/x402/* routes, verdict / dossier / wallet-exposure over their free 100/day, and preflight / wallet-exposure checks over the free daily tier)",
+         "## x402 micropayments (Base USDC: the five /v1/x402/* routes, the two $0.001 wallet-memory doors, verdict / dossier / wallet-exposure over their free 100/day, and preflight / wallet-exposure checks over the free daily tier)",
          f"- {FREE_X402_DOC}",
          f"- {LLMS_FREE_TIER_DOC}",
+         f"- {LLMS_X402_MEMORY_DOC}",
          f"- Network: Base (chain id 8453) · scheme exact · asset USDC {USDC_BASE} · payTo {PAY_TO} (Pacta treasury).",
          f"- Pacta Treasury: {TREASURY} (an externally owned account; the PactaCommitmentRegistry treasury slot). {TREASURY_USE}",
          f"- Live gateway: {X402_URL} (Cloudflare Worker; x402Versions [1, 2]; PayAI facilitator; maxTimeoutSeconds {X402_MAX_TIMEOUT_S}).",
@@ -460,7 +471,7 @@ def agent_card(prop, onb, idx):
         "capabilities": {"streaming": False, "pushNotifications": False, "stateTransitionHistory": False},
         "defaultInputModes": ["application/json", "text/plain"],
         "defaultOutputModes": ["application/json", "text/markdown"],
-        "authentication": {"schemes": ["none"], "notes": "No API key and no account. The free daily tier needs no wallet; the five /v1/x402/* routes and calls over the daily quota are paid in Base USDC via x402 (v1 X-PAYMENT or v2 PAYMENT-SIGNATURE)."},
+        "authentication": {"schemes": ["none"], "notes": "No API key and no account. The free daily tier needs no wallet; the five /v1/x402/* routes, the two $0.001 wallet-memory doors and calls over the daily quota are paid in Base USDC via x402 (v1 X-PAYMENT or v2 PAYMENT-SIGNATURE)."},
         "skills": [
             {"id": "protocol-lookup", "name": "Protocol / token name lookup",
              "description": "Resolve a protocol or token name (Aave, Ethena, USDe, Moonwell, kUSD, ...) to Pacta's verified record and the checksummed contract to check next. Free, in memory, every pricing mode.",
@@ -554,27 +565,59 @@ X402_ENDPOINTS = [("/v1/x402/verdict", "0.02", "Fast safety verdict: structural 
                   ("/v1/x402/wallet-exposure", "0.05", "Multi-position wallet & Safe exposure graph: signer breakdown, cross-position contagion & exit matrix"),
                   ("/v1/x402/calldata-sim", "0.25", "Calldata sim: timelock / Safe calls decoded and rated before signing"),
                   ("/v1/x402/deep-scan", "9.00", "Deep scan cross-checked on two RPC operators + Base EAS ticket")]
-FREE_TIER_DOC = (f"Free agent tier: {FREE_DAILY_QUOTA} pre-flight and wallet-exposure checks per caller per UTC day (REST /v1/check/preflight, /v1/check/wallet-exposure and MCP "
-                 "pacta_check_preflight, pacta_scan_wallet_exposure together; X-Meter-Limit / X-Meter-Remaining / X-Meter-Reset headers), then $0.01 per call over x402 "
-                 "(HTTP 402, USDC on Base; never a dead-end 429). Free responses carry an upgrade_x402 object listing the paid routes.")
+FREE_TIER_DOC = ("Free daily tiers, per caller and UTC day (REST and MCP share each tool's quota; X-Meter-Limit / X-Meter-Remaining / X-Meter-Reset "
+                 "headers): 100 calls each for who_controls (GET /v1/check), pacta_verdict, pacta_dossier and pacta_scan_wallet_exposure, and "
+                 f"{FREE_DAILY_QUOTA} for pacta_check_preflight. Above the quota, pre-flight and wallet-exposure checks cost $0.01 per call and "
+                 "verdict / dossier $0.02 / $0.05 over x402 (HTTP 402, USDC on Base; never a dead-end 429); who_controls has no paid overflow. "
+                 "Lookups, scans, live timelocks and trace_dependencies are free. Wallet memory: remember and what_changed_since are free at "
+                 "20 calls / minute and 100 calls / day per wallet; their paid doors cost $0.001 USDC per call (60 calls / minute); forget is "
+                 "always free. Free responses carry an upgrade_x402 object listing the paid routes.")
 X402_DOC = "Pay per call with x402 (USDC on Base, POST JSON, X-PAYMENT v1 or PAYMENT-SIGNATURE v2): " + "; ".join(
     f"{X402_PUBLIC}{p} ${usd} ({what})" for p, usd, what in X402_ENDPOINTS) + "."
 # The free tier of three x402 routes (the Worker's FREE_X402_ROUTES / FREE_X402_DAILY_QUOTA), as stated by llms.txt, /llms/ and llms-full.txt.
 FREE_X402_DAILY_QUOTA = 100
 FREE_X402_MCP_TOOLS = ["pacta_verdict", "pacta_dossier"]
-WHO_CONTROLS_TOOL = "pacta_who_controls_contract"
+WHO_CONTROLS_TOOL = "who_controls"
+WHO_CONTROLS_ALIAS = "pacta_who_controls_contract"
 WHO_CONTROLS_DAILY_QUOTA = 100
 FEATURE_REQUEST_DAILY_LIMIT = 5
-# The remote MCP's 12 tools (10 read-only + 2 request tools), as the llms texts state them; SKILL.md / .well-known keep the shared REMOTE_TOOLS.
-LLMS_REMOTE_TOOLS = ([REMOTE_READ_ONLY_TOOLS[0], WHO_CONTROLS_TOOL] + REMOTE_READ_ONLY_TOOLS[1:] + FREE_X402_MCP_TOOLS + [REQUEST_TOOL, FEATURE_TOOL])
-LLMS_REMOTE_TOOLS_DOC = "10 read-only inspection tools + 2 opt-in request tools (pacta_submit_request, request_feature)"
+# The llms texts state the same 16 remote tools as SKILL.md, mcp.json, /mcp/ and the home page.
+LLMS_REMOTE_TOOLS = REMOTE_TOOLS
+LLMS_REMOTE_TOOLS_DOC = REMOTE_TOOLS_DOC
+LLMS_REMOTE_ALIAS_NOTE = f"{WHO_CONTROLS_TOOL} also answers as {WHO_CONTROLS_ALIAS}"
 LLMS_WHO_CONTROLS_DOC = (f"Who controls this contract (free): GET {X402_URL}/v1/check?chain=ethereum|base&address=0x... and the MCP tool {WHO_CONTROLS_TOOL} "
-                         "(chain, address): owner, admin, upgradeable proxy, timelock, multisig, can mint, can pause, as block-pinned chain facts confirmed by two "
+                         f"(chain, address; alias {WHO_CONTROLS_ALIAS}): owner, admin, upgradeable proxy, timelock, multisig, can mint, can pause, as block-pinned chain facts confirmed by two "
                          "independent RPC providers, with Foundry cast commands; never guesses or rates. "
                          f"Free: {WHO_CONTROLS_DAILY_QUOTA} calls per caller per UTC day (no key, no payment).")
 LLMS_FEATURE_DOC = (f"Feature requests (free): the MCP tool {FEATURE_TOOL} or POST {X402_URL}/v1/feature-request with a JSON body {{text, use_case?}} "
                     "(text up to 1000 characters, use_case up to 500): tell Pacta what tool, chain, check or data your agent needs; read daily. Never include "
                     f"names, emails, IP addresses, secrets or keys. Free: {FEATURE_REQUEST_DAILY_LIMIT} per caller per UTC day.")
+WALLET_MEMORY_TRUST_NOTICE = ("Pacta keeps what your wallet saves (contract addresses, block numbers, your notes), with your wallet address and the "
+                              "time. No other wallet can read it. We do not share, sell, score or trade on it. One call erases it; backup copies "
+                              "expire within 30 days.")   # the Worker's WALLET_MEMORY_TRUST_NOTICE, word for word (253 characters)
+X402_MEMORY_ENDPOINTS = [("/v1/x402/remember", "0.001", "Wallet memory, paid door of remember: save a position, an entry block or a rule under your "
+                          "wallet. The payer must be the wallet in wallet_auth / wallet_session_token; the free doors are POST /v1/memory/remember and MCP"),
+                         ("/v1/x402/what-changed-since", "0.001", "Wallet memory, paid door of what_changed_since: every control, minter, price "
+                          "source or bridge change under your saved positions since a block. The payer must be the wallet; the free doors are POST "
+                          "/v1/memory/what-changed-since and MCP")]
+LLMS_TRACE_DEPENDENCIES_DOC = (f"Dependency trace (free): GET {X402_URL}/v1/trace-dependencies?chain=ethereum|base&address=0x...&depth=2 and the MCP "
+                               "tool trace_dependencies (chain, address, optional depth 1..3): the collateral assets, minters, price sources and bridge "
+                               "verifiers a vault, market or token depends on, each link citing a contract and a block.")
+# What wallet memory is for comes first (the two tool sentences of remember and what_changed_since), then its doors, limits and prices
+WALLET_MEMORY_PURPOSE = ("Save a position, an entry block or a rule under your wallet, tied to the contracts it depends on. Since a block or "
+                         "your last check: every control, minter, price source or bridge change under your saved positions or a list of "
+                         "contracts, including changes that are queued and have not run yet.")
+LLMS_WALLET_MEMORY_DOC = ("Wallet memory (remember, what_changed_since, forget): " + WALLET_MEMORY_PURPOSE
+                          + f" Free over MCP and POST {X402_URL}/v1/memory/remember, "
+                          "/v1/memory/what-changed-since and /v1/memory/forget at 20 calls / minute and 100 calls / day per wallet; the paid doors "
+                          f"POST {X402_URL}/v1/x402/remember and /v1/x402/what-changed-since cost $0.001 USDC per call on Base via x402 (60 calls / "
+                          "minute, no daily cap); forget is always free. Calls are signed with wallet_auth (an EIP-191 personal_sign from an EOA, or "
+                          "ERC-1271 for a contract wallet) or a 1-hour wallet_session_token; what_changed_since with an explicit contracts list needs "
+                          "no wallet. Up to 200 items per wallet, notes up to 500 characters (no contact details, keys or secrets). "
+                          + WALLET_MEMORY_TRUST_NOTICE)
+LLMS_X402_MEMORY_DOC = (f"Wallet memory paid doors: POST {X402_URL}/v1/x402/remember $0.001 and POST {X402_URL}/v1/x402/what-changed-since $0.001 "
+                        "(USDC on Base, 60 calls / minute; the payer must be the wallet in wallet_auth / wallet_session_token). The free doors are "
+                        "POST /v1/memory/* and MCP; forget is always free.")
 FREE_X402_DOC = (f"Free x402 tier: {X402_PUBLIC}/v1/x402/verdict, /v1/x402/dossier and /v1/x402/wallet-exposure, and the MCP tools pacta_verdict, pacta_dossier "
                  f"and pacta_scan_wallet_exposure, are free for {FREE_X402_DAILY_QUOTA} calls per caller per UTC day per tool (no key, no payment; REST and MCP share each "
                  "tool's quota; X-Meter-Limit / X-Meter-Remaining / X-Meter-Reset headers and a meter object; free wallet-exposure calls may also "
@@ -605,7 +648,8 @@ homepage: {BASE}/
 
 Use this skill when a task involves DeFi collateral risk, governance or upgrade authority, timelocks, Safe quorums or roles,
 or a live collateral onboarding proposal. Pacta publishes {m['records_indexed']} attested checks across {m['sprints_completed']} Base EAS batch attestations and
-{len(prop['proposals'])} governance proposals mapped to on-chain state. Every inspection tool is read-only and free; two opt-in tools write:
+{len(prop['proposals'])} governance proposals mapped to on-chain state. Every inspection tool is read-only and free within its daily tier; the three wallet-memory tools
+(`remember`, `what_changed_since`, `forget`) save, diff and erase only under the caller's own wallet; two opt-in tools write:
 `pacta_submit_request` queues a coverage / feature request with the user's consent, and `request_feature` sends a free-text feature request.
 
 ## Pre-execution API (free daily tier, no API key; deep routes paid in Base USDC)
@@ -651,13 +695,13 @@ Use EIP-1898 `{{"blockHash": "<hash>", "requireCanonical": true}}` when calling 
 Environment (all optional, none secret):
 """ + "\n".join(f"- `{n}`: {d}" for n, d in MCP_ENV) + f"""
 
-## x402 (Base USDC; the five /v1/x402/* routes and calls over the free daily tier)
+## x402 (Base USDC; the five /v1/x402/* routes, the two $0.001 wallet-memory doors and calls over the free daily tiers)
 - Live gateway: `{X402_URL}` (discovery `{X402_URL}/.well-known/x402`; free `/health`, `/v1/sample/control-plane`, `/v1/sample/preflight`).
 - {FREE_LAUNCH_NOTE}
 - The local stdio MCP server's gateway tools are on by default (`PACTA_X402_URL={X402_URL}`); set `PACTA_X402_URL=""` to keep it local-only.
 - Base (8453), scheme `exact`, USDC `{USDC_BASE}`, payTo `{PAY_TO}` (the Pacta Treasury EOA), `maxTimeoutSeconds` {X402_MAX_TIMEOUT_S}. Never sign for any other `payTo`.
 - Gateway routes (GET query or POST JSON body with the same names; default client cap $1.00):
-""" + "\n".join(f"  - `{X402_URL}{r.split('?')[0]}` (" + (f"{FREE_DAILY_QUOTA} free calls per caller per UTC day, then {usd} = `{atomic}` atomic USDC via x402"
+""" + "\n".join(f"  - `{X402_URL}{r.split('?')[0]}` (" + (f"{FREE_X402_DAILY_QUOTA if r.split('?')[0] == '/v1/check/wallet-exposure' else FREE_DAILY_QUOTA} free calls per caller per UTC day, then {usd} = `{atomic}` atomic USDC via x402"
                                                        if r.split("?")[0] in METERED_PATHS else "free, $0.00 today: no wallet, no payment")
                 + ")" + (f": `?{r.split('?')[1]}`" if "?" in r else "")
                 for r, atomic, usd in X402_ROUTES) + f"""

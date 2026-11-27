@@ -898,13 +898,14 @@ class Scorecard87(unittest.TestCase):
     # MCP 0.1.7: .github/workflows/publish-mcp.yml names the api.pacta.wtf endpoint, documents a re-run, and its last step skips
     # the publish of a version the registry already lists as active, then marks the superseded registry versions deleted
     # (PUBLISH_WORKFLOW_MOVES, each old text exactly once in BASE). Nothing else of it, or of any other workflow, moved.
+    # MCP 0.1.8 (control, dependency and wallet-memory registry description): 0.1.7 joins the superseded versions and the delete message names 0.1.8.
     PUBLISH_WORKFLOW_MOVES = (
         (('# Streamable HTTP endpoint https://pacta-x402.pacta.workers.dev/mcp, no npm package) to registry.modelcontextprotocol.io.\n'),
          ('# Streamable HTTP endpoint https://api.pacta.wtf/mcp, no npm package) to registry.modelcontextprotocol.io.\n')),
         (('# so bump "version" in server.remote.json (and server.json) to publish an update.\n'),
          ('# so bump "version" in server.remote.json (and server.json) to publish an update. A re-run (workflow_dispatch) skips the\n'
          '# publish only while the registry already lists that exact version as active; then the superseded versions 0.1.1, 0.1.3,\n'
-         '# 0.1.4, 0.1.5 and 0.1.6 are marked deleted (one already marked deleted is skipped). A failed registry read fails the run.\n')),
+         '# 0.1.4, 0.1.5, 0.1.6 and 0.1.7 are marked deleted (one already marked deleted is skipped). A failed registry read fails the run.\n')),
         (('      - name: Log in with GitHub OIDC and publish io.github.Fractal-Neurons/pacta\n'
          '        run: |\n'
          '          set -euo pipefail\n'
@@ -934,10 +935,10 @@ class Scorecard87(unittest.TestCase):
          '          else\n'
          '            mcp-publisher publish\n'
          '          fi\n'
-         '          for ver in 0.1.1 0.1.3 0.1.4 0.1.5 0.1.6; do\n'
+         '          for ver in 0.1.1 0.1.3 0.1.4 0.1.5 0.1.6 0.1.7; do\n'
          '            state="$(registry_status "$ver")"\n'
          '            if [ "$state" = "deleted" ]; then echo "io.github.Fractal-Neurons/pacta $ver is already marked deleted"; continue; fi\n'
-         '            mcp-publisher status --status deleted --message "Superseded by 0.1.7 on https://api.pacta.wtf/mcp" io.github.Fractal-Neurons/pacta "$ver"\n'
+         '            mcp-publisher status --status deleted --message "Superseded by 0.1.8 on https://api.pacta.wtf/mcp" io.github.Fractal-Neurons/pacta "$ver"\n'
          '          done\n')),
     )
     WATCH_PAGE_MOVES = (

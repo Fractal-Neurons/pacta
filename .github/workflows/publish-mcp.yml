@@ -4,7 +4,7 @@
 # SHA-256 and the release's own checksums file before it runs. The registry rejects re-publishing an existing version,
 # so bump "version" in server.remote.json (and server.json) to publish an update. A re-run (workflow_dispatch) skips the
 # publish only while the registry already lists that exact version as active; then the superseded versions 0.1.1, 0.1.3,
-# 0.1.4, 0.1.5 and 0.1.6 are marked deleted (one already marked deleted is skipped). A failed registry read fails the run.
+# 0.1.4, 0.1.5, 0.1.6 and 0.1.7 are marked deleted (one already marked deleted is skipped). A failed registry read fails the run.
 name: Publish remote MCP server to the MCP Registry
 
 on:
@@ -79,8 +79,8 @@ jobs:
           else
             mcp-publisher publish
           fi
-          for ver in 0.1.1 0.1.3 0.1.4 0.1.5 0.1.6; do
+          for ver in 0.1.1 0.1.3 0.1.4 0.1.5 0.1.6 0.1.7; do
             state="$(registry_status "$ver")"
             if [ "$state" = "deleted" ]; then echo "io.github.Fractal-Neurons/pacta $ver is already marked deleted"; continue; fi
-            mcp-publisher status --status deleted --message "Superseded by 0.1.7 on https://api.pacta.wtf/mcp" io.github.Fractal-Neurons/pacta "$ver"
+            mcp-publisher status --status deleted --message "Superseded by 0.1.8 on https://api.pacta.wtf/mcp" io.github.Fractal-Neurons/pacta "$ver"
           done
