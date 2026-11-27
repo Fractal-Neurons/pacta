@@ -12,7 +12,7 @@
   }
  },
  "authentication": {
-  "notes": "No API key and no account. The free daily tier needs no wallet; the five /v1/x402/* routes and calls over the daily quota are paid in Base USDC via x402 (v1 X-PAYMENT or v2 PAYMENT-SIGNATURE).",
+  "notes": "No API key and no account. The free daily tier needs no wallet; the five /v1/x402/* routes, the two $0.001 wallet-memory doors and calls over the daily quota are paid in Base USDC via x402 (v1 X-PAYMENT or v2 PAYMENT-SIGNATURE).",
   "schemes": [
    "none"
   ]
@@ -71,7 +71,7 @@
    "/v1/x402/*": "x402_paid",
    "reads": "free_read"
   },
-  "note": "No API key. Paid today: only the five /v1/x402/* routes ($0.02 to $9.00 USDC on Base, paid to the Pacta Treasury EOA 0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14; x402 v1 X-PAYMENT or v2 PAYMENT-SIGNATURE). /v1/check/preflight and /v1/check/wallet-exposure are free for 50 calls per caller per UTC day, then $0.01 USDC per call via x402 to the same treasury. Every other route (protocol lookup, control-plane, timelock-op and proposal-diff scans, live-timelocks briefs, samples and the remote MCP read tools) is free at $0.00 (60 requests / minute per caller).",
+  "note": "No API key. Paid today: the five /v1/x402/* routes ($0.02 to $9.00 USDC on Base, paid to the Pacta Treasury EOA 0x4348DF1BEFAffcbA248B5118B1b782B1B2bdEd14; x402 v1 X-PAYMENT or v2 PAYMENT-SIGNATURE), the two wallet-memory doors /v1/x402/remember and /v1/x402/what-changed-since ($0.001 USDC per call) and calls over the free daily tiers. /v1/check/preflight is free for 50 calls per caller per UTC day and /v1/check/wallet-exposure for 100, then $0.01 USDC per call via x402 to the same treasury; who_controls (GET /v1/check) is free for 100 calls a day. Every other route (protocol lookup, control-plane, timelock-op and proposal-diff scans, live-timelocks briefs, dependency trace, samples and the other remote MCP read tools) is free at $0.00 (60 requests / minute per caller); wallet memory is free at 20 calls / minute and 100 calls / day per wallet, and forget is always free.",
   "priceUsd": "0.00",
   "rateLimitPerMinute": 60,
   "wallet": false

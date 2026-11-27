@@ -3404,7 +3404,7 @@ def not_found_page(idx, sp=None):
 <div><dt>For agents</dt><dd class="links"><a href="/llms.txt">llms.txt</a><a href="/SKILL.md">SKILL.md</a><a href="/.well-known/agent.json">agent.json</a><a href="/api/v1/index.json">/api/v1/index.json</a></dd></div>
 </dl></section>
 <section class="memo-sec"><h2>Remote MCP server (free)</h2>
-<p>8 MCP tools: 7 read-only checks + 1 coverage request (<code>pacta_submit_request</code>) over Streamable HTTP, zero install, led by <code>pacta_lookup_protocol</code> (resolve a protocol or token name first). Tool <code>pacta_check_preflight</code> runs the same check as the live checker on the homepage.</p>
+<p>16 MCP tools ({E(REMOTE_TOOLS_DOC)}) over Streamable HTTP, zero install, led by <code>pacta_lookup_protocol</code> (resolve a protocol or token name first). Tool <code>pacta_check_preflight</code> runs the same check as the live checker on the homepage.</p>
 {snippet("Any MCP client (Streamable HTTP)", MCP_URL)}{snippet("Claude Code", claude)}</section>
 </article>
 </main>
@@ -3850,7 +3850,7 @@ def request_page(idx):
 <nav class="crumbs breadcrumb" aria-label="Breadcrumb"><a href="../">Pacta</a><span aria-hidden="true">/</span><span>Request a dossier</span></nav>
 <div class="sec-head"><h1>Request a dossier</h1><p class="aside" data-free-paid>Every scorecard and public JSON feed is free; pre-flight checks include 50 free calls per day ($0.01 USDC via x402 after), and deep x402 API routes ($0.02–$9.00 USDC) pay per call on Base. This form is for verification work.</p></div>
 <nav class="launcher" aria-label="Instant self-serve checks" data-launcher>{launcher_links("../")}</nav>
-<p class="sec-intro">Agents do not need this page: every scorecard, public JSON feed, and <a href="../mcp/">remote MCP</a> read tool (<code>{E(MCP_URL)}</code>) stays free (no key, no wallet); pre-flight (<code>/v1/check/preflight</code>) and wallet-exposure checks include 50 free calls per day ($0.01 USDC via x402 after), and deep x402 API routes ($0.02–$9.00 USDC) pay per call on Base. Remote MCP ({E(REMOTE_TOOLS_DOC)}). Pick a track and the protocols in scope; you get a request ID right away. {E(EDITORIAL_FIREWALL)} {E(EDITORIAL_SHORT)}</p>
+<p class="sec-intro">Agents do not need this page: every scorecard, public JSON feed, and <a href="../mcp/">remote MCP</a> read tool (<code>{E(MCP_URL)}</code>) stays free (no key, no wallet); pre-flight checks (<code>/v1/check/preflight</code>) include 50 free calls per day and wallet-exposure checks 100 ($0.01 USDC via x402 after), and deep x402 API routes ($0.02–$9.00 USDC) pay per call on Base. Remote MCP ({E(REMOTE_TOOLS_DOC)}). Pick a track and the protocols in scope; you get a request ID right away. {E(EDITORIAL_FIREWALL)} {E(EDITORIAL_SHORT)}</p>
 {request_builder(idx, "../")}
 </div></section>
 {pricing_section(idx, "../")}
@@ -5441,9 +5441,10 @@ def mcp_page(idx):
     reg = idx["onchain_anchoring"]["commitment_registry"]
     claude = f"claude mcp add --transport http pacta {MCP_URL}"
     cursor = json.dumps({"mcpServers": {"pacta": {"url": MCP_URL}}}, indent=2)
-    tools = "".join(f"<li><code>{E(t)}</code></li>" for t in B2A.REMOTE_TOOLS)
+    tools = "".join(f"<li><code>{E(t)}</code>" + (f" (alias <code>{E(B2A.WHO_CONTROLS_ALIAS)}</code>)" if t == B2A.WHO_CONTROLS_TOOL else "") + "</li>"
+                    for t in B2A.REMOTE_TOOLS)
     starter = "https://github.com/Fractal-Neurons/defi-control-plane-mcp"
-    x402_rows = "".join(f'<tr><td class="nowrap"><code>POST {E(p)}</code></td><td class="nowrap num">${E(u)}</td><td>{E(w)}</td></tr>' for p, u, w in B2A.X402_ENDPOINTS)
+    x402_rows = "".join(f'<tr><td class="nowrap"><code>POST {E(p)}</code></td><td class="nowrap num">${E(u)}</td><td>{E(w)}</td></tr>' for p, u, w in B2A.X402_ENDPOINTS + B2A.X402_MEMORY_ENDPOINTS)
     install = U.tabs("mcpq", [("mcp", "MCP", term(claude, "Claude Code", "Copy the Claude Code MCP install command")
                                + term(cursor, "Cursor (mcp.json)", "Copy the Cursor MCP configuration")),
                               ("curl", "cURL", term(REST_CURL, "cURL", "Copy the cURL quickstart")),
@@ -5454,8 +5455,9 @@ def mcp_page(idx):
 <main id="main" class="memo-wrap">
 <nav class="crumbs breadcrumb" aria-label="Breadcrumb"><a href="../">Pacta</a><span aria-hidden="true">/</span><span>MCP</span></nav>
 <article class="memo">
-<header><span data-slot="badge" data-variant="info" data-mcp-tier>Free read tools · 50/day live checks</span><h1>Pacta MCP server</h1>
-<p class="lede">The live Model Context Protocol endpoint is <code data-mcp-endpoint>{E(MCP_URL)}</code>: Streamable HTTP, JSON-RPC 2.0, stateless (no session). The read-only lookup, scan and radar tools are free with <b>no API key and no wallet</b>; <code>pacta_check_preflight</code> and <code>pacta_scan_wallet_exposure</code> include 50 free calls per day ($0.01 USDC via x402 on Base after), and deep <code>/v1/x402/*</code> routes ($0.02–$9.00 USDC) pay per call on Base. Rate limit: {E(RATE_LIMIT)}. This page only documents it; point your MCP client at the endpoint above.</p></header>
+<header><span data-slot="badge" data-variant="info" data-mcp-tier>16 MCP tools · free read &amp; wallet memory</span><h1>Pacta MCP server</h1>
+<p class="lede">The live Model Context Protocol endpoint is <code data-mcp-endpoint>{E(MCP_URL)}</code>: Streamable HTTP, JSON-RPC 2.0, stateless (no session). <b>Read-only checks and dependency trace (11 tools):</b> <code>pacta_lookup_protocol</code>, the <code>/v1/scan/*</code> tools, <code>pacta_get_live_timelocks</code> and <code>trace_dependencies</code> (<code>GET /v1/trace-dependencies</code>) are free ($0, <b>no API key and no wallet</b>); <code>who_controls</code> (<code>GET /v1/check</code>), <code>pacta_verdict</code>, <code>pacta_dossier</code> and <code>pacta_scan_wallet_exposure</code> include 100 free calls per caller per UTC day, and <code>pacta_check_preflight</code> includes 50 ($0.01 USDC via x402 on <code>/v1/check/*</code> above the quota); the five deep <code>/v1/x402/*</code> routes ($0.02–$9.00 USDC) pay per call on Base. Rate limit: {E(RATE_LIMIT)}. This page only documents it; point your MCP client at the endpoint above.</p>
+<p class="lede" data-mcp-memory><b>Wallet memory</b> (<code>remember</code>, <code>what_changed_since</code>, <code>forget</code>): {E(B2A.WALLET_MEMORY_PURPOSE)} Free on MCP and <code>POST /v1/memory/*</code> at 20 calls per minute and 100 calls per day per wallet, signed with <code>wallet_auth</code> (an EOA or ERC-1271 signature) or a 1-hour <code>wallet_session_token</code>; up to 200 items per wallet, notes up to 500 characters. The same calls cost $0.001 USDC each on Base via <code>POST /v1/x402/remember</code> and <code>POST /v1/x402/what-changed-since</code> (60 calls per minute, no daily cap); <code>forget</code> is always free. <span data-trust-notice>{E(B2A.WALLET_MEMORY_TRUST_NOTICE)}</span> (<a href="../privacy/">Privacy</a>)</p></header>
 <section class="memo-sec" id="install"><h2>Install</h2>
 {install}
 <p>Optional attribution: <code>caller_agent</code>, <code>requester_role</code> and <code>caller_purpose</code> (non-personal; omitted or invalid values never block a call — invalid values are silently dropped; see <a href="../SKILL.md">SKILL.md</a>).</p></section>
@@ -5501,8 +5503,10 @@ def llms(idx, radar):
         f"> {BRAND}: pre-execution contract and governance safety API for AI agents (free daily tier, no API key; deep x402 routes paid in Base USDC), plus block-pinned DeFi control-plane snapshots and a free timelock feed. {coverage_line(idx)}.", "",
         "Pacta checks who can change the rules of DeFi protocols (proxy admins, timelock delays, Safe quorums, roles) and compares that with what the protocols document. Every record is a read-only on-chain observation pinned to a block number and canonical block hash on its chain (" + counts(idx)["chains"] + ").", "",
         "## API & MCP for agents (free daily tier + Base USDC x402)",
-        f"- Remote MCP (Streamable HTTP, zero install): {MCP_URL} · Claude Code: `claude mcp add --transport http pacta {MCP_URL}` · Cursor: `{{\"mcpServers\": {{\"pacta\": {{\"url\": \"{MCP_URL}\"}}}}}}`. Tools ({B2A.LLMS_REMOTE_TOOLS_DOC}): {', '.join(B2A.LLMS_REMOTE_TOOLS)}. Local stdio server: {STDIO_TOOLS_DOC}.",
+        f"- Remote MCP (Streamable HTTP, zero install): {MCP_URL} · Claude Code: `claude mcp add --transport http pacta {MCP_URL}` · Cursor: `{{\"mcpServers\": {{\"pacta\": {{\"url\": \"{MCP_URL}\"}}}}}}`. Tools ({B2A.LLMS_REMOTE_TOOLS_DOC}): {', '.join(B2A.LLMS_REMOTE_TOOLS)} ({B2A.LLMS_REMOTE_ALIAS_NOTE}). Local stdio server: {STDIO_TOOLS_DOC}.",
         "- " + B2A.LLMS_WHO_CONTROLS_DOC,
+        "- " + B2A.LLMS_TRACE_DEPENDENCIES_DOC,
+        "- " + B2A.LLMS_WALLET_MEMORY_DOC,
         "- " + B2A.LLMS_FEATURE_DOC,
         "- " + B2A.CALLER_FIELDS_DOC,
         "- " + B2A.LLMS_FREE_TIER_DOC,
@@ -5562,6 +5566,7 @@ def llms(idx, radar):
         f"- Settlement, Option B (direct express): USDC on Base (`{USDC['Base']}`) or Ethereum (`{USDC['Ethereum']}`) to the Pacta treasury (direct settlement EOA) `{a['treasury_admin']}` (an externally owned account; the same address on both chains).",
         f"- Request: {BASE_URL}/request/ (builds a scope brief; opens a pre-filled GitHub intake issue or Gmail compose, or copies the brief). Prefill: `?tier=community|clearance|api_sla&protocol=<slug>&forum=<https URL>&settlement=invoice|direct`.", "",
         "## x402 API (live for AI agents & programmatic callers)",
+        "- " + B2A.LLMS_X402_MEMORY_DOC,
         f"- Free daily quota + pay-per-call x402 overflow: {B2A.FREE_DAILY_QUOTA} free preflight checks (`GET /v1/check/preflight`, MCP `pacta_check_preflight`) and {B2A.FREE_X402_DAILY_QUOTA} free wallet-exposure checks (`GET /v1/check/wallet-exposure`, `POST /v1/x402/wallet-exposure`, MCP `pacta_scan_wallet_exposure`) per caller per UTC day, then $0.01 per call over x402 on the /v1/check/* routes (never a dead-end 429). Dedicated POST JSON x402 agent endpoints on `{API}` (`{B2A.X402_URL}`): `POST /v1/x402/verdict` ($0.02), `POST /v1/x402/dossier` ($0.05), `POST /v1/x402/wallet-exposure` ($0.05), `POST /v1/x402/calldata-sim` ($0.25), `POST /v1/x402/deep-scan` ($9.00); verdict, dossier and wallet-exposure are free for the first {B2A.FREE_X402_DAILY_QUOTA} calls per caller per UTC day per tool (no key, no payment; MCP `pacta_verdict`, `pacta_dossier`, `pacta_scan_wallet_exposure` share the quota), then x402; calldata-sim and deep-scan are paid on every call; metered live check routes ({B2A.FREE_DAILY_QUOTA} free pre-flight / {B2A.FREE_X402_DAILY_QUOTA} free wallet-exposure calls/day per caller, then $0.01 USDC via x402 on Base): `GET /v1/check/preflight`, `GET /v1/check/wallet-exposure`; free live scan routes ($0.00 today: no key, no wallet, {RATE_LIMIT}): `GET /v1/scan/control-plane`, `GET /v1/scan/proposal-diff`, `GET /v1/scan/timelock-op`, `GET /v1/briefs/live-timelocks`; free `/health`, `/.well-known/x402` (Bazaar discovery), `/v1/sample/control-plane`, `/v1/sample/preflight`. Wire: x402Versions [1, 2] (v1 network `base` with `X-PAYMENT` / `X-PAYMENT-RESPONSE`, v2 network `{B2A.X402_NETWORK_V2}` with `PAYMENT-REQUIRED` / `PAYMENT-SIGNATURE` / `PAYMENT-RESPONSE`; USDC on Base, payTo `{B2A.PAY_TO}`, maxTimeoutSeconds {B2A.X402_MAX_TIMEOUT_S}).",
         f"- Remote MCP: {MCP_URL} (free, no install). Local stdio server (from a clone of the repo): its gateway tools are on by default (`PACTA_X402_URL={B2A.X402_URL}`; `PACTA_X402_URL=\"\"` keeps it local-only); in x402_paid mode pay with `xPaymentHeader` (v1) or `paymentSignatureHeader` (v2). The MCP client does not re-check receipts on-chain (onchainReceiptVerified: false); the gateway does.",
         f"- Gateway settlement guard: {B2A.X402_GATEWAY_GUARD_NOTE}", "",
@@ -5907,8 +5912,11 @@ def how_it_works(idx, cards, radar, prefix=""):
                     (("SKILL.md", f"{prefix}SKILL.md"), ("llms.txt", f"{prefix}llms.txt"), ("OpenAPI 3.1", f"{prefix}openapi.json"),
                      ("MCP docs", f"{prefix}mcp/")))
     # v4.7.1: two columns from 1024 px (install | verify), so the two panels are close in height
-    agents = (f'<p class="s">Remote MCP over Streamable HTTP and a REST API: {E(RATE_LIMIT)}, free, no API key, no wallet. '
-              f'Remote tools: {E(REMOTE_TOOLS_DOC)}.</p>'
+    agents = (f'<p class="s" data-hiw-mcp>Remote MCP over Streamable HTTP and a REST API: {E(RATE_LIMIT)}; reads need no API key and no wallet. '
+              '16 remote tools: 11 read-only inspection tools (among them <code>who_controls</code>, 100 free calls a day, and '
+              '<code>trace_dependencies</code>, free) + 3 wallet-memory tools (<code>remember</code>, <code>what_changed_since</code> and '
+              '<code>forget</code>: free at 20 calls / minute and 100 / day per wallet, then $0.001 USDC a call over x402; <code>forget</code> '
+              'is always free) + 2 opt-in request tools.</p>'
               + f'<div class="hiw-pills">{pills}</div><div class="hiw-agents"><div>'
               + term(f"claude mcp add --transport http pacta {MCP_URL}", "Claude Code", "Copy the Claude Code MCP install command")
               + term(cursor, "Cursor (mcp.json)", "Copy the Cursor MCP configuration") + '</div><div>'
@@ -5949,7 +5957,7 @@ def agents_section(prefix=""):
           + term(STATIC_PY, "Python (standard library, static JSON)", "Copy the Python standard-library quickstart")
           + f'<p class="s" style="margin-top:12px"><a href="#hiw-t-agents" data-tab-open="hiw-t-agents">Claude Code, Cursor, curl and cast commands{ARR}</a></p>')
     agents = U.card(U.card_header("AI agents &amp; builders", f"Pre-execution contract checks over MCP or REST: {E(RATE_LIMIT)}, no key, no wallet.")
-                    + f'<div data-slot="card-content">{qs}<p class="s" style="margin-top:12px">Remote MCP ({E(REMOTE_TOOLS_DOC)}) · {E(RATE_LIMIT)}.</p></div>'
+                    + f'<div data-slot="card-content">{qs}<p class="s" style="margin-top:12px" data-agents-mcp>Remote MCP (11 read-only + 3 wallet-memory + 2 request tools) · free daily tiers + wallet memory (20/min, 100/day per wallet)</p></div>'
                     + f'<div data-slot="card-footer" class="links"><a href="{prefix}mcp/">MCP docs{ARR}</a><a href="{prefix}openapi.json">OpenAPI 3.1</a>'
                       f'<a href="{prefix}SKILL.md">SKILL.md</a><a href="{prefix}agent.json">agent.json</a></div>', cls="agents-card")
     teams = U.card(U.card_header("Protocol &amp; security teams", "Keep your public docs and your onchain authority aligned.")
@@ -5973,7 +5981,7 @@ RADAR_STATE_WORD = {"ready": "window open", "pending": "waiting", "mixed": "mixe
 SELF_SERVE_PLANS = [   # key, title, price, note, bullets, (cta, href, kind), badge
     ("free", "Free scorecards, API & MCP", "$0", "No key, no wallet", [
         "All {n} scorecards and Base EAS proofs, free, with live re-check on demand",
-        "50 free preflight / wallet-exposure checks a day, then $0.01 a call over x402",
+        "50 free preflight and 100 free wallet-exposure checks a day, then $0.01 a call over x402",
         "Free doc-update queue, typically 6–8 weeks"], ("Browse scorecards", "scorecards/", "pricing_free"), None),
     ("wallet-report-9", "Full Wallet & Safe Exposure Report", "$9", "USDC · one-time", [
         "Read-only Multicall3 scan across Ethereum & Base holdings",
@@ -6009,7 +6017,7 @@ def pricing_cards(idx, home=""):
                    for p, u, t in X402_STRIP)
     return (f'<div class="plans" data-pricing>{"".join(out)}</div>'
             f'<div class="ent-strip" data-x402-strip><span class="ent-l">Agent &amp; API · pay per call in USDC on Base (x402) '
-            f'<small>{B2A.FREE_DAILY_QUOTA} free preflight / MCP checks a day, then $0.01 a call</small></span>{x402}</div>'
+            f'<small>{B2A.FREE_DAILY_QUOTA} free preflight and {B2A.FREE_X402_DAILY_QUOTA} free wallet-exposure checks a day, then $0.01 a call</small></span>{x402}</div>'
             f'<div class="ent-strip" data-enterprise-strip><span class="ent-l">Enterprise &amp; protocol diligence · by arrangement</span>{strip}</div>'
             f'<p class="note">Paid work never changes a result: re-verification and dossiers can still read Delta when docs and chain diverge.</p>')
 
@@ -6141,7 +6149,7 @@ def about_page(idx):
          f'<p class="s">Every transaction from or to the operational accounts above is permanently verifiable on BaseScan and Etherscan alongside Pacta&#x27;s public JSON ledgers at <a href="../api/v1/index.json">/api/v1/index.json</a> and <a href="../leaderboard/">/leaderboard/</a>; Pacta never solicits transfers over direct messages or unverified addresses.</p>'
         ),
         ("independence", "Independence and funding", f'<p>{E(EDITORIAL_FIREWALL)} {E(EDITORIAL_INDEPENDENCE)} Paid verification work for protocol teams funds the '
-         f'engineering; every scorecard, public JSON feed and remote MCP read tool stays free; pre-flight (<code>/v1/check/preflight</code>) and wallet-exposure checks include 50 free calls per day ($0.01 USDC via x402 after), and deep x402 API routes ($0.02–$9.00 USDC) pay per call on Base.</p>'),
+         f'engineering; every scorecard, public JSON feed and remote MCP read tool stays free; pre-flight checks (<code>/v1/check/preflight</code>) include 50 free calls per day and wallet-exposure checks 100 ($0.01 USDC via x402 after), and deep x402 API routes ($0.02–$9.00 USDC) pay per call on Base.</p>'),
         ("contact", "Contact", f'<p>{E(CONTACT_NOTE)}. Security issues: see <a href="../.well-known/security.txt">security.txt</a>; exploit-sensitive '
          f'findings go through the affected protocol\'s bug bounty programme.</p>'),
     ]
@@ -6223,7 +6231,7 @@ def methodology_page(idx):
          f'<a href="../api/v1/scorecards.json">scorecards.json</a>, <a href="../api/v1/index.json">index.json</a>, '
          f'<a href="../api/v1/rpc-pinned.json">rpc-pinned.json</a>.</p>'),
         ("independence", "Independence policy", f'<p>{E(EDITORIAL_FIREWALL)} {E(EDITORIAL_INDEPENDENCE)} {E(SELF_CORRECTION)}</p>'
-         '<p>Paid verification work for protocol teams funds the engineering; every scorecard, public JSON feed and remote MCP read tool stays free; pre-flight (<code>/v1/check/preflight</code>) and wallet-exposure checks include 50 free calls per day ($0.01 USDC via x402 after), and deep x402 API routes ($0.02–$9.00 USDC) pay per call on Base.</p>'),
+         '<p>Paid verification work for protocol teams funds the engineering; every scorecard, public JSON feed and remote MCP read tool stays free; pre-flight checks (<code>/v1/check/preflight</code>) include 50 free calls per day and wallet-exposure checks 100 ($0.01 USDC via x402 after), and deep x402 API routes ($0.02–$9.00 USDC) pay per call on Base.</p>'),
         ("corrections", "Corrections Log",
          '<p>Pacta logs parser, schema and record corrections transparently so institutional allocators and protocol teams can audit every change:</p>'
          '<ul class="corr-log" data-corrections-log>'
@@ -6328,8 +6336,8 @@ def privacy_page(idx):
 
 def terms_page(idx):
     sections = [
-        ("use", "Use of the site and data", f'<p>Pacta publishes read-only analysis of public onchain state and public documentation. The '
-         f'Every scorecard, public JSON feed and remote MCP read tool stays free; pre-flight and wallet-exposure checks include 50 free calls per day ($0.01 USDC via x402 after), and deep x402 API routes ($0.02–$9.00 USDC) pay per call on Base, within the published rate limit ({E(RATE_LIMIT)}). The code is '
+        ("use", "Use of the site and data", f'<p>Pacta publishes read-only analysis of public onchain state and public documentation. '
+         f'Every scorecard, public JSON feed and remote MCP read tool stays free; pre-flight checks include 50 free calls per day and wallet-exposure checks 100 ($0.01 USDC via x402 after), and deep x402 API routes ($0.02–$9.00 USDC) pay per call on Base, within the published rate limit ({E(RATE_LIMIT)}). The code is '
          f'MIT-licensed at <a href="{REPO}" target="_blank" rel="noopener">GitHub</a>.</p>'),
         ("advice", "Not investment advice", '<p>Nothing on Pacta is investment, legal or security advice. A status describes whether documentation '
          'matches onchain controls at a block; it is not a safety rating. Verify anything that matters with the reproduction commands.</p>'),

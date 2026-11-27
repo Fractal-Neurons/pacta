@@ -2,7 +2,9 @@
 #
 # Two ways to connect:
 #   1. Remote (zero install, preferred): Streamable HTTP at https://api.pacta.wtf/mcp (io.github.Fractal-Neurons/pacta)
-#      (7 read-only inspection tools led by pacta_lookup_protocol + 1 opt-in request tool pacta_submit_request; free during the launch: no API key, no wallet). Register it as an external
+#      (16 tools: 11 read-only inspection tools led by pacta_lookup_protocol, who_controls and trace_dependencies + 3 wallet-memory tools
+#      remember, what_changed_since, forget + 2 opt-in request tools request_feature, pacta_submit_request; free read and wallet-memory tiers,
+#      no API key; $0.001 USDC paid memory overflow on Base; forget always free). Register it as an external
 #      remote server with that URL; nothing below is needed for it.
 #   2. stdio (this file): the zero-dependency Node server in packages/mcp-server, built from its Dockerfile.
 #      Nothing is published on npm, so there is no npx form.
@@ -18,7 +20,7 @@ startCommand:
       x402Url:
         type: string
         default: https://pacta-x402.pacta.workers.dev
-        description: Pacta gateway base URL for the live tools (pre-flight check, control-plane / timelock / proposal scans). Free during the launch. Empty string = static-feed tools only.
+        description: Pacta gateway base URL for the live tools (pre-flight check, control-plane / timelock / proposal scans). Scans are free; pre-flight checks include 50 free calls per caller per UTC day, then $0.01 USDC per call via x402 on Base. Empty string = static-feed tools only.
       maxAtomic:
         type: string
         default: "1000000"

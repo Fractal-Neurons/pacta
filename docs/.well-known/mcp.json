@@ -66,7 +66,7 @@
  "status": "registry_remote: io.github.Fractal-Neurons/pacta is published in the official MCP Registry as a remote Streamable HTTP server (no install): https://api.pacta.wtf/mcp. Local stdio server: git clone https://github.com/Fractal-Neurons/pacta.git, then node packages/mcp-server/bin/pacta-mcp.mjs.",
  "title": "Pacta by Fractal Neurons",
  "toolSummary": {
-  "remote": "7 read-only inspection tools + 1 opt-in coverage/feature request tool (pacta_submit_request)",
+  "remote": "11 read-only inspection tools + 3 wallet-memory tools + 2 opt-in request tools",
   "requestTool": "pacta_submit_request",
   "requestsEndpoint": "https://api.pacta.wtf/v1/requests",
   "stdio": "14 read-only inspection tools + 2 opt-in request tools"
@@ -212,13 +212,21 @@
   },
   "tools": [
    "pacta_lookup_protocol",
+   "who_controls",
    "pacta_check_preflight",
    "pacta_scan_wallet_exposure",
    "pacta_scan_control_plane",
    "pacta_scan_timelock_op",
    "pacta_scan_proposal_diff",
    "pacta_get_live_timelocks",
-   "pacta_submit_request"
+   "pacta_verdict",
+   "pacta_dossier",
+   "trace_dependencies",
+   "remember",
+   "what_changed_since",
+   "forget",
+   "pacta_submit_request",
+   "request_feature"
   ],
   "type": "streamable-http",
   "url": "https://api.pacta.wtf/mcp"
@@ -228,13 +236,21 @@
    "install": "none",
    "tools": [
     "pacta_lookup_protocol",
+    "who_controls",
     "pacta_check_preflight",
     "pacta_scan_wallet_exposure",
     "pacta_scan_control_plane",
     "pacta_scan_timelock_op",
     "pacta_scan_proposal_diff",
     "pacta_get_live_timelocks",
-    "pacta_submit_request"
+    "pacta_verdict",
+    "pacta_dossier",
+    "trace_dependencies",
+    "remember",
+    "what_changed_since",
+    "forget",
+    "pacta_submit_request",
+    "request_feature"
    ],
    "type": "streamable-http",
    "url": "https://api.pacta.wtf/mcp"

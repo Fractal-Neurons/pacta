@@ -1940,8 +1940,10 @@ def main(argv=None):
           not f1_bad and card_f1["settlementGuard"]["replay"].startswith("every credited Base USDC transfer is owned by one PactaLedgerDO Durable Object")
           and all("PactaLedgerDO" in read(f) and "without Durable Objects" not in read(f) for f in ("docs/.well-known/agent.json", "docs/.well-known/mcp.json", "docs/llms.txt", "docs/llms-full.txt")),
           str(f1_bad))
-    remote_tools = ["pacta_lookup_protocol", "pacta_check_preflight", "pacta_scan_wallet_exposure", "pacta_scan_control_plane", "pacta_scan_timelock_op", "pacta_scan_proposal_diff",
-                    "pacta_get_live_timelocks", "pacta_submit_request"]
+    # Discovery copy: the live remote MCP (POST /mcp tools/list, core f6877af3) = 11 read-only + 3 wallet-memory + 2 request tools
+    remote_tools = ["pacta_lookup_protocol", "who_controls", "pacta_check_preflight", "pacta_scan_wallet_exposure", "pacta_scan_control_plane",
+                    "pacta_scan_timelock_op", "pacta_scan_proposal_diff", "pacta_get_live_timelocks", "pacta_verdict", "pacta_dossier",
+                    "trace_dependencies", "remember", "what_changed_since", "forget", "pacta_submit_request", "request_feature"]
     man_ = json.loads(read("docs/.well-known/mcp.json"))
     card_ = json.loads(read("docs/.well-known/agent.json"))
     man_remote = next((t_ for t_ in man_.get("transports", []) if t_.get("type") == "streamable-http"), {})
@@ -1962,7 +1964,7 @@ def main(argv=None):
         "@pacta/mcp-server": 'name: "pacta_check_preflight"' in srv_src and "PAID_ROUTES.checkPreflight" in srv_src,
         "SKILL.md copies": skill_copy_ok(primary["docs/SKILL.md"], read("packages/mcp-server/SKILL.md"), read("packages/mcp-server/package.json")),
     }
-    check("remote MCP: 6 read-only tools + pacta_submit_request (pacta_lookup_protocol, then pacta_check_preflight) on mcp.json, agent.json (free_read / metered / x402_paid pricing; 0 free_launch on agent surfaces), SKILL.md, llms.txt, llms-full.txt; @pacta/mcp-server ships pacta_check_preflight; SKILL.md copies byte-identical",
+    check("remote MCP: 16 tools (11 read-only + 3 wallet-memory + 2 request tools, tools/list order, pacta_lookup_protocol first) on mcp.json, agent.json (free_read / metered / x402_paid pricing; 0 free_launch on agent surfaces), SKILL.md, llms.txt, llms-full.txt; @pacta/mcp-server ships pacta_check_preflight; SKILL.md copies byte-identical",
           all(surfaces5.values()), str({k: v for k, v in surfaces5.items() if not v}))
 
     # ---- protocol / token lookup (task-14e685be73f9): docs/api/v1/lookup.json == packages/mcp-server/src/lookup.mjs, exact parity with the feeds
@@ -3262,17 +3264,20 @@ def main(argv=None):
         # Pack 2: the stdio server lists 14 read-only + 2 opt-in request tools (adds pacta_who_controls_contract, pacta_verdict, pacta_dossier, request_feature)
         # MCP 0.1.7: README.md names the live remote surface (10 read-only + 2 opt-in request tools); the home page, the request page and
         # smithery.yaml keep their 7 + 1 wording until the site pages are rebuilt. MCP 0.1.8: the remote surface is 11 read-only
-        # (+ trace_dependencies) + 3 wallet-memory (remember, what_changed_since, forget) + 2 request tools; the stdio server is unchanged
-        "README 11 + 3 + 2 remote / 14 + 2 stdio tools; home, request page and smithery.yaml 7 + 1 remote": "11 read-only inspection tools + 3 wallet-memory tools + 2 opt-in request tools, led by `pacta_lookup_protocol`" in read("README.md")
+        # (+ trace_dependencies) + 3 wallet-memory (remember, what_changed_since, forget) + 2 request tools; the stdio server is unchanged.
+        # Discovery copy: the home page, the request page and smithery.yaml state the same 11 + 3 + 2 remote surface
+        "README, home, request page and smithery.yaml 11 + 3 + 2 remote / 14 + 2 stdio tools": "11 read-only inspection tools + 3 wallet-memory tools + 2 opt-in request tools, led by `pacta_lookup_protocol`" in read("README.md")
             and "the wallet-memory tools `remember`, `what_changed_since` and `forget`" in read("README.md")
             and "14 read-only inspection tools + 2 opt-in request tools" in read("README.md") and "10 read-only inspection tools + 2 opt-in request tools" not in read("README.md")
             and "7 read-only inspection tools" not in read("README.md") and "1 opt-in coverage/feature request tool" not in read("README.md")
-            and "`pacta_live_timelocks`" in read("README.md") and "7 read-only inspection tools led by pacta_lookup_protocol + 1 opt-in request tool" in read("smithery.yaml")
-            and "Remote MCP (7 read-only inspection tools + 1 opt-in coverage/feature request tool (pacta_submit_request))" in home
-            and "Remote MCP (7 read-only inspection tools + 1 opt-in coverage/feature request tool (pacta_submit_request))" in req_page,
+            and "`pacta_live_timelocks`" in read("README.md")
+            and "(16 tools: 11 read-only inspection tools led by pacta_lookup_protocol, who_controls and trace_dependencies + 3 wallet-memory tools" in read("smithery.yaml")
+            and "Remote MCP (11 read-only + 3 wallet-memory + 2 request tools) · free daily tiers + wallet memory (20/min, 100/day per wallet)" in home
+            and "Remote MCP (11 read-only inspection tools + 3 wallet-memory tools + 2 opt-in request tools)." in req_page
+            and not any("7 read-only" in x_ for x_ in (home, req_page, read("smithery.yaml"))),
         "no stale 5-tool strings": not stale5,
     }
-    check("C1: root + package Dockerfile run as USER node with CMD [node, /app/bin/pacta-mcp.mjs] (Glama mcp-proxy), glama.json maintainers [pacta-fractal-neurons], 6 + 1 remote / 10 + 1 stdio tools everywhere, 0 stale '5 read-only tools' strings",
+    check("C1: root + package Dockerfile run as USER node with CMD [node, /app/bin/pacta-mcp.mjs] (Glama mcp-proxy), glama.json maintainers [pacta-fractal-neurons], 11 + 3 + 2 remote / 14 + 2 stdio tools everywhere, 0 stale '5 read-only tools' strings",
           all(c1.values()), f"{[k for k, v in c1.items() if not v]} stale {stale5[:4]}")
 
     # C2: post-ETA state from radar.json; READY never rendered as executed; live hydrate (harness)
@@ -3497,23 +3502,26 @@ def main(argv=None):
             and cov in read("README.md") and all(cov in t for r, t in pages.items() if 'class="ftr"' in t) and f"{cov}." in read("docs/llms.txt"),
         "0 stale 'Indexed Records' lines": not [r for r, t in pages.items() if "Indexed Records" in t] and "Indexed Records" not in read("README.md")
             and "Indexed Records" not in read("docs/llms.txt"),
-        # Pack 1a / Pack 2: llms.txt / llms-full.txt list the remote MCP's 12 tools (10 read-only + 2 request tools: pacta_who_controls_contract,
-        # pacta_verdict, pacta_dossier, request_feature added) and state GET /v1/check + POST /v1/feature-request; SKILL.md keeps the 7 + 1 wording
-        # of the shared B2A constants
-        "6 + 1 remote / 10 + 1 stdio wording": all(B2AV.LLMS_REMOTE_TOOLS_DOC in read(f) and ", ".join(B2AV.LLMS_REMOTE_TOOLS) in read(f)
-                                                   and B2AV.LLMS_WHO_CONTROLS_DOC in read(f) and B2AV.LLMS_FEATURE_DOC in read(f)
-                                                   for f in ("docs/llms.txt", "docs/llms-full.txt"))
-            and B2AV.LLMS_REMOTE_TOOLS == ["pacta_lookup_protocol", "pacta_who_controls_contract", "pacta_check_preflight", "pacta_scan_wallet_exposure",
+        # Discovery copy: llms.txt / llms-full.txt / /llms/ list the same 16 remote tools as SKILL.md and mcp.json (who_controls, with its
+        # earlier name pacta_who_controls_contract as an alias) and add the dependency-trace and wallet-memory bullets; GET /v1/check +
+        # POST /v1/feature-request stay
+        "11 + 3 + 2 remote / 14 + 2 stdio wording": all(B2AV.LLMS_REMOTE_TOOLS_DOC in read(f) and ", ".join(B2AV.LLMS_REMOTE_TOOLS) in read(f)
+                                                        and B2AV.LLMS_WHO_CONTROLS_DOC in read(f) and B2AV.LLMS_FEATURE_DOC in read(f)
+                                                        and B2AV.LLMS_TRACE_DEPENDENCIES_DOC in read(f) and B2AV.LLMS_WALLET_MEMORY_DOC in read(f)
+                                                        for f in ("docs/llms.txt", "docs/llms-full.txt"))
+            and B2AV.LLMS_REMOTE_TOOLS == ["pacta_lookup_protocol", "who_controls", "pacta_check_preflight", "pacta_scan_wallet_exposure",
                                            "pacta_scan_control_plane", "pacta_scan_timelock_op", "pacta_scan_proposal_diff", "pacta_get_live_timelocks",
-                                           "pacta_verdict", "pacta_dossier", "pacta_submit_request", "request_feature"]
-            and B2AV.LLMS_REMOTE_TOOLS_DOC == "10 read-only inspection tools + 2 opt-in request tools (pacta_submit_request, request_feature)"
+                                           "pacta_verdict", "pacta_dossier", "trace_dependencies", "remember", "what_changed_since", "forget",
+                                           "pacta_submit_request", "request_feature"]
+            and B2AV.LLMS_REMOTE_TOOLS_DOC == "11 read-only inspection tools + 3 wallet-memory tools + 2 opt-in request tools"
             and all(html.escape(x, quote=False) in read("docs/llms/index.html") or x in read("docs/llms/index.html")
-                    for x in (B2AV.LLMS_REMOTE_TOOLS_DOC, B2AV.LLMS_WHO_CONTROLS_DOC, B2AV.LLMS_FEATURE_DOC))
+                    for x in (B2AV.LLMS_REMOTE_TOOLS_DOC, B2AV.LLMS_WHO_CONTROLS_DOC, B2AV.LLMS_FEATURE_DOC, B2AV.LLMS_TRACE_DEPENDENCIES_DOC,
+                              B2AV.LLMS_WALLET_MEMORY_DOC, B2AV.LLMS_X402_MEMORY_DOC))
             and B2AV.REMOTE_TOOLS_DOC in read("docs/SKILL.md")
             and all(B2AV.STDIO_TOOLS_DOC in read(f) for f in ("docs/llms.txt", "docs/llms-full.txt"))
             and not re.search(r"all read-only|Everything is read-only", read("docs/llms.txt") + read("docs/SKILL.md") + read("docs/llms-full.txt")),
         # Pack 2: the stdio list (MCP_TOOLS) has 16 tools, exactly 2 of them write (request_feature, pacta_submit_request)
-        "mcp.json lists 8 remote tools + readOnly flags": man_["transport"]["tools"] == B2AV.REMOTE_TOOLS and len(B2AV.REMOTE_TOOLS) == 8
+        "mcp.json lists 16 remote tools + readOnly flags": man_["transport"]["tools"] == B2AV.REMOTE_TOOLS and len(B2AV.REMOTE_TOOLS) == 16
             and len(man_["tools"]) == 16 and [t["name"] for t in man_["tools"] if not t["readOnly"]] == ["request_feature", "pacta_submit_request"],
         "radar: live note + each timelock on its own chain's explorer (Etherscan / Basescan)": "Block-pinned timelock queue — auto-rechecked via RPC in your browser" in home
             and all(f'{BS.EXPLORERS[BS.radar_chain(it, rad)][1]}/address/{it["timelock"]}' in (home if BS.item_state(it) != "executed" else read("docs/radar/index.html"))
@@ -3535,9 +3543,129 @@ def main(argv=None):
             "pfilter_initial_all", "pfilter_pills_exact", "pfilter_status_x_chain", "pfilter_text_search", "pfilter_empty_prompt", "pfilter_recover_chain",
             "pfilter_inert", "pfilter_clear_all", "pfilter_reset")),
     }
-    check("D3: v0.1.4 brand / RAG disambiguation (0 'Pacta Protocol', exact disambiguation line, Organization JSON-LD), data-derived coverage line, 6 + 1 / 10 + 1 tools, "
+    check("D3: v0.1.4 brand / RAG disambiguation (0 'Pacta Protocol', exact disambiguation line, Organization JSON-LD), data-derived coverage line, 11 + 3 + 2 / 14 + 2 tools, "
           "#radar live-mainnet note with Etherscan links, GitHub link in the header, MCP recipes, /protocols/ client-side filter (text only)",
           all(d3.values()), f"{[k for k, v in d3.items() if not v]} brand {brand_hits}")
+    # Discovery copy: /, /mcp/, llms.txt, /llms/, llms-full.txt and smithery.yaml (and the shared call sites SKILL.md, mcp.json,
+    # agent.json, /request/ and 404) state the live remote MCP (16 tools = 11 read-only + 3 wallet-memory + 2 request tools, tools/list order),
+    # the free daily tiers (100/day who_controls, verdict, dossier, wallet-exposure; 50/day preflight), wallet memory (20/min + 100/day per
+    # wallet, forget always free), its two $0.001 paid doors and the Worker's 253-character trust notice
+    g2_mcp = read("docs/mcp/index.html")
+    g2_llms, g2_full, g2_llms_html, g2_smithery = read("docs/llms.txt"), read("docs/llms-full.txt"), read("docs/llms/index.html"), read("smithery.yaml")
+    g2_tools = ["pacta_lookup_protocol", "who_controls", "pacta_check_preflight", "pacta_scan_wallet_exposure", "pacta_scan_control_plane",
+                "pacta_scan_timelock_op", "pacta_scan_proposal_diff", "pacta_get_live_timelocks", "pacta_verdict", "pacta_dossier",
+                "trace_dependencies", "remember", "what_changed_since", "forget", "pacta_submit_request", "request_feature"]
+    g2_doc = "11 read-only inspection tools + 3 wallet-memory tools + 2 opt-in request tools"
+    g2_trust = ("Pacta keeps what your wallet saves (contract addresses, block numbers, your notes), with your wallet address and the time. "
+                "No other wallet can read it. We do not share, sell, score or trade on it. One call erases it; backup copies expire within 30 days.")
+    g2_list = re.search(r'<section class="memo-sec" id="tools"><h2>Tools \(([^)]*)\)</h2><ul>(.*?)</ul>', g2_mcp)
+    g2_table = re.search(r'<section class="memo-sec" id="x402">.*?<tbody>(.*?)</tbody>', g2_mcp, re.S)
+    g2_rows = re.findall(r'<tr><td class="nowrap"><code>POST (/v1/x402/[a-z-]+)</code></td><td class="nowrap num">\$([0-9.]+)</td><td>([^<]*)</td></tr>',
+                         g2_table.group(1) if g2_table else "")
+    g2_memory = re.findall(r'<p class="lede" data-mcp-memory>(.*?)</p>', g2_mcp)
+
+    def g2_below(text, first, then):   # the bullets right below `first`, in this order
+        ls_ = text.splitlines()
+        i_ = next((k_ for k_, l_ in enumerate(ls_) if l_ == "- " + first), None)
+        return i_ is not None and ls_[i_ + 1:i_ + 1 + len(then)] == ["- " + x_ for x_ in then]
+
+    def g2_section(text, head):        # the lines of one "## " section
+        return text.split("\n" + head + "\n", 1)[1].split("\n## ", 1)[0] if ("\n" + head + "\n") in text else ""
+    g2_stale = {f: [s for s in ("7 read-only", "1 opt-in coverage/feature request tool", "8 MCP tools", "Free during the launch", "Free read tools",
+                                "50/day live checks", "50 free preflight / ", "10 read-only inspection tools", "50 pre-flight and wallet-exposure checks",
+                                "Paid today: only the five", "wallet-exposure are free for 50", "and wallet-exposure checks include 50",
+                                "The Every scorecard") if s in read(f)]
+                for f in ("docs/index.html", "docs/mcp/index.html", "docs/llms.txt", "docs/llms/index.html", "docs/llms-full.txt", "smithery.yaml",
+                          "docs/SKILL.md", "packages/mcp-server/SKILL.md", "docs/404.html", "docs/request/index.html", "docs/mcp.json",
+                          "docs/.well-known/mcp.json", "docs/agent.json", "docs/.well-known/agent.json", "docs/about/index.html",
+                          "docs/methodology/index.html", "docs/terms/index.html")}
+    g2_purpose = ("Save a position, an entry block or a rule under your wallet, tied to the contracts it depends on. Since a block or your last check: "
+                  "every control, minter, price source or bridge change under your saved positions or a list of contracts, including changes that "
+                  "are queued and have not run yet.")
+    g2 = {
+        "shared constants": B2AV.REMOTE_TOOLS == g2_tools and B2AV.LLMS_REMOTE_TOOLS == g2_tools and B2AV.REMOTE_TOOLS_DOC == g2_doc
+            and B2AV.LLMS_REMOTE_TOOLS_DOC == g2_doc and B2AV.STDIO_TOOLS_DOC == "14 read-only inspection tools + 2 opt-in request tools"
+            and B2AV.WALLET_MEMORY_TRUST_NOTICE == g2_trust and len(g2_trust) == 253 and (B2AV.WHO_CONTROLS_TOOL, B2AV.WHO_CONTROLS_ALIAS) == ("who_controls", "pacta_who_controls_contract"),
+        "0 stale discovery strings": not any(g2_stale.values()),
+        "/mcp/ badge": g2_mcp.count('data-mcp-tier>16 MCP tools · free read &amp; wallet memory</span>') == 1,
+        "/mcp/ lede: free reads + daily tiers": all(x_ in g2_mcp for x_ in (
+            '<code data-mcp-endpoint>https://api.pacta.wtf/mcp</code>: Streamable HTTP, JSON-RPC 2.0',
+            "<b>Read-only checks and dependency trace (11 tools):</b> <code>pacta_lookup_protocol</code>, the <code>/v1/scan/*</code> tools, "
+            "<code>pacta_get_live_timelocks</code> and <code>trace_dependencies</code> (<code>GET /v1/trace-dependencies</code>) are free ($0, <b>no API key and no wallet</b>)",
+            "<code>who_controls</code> (<code>GET /v1/check</code>), <code>pacta_verdict</code>, <code>pacta_dossier</code> and <code>pacta_scan_wallet_exposure</code> "
+            "include 100 free calls per caller per UTC day, and <code>pacta_check_preflight</code> includes 50 ($0.01 USDC via x402 on <code>/v1/check/*</code> above the quota)",
+            "the five deep <code>/v1/x402/*</code> routes ($0.02–$9.00 USDC) pay per call on Base",
+            f"Rate limit: {html.escape(BS.RATE_LIMIT)}.")),
+        "/mcp/ lede: wallet memory + trust notice + /privacy/ link": len(g2_memory) == 1 and all(x_ in g2_memory[0] for x_ in (
+            "Free on MCP and <code>POST /v1/memory/*</code> at 20 calls per minute and 100 calls per day per wallet",
+            "<code>wallet_auth</code> (an EOA or ERC-1271 signature) or a 1-hour <code>wallet_session_token</code>",
+            "up to 200 items per wallet, notes up to 500 characters",
+            "$0.001 USDC each on Base via <code>POST /v1/x402/remember</code> and <code>POST /v1/x402/what-changed-since</code> (60 calls per minute, no daily cap)",
+            "<code>forget</code> is always free", f"<span data-trust-notice>{html.escape(g2_trust)}</span>", '(<a href="../privacy/">Privacy</a>)')),
+        "/mcp/ tools: heading + 16 tools in tools/list order + alias": bool(g2_list) and g2_list.group(1) == g2_doc
+            and re.findall(r"<li><code>([a-z_]+)</code>", g2_list.group(2)) == g2_tools
+            and "<li><code>who_controls</code> (alias <code>pacta_who_controls_contract</code>)</li>" in g2_list.group(2),
+        "/mcp/ free tiers + 7 x402 rows (2 paid memory doors, payer == wallet, free doors POST /v1/memory/* and MCP)":
+            f"<p>{html.escape(B2AV.FREE_TIER_DOC)}</p>" in g2_mcp and all(x_ in B2AV.FREE_TIER_DOC for x_ in (
+                "100 calls each for who_controls (GET /v1/check), pacta_verdict, pacta_dossier and pacta_scan_wallet_exposure", "50 for pacta_check_preflight",
+                "remember and what_changed_since are free at 20 calls / minute and 100 calls / day per wallet", "$0.001 USDC per call (60 calls / minute)",
+                "forget is always free", "who_controls has no paid overflow"))
+            and [(p_, u_) for p_, u_, _ in g2_rows] == [("/v1/x402/verdict", "0.02"), ("/v1/x402/dossier", "0.05"), ("/v1/x402/wallet-exposure", "0.05"),
+                                                      ("/v1/x402/calldata-sim", "0.25"), ("/v1/x402/deep-scan", "9.00"), ("/v1/x402/remember", "0.001"),
+                                                      ("/v1/x402/what-changed-since", "0.001")]
+            and all("The payer must be the wallet" in w_ and f"the free doors are POST /v1/memory/{p_.rsplit('/', 1)[1]} and MCP" in w_ for p_, _, w_ in g2_rows[5:]),
+        "home: how it works (agents) + AI agents card + free plan + x402 strip (5 routes)": all(x_ in home for x_ in (
+            "16 remote tools: 11 read-only inspection tools (among them <code>who_controls</code>, 100 free calls a day, and <code>trace_dependencies</code>, free)",
+            "+ 3 wallet-memory tools (<code>remember</code>, <code>what_changed_since</code> and <code>forget</code>: free at 20 calls / minute and 100 / day per wallet, "
+            "then $0.001 USDC a call over x402; <code>forget</code> is always free) + 2 opt-in request tools.</p>",
+            '<p class="s" style="margin-top:12px" data-agents-mcp>Remote MCP (11 read-only + 3 wallet-memory + 2 request tools) · free daily tiers + wallet memory (20/min, 100/day per wallet)</p>',
+            "<li>50 free preflight and 100 free wallet-exposure checks a day, then $0.01 a call over x402</li>",
+            "<small>50 free preflight and 100 free wallet-exposure checks a day, then $0.01 a call</small>"))
+            and home.count('data-x402-route="') == 5 and home.count("data-hiw-mcp>") == 1 and home.count("data-agents-mcp>") == 1,
+        "wallet memory leads with its purpose (llms.txt, llms-full.txt, /llms/, /mcp/), then its doors and prices":
+            B2AV.WALLET_MEMORY_PURPOSE == g2_purpose
+            and B2AV.LLMS_WALLET_MEMORY_DOC.startswith("Wallet memory (remember, what_changed_since, forget): " + g2_purpose + " Free over MCP and POST ")
+            and all(x_.count("- " + B2AV.LLMS_WALLET_MEMORY_DOC + "\n") == 1 for x_ in (g2_llms, g2_full))
+            and html.escape(B2AV.LLMS_WALLET_MEMORY_DOC, quote=False) in g2_llms_html
+            and len(g2_memory) == 1 and g2_memory[0].startswith('<b>Wallet memory</b> (<code>remember</code>, <code>what_changed_since</code>, '
+                                                              '<code>forget</code>): ' + html.escape(g2_purpose) + " Free on MCP and "),
+        "/about/, /methodology/, /terms/: 50 free pre-flight and 100 free wallet-exposure calls a day; /terms/ wording":
+            all(read(f_).count("pre-flight checks (<code>/v1/check/preflight</code>) include 50 free calls per day and wallet-exposure checks 100 "
+                               "($0.01 USDC via x402 after)") == 1 for f_ in ("docs/about/index.html", "docs/methodology/index.html"))
+            and read("docs/terms/index.html").count("public documentation. Every scorecard, public JSON feed and remote MCP read tool stays free; "
+                                                    "pre-flight checks include 50 free calls per day and wallet-exposure checks 100 ($0.01 USDC via "
+                                                    "x402 after)") == 1,
+        "/request/ + 404": "pre-flight checks (<code>/v1/check/preflight</code>) include 50 free calls per day and wallet-exposure checks 100" in req_page
+            and "<li>50 free preflight and 100 free wallet-exposure checks a day, then $0.01 a call over x402</li>" in req_page
+            and f"<p>16 MCP tools ({g2_doc}) over Streamable HTTP, zero install" in read("docs/404.html"),
+        "llms.txt + llms-full.txt: alias note, trace + memory bullets right below who-controls, paid memory doors in the x402 section":
+            all(f"{', '.join(g2_tools)} (who_controls also answers as pacta_who_controls_contract)." in x_
+                and g2_below(x_, B2AV.LLMS_WHO_CONTROLS_DOC, [B2AV.LLMS_TRACE_DEPENDENCIES_DOC, B2AV.LLMS_WALLET_MEMORY_DOC]) and g2_trust in x_
+                for x_ in (g2_llms, g2_full))
+            and B2AV.LLMS_WALLET_MEMORY_DOC.endswith(" " + g2_trust)
+            and ("- " + B2AV.LLMS_X402_MEMORY_DOC) in g2_section(g2_llms, "## x402 API (live for AI agents & programmatic callers)").splitlines()
+            and ("- " + B2AV.LLMS_X402_MEMORY_DOC) in g2_section(g2_full, next((l_ for l_ in g2_full.splitlines() if l_.startswith("## x402 micropayments (")), "-")).splitlines()
+            and all(x_ in B2AV.LLMS_X402_MEMORY_DOC for x_ in ("/v1/x402/remember $0.001", "/v1/x402/what-changed-since $0.001", "the payer must be the wallet"))
+            and html.escape(g2_trust, quote=False) in g2_llms_html,
+        "smithery.yaml: remote comment (16 tools) + x402Url description; runtime / commandFunction / exampleConfig kept":
+            "#   1. Remote (zero install, preferred): Streamable HTTP at https://api.pacta.wtf/mcp (io.github.Fractal-Neurons/pacta)\n"
+            "#      (16 tools: 11 read-only inspection tools led by pacta_lookup_protocol, who_controls and trace_dependencies + 3 wallet-memory tools\n"
+            "#      remember, what_changed_since, forget + 2 opt-in request tools request_feature, pacta_submit_request; free read and wallet-memory tiers,\n"
+            "#      no API key; $0.001 USDC paid memory overflow on Base; forget always free). Register it as an external\n" in g2_smithery
+            and "Scans are free; pre-flight checks include 50 free calls per caller per UTC day, then $0.01 USDC per call via x402 on Base. "
+                "Empty string = static-feed tools only." in g2_smithery
+            and all(x_ in g2_smithery for x_ in ("runtime: container", "commandFunction:", "exampleConfig:")),
+        "mcp.json + agent.json + SKILL.md": all(json.loads(read(f))["transport"]["tools"] == g2_tools and json.loads(read(f))["toolSummary"]["remote"] == g2_doc
+                                                for f in ("docs/mcp.json", "docs/.well-known/mcp.json"))
+            and all(json.loads(read(f))["pricing"]["note"] == B2AV.FREE_LAUNCH_NOTE for f in ("docs/agent.json", "docs/.well-known/agent.json"))
+            and "/v1/check/wallet-exposure for 100" in B2AV.FREE_LAUNCH_NOTE and "the two wallet-memory doors /v1/x402/remember and /v1/x402/what-changed-since" in B2AV.FREE_LAUNCH_NOTE
+            and B2AV.FREE_TIER_DOC in read("docs/SKILL.md") and ", ".join(f"`{n_}`" for n_ in g2_tools) in read("docs/SKILL.md")
+            and "/v1/check/wallet-exposure` (100 free calls per caller per UTC day" in read("docs/SKILL.md"),
+    }
+    check("Discovery copy: /, /mcp/, llms.txt, /llms/, llms-full.txt, smithery.yaml (+ SKILL.md, mcp.json, agent.json, /request/, 404) state 16 remote "
+          "tools (11 + 3 + 2, tools/list order), 100/day + 50/day free tiers, wallet memory 20/min + 100/day per wallet, 2 x $0.001 paid memory doors, "
+          "the 253-character trust notice; 0 stale 7 + 1 strings",
+          all(g2.values()), f"{[k for k, v in g2.items() if not v]} stale {({k: v for k, v in g2_stale.items() if v})}")
 
     bounty = read("docs/bounties/index.html")
     bd = BS.load_bounties()
