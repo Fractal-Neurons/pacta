@@ -6249,7 +6249,7 @@ PRIVACY_REPEAT_CALLERS = ("To count repeat API and MCP callers across days witho
 PRIVACY_KEEWANO_TOTALS = ("We send totals of these counts to our analytics provider, Keewano: how many pages were opened, how far they were scrolled, "
                           "how many hit a missing page, and how many API and MCP calls were made, by day and hour, and from which kind of site visitors "
                           "arrived, for example a search engine or a directory. We also send the amount, what was paid for and the day of each payment "
-                          "we receive, with the kind of payer and never the payer's address. What Keewano receives contains no wallet address, no IP "
+                          "we receive, with the kind of payer and never the payer's address. These totals contain no wallet address, no IP "
                           "address, no name of a referring site and nothing that identifies a visitor or a caller.")
 
 
