@@ -1,7 +1,7 @@
 {
   "name": "pacta-mcp-server",
   "private": true,
-  "version": "0.1.7",
+  "version": "0.1.8",
   "mcpName": "io.github.Fractal-Neurons/pacta",
   "description": "Zero-dependency MCP server for Pacta, by Fractal Neurons: who can upgrade, pause or change a contract on Ethereum and Base, with optional x402 Base USDC live scans.",
   "license": "MIT",

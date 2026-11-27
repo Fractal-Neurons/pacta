@@ -967,9 +967,10 @@ def ready_fixture_brief(idx):
 
 
 # MCP package version: 0.1.5 on Commit 1 (published), 0.1.6 on Commit 2 (the registry bump), 0.1.7 with the control-facts registry
-# description (the publish workflow marks 0.1.1 to 0.1.6 deleted). The package's own files must agree with
+# description (the publish workflow marks 0.1.1 to 0.1.6 deleted), 0.1.8 with the control, dependency and wallet-memory registry
+# description (0.1.7 joins the deleted list). The package's own files must agree with
 # packages/mcp-server/package.json; site documents may still name an earlier version (docs/SKILL.md: 0.1.5).
-MCP_VERSIONS_OK = {"0.1.5", "0.1.6", "0.1.7"}
+MCP_VERSIONS_OK = {"0.1.5", "0.1.6", "0.1.7", "0.1.8"}
 # packages/mcp-server/SKILL.md vs docs/SKILL.md (tools/build_site.package_skill writes the package copy on every build). From package
 # 0.1.6: an undated bounties pointer, and the MCP status line names only io.github.Fractal-Neurons/pacta, the remote endpoint and the
 # clone command (MCP_STATUS_LINE), whatever the site copy still says. Below 0.1.6 (the frozen 0.1.5 package files): once the site copy
@@ -1332,8 +1333,14 @@ def main(argv=None):
         b.feed(read(f))
         check(f"HTML tag balance: {f}", not b.errors and not [t for t in b.stack if t not in ("html", "body")], "; ".join(b.errors[:3]))
 
-    # v3 design / UX invariants
-    pages = {os.path.relpath(p, DOCS): open(p).read() for p in glob.glob(os.path.join(DOCS, "**", "*.html"), recursive=True)}
+    # v3 design / UX invariants + root search-engine ownership artifacts (exact bytes, excluded from normal HTML page chrome)
+    ROOT_VERIFY_HTML = {"google9232d852c0706689.html": b"google-site-verification: google9232d852c0706689.html"}
+    ROOT_VERIFY_XML = {"BingSiteAuth.xml": b'<?xml version="1.0"?>\n<users>\n\t<user>E636BB57E9F39AD391DCAC0C3B6BEAB7</user>\n</users>\n'}
+    check("root search-engine verification artifacts match exact expected bytes (Google 53 B, Bing 86 B)",
+          all(os.path.isfile(os.path.join(DOCS, fn)) and open(os.path.join(DOCS, fn), "rb").read() == exp
+              for fn, exp in {**ROOT_VERIFY_HTML, **ROOT_VERIFY_XML}.items()))
+    pages = {os.path.relpath(p, DOCS): open(p).read() for p in glob.glob(os.path.join(DOCS, "**", "*.html"), recursive=True)
+             if os.path.relpath(p, DOCS) not in ROOT_VERIFY_HTML}
     # MV10-09: the shared footer's contact line is the one mailto: (pacta@dri.network); every CTA still works in the browser
     FTR_MAIL = '<p class="ftr-contact" data-ftr-contact>Contact: <a class="mono" href="mailto:pacta@dri.network">pacta@dri.network</a></p>'
     mail = sorted(k for k, v in pages.items() if "mailto:" in v.replace(FTR_MAIL, "")) + (["app.js"] if "mailto:" in appjs else [])
@@ -1849,7 +1856,7 @@ def main(argv=None):
         "defined in llms.txt + llms-full.txt": all("rpc_observed (on-chain control plane pinned at an archive block height" in read(f) or
                                                    "Classification rpc_observed: on-chain control plane pinned at an archive block height" in read(f)
                                                    for f in ("docs/llms.txt", "docs/llms-full.txt")),
-        "mcp.json: no npm package / packageVersion keys; package.json 0.1.5 / 0.1.6 / 0.1.7": not ({"package", "packageVersion"} & set(json.loads(read("docs/.well-known/mcp.json"))))
+        "mcp.json: no npm package / packageVersion keys; package.json 0.1.5 / 0.1.6 / 0.1.7 / 0.1.8": not ({"package", "packageVersion"} & set(json.loads(read("docs/.well-known/mcp.json"))))
                                          and json.loads(read("packages/mcp-server/package.json"))["version"] in MCP_VERSIONS_OK,
         "llms-full names io.github.Fractal-Neurons/pacta, the remote endpoint and the clone command (no npm package)": (
             "- Name: io.github.Fractal-Neurons/pacta · remote Streamable HTTP https://api.pacta.wtf/mcp (no install) · local stdio from a clone." in read("docs/llms-full.txt")
@@ -2007,7 +2014,7 @@ def main(argv=None):
                                                  for f in ("docs/SKILL.md", "docs/llms.txt", "docs/llms-full.txt"))
             and card_["endpoints"].get("lookup") in (API_ + "/v1/protocols/lookup", WORKERS_API_ + "/v1/protocols/lookup") and man_.get("lookup", {}).get("tool") == "pacta_lookup_protocol"
             and "pacta_lookup_protocol" in read("docs/llms/index.html") and f"{BS.BASE_URL}/api/v1/lookup.json" in read("docs/sitemap.xml"),
-        "MCP server 0.1.5 / 0.1.6 / 0.1.7 everywhere (an npm entry or packageVersion only while still present)": {
+        "MCP server 0.1.5 / 0.1.6 / 0.1.7 / 0.1.8 everywhere (an npm entry or packageVersion only while still present)": {
             json.loads(read("packages/mcp-server/package.json"))["version"], json.loads(read("packages/mcp-server/server.json"))["version"],
             *[p_["version"] for p_ in json.loads(read("packages/mcp-server/server.json")).get("packages", [])],
             json.loads(read("packages/mcp-server/server.remote.json"))["version"], *([man_["packageVersion"]] if "packageVersion" in man_ else [])} <= MCP_VERSIONS_OK
@@ -2485,14 +2492,15 @@ def main(argv=None):
         rc_st = subprocess.run([sys.executable, os.path.join(ROOT, "tools", "build_site.py"), "--base-path", "/website-test", "--out-dir", out_st],
                                cwd=ROOT, capture_output=True, text=True, timeout=300)
         st = _tree_digest(out_st) if rc_st.returncode == 0 else {}
-        html_st = {k: open(os.path.join(out_st, k), encoding="utf-8").read() for k in st if k.endswith(".html")}
+        html_st = {k: open(os.path.join(out_st, k), encoding="utf-8").read() for k in st if k.endswith(".html") and k not in ROOT_VERIFY_HTML}
         rootrel = [k for k, t in html_st.items() for u in re.findall(r'(?:href|src|action)="(/[^"]*)"', t) if not u.startswith(("/website-test/", "//"))]
         st_ok = {
             "build ok": rc_st.returncode == 0 and "staged:" in rc_st.stdout,
             "docs/ untouched": _tree_digest(DOCS) == docs_before,
             "same files as docs/ (+ marker)": set(st) - {".pacta-staging"} == set(docs_before),
-            "non-HTML bytes identical (robots.txt disallows)": all(st[k] == docs_before[k] for k in st if not k.endswith(".html") and k not in (".pacta-staging", "robots.txt"))
-                and open(os.path.join(out_st, "robots.txt")).read() == "User-agent: *\nDisallow: /\n",
+            "non-HTML + root-verification bytes identical (robots.txt disallows)": all(
+                st[k] == docs_before[k] for k in st if (not k.endswith(".html") or k in ROOT_VERIFY_HTML) and k not in (".pacta-staging", "robots.txt")
+            ) and open(os.path.join(out_st, "robots.txt")).read() == "User-agent: *\nDisallow: /\n",
             "every page noindex, nofollow": bool(html_st) and all(re.findall(r'<meta name="robots" content="([^"]*)">', t) == ["noindex, nofollow"] for t in html_st.values()),
             "every page records the base path": all('<html lang="en" data-base-path="/website-test">' in t for t in html_st.values()),
             "0 root-relative links outside /website-test/": not rootrel,
@@ -2502,7 +2510,8 @@ def main(argv=None):
             "/pricing/ resolves to /website-test/#pricing": (lambda m: bool(m) and _upst.urljoin("https://pacta.dri.network/website-test/pricing/", m.group(1)) == "https://pacta.dri.network/website-test/#pricing")(
                 re.search(r'<meta http-equiv="refresh" content="0; url=([^"]+)">', html_st.get(os.path.join("pricing", "index.html"), ""))),
             "canonical docs/ stays indexable with no base path": not any("noindex, nofollow" in t or "data-base-path" in t
-                                                                     for t in (open(p_, encoding="utf-8").read() for p_ in glob.glob(os.path.join(DOCS, "**", "*.html"), recursive=True))),
+                                                                     for t in (open(p_, encoding="utf-8").read() for p_ in glob.glob(os.path.join(DOCS, "**", "*.html"), recursive=True)
+                                                                               if os.path.relpath(p_, DOCS) not in ROOT_VERIFY_HTML)),
         }
         guard_dir = os.path.join(tmp_root, "not-staging")
         os.makedirs(guard_dir)
@@ -2536,7 +2545,8 @@ def main(argv=None):
             and not os.path.exists(os.path.join(ROOT, "staging-inside-repo")))
         # v4.3 N2: every staging page (and only staging pages) carries one subtle banner line right after the skip link
         banner_st = BS.staging_banner("/website-test")
-        canon_html = [open(p_, encoding="utf-8").read() for p_ in glob.glob(os.path.join(DOCS, "**", "*.html"), recursive=True)]
+        canon_html = [open(p_, encoding="utf-8").read() for p_ in glob.glob(os.path.join(DOCS, "**", "*.html"), recursive=True)
+                      if os.path.relpath(p_, DOCS) not in ROOT_VERIFY_HTML]
         st_ok["N2: one staging banner per staged page (after the skip link); none on docs/, which ships index, follow"] = (
             banner_st == ('<div class="staging-banner" role="note" data-staging-banner>Staging preview (/website-test/) · robots=noindex on this '
                           'test route; production pacta.wtf ships index, follow.</div>')
@@ -3115,6 +3125,22 @@ def main(argv=None):
           and "no third-party trackers" not in priv_html and "The site sets no cookies" not in priv_html,
           f"xp_failed {[k_ for k_ in xp_keys if res.get(k_) is not True]}")
 
+    # Wallet memory release: the /privacy/ summary sentence and the two section paragraphs, word for word, once each
+    # (summary sentence 263, wallet memory 1089, call analytics 647 characters)
+    g2_priv = {a_: [html.unescape(x_) for x_ in re.findall(rf'<p {a_}>([^<]*)</p>', priv_html)]
+               for a_ in ("data-privacy-wallet-memory", "data-privacy-call-analytics")}
+    g2_priv["data-privacy-summary-gate2"] = [html.unescape(x_) for x_ in re.findall(
+        r'<section class="memo-sec" id="summary"><h2>Summary</h2><p>Pacta has no user accounts\. First-party telemetry stores aggregate '
+        r'counts only \(zero raw IP addresses\)\. <span data-privacy-summary-gate2>([^<]*)</span> On the public production domains ', priv_html)]
+    check("/privacy/: the summary sentence (263 characters, right after the aggregate-counts sentence), the wallet-memory (1089 characters) "
+          "and Keewano call-analytics (647 characters) paragraphs, word for word, once each",
+          g2_priv["data-privacy-summary-gate2"] == [BS.PRIVACY_SUMMARY_QUALIFIER] and len(BS.PRIVACY_SUMMARY_QUALIFIER) == 263
+          and priv_html.count("data-privacy-summary-gate2") == 1
+          and g2_priv["data-privacy-wallet-memory"] == [BS.PRIVACY_WALLET_MEMORY] and len(BS.PRIVACY_WALLET_MEMORY) == 1089
+          and g2_priv["data-privacy-call-analytics"] == [BS.PRIVACY_CALL_ANALYTICS] and len(BS.PRIVACY_CALL_ANALYTICS) == 647
+          and 'id="wallet-memory"' in priv_html and 'id="call-analytics"' in priv_html,
+          str({k_: [len(x_) for x_ in v_] for k_, v_ in g2_priv.items()}))
+
     fc_raw = read("docs/.well-known/farcaster.json") if os.path.exists(os.path.join(DOCS, ".well-known", "farcaster.json")) else "{}"
     fc_doc = json.loads(fc_raw)
     fc_ma = fc_doc.get("miniapp") if isinstance(fc_doc, dict) else {}
@@ -3235,9 +3261,11 @@ def main(argv=None):
         "glama maintainers": json.loads(read("glama.json"))["maintainers"] == ["pacta-fractal-neurons"],
         # Pack 2: the stdio server lists 14 read-only + 2 opt-in request tools (adds pacta_who_controls_contract, pacta_verdict, pacta_dossier, request_feature)
         # MCP 0.1.7: README.md names the live remote surface (10 read-only + 2 opt-in request tools); the home page, the request page and
-        # smithery.yaml keep their 7 + 1 wording until the site pages are rebuilt
-        "README 10 + 2 remote / 14 + 2 stdio tools; home, request page and smithery.yaml 7 + 1 remote": "10 read-only inspection tools + 2 opt-in request tools, led by `pacta_lookup_protocol`" in read("README.md")
-            and "14 read-only inspection tools + 2 opt-in request tools" in read("README.md") and "11 read-only inspection tools" not in read("README.md")
+        # smithery.yaml keep their 7 + 1 wording until the site pages are rebuilt. MCP 0.1.8: the remote surface is 11 read-only
+        # (+ trace_dependencies) + 3 wallet-memory (remember, what_changed_since, forget) + 2 request tools; the stdio server is unchanged
+        "README 11 + 3 + 2 remote / 14 + 2 stdio tools; home, request page and smithery.yaml 7 + 1 remote": "11 read-only inspection tools + 3 wallet-memory tools + 2 opt-in request tools, led by `pacta_lookup_protocol`" in read("README.md")
+            and "the wallet-memory tools `remember`, `what_changed_since` and `forget`" in read("README.md")
+            and "14 read-only inspection tools + 2 opt-in request tools" in read("README.md") and "10 read-only inspection tools + 2 opt-in request tools" not in read("README.md")
             and "7 read-only inspection tools" not in read("README.md") and "1 opt-in coverage/feature request tool" not in read("README.md")
             and "`pacta_live_timelocks`" in read("README.md") and "7 read-only inspection tools led by pacta_lookup_protocol + 1 opt-in request tool" in read("smithery.yaml")
             and "Remote MCP (7 read-only inspection tools + 1 opt-in coverage/feature request tool (pacta_submit_request))" in home

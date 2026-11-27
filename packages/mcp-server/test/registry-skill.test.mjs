@@ -201,8 +201,8 @@ test("0.1.5 icons: server.json and server.remote.json carry the same schema-vali
     assert.ok(doc.description.length <= 100);
     assert.doesNotMatch(doc.version, VERSION_RANGE);
   }
-  assert.equal(SERVER.version, "0.1.7");
-  assert.equal(REMOTE.version, "0.1.7");
+  assert.equal(SERVER.version, "0.1.8");
+  assert.equal(REMOTE.version, "0.1.8");
   // pacta-github-repo: the icon files are the site's own (32x32 PNG, SVG); skipped where the site docs are absent
   const DOCS = join(ROOT, "..", "..", "docs");
   if (existsSync(join(DOCS, "favicon.png"))) {
@@ -213,16 +213,20 @@ test("0.1.5 icons: server.json and server.remote.json carry the same schema-vali
   }
 });
 
-test("0.1.7 metadata: title, public description and package author / bugs / homepage", () => {
+test("0.1.8 metadata: title, public description and package author / bugs / homepage", () => {
   const REMOTE = JSON.parse(read("server.remote.json"));
   for (const doc of [SERVER, REMOTE]) {
     assert.equal(doc.title, "Pacta, by Fractal Neurons");
-    assert.equal(doc.description, "Who can upgrade, pause or change a contract. Control facts for agents on Ethereum and Base.");
-    assert.equal(doc.description.length, 91, `description is ${doc.description.length} chars`);
+    assert.equal(doc.description, "Control, dependency and wallet-memory facts for agents on Ethereum and Base. MCP and x402.");
+    assert.equal(doc.description.length, 90, `description is ${doc.description.length} chars`);
   }
+  // the registry entry names the remote surface (control, dependency and wallet-memory facts); the stdio package keeps its own wording
   assert.equal(PKG.description, "Zero-dependency MCP server for Pacta, by Fractal Neurons: who can upgrade, pause or change a contract on Ethereum and Base, with optional x402 Base USDC live scans.");
+  for (const s of ["who can upgrade, pause or change a contract", "Ethereum and Base"]) assert.ok(PKG.description.toLowerCase().includes(s.toLowerCase()), `${PKG.description} names ${s}`);
+  for (const d of [SERVER.description, REMOTE.description]) {
+    for (const s of ["Control, dependency and wallet-memory facts", "Ethereum and Base", "MCP and x402"]) assert.ok(d.includes(s), `${d} names ${s}`);
+  }
   for (const d of [SERVER.description, REMOTE.description, PKG.description]) {
-    for (const s of ["who can upgrade, pause or change a contract", "Ethereum and Base"]) assert.ok(d.toLowerCase().includes(s.toLowerCase()), `${d} names ${s}`);
     assert.doesNotMatch(d, /\b86\b|referral|\bsprint\b|\bDRI\b/i);
     assert.doesNotMatch(d, /\bnpm\b|workers\.dev/i);
   }
