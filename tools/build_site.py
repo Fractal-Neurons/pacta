@@ -6287,6 +6287,7 @@ def privacy_page(idx):
          'contact or webhook is kept privately for delivery and never published. A payment on Base is public on-chain, like any transfer. '
          'Pay on Base talks only to the wallet in your browser; Pacta never sees your keys.</p>'),
         ("checks", "Live checks", f'<p>When you press Check, the address and chain you entered are sent to Pacta\'s API at <code>{E(API)}</code>. '
+         f'We keep a count of the addresses that are checked and of the names that are looked up and not found, to see what to cover next. For an address or a name that is not in our catalogue we also keep the first and the last time it was asked, and the role and purpose labels sent with the request. We keep no IP address with it. These records have no date of removal. We publish how often the addresses in our catalogue are checked, and we do not publish a checked address or a looked-up name that is not in it. '
          f'"Verify live on RPC" sends read-only JSON-RPC calls from your browser directly to public RPC providers (publicnode.com, drpc.org, '
          f'base.org), which see your IP address under their own policies.</p>'),
         ("watch-pilot", "Watch sign-ups and pledges",

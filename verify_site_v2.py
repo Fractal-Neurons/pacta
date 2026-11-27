@@ -2486,7 +2486,7 @@ def main(argv=None):
               "b_c2_slug_only_from_canonical", "b_cta_aligned_maintenance", "b_cta_clearance_protocol", "b_cta_clearance_brief", "b_cta_pricing",
               "qa_external_untouched", "qa_opt_in_persists_and_tags", "qa_turn_off_and_param_zero", "qa_param_zero_clears"]
     failed_bk = [k for k in b_keys if res.get(k) is not True] + (["harness_error: " + res["harness_error"][:200]] if "harness_error" in res else [])
-    check("beacon behaviour (node harness, mocked navigator.sendBeacon): page_load {r, u}, same-site r=self, protocol_view t=slug, copy_mcp_url / copy_curl / copy_skill_md / cta_click hooks, scroll_50/90 once, live_checker_submit t=chain:address, 404 path sanitised, DNT and http send nothing, fetch keepalive fallback",
+    check("beacon behaviour (node harness, mocked navigator.sendBeacon): page_load {r, u}, same-site r=self, protocol_view t=slug, copy_mcp_url / copy_curl / copy_skill_md / cta_click hooks, scroll_50/90 once, live_checker_submit (count only, no address), 404 path sanitised, DNT and http send nothing, fetch keepalive fallback",
           not failed_bk, f"{len(b_keys) - len([k for k in b_keys if res.get(k) is not True])}/{len(b_keys)}; failed {failed_bk[:4]}")
     f1_keys = ["pf_f1_stale_200_keeps_input_error", "pf_f1_previous_request_aborted", "pf_f1_no_abortcontroller_still_safe"]
     run_src = appjs[appjs.find("function run()"):appjs.find("form.addEventListener(\"submit\"", appjs.find("function run()"))]

@@ -1816,7 +1816,7 @@ var my = ++checkSeq;
 if (cSub) cSub.disabled = true;
 maResetResult(ch, a, "checking");
 if (vSum) vSum.textContent = "Reading " + short(a, 6, 4) + " on " + (ch === "base" ? "Base" : "Ethereum") + "…";
-if (typeof window.pactaBeacon === "function") { try { window.pactaBeacon("live_checker_submit", ch + ":" + a.toLowerCase()); } catch (e) {  } }
+if (typeof window.pactaBeacon === "function") { try { window.pactaBeacon("live_checker_submit"); } catch (e) {  } }
 xTrackLead();
 var pfUrl = api + "/v1/check/preflight?chain=" + ch + "&address=" + a + "&caller_agent=" + checkerCallerAgent() + "&requester_role=individual_user&caller_purpose=general_research";
 Promise.all([
@@ -3182,7 +3182,7 @@ out.removeAttribute("data-pf-names");
 invalid("");
 $$("[data-wallet-demo]", box).forEach(function (o) { o.setAttribute("aria-pressed", "false"); });
 if (typeof fetch !== "function") { msg("This browser cannot call the API; use the cURL quickstart.", "http"); return; }
-if (typeof window.pactaBeacon === "function") { try { window.pactaBeacon("live_checker_submit", ch + ":" + a.toLowerCase()); } catch (e) {  } }
+if (typeof window.pactaBeacon === "function") { try { window.pactaBeacon("live_checker_submit"); } catch (e) {  } }
 xTrackLead();
 var selectedIsThis = !!(pfSelectedMeta && pfSelectedMeta.address.toLowerCase() === a.toLowerCase());
 if (!walletScanner || selectedIsThis) {

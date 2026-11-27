@@ -1938,7 +1938,7 @@
       if (cSub) cSub.disabled = true;
       maResetResult(ch, a, "checking");
       if (vSum) vSum.textContent = "Reading " + short(a, 6, 4) + " on " + (ch === "base" ? "Base" : "Ethereum") + "…";
-      if (typeof window.pactaBeacon === "function") { try { window.pactaBeacon("live_checker_submit", ch + ":" + a.toLowerCase()); } catch (e) { /* ignore */ } }
+      if (typeof window.pactaBeacon === "function") { try { window.pactaBeacon("live_checker_submit"); } catch (e) { /* ignore */ } }
       xTrackLead();
       var pfUrl = api + "/v1/check/preflight?chain=" + ch + "&address=" + a + "&caller_agent=" + checkerCallerAgent() + "&requester_role=individual_user&caller_purpose=general_research";
       Promise.all([
@@ -3364,7 +3364,7 @@
       $$("[data-wallet-demo]", box).forEach(function (o) { o.setAttribute("aria-pressed", "false"); });
       if (typeof fetch !== "function") { msg("This browser cannot call the API; use the cURL quickstart.", "http"); return; }
       // First-party beacon hook (docs/b.js); optional: the checker works the same without it.
-      if (typeof window.pactaBeacon === "function") { try { window.pactaBeacon("live_checker_submit", ch + ":" + a.toLowerCase()); } catch (e) { /* ignore */ } }
+      if (typeof window.pactaBeacon === "function") { try { window.pactaBeacon("live_checker_submit"); } catch (e) { /* ignore */ } }
       xTrackLead();
       var selectedIsThis = !!(pfSelectedMeta && pfSelectedMeta.address.toLowerCase() === a.toLowerCase());
       if (!walletScanner || selectedIsThis) {

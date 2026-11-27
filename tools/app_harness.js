@@ -483,7 +483,7 @@ async function beaconScenario() {
   f.querySelector('input[name="address"]').value = PF_EXAMPLE.address;
   f.dispatchEvent(new Event_("submit")); await flush(); await flush(); await flush();
   const lc = p.events().filter(e => e.e === "live_checker_submit");
-  res.b_live_checker_submit = lc.length === 1 && lc[0].t === "base:" + PF_EXAMPLE.address.toLowerCase() && calls.length === 1
+  res.b_live_checker_submit = lc.length === 1 && !("t" in lc[0]) && calls.length === 1
     && p.document.getElementById("pf-out").textContent.includes("MULTISIG_NO_TIMELOCK");
   f.querySelector('input[name="address"]').value = "0x12"; f.dispatchEvent(new Event_("submit")); await flush();
   res.b_invalid_submit_not_reported = p.events().filter(e => e.e === "live_checker_submit").length === 1;
