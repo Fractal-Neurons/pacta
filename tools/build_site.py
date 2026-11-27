@@ -6283,7 +6283,9 @@ PRIVACY_REPEAT_CALLERS = ("To count repeat API and MCP callers across days witho
                           "14-day window, publishing only aggregate multi-day caller totals. "
                           "We also count, for each day, calls by the client name and version your MCP client sends and by the agent name "
                           "you choose to pass with a call, and keep these daily counts with no date of removal. We publish them only as "
-                          "counts per kind of client. Do not put a personal name there.")
+                          "counts per kind of client. Do not put a personal name there. "
+                          "We also count calls per day by country and continent, keep these counts with no date of removal, "
+                          "and publish them as totals.")
 
 PRIVACY_PROVIDER_ANALYTICS = (
     "For analytics, we send an analytics provider a record of each API and agent call, each payment, and each page visit, "
