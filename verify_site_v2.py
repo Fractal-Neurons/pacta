@@ -2218,7 +2218,7 @@ def main(argv=None):
     b_urls = set(re.findall(r"https?://[^\s\"'`)]+", bjs))
     b_events = {"page_load", "scroll_50", "scroll_90", "copy_mcp_url", "copy_curl", "copy_skill_md", "cta_click", "protocol_view", "not_found_404"}
     beacon_static = {
-        "size < 2048 bytes": 0 < len(bjs_raw) < 2048,
+        "size < 2560 bytes": 0 < len(bjs_raw) < 2560,
         "sponsor week: wk_20YYMMDD campaigns + medium sponsor kept, campaign on live_checker_submit (harness)": res.get("b_sponsor_week") is True,
         # https://pacta.wtf only appears as the string compared with the page's <link rel="canonical"> (never requested)
         "only the first-party endpoint": b_urls - {"https://pacta.wtf"} == {BEACON_URL} and bjs.count("https://pacta.wtf") == 1,
@@ -2573,9 +2573,9 @@ def main(argv=None):
           and "L.replace(" in rescue_ and "w.pactaRescued=1" in rescue_ and "&&!w.pactaRescued" in bjs and all(res.get(k_) is True for k_ in r_keys),
           f"csp {csp_at} rescue {r_at} b.js {b_at}; failed {[k_ for k_ in r_keys if res.get(k_) is not True]}")
     b5_keys = ["b_v5_routes", "b_v5_campaign_fields", "b_v5_host", "b_watch_route"]
-    check("b.js v5.1: all live site routes (/curators/ /pricing/ /about/ /for-protocols/ /integrations/ /mcp/ /demos/ /privacy/ /terms/ /watch/ + core v5 set); production-host-only gate "
+    check("b.js v5.1: all live site routes (/curators/ /pricing/ /about/ /for-protocols/ /integrations/ /mcp/ /demos/ /privacy/ /terms/ /watch/ + Wave 1 + core v5 set); production-host-only gate "
           "(pacta.wtf | pacta.fractalneurons.com | pacta-fractalneurons.pages.dev; staging sends 0 beacons); allowlisted m, c, and h (harness)",
-          r"/^\/(protocols|scorecards|radar|curators|bounties|leaderboard|methodology|request|scan|seal|webhook|watch|miniapp|briefs|llms|pricing|about|for-protocols|integrations(\/vault-factories)?|mcp|demos(\/swapio-x402)?|privacy|terms)$/" in bjs
+          r"/^\/(protocols|scorecards|radar|curators|bounties|leaderboard|methodology|request|scan|seal|webhook|watch|miniapp|briefs|llms|pricing|about|for-protocols|integrations(\/vault-factories)?|mcp|demos(\/swapio-x402)?|privacy|terms|control\/(timelock|multisig)|docs-vs-chain|chains\/(ethereum|base)|learn\/(connect-mcp-agent|check-before-deposit|who-can-upgrade)|listed|proof\/moonwell-cbeth)$/" in bjs
           and r"/^(pacta\.wtf|pacta\.fractalneurons\.com|pacta-fractalneurons\.pages\.dev)$/.test(L.hostname)" in bjs
           and r'/^(paid|paid_search|cpc|organic|sponsor)$/.test(u=G("medium"))&&(b.m=u)' in bjs
           and r'(f||/^live/.test(e))&&/^[a-z\d_-]{1,32}$/.test(u=G("campaign"))&&(/^wk_20\d{6}$/.test(u)||!D.test(u)&&!/[\da-f]{12}/.test(u))&&(b.c=u)' in bjs
