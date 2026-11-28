@@ -6282,9 +6282,13 @@ PRIVACY_WALLET_MEMORY_PARAGRAPHS = (
      "provider, Voyage AI (part of MongoDB), which turns it into a numeric fingerprint. Voyage AI's published terms allow it to "
      "use this text to train and improve its models, and they name no time after which it is deleted."),
     ("The forget tool erases one item or everything saved under your wallet, in both places: at Cloudflare at once, and the "
-     "reduced copy right after. If that server cannot be reached, the erase is repeated until it is done. After an erase "
-     "nothing you saved can be recalled through our tools. After an erase, a backup copy on that server made before it still "
-     "holds the erased item. A copy of that server's whole disk, made every day, can hold it too, and holds that server's key "
+     "reduced copy right after. If that server cannot be reached, the erase is repeated until it is done. There is one "
+     "exception, for a single item. If that server's answer to a save is missing, cut short or delayed, including when you "
+     "erase while the save is still awaiting an answer, a copy of the item can remain on that server after a single-item erase. "
+     "It remains there until an erase of everything saved under your wallet is completed on that server. After an erase "
+     "nothing you saved can be recalled through our tools. After an erase, a backup copy on that server made before the erase "
+     "was completed on that server still holds the erased item. A copy of that server's whole disk, made every day, can hold it "
+     "too, and holds that server's key "
      "as well. They stay until those copies are removed, and we give no date for that. A search form of the item (numbers, not "
      "its words) can stay in an older file there and in later copies until that file is replaced. What stays with no date of "
      "removal: on that server, a record of each save and erase, and of each check our service makes when a save was slow to "
@@ -6323,8 +6327,9 @@ PRIVACY_REPEAT_CALLERS = ("To count repeat API and MCP callers across days witho
                           "and publish them as totals.")
 
 PRIVACY_PROVIDER_ANALYTICS = (
-    "For analytics, we send an analytics provider a record of each API and agent call, each payment, and each page visit, "
-    "scroll and button use: what was used (tool or page, chain, listed protocol, kind of request), the outcome and how long "
+    "For analytics, we send an analytics provider a record of each API and agent call, also the ones we turn away and "
+    "requests by crawlers for our public files, each payment, and each page visit, scroll and button use: what was used "
+    "(tool or page, chain, listed protocol, kind of request), which of our addresses was asked, the outcome and how long "
     "it took, the kind of client, the kind of site or campaign a visit came from, the amount of a payment, and the time. "
     "We also send that a wallet used wallet memory for the first time or came back after a day, without its address. "
     "Calls from one caller or session are grouped for one day only. These analytics records carry no wallet address, no IP "
