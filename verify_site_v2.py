@@ -2031,8 +2031,8 @@ def main(argv=None):
                                                                         for r_ in FP_.LIST_PAGES + tuple(f"chains/{c_}/" for c_ in FP_.CHAIN_PAGES)),
         "timelock: listed + not determined + no delay = all protocols": tl_n["rows"] + tl_n["nd"] + tl_n["zero"] == tl_n["total"] == n_all,
         "multisig: listed + not determined + token vote = all protocols": ms_n["rows"] + ms_n["nd"] + ms_n.get("governor", 0) == ms_n["total"] == n_all,
-        "docs-vs-chain: differ + not determined + agree = compared; compared + not compared = all protocols":
-            dv_n["rows"] + dv_n["nd"] + dv_n["agree"] == dv_n["compared"] and dv_n["compared"] + dv_n["uncompared"] == dv_n["total"] == n_all,
+        "docs-vs-chain: differ + not determined + agree + chain stricter than documented = compared; compared + not compared = all protocols":
+            dv_n["rows"] + dv_n["nd"] + dv_n["agree"] + dv_n["stricter"] == dv_n["compared"] and dv_n["compared"] + dv_n["uncompared"] == dv_n["total"] == n_all,
         "chain pages: on one chain + on both + on neither = all protocols; Ethereum + Base rows = one + 2 x both":
             all(fp_n[f"chains/{c_}/"][0]["both"] == sum(1 for k_ in sc_cards if len(k_["chains"]) == 2)
                 and fp_n[f"chains/{c_}/"][0]["one"] + fp_n[f"chains/{c_}/"][0]["both"] + fp_n[f"chains/{c_}/"][0].get("neither", 0)

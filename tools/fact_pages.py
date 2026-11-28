@@ -331,6 +331,8 @@ def protocol_facts(H, idx, sp, cards):
                          "observed": _excerpt(H, e.get("onchain_observed", ""), c0["observed"]),
                          "rid": e["id"], "surface": e["surface"], "chain": H.chain_of(e), "block": int(e["block_number"])}
             assert quotes_closed(p["docs"]["documented"]) and quotes_closed(p["docs"]["observed"]), ("a shown quote is not closed", slug)
+        elif card["grade"] == "protective":       # the parity factor reads the same as for aligned; the grade says the chain is stricter
+            p["docs"] = {"kind": "stricter"}
         else:
             p["docs"] = {"kind": "agree"}
         out[slug] = p
@@ -431,7 +433,8 @@ def lists(F):
                            "compared": [p for p in ps if p["docs"]["kind"] != "uncompared"],
                            "uncompared": [p for p in ps if p["docs"]["kind"] == "uncompared"],
                            "nd": [p for p in ps if p["docs"]["kind"] == "nd"],
-                           "agree": [p for p in ps if p["docs"]["kind"] == "agree"]},
+                           "agree": [p for p in ps if p["docs"]["kind"] == "agree"],
+                           "stricter": [p for p in ps if p["docs"]["kind"] == "stricter"]},
         **{f"chains/{c}/": {"rows": [p for p in ps if c in p["chains"]], "chain": c, "total": len(ps),
                             "both": [p for p in ps if all(c_ in p["chains"] for c_ in CHAIN_PAGES)],
                             "one": [p for p in ps if sum(c_ in p["chains"] for c_ in CHAIN_PAGES) == 1],
@@ -700,7 +703,8 @@ def multisig_page(H, idx, L, times):
 def docs_page(H, idx, L, times):
     d = L["docs-vs-chain/"]
     rows, pre = d["rows"], "../"
-    n, mc, u, k, ag, m = len(rows), len(d["compared"]), len(d["uncompared"]), len(d["nd"]), len(d["agree"]), d["total"]
+    n, mc, u, k, ag, st, m = (len(rows), len(d["compared"]), len(d["uncompared"]), len(d["nd"]), len(d["agree"]), len(d["stricter"]),
+                              d["total"])
     day = newest_day([(p["docs"]["chain"], p["docs"]["block"]) for p in rows], times)
     desc = (f"{n} DeFi protocols where the published documents say one thing about who controls the contracts and the chain shows another. "
             "Each difference with its block.")
@@ -708,8 +712,9 @@ def docs_page(H, idx, L, times):
                  'chain, the documents and the chain disagree on how the contracts are controlled. Each row names what the documents say, '
                  'what the chain shows, and the block it was read at. A difference can be an outdated document; the row states both sides '
                  f'and takes neither. Of the {_n(m, "total")} protocols we have checked, the documents of {_n(mc, "compared")} were compared with the chain '
-                 f'and those of {_n(u, "uncompared")} were not; of the {_n(mc, "compared")} compared, {_n(n, "rows")} differ and are listed here, '
-                 f'{_n(ag, "agree")} agree, and for {_n(k, "nd")} a difference is not determined, so they are left out. '
+                 f'and those of {_n(u, "uncompared")} were not; of the {_n(mc, "compared")} compared, {_n(n, "rows")} differ and are listed here. '
+                 f'Not listed: {_n(ag, "agree")} where the two agree, {_n(st, "stricter")} where the chain is stricter than documented, '
+                 f'and {_n(k, "nd")} where a difference is not determined. '
                  f'The list runs by protocol name, A to Z; newest reading {_date(day)}. A protocol leaves the list when a newer reading '
                  'of its record shows the two agree.</p>')
     trs = []
@@ -743,7 +748,7 @@ def docs_page(H, idx, L, times):
              'the free queue for updated documents.</p>' + _call(H)),
             ("next", "Read next", read_next(H, pre, ["control/timelock/", "control/multisig/", "chains/ethereum/", "chains/base/",
                                                      "learn/who-can-upgrade/"]))]
-    return page(H, idx, "docs-vs-chain/", desc, head_html, secs, wide=True), {"rows": n, "stated": n, "left_out": {"documents not compared": u, "not determined": k, "agree": ag}, "compared": mc, "total": m, "date": day}
+    return page(H, idx, "docs-vs-chain/", desc, head_html, secs, wide=True), {"rows": n, "stated": n, "left_out": {"documents not compared": u, "not determined": k, "agree": ag, "chain stricter than documented": st}, "compared": mc, "total": m, "date": day}
 
 
 def chain_page(H, idx, L, times, chain):
@@ -771,7 +776,8 @@ def chain_page(H, idx, L, times, chain):
         tl, q = p["timelock"], p["quorum"]
         tl_t = H.E(tl_cell(p))
         q_t = (f'{q["k"]} of {q["n"]}' if q["kind"] == "listed" else "token vote" if q["kind"] == "governor" else "not determined")
-        dv = {"listed": "differ", "agree": "agree", "uncompared": "not compared", "nd": "not determined"}[p["docs"]["kind"]]
+        dv = {"listed": "differ", "agree": "agree", "stricter": "chain stricter than documented", "uncompared": "not compared",
+              "nd": "not determined"}[p["docs"]["kind"]]
         trs.append([_rec(H, p, pre), H.E(p["upgrade"]["text"]), tl_t, q_t, dv, _blk(H, chain, p["newest"][chain])])
     other = [c for c in CHAIN_PAGES if c != chain]
     secs = [("list", f"{n} protocols on {cname}, A to Z",
@@ -1272,9 +1278,11 @@ def check(out, L, nums):
         elif rel == "docs-vs-chain/":
             d = L[rel]
             ok &= ns["compared"] == len(d["compared"]) and ns["uncompared"] == len(d["uncompared"]) and ns["nd"] == len(d["nd"]) \
-                and ns["agree"] == len(d["agree"]) and ns["rows"] + ns["nd"] + ns["agree"] == ns["compared"] \
+                and ns["agree"] == len(d["agree"]) and ns["stricter"] == len(d["stricter"]) \
+                and ns["rows"] + ns["nd"] + ns["agree"] + ns["stricter"] == ns["compared"] \
                 and ns["compared"] + ns["uncompared"] == ns["total"] == d["total"]
-            parts = (f'; {ns["rows"]} differ + {ns["nd"]} not determined + {ns["agree"]} agree = {ns["compared"]} compared; '
+            parts = (f'; {ns["rows"]} differ + {ns["nd"]} not determined + {ns["agree"]} agree + {ns["stricter"]} chain stricter than '
+                     f'documented = {ns["compared"]} compared; '
                      f'+ {ns["uncompared"]} not compared = {ns["total"]} protocols')
         else:
             t = re.search(r"<tbody data-rows>(.*?)</tbody>", out[rel], re.S).group(1)

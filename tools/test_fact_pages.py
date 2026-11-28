@@ -142,7 +142,7 @@ class Lists(unittest.TestCase):
         self.assertEqual(len(tl["rows"]) + len(tl["zero"]) + len(tl["nd"]), self.n)
         self.assertEqual(len(ms["rows"]) + len(ms["governor"]) + len(ms["nd"]), self.n)
         self.assertEqual(len(dv["compared"]) + len(dv["uncompared"]), self.n)
-        self.assertEqual(len(dv["rows"]) + len(dv["nd"]) + len(dv["agree"]), len(dv["compared"]))
+        self.assertEqual(len(dv["rows"]) + len(dv["nd"]) + len(dv["agree"]) + len(dv["stricter"]), len(dv["compared"]))
         for c in FP.CHAIN_PAGES:
             cv = L[f"chains/{c}/"]
             self.assertEqual(len(cv["both"]) + len(cv["one"]) + len(cv["neither"]), self.n, c)
@@ -206,6 +206,49 @@ class Lists(unittest.TestCase):
             self.assertEqual(F[slug]["timelock"]["kind"], "nd", slug)
             self.assertIn(slug, {p["slug"] for p in L["control/timelock/"]["nd"]})
             self.assertTrue(cells(slug) and all(c == "not determined" for c in cells(slug)), slug)
+
+    def test_a_stricter_chain_is_not_agree(self):
+        # grade protective: the parity factor reads as for aligned ("Chain matches or is stronger than the documentation"); the cell
+        # says what the grade says. A protocol holding a protective record under another grade keeps the cell its grade gives it.
+        F, L, out = self.w["F"], self.w["L"], self.w["out"]
+        cards = {c["slug"]: c for c in BS.scorecards(self.idx)}
+        sp = {v["slug"]: v for v in BS.site_protocols(self.idx).values()}
+
+        def cells(slug):
+            got = []
+            for c in set(F[slug]["chains"]) & set(FP.CHAIN_PAGES):
+                tb = out[f"chains/{c}/"].split("<tbody data-rows>", 1)[1].split("</tbody>", 1)[0]
+                r = [r for r in re.findall(r"<tr>(.*?)</tr>", tb) if f'href="../../protocols/{slug}/"' in r]
+                self.assertEqual(len(r), 1, (slug, c))
+                got.append(re.search(r'<td data-label="Documents and chain">(.*?)</td>', r[0]).group(1))
+            return got
+        seven = ["cap", "enzyme-finance", "ethena-usdtb", "ether-fi-core-eeth-weeth", "mantle-liquid-staking-meth-cmeth", "re",
+                 "solv-protocol-solvbtc"]
+        self.assertEqual(sorted(s for s, c in cards.items() if c["grade"] == "protective"), seven)
+        self.assertEqual(sorted(p["slug"] for p in L["docs-vs-chain/"]["stricter"]), seven)
+        for slug in seven:
+            self.assertEqual(F[slug]["docs"]["kind"], "stricter", slug)
+            self.assertEqual(cells(slug), ["chain stricter than documented"], slug)
+        self.assertEqual((cards["3jane-lending"]["grade"], cells("3jane-lending")), ("aligned", ["agree"]))
+        self.assertTrue(all(F[s]["docs"]["kind"] == "agree" for s, c in cards.items() if c["grade"] == "aligned"))
+        for slug, grade, cell in (("inverse-finance-firm", "delta", "differ"), ("stake-dao", "delta", "differ"),
+                                  ("yearn-v3", "recent_change", "not determined")):
+            self.assertTrue(any(e.get("classification") == "protective_delta" for e in sp[slug]["entries"]), slug)
+            self.assertEqual((cards[slug]["grade"], cells(slug)), (grade, [cell]), slug)
+        # /docs-vs-chain/: the 7 are counted apart from "agree", and the parts add up to the protocols compared
+        ns = FP.first_lines_counts(out["docs-vs-chain/"])[0]
+        self.assertEqual((ns["agree"], ns["stricter"]), (len(L["docs-vs-chain/"]["agree"]), len(seven)))
+        self.assertEqual(ns["rows"] + ns["nd"] + ns["agree"] + ns["stricter"], ns["compared"])
+        lede = re.search(r'<p class="lede" data-first-lines>(.*?)</p>', out["docs-vs-chain/"], re.S).group(1)
+        self.assertIn(f'differ and are listed here. Not listed: <span data-n="agree">{ns["agree"]:,}</span> where the two agree, '
+                      f'<span data-n="stricter">{ns["stricter"]:,}</span> where the chain is stricter than documented, and '
+                      f'<span data-n="nd">{ns["nd"]:,}</span> where a difference is not determined. The list runs', lede)
+        o2 = dict(out)                                                             # the new count is held by the build check too
+        tag = f'<span data-n="stricter">{ns["stricter"]:,}</span>'
+        o2["docs-vs-chain/"] = out["docs-vs-chain/"].replace(tag, f'<span data-n="stricter">{ns["stricter"] + 1:,}</span>', 1)
+        self.assertNotEqual(o2["docs-vs-chain/"], out["docs-vs-chain/"])
+        with self.assertRaises(AssertionError):
+            FP.check(o2, L, self.w["nums"])
 
     def test_timelock_cell_beside_the_upgrade_cell(self):
         F, out = self.w["F"], self.w["out"]
