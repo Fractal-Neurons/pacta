@@ -55,9 +55,17 @@ class Parse(unittest.TestCase):
         self.assertEqual(K("b", "1d minimum enforced delay on sampled timelocked surfaces", 86400), ("listed", 86400))
         self.assertEqual(K("a", "0s on TREE token blacklisting (5-of-7 Safe); TREE upgrade/owner path and tETH owner path enforce a 5d "
                                 "TimelockController", 432000), ("zero", 0))
+        # a 0s reading on a named control stands when "unverified" only asks whether a documented delay covers it (Lagoon's fact) ...
         self.assertEqual(K("a", "0s on the legacy cbBTC vault beacon upgrade path (3-of-6 Safe); whether the documented 24h Opt-in delay "
-                                "covers this vault is unverified", None), ("doubt", None))
+                                "covers this vault is unverified", None), ("zero", 0))
+        # ... and not when the reading itself is left open: in its own clause, or in a later clause about anything else
+        self.assertEqual(K("a", "0s on the vault beacon upgrade path (3-of-6 Safe, delay reading unverified)", None), ("doubt", None))
+        self.assertEqual(K("a", "0s on the vault beacon upgrade path (3-of-6 Safe); the 0s reading is unverified", None), ("doubt", None))
+        self.assertEqual(K("a", "0s on the vault beacon upgrade path; whether the documented 24h delay covers this vault is unverified; "
+                                "the owner path is unverified", None), ("doubt", None))
         self.assertEqual(K("b", "Long governance timelock: 7d; Short timelock: 1d (per-surface wiring unverified)", None), ("doubt", None))
+        self.assertEqual(K("a", "1s DEFAULT_ADMIN role-handover delay (RegistryAccess.defaultAdminDelay); ordinary admin action delay not in "
+                                "published records", None), ("doubt", None))
         # an upgrade path with no enforced delay is a sampled control with none; a longer upgrade delay does not settle the shortest
         self.assertEqual(K("n", nd, 0), ("zero", 0))
         self.assertEqual(K("n", nd, None), ("nd", None))
@@ -176,6 +184,28 @@ class Lists(unittest.TestCase):
         self.assertEqual(FP.first_lines_counts(out["docs-vs-chain/"])[0]["compared"], -1)
         with self.assertRaises(AssertionError):
             FP.check(out, self.w["L"], self.w["nums"])
+
+    def test_a_zero_reading_with_an_open_documents_point(self):
+        # Lagoon: 0s read on the sampled beacon path, the documented 24h delay's coverage unverified -> no delay on a sampled control;
+        # infinifi and usual-money leave the delay itself open -> not determined, on every chain page they are on
+        F, L, out = self.w["F"], self.w["L"], self.w["out"]
+
+        def cells(slug):
+            p = F[slug]
+            got = []
+            for c in set(p["chains"]) & set(FP.CHAIN_PAGES):
+                tb = out[f"chains/{c}/"].split("<tbody data-rows>", 1)[1].split("</tbody>", 1)[0]
+                r = [r for r in re.findall(r"<tr>(.*?)</tr>", tb) if f'href="../../protocols/{slug}/"' in r]
+                self.assertEqual(len(r), 1, (slug, c))
+                got.append(FP._txt(re.search(r'<td data-label="Timelock delay">(.*?)</td>', r[0]).group(1)))
+            return got
+        self.assertEqual((F["lagoon"]["timelock"]["kind"], F["lagoon"]["timelock"]["seconds"]), ("zero", 0))
+        self.assertIn("lagoon", {p["slug"] for p in L["control/timelock/"]["zero"]})
+        self.assertEqual(cells("lagoon"), ["none on a sampled control"])
+        for slug in ("infinifi", "usual-money-usd0-usd0"):
+            self.assertEqual(F[slug]["timelock"]["kind"], "nd", slug)
+            self.assertIn(slug, {p["slug"] for p in L["control/timelock/"]["nd"]})
+            self.assertTrue(cells(slug) and all(c == "not determined" for c in cells(slug)), slug)
 
     def test_timelock_cell_beside_the_upgrade_cell(self):
         F, out = self.w["F"], self.w["out"]

@@ -120,8 +120,13 @@ _DUR = r"(\d+d(?: \d+h)?|\d+(?:\.\d+)?h|\d+s)"
 _TL_ON = re.compile(r"^" + _DUR + r" minimum enforced delay on sampled (?:admin )?timelocked surfaces(?: \(.*\))?$")
 _TL_ZERO = re.compile(r"^(?:No enforced delay on at least one sampled control surface \(0s|0s: |No timelock in the sampled )")
 # a correction's floor sentence that starts at a 0s reading on a named control ("0s on TREE token blacklisting (...); ...") is a zero
-# floor, unless the sentence leaves that reading in doubt ("... is unverified")
-_TL_ZERO_ON = re.compile(r"^0s on (?!.*\bunverified\b)")
+# floor, unless the sentence leaves that reading itself in doubt: "unverified" in the reading's own clause, or in a later clause that
+# is about anything other than whether a documented delay covers the control. "0s on the legacy cbBTC vault beacon upgrade path
+# (3-of-6 Safe); whether the documented 24h Opt-in delay covers this vault is unverified" is a zero floor: the 0s is read from the
+# chain, and what is open is the documents' coverage, not the reading (zero_on()).
+_TL_ZERO_ON = re.compile(r"^0s on ")
+_UNVERIFIED = re.compile(r"\bunverified\b")
+_DOC_COVERS = re.compile(r"^whether the documented [^;]* covers [^;]* is unverified$")
 # the upgrade path's own delay, in the upgrade fact's words: "Upgradeable behind a ≥48h delay (2d ...)" / "... with no enforced delay"
 _UP_DELAY = re.compile(r"^Upgradeable behind a (?:≥48h|1h–47h) delay \(" + _DUR + r"\b")
 _UP_NONE = re.compile(r"^Upgradeable with no enforced delay\b")
@@ -153,6 +158,15 @@ def upgrade_delay(text):
     return dur_seconds(m.group(1)) if m else 0 if _UP_NONE.match(text) else None
 
 
+def zero_on(value):
+    """True for a "0s on <control>" floor sentence whose 0s reading stands: no "unverified" in its first clause, and in a later
+    clause only where that clause asks whether a documented delay covers the control (_TL_ZERO_ON above)"""
+    if not _TL_ZERO_ON.match(value):
+        return False
+    first, *later = [c.strip() for c in value.split(";")]
+    return not _UNVERIFIED.search(first) and all(_DOC_COVERS.match(c) or not _UNVERIFIED.search(c) for c in later)
+
+
 def timelock_kind(state, value, up):
     """(kind, seconds) of a protocol's timelock floor, the shortest delay on any sampled control, the upgrade path included
     (scorecard.factors()). kind: "listed" (a delay above zero), "zero" (a sampled control has none), "nd" (not determined) or
@@ -164,7 +178,7 @@ def timelock_kind(state, value, up):
     if m:
         s = dur_seconds(m.group(1))
         return ("listed" if s > 0 else "zero"), s
-    if _TL_ZERO.match(value) or _TL_ZERO_ON.match(value):
+    if _TL_ZERO.match(value) or zero_on(value):
         return "zero", 0
     return "doubt", None
 
