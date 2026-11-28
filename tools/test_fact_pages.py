@@ -27,6 +27,11 @@ def built():
     return BS.wave(idx, radar), idx, radar
 
 
+# an upgrade sentence that leaves its own delay in doubt (a correction's words)
+UNVERIFIED_UPGRADE = ("Upgradeable · Immediate beacon upgrades via 3-of-6 Safe (0s delay on UpgradeableBeacon; coverage by documented 24h "
+                      "Opt-in ProxyDelay unverified)")
+
+
 class Parse(unittest.TestCase):
     def test_durations(self):
         for tok, s in (("7d", 604800), ("1d 12h", 129600), ("1.5h", 5400), ("168h", 604800), ("300s", 300), ("10d", 864000)):
@@ -36,6 +41,50 @@ class Parse(unittest.TestCase):
                 FP.dur_seconds(bad)
         self.assertEqual([FP.say_dur(s) for s in (604800, 129600, 3600, 43200, 1800, 1)],
                          ["7 days", "1 day 12 hours", "1 hour", "12 hours", "30 minutes", "1 second"])
+
+    def test_upgrade_delay_and_the_timelock_floor(self):
+        U = FP.upgrade_delay
+        self.assertEqual(U("Upgradeable behind a 1h–47h delay (6h)"), 21600)
+        self.assertEqual(U("Upgradeable behind a ≥48h delay (5d TimelockController owner on TREE EIP-1967 proxy)"), 432000)
+        self.assertEqual(U("Upgradeable behind a ≥48h delay (2d) (1 other upgrade path not determined)"), 172800)
+        self.assertEqual(U("Upgradeable with no enforced delay: CoreProxy owned directly by the 4-of-7 pDAO Safe"), 0)
+        for t in ("Upgrade path not in the published records", "Not upgradeable: the target contract is not a proxy", UNVERIFIED_UPGRADE):
+            self.assertIsNone(U(t), t)
+        K, nd = FP.timelock_kind, "No enforced admin delay in the published records"
+        self.assertEqual(K("a", "No enforced delay on at least one sampled control surface (0s)", 21600), ("zero", 0))
+        self.assertEqual(K("b", "1d minimum enforced delay on sampled timelocked surfaces", 86400), ("listed", 86400))
+        self.assertEqual(K("a", "0s on TREE token blacklisting (5-of-7 Safe); TREE upgrade/owner path and tETH owner path enforce a 5d "
+                                "TimelockController", 432000), ("zero", 0))
+        self.assertEqual(K("a", "0s on the legacy cbBTC vault beacon upgrade path (3-of-6 Safe); whether the documented 24h Opt-in delay "
+                                "covers this vault is unverified", None), ("doubt", None))
+        self.assertEqual(K("b", "Long governance timelock: 7d; Short timelock: 1d (per-surface wiring unverified)", None), ("doubt", None))
+        # an upgrade path with no enforced delay is a sampled control with none; a longer upgrade delay does not settle the shortest
+        self.assertEqual(K("n", nd, 0), ("zero", 0))
+        self.assertEqual(K("n", nd, None), ("nd", None))
+        self.assertEqual(K("n", nd, 172800), ("nd", None))
+        self.assertEqual([FP.said_seconds(FP.say_dur(s)) for s in (604800, 129600, 86400, 3600, 21600, 5400, 1800, 1)],
+                         [604800, 129600, 86400, 3600, 21600, 5400, 1800, 1])
+
+    def test_the_two_cells_disagree(self):
+        D, six = FP.cells_disagree, "Upgradeable behind a 1h–47h delay (6h)"
+        self.assertIsNone(D(six, "none on a sampled control; 6 hours on the upgrade path"))
+        self.assertIsNone(D(six, "6 hours"))
+        for tl in ("none on a sampled control", "not determined", "1 day", "none on a sampled control; 1 day on the upgrade path",
+                   "6 hours; 6 hours on the upgrade path", "not determined; 6 hours on the upgrade path"):
+            self.assertIsNotNone(D(six, tl), tl)
+        self.assertIsNotNone(D("Upgradeable behind a ≥48h delay (5d TimelockController owner on TREE EIP-1967 proxy)", "not determined"))
+        none_ = "Upgradeable with no enforced delay: ERC1967Proxy controlled by a 3-of-5 Safe"
+        self.assertIsNone(D(none_, "none on a sampled control"))
+        for tl in ("not determined", "2 days", "none on a sampled control; 1 day on the upgrade path"):
+            self.assertIsNotNone(D(none_, tl), tl)
+        # a delay the upgrade sentence names in passing is never below the shortest delay, nor beside "not determined"
+        hop = "Sampled L1_ETH_Bridge is not a proxy (non-proxy bytecode; governance() is a 24h Timelock; other bridge contracts not assessed)"
+        self.assertIsNone(D(hop, "1 day"))
+        self.assertIsNotNone(D(hop, "2 days"))
+        self.assertIsNotNone(D(hop, "not determined"))
+        self.assertIsNone(D("Upgrade path not in the published records", "not determined"))
+        self.assertIsNone(D(UNVERIFIED_UPGRADE, "not determined"))      # the sentence itself leaves the delay in doubt
+        self.assertIsNotNone(D("Upgrade path not in the published records", "1 day; 2 days on the upgrade path"))
 
     def test_banned_words(self):
         self.assertEqual(FP.banned("<p>the best and safest; a risky score</p>"), ["best", "safest", "risky", "score"])
@@ -102,7 +151,7 @@ class Lists(unittest.TestCase):
         self.assertTrue(all(cards[p["slug"]]["grade"] == "delta" for p in L["docs-vs-chain/"]["rows"]))
 
     def test_rule_a_check_catches_a_changed_count(self):
-        self.assertEqual(len(self.w["check"]), 5)
+        self.assertEqual(len(self.w["check"]), 5 + len(FP.CHAIN_PAGES))
         self.assertTrue(all(line.endswith(": OK") for line in self.w["check"]))
         out = dict(self.w["out"])
         t = out["control/timelock/"]
@@ -127,6 +176,43 @@ class Lists(unittest.TestCase):
         self.assertEqual(FP.first_lines_counts(out["docs-vs-chain/"])[0]["compared"], -1)
         with self.assertRaises(AssertionError):
             FP.check(out, self.w["L"], self.w["nums"])
+
+    def test_timelock_cell_beside_the_upgrade_cell(self):
+        F, out = self.w["F"], self.w["out"]
+        rows, raw = {}, {}
+        for c in FP.CHAIN_PAGES:
+            t = out[f"chains/{c}/"]
+            tb = t.split("<tbody data-rows>", 1)[1].split("</tbody>", 1)[0]
+            for r in re.findall(r"<tr>(.*?)</tr>", tb):
+                d = {k: FP._txt(v) for k, v in re.findall(r'<td data-label="([^"]+)">(.*?)</td>', r)}
+                rows[(c, d["Protocol"])], raw[(c, d["Protocol"])] = d, r
+                self.assertIsNone(FP.cells_disagree(d["Upgradeability"], d["Timelock delay"]), (c, d))
+            how = t.split("</tbody></table></div>", 1)[1].split("</section>", 1)[0]
+            self.assertTrue(how.startswith("<p data-how-timelock>How the Timelock delay column picks: a protocol can have more than one "
+                                           "timelock. The column gives the shortest delay read on any of its sampled controls, the upgrade "
+                                           "path included"), (c, how[:200]))
+        # an upgrade path that waits longer than the shortest delay: the Timelock delay cell gives both
+        longer = [p for p in F.values() if p["timelock"]["kind"] != "nd" and (p["upgrade"]["seconds"] or 0) > p["timelock"]["seconds"]]
+        self.assertTrue(longer)
+        for p in longer:
+            for c in set(p["chains"]) & set(FP.CHAIN_PAGES):
+                self.assertTrue(rows[(c, p["name"])]["Timelock delay"].endswith(f'; {FP.say_dur(p["upgrade"]["seconds"])} on the upgrade path'), p["slug"])
+        # an upgrade path with no enforced delay is never "not determined" beside it (the timelock list leaves it out as a zero delay)
+        none_ = [p for p in F.values() if p["upgrade"]["seconds"] == 0]
+        self.assertTrue(none_)
+        zero = {p["slug"] for p in self.w["L"]["control/timelock/"]["zero"]}
+        self.assertFalse([p["slug"] for p in none_ if p["slug"] not in zero])
+        # the build check fails when a cell loses the upgrade path's delay, or says "not determined" beside a named delay
+        cut = "none on a sampled control</td>"
+        for k_, want in ((next(k for k, d in rows.items() if "; " in d["Timelock delay"]), cut),
+                         (next(k for k, d in rows.items() if FP.upgrade_delay(d["Upgradeability"]) == 0), "not determined</td>")):
+            r = raw[k_]
+            new = re.sub(r'(<td data-label="Timelock delay">)[^<]*(?:<wbr>[^<]*)*</td>', lambda m_: m_.group(1) + want, r, count=1)
+            self.assertNotEqual(new, r, k_)
+            o = dict(out)
+            o[f"chains/{k_[0]}/"] = out[f"chains/{k_[0]}/"].replace(r, new, 1)
+            with self.assertRaises(AssertionError):
+                FP.check(o, self.w["L"], self.w["nums"])
 
     def test_description_count_is_the_row_count(self):
         """W10: the count a description leads with (meta, og:, twitter:) is checked against the rows; one changed copy fails the build"""
@@ -289,6 +375,39 @@ class Lists(unittest.TestCase):
         try:
             FP._CACHE[k] = {**oa, "paths": {p_: v for p_, v in oa["paths"].items() if p_ != "/v1/memory/forget"}}
             with self.assertRaises(AssertionError):
+                FP.prices(BS)
+        finally:
+            FP._CACHE[k] = oa
+        self.assertEqual(FP.prices(BS), R)
+        # the two request rows: the limit and what happens past it, from the service's API description (openapi.json)
+        req = oa["paths"]["/v1/requests"]["post"]
+        per_h = re.search(r"(\d+) per hour per caller", req["summary"]).group(1)
+        self.assertEqual(R["pacta_submit_request"], ("POST /v1/requests", f"no daily limit ({per_h} an hour)",
+                                                     "none: free only, a refused call gives the wait in seconds (Retry-After)"))
+        self.assertEqual(R["request_feature"], ("POST /v1/feature-request", f"{B.FEATURE_REQUEST_DAILY_LIMIT} a day",
+                                                "none: free only, the count resets at 00:00 UTC"))
+        self.assertFalse([t_ for t_, v in R.items() if v[1] == "free, rate-limited"])
+        tb = out["learn/connect-mcp-agent/"].split('data-tool-table>', 1)[1].split("</tbody>", 1)[0]
+        row = re.search(r'<tr><td data-label="Tool"><code>request_feature</code>.*?</tr>', tb).group(0)
+        self.assertTrue(row.endswith(f'<td data-label="Free a day">{B.FEATURE_REQUEST_DAILY_LIMIT} a day</td><td data-label="Price after '
+                                     '(HTTP x402 on Base)">none: free only, the count resets at 00:00 UTC</td></tr>'), row)
+
+        def with_paths(**chg):
+            return {**oa, "paths": {**oa["paths"], **{p_: {**oa["paths"][p_], "post": {**oa["paths"][p_]["post"], **v}} for p_, v in chg.items()}}}
+        try:
+            FP._CACHE[k] = with_paths(**{"/v1/requests": {
+                "summary": req["summary"].replace(f"{per_h} per hour", "7 per hour"),
+                "responses": {**req["responses"], "429": {**req["responses"]["429"], "description": req["responses"]["429"]["description"]
+                                                          .replace(f"More than {per_h} requests", "More than 7 requests")}}}})
+            self.assertEqual(FP.prices(BS)["pacta_submit_request"][1], "no daily limit (7 an hour)")
+            fr = oa["paths"]["/v1/feature-request"]["post"]
+            FP._CACHE[k] = with_paths(**{"/v1/feature-request": {"summary": fr["summary"].replace("5 per caller", "6 per caller")}})
+            with self.assertRaises(AssertionError):           # the service's figure and the site's constant differ
+                FP.prices(BS)
+            h200 = fr["responses"]["200"]
+            FP._CACHE[k] = with_paths(**{"/v1/feature-request": {"responses": {**fr["responses"], "200": {**h200, "headers": {
+                **h200["headers"], "X-Meter-Reset": {"description": "Unix seconds of the end of the caller's hour"}}}}}})
+            with self.assertRaises(AssertionError):           # a reset that is not 00:00 UTC
                 FP.prices(BS)
         finally:
             FP._CACHE[k] = oa

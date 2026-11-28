@@ -119,6 +119,13 @@ def banned(html_):
 _DUR = r"(\d+d(?: \d+h)?|\d+(?:\.\d+)?h|\d+s)"
 _TL_ON = re.compile(r"^" + _DUR + r" minimum enforced delay on sampled (?:admin )?timelocked surfaces(?: \(.*\))?$")
 _TL_ZERO = re.compile(r"^(?:No enforced delay on at least one sampled control surface \(0s|0s: |No timelock in the sampled )")
+# a correction's floor sentence that starts at a 0s reading on a named control ("0s on TREE token blacklisting (...); ...") is a zero
+# floor, unless the sentence leaves that reading in doubt ("... is unverified")
+_TL_ZERO_ON = re.compile(r"^0s on (?!.*\bunverified\b)")
+# the upgrade path's own delay, in the upgrade fact's words: "Upgradeable behind a ≥48h delay (2d ...)" / "... with no enforced delay"
+_UP_DELAY = re.compile(r"^Upgradeable behind a (?:≥48h|1h–47h) delay \(" + _DUR + r"\b")
+_UP_NONE = re.compile(r"^Upgradeable with no enforced delay\b")
+_DUR_ANY = re.compile(r"(?<![\w≥–.])" + _DUR + r"(?![\w–])")     # any duration in a sentence, not the class labels ≥48h and 1h–47h
 _Q_NOF = re.compile(r"\b(\d{1,2})-of-(\d{1,2})\b")
 _Q_CANON = re.compile(r"^Lowest controlling quorum: (?:\d{1,2}-of-\d{1,2}|a single key)$")
 
@@ -130,6 +137,36 @@ def dur_seconds(tok):
     s = (int(m.group(1)) * DAY + int(m.group(2) or 0) * 3600 if m.group(1) else
          round(float(m.group(3)) * 3600) if m.group(3) else int(m.group(4)))
     return s
+
+
+def said_seconds(t):
+    """say_dur's words back to seconds: '2 days', '1 day 12 hours', '6 hours', '30 minutes', '45 seconds'"""
+    m = re.fullmatch(r"(\d+) days?(?: (\d+) hours?)?|(\d+(?:\.\d+)?) hours?|(\d+) minutes?|(\d+) seconds?", t)
+    assert m, t
+    return (int(m.group(1)) * DAY + int(m.group(2) or 0) * 3600 if m.group(1) else round(float(m.group(3)) * 3600) if m.group(3)
+            else int(m.group(4)) * 60 if m.group(4) else int(m.group(5)))
+
+
+def upgrade_delay(text):
+    """the seconds the upgrade path waits, by the upgrade fact's own sentence; None where the sentence names no delay of its own"""
+    m = _UP_DELAY.match(text)
+    return dur_seconds(m.group(1)) if m else 0 if _UP_NONE.match(text) else None
+
+
+def timelock_kind(state, value, up):
+    """(kind, seconds) of a protocol's timelock floor, the shortest delay on any sampled control, the upgrade path included
+    (scorecard.factors()). kind: "listed" (a delay above zero), "zero" (a sampled control has none), "nd" (not determined) or
+    "doubt" (no single delay for the sampled controls: not determined too). up: upgrade_delay() of the protocol's upgrade fact."""
+    m = _TL_ON.match(value)
+    if state == "n":
+        # a correction can set the upgrade fact alone: when it says the upgrade path has no enforced delay, that sampled control has none
+        return ("zero", 0) if up == 0 else ("nd", None)
+    if m:
+        s = dur_seconds(m.group(1))
+        return ("listed" if s > 0 else "zero"), s
+    if _TL_ZERO.match(value) or _TL_ZERO_ON.match(value):
+        return "zero", 0
+    return "doubt", None
 
 
 def say_dur(s):
@@ -235,20 +272,16 @@ def protocol_facts(H, idx, sp, cards):
             p["newest"][H.chain_of(e)] = max(int(e["block_number"]), p["newest"].get(H.chain_of(e), 0))
         p["baskets"] = [k for k in H.baskets_of(p["category"], p["chains"]) if k != "base"]
         up = _factor(card, "upgrade")
-        p["upgrade"] = {"state": up["state"], "text": up["value"]}
+        p["upgrade"] = {"state": up["state"], "text": up["value"], "seconds": upgrade_delay(up["value"])}
         # timelock floor
         f = _factor(card, "timelock")
-        m = _TL_ON.match(f["value"])
-        if f["state"] == "n":
-            p["timelock"] = {"kind": "nd", "text": f["value"]}
-        elif m:
-            s = dur_seconds(m.group(1))
-            p["timelock"] = {"kind": "listed" if s > 0 else "zero", "seconds": s, "text": f["value"],
-                             **where(f, lambda c, s=s: c.get("timelock_min_delay") == s)}
-        elif _TL_ZERO.match(f["value"]):
+        k_, s = timelock_kind(f["state"], f["value"], p["upgrade"]["seconds"])
+        if k_ == "listed":
+            p["timelock"] = {"kind": "listed", "seconds": s, "text": f["value"], **where(f, lambda c, s=s: c.get("timelock_min_delay") == s)}
+        elif k_ == "zero":
             p["timelock"] = {"kind": "zero", "seconds": 0, "text": f["value"]}
         else:
-            p["timelock"] = {"kind": "nd", "doubt": True, "text": f["value"]}   # no single delay for the sampled controls: in doubt, out
+            p["timelock"] = {"kind": "nd", "text": f["value"], **({"doubt": True} if k_ == "doubt" else {})}   # not determined: out
         # signer quorum
         f = _factor(card, "quorum")
         v_ = f["value"]
@@ -553,6 +586,41 @@ def read_next(H, pre, keys):
     return "<ul>" + "".join(f'<li><a href="{pre}{k}">{H.E(lbl[k])}</a></li>' for k in keys) + "</ul>"
 
 
+def tl_more(p):
+    """"; <delay> on the upgrade path" where the upgrade path waits longer than the protocol's shortest delay, else "" """
+    tl, u = p["timelock"], p["upgrade"]["seconds"]
+    return f"; {say_dur(u)} on the upgrade path" if tl["kind"] != "nd" and u is not None and u > tl["seconds"] else ""
+
+
+def tl_cell(p):
+    """the Timelock delay cell: the protocol's shortest delay, then the upgrade path's delay where that path waits longer"""
+    tl = p["timelock"]
+    return (say_dur(tl["seconds"]) if tl["kind"] == "listed" else "none on a sampled control" if tl["kind"] == "zero"
+            else "not determined") + tl_more(p)
+
+
+def cells_disagree(up_txt, tl_txt):
+    """Why a row's Upgradeability cell and Timelock delay cell disagree, or None. Read from the two cells' text alone: the upgrade
+    path's delay (upgrade_delay()), and the timelock cell's shortest delay with its "; <delay> on the upgrade path"."""
+    m = re.fullmatch(r"(?:(none on a sampled control)|(not determined)|(.+?))(?:; (.+) on the upgrade path)?", tl_txt)
+    lo = 0 if m.group(1) else None if m.group(2) else said_seconds(m.group(3))
+    more = said_seconds(m.group(4)) if m.group(4) else None
+    u = upgrade_delay(up_txt)
+    if more is not None and (lo is None or more != u or more <= lo):
+        return "the timelock cell's upgrade-path delay is not the upgrade cell's, or not longer than the shortest delay"
+    if u is not None and lo is None:
+        return "the upgrade cell gives the upgrade path's delay, the timelock cell says not determined"
+    if u is not None and u < lo:
+        return "the upgrade path waits less than the timelock cell's shortest delay"
+    if u is not None and u > lo and more != u:
+        return "the upgrade path waits longer than the shortest delay, and the timelock cell does not say so"
+    if "unverified" not in up_txt:            # a delay the upgrade sentence names in passing ("governance() is a 24h Timelock")
+        for x in _DUR_ANY.finditer(up_txt):
+            if lo is None or dur_seconds(x.group(1)) < lo:
+                return f"the upgrade cell names {x.group(1)}, " + ("the timelock cell says not determined" if lo is None else "below the shortest delay")
+    return None
+
+
 def timelock_page(H, idx, L, times):
     d = L["control/timelock/"]
     rows, pre = d["rows"], "../../"
@@ -568,7 +636,7 @@ def timelock_page(H, idx, L, times):
                  f'{_n(z, "zero")} because at least one of their sampled controls has a delay of zero seconds, that is no delay at all; a delay of '
                  f'zero is not a timelock. Read from the chain; newest reading {_date(day)}.</p>')
     trs = [[_rec(H, p, pre), H.E(", ".join(H.CHAINS[c][0] for c in p["chains"])),
-            f'{H.E(say_dur(p["timelock"]["seconds"]))} <span class="num">({p["timelock"]["seconds"]:,} s)</span>',
+            f'{H.E(say_dur(p["timelock"]["seconds"]))} <span class="num">({p["timelock"]["seconds"]:,} s)</span>{H.E(tl_more(p))}',
             _blk(H, p["timelock"]["chain"], p["timelock"]["block"]),
             _rec(H, p, pre, p["timelock"]["rid"], p["timelock"]["surface"]) if p["timelock"]["rid"] else "getMinDelay() of the timelock contract"]
            for p in rows]
@@ -687,15 +755,19 @@ def chain_page(H, idx, L, times, chain):
     trs = []
     for p in rows:
         tl, q = p["timelock"], p["quorum"]
-        tl_t = (H.E(say_dur(tl["seconds"])) if tl["kind"] == "listed" else "none on a sampled control" if tl["kind"] == "zero"
-                else "not determined")
+        tl_t = H.E(tl_cell(p))
         q_t = (f'{q["k"]} of {q["n"]}' if q["kind"] == "listed" else "token vote" if q["kind"] == "governor" else "not determined")
         dv = {"listed": "differ", "agree": "agree", "uncompared": "not compared", "nd": "not determined"}[p["docs"]["kind"]]
         trs.append([_rec(H, p, pre), H.E(p["upgrade"]["text"]), tl_t, q_t, dv, _blk(H, chain, p["newest"][chain])])
     other = [c for c in CHAIN_PAGES if c != chain]
     secs = [("list", f"{n} protocols on {cname}, A to Z",
              _table(H, ["Protocol", "Upgradeability", "Timelock delay", "Fewest signers needed", "Documents and chain", "Newest block"], trs,
-                    f"Protocols on {cname}, by name")),
+                    f"Protocols on {cname}, by name")
+             + '<p data-how-timelock>How the Timelock delay column picks: a protocol can have more than one timelock. The column gives the '
+               'shortest delay read on any of its sampled controls, the upgrade path included, so one control with no delay makes it '
+               '“none on a sampled control”. Where the upgrade path waits longer, the cell also gives the upgrade path\'s delay. The '
+               'Upgradeability column is the upgrade path alone. “Not determined”: the published records do not settle the shortest '
+               'delay.</p>'),
             ("next", "The lists", read_next(H, pre, ["control/timelock/", "control/multisig/", "docs-vs-chain/"] + [f"chains/{c}/" for c in other]
                                             + ["learn/who-can-upgrade/"]) + _call(H, chain))]
     return page(H, idx, rel, desc, head_html, secs, wide=True), {"rows": n, "stated": n, "timelock": a, "multisig": b, "docs": dn, "both": both, "one": one, "neither": nei, "total": m, "date": day}
@@ -756,6 +828,15 @@ def prices(H):
     assert f"{B.WALLET_MEMORY_PER_MIN} calls / minute and {B.WALLET_MEMORY_DAILY_QUOTA} calls / day per wallet" in B.FREE_TIER_DOC
     assert f"({B.X402_MEMORY_PER_MIN} calls / minute)" in B.FREE_TIER_DOC and "who_controls has no paid overflow" in B.FREE_TIER_DOC
     rl = f"no daily limit ({B.RATE_LIMIT_PER_MIN} a minute)"
+    # the two request routes: each limit as the service's API description gives it
+    req, fr = api_paths(H)["/v1/requests"]["post"], api_paths(H)["/v1/feature-request"]["post"]
+    per_h = re.search(r"\b(\d+) per hour per caller\b", req["summary"])
+    assert per_h and f"More than {per_h.group(1)} requests per hour" in req["responses"]["429"]["description"] \
+        and "(Retry-After)" in req["responses"]["429"]["description"], "openapi.json: the /v1/requests limit"
+    per_d = re.search(r"\b(\d+) per caller per UTC day\b", fr["summary"])
+    assert per_d and int(per_d.group(1)) == B.FEATURE_REQUEST_DAILY_LIMIT, "openapi.json and the site's feature-request limit differ"
+    assert fr["responses"]["200"]["headers"]["X-Meter-Reset"]["description"].startswith("Unix seconds of the next UTC midnight"), \
+        "openapi.json: the feature-request reset is no longer 00:00 UTC"
     mem_free = f"{B.WALLET_MEMORY_DAILY_QUOTA} a day per wallet ({B.WALLET_MEMORY_PER_MIN} a minute)"
     R = {"pacta_lookup_protocol": ("GET /v1/protocols/lookup", rl, "$0.00"),
          "who_controls": ("GET /v1/check", f"{B.WHO_CONTROLS_DAILY_QUOTA} a day", "none: free only, the count resets at 00:00 UTC"),
@@ -774,8 +855,9 @@ def prices(H):
          "what_changed_since": ("POST /v1/memory/what-changed-since", mem_free,
                                 f"${x['/v1/x402/what-changed-since']} a call on POST /v1/x402/what-changed-since ({B.X402_MEMORY_PER_MIN} a minute, no daily cap)"),
          "forget": ("POST /v1/memory/forget", "free", "$0.00, always free"),
-         "pacta_submit_request": ("POST /v1/requests", "free, rate-limited", "$0.00"),
-         "request_feature": ("POST /v1/feature-request", f"{B.FEATURE_REQUEST_DAILY_LIMIT} a day", "$0.00")}
+         "pacta_submit_request": ("POST /v1/requests", f"no daily limit ({int(per_h.group(1))} an hour)",
+                                  "none: free only, a refused call gives the wait in seconds (Retry-After)"),
+         "request_feature": ("POST /v1/feature-request", f"{int(per_d.group(1))} a day", "none: free only, the count resets at 00:00 UTC")}
     assert list(R) == list(B.REMOTE_TOOLS) and list(TOOL_WHAT) == list(B.REMOTE_TOOLS), "the tool list and the price list differ"
     paths = api_paths(H)
     for t, (route, _, after) in R.items():
@@ -1085,7 +1167,7 @@ def listed_page(H, idx):
 CHANGED = "@@CHANGED@@"
 TEXT_PINS = {"learn/who-can-upgrade/": ("2026-11-28", "0b3943c787230351"),
              "learn/check-before-deposit/": ("2026-11-28", "34466fa5c8614468"),
-             "learn/connect-mcp-agent/": ("2026-11-28", "c24007a886ae5be5"),
+             "learn/connect-mcp-agent/": ("2026-11-28", "44fb30a33c4e4f60"),
              "listed/": ("2026-11-28", "3f72448b274d13ba")}
 
 
@@ -1183,7 +1265,7 @@ def check(out, L, nums):
         else:
             t = re.search(r"<tbody data-rows>(.*?)</tbody>", out[rel], re.S).group(1)
             cells = [re.findall(r'<td data-label="([^"]+)">(.*?)</td>', r) for r in re.findall(r"<tr>(.*?)</tr>", t)]
-            tl = sum(1 for r in cells if dict(r)["Timelock delay"] not in ("none on a sampled control", "not determined"))
+            tl = sum(1 for r in cells if not _txt(dict(r)["Timelock delay"]).startswith(("none on a sampled control", "not determined")))
             ms = sum(1 for r in cells if re.fullmatch(r"\d+ of \d+", dict(r)["Fewest signers needed"]))
             dv = sum(1 for r in cells if dict(r)["Documents and chain"] == "differ")
             ok &= ns["timelock"] == tl == nums[rel]["timelock"] and ns["multisig"] == ms == nums[rel]["multisig"] and ns["docs"] == dv == nums[rel]["docs"]
@@ -1202,5 +1284,20 @@ def check(out, L, nums):
         lines.append(f'/{rel}: first lines {ns.get("rows")} = {rows} rows{parts}: {"OK" if ok else "MISMATCH"}')
         if not ok:
             bad.append(rel)
-    assert not bad, "first-line counts differ from the rows: " + "; ".join(lines)
+    # the two cells of a chain page row agree: the Upgradeability cell's delay and the Timelock delay cell (cells_disagree())
+    for c in CHAIN_PAGES:
+        t = re.search(r"<tbody data-rows>(.*?)</tbody>", out[f"chains/{c}/"], re.S).group(1)
+        rows = [dict(re.findall(r'<td data-label="([^"]+)">(.*?)</td>', r)) for r in re.findall(r"<tr>(.*?)</tr>", t)]
+        why = [(_txt(r["Protocol"]), w) for r in rows for w in [cells_disagree(_txt(r["Upgradeability"]), _txt(r["Timelock delay"]))] if w]
+        more = sum("on the upgrade path" in _txt(r["Timelock delay"]) for r in rows)
+        lines.append(f'/chains/{c}/: the Upgradeability and Timelock delay cells agree on {len(rows) - len(why)} of {len(rows)} rows '
+                     f'({more} {"gives" if more == 1 else "give"} the upgrade path\'s longer delay): {"OK" if not why else "MISMATCH " + "; ".join(f"{n}: {w}" for n, w in why)}')
+        if why:
+            bad.append(f"chains/{c}/")
+    assert not bad, "first-line counts differ from the rows, or two cells of a row disagree: " + "; ".join(lines)
     return lines
+
+
+def _txt(cell):
+    """a table cell's text: no tags (the soft breaks), no entities"""
+    return html.unescape(re.sub(r"<[^>]+>", "", cell))
