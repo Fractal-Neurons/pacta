@@ -27,6 +27,7 @@ import html
 import json
 import os
 import re
+import urllib.parse
 
 import control_diff as CD
 import scorecard as SC
@@ -48,12 +49,12 @@ TITLES = {"control/timelock/": "Protocols behind a timelock, by length of delay"
 # The meta description of the pages without a count in it; a list or chain page's own description leads with its count ("75 DeFi
 # protocols ..."), so llms.txt and llms-full.txt name those pages with the line below it in GUIDES, which holds no figure.
 DESC = {"learn/who-can-upgrade/": "Find the proxy, its admin, the timelock and its delay, and the multisig behind a DeFi contract, read from "
-                                  "the chain at a named block. One free call, no key.",
+                                  "the chain at a named block. One call, free within a daily limit, no key.",
         "learn/check-before-deposit/": "Three checks an agent can run before it moves funds into a DeFi protocol: who can change the "
                                        "contract, what it depends on, and what changed since the last look. Free within daily limits; "
                                        "the page lists what is paid per call.",
-        "learn/connect-mcp-agent/": "Connect an agent to Pacta's MCP server in one line, make a first call, and see which tools are free "
-                                    "and which are paid per call over x402.",
+        "learn/connect-mcp-agent/": "Connect an agent to Pacta's MCP server in one line, make a first call, and see what is free and "
+                                    "what an agent pays for per call over x402.",
         "listed/": "The directories and registries that list Pacta's MCP server and paid API, with a link to each listing."}
 # Where the pages are linked from, and how the files made for assistants name them: ONE list, in this order. It feeds the block on
 # the home page and the "Guides and lists" column of every page's footer (build_site.home / footer), the how-to links on /mcp/
@@ -643,8 +644,8 @@ def docs_page(H, idx, L, times):
                     _rec(H, p, pre, dd["rid"], dd["surface"])])
     assert CORRECTION_TRACK in H.TRACKS
     qn = sum(p["docs"]["quoted"] for p in rows)
-    quo_t = ("Every row below quotes the documents' own words." if qn == n else
-             f"{qn} of the {n} rows below quote the documents' own words; the other {n - qn} give the record's summary of them, marked in the row.")
+    quo_t = ("Every row above quotes the documents' own words." if qn == n else
+             f"{qn} of the {n} rows above quote the documents' own words; the other {n - qn} give the record's summary of them, marked in the row.")
     att = sum(p["docs"]["attested"] for p in rows)
     att_t = (("Each compared finding is attested on Base." if att == n else f"{att} of the {n} findings on this list are attested on Base.")
              + " The attestation carries the block it was read at and a fingerprint (SHA-256) of the summary that holds the quoted text; "
@@ -689,12 +690,11 @@ def chain_page(H, idx, L, times, chain):
         tl_t = (H.E(say_dur(tl["seconds"])) if tl["kind"] == "listed" else "none on a sampled control" if tl["kind"] == "zero"
                 else "not determined")
         q_t = (f'{q["k"]} of {q["n"]}' if q["kind"] == "listed" else "token vote" if q["kind"] == "governor" else "not determined")
-        kind = ", ".join(basket_label(H, k_) for k_ in p["baskets"]) or "none"
         dv = {"listed": "differ", "agree": "agree", "uncompared": "not compared", "nd": "not determined"}[p["docs"]["kind"]]
-        trs.append([_rec(H, p, pre), H.E(kind), H.E(p["upgrade"]["text"]), tl_t, q_t, dv, _blk(H, chain, p["newest"][chain])])
+        trs.append([_rec(H, p, pre), H.E(p["upgrade"]["text"]), tl_t, q_t, dv, _blk(H, chain, p["newest"][chain])])
     other = [c for c in CHAIN_PAGES if c != chain]
     secs = [("list", f"{n} protocols on {cname}, A to Z",
-             _table(H, ["Protocol", "Kind", "Upgradeability", "Timelock delay", "Fewest signers needed", "Documents and chain", "Newest block"], trs,
+             _table(H, ["Protocol", "Upgradeability", "Timelock delay", "Fewest signers needed", "Documents and chain", "Newest block"], trs,
                     f"Protocols on {cname}, by name")),
             ("next", "The lists", read_next(H, pre, ["control/timelock/", "control/multisig/", "docs-vs-chain/"] + [f"chains/{c}/" for c in other]
                                             + ["learn/who-can-upgrade/"]) + _call(H, chain))]
@@ -932,17 +932,19 @@ def worked_run(H, idx, F, times):
           + (f' The documents say: {dd["documented"]}' if dd["kind"] == "listed" and dd["rid"] == q["rid"] else ""))
     days = [day, qday]
     assert not has_deps and not rereads, "the worked run says the records hold no dependency link and no re-reading: rewrite it"
+    assert rec["block_number"] == q["block"], "call 3 starts at the block of the signer-threshold reading in the first answer"
     items = [
         (f'<code>{H.E(B.WHO_CONTROLS_TOOL)}</code> on the ETHx token contract <code>{H.E(addr)}</code>, the contract a depositor receives.',
          f'Pacta\'s record holds: {_ex(H, a1)}'),
         ('<code>trace_dependencies</code> on the same contract.',
          'The records on this site hold no dependency link for this contract, so no example answer is shown here.'),
-        (f'<code>pacta_check_preflight</code> on the Stader Manager Safe <code>{H.E(safe)}</code>, because that is the contract whose '
-         'signer threshold Pacta\'s record reads.', f'Pacta\'s record holds: {_ex(H, a2)}'),
-        (f'<code>what_changed_since</code> on the ETHx contract since block {rec["block_number"]:,}, the block of that record.',
+        (f'<code>what_changed_since</code> on the ETHx contract since block {rec["block_number"]:,}, the block of the signer-threshold '
+         'reading in the first answer.',
          'The answer depends on what happened on the chain after that block. The records on this site hold no later reading of this '
-         'contract, so no example answer is shown here.')]
-    html_ = (f'<p>One protocol, {H.E(p["name"])}, four calls; the order is the order of the checks above. What follows each call is what '
+         'contract, so no example answer is shown here.'),
+        (f'The one-call version, <code>pacta_check_preflight</code>, on the Stader Manager Safe <code>{H.E(safe)}</code>, because that '
+         'is the contract whose signer threshold Pacta\'s record reads.', f'Pacta\'s record holds: {_ex(H, a2)}')]
+    html_ = (f'<p>One protocol, {H.E(p["name"])}, four calls: the three checks and the one-call version. What follows each call is what '
              'Pacta\'s published records hold for it, with its block and date. A live call reads the chain now, so you should get an '
              'answer like this one, not necessarily the same.</p><ol>'
              + "".join(f"<li>{c} {a_}</li>" for c, a_ in items) + "</ol>")
@@ -970,12 +972,12 @@ def learn_deposit(H, idx, F, times):
              f'<ol><li>Who can change it: the MCP tool <code>{H.E(B.WHO_CONTROLS_TOOL)}</code>, or <code>GET {u}/v1/check?chain=ethereum&amp;address=0x…</code>. '
              'Stop here if the answer surprises you.</li>'
              f'<li>What it depends on: the MCP tool <code>trace_dependencies</code>, or <code>GET {u}/v1/trace-dependencies?chain=ethereum&amp;address=0x…</code>. '
-             f'In the API description\'s own words: “{H.E(api_words(H, "/v1/trace-dependencies"))}” '
-             f'One answer for the whole picture: the MCP tool <code>pacta_check_preflight</code>, or <code>GET {u}/v1/check/preflight?chain=ethereum&amp;address=0x…</code>. '
-             f'In the tool\'s own words: “{H.E(PREFLIGHT_WORDS)}”</li>'
+             f'In the API description\'s own words: “{H.E(api_words(H, "/v1/trace-dependencies"))}”</li>'
              f'<li>What changed since last time: the MCP tool <code>what_changed_since</code>, or <code>POST {u}/v1/memory/what-changed-since</code> '
              '(given a list of contracts, a chain and a since_block, it needs no wallet), for an agent that saved its positions with '
              f'<code>remember</code> (the MCP tool, or <code>POST {u}/v1/memory/remember</code>).</li></ol>'
+             f'<p data-one-call>Or one call for the whole picture: the MCP tool <code>pacta_check_preflight</code>, or '
+             f'<code>GET {u}/v1/check/preflight?chain=ethereum&amp;address=0x…</code>. In the tool\'s own words: “{H.E(PREFLIGHT_WORDS)}”</p>'
              + H.term(f'curl -s "{u}/v1/check?chain={chain}&address={addr}"', "Check 1 with curl", "Copy the first check",
                       marker="check-before-deposit:call")),
             ("run", "A worked run", run),
@@ -998,8 +1000,8 @@ def learn_connect(H, idx, F, times):
     assert "Streamable HTTP" in B.MCP_STATUS
     desc = DESC[rel]
     head_html = ('<p class="lede" data-first-lines>Pacta is an MCP server and a web API that tells an agent who can upgrade, pause or change a '
-                 'DeFi contract. Adding it takes one line. Most tools are free up to a daily limit and need no key; the rest are paid per '
-                 'call by the agent itself.</p>'
+                 'DeFi contract. Adding it takes one line. The tools are free within their limits and need no key; where a paid call '
+                 'exists, the agent pays for it itself, per call. The table below says which.</p>'
                  f'<p class="s">Changed {CHANGED}. The example answer on this page was read from the chain; its newest reading is from {_reading(day)}.</p>')
     only = http_only(H)
     secs = [("add", "Add it",
@@ -1022,10 +1024,13 @@ def learn_connect(H, idx, F, times):
     return page(H, idx, rel, desc, head_html, secs), {"example_read": day, "newest_input": day}
 
 
-# The listings, each checked over HTTP on 28 Nov 2026 (00:08 UTC): (name, what it lists, link, note on the link, the day
-# we were listed). A directory whose entry answered 404 or could not be checked is left out; LISTINGS_LEFT_OUT counts them.
+# The listings, each checked over HTTP on 28 Nov 2026 (00:08 UTC; the x402-list.com entry page at 01:32 UTC, "member since
+# 2026-11-20"): (name, what it lists, link to our entry, note on the link, the day we were listed). Each link is our own entry,
+# never a directory's front page (a sponsor row there is not part of the directory). A directory whose entry answered 404 or
+# could not be checked is left out; LISTINGS_LEFT_OUT counts them.
 LISTINGS = [
-    ("x402-list.com", "x402 services", "https://x402-list.com/", "our row is on the front page", "2026-11-23"),
+    ("x402-list.com", "x402 services", "https://x402-list.com/services/pacta-control-plane-verification", "our entry in the directory",
+     "2026-11-20"),
     ("Official MCP Registry", "the remote MCP server {MCP_NAME} ({MCP_URL})",
      "https://registry.modelcontextprotocol.io/v0/servers?search={MCP_NAME}", "returns data, not a page", "2026-11-14"),
     ("Glama MCP directory", "the Pacta MCP server, its tools and their schema", "https://glama.ai/mcp/servers/Fractal-Neurons/pacta", None, "2026-11-14"),
@@ -1043,6 +1048,8 @@ def listings(H):
     v = {"MCP_NAME": H.B2A.MCP_NAME, "MCP_URL": H.MCP_URL, "EAS_SCHEMA": H.B2A.EAS_SCHEMA, "REPO": H.REPO}
     rows = [(n, w.format(**v), u.format(**v), note, d) for n, w, u, note, d in LISTINGS]
     assert all(u.startswith("https://") for _, _, u, _, _ in rows) and len({n for n, *_ in rows}) == len(rows)
+    front = [u for _, _, u, _, _ in rows if urllib.parse.urlsplit(u).path in ("", "/")]
+    assert not front, f"a listing links a directory's front page, not our entry: {front}"
     return sorted(sorted(rows, key=lambda r: r[0].lower()), key=lambda r: r[4], reverse=True)   # newest first, then A to Z
 
 
@@ -1052,7 +1059,7 @@ def listed_page(H, idx):
     newest = rows[0][4]
     desc = DESC[rel]
     head_html = ('<p class="lede" data-first-lines>Pacta\'s MCP server and its pay-per-call API are listed in the places below. Each link goes to '
-                 'our entry there, or to the page our row is on. If you run a directory of MCP servers, x402 services or DeFi tools and want '
+                 'our entry there. If you run a directory of MCP servers, x402 services or DeFi tools and want '
                  'to list us, the facts you need are on this page.</p>'
                  f'<p class="s">Changed {CHANGED}.</p>')
     facts = [("Name", H.E(H.ORG_LD["name"])), ("Description", H.E(LISTED_DESC)),
@@ -1077,9 +1084,9 @@ def listed_page(H, idx):
 # its pin is set again. The page shows the later of that day and its newest input (the example's reading, the newest listing).
 CHANGED = "@@CHANGED@@"
 TEXT_PINS = {"learn/who-can-upgrade/": ("2026-11-28", "0b3943c787230351"),
-             "learn/check-before-deposit/": ("2026-11-28", "ef083207d2e68146"),
-             "learn/connect-mcp-agent/": ("2026-11-28", "426939e6d06f244a"),
-             "listed/": ("2026-11-28", "7dea4743c00c0ad9")}
+             "learn/check-before-deposit/": ("2026-11-28", "34466fa5c8614468"),
+             "learn/connect-mcp-agent/": ("2026-11-28", "c24007a886ae5be5"),
+             "listed/": ("2026-11-28", "3f72448b274d13ba")}
 
 
 def text_fingerprint(html_):

@@ -72,6 +72,12 @@ class Lists(unittest.TestCase):
             self.assertEqual(t, read("docs", rel, "index.html"), rel)
             self.assertEqual(re.findall(r"<h1>([^<]*)</h1>", t), [BS.E(FP.TITLES[rel])], rel)
             self.assertEqual(re.findall(r"<title>([^<]*)</title>", t), [BS.E(FP.TITLES[rel])], rel)
+        # the chain pages carry no "Kind" column (the basket is a word rule on a free-text field)
+        for c in FP.CHAIN_PAGES:
+            head = self.w["out"][f"chains/{c}/"].split("data-list-table>", 1)[1].split("</thead>", 1)[0]
+            self.assertEqual(re.findall(r'<th scope="col">([^<]+)</th>', head),
+                             ["Protocol", "Upgradeability", "Timelock delay", "Fewest signers needed", "Documents and chain", "Newest block"], c)
+            self.assertNotIn('data-label="Kind"', self.w["out"][f"chains/{c}/"])
 
     def test_partitions(self):
         L = self.w["L"]
@@ -171,6 +177,12 @@ class Lists(unittest.TestCase):
             self.assertEqual("it quotes no words" in c, not p["docs"]["quoted"], p["slug"])
             self.assertEqual("The rest is on" in c, p["docs"]["documented_cut"], p["slug"])
         self.assertNotIn("no row has left", t)
+        # the note on quotes stands under the table
+        how = t.split('id="how"', 1)[1].split("</section>", 1)[0]
+        self.assertTrue(t.index('id="how"') > t.index("data-list-table>"))
+        self.assertRegex(how, r"(Every row above quotes|\d+ of the \d+ rows above quote) the documents' own words")
+        self.assertNotIn("rows below", t)
+        self.assertNotIn("row below", t)
         self.assertNotIn("parameter delta", t.split('<article class="memo" data-page=', 1)[1])
         # the cutter: whole parts only, never inside a quotation; an apostrophe is not a quotation mark
         self.assertEqual(FP.doc_words("'a; b' (x.org/1) / 'c' (y.org)", 20), ("'a; b' (x.org/1)", True))
@@ -231,6 +243,13 @@ class Lists(unittest.TestCase):
         R = FP.prices(BS)
         self.assertEqual(list(R), list(B.REMOTE_TOOLS))
         t = out["learn/connect-mcp-agent/"]
+        first = t.split("data-first-lines>", 1)[1].split("</p>", 1)[0]
+        self.assertTrue(first.endswith("where a paid call exists, the agent pays for it itself, per call. The table below says which."), first)
+        self.assertNotIn("the rest are paid", t)
+        want = ("Connect an agent to Pacta's MCP server in one line, make a first call, and see what is free and what an agent "
+                "pays for per call over x402.")
+        self.assertEqual(FP.DESC["learn/connect-mcp-agent/"], want)
+        self.assertIn(f'<meta name="description" content="{want}">', BS.html.unescape(t))
         tb = t.split('data-tool-table>', 1)[1].split("</tbody>", 1)[0]
         self.assertEqual(re.findall(r'<tr><td data-label="Tool"><code>([^<]+)</code>', tb), list(B.REMOTE_TOOLS))
         self.assertIn(f"{B.WHO_CONTROLS_DAILY_QUOTA} a day", R["who_controls"][1])
@@ -243,6 +262,17 @@ class Lists(unittest.TestCase):
         safe = FP.lookup_item(BS, BS.HERO_EXAMPLE[0])["preflightArgs"]["address"]
         run = t.split('id="run"', 1)[1].split("</section>", 1)[0]
         self.assertIn(safe, run)
+        # three checks, one call each; the preflight after the list; the run = the three checks, then the one-call version
+        checks = t.split('id="checks"', 1)[1].split("</section>", 1)[0]
+        items = re.findall(r"<li>(.*?)</li>", checks.split("<ol>", 1)[1].split("</ol>", 1)[0], re.S)
+        self.assertEqual([re.findall(r"the MCP tool <code>([a-z_]+)</code>", i_)[:1] for i_ in items],
+                         [[B.WHO_CONTROLS_TOOL], ["trace_dependencies"], ["what_changed_since"]])
+        self.assertNotIn("pacta_check_preflight", checks.split("</ol>", 1)[0])
+        self.assertIn("<p data-one-call>Or one call for the whole picture: the MCP tool <code>pacta_check_preflight</code>", checks)
+        self.assertIn("four calls: the three checks and the one-call version.", run)
+        self.assertNotIn("order of the checks above", t)
+        self.assertEqual([re.findall(r"<code>([a-z_]+)</code>", i_)[0] for i_ in re.findall(r"<li>(.*?)</li>", run, re.S)],
+                         [B.WHO_CONTROLS_TOOL, "trace_dependencies", "what_changed_since", "pacta_check_preflight"])
         self.assertIn(BS.HERO_EXAMPLE[2], run)
         self.assertNotIn("Ethena", run)
         # a tool missing from either list, or a route that is not in openapi.json, fails the build
@@ -287,7 +317,14 @@ class Lists(unittest.TestCase):
         self.assertTrue(all(re.fullmatch(r"\d{4}-\d\d-\d\d", d) for d in days), days)
         self.assertEqual(days, sorted(days, reverse=True))
         self.assertIn("x402-list.com", rows[0])
-        self.assertIn("our row is on the front page", rows[0])
+        self.assertIn('href="https://x402-list.com/services/pacta-control-plane-verification"', rows[0])
+        self.assertIn("our entry in the directory", rows[0])
+        self.assertIn("Each link goes to our entry there. If you run", art)
+        for gone in ("front page", "page our row is on"):
+            self.assertNotIn(gone, art)
+        hrefs = re.findall(r'<a href="(https://[^"]+)" target="_blank"', tb)
+        self.assertEqual(len(hrefs), len(FP.LISTINGS))
+        self.assertFalse([u for u in hrefs if re.fullmatch(r"https://[^/]+/?", u)], hrefs)
         self.assertIn(f"<p data-listed-left-out>{len(FP.LISTINGS_LEFT_OUT)} more directories are left out", art)
         self.assertIn(FP.LISTED_DESC, BS.html.unescape(art) if hasattr(BS, "html") else art)
         self.assertNotIn("mailto:", art)

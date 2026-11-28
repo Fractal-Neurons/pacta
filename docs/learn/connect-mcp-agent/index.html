@@ -2,18 +2,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Add Pacta to Claude, Cursor or your own agent: one line, the first call, what is free and what costs</title>
-<meta name="description" content="Connect an agent to Pacta&#x27;s MCP server in one line, make a first call, and see which tools are free and which are paid per call over x402.">
+<meta name="description" content="Connect an agent to Pacta&#x27;s MCP server in one line, make a first call, and see what is free and what an agent pays for per call over x402.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Pacta by Fractal Neurons">
 <meta property="og:title" content="Add Pacta to Claude, Cursor or your own agent: one line, the first call, what is free and what costs">
-<meta property="og:description" content="Connect an agent to Pacta&#x27;s MCP server in one line, make a first call, and see which tools are free and which are paid per call over x402.">
+<meta property="og:description" content="Connect an agent to Pacta&#x27;s MCP server in one line, make a first call, and see what is free and what an agent pays for per call over x402.">
 <meta property="og:url" content="https://pacta.wtf/learn/connect-mcp-agent/">
 <meta property="og:image" content="https://pacta.wtf/og-preview.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="628">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Add Pacta to Claude, Cursor or your own agent: one line, the first call, what is free and what costs">
-<meta name="twitter:description" content="Connect an agent to Pacta&#x27;s MCP server in one line, make a first call, and see which tools are free and which are paid per call over x402.">
+<meta name="twitter:description" content="Connect an agent to Pacta&#x27;s MCP server in one line, make a first call, and see what is free and what an agent pays for per call over x402.">
 <meta name="twitter:image" content="https://pacta.wtf/og-preview.png">
 <meta name="twitter:site" content="@pacta_fractal">
 <link rel="canonical" href="https://pacta.wtf/learn/connect-mcp-agent/">
@@ -39,7 +39,7 @@
 <main id="main" class="memo-wrap">
 <article class="memo" data-page="learn/connect-mcp-agent/">
 <header><h1>Add Pacta to Claude, Cursor or your own agent: one line, the first call, what is free and what costs</h1>
-<p class="lede" data-first-lines>Pacta is an MCP server and a web API that tells an agent who can upgrade, pause or change a DeFi contract. Adding it takes one line. Most tools are free up to a daily limit and need no key; the rest are paid per call by the agent itself.</p><p class="s">Changed <time datetime="2026-11-28" data-change-date>2026-11-28</time>. The example answer on this page was read from the chain; its newest reading is from <time datetime="2026-11-15" data-reading-date>2026-11-15</time>.</p></header>
+<p class="lede" data-first-lines>Pacta is an MCP server and a web API that tells an agent who can upgrade, pause or change a DeFi contract. Adding it takes one line. The tools are free within their limits and need no key; where a paid call exists, the agent pays for it itself, per call. The table below says which.</p><p class="s">Changed <time datetime="2026-11-28" data-change-date>2026-11-28</time>. The example answer on this page was read from the chain; its newest reading is from <time datetime="2026-11-15" data-reading-date>2026-11-15</time>.</p></header>
 <section class="memo-sec" id="add"><h2>Add it</h2><div class="term"><div class="term-h"><span>Claude Code</span><button class="copy" data-slot="button" data-variant="ghost" data-size="sm" type="button" data-copy-term data-copy-count="connect-mcp-agent:claude-code" aria-label="Copy the Claude Code line"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span>Copy</span></button></div><pre>claude mcp add --transport http pacta https://api.pacta.wtf/mcp</pre></div><div class="term"><div class="term-h"><span>Cursor (mcp.json)</span><button class="copy" data-slot="button" data-variant="ghost" data-size="sm" type="button" data-copy-term data-copy-count="connect-mcp-agent:cursor" aria-label="Copy the Cursor lines"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span>Copy</span></button></div><pre>{
   &quot;mcpServers&quot;: {
     &quot;pacta&quot;: {
