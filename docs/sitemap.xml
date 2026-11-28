@@ -382,4 +382,13 @@
   <url><loc>https://pacta.wtf/protocols/zircuit-staking/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/zora-bridge/</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://pacta.wtf/protocols/ztln-p/</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://pacta.wtf/control/timelock/</loc><lastmod>2026-11-20</lastmod></url>
+  <url><loc>https://pacta.wtf/control/multisig/</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://pacta.wtf/docs-vs-chain/</loc><lastmod>2026-11-20</lastmod></url>
+  <url><loc>https://pacta.wtf/chains/ethereum/</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://pacta.wtf/chains/base/</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://pacta.wtf/learn/who-can-upgrade/</loc><lastmod>2026-11-28</lastmod></url>
+  <url><loc>https://pacta.wtf/learn/check-before-deposit/</loc><lastmod>2026-11-28</lastmod></url>
+  <url><loc>https://pacta.wtf/learn/connect-mcp-agent/</loc><lastmod>2026-11-28</lastmod></url>
+  <url><loc>https://pacta.wtf/listed/</loc><lastmod>2026-11-28</lastmod></url>
 </urlset>

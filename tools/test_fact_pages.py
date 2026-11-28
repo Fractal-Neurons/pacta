@@ -521,10 +521,14 @@ class Lists(unittest.TestCase):
         self.assertIn(FP.LISTED_DESC, BS.html.unescape(art) if hasattr(BS, "html") else art)
         self.assertNotIn("mailto:", art)
 
-    def test_not_in_sitemap_or_feeds(self):
-        for f in ("sitemap.xml", "feed.xml", os.path.join("api", "v1", "feed.json")):
+    def test_in_sitemap_with_change_dates_and_not_in_feeds(self):
+        for f in ("feed.xml", os.path.join("api", "v1", "feed.json")):
             t = read("docs", f)
             self.assertFalse([r for r in FP.PAGES if f"{BS.BASE_URL}/{r}" in t], f)
+        sm = read("docs", "sitemap.xml")
+        for r in FP.PAGES:
+            chg = re.search(r'<time datetime="(\d{4}-\d\d-\d\d)" data-change-date>', self.w["out"][r]).group(1)
+            self.assertEqual(sm.count(f"<url><loc>{BS.BASE_URL}/{r}</loc><lastmod>{chg}</lastmod></url>"), 1, r)
 
     def test_llms_files_name_each_page_once(self):
         """W9: one Guides and lists section in llms.txt and llms-full.txt, from GUIDES (the page list), each page once, no figure"""

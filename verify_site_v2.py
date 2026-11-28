@@ -1296,13 +1296,20 @@ def main(argv=None):
         sys.path.insert(0, os.path.join(ROOT, "tools"))
         sys.dont_write_bytecode = True
         import build_site as BSF
-        lastmods = {e.text for e in sm.iter("{http://www.sitemaps.org/schemas/sitemap/0.9}lastmod")}
+        import fact_pages as FPSM
+        sm_pairs = [(u.find("{http://www.sitemaps.org/schemas/sitemap/0.9}loc").text,
+                     u.find("{http://www.sitemaps.org/schemas/sitemap/0.9}lastmod").text)
+                    for u in sm.findall("{http://www.sitemaps.org/schemas/sitemap/0.9}url")]
         want_day = BSF.site_date(idx, json.loads(read("docs/api/v1/radar.json")), json.loads(read("docs/api/v1/rpc-pinned.json")),
                                  json.loads(read("docs/api/v1/onboarding.json")) if os.path.exists(os.path.join(DOCS, "api", "v1", "onboarding.json")) else None)
+        fp_want = {f"{base}/{r_}": re.search(r'<time datetime="(\d{4}-\d\d-\d\d)" data-change-date>',
+                                             read(f"docs/{r_}index.html")).group(1) for r_ in FPSM.PAGES}
+        sm_bad = [(loc_, lm_) for loc_, lm_ in sm_pairs if lm_ != fp_want.get(loc_, want_day)]
         wall = [f for f in ("tools/build_site.py", "tools/build_b2a_feeds.py", "tools/build_lookup.py")
                 if re.search(r"date\.today\(|datetime\.now\(|datetime\.utcnow\(|time\.time\(|time\.gmtime\(\)|time\.localtime\(", read(f))]
-        check("sitemap <lastmod> is deterministic: every entry = the newest pinned-data date (index / radar / rpc-pinned / onboarding), "
-              "no wall-clock call in the build scripts (Codex F3)", lastmods == {want_day} and not wall, f"lastmod {sorted(lastmods)} want {want_day}; wall-clock in {wall}")
+        check("sitemap <lastmod> is deterministic: every entry = pinned-data date (or Wave 1 data-change-date), 391 total entries, "
+              "no wall-clock call in the build scripts (Codex F3)", not sm_bad and len(sm_pairs) == 391 and fp_want.keys() <= locs and not wall,
+              f"bad {sm_bad[:5]} count {len(sm_pairs)} want {want_day}; wall-clock in {wall}")
     except ET.ParseError as e:
         check("sitemap.xml parses", False, str(e))
     sec = read("docs/.well-known/security.txt")
@@ -1987,7 +1994,7 @@ def main(argv=None):
     rec_pages = sorted(glob.glob(os.path.join(DOCS, "protocols", "*", "index.html")))
     rec_links = [re.search(r'<nav class="fact-links" aria-label="Lists this record is on" data-fact-links>(.*?)</nav>', open(f_, encoding="utf-8").read())
                  for f_ in rec_pages]
-    unlisted_in = ["sitemap.xml", "feed.xml", "api/v1/feed.json"]   # sitemap entries and their dates are added separately
+    unlisted_in = ["feed.xml", "api/v1/feed.json"]   # sitemap.xml carries all 9 Wave 1 pages with their data-change-date lastmod
     # W8: the pages are linked from the home page (one block), from every footer (the Guides and lists column, in GUIDES order) and
     # /mcp/ (the three use pages); W9: llms.txt and llms-full.txt carry one Guides and lists section each, the GUIDES lines in order,
     # with no figure; nothing links to /learn/ itself (no page of its own)
@@ -2072,7 +2079,11 @@ def main(argv=None):
         "record links: one per list a record is on": sum(m_.group(1).count('href="../../control/timelock/"') for m_ in rec_links) == tl_n["rows"]
             and sum(m_.group(1).count('href="../../control/multisig/"') for m_ in rec_links) == ms_n["rows"]
             and sum(m_.group(1).count('href="../../docs-vs-chain/"') for m_ in rec_links) == dv_n["rows"],
-        "not in sitemap.xml, feed.xml or feed.json": not [f_ for f_ in unlisted_in for r_ in FP_.PAGES if f"{BS.BASE_URL}/{r_}" in read("docs/" + f_)],
+        "in sitemap.xml (with change dates); not in feed.xml or feed.json":
+            not [f_ for f_ in unlisted_in for r_ in FP_.PAGES if f"{BS.BASE_URL}/{r_}" in read("docs/" + f_)]
+            and all(f"<url><loc>{BS.BASE_URL}/{r_}</loc><lastmod>"
+                    + re.search(r'<time datetime="(\d{4}-\d\d-\d\d)" data-change-date>', fp[r_]).group(1) + "</lastmod></url>"
+                    in read("docs/sitemap.xml") for r_ in FP_.PAGES),
         "W9: one Guides and lists section in llms.txt and llms-full.txt (each page once, in order, no figure)": llms_sec_ok,
         "W8: linked from the home page block, every footer's Guides and lists column and /mcp/ (the three use pages); 0 links to /learn/":
             sorted(set(FP_.PAGES)) == sorted(g_rels) and bool(ftr_cols) and not ftr_bad and not learn_bare

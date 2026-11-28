@@ -7016,13 +7016,17 @@ def build_all():
         w(root_name, open(os.path.join(DOCS, src_rel), encoding="utf-8").read())
     w("feed.xml", atom_feed(idx, radar))
     w("api/v1/feed.json", json_feed(idx, radar))
+    INDEXNOW_KEY = "b7e41c92a5084d6f83c9024e6a7158d3"
     urls = ["/", "/request/", "/scan/", "/watch/", "/sponsor/", "/seal/", "/miniapp/", "/curators/", "/.well-known/farcaster.json", "/llms.txt", "/api/v1/index.json", "/api/v1/radar.json"] + [f"/briefs/{k}/" for k in BRIEFS] + \
         [f"/briefs/{b['slug']}/" for b in load_onboarding()["briefs"]] + (["/api/v1/onboarding.json"] if load_onboarding()["briefs"] else []) + \
         ["/api/v1/proposals.json", "/api/v1/rpc-pinned.json", "/api/v1/lookup.json", "/api/v1/protocols.json", "/api/v1/graph-manifest.json", "/api/v1/wallet-tokens.json", "/api/v1/curator-exposure-matrix.json", "/integrations/vault-factories/", "/for-protocols/", "/llms/", "/llms-full.txt", "/SKILL.md", "/.well-known/agent.json", "/.well-known/mcp.json",
          "/demos/swapio-x402/", "/bounties/", "/leaderboard/", "/mcp/", "/protocols/", "/feed.xml", "/api/v1/feed.json",
          "/scorecards/", "/radar/", "/about/", "/methodology/", "/privacy/", "/terms/"] + [f"/protocols/{v['slug']}/" for v in sp.values()]
+    fp_sm = [(f"/{rel_}", re.search(r'<time datetime="(\d{4}-\d\d-\d\d)" data-change-date>', wv["out"][rel_]).group(1)) for rel_ in FP.PAGES]
     w("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-      + "".join(f"  <url><loc>{BASE_URL}{u}</loc><lastmod>{today}</lastmod></url>\n" for u in urls) + "</urlset>\n")
+      + "".join(f"  <url><loc>{BASE_URL}{u}</loc><lastmod>{today}</lastmod></url>\n" for u in urls)
+      + "".join(f"  <url><loc>{BASE_URL}{u}</loc><lastmod>{d_}</lastmod></url>\n" for u, d_ in fp_sm) + "</urlset>\n")
+    w(INDEXNOW_KEY + ".txt", INDEXNOW_KEY)
     w("google9232d852c0706689.html", "google-site-verification: google9232d852c0706689.html")
     w("BingSiteAuth.xml", '<?xml version="1.0"?>\n<users>\n\t<user>E636BB57E9F39AD391DCAC0C3B6BEAB7</user>\n</users>\n')
     w(".well-known/security.txt", f"Contact: mailto:{CONTACT}\nExpires: 2027-11-13T00:00:00.000Z\nPreferred-Languages: en\n"
